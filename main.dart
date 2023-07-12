@@ -1,7 +1,7 @@
 import "dart:io";
 import 'package:xml/xml.dart';
 
-var typeMap = {"uint32_t": "uint", "uint64_t": "long", "void": "void"};
+var typeMap = {"uint32_t": "uint", "uint64_t": "ulong", "int32_t": "int", "int64_t": "long"};
 
 class VkStructMember {
   String? type;
@@ -10,7 +10,8 @@ class VkStructMember {
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
-    return VkStructMember(type: type, name: name);
+
+    return VkStructMember(type: typeMap[type] ?? type, name: name);
   }
 }
 
@@ -27,7 +28,7 @@ class VKstruct {
     return VKstruct(returnedOnly: returned == "true", name: name, values: values);
   }
 
-  String toString() {
+  String build() {
     return """
 struct $name {
   ${values.map((value) => "${value.type} ${value.name};").join("\n  ")}
@@ -40,30 +41,49 @@ class VKenumValue {
   String? index;
   String? name;
   String? value;
-  VKenumValue({
-    required this.name,
-    required this.value,
-    required this.index,
-  });
+  String? type;
+  VKenumValue({required this.name, required this.value, required this.index, this.type});
+
   static fromXML(XmlElement node) {
     String? index = node.getAttribute("index");
     String? name = node.getAttribute("name");
     String? value = node.getAttribute("value");
-    return VKenumValue(index: index, name: name, value: value);
+    String? type = node.getAttribute("type");
+    return VKenumValue(index: index, name: name, value: value, type: type);
   }
 }
 
 class VKenum {
   String? type;
   String? name;
+  String? comment;
   List<VKenumValue> values;
-  VKenum({required this.name, this.type, required this.values});
+  VKenum({required this.name, this.type, required this.values, this.comment});
+
+  String? build() {
+    if (type == "bitmask") {
+      return "const $name = int;";
+    }
+
+    if (type == "enum") {
+      return """
+enum $name : int {
+ ${values.map((entry) => "${entry.name} : ${entry.value}").join("\n ")}
+}
+""";
+    }
+
+    return null;
+  }
+
   static fromXML(XmlElement node) {
     String? name = node.getAttribute("name");
     String? type = node.getAttribute("type");
+    String? comment = node.getAttribute("comment");
     List<VKenumValue> values =
         List<VKenumValue>.from(node.findAllElements('enum').map((node) => VKenumValue.fromXML(node)));
-    return VKenum(type: type, name: name, values: values);
+
+    return VKenum(type: type, name: name, values: values, comment: comment);
   }
 }
 
@@ -105,11 +125,8 @@ void main() {
     }
   });
 
-  document.findAllElements('enum').forEach((XmlElement node) {
-    String? category = node.getAttribute("type");
-    if (category == "bitmask") {
-      enums.add(VKenum.fromXML(node));
-    }
+  document.findAllElements('enums').forEach((XmlElement node) {
+    enums.add(VKenum.fromXML(node));
   });
 
   // baseTypes.forEach((element) {
@@ -125,13 +142,16 @@ module vk;
 // Base types
 ${baseTypes.map((type) => "def ${type.name} = ${type.type != null ? typeMap[type.type] : "void*"};").join("\n")}
 
-// Bitmasks
-${bitmasks.where((element) => element.name != null).map((type) => "def ${type.name} = ${type.type};").join("\n")}
-
 // Handles
 ${handles.where((element) => element.name != null).map((type) => "def ${type.name} = void*;").join("\n")}
 
+// Bitmasks
+${bitmasks.where((element) => element.name != null).map((type) => "def ${type.name} = ${type.type};").join("\n")}
+
 // Structs
-${structs.where((element) => element.name != null).map((value) => value.toString()).join("\n")}
+${structs.where((element) => element.name != null && element.values.isNotEmpty).map((struct) => struct.build()).join("\n")}
+
+// Enums
+${enums.where((element) => element.name != null).map((entry) => entry.build()).join("\n")}
 """);
 }
