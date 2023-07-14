@@ -1,0 +1,14 @@
+{
+	"langrev": "1",
+	"warnings": ["no-unused"],
+	"authors": [],
+	"version": "0.1.0",
+	"sources": ["./build/vk.c3"],
+	"targets": {
+		"test": {
+			"type": "executable",
+			"sources-add": ["./tests/main.c3"]
+		}
+	},
+	"output": "./build"
+}
