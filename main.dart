@@ -101,12 +101,15 @@ var typeMap = {
 class VkStructMember {
   String? type;
   String? name;
-  VkStructMember({required this.type, required this.name});
+  String? api;
+  bool optional;
+  VkStructMember({required this.type, required this.name, this.optional = false, this.api});
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
-
-    return VkStructMember(type: typeMap[type] ?? type, name: name);
+    String? api = node.getAttribute("api");
+    bool optional = node.getAttribute("optional") == "true";
+    return VkStructMember(type: typeMap[type] ?? type, name: name, api: api, optional: optional);
   }
 }
 
@@ -172,12 +175,14 @@ class VKtype {
   String? type;
   String? name;
   String? requiredBy;
-  VKtype({required this.type, required this.name, required this.requiredBy});
+  String? api;
+  VKtype({required this.type, required this.name, required this.requiredBy, this.api});
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
     String? requiredBy = node.getAttribute("requires");
-    return VKtype(type: type, name: name, requiredBy: requiredBy);
+    String? api = node.getAttribute("api");
+    return VKtype(type: type, name: name, requiredBy: requiredBy, api: api);
   }
 }
 
@@ -249,15 +254,15 @@ ${structs.where((element) => element.name != null && element.values.isNotEmpty &
 // Enums
 ${enums.where((element) => element.name != null).map((entry) {
     if (entry.type == "bitmask") {
-      return "const ${entry.name} = int;";
+      return "def ${entry.name} = int;";
     }
 
     if (entry.type == "enum") {
-      return "enum ${entry.name} : int { \n ${entry.values.map((entry) => "${entry.name} : ${entry.value},").join("\n ")}\n}\n";
+      return "def ${entry.name} = distinct inline int;\n ${entry.values.map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
     }
 
     if (entry.name == "API Constants") {
-      return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value};").join("\n")}";
+      return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "")};").join("\n")}";
     }
 
     return null;
