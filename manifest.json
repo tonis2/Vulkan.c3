@@ -1,6 +1,6 @@
 
 { 
-  "provides" : "opengl",
+  "provides" : "vulkan",
   "targets" : {
     "macos-x64" : {
       "linkflags" : [],
