@@ -1,47 +1,6 @@
 import "dart:io";
 import 'package:xml/xml.dart';
 
-// const PLATFORM_TYPES = """
-// def RROutput = ulong;
-// def VisualID = uint;
-// def Display = void*;
-// def Window = ulong;
-// def xcb_connection_t = void*;
-// def xcb_window_t = uint;
-// def xcb_visualid_t = uint;
-// def MirConnection = *const void*;
-// def MirSurface = void*;
-// def HINSTANCE = void*;
-// def HWND = *const void*;
-// def wl_display = void*;
-// def wl_surface = void*;
-// def HANDLE = void*;
-// def HMONITOR = HANDLE;
-// def DWORD = ulong;
-// def LPCWSTR = *uint;
-// def zx_handle_t = uint;
-// def _screen_buffer = void*;
-// def _screen_context = void*;
-// def _screen_window = void*;
-// def SECURITY_ATTRIBUTES = void*;
-
-// // Opaque types
-// def ANativeWindow = void*;
-// def AHardwareBuffer = void*;
-// def CAMetalLayer = void*;
-// def GgpStreamDescriptor = uint;
-// def GgpFrameToken = ulong;
-// def IDirectFB = void*;
-// def IDirectFBSurface = void*;
-// def __IOSurface = void*;
-// def IOSurfaceRef = __IOSurface;
-// def MTLBuffer_id =  void*;
-// def MTLCommandQueue_id = void*;
-// def MTLDevice_id = void*;
-// def MTLSharedEvent_id = void*;
-// def MTLTexture_id = void*;
-// """;
-
 var platformTypes = {
   "RROutput": "ulong",
   "VisualID": "uint",
@@ -57,7 +16,7 @@ var platformTypes = {
   "wl_display": "void*",
   "wl_surface": "void*",
   "Handle": "void*",
-  "HMONITOR": "Handle",
+  "HMONITOR": "void*",
   "DWORD": "ulong",
   "LPCWSTR": "uint*",
   "zx_handle_t": "uint",
@@ -73,7 +32,7 @@ var platformTypes = {
   "IDirectFB": "void*",
   "IDirectFBSurface": "void*",
   "__IOSurface": "void*",
-  "IOSurfaceRef": "__IOSurface",
+  "IOSurfaceRef": "void*",
   "MTLBuffer_id": "void*",
   "MTLCommandQueue_id": "void*",
   "MTLDevice_id": "void*",
@@ -82,6 +41,7 @@ var platformTypes = {
 };
 
 var replaceNames = {"module": "mod"};
+var filteredNames = ["VkBaseInStructure", "VkBaseOutStructure", "VkDependencyInfo"];
 
 var typeMap = {
   "uint16_t": "uint",
@@ -95,7 +55,9 @@ var typeMap = {
   "size_t": "usz",
   "isize_t": "isz",
   "null": "void*",
-  "HANDLE": "void*"
+  "HANDLE": "void*",
+  "void": "void*",
+  "char": "char*"
 };
 
 class VkStructMember {
@@ -103,13 +65,17 @@ class VkStructMember {
   String? name;
   String? api;
   bool optional;
-  VkStructMember({required this.type, required this.name, this.optional = false, this.api});
+  bool nullTerminated;
+  VkStructMember(
+      {required this.type, required this.name, this.optional = false, this.api, this.nullTerminated = false});
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
     String? api = node.getAttribute("api");
     bool optional = node.getAttribute("optional") == "true";
-    return VkStructMember(type: typeMap[type] ?? type, name: name, api: api, optional: optional);
+    bool nullTerminated = node.getAttribute("len") == "null-terminated";
+    return VkStructMember(
+        type: typeMap[type] ?? type, name: name, api: api, optional: optional, nullTerminated: nullTerminated);
   }
 }
 
@@ -172,6 +138,7 @@ class VKtype {
   String? name;
   String? requiredBy;
   String? api;
+
   VKtype({required this.type, required this.name, required this.requiredBy, this.api});
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
@@ -179,6 +146,23 @@ class VKtype {
     String? requiredBy = node.getAttribute("requires");
     String? api = node.getAttribute("api");
     return VKtype(type: type, name: name, requiredBy: requiredBy, api: api);
+  }
+}
+
+class VKfnPointer {
+  String? name;
+  String? requiredBy;
+  String? returnType;
+  List<String> values;
+  VKfnPointer({required this.name, required this.requiredBy, required this.values, required this.returnType});
+  static fromXML(XmlElement node) {
+    String? name = node.getElement("name")?.innerText;
+    String? returnType = node.innerText.split(" ")[1];
+    String? requiredBy = node.getAttribute("requires");
+    List<String> values =
+        List<String>.from(node.findAllElements('type').map((value) => typeMap[value.innerText] ?? value.innerText));
+    return VKfnPointer(
+        name: name, requiredBy: requiredBy, values: values, returnType: typeMap[returnType] ?? returnType);
   }
 }
 
@@ -219,6 +203,7 @@ void main() {
   List<VKtype> baseTypes = [];
   List<VKtype> handles = [];
   List<VKstruct> unions = [];
+  List<VKfnPointer> functionsPtrs = [];
 
   document.findAllElements('type').forEach((XmlElement node) {
     String? category = node.getAttribute("category");
@@ -237,29 +222,41 @@ void main() {
     if (category == "union") {
       unions.add(VKstruct.fromXML(node));
     }
+    if (category == "funcpointer") {
+      functionsPtrs.add(VKfnPointer.fromXML(node));
+    }
   });
 
   document.findAllElements('enums').forEach((XmlElement node) {
     enums.add(VKenum.fromXML(node));
   });
 
-  // Filter out some faulty and extension structs
+  // Filter out some faulty or extension structs
   structs = structs
       .where((struct) =>
           struct.name != null &&
           struct.values.isNotEmpty &&
           struct.extendsStruct == null &&
+          !filteredNames.contains(struct.name) &&
           struct.name?.is_nv_extension() == false &&
           struct.name?.is_khr_extension() == false &&
           struct.name?.is_extension() == false)
       .toList();
 
-  // Filter out some faulty and extension unions
+  // Filter out some faulty or extension unions
   unions = unions
       .where((union) =>
           union.name != null &&
           union.values.isNotEmpty &&
           union.extendsStruct == null &&
+          union.name?.is_nv_extension() == false &&
+          union.name?.is_khr_extension() == false &&
+          union.name?.is_extension() == false)
+      .toList();
+
+  functionsPtrs = functionsPtrs
+      .where((union) =>
+          union.name != null &&
           union.name?.is_nv_extension() == false &&
           union.name?.is_khr_extension() == false &&
           union.name?.is_extension() == false)
@@ -316,6 +313,9 @@ ${enums.where((element) => element.name != null).map((entry) {
 
     return null;
   }).join("\n")}
+
+// Functions pointers
+${functionsPtrs.map((element) => "def ${element.name} = fn ${element.returnType} (${element.values.map((value) => value).join(", ")});").join("\n")}
 
 """);
 }
