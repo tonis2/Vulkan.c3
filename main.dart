@@ -127,14 +127,6 @@ class VKstruct {
         List<VkStructMember>.from(node.findAllElements('member').map((node) => VkStructMember.fromXML(node)));
     return VKstruct(returnedOnly: returned == "true", name: name, values: values, extendsStruct: extendsStruct);
   }
-
-  String build() {
-    return "struct $name {\n  ${values.map((value) {
-      bool formatType = platformTypes.keys.contains(value.type);
-      String? newName = replaceNames[value.name] ?? name;
-      return "${formatType ? formatTypeName(value.type ?? "") : value.type} ${newName?.camelCase()};";
-    }).join("\n  ")}\n}\n";
-  }
 }
 
 class VKenumValue {
@@ -142,14 +134,18 @@ class VKenumValue {
   String? name;
   String? value;
   String? type;
-  VKenumValue({required this.name, required this.value, required this.index, this.type});
+  String? deprecated;
+  String? alias;
+  VKenumValue({required this.name, required this.value, required this.index, this.type, this.deprecated, this.alias});
 
   static fromXML(XmlElement node) {
     String? index = node.getAttribute("index");
     String? name = node.getAttribute("name");
     String? value = node.getAttribute("value");
     String? type = node.getAttribute("type");
-    return VKenumValue(index: index, name: name, value: value, type: type);
+    String? deprecated = node.getAttribute("deprecated");
+    String? alias = node.getAttribute("alias");
+    return VKenumValue(index: index, name: name, value: value, type: type, deprecated: deprecated, alias: alias);
   }
 }
 
@@ -200,6 +196,18 @@ extension ParseMethods on String {
   String camelCase() {
     return '${this[0].toLowerCase()}${this.substring(1)}';
   }
+
+  bool is_nv_extension() {
+    return this.substring(this.length - 2) == "NV";
+  }
+
+  bool is_extension() {
+    return this.substring(this.length - 3) == "EXT";
+  }
+
+  bool is_khr_extension() {
+    return this.substring(this.length - 3) == "KHR";
+  }
 }
 
 void main() {
@@ -210,6 +218,7 @@ void main() {
   List<VKenum> enums = [];
   List<VKtype> baseTypes = [];
   List<VKtype> handles = [];
+  List<VKstruct> unions = [];
 
   document.findAllElements('type').forEach((XmlElement node) {
     String? category = node.getAttribute("category");
@@ -225,12 +234,38 @@ void main() {
     if (category == "handle") {
       handles.add(VKtype.fromXML(node));
     }
+    if (category == "union") {
+      unions.add(VKstruct.fromXML(node));
+    }
   });
 
   document.findAllElements('enums').forEach((XmlElement node) {
     enums.add(VKenum.fromXML(node));
   });
 
+  // Filter out some faulty and extension structs
+  structs = structs
+      .where((struct) =>
+          struct.name != null &&
+          struct.values.isNotEmpty &&
+          struct.extendsStruct == null &&
+          struct.name?.is_nv_extension() == false &&
+          struct.name?.is_khr_extension() == false &&
+          struct.name?.is_extension() == false)
+      .toList();
+
+  // Filter out some faulty and extension unions
+  unions = unions
+      .where((union) =>
+          union.name != null &&
+          union.values.isNotEmpty &&
+          union.extendsStruct == null &&
+          union.name?.is_nv_extension() == false &&
+          union.name?.is_khr_extension() == false &&
+          union.name?.is_extension() == false)
+      .toList();
+
+  // Write parsed data as C3 file
   var output = File('./build/vk.c3');
   output.writeAsStringSync("");
   output.writeAsStringSync("""
@@ -246,10 +281,24 @@ ${baseTypes.map((type) => "def ${type.name} = ${typeMap[type.type] ?? "void*"};"
 ${handles.where((element) => element.name != null).map((type) => "def ${type.name} = void*;").join("\n")}
 
 // Bitmasks
-${bitmasks.where((element) => element.name != null).map((type) => "def ${type.name} = ${typeMap[type.type] ?? type.type};").join("\n")}
+${bitmasks.where((mask) => mask.api != "vulkansc" && mask.name != null).map((type) => "def ${type.name} = ${typeMap[type.type] ?? type.type};").join("\n")}
 
 // Structs
-${structs.where((element) => element.name != null && element.values.isNotEmpty && element.extendsStruct == null).map((struct) => struct.build()).join("\n")}
+${structs.map((struct) {
+    return "struct ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
+      bool formatType = platformTypes.keys.contains(value.type);
+      String? newName = replaceNames[value.name] ?? value.name;
+      return "${formatType ? formatTypeName(value.type ?? "") : value.type} ${newName?.camelCase()};";
+    }).join("\n  ")}\n}\n";
+  }).join("\n")}
+
+// Unions
+${unions.map((struct) {
+    return "union ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
+      String? newName = replaceNames[value.name] ?? value.name;
+      return "${value.type} ${newName?.camelCase()};";
+    }).join("\n  ")}\n}\n";
+  }).join("\n")}
 
 // Enums
 ${enums.where((element) => element.name != null).map((entry) {
@@ -258,11 +307,11 @@ ${enums.where((element) => element.name != null).map((entry) {
     }
 
     if (entry.type == "enum") {
-      return "def ${entry.name} = distinct inline int;\n ${entry.values.map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
+      return "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
     }
 
     if (entry.name == "API Constants") {
-      return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "")};").join("\n")}";
+      return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}";
     }
 
     return null;
