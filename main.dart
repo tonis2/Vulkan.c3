@@ -240,106 +240,158 @@ void main() {
 
   final file = new File('assets/vk.xml');
   final document = XmlDocument.parse(file.readAsStringSync());
-  List<VKstruct> structs = [];
-  List<VKtype> bitmasks = [];
   List<VKenum> enums = [];
-  List<VKtype> baseTypes = [];
-  List<VKtype> handles = [];
-  List<VKstruct> unions = [];
-  List<VKfnPointer> functionsPtrs = [];
-  List<VKCommand> commands = [];
-
-  document.findAllElements('type').forEach((XmlElement node) {
-    String? category = node.getAttribute("category");
-    if (category == "bitmask") {
-      bitmasks.add(VKtype.fromXML(node));
-    }
-    if (category == "struct") {
-      structs.add(VKstruct.fromXML(node));
-    }
-    if (category == "basetype") {
-      baseTypes.add(VKtype.fromXML(node));
-    }
-    if (category == "handle") {
-      handles.add(VKtype.fromXML(node));
-    }
-    if (category == "union") {
-      unions.add(VKstruct.fromXML(node));
-    }
-    if (category == "funcpointer") {
-      functionsPtrs.add(VKfnPointer.fromXML(node));
-    }
-  });
 
   document.findAllElements('enums').forEach((XmlElement node) {
     enums.add(VKenum.fromXML(node));
   });
 
-  var commandList = document.findAllElements('commands').toList()[0];
-
-  commandList.findAllElements('command').forEach((XmlElement node) {
-    commands.add(VKCommand.fromXML(node));
-  });
-
-  // Filter out some faulty or extension structs
-  // structs = structs
-  //     .where((struct) =>
-  //         struct.name != null &&
-  //         struct.values.isNotEmpty &&
-  //         struct.extendsStruct == null &&
-  //         !filteredNames.contains(struct.name) &&
-  //         struct.name?.is_nv_extension() == false &&
-  //         struct.name?.is_khr_extension() == false &&
-  //         struct.name?.is_extension() == false)
-  //     .toList();
-
-  // Filter out some faulty or extension unions
-  // unions = unions
-  //     .where((union) =>
-  //         union.name != null &&
-  //         union.values.isNotEmpty &&
-  //         union.extendsStruct == null &&
-  //         union.name?.is_nv_extension() == false &&
-  //         union.name?.is_khr_extension() == false &&
-  //         union.name?.is_extension() == false)
-  //     .toList();
-
-  // functionsPtrs = functionsPtrs
-  //     .where((union) =>
-  //         union.name != null &&
-  //         union.name?.is_nv_extension() == false &&
-  //         union.name?.is_khr_extension() == false &&
-  //         union.name?.is_extension() == false)
-  //     .toList();
-
-  // commands = commands
-  //     .where((union) =>
-  //         union.name != null &&
-  //         union.name?.is_nv_extension() == false &&
-  //         union.name?.is_khr_extension() == false &&
-  //         union.name?.is_extension() == false)
-  //     .toList();
-
+  // Find features for set api version
   var features = document
       .findAllElements("feature")
       .where((element) => double.parse(element.getAttribute("number")!) <= API_VERSION);
+
   output.writeAsStringSync("");
   output.writeAsStringSync("module vk; \n", mode: FileMode.append);
+
+  // Plaform types
+  output.writeAsStringSync("// Platform types \n", mode: FileMode.append);
+  output.writeAsStringSync(
+      platformTypes.entries.map((value) => "def ${value.key.formatTypeName()} = ${value.value};").join("\n"),
+      mode: FileMode.append);
+  output.writeAsStringSync("\n", mode: FileMode.append);
+
   features.forEach((feature) {
     var requirements = feature.findAllElements("require");
     requirements.forEach((element) {
       String? name = element.getAttribute("comment");
 
-      // Write comment
       if (name != null && name != "Header boilerplate") {
-        output.writeAsStringSync("// $name \n", mode: FileMode.append);
+        // Write the api name
+        output.writeAsStringSync("\n// ${name.toUpperCase()} \n", mode: FileMode.append);
+
+        // Loop throught api required components
+        element.childElements.forEach((child) {
+          String nodeType = child.name.qualified;
+          String? name = child.getAttribute("name");
+          if (name == null || filteredNames.contains(name)) return;
+          if (nodeType == "type") {
+            // Find the Vulkan type in XML and parse it
+            XmlElement VkNode = document.findAllElements(nodeType).where((element) {
+              bool hasName = (element.getAttribute("name") == name) || (element.getElement("name")?.innerText == name);
+              return hasName && element.getAttribute("category") != null && element.getAttribute("api") != "vulkansc";
+            }).first;
+
+            // Write the actual C3 code
+
+            String category = VkNode.getAttribute("category")!;
+
+            if (category == "bitmask") {
+              VKtype value = VKtype.fromXML(VkNode);
+              output.writeAsStringSync("def ${value.name} = ${value.type};\n", mode: FileMode.append);
+            }
+
+            if (category == "handle") {
+              VKtype value = VKtype.fromXML(VkNode);
+              output.writeAsStringSync("def ${value.name} = void*;\n", mode: FileMode.append);
+            }
+
+            if (category == "basetype") {
+              VKtype value = VKtype.fromXML(VkNode);
+              output.writeAsStringSync("def ${value.name} = ${value.type};\n", mode: FileMode.append);
+            }
+
+            if (category == "union") {
+              VKstruct value = VKstruct.fromXML(VkNode);
+              String code =
+                  "union ${value.name} {\n  ${value.values.where((struct) => struct.api != "vulkansc").map((value) {
+                String? newName = replaceNames[value.name] ?? value.name;
+                return "${value.type} ${newName?.camelCase()};";
+              }).join("\n  ")}\n}\n";
+
+              output.writeAsStringSync(code, mode: FileMode.append);
+            }
+
+            if (category == "struct") {
+              VKstruct value = VKstruct.fromXML(VkNode);
+              String code =
+                  "struct ${value.name} {\n  ${value.values.where((struct) => struct.api != "vulkansc").map((value) {
+                String? newName = replaceNames[value.name] ?? value.name;
+                return "${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${newName?.camelCase()};";
+              }).join("\n  ")}\n}\n";
+              output.writeAsStringSync(code, mode: FileMode.append);
+            }
+
+            if (category == "funcpointer") {
+              VKfnPointer value = VKfnPointer.fromXML(VkNode);
+              String code =
+                  "def ${value.name} = fn ${value.returnType} (${value.values.map((value) => value).join(", ")});";
+              output.writeAsStringSync(code, mode: FileMode.append);
+            }
+          }
+
+          // if (nodeType == "enum") {
+          //   XmlElement VkNode =
+          //       document.findAllElements(nodeType).where((element) => element.getAttribute("name") == name).first;
+
+          //   VKenum value = VKenum.fromXML(VkNode);
+
+          //   print(value.type);
+
+          //   if (value.type == "bitmask") {
+          //     output.writeAsStringSync("def ${value.name} = int;", mode: FileMode.append);
+          //   }
+
+          //   if (value.type == "enum") {
+          //     String code =
+          //         "\ndef ${value.name} = distinct inline int;\n${value.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${value.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
+          //     output.writeAsStringSync(code, mode: FileMode.append);
+          //   }
+
+          //   if (value.type == "API Constants") {
+          //     output.writeAsStringSync(
+          //         "${value.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}",
+          //         mode: FileMode.append);
+          //   }
+          // }
+
+          if (nodeType == "command") {
+            XmlElement VkNode = document
+                .findAllElements(nodeType)
+                .where((element) => element.getElement("proto")?.getElement("name")?.innerText == name)
+                .first;
+            VKCommand value = VKCommand.fromXML(VkNode);
+            String code =
+                "extern fn ${value.returnType} ${value.name?.substring(2).camelCase().replaceAll("_", "")} (${value.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) @extern(\"${value.name}\");\n";
+            output.writeAsStringSync(code, mode: FileMode.append);
+          }
+        });
       }
     });
   });
 
-  // Write parsed data as C3 file
+//  Enums
+  enums.where((element) => element.name != null).forEach((entry) {
+    if (entry.type == "bitmask") {
+      output.writeAsStringSync("def ${entry.name} = int;\n", mode: FileMode.append);
+    }
+
+    if (entry.type == "enum") {
+      String code =
+          "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}\n";
+      output.writeAsStringSync(code, mode: FileMode.append);
+    }
+
+    if (entry.name == "API Constants") {
+      String code =
+          "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}\n";
+      output.writeAsStringSync(code, mode: FileMode.append);
+    }
+  });
 }
-// // Platform type 
+
+  // Write parsed data as C3 file
+// Platform type 
 // ${platformTypes.entries.map((value) => "def ${value.key.formatTypeName()} = ${value.value};").join("\n")}
 
 // // Base types
@@ -362,28 +414,13 @@ void main() {
 
 // // Unions
 // ${unions.map((struct) {
-//     return "union ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
-//       String? newName = replaceNames[value.name] ?? value.name;
-//       return "${value.type} ${newName?.camelCase()};";
-//     }).join("\n  ")}\n}\n";
+    // return "union ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
+    //   String? newName = replaceNames[value.name] ?? value.name;
+    //   return "${value.type} ${newName?.camelCase()};";
+    // }).join("\n  ")}\n}\n";
 //   }).join("\n")}
 
-// // Enums
-// ${enums.where((element) => element.name != null).map((entry) {
-//     if (entry.type == "bitmask") {
-//       return "def ${entry.name} = int;";
-//     }
 
-//     if (entry.type == "enum") {
-//       return "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
-//     }
-
-//     if (entry.name == "API Constants") {
-//       return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}";
-//     }
-
-//     return null;
-//   }).join("\n")}
 
 // // Functions pointers
 // ${functionsPtrs.map((element) => "def ${element.name} = fn ${element.returnType} (${element.values.map((value) => value).join(", ")});").join("\n")}
