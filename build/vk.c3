@@ -1531,7 +1531,9 @@ const VkPipelineBindPoint VK_PIPELINE_BIND_POINT_COMPUTE = 1;
 
 def VkPipelineCacheHeaderVersion = distinct inline int;
 const VkPipelineCacheHeaderVersion VK_PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
-def VkPipelineCacheCreateFlagBits = int;
+
+def VkPipelineCacheCreateFlagBits = distinct inline int;
+
 
 def VkPrimitiveTopology = distinct inline int;
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_POINT_LIST = 0;
@@ -1976,47 +1978,237 @@ const VkRayTracingInvocationReorderModeNV VK_RAY_TRACING_INVOCATION_REORDER_MODE
 def VkDirectDriverLoadingModeLUNARG = distinct inline int;
 const VkDirectDriverLoadingModeLUNARG VK_DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG = 0;
 const VkDirectDriverLoadingModeLUNARG VK_DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG = 1;
-def VkQueueFlagBits = int;
-def VkCullModeFlagBits = int;
-def VkRenderPassCreateFlagBits = int;
-def VkDeviceQueueCreateFlagBits = int;
-def VkMemoryPropertyFlagBits = int;
-def VkMemoryHeapFlagBits = int;
-def VkAccessFlagBits = int;
-def VkBufferUsageFlagBits = int;
-def VkBufferCreateFlagBits = int;
-def VkShaderStageFlagBits = int;
-def VkImageUsageFlagBits = int;
-def VkImageCreateFlagBits = int;
-def VkImageViewCreateFlagBits = int;
-def VkSamplerCreateFlagBits = int;
-def VkPipelineCreateFlagBits = int;
-def VkPipelineShaderStageCreateFlagBits = int;
-def VkColorComponentFlagBits = int;
-def VkFenceCreateFlagBits = int;
-def VkSemaphoreCreateFlagBits = int;
-def VkFormatFeatureFlagBits = int;
-def VkQueryControlFlagBits = int;
-def VkQueryResultFlagBits = int;
-def VkCommandBufferUsageFlagBits = int;
-def VkQueryPipelineStatisticFlagBits = int;
-def VkImageAspectFlagBits = int;
-def VkSparseImageFormatFlagBits = int;
-def VkSparseMemoryBindFlagBits = int;
-def VkPipelineStageFlagBits = int;
-def VkCommandPoolCreateFlagBits = int;
-def VkCommandPoolResetFlagBits = int;
-def VkCommandBufferResetFlagBits = int;
-def VkSampleCountFlagBits = int;
-def VkAttachmentDescriptionFlagBits = int;
-def VkStencilFaceFlagBits = int;
-def VkDescriptorPoolCreateFlagBits = int;
-def VkDependencyFlagBits = int;
+
+def VkQueueFlagBits = distinct inline int;
+const VkQueueFlagBits VK_QUEUE_GRAPHICS_BIT = null;
+const VkQueueFlagBits VK_QUEUE_COMPUTE_BIT = null;
+const VkQueueFlagBits VK_QUEUE_TRANSFER_BIT = null;
+const VkQueueFlagBits VK_QUEUE_SPARSE_BINDING_BIT = null;
+
+def VkCullModeFlagBits = distinct inline int;
+const VkCullModeFlagBits VK_CULL_MODE_NONE = 0;
+const VkCullModeFlagBits VK_CULL_MODE_FRONT_BIT = null;
+const VkCullModeFlagBits VK_CULL_MODE_BACK_BIT = null;
+const VkCullModeFlagBits VK_CULL_MODE_FRONT_AND_BACK = 0x00000003;
+
+def VkRenderPassCreateFlagBits = distinct inline int;
+
+
+def VkDeviceQueueCreateFlagBits = distinct inline int;
+
+
+def VkMemoryPropertyFlagBits = distinct inline int;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = null;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = null;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = null;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_CACHED_BIT = null;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = null;
+
+def VkMemoryHeapFlagBits = distinct inline int;
+const VkMemoryHeapFlagBits VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = null;
+
+def VkAccessFlagBits = distinct inline int;
+const VkAccessFlagBits VK_ACCESS_INDIRECT_COMMAND_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_INDEX_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_UNIFORM_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_SHADER_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_SHADER_WRITE_BIT = null;
+const VkAccessFlagBits VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = null;
+const VkAccessFlagBits VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = null;
+const VkAccessFlagBits VK_ACCESS_TRANSFER_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_TRANSFER_WRITE_BIT = null;
+const VkAccessFlagBits VK_ACCESS_HOST_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_HOST_WRITE_BIT = null;
+const VkAccessFlagBits VK_ACCESS_MEMORY_READ_BIT = null;
+const VkAccessFlagBits VK_ACCESS_MEMORY_WRITE_BIT = null;
+
+def VkBufferUsageFlagBits = distinct inline int;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_TRANSFER_SRC_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_TRANSFER_DST_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDEX_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = null;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = null;
+
+def VkBufferCreateFlagBits = distinct inline int;
+const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_BINDING_BIT = null;
+const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = null;
+const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = null;
+
+def VkShaderStageFlagBits = distinct inline int;
+const VkShaderStageFlagBits VK_SHADER_STAGE_VERTEX_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_GEOMETRY_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_FRAGMENT_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_COMPUTE_BIT = null;
+const VkShaderStageFlagBits VK_SHADER_STAGE_ALL_GRAPHICS = 0x0000001F;
+const VkShaderStageFlagBits VK_SHADER_STAGE_ALL = 0x7FFFFFFF;
+
+def VkImageUsageFlagBits = distinct inline int;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSFER_SRC_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSFER_DST_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_SAMPLED_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_STORAGE_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = null;
+const VkImageUsageFlagBits VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = null;
+
+def VkImageCreateFlagBits = distinct inline int;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_BINDING_BIT = null;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = null;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = null;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = null;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = null;
+
+def VkImageViewCreateFlagBits = distinct inline int;
+
+
+def VkSamplerCreateFlagBits = distinct inline int;
+
+
+def VkPipelineCreateFlagBits = distinct inline int;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = null;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = null;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DERIVATIVE_BIT = null;
+
+def VkPipelineShaderStageCreateFlagBits = distinct inline int;
+
+
+def VkColorComponentFlagBits = distinct inline int;
+const VkColorComponentFlagBits VK_COLOR_COMPONENT_R_BIT = null;
+const VkColorComponentFlagBits VK_COLOR_COMPONENT_G_BIT = null;
+const VkColorComponentFlagBits VK_COLOR_COMPONENT_B_BIT = null;
+const VkColorComponentFlagBits VK_COLOR_COMPONENT_A_BIT = null;
+
+def VkFenceCreateFlagBits = distinct inline int;
+const VkFenceCreateFlagBits VK_FENCE_CREATE_SIGNALED_BIT = null;
+
+def VkSemaphoreCreateFlagBits = distinct inline int;
+
+
+def VkFormatFeatureFlagBits = distinct inline int;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_SRC_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_DST_BIT = null;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = null;
+
+def VkQueryControlFlagBits = distinct inline int;
+const VkQueryControlFlagBits VK_QUERY_CONTROL_PRECISE_BIT = null;
+
+def VkQueryResultFlagBits = distinct inline int;
+const VkQueryResultFlagBits VK_QUERY_RESULT_64_BIT = null;
+const VkQueryResultFlagBits VK_QUERY_RESULT_WAIT_BIT = null;
+const VkQueryResultFlagBits VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = null;
+const VkQueryResultFlagBits VK_QUERY_RESULT_PARTIAL_BIT = null;
+
+def VkCommandBufferUsageFlagBits = distinct inline int;
+const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = null;
+const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = null;
+const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = null;
+
+def VkQueryPipelineStatisticFlagBits = distinct inline int;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = null;
+const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = null;
+
+def VkImageAspectFlagBits = distinct inline int;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_COLOR_BIT = null;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_DEPTH_BIT = null;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_STENCIL_BIT = null;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_METADATA_BIT = null;
+
+def VkSparseImageFormatFlagBits = distinct inline int;
+const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = null;
+const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = null;
+const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = null;
+
+def VkSparseMemoryBindFlagBits = distinct inline int;
+const VkSparseMemoryBindFlagBits VK_SPARSE_MEMORY_BIND_METADATA_BIT = null;
+
+def VkPipelineStageFlagBits = distinct inline int;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_TRANSFER_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_HOST_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = null;
+const VkPipelineStageFlagBits VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = null;
+
+def VkCommandPoolCreateFlagBits = distinct inline int;
+const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = null;
+const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = null;
+
+def VkCommandPoolResetFlagBits = distinct inline int;
+const VkCommandPoolResetFlagBits VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = null;
+
+def VkCommandBufferResetFlagBits = distinct inline int;
+const VkCommandBufferResetFlagBits VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = null;
+
+def VkSampleCountFlagBits = distinct inline int;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_1_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_2_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_4_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_8_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_16_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_32_BIT = null;
+const VkSampleCountFlagBits VK_SAMPLE_COUNT_64_BIT = null;
+
+def VkAttachmentDescriptionFlagBits = distinct inline int;
+const VkAttachmentDescriptionFlagBits VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = null;
+
+def VkStencilFaceFlagBits = distinct inline int;
+const VkStencilFaceFlagBits VK_STENCIL_FACE_FRONT_BIT = null;
+const VkStencilFaceFlagBits VK_STENCIL_FACE_BACK_BIT = null;
+const VkStencilFaceFlagBits VK_STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
+
+def VkDescriptorPoolCreateFlagBits = distinct inline int;
+const VkDescriptorPoolCreateFlagBits VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = null;
+
+def VkDependencyFlagBits = distinct inline int;
+const VkDependencyFlagBits VK_DEPENDENCY_BY_REGION_BIT = null;
 
 def VkSemaphoreType = distinct inline int;
 const VkSemaphoreType VK_SEMAPHORE_TYPE_BINARY = 0;
 const VkSemaphoreType VK_SEMAPHORE_TYPE_TIMELINE = 1;
-def VkSemaphoreWaitFlagBits = int;
+
+def VkSemaphoreWaitFlagBits = distinct inline int;
+const VkSemaphoreWaitFlagBits VK_SEMAPHORE_WAIT_ANY_BIT = null;
 
 def VkPresentModeKHR = distinct inline int;
 const VkPresentModeKHR VK_PRESENT_MODE_IMMEDIATE_KHR = 0;
@@ -2026,17 +2218,45 @@ const VkPresentModeKHR VK_PRESENT_MODE_FIFO_RELAXED_KHR = 3;
 
 def VkColorSpaceKHR = distinct inline int;
 const VkColorSpaceKHR VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
-def VkDisplayPlaneAlphaFlagBitsKHR = int;
-def VkCompositeAlphaFlagBitsKHR = int;
-def VkSurfaceTransformFlagBitsKHR = int;
-def VkSwapchainImageUsageFlagBitsANDROID = int;
+
+def VkDisplayPlaneAlphaFlagBitsKHR = distinct inline int;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = null;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = null;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = null;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = null;
+
+def VkCompositeAlphaFlagBitsKHR = distinct inline int;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = null;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = null;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = null;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = null;
+
+def VkSurfaceTransformFlagBitsKHR = distinct inline int;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = null;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = null;
+
+def VkSwapchainImageUsageFlagBitsANDROID = distinct inline int;
+const VkSwapchainImageUsageFlagBitsANDROID VK_SWAPCHAIN_IMAGE_USAGE_SHARED_BIT_ANDROID = null;
 
 def VkTimeDomainEXT = distinct inline int;
 const VkTimeDomainEXT VK_TIME_DOMAIN_DEVICE_EXT = 0;
 const VkTimeDomainEXT VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT = 1;
 const VkTimeDomainEXT VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = 2;
 const VkTimeDomainEXT VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = 3;
-def VkDebugReportFlagBitsEXT = int;
+
+def VkDebugReportFlagBitsEXT = distinct inline int;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_INFORMATION_BIT_EXT = null;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_WARNING_BIT_EXT = null;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = null;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_ERROR_BIT_EXT = null;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_DEBUG_BIT_EXT = null;
 
 def VkDebugReportObjectTypeEXT = distinct inline int;
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
@@ -2082,8 +2302,17 @@ const VkDeviceMemoryReportEventTypeEXT VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCA
 def VkRasterizationOrderAMD = distinct inline int;
 const VkRasterizationOrderAMD VK_RASTERIZATION_ORDER_STRICT_AMD = 0;
 const VkRasterizationOrderAMD VK_RASTERIZATION_ORDER_RELAXED_AMD = 1;
-def VkExternalMemoryHandleTypeFlagBitsNV = int;
-def VkExternalMemoryFeatureFlagBitsNV = int;
+
+def VkExternalMemoryHandleTypeFlagBitsNV = distinct inline int;
+const VkExternalMemoryHandleTypeFlagBitsNV VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = null;
+const VkExternalMemoryHandleTypeFlagBitsNV VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = null;
+const VkExternalMemoryHandleTypeFlagBitsNV VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = null;
+const VkExternalMemoryHandleTypeFlagBitsNV VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = null;
+
+def VkExternalMemoryFeatureFlagBitsNV = distinct inline int;
+const VkExternalMemoryFeatureFlagBitsNV VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = null;
+const VkExternalMemoryFeatureFlagBitsNV VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = null;
+const VkExternalMemoryFeatureFlagBitsNV VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = null;
 
 def VkValidationCheckEXT = distinct inline int;
 const VkValidationCheckEXT VK_VALIDATION_CHECK_ALL_EXT = 0;
@@ -2105,9 +2334,24 @@ const VkValidationFeatureDisableEXT VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIM
 const VkValidationFeatureDisableEXT VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = 5;
 const VkValidationFeatureDisableEXT VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = 6;
 const VkValidationFeatureDisableEXT VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT = 7;
-def VkSubgroupFeatureFlagBits = int;
-def VkIndirectCommandsLayoutUsageFlagBitsNV = int;
-def VkIndirectStateFlagBitsNV = int;
+
+def VkSubgroupFeatureFlagBits = distinct inline int;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_BASIC_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_VOTE_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_ARITHMETIC_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_BALLOT_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_SHUFFLE_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_CLUSTERED_BIT = null;
+const VkSubgroupFeatureFlagBits VK_SUBGROUP_FEATURE_QUAD_BIT = null;
+
+def VkIndirectCommandsLayoutUsageFlagBitsNV = distinct inline int;
+const VkIndirectCommandsLayoutUsageFlagBitsNV VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = null;
+const VkIndirectCommandsLayoutUsageFlagBitsNV VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = null;
+const VkIndirectCommandsLayoutUsageFlagBitsNV VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV = null;
+
+def VkIndirectStateFlagBitsNV = distinct inline int;
+const VkIndirectStateFlagBitsNV VK_INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV = null;
 
 def VkIndirectCommandsTokenTypeNV = distinct inline int;
 const VkIndirectCommandsTokenTypeNV VK_INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV = 0;
@@ -2118,17 +2362,56 @@ const VkIndirectCommandsTokenTypeNV VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTAN
 const VkIndirectCommandsTokenTypeNV VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV = 5;
 const VkIndirectCommandsTokenTypeNV VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV = 6;
 const VkIndirectCommandsTokenTypeNV VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = 7;
-def VkPrivateDataSlotCreateFlagBits = int;
-def VkDescriptorSetLayoutCreateFlagBits = int;
-def VkExternalMemoryHandleTypeFlagBits = int;
-def VkExternalMemoryFeatureFlagBits = int;
-def VkExternalSemaphoreHandleTypeFlagBits = int;
-def VkExternalSemaphoreFeatureFlagBits = int;
-def VkSemaphoreImportFlagBits = int;
-def VkExternalFenceHandleTypeFlagBits = int;
-def VkExternalFenceFeatureFlagBits = int;
-def VkFenceImportFlagBits = int;
-def VkSurfaceCounterFlagBitsEXT = int;
+
+def VkPrivateDataSlotCreateFlagBits = distinct inline int;
+
+
+def VkDescriptorSetLayoutCreateFlagBits = distinct inline int;
+
+
+def VkExternalMemoryHandleTypeFlagBits = distinct inline int;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = null;
+const VkExternalMemoryHandleTypeFlagBits VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = null;
+
+def VkExternalMemoryFeatureFlagBits = distinct inline int;
+const VkExternalMemoryFeatureFlagBits VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = null;
+const VkExternalMemoryFeatureFlagBits VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = null;
+const VkExternalMemoryFeatureFlagBits VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = null;
+
+def VkExternalSemaphoreHandleTypeFlagBits = distinct inline int;
+const VkExternalSemaphoreHandleTypeFlagBits VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = null;
+const VkExternalSemaphoreHandleTypeFlagBits VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = null;
+const VkExternalSemaphoreHandleTypeFlagBits VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = null;
+const VkExternalSemaphoreHandleTypeFlagBits VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = null;
+const VkExternalSemaphoreHandleTypeFlagBits VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = null;
+
+def VkExternalSemaphoreFeatureFlagBits = distinct inline int;
+const VkExternalSemaphoreFeatureFlagBits VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = null;
+const VkExternalSemaphoreFeatureFlagBits VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = null;
+
+def VkSemaphoreImportFlagBits = distinct inline int;
+const VkSemaphoreImportFlagBits VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = null;
+
+def VkExternalFenceHandleTypeFlagBits = distinct inline int;
+const VkExternalFenceHandleTypeFlagBits VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = null;
+const VkExternalFenceHandleTypeFlagBits VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = null;
+const VkExternalFenceHandleTypeFlagBits VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = null;
+const VkExternalFenceHandleTypeFlagBits VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = null;
+
+def VkExternalFenceFeatureFlagBits = distinct inline int;
+const VkExternalFenceFeatureFlagBits VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = null;
+const VkExternalFenceFeatureFlagBits VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = null;
+
+def VkFenceImportFlagBits = distinct inline int;
+const VkFenceImportFlagBits VK_FENCE_IMPORT_TEMPORARY_BIT = null;
+
+def VkSurfaceCounterFlagBitsEXT = distinct inline int;
+const VkSurfaceCounterFlagBitsEXT VK_SURFACE_COUNTER_VBLANK_BIT_EXT = null;
 
 def VkDisplayPowerStateEXT = distinct inline int;
 const VkDisplayPowerStateEXT VK_DISPLAY_POWER_STATE_OFF_EXT = 0;
@@ -2140,10 +2423,24 @@ const VkDeviceEventTypeEXT VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = 0;
 
 def VkDisplayEventTypeEXT = distinct inline int;
 const VkDisplayEventTypeEXT VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = 0;
-def VkPeerMemoryFeatureFlagBits = int;
-def VkMemoryAllocateFlagBits = int;
-def VkDeviceGroupPresentModeFlagBitsKHR = int;
-def VkSwapchainCreateFlagBitsKHR = int;
+
+def VkPeerMemoryFeatureFlagBits = distinct inline int;
+const VkPeerMemoryFeatureFlagBits VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT = null;
+const VkPeerMemoryFeatureFlagBits VK_PEER_MEMORY_FEATURE_COPY_DST_BIT = null;
+const VkPeerMemoryFeatureFlagBits VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = null;
+const VkPeerMemoryFeatureFlagBits VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT = null;
+
+def VkMemoryAllocateFlagBits = distinct inline int;
+const VkMemoryAllocateFlagBits VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = null;
+
+def VkDeviceGroupPresentModeFlagBitsKHR = distinct inline int;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = null;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = null;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = null;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = null;
+
+def VkSwapchainCreateFlagBitsKHR = distinct inline int;
+
 
 def VkViewportCoordinateSwizzleNV = distinct inline int;
 const VkViewportCoordinateSwizzleNV VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = 0;
@@ -2158,7 +2455,9 @@ const VkViewportCoordinateSwizzleNV VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
 def VkDiscardRectangleModeEXT = distinct inline int;
 const VkDiscardRectangleModeEXT VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = 0;
 const VkDiscardRectangleModeEXT VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = 1;
-def VkSubpassDescriptionFlagBits = int;
+
+def VkSubpassDescriptionFlagBits = distinct inline int;
+
 
 def VkPointClippingBehavior = distinct inline int;
 const VkPointClippingBehavior VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = 0;
@@ -2216,14 +2515,28 @@ const VkQueueGlobalPriorityKHR VK_QUEUE_GLOBAL_PRIORITY_LOW_KHR = 128;
 const VkQueueGlobalPriorityKHR VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR = 256;
 const VkQueueGlobalPriorityKHR VK_QUEUE_GLOBAL_PRIORITY_HIGH_KHR = 512;
 const VkQueueGlobalPriorityKHR VK_QUEUE_GLOBAL_PRIORITY_REALTIME_KHR = 1024;
-def VkDebugUtilsMessageSeverityFlagBitsEXT = int;
-def VkDebugUtilsMessageTypeFlagBitsEXT = int;
+
+def VkDebugUtilsMessageSeverityFlagBitsEXT = distinct inline int;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = null;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = null;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = null;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = null;
+
+def VkDebugUtilsMessageTypeFlagBitsEXT = distinct inline int;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = null;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = null;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = null;
 
 def VkConservativeRasterizationModeEXT = distinct inline int;
 const VkConservativeRasterizationModeEXT VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = 0;
 const VkConservativeRasterizationModeEXT VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = 1;
 const VkConservativeRasterizationModeEXT VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = 2;
-def VkDescriptorBindingFlagBits = int;
+
+def VkDescriptorBindingFlagBits = distinct inline int;
+const VkDescriptorBindingFlagBits VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = null;
+const VkDescriptorBindingFlagBits VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = null;
+const VkDescriptorBindingFlagBits VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = null;
+const VkDescriptorBindingFlagBits VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = null;
 
 def VkVendorId = distinct inline int;
 const VkVendorId VK_VENDOR_ID_VIV = 0x10001;
@@ -2260,8 +2573,16 @@ const VkDriverId VK_DRIVER_ID_MESA_VENUS = 22;
 const VkDriverId VK_DRIVER_ID_MESA_DOZEN = 23;
 const VkDriverId VK_DRIVER_ID_MESA_NVK = 24;
 const VkDriverId VK_DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = 25;
-def VkConditionalRenderingFlagBitsEXT = int;
-def VkResolveModeFlagBits = int;
+
+def VkConditionalRenderingFlagBitsEXT = distinct inline int;
+const VkConditionalRenderingFlagBitsEXT VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT = null;
+
+def VkResolveModeFlagBits = distinct inline int;
+const VkResolveModeFlagBits VK_RESOLVE_MODE_NONE = 0;
+const VkResolveModeFlagBits VK_RESOLVE_MODE_SAMPLE_ZERO_BIT = null;
+const VkResolveModeFlagBits VK_RESOLVE_MODE_AVERAGE_BIT = null;
+const VkResolveModeFlagBits VK_RESOLVE_MODE_MIN_BIT = null;
+const VkResolveModeFlagBits VK_RESOLVE_MODE_MAX_BIT = null;
 
 def VkShadingRatePaletteEntryNV = distinct inline int;
 const VkShadingRatePaletteEntryNV VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = 0;
@@ -2282,10 +2603,26 @@ const VkCoarseSampleOrderTypeNV VK_COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = 0;
 const VkCoarseSampleOrderTypeNV VK_COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = 1;
 const VkCoarseSampleOrderTypeNV VK_COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = 2;
 const VkCoarseSampleOrderTypeNV VK_COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = 3;
-def VkGeometryInstanceFlagBitsKHR = int;
-def VkGeometryFlagBitsKHR = int;
-def VkBuildAccelerationStructureFlagBitsKHR = int;
-def VkAccelerationStructureCreateFlagBitsKHR = int;
+
+def VkGeometryInstanceFlagBitsKHR = distinct inline int;
+const VkGeometryInstanceFlagBitsKHR VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = null;
+const VkGeometryInstanceFlagBitsKHR VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR = null;
+const VkGeometryInstanceFlagBitsKHR VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = null;
+const VkGeometryInstanceFlagBitsKHR VK_GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = null;
+
+def VkGeometryFlagBitsKHR = distinct inline int;
+const VkGeometryFlagBitsKHR VK_GEOMETRY_OPAQUE_BIT_KHR = null;
+const VkGeometryFlagBitsKHR VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR = null;
+
+def VkBuildAccelerationStructureFlagBitsKHR = distinct inline int;
+const VkBuildAccelerationStructureFlagBitsKHR VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = null;
+const VkBuildAccelerationStructureFlagBitsKHR VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR = null;
+const VkBuildAccelerationStructureFlagBitsKHR VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = null;
+const VkBuildAccelerationStructureFlagBitsKHR VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = null;
+const VkBuildAccelerationStructureFlagBitsKHR VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = null;
+
+def VkAccelerationStructureCreateFlagBitsKHR = distinct inline int;
+const VkAccelerationStructureCreateFlagBitsKHR VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = null;
 
 def VkCopyAccelerationStructureModeKHR = distinct inline int;
 const VkCopyAccelerationStructureModeKHR VK_COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR = 0;
@@ -2336,7 +2673,9 @@ def VkMemoryOverallocationBehaviorAMD = distinct inline int;
 const VkMemoryOverallocationBehaviorAMD VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = 0;
 const VkMemoryOverallocationBehaviorAMD VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = 1;
 const VkMemoryOverallocationBehaviorAMD VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = 2;
-def VkFramebufferCreateFlagBits = int;
+
+def VkFramebufferCreateFlagBits = distinct inline int;
+
 
 def VkScopeNV = distinct inline int;
 const VkScopeNV VK_SCOPE_DEVICE_NV = 1;
@@ -2356,8 +2695,17 @@ const VkComponentTypeNV VK_COMPONENT_TYPE_UINT8_NV = 7;
 const VkComponentTypeNV VK_COMPONENT_TYPE_UINT16_NV = 8;
 const VkComponentTypeNV VK_COMPONENT_TYPE_UINT32_NV = 9;
 const VkComponentTypeNV VK_COMPONENT_TYPE_UINT64_NV = 10;
-def VkDeviceDiagnosticsConfigFlagBitsNV = int;
-def VkPipelineCreationFeedbackFlagBits = int;
+
+def VkDeviceDiagnosticsConfigFlagBitsNV = distinct inline int;
+const VkDeviceDiagnosticsConfigFlagBitsNV VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = null;
+const VkDeviceDiagnosticsConfigFlagBitsNV VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = null;
+const VkDeviceDiagnosticsConfigFlagBitsNV VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = null;
+const VkDeviceDiagnosticsConfigFlagBitsNV VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = null;
+
+def VkPipelineCreationFeedbackFlagBits = distinct inline int;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT = null;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = null;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = null;
 
 def VkFullScreenExclusiveEXT = distinct inline int;
 const VkFullScreenExclusiveEXT VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = 0;
@@ -2369,7 +2717,9 @@ def VkPerformanceCounterScopeKHR = distinct inline int;
 const VkPerformanceCounterScopeKHR VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = 0;
 const VkPerformanceCounterScopeKHR VK_PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = 1;
 const VkPerformanceCounterScopeKHR VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = 2;
-def VkMemoryDecompressionMethodFlagBitsNV = int;
+
+def VkMemoryDecompressionMethodFlagBitsNV = distinct inline int;
+const VkMemoryDecompressionMethodFlagBitsNV VK_MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV = null;
 
 def VkPerformanceCounterUnitKHR = distinct inline int;
 const VkPerformanceCounterUnitKHR VK_PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = 0;
@@ -2391,10 +2741,19 @@ const VkPerformanceCounterStorageKHR VK_PERFORMANCE_COUNTER_STORAGE_UINT32_KHR =
 const VkPerformanceCounterStorageKHR VK_PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = 3;
 const VkPerformanceCounterStorageKHR VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = 4;
 const VkPerformanceCounterStorageKHR VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = 5;
-def VkPerformanceCounterDescriptionFlagBitsKHR = int;
-def VkAcquireProfilingLockFlagBitsKHR = int;
-def VkShaderCorePropertiesFlagBitsAMD = int;
-def VkRefreshObjectFlagBitsKHR = int;
+
+def VkPerformanceCounterDescriptionFlagBitsKHR = distinct inline int;
+const VkPerformanceCounterDescriptionFlagBitsKHR VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = null;
+const VkPerformanceCounterDescriptionFlagBitsKHR VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = null;
+
+def VkAcquireProfilingLockFlagBitsKHR = distinct inline int;
+
+
+def VkShaderCorePropertiesFlagBitsAMD = distinct inline int;
+
+
+def VkRefreshObjectFlagBitsKHR = distinct inline int;
+
 
 def VkPerformanceConfigurationTypeINTEL = distinct inline int;
 const VkPerformanceConfigurationTypeINTEL VK_PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL = 0;
@@ -2433,8 +2792,12 @@ const VkLineRasterizationModeEXT VK_LINE_RASTERIZATION_MODE_DEFAULT_EXT = 0;
 const VkLineRasterizationModeEXT VK_LINE_RASTERIZATION_MODE_RECTANGULAR_EXT = 1;
 const VkLineRasterizationModeEXT VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT = 2;
 const VkLineRasterizationModeEXT VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = 3;
-def VkShaderModuleCreateFlagBits = int;
-def VkPipelineCompilerControlFlagBitsAMD = int;
+
+def VkShaderModuleCreateFlagBits = distinct inline int;
+
+
+def VkPipelineCompilerControlFlagBitsAMD = distinct inline int;
+
 
 def VkFaultLevel = distinct inline int;
 const VkFaultLevel VK_FAULT_LEVEL_UNASSIGNED = 0;
@@ -2453,7 +2816,13 @@ const VkFaultType VK_FAULT_TYPE_INVALID_API_USAGE = 6;
 
 def VkFaultQueryBehavior = distinct inline int;
 const VkFaultQueryBehavior VK_FAULT_QUERY_BEHAVIOR_GET_AND_CLEAR_ALL_FAULTS = 0;
-def VkToolPurposeFlagBits = int;
+
+def VkToolPurposeFlagBits = distinct inline int;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_VALIDATION_BIT = null;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_PROFILING_BIT = null;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_TRACING_BIT = null;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = null;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_MODIFYING_FEATURES_BIT = null;
 
 def VkPipelineMatchControl = distinct inline int;
 const VkPipelineMatchControl VK_PIPELINE_MATCH_CONTROL_APPLICATION_UUID_EXACT_MATCH = 0;
@@ -2498,11 +2867,65 @@ const VkSubpassMergeStatusEXT VK_SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_C
 const VkSubpassMergeStatusEXT VK_SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT = 11;
 const VkSubpassMergeStatusEXT VK_SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT = 12;
 const VkSubpassMergeStatusEXT VK_SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT = 13;
-def VkAccessFlagBits2 = int;
-def VkPipelineStageFlagBits2 = int;
-def VkSubmitFlagBits = int;
-def VkEventCreateFlagBits = int;
-def VkPipelineLayoutCreateFlagBits = int;
+
+def VkAccessFlagBits2 = distinct inline int;
+const VkAccessFlagBits2 VK_ACCESS_2_NONE = 0;
+const VkAccessFlagBits2 VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_INDEX_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_UNIFORM_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_TRANSFER_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_TRANSFER_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_HOST_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_HOST_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_MEMORY_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_MEMORY_WRITE_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_SAMPLED_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_STORAGE_READ_BIT = null;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT = null;
+
+def VkPipelineStageFlagBits2 = distinct inline int;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_NONE = 0;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_HOST_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COPY_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_RESOLVE_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_BLIT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_CLEAR_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = null;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = null;
+
+def VkSubmitFlagBits = distinct inline int;
+const VkSubmitFlagBits VK_SUBMIT_PROTECTED_BIT = null;
+
+def VkEventCreateFlagBits = distinct inline int;
+
+
+def VkPipelineLayoutCreateFlagBits = distinct inline int;
+
 
 def VkSciSyncClientTypeNV = distinct inline int;
 const VkSciSyncClientTypeNV VK_SCI_SYNC_CLIENT_TYPE_SIGNALER_NV = 0;
@@ -2524,32 +2947,94 @@ def VkAccelerationStructureMotionInstanceTypeNV = distinct inline int;
 const VkAccelerationStructureMotionInstanceTypeNV VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV = 0;
 const VkAccelerationStructureMotionInstanceTypeNV VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV = 1;
 const VkAccelerationStructureMotionInstanceTypeNV VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV = 2;
-def VkPipelineColorBlendStateCreateFlagBits = int;
-def VkPipelineDepthStencilStateCreateFlagBits = int;
-def VkGraphicsPipelineLibraryFlagBitsEXT = int;
-def VkDeviceAddressBindingFlagBitsEXT = int;
+
+def VkPipelineColorBlendStateCreateFlagBits = distinct inline int;
+
+
+def VkPipelineDepthStencilStateCreateFlagBits = distinct inline int;
+
+
+def VkGraphicsPipelineLibraryFlagBitsEXT = distinct inline int;
+const VkGraphicsPipelineLibraryFlagBitsEXT VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT = null;
+const VkGraphicsPipelineLibraryFlagBitsEXT VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT = null;
+const VkGraphicsPipelineLibraryFlagBitsEXT VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT = null;
+const VkGraphicsPipelineLibraryFlagBitsEXT VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT = null;
+
+def VkDeviceAddressBindingFlagBitsEXT = distinct inline int;
+const VkDeviceAddressBindingFlagBitsEXT VK_DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT = null;
 
 def VkDeviceAddressBindingTypeEXT = distinct inline int;
 const VkDeviceAddressBindingTypeEXT VK_DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT = 0;
 const VkDeviceAddressBindingTypeEXT VK_DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT = 1;
-def VkPresentScalingFlagBitsEXT = int;
-def VkPresentGravityFlagBitsEXT = int;
-def VkVideoCodecOperationFlagBitsKHR = int;
-def VkVideoChromaSubsamplingFlagBitsKHR = int;
-def VkVideoComponentBitDepthFlagBitsKHR = int;
-def VkVideoCapabilityFlagBitsKHR = int;
-def VkVideoSessionCreateFlagBitsKHR = int;
-def VkVideoDecodeH264PictureLayoutFlagBitsKHR = int;
-def VkVideoCodingControlFlagBitsKHR = int;
+
+def VkPresentScalingFlagBitsEXT = distinct inline int;
+const VkPresentScalingFlagBitsEXT VK_PRESENT_SCALING_ONE_TO_ONE_BIT_EXT = null;
+const VkPresentScalingFlagBitsEXT VK_PRESENT_SCALING_ASPECT_RATIO_STRETCH_BIT_EXT = null;
+const VkPresentScalingFlagBitsEXT VK_PRESENT_SCALING_STRETCH_BIT_EXT = null;
+
+def VkPresentGravityFlagBitsEXT = distinct inline int;
+const VkPresentGravityFlagBitsEXT VK_PRESENT_GRAVITY_MIN_BIT_EXT = null;
+const VkPresentGravityFlagBitsEXT VK_PRESENT_GRAVITY_MAX_BIT_EXT = null;
+const VkPresentGravityFlagBitsEXT VK_PRESENT_GRAVITY_CENTERED_BIT_EXT = null;
+
+def VkVideoCodecOperationFlagBitsKHR = distinct inline int;
+const VkVideoCodecOperationFlagBitsKHR VK_VIDEO_CODEC_OPERATION_NONE_KHR = 0;
+
+def VkVideoChromaSubsamplingFlagBitsKHR = distinct inline int;
+const VkVideoChromaSubsamplingFlagBitsKHR VK_VIDEO_CHROMA_SUBSAMPLING_INVALID_KHR = 0;
+const VkVideoChromaSubsamplingFlagBitsKHR VK_VIDEO_CHROMA_SUBSAMPLING_MONOCHROME_BIT_KHR = null;
+const VkVideoChromaSubsamplingFlagBitsKHR VK_VIDEO_CHROMA_SUBSAMPLING_420_BIT_KHR = null;
+const VkVideoChromaSubsamplingFlagBitsKHR VK_VIDEO_CHROMA_SUBSAMPLING_422_BIT_KHR = null;
+const VkVideoChromaSubsamplingFlagBitsKHR VK_VIDEO_CHROMA_SUBSAMPLING_444_BIT_KHR = null;
+
+def VkVideoComponentBitDepthFlagBitsKHR = distinct inline int;
+const VkVideoComponentBitDepthFlagBitsKHR VK_VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR = 0;
+const VkVideoComponentBitDepthFlagBitsKHR VK_VIDEO_COMPONENT_BIT_DEPTH_8_BIT_KHR = null;
+const VkVideoComponentBitDepthFlagBitsKHR VK_VIDEO_COMPONENT_BIT_DEPTH_10_BIT_KHR = null;
+const VkVideoComponentBitDepthFlagBitsKHR VK_VIDEO_COMPONENT_BIT_DEPTH_12_BIT_KHR = null;
+
+def VkVideoCapabilityFlagBitsKHR = distinct inline int;
+const VkVideoCapabilityFlagBitsKHR VK_VIDEO_CAPABILITY_PROTECTED_CONTENT_BIT_KHR = null;
+const VkVideoCapabilityFlagBitsKHR VK_VIDEO_CAPABILITY_SEPARATE_REFERENCE_IMAGES_BIT_KHR = null;
+
+def VkVideoSessionCreateFlagBitsKHR = distinct inline int;
+const VkVideoSessionCreateFlagBitsKHR VK_VIDEO_SESSION_CREATE_PROTECTED_CONTENT_BIT_KHR = null;
+
+def VkVideoDecodeH264PictureLayoutFlagBitsKHR = distinct inline int;
+const VkVideoDecodeH264PictureLayoutFlagBitsKHR VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_KHR = 0;
+const VkVideoDecodeH264PictureLayoutFlagBitsKHR VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_INTERLEAVED_LINES_BIT_KHR = null;
+const VkVideoDecodeH264PictureLayoutFlagBitsKHR VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_SEPARATE_PLANES_BIT_KHR = null;
+
+def VkVideoCodingControlFlagBitsKHR = distinct inline int;
+const VkVideoCodingControlFlagBitsKHR VK_VIDEO_CODING_CONTROL_RESET_BIT_KHR = null;
 
 def VkQueryResultStatusKHR = distinct inline int;
 const VkQueryResultStatusKHR VK_QUERY_RESULT_STATUS_ERROR_KHR = -1;
 const VkQueryResultStatusKHR VK_QUERY_RESULT_STATUS_NOT_READY_KHR = 0;
 const VkQueryResultStatusKHR VK_QUERY_RESULT_STATUS_COMPLETE_KHR = 1;
-def VkVideoDecodeUsageFlagBitsKHR = int;
-def VkVideoDecodeCapabilityFlagBitsKHR = int;
-def VkVideoEncodeUsageFlagBitsKHR = int;
-def VkVideoEncodeContentFlagBitsKHR = int;
+
+def VkVideoDecodeUsageFlagBitsKHR = distinct inline int;
+const VkVideoDecodeUsageFlagBitsKHR VK_VIDEO_DECODE_USAGE_DEFAULT_KHR = 0;
+const VkVideoDecodeUsageFlagBitsKHR VK_VIDEO_DECODE_USAGE_TRANSCODING_BIT_KHR = null;
+const VkVideoDecodeUsageFlagBitsKHR VK_VIDEO_DECODE_USAGE_OFFLINE_BIT_KHR = null;
+const VkVideoDecodeUsageFlagBitsKHR VK_VIDEO_DECODE_USAGE_STREAMING_BIT_KHR = null;
+
+def VkVideoDecodeCapabilityFlagBitsKHR = distinct inline int;
+const VkVideoDecodeCapabilityFlagBitsKHR VK_VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_COINCIDE_BIT_KHR = null;
+const VkVideoDecodeCapabilityFlagBitsKHR VK_VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_DISTINCT_BIT_KHR = null;
+
+def VkVideoEncodeUsageFlagBitsKHR = distinct inline int;
+const VkVideoEncodeUsageFlagBitsKHR VK_VIDEO_ENCODE_USAGE_DEFAULT_KHR = 0;
+const VkVideoEncodeUsageFlagBitsKHR VK_VIDEO_ENCODE_USAGE_TRANSCODING_BIT_KHR = null;
+const VkVideoEncodeUsageFlagBitsKHR VK_VIDEO_ENCODE_USAGE_STREAMING_BIT_KHR = null;
+const VkVideoEncodeUsageFlagBitsKHR VK_VIDEO_ENCODE_USAGE_RECORDING_BIT_KHR = null;
+const VkVideoEncodeUsageFlagBitsKHR VK_VIDEO_ENCODE_USAGE_CONFERENCING_BIT_KHR = null;
+
+def VkVideoEncodeContentFlagBitsKHR = distinct inline int;
+const VkVideoEncodeContentFlagBitsKHR VK_VIDEO_ENCODE_CONTENT_DEFAULT_KHR = 0;
+const VkVideoEncodeContentFlagBitsKHR VK_VIDEO_ENCODE_CONTENT_CAMERA_BIT_KHR = null;
+const VkVideoEncodeContentFlagBitsKHR VK_VIDEO_ENCODE_CONTENT_DESKTOP_BIT_KHR = null;
+const VkVideoEncodeContentFlagBitsKHR VK_VIDEO_ENCODE_CONTENT_RENDERED_BIT_KHR = null;
 
 def VkVideoEncodeTuningModeKHR = distinct inline int;
 const VkVideoEncodeTuningModeKHR VK_VIDEO_ENCODE_TUNING_MODE_DEFAULT_KHR = 0;
@@ -2557,25 +3042,197 @@ const VkVideoEncodeTuningModeKHR VK_VIDEO_ENCODE_TUNING_MODE_HIGH_QUALITY_KHR = 
 const VkVideoEncodeTuningModeKHR VK_VIDEO_ENCODE_TUNING_MODE_LOW_LATENCY_KHR = 2;
 const VkVideoEncodeTuningModeKHR VK_VIDEO_ENCODE_TUNING_MODE_ULTRA_LOW_LATENCY_KHR = 3;
 const VkVideoEncodeTuningModeKHR VK_VIDEO_ENCODE_TUNING_MODE_LOSSLESS_KHR = 4;
-def VkVideoEncodeCapabilityFlagBitsKHR = int;
-def VkVideoEncodeFeedbackFlagBitsKHR = int;
-def VkVideoEncodeRateControlModeFlagBitsKHR = int;
-def VkVideoEncodeH264CapabilityFlagBitsEXT = int;
-def VkVideoEncodeH264StdFlagBitsEXT = int;
-def VkVideoEncodeH264RateControlFlagBitsEXT = int;
-def VkImageFormatConstraintsFlagBitsFUCHSIA = int;
-def VkImageConstraintsInfoFlagBitsFUCHSIA = int;
-def VkFormatFeatureFlagBits2 = int;
-def VkRenderingFlagBits = int;
-def VkVideoEncodeH265CapabilityFlagBitsEXT = int;
-def VkVideoEncodeH265StdFlagBitsEXT = int;
-def VkVideoEncodeH265RateControlFlagBitsEXT = int;
-def VkVideoEncodeH265CtbSizeFlagBitsEXT = int;
-def VkVideoEncodeH265TransformBlockSizeFlagBitsEXT = int;
-def VkExportMetalObjectTypeFlagBitsEXT = int;
-def VkInstanceCreateFlagBits = int;
-def VkImageCompressionFlagBitsEXT = int;
-def VkImageCompressionFixedRateFlagBitsEXT = int;
+
+def VkVideoEncodeCapabilityFlagBitsKHR = distinct inline int;
+const VkVideoEncodeCapabilityFlagBitsKHR VK_VIDEO_ENCODE_CAPABILITY_PRECEDING_EXTERNALLY_ENCODED_BYTES_BIT_KHR = null;
+
+def VkVideoEncodeFeedbackFlagBitsKHR = distinct inline int;
+const VkVideoEncodeFeedbackFlagBitsKHR VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR = null;
+const VkVideoEncodeFeedbackFlagBitsKHR VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR = null;
+const VkVideoEncodeFeedbackFlagBitsKHR VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR = null;
+
+def VkVideoEncodeRateControlModeFlagBitsKHR = distinct inline int;
+const VkVideoEncodeRateControlModeFlagBitsKHR VK_VIDEO_ENCODE_RATE_CONTROL_MODE_DEFAULT_KHR = 0;
+const VkVideoEncodeRateControlModeFlagBitsKHR VK_VIDEO_ENCODE_RATE_CONTROL_MODE_DISABLED_BIT_KHR = null;
+const VkVideoEncodeRateControlModeFlagBitsKHR VK_VIDEO_ENCODE_RATE_CONTROL_MODE_CBR_BIT_KHR = null;
+const VkVideoEncodeRateControlModeFlagBitsKHR VK_VIDEO_ENCODE_RATE_CONTROL_MODE_VBR_BIT_KHR = null;
+
+def VkVideoEncodeH264CapabilityFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_HRD_COMPLIANCE_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_ROW_UNALIGNED_SLICE_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_DIFFERENT_SLICE_TYPE_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_B_FRAME_IN_L0_LIST_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_B_FRAME_IN_L1_LIST_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_PER_PICTURE_TYPE_MIN_MAX_QP_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_PER_SLICE_CONSTANT_QP_BIT_EXT = null;
+const VkVideoEncodeH264CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H264_CAPABILITY_GENERATE_PREFIX_NALU_BIT_EXT = null;
+
+def VkVideoEncodeH264StdFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_SCALING_MATRIX_PRESENT_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_CHROMA_QP_INDEX_OFFSET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_SECOND_CHROMA_QP_INDEX_OFFSET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_PIC_INIT_QP_MINUS26_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_WEIGHTED_PRED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_WEIGHTED_BIPRED_IDC_EXPLICIT_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_WEIGHTED_BIPRED_IDC_IMPLICIT_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_TRANSFORM_8X8_MODE_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_DIRECT_SPATIAL_MV_PRED_FLAG_UNSET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_ENTROPY_CODING_MODE_FLAG_UNSET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_ENTROPY_CODING_MODE_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_DIRECT_8X8_INFERENCE_FLAG_UNSET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_CONSTRAINED_INTRA_PRED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_DISABLED_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_ENABLED_BIT_EXT = null;
+const VkVideoEncodeH264StdFlagBitsEXT VK_VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_PARTIAL_BIT_EXT = null;
+
+def VkVideoEncodeH264RateControlFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH264RateControlFlagBitsEXT VK_VIDEO_ENCODE_H264_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_EXT = null;
+const VkVideoEncodeH264RateControlFlagBitsEXT VK_VIDEO_ENCODE_H264_RATE_CONTROL_REGULAR_GOP_BIT_EXT = null;
+const VkVideoEncodeH264RateControlFlagBitsEXT VK_VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_EXT = null;
+const VkVideoEncodeH264RateControlFlagBitsEXT VK_VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_EXT = null;
+const VkVideoEncodeH264RateControlFlagBitsEXT VK_VIDEO_ENCODE_H264_RATE_CONTROL_TEMPORAL_LAYER_PATTERN_DYADIC_BIT_EXT = null;
+
+def VkImageFormatConstraintsFlagBitsFUCHSIA = distinct inline int;
+
+
+def VkImageConstraintsInfoFlagBitsFUCHSIA = distinct inline int;
+const VkImageConstraintsInfoFlagBitsFUCHSIA VK_IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA = null;
+const VkImageConstraintsInfoFlagBitsFUCHSIA VK_IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA = null;
+const VkImageConstraintsInfoFlagBitsFUCHSIA VK_IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA = null;
+const VkImageConstraintsInfoFlagBitsFUCHSIA VK_IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA = null;
+const VkImageConstraintsInfoFlagBitsFUCHSIA VK_IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA = null;
+
+def VkFormatFeatureFlagBits2 = distinct inline int;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BLIT_SRC_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BLIT_DST_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_DISJOINT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = null;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = null;
+
+def VkRenderingFlagBits = distinct inline int;
+const VkRenderingFlagBits VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = null;
+const VkRenderingFlagBits VK_RENDERING_SUSPENDING_BIT = null;
+const VkRenderingFlagBits VK_RENDERING_RESUMING_BIT = null;
+
+def VkVideoEncodeH265CapabilityFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_HRD_COMPLIANCE_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_ROW_UNALIGNED_SLICE_SEGMENT_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_DIFFERENT_SLICE_SEGMENT_TYPE_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_B_FRAME_IN_L0_LIST_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_B_FRAME_IN_L1_LIST_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_PER_PICTURE_TYPE_MIN_MAX_QP_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_PER_SLICE_SEGMENT_CONSTANT_QP_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE_TILES_PER_SLICE_SEGMENT_BIT_EXT = null;
+const VkVideoEncodeH265CapabilityFlagBitsEXT VK_VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE_SLICE_SEGMENTS_PER_TILE_BIT_EXT = null;
+
+def VkVideoEncodeH265StdFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_SAMPLE_ADAPTIVE_OFFSET_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_SCALING_LIST_DATA_PRESENT_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_PCM_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_SPS_TEMPORAL_MVP_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_INIT_QP_MINUS26_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_WEIGHTED_PRED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_WEIGHTED_BIPRED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_LOG2_PARALLEL_MERGE_LEVEL_MINUS2_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_SIGN_DATA_HIDING_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_TRANSFORM_SKIP_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_TRANSFORM_SKIP_ENABLED_FLAG_UNSET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_PPS_SLICE_CHROMA_QP_OFFSETS_PRESENT_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_TRANSQUANT_BYPASS_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_CONSTRAINED_INTRA_PRED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_ENTROPY_CODING_SYNC_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_DEBLOCKING_FILTER_OVERRIDE_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_DEPENDENT_SLICE_SEGMENTS_ENABLED_FLAG_SET_BIT_EXT = null;
+const VkVideoEncodeH265StdFlagBitsEXT VK_VIDEO_ENCODE_H265_STD_DEPENDENT_SLICE_SEGMENT_FLAG_SET_BIT_EXT = null;
+
+def VkVideoEncodeH265RateControlFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH265RateControlFlagBitsEXT VK_VIDEO_ENCODE_H265_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_EXT = null;
+const VkVideoEncodeH265RateControlFlagBitsEXT VK_VIDEO_ENCODE_H265_RATE_CONTROL_REGULAR_GOP_BIT_EXT = null;
+const VkVideoEncodeH265RateControlFlagBitsEXT VK_VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_EXT = null;
+const VkVideoEncodeH265RateControlFlagBitsEXT VK_VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_EXT = null;
+const VkVideoEncodeH265RateControlFlagBitsEXT VK_VIDEO_ENCODE_H265_RATE_CONTROL_TEMPORAL_SUB_LAYER_PATTERN_DYADIC_BIT_EXT = null;
+
+def VkVideoEncodeH265CtbSizeFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH265CtbSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_CTB_SIZE_16_BIT_EXT = null;
+const VkVideoEncodeH265CtbSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_CTB_SIZE_32_BIT_EXT = null;
+const VkVideoEncodeH265CtbSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_CTB_SIZE_64_BIT_EXT = null;
+
+def VkVideoEncodeH265TransformBlockSizeFlagBitsEXT = distinct inline int;
+const VkVideoEncodeH265TransformBlockSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_4_BIT_EXT = null;
+const VkVideoEncodeH265TransformBlockSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_8_BIT_EXT = null;
+const VkVideoEncodeH265TransformBlockSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_16_BIT_EXT = null;
+const VkVideoEncodeH265TransformBlockSizeFlagBitsEXT VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_32_BIT_EXT = null;
+
+def VkExportMetalObjectTypeFlagBitsEXT = distinct inline int;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = null;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = null;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = null;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT = null;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = null;
+const VkExportMetalObjectTypeFlagBitsEXT VK_EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = null;
+
+def VkInstanceCreateFlagBits = distinct inline int;
+
+
+def VkImageCompressionFlagBitsEXT = distinct inline int;
+const VkImageCompressionFlagBitsEXT VK_IMAGE_COMPRESSION_DEFAULT_EXT = 0;
+const VkImageCompressionFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT = null;
+const VkImageCompressionFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT = null;
+const VkImageCompressionFlagBitsEXT VK_IMAGE_COMPRESSION_DISABLED_EXT = null;
+
+def VkImageCompressionFixedRateFlagBitsEXT = distinct inline int;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT = 0;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT = null;
+const VkImageCompressionFixedRateFlagBitsEXT VK_IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT = null;
 
 def VkPipelineRobustnessBufferBehaviorEXT = distinct inline int;
 const VkPipelineRobustnessBufferBehaviorEXT VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT = 0;
@@ -2588,8 +3245,21 @@ const VkPipelineRobustnessImageBehaviorEXT VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR
 const VkPipelineRobustnessImageBehaviorEXT VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT = 1;
 const VkPipelineRobustnessImageBehaviorEXT VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT = 2;
 const VkPipelineRobustnessImageBehaviorEXT VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT = 3;
-def VkOpticalFlowGridSizeFlagBitsNV = int;
-def VkOpticalFlowUsageFlagBitsNV = int;
+
+def VkOpticalFlowGridSizeFlagBitsNV = distinct inline int;
+const VkOpticalFlowGridSizeFlagBitsNV VK_OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV = 0;
+const VkOpticalFlowGridSizeFlagBitsNV VK_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV = null;
+const VkOpticalFlowGridSizeFlagBitsNV VK_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV = null;
+const VkOpticalFlowGridSizeFlagBitsNV VK_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV = null;
+const VkOpticalFlowGridSizeFlagBitsNV VK_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV = null;
+
+def VkOpticalFlowUsageFlagBitsNV = distinct inline int;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_UNKNOWN_NV = 0;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_INPUT_BIT_NV = null;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV = null;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_HINT_BIT_NV = null;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_COST_BIT_NV = null;
+const VkOpticalFlowUsageFlagBitsNV VK_OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV = null;
 
 def VkOpticalFlowPerformanceLevelNV = distinct inline int;
 const VkOpticalFlowPerformanceLevelNV VK_OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_NV = 0;
@@ -2607,13 +3277,27 @@ const VkOpticalFlowSessionBindingPointNV VK_OPTICAL_FLOW_SESSION_BINDING_POINT_B
 const VkOpticalFlowSessionBindingPointNV VK_OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV = 6;
 const VkOpticalFlowSessionBindingPointNV VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = 7;
 const VkOpticalFlowSessionBindingPointNV VK_OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = 8;
-def VkOpticalFlowSessionCreateFlagBitsNV = int;
-def VkOpticalFlowExecuteFlagBitsNV = int;
+
+def VkOpticalFlowSessionCreateFlagBitsNV = distinct inline int;
+const VkOpticalFlowSessionCreateFlagBitsNV VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV = null;
+const VkOpticalFlowSessionCreateFlagBitsNV VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV = null;
+const VkOpticalFlowSessionCreateFlagBitsNV VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV = null;
+const VkOpticalFlowSessionCreateFlagBitsNV VK_OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV = null;
+const VkOpticalFlowSessionCreateFlagBitsNV VK_OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV = null;
+
+def VkOpticalFlowExecuteFlagBitsNV = distinct inline int;
+const VkOpticalFlowExecuteFlagBitsNV VK_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV = null;
 
 def VkMicromapTypeEXT = distinct inline int;
 const VkMicromapTypeEXT VK_MICROMAP_TYPE_OPACITY_MICROMAP_EXT = 0;
-def VkBuildMicromapFlagBitsEXT = int;
-def VkMicromapCreateFlagBitsEXT = int;
+
+def VkBuildMicromapFlagBitsEXT = distinct inline int;
+const VkBuildMicromapFlagBitsEXT VK_BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT = null;
+const VkBuildMicromapFlagBitsEXT VK_BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT = null;
+const VkBuildMicromapFlagBitsEXT VK_BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT = null;
+
+def VkMicromapCreateFlagBitsEXT = distinct inline int;
+const VkMicromapCreateFlagBitsEXT VK_MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = null;
 
 def VkCopyMicromapModeEXT = distinct inline int;
 const VkCopyMicromapModeEXT VK_COPY_MICROMAP_MODE_CLONE_EXT = 0;
@@ -2655,7 +3339,9 @@ def VkDisplacementMicromapFormatNV = distinct inline int;
 const VkDisplacementMicromapFormatNV VK_DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV = 1;
 const VkDisplacementMicromapFormatNV VK_DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV = 2;
 const VkDisplacementMicromapFormatNV VK_DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV = 3;
-def VkShaderCreateFlagBitsEXT = int;
+
+def VkShaderCreateFlagBitsEXT = distinct inline int;
+const VkShaderCreateFlagBitsEXT VK_SHADER_CREATE_LINK_STAGE_BIT_EXT = null;
 
 def VkShaderCodeTypeEXT = distinct inline int;
 const VkShaderCodeTypeEXT VK_SHADER_CODE_TYPE_BINARY_EXT = 0;

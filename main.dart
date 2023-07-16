@@ -372,11 +372,7 @@ void main() {
 
 //  Enums
   enums.where((element) => element.name != null).forEach((entry) {
-    if (entry.type == "bitmask") {
-      output.writeAsStringSync("def ${entry.name} = int;\n", mode: FileMode.append);
-    }
-
-    if (entry.type == "enum") {
+    if (entry.type == "enum" || entry.type == "bitmask") {
       String code =
           "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}\n";
       output.writeAsStringSync(code, mode: FileMode.append);
