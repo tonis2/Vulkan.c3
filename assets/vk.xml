@@ -14803,7 +14803,7 @@ typedef void* <name>MTLSharedEvent_id</name>;
             <command name="vkCreateCommandPool"/>
             <command name="vkDestroyCommandPool"/>
             <command name="vkResetCommandPool"/>
-        </require>
+        </require>ResetCommandBuffer
         <require comment="Command buffer commands">
             <type name="VkCommandBuffer"/>
             <type name="VkCommandBufferAllocateInfo"/>
