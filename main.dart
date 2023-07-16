@@ -145,7 +145,7 @@ class VKtype {
     String? type = node.getElement("type")?.innerText;
     String? requiredBy = node.getAttribute("requires");
     String? api = node.getAttribute("api");
-    return VKtype(type: type, name: name, requiredBy: requiredBy, api: api);
+    return VKtype(type: typeMap[type] ?? type, name: name, requiredBy: requiredBy, api: api);
   }
 }
 
@@ -166,15 +166,50 @@ class VKfnPointer {
   }
 }
 
-String formatTypeName(String value) {
-  value = value.replaceAll("_t", "");
-  value = value.replaceAll("_", "");
-  return value.capitalize();
+class VKCommand {
+  String? name;
+  String? returnType;
+  List<String> successCodes;
+  List<String> errorCodes;
+  List<VKtype> values;
+  VKCommand(
+      {required this.name,
+      required this.values,
+      required this.successCodes,
+      required this.errorCodes,
+      required this.returnType});
+  static fromXML(XmlElement node) {
+    XmlElement? proto = node.getElement("proto");
+    String? name = proto?.getElement("name")?.innerText;
+    String? returnType = proto?.getElement("type")?.innerText;
+    List<String> successCodes = node.getAttribute("successcodes")?.split(",").toList() ?? [];
+    List<String> errorCodes = node.getAttribute("errorcodes")?.split(",").toList() ?? [];
+
+    List<VKtype> values = List<VKtype>.from(node
+        .findAllElements('param')
+        .where((element) => element.getElement("type") != null)
+        .map((value) => VKtype.fromXML(value)));
+
+    return VKCommand(
+        name: name,
+        values: values,
+        returnType: typeMap[returnType] ?? returnType,
+        errorCodes: errorCodes,
+        successCodes: successCodes);
+  }
 }
 
 extension ParseMethods on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${this.toLowerCase().substring(1)}';
+  }
+
+  String formatTypeName() {
+    var value = this;
+    value = value.replaceAll("_t", "");
+    value = value.replaceAll("_", "");
+    value = value.capitalize();
+    return value;
   }
 
   String camelCase() {
@@ -192,9 +227,17 @@ extension ParseMethods on String {
   bool is_khr_extension() {
     return this.substring(this.length - 3) == "KHR";
   }
+
+  bool is_qnx_extension() {
+    return this.substring(this.length - 3) == "QNX";
+  }
 }
 
 void main() {
+  const API_VERSION = 1.0;
+  const API = "vulkan";
+  var output = File('./build/vk.c3');
+
   final file = new File('assets/vk.xml');
   final document = XmlDocument.parse(file.readAsStringSync());
   List<VKstruct> structs = [];
@@ -204,6 +247,7 @@ void main() {
   List<VKtype> handles = [];
   List<VKstruct> unions = [];
   List<VKfnPointer> functionsPtrs = [];
+  List<VKCommand> commands = [];
 
   document.findAllElements('type').forEach((XmlElement node) {
     String? category = node.getAttribute("category");
@@ -231,91 +275,118 @@ void main() {
     enums.add(VKenum.fromXML(node));
   });
 
+  var commandList = document.findAllElements('commands').toList()[0];
+
+  commandList.findAllElements('command').forEach((XmlElement node) {
+    commands.add(VKCommand.fromXML(node));
+  });
+
   // Filter out some faulty or extension structs
-  structs = structs
-      .where((struct) =>
-          struct.name != null &&
-          struct.values.isNotEmpty &&
-          struct.extendsStruct == null &&
-          !filteredNames.contains(struct.name) &&
-          struct.name?.is_nv_extension() == false &&
-          struct.name?.is_khr_extension() == false &&
-          struct.name?.is_extension() == false)
-      .toList();
+  // structs = structs
+  //     .where((struct) =>
+  //         struct.name != null &&
+  //         struct.values.isNotEmpty &&
+  //         struct.extendsStruct == null &&
+  //         !filteredNames.contains(struct.name) &&
+  //         struct.name?.is_nv_extension() == false &&
+  //         struct.name?.is_khr_extension() == false &&
+  //         struct.name?.is_extension() == false)
+  //     .toList();
 
   // Filter out some faulty or extension unions
-  unions = unions
-      .where((union) =>
-          union.name != null &&
-          union.values.isNotEmpty &&
-          union.extendsStruct == null &&
-          union.name?.is_nv_extension() == false &&
-          union.name?.is_khr_extension() == false &&
-          union.name?.is_extension() == false)
-      .toList();
+  // unions = unions
+  //     .where((union) =>
+  //         union.name != null &&
+  //         union.values.isNotEmpty &&
+  //         union.extendsStruct == null &&
+  //         union.name?.is_nv_extension() == false &&
+  //         union.name?.is_khr_extension() == false &&
+  //         union.name?.is_extension() == false)
+  //     .toList();
 
-  functionsPtrs = functionsPtrs
-      .where((union) =>
-          union.name != null &&
-          union.name?.is_nv_extension() == false &&
-          union.name?.is_khr_extension() == false &&
-          union.name?.is_extension() == false)
-      .toList();
+  // functionsPtrs = functionsPtrs
+  //     .where((union) =>
+  //         union.name != null &&
+  //         union.name?.is_nv_extension() == false &&
+  //         union.name?.is_khr_extension() == false &&
+  //         union.name?.is_extension() == false)
+  //     .toList();
+
+  // commands = commands
+  //     .where((union) =>
+  //         union.name != null &&
+  //         union.name?.is_nv_extension() == false &&
+  //         union.name?.is_khr_extension() == false &&
+  //         union.name?.is_extension() == false)
+  //     .toList();
+
+  var features = document
+      .findAllElements("feature")
+      .where((element) => double.parse(element.getAttribute("number")!) <= API_VERSION);
+  output.writeAsStringSync("");
+  output.writeAsStringSync("module vk; \n", mode: FileMode.append);
+  features.forEach((feature) {
+    var requirements = feature.findAllElements("require");
+    requirements.forEach((element) {
+      String? name = element.getAttribute("comment");
+
+      // Write comment
+      if (name != null && name != "Header boilerplate") {
+        output.writeAsStringSync("// $name \n", mode: FileMode.append);
+      }
+    });
+  });
 
   // Write parsed data as C3 file
-  var output = File('./build/vk.c3');
-  output.writeAsStringSync("");
-  output.writeAsStringSync("""
-module vk;
-
-// Platform type 
-${platformTypes.entries.map((value) => "def ${formatTypeName(value.key)} = ${value.value};").join("\n")}
-
-// Base types
-${baseTypes.map((type) => "def ${type.name} = ${typeMap[type.type] ?? "void*"};").join("\n")}
-
-// Handles
-${handles.where((element) => element.name != null).map((type) => "def ${type.name} = void*;").join("\n")}
-
-// Bitmasks
-${bitmasks.where((mask) => mask.api != "vulkansc" && mask.name != null).map((type) => "def ${type.name} = ${typeMap[type.type] ?? type.type};").join("\n")}
-
-// Structs
-${structs.map((struct) {
-    return "struct ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
-      bool formatType = platformTypes.keys.contains(value.type);
-      String? newName = replaceNames[value.name] ?? value.name;
-      return "${formatType ? formatTypeName(value.type ?? "") : value.type} ${newName?.camelCase()};";
-    }).join("\n  ")}\n}\n";
-  }).join("\n")}
-
-// Unions
-${unions.map((struct) {
-    return "union ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
-      String? newName = replaceNames[value.name] ?? value.name;
-      return "${value.type} ${newName?.camelCase()};";
-    }).join("\n  ")}\n}\n";
-  }).join("\n")}
-
-// Enums
-${enums.where((element) => element.name != null).map((entry) {
-    if (entry.type == "bitmask") {
-      return "def ${entry.name} = int;";
-    }
-
-    if (entry.type == "enum") {
-      return "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
-    }
-
-    if (entry.name == "API Constants") {
-      return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}";
-    }
-
-    return null;
-  }).join("\n")}
-
-// Functions pointers
-${functionsPtrs.map((element) => "def ${element.name} = fn ${element.returnType} (${element.values.map((value) => value).join(", ")});").join("\n")}
-
-""");
 }
+// // Platform type 
+// ${platformTypes.entries.map((value) => "def ${value.key.formatTypeName()} = ${value.value};").join("\n")}
+
+// // Base types
+// ${baseTypes.map((type) => "def ${type.name} = ${type.type};").join("\n")}
+
+// // Handles
+// ${handles.where((element) => element.name != null).map((type) => "def ${type.name} = void*;").join("\n")}
+
+// // Bitmasks
+// ${bitmasks.where((mask) => mask.api != "vulkansc" && mask.name != null).map((type) => "def ${type.name} = ${type.type};").join("\n")}
+
+// // Structs
+// ${structs.map((struct) {
+//     return "struct ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
+//       bool formatType = platformTypes.keys.contains(value.type);
+//       String? newName = replaceNames[value.name] ?? value.name;
+//       return "${formatType ? value.type?.formatTypeName() : value.type} ${newName?.camelCase()};";
+//     }).join("\n  ")}\n}\n";
+//   }).join("\n")}
+
+// // Unions
+// ${unions.map((struct) {
+//     return "union ${struct.name} {\n  ${struct.values.where((struct) => struct.api != "vulkansc").map((value) {
+//       String? newName = replaceNames[value.name] ?? value.name;
+//       return "${value.type} ${newName?.camelCase()};";
+//     }).join("\n  ")}\n}\n";
+//   }).join("\n")}
+
+// // Enums
+// ${enums.where((element) => element.name != null).map((entry) {
+//     if (entry.type == "bitmask") {
+//       return "def ${entry.name} = int;";
+//     }
+
+//     if (entry.type == "enum") {
+//       return "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}";
+//     }
+
+//     if (entry.name == "API Constants") {
+//       return "${entry.values.map((entry) => "const ${entry.name} = ${entry.value?.replaceAll("ULL", "UL")};").join("\n")}";
+//     }
+
+//     return null;
+//   }).join("\n")}
+
+// // Functions pointers
+// ${functionsPtrs.map((element) => "def ${element.name} = fn ${element.returnType} (${element.values.map((value) => value).join(", ")});").join("\n")}
+
+// // Commands
+// ${commands.map((element) => "extern fn ${element.returnType} ${element.name?.substring(2).camelCase().replaceAll("_", "")} (${element.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) @extern(\"${element.name}\");").join("\n")}
