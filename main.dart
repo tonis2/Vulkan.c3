@@ -102,7 +102,15 @@ class VKenumValue {
   String? type;
   String? deprecated;
   String? alias;
-  VKenumValue({required this.name, required this.value, required this.index, this.type, this.deprecated, this.alias});
+  String? bitValue;
+  VKenumValue(
+      {required this.name,
+      required this.value,
+      required this.index,
+      this.type,
+      this.deprecated,
+      this.alias,
+      this.bitValue});
 
   static fromXML(XmlElement node) {
     String? index = node.getAttribute("index");
@@ -111,7 +119,15 @@ class VKenumValue {
     String? type = node.getAttribute("type");
     String? deprecated = node.getAttribute("deprecated");
     String? alias = node.getAttribute("alias");
-    return VKenumValue(index: index, name: name, value: value, type: type, deprecated: deprecated, alias: alias);
+    String? bitpos = node.getAttribute("bitpos");
+    String? bitValue;
+
+    // Todo
+    if (bitpos != null) {
+      bitValue = "0x0000000${(1 << int.parse(bitpos)).toRadixString(16)}";
+    }
+    return VKenumValue(
+        index: index, name: name, value: value, type: type, deprecated: deprecated, alias: alias, bitValue: bitValue);
   }
 }
 
@@ -374,7 +390,7 @@ void main() {
   enums.where((element) => element.name != null).forEach((entry) {
     if (entry.type == "enum" || entry.type == "bitmask") {
       String code =
-          "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null && element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.value};").join("\n")}\n";
+          "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.deprecated == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
       output.writeAsStringSync(code, mode: FileMode.append);
     }
 
