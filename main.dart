@@ -42,7 +42,25 @@ var platformTypes = {
 
 var replaceNames = {"module": "mod"};
 var filteredNames = ["VkBaseInStructure", "VkBaseOutStructure", "VkDependencyInfo"];
-var extensions = ["VK_KHR_surface", "VK_KHR_swapchain"];
+var extensions = [
+  "VK_KHR_surface",
+  "VK_KHR_swapchain",
+  "VK_KHR_display",
+  // "VK_EXT_debug_report",
+  "VK_EXT_debug_marker",
+  "VK_EXT_debug_utils",
+  // "VK_KHR_depth_stencil_resolve",
+  // "VK_KHR_get_physical_device_properties2",
+  // "VK_KHR_get_display_properties2",
+  // "VK_KHR_get_surface_capabilities2",
+  // "VK_KHR_synchronization2",
+  // "VK_KHR_bind_memory2",
+  // "VK_KHR_display",
+  // "VK_KHR_display_swapchain",
+  // "VK_MVK_moltenvk",
+  // "VK_MVK_macos_surface",
+  // "VK_KHR_dynamic_rendering"
+];
 
 var typeMap = {
   "uint16_t": "uint",
@@ -208,7 +226,7 @@ class VKCommand {
 
     List<VKtype> values = List<VKtype>.from(node
         .findAllElements('param')
-        .where((element) => element.getElement("type") != null)
+        .where((element) => element.getElement("type") != null && element.getAttribute("api") != "vulkansc")
         .map((value) => VKtype.fromXML(value)));
 
     return VKCommand(
@@ -256,6 +274,11 @@ extension ParseMethods on String {
   bool is_qnx_extension() {
     return this.substring(this.length - 3) == "QNX";
   }
+
+  String ext_num_enum(String offset, String? dir) {
+    String newValue = (int.parse(this) - 1).toString();
+    return "${dir ?? ""}1${newValue.padLeft(6, "0")}${offset.padLeft(3, "0")}";
+  }
 }
 
 void main() {
@@ -268,9 +291,8 @@ void main() {
   final document = XmlDocument.parse(file.readAsStringSync());
 
   // Find features for set api version
-  var features = document
-      .findAllElements("feature")
-      .where((element) => double.parse(element.getAttribute("number")!) <= API_VERSION);
+  var features = document.findAllElements("feature").where((element) =>
+      double.parse(element.getAttribute("number")!) <= API_VERSION && element.getAttribute("api") != "vulkansc");
 
   output.writeAsStringSync("");
   output.writeAsStringSync("module vk; \n", mode: FileMode.append);
@@ -289,6 +311,63 @@ void main() {
   List<VKenum> enums = [];
   List<VKenumValue> constants = [];
 
+  void parseType(String nodeType, String name) {
+    // Find the Vulkan type in XML and parse it
+    List<XmlElement> vkNode = document.findAllElements(nodeType).where((element) {
+      bool hasName = (element.getAttribute("name") == name) || (element.getElement("name")?.innerText == name);
+      return hasName && element.getAttribute("category") != null && element.getAttribute("api") != "vulkansc";
+    }).toList();
+
+    if (vkNode.length == 0) return;
+    XmlElement node = vkNode.first;
+    String category = node.getAttribute("category")!;
+
+    // Parse Vulkan types
+    if (category == "bitmask") {
+      VKtype value = VKtype.fromXML(node);
+      value.category = category;
+      types.add(value);
+    }
+
+    if (category == "handle") {
+      VKtype value = VKtype.fromXML(node);
+      value.category = category;
+      types.add(value);
+    }
+
+    if (category == "basetype") {
+      VKtype value = VKtype.fromXML(node);
+      value.category = category;
+      types.add(value);
+    }
+
+    if (category == "enum") {
+      var enumNode = document
+          .findAllElements("enums")
+          .firstWhere((element) => element.getAttribute("name") == name && element.getAttribute("api") != "vulkansc");
+      VKenum value = VKenum.fromXML(enumNode);
+      value.category = category;
+      enums.add(value);
+    }
+
+    if (category == "union") {
+      VKstruct value = VKstruct.fromXML(node);
+      value.category = category;
+      structs.add(value);
+    }
+
+    if (category == "struct") {
+      VKstruct value = VKstruct.fromXML(node);
+      value.category = category;
+      structs.add(value);
+    }
+
+    if (category == "funcpointer") {
+      pointers.add(VKfnPointer.fromXML(node));
+    }
+  }
+
+  // Parse by VK version
   features.forEach((feature) {
     var requirements = feature.findAllElements("require");
     requirements.forEach((element) {
@@ -300,60 +379,6 @@ void main() {
           String nodeType = child.name.qualified;
           String? name = child.getAttribute("name");
           if (name == null || filteredNames.contains(name)) return;
-          if (nodeType == "type") {
-            // Find the Vulkan type in XML and parse it
-            List<XmlElement> vkNode = document.findAllElements(nodeType).where((element) {
-              bool hasName = (element.getAttribute("name") == name) || (element.getElement("name")?.innerText == name);
-              return hasName && element.getAttribute("category") != null && element.getAttribute("api") != "vulkansc";
-            }).toList();
-
-            if (vkNode.length == 0) return;
-            XmlElement node = vkNode.first;
-            String category = node.getAttribute("category")!;
-
-            // Parse Vulkan types
-            if (category == "bitmask") {
-              VKtype value = VKtype.fromXML(node);
-              value.category = category;
-              types.add(value);
-            }
-
-            if (category == "handle") {
-              VKtype value = VKtype.fromXML(node);
-              value.category = category;
-              types.add(value);
-            }
-
-            if (category == "basetype") {
-              VKtype value = VKtype.fromXML(node);
-              value.category = category;
-              types.add(value);
-            }
-
-            if (category == "enum") {
-              var enumNode = document.findAllElements("enums").firstWhere(
-                  (element) => element.getAttribute("name") == name && element.getAttribute("api") != "vulkansc");
-              VKenum value = VKenum.fromXML(enumNode);
-              value.category = category;
-              enums.add(value);
-            }
-
-            if (category == "union") {
-              VKstruct value = VKstruct.fromXML(node);
-              value.category = category;
-              structs.add(value);
-            }
-
-            if (category == "struct") {
-              VKstruct value = VKstruct.fromXML(node);
-              value.category = category;
-              structs.add(value);
-            }
-
-            if (category == "funcpointer") {
-              pointers.add(VKfnPointer.fromXML(node));
-            }
-          }
 
           if (nodeType == "enum") {
             String? extension = child.getAttribute("extends");
@@ -371,21 +396,23 @@ void main() {
               String? offset = child.getAttribute("offset");
               String? name = child.getAttribute("name");
               String? bitpos = child.getAttribute("bitpos");
+              String? dir = child.getAttribute("dir");
 
               var previousEnum = enums.where((element) => element.name == extension);
 
-              if (previousEnum.length != 0 && extNumber != null && offset != null) {
-                extNumber = (int.parse(extNumber) - 1).toString();
-                String offsetValue = offset.padLeft(3, "0");
-                String extValue = extNumber.padLeft(6, "0");
-                previousEnum.first.values
-                    .add(VKenumValue(name: name, value: "1${extValue}${offsetValue}", index: null));
+              if (previousEnum.length != 0 && offset != null) {
+                previousEnum.first.values.add(
+                    VKenumValue(name: name, value: extNumber?.ext_num_enum(offset, dir), index: null, type: "uint"));
               }
 
               if (previousEnum.length != 0 && bitpos != null) {
                 previousEnum.first.values.add(VKenumValue(name: name, value: bitpos.to_bitvalue(), index: null));
               }
             }
+          }
+
+          if (nodeType == "type") {
+            parseType(nodeType, name);
           }
 
           if (nodeType == "command") {
@@ -397,6 +424,61 @@ void main() {
           }
         });
       }
+    });
+  });
+
+  // Parse extensions
+  extensions.forEach((name) {
+    XmlElement extension =
+        document.findAllElements("extension").firstWhere((element) => element.getAttribute("name") == name);
+    List<XmlElement> requirements = extension.findAllElements("require").toList();
+    String? number = extension.getAttribute("number")!;
+
+    requirements.forEach((element) {
+      element.childElements.forEach((node) {
+        String? extension_name = node.getAttribute("name");
+        String? extension = node.getAttribute("extends");
+        String? api = node.getAttribute("api");
+        String nodeType = node.name.qualified;
+        if (api == "vulkansc") return;
+        if (nodeType == "enum") {
+          // Add enum extentsion to parent
+          if (extension != null) {
+            String? offset = node.getAttribute("offset");
+            String? bitpos = node.getAttribute("bitpos");
+            VKenum parent = enums.firstWhere((entry) => entry.name == extension);
+            if (offset != null) {
+              String? dir = node.getAttribute("dir");
+              parent.values.add(VKenumValue(
+                  name: extension_name, value: number.ext_num_enum(offset, dir), index: null, type: "uint"));
+            }
+
+            if (bitpos != null) {
+              parent.values.add(VKenumValue(name: extension_name, value: bitpos.to_bitvalue(), index: null));
+            }
+          } else {
+            // parse enum constant
+            String? value = node.getAttribute("value");
+            if (value != null) {
+              bool is_number = int.tryParse(value) != null;
+              constants.add(
+                  VKenumValue(name: extension_name, value: value, index: value, type: is_number ? "uint" : "String"));
+            }
+          }
+        }
+
+        if (nodeType == "type") {
+          parseType(nodeType, extension_name!);
+        }
+
+        if (nodeType == "command") {
+          XmlElement VkNode = document
+              .findAllElements(nodeType)
+              .firstWhere((element) => element.getElement("proto")?.getElement("name")?.innerText == extension_name);
+
+          commands.add(VKCommand.fromXML(VkNode));
+        }
+      });
     });
   });
 

@@ -139,6 +139,22 @@ def VkFenceImportFlags = VkFlags;
 def VkSemaphoreImportFlags = VkFlags;
 def VkExternalSemaphoreHandleTypeFlags = VkFlags;
 def VkExternalSemaphoreFeatureFlags = VkFlags;
+def VkSurfaceKHR = void*;
+def VkCompositeAlphaFlagsKHR = VkFlags;
+def VkSwapchainCreateFlagsKHR = VkFlags;
+def VkSwapchainKHR = void*;
+def VkDeviceGroupPresentModeFlagsKHR = VkFlags;
+def VkDisplayKHR = void*;
+def VkDisplayModeCreateFlagsKHR = VkFlags;
+def VkDisplayModeKHR = void*;
+def VkDisplayPlaneAlphaFlagsKHR = VkFlags;
+def VkDisplaySurfaceCreateFlagsKHR = VkFlags;
+def VkSurfaceTransformFlagsKHR = VkFlags;
+def VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
+def VkDebugUtilsMessageTypeFlagsEXT = VkFlags;
+def VkDebugUtilsMessengerCallbackDataFlagsEXT = VkFlags;
+def VkDebugUtilsMessengerCreateFlagsEXT = VkFlags;
+def VkDebugUtilsMessengerEXT = void*;
 const uint VK_ATTACHMENT_UNUSED = (~0U);
 const uint VK_FALSE = 0;
 const float VK_LOD_CLAMP_NONE = 1000.0F;
@@ -157,6 +173,16 @@ const uint VK_MAX_MEMORY_HEAPS = 16;
 const uint VK_MAX_DEVICE_GROUP_SIZE = 32;
 const uint VK_LUID_SIZE = 8;
 const uint VK_QUEUE_FAMILY_EXTERNAL = (~1U);
+const uint VK_KHR_SURFACE_SPEC_VERSION = 25;
+const String VK_KHR_SURFACE_EXTENSION_NAME = "VK_KHR_surface";
+const uint VK_KHR_SWAPCHAIN_SPEC_VERSION = 70;
+const String VK_KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
+const uint VK_KHR_DISPLAY_SPEC_VERSION = 23;
+const String VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
+const uint VK_EXT_DEBUG_MARKER_SPEC_VERSION = 4;
+const String VK_EXT_DEBUG_MARKER_EXTENSION_NAME = "VK_EXT_debug_marker";
+const uint VK_EXT_DEBUG_UTILS_SPEC_VERSION = 2;
+const String VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 struct VkExtent2D {
   uint width;
   uint height;
@@ -1548,110 +1574,206 @@ struct VkPhysicalDeviceShaderDrawParametersFeatures {
   void* pNext;
   VkBool32 shaderDrawParameters;
 }
-struct VkDeviceObjectReservationCreateInfo {
+struct VkSurfaceCapabilitiesKHR {
+  uint minImageCount;
+  uint maxImageCount;
+  VkExtent2D currentExtent;
+  VkExtent2D minImageExtent;
+  VkExtent2D maxImageExtent;
+  uint maxImageArrayLayers;
+  VkSurfaceTransformFlagsKHR supportedTransforms;
+  VkSurfaceTransformFlagBitsKHR currentTransform;
+  VkCompositeAlphaFlagsKHR supportedCompositeAlpha;
+  VkImageUsageFlags supportedUsageFlags;
+}
+struct VkSurfaceFormatKHR {
+  VkFormat format;
+  VkColorSpaceKHR colorSpace;
+}
+struct VkSwapchainCreateInfoKHR {
   VkStructureType sType;
   void* pNext;
-  uint pipelineCacheCreateInfoCount;
-  VkPipelineCacheCreateInfo pPipelineCacheCreateInfos;
-  uint pipelinePoolSizeCount;
-  VkPipelinePoolSize pPipelinePoolSizes;
-  uint semaphoreRequestCount;
-  uint commandBufferRequestCount;
-  uint fenceRequestCount;
-  uint deviceMemoryRequestCount;
-  uint bufferRequestCount;
-  uint imageRequestCount;
-  uint eventRequestCount;
-  uint queryPoolRequestCount;
-  uint bufferViewRequestCount;
-  uint imageViewRequestCount;
-  uint layeredImageViewRequestCount;
-  uint pipelineCacheRequestCount;
-  uint pipelineLayoutRequestCount;
-  uint renderPassRequestCount;
-  uint graphicsPipelineRequestCount;
-  uint computePipelineRequestCount;
-  uint descriptorSetLayoutRequestCount;
-  uint samplerRequestCount;
-  uint descriptorPoolRequestCount;
-  uint descriptorSetRequestCount;
-  uint framebufferRequestCount;
-  uint commandPoolRequestCount;
-  uint samplerYcbcrConversionRequestCount;
-  uint surfaceRequestCount;
-  uint swapchainRequestCount;
-  uint displayModeRequestCount;
-  uint subpassDescriptionRequestCount;
-  uint attachmentDescriptionRequestCount;
-  uint descriptorSetLayoutBindingRequestCount;
-  uint descriptorSetLayoutBindingLimit;
-  uint maxImageViewMipLevels;
-  uint maxImageViewArrayLayers;
-  uint maxLayeredImageViewMipLevels;
-  uint maxOcclusionQueriesPerPool;
-  uint maxPipelineStatisticsQueriesPerPool;
-  uint maxTimestampQueriesPerPool;
-  uint maxImmutableSamplersPerDescriptorSetLayout;
+  VkSwapchainCreateFlagsKHR flags;
+  VkSurfaceKHR surface;
+  uint minImageCount;
+  VkFormat imageFormat;
+  VkColorSpaceKHR imageColorSpace;
+  VkExtent2D imageExtent;
+  uint imageArrayLayers;
+  VkImageUsageFlags imageUsage;
+  VkSharingMode imageSharingMode;
+  uint queueFamilyIndexCount;
+  uint pQueueFamilyIndices;
+  VkSurfaceTransformFlagBitsKHR preTransform;
+  VkCompositeAlphaFlagBitsKHR compositeAlpha;
+  VkPresentModeKHR presentMode;
+  VkBool32 clipped;
+  VkSwapchainKHR oldSwapchain;
 }
-struct VkCommandPoolMemoryReservationCreateInfo {
+struct VkPresentInfoKHR {
   VkStructureType sType;
   void* pNext;
-  VkDeviceSize commandPoolReservedSize;
-  uint commandPoolMaxCommandBuffers;
+  uint waitSemaphoreCount;
+  VkSemaphore pWaitSemaphores;
+  uint swapchainCount;
+  VkSwapchainKHR pSwapchains;
+  uint pImageIndices;
+  VkResult pResults;
 }
-struct VkCommandPoolMemoryConsumption {
+struct VkImageSwapchainCreateInfoKHR {
   VkStructureType sType;
   void* pNext;
-  VkDeviceSize commandPoolAllocated;
-  VkDeviceSize commandPoolReservedSize;
-  VkDeviceSize commandBufferAllocated;
+  VkSwapchainKHR swapchain;
 }
-struct VkPipelinePoolSize {
+struct VkBindImageMemorySwapchainInfoKHR {
   VkStructureType sType;
   void* pNext;
-  VkDeviceSize poolEntrySize;
-  uint poolEntryCount;
+  VkSwapchainKHR swapchain;
+  uint imageIndex;
 }
-struct VkFaultData {
+struct VkAcquireNextImageInfoKHR {
   VkStructureType sType;
   void* pNext;
-  VkFaultLevel faultLevel;
-  VkFaultType faultType;
+  VkSwapchainKHR swapchain;
+  ulong timeout;
+  VkSemaphore semaphore;
+  VkFence fence;
+  uint deviceMask;
 }
-struct VkFaultCallbackInfo {
+struct VkDeviceGroupPresentCapabilitiesKHR {
   VkStructureType sType;
   void* pNext;
-  uint faultCount;
-  VkFaultData pFaults;
-  PFN_vkFaultCallbackFunction pfnFaultCallback;
+  uint presentMask;
+  VkDeviceGroupPresentModeFlagsKHR modes;
 }
-struct VkPipelineOfflineCreateInfo {
+struct VkDeviceGroupPresentInfoKHR {
   VkStructureType sType;
   void* pNext;
-  char pipelineIdentifier;
-  VkPipelineMatchControl matchControl;
-  VkDeviceSize poolEntrySize;
+  uint swapchainCount;
+  uint pDeviceMasks;
+  VkDeviceGroupPresentModeFlagBitsKHR mode;
 }
-struct VkPipelineCacheStageValidationIndexEntry {
-  ulong codeSize;
-  ulong codeOffset;
+struct VkDeviceGroupSwapchainCreateInfoKHR {
+  VkStructureType sType;
+  void* pNext;
+  VkDeviceGroupPresentModeFlagsKHR modes;
 }
-struct VkPipelineCacheSafetyCriticalIndexEntry {
-  char pipelineIdentifier;
-  ulong pipelineMemorySize;
-  ulong jsonSize;
-  ulong jsonOffset;
-  uint stageIndexCount;
-  uint stageIndexStride;
-  ulong stageIndexOffset;
+struct VkDisplayModeCreateInfoKHR {
+  VkStructureType sType;
+  void* pNext;
+  VkDisplayModeCreateFlagsKHR flags;
+  VkDisplayModeParametersKHR parameters;
 }
-struct VkPipelineCacheHeaderVersionSafetyCriticalOne {
-  VkPipelineCacheHeaderVersionOne headerVersionOne;
-  VkPipelineCacheValidationVersion validationVersion;
-  uint implementationData;
-  uint pipelineIndexCount;
-  uint pipelineIndexStride;
-  ulong pipelineIndexOffset;
+struct VkDisplayModeParametersKHR {
+  VkExtent2D visibleRegion;
+  uint refreshRate;
+}
+struct VkDisplayModePropertiesKHR {
+  VkDisplayModeKHR displayMode;
+  VkDisplayModeParametersKHR parameters;
+}
+struct VkDisplayPlaneCapabilitiesKHR {
+  VkDisplayPlaneAlphaFlagsKHR supportedAlpha;
+  VkOffset2D minSrcPosition;
+  VkOffset2D maxSrcPosition;
+  VkExtent2D minSrcExtent;
+  VkExtent2D maxSrcExtent;
+  VkOffset2D minDstPosition;
+  VkOffset2D maxDstPosition;
+  VkExtent2D minDstExtent;
+  VkExtent2D maxDstExtent;
+}
+struct VkDisplayPlanePropertiesKHR {
+  VkDisplayKHR currentDisplay;
+  uint currentStackIndex;
+}
+struct VkDisplayPropertiesKHR {
+  VkDisplayKHR display;
+  char* displayName;
+  VkExtent2D physicalDimensions;
+  VkExtent2D physicalResolution;
+  VkSurfaceTransformFlagsKHR supportedTransforms;
+  VkBool32 planeReorderPossible;
+  VkBool32 persistentContent;
+}
+struct VkDisplaySurfaceCreateInfoKHR {
+  VkStructureType sType;
+  void* pNext;
+  VkDisplaySurfaceCreateFlagsKHR flags;
+  VkDisplayModeKHR displayMode;
+  uint planeIndex;
+  uint planeStackIndex;
+  VkSurfaceTransformFlagBitsKHR transform;
+  float globalAlpha;
+  VkDisplayPlaneAlphaFlagBitsKHR alphaMode;
+  VkExtent2D imageExtent;
+}
+struct VkDebugMarkerObjectNameInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkDebugReportObjectTypeEXT objectType;
+  ulong object;
+  char* pObjectName;
+}
+struct VkDebugMarkerObjectTagInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkDebugReportObjectTypeEXT objectType;
+  ulong object;
+  ulong tagName;
+  usz tagSize;
+  void* pTag;
+}
+struct VkDebugMarkerMarkerInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  char* pMarkerName;
+  float color;
+}
+struct VkDebugUtilsLabelEXT {
+  VkStructureType sType;
+  void* pNext;
+  char* pLabelName;
+  float color;
+}
+struct VkDebugUtilsMessengerCallbackDataEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkDebugUtilsMessengerCallbackDataFlagsEXT flags;
+  char* pMessageIdName;
+  int messageIdNumber;
+  char* pMessage;
+  uint queueLabelCount;
+  VkDebugUtilsLabelEXT pQueueLabels;
+  uint cmdBufLabelCount;
+  VkDebugUtilsLabelEXT pCmdBufLabels;
+  uint objectCount;
+  VkDebugUtilsObjectNameInfoEXT pObjects;
+}
+struct VkDebugUtilsMessengerCreateInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkDebugUtilsMessengerCreateFlagsEXT flags;
+  VkDebugUtilsMessageSeverityFlagsEXT messageSeverity;
+  VkDebugUtilsMessageTypeFlagsEXT messageType;
+  PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback;
+  void* pUserData;
+}
+struct VkDebugUtilsObjectNameInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkObjectType objectType;
+  ulong objectHandle;
+  char* pObjectName;
+}
+struct VkDebugUtilsObjectTagInfoEXT {
+  VkStructureType sType;
+  void* pNext;
+  VkObjectType objectType;
+  ulong objectHandle;
+  ulong tagName;
+  usz tagSize;
+  void* pTag;
 }
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, VkSystemAllocationScope);
 def PFN_vkFreeFunction = fn void* (void*, void*);
@@ -1659,7 +1781,7 @@ def PFN_vkInternalAllocationNotification = fn void* (void*, usz, VkInternalAlloc
 def PFN_vkInternalFreeNotification = fn void* (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
 def PFN_vkReallocationFunction = fn void* (void*, void*, usz, usz, VkSystemAllocationScope);
 def PFN_vkVoidFunction = fn void* ();
-def PFN_vkFaultCallbackFunction = fn void* (VkBool32, uint, VkFaultData);
+def PFN_vkDebugUtilsMessengerCallbackEXT = fn VkBool32 (VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT, VkDebugUtilsMessengerCallbackDataEXT, void*);
 extern fn VkResult createInstance (VkInstanceCreateInfo pcreateinfo, VkAllocationCallbacks pallocator, VkInstance pinstance) @extern("vkCreateInstance");
 extern fn void* destroyInstance (VkInstance instance, VkAllocationCallbacks pallocator) @extern("vkDestroyInstance");
 extern fn VkResult enumeratePhysicalDevices (VkInstance instance, uint pphysicaldevicecount, VkPhysicalDevice pphysicaldevices) @extern("vkEnumeratePhysicalDevices");
@@ -1825,8 +1947,43 @@ extern fn void* getPhysicalDeviceExternalBufferProperties (VkPhysicalDevice phys
 extern fn void* getPhysicalDeviceExternalFenceProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalFenceInfo pexternalfenceinfo, VkExternalFenceProperties pexternalfenceproperties) @extern("vkGetPhysicalDeviceExternalFenceProperties");
 extern fn void* getPhysicalDeviceExternalSemaphoreProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalSemaphoreInfo pexternalsemaphoreinfo, VkExternalSemaphoreProperties pexternalsemaphoreproperties) @extern("vkGetPhysicalDeviceExternalSemaphoreProperties");
 extern fn void* getDescriptorSetLayoutSupport (VkDevice device, VkDescriptorSetLayoutCreateInfo pcreateinfo, VkDescriptorSetLayoutSupport psupport) @extern("vkGetDescriptorSetLayoutSupport");
-extern fn void* getCommandPoolMemoryConsumption (VkDevice device, VkCommandPool commandpool, VkCommandBuffer commandbuffer, VkCommandPoolMemoryConsumption pconsumption) @extern("vkGetCommandPoolMemoryConsumption");
-extern fn VkResult getFaultData (VkDevice device, VkFaultQueryBehavior faultquerybehavior, VkBool32 punrecordedfaults, uint pfaultcount, VkFaultData pfaults) @extern("vkGetFaultData");
+extern fn void* destroySurfaceKHR (VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks pallocator) @extern("vkDestroySurfaceKHR");
+extern fn VkResult getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physicaldevice, uint queuefamilyindex, VkSurfaceKHR surface, VkBool32 psupported) @extern("vkGetPhysicalDeviceSurfaceSupportKHR");
+extern fn VkResult getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR psurfacecapabilities) @extern("vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+extern fn VkResult getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint psurfaceformatcount, VkSurfaceFormatKHR psurfaceformats) @extern("vkGetPhysicalDeviceSurfaceFormatsKHR");
+extern fn VkResult getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint ppresentmodecount, VkPresentModeKHR ppresentmodes) @extern("vkGetPhysicalDeviceSurfacePresentModesKHR");
+extern fn VkResult createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR pcreateinfo, VkAllocationCallbacks pallocator, VkSwapchainKHR pswapchain) @extern("vkCreateSwapchainKHR");
+extern fn void* destroySwapchainKHR (VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks pallocator) @extern("vkDestroySwapchainKHR");
+extern fn VkResult getSwapchainImagesKHR (VkDevice device, VkSwapchainKHR swapchain, uint pswapchainimagecount, VkImage pswapchainimages) @extern("vkGetSwapchainImagesKHR");
+extern fn VkResult acquireNextImageKHR (VkDevice device, VkSwapchainKHR swapchain, ulong timeout, VkSemaphore semaphore, VkFence fence, uint pimageindex) @extern("vkAcquireNextImageKHR");
+extern fn VkResult queuePresentKHR (VkQueue queue, VkPresentInfoKHR ppresentinfo) @extern("vkQueuePresentKHR");
+extern fn VkResult getDeviceGroupPresentCapabilitiesKHR (VkDevice device, VkDeviceGroupPresentCapabilitiesKHR pdevicegrouppresentcapabilities) @extern("vkGetDeviceGroupPresentCapabilitiesKHR");
+extern fn VkResult getDeviceGroupSurfacePresentModesKHR (VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR pmodes) @extern("vkGetDeviceGroupSurfacePresentModesKHR");
+extern fn VkResult getPhysicalDevicePresentRectanglesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint prectcount, VkRect2D prects) @extern("vkGetPhysicalDevicePresentRectanglesKHR");
+extern fn VkResult acquireNextImage2KHR (VkDevice device, VkAcquireNextImageInfoKHR pacquireinfo, uint pimageindex) @extern("vkAcquireNextImage2KHR");
+extern fn VkResult getPhysicalDeviceDisplayPropertiesKHR (VkPhysicalDevice physicaldevice, uint ppropertycount, VkDisplayPropertiesKHR pproperties) @extern("vkGetPhysicalDeviceDisplayPropertiesKHR");
+extern fn VkResult getPhysicalDeviceDisplayPlanePropertiesKHR (VkPhysicalDevice physicaldevice, uint ppropertycount, VkDisplayPlanePropertiesKHR pproperties) @extern("vkGetPhysicalDeviceDisplayPlanePropertiesKHR");
+extern fn VkResult getDisplayPlaneSupportedDisplaysKHR (VkPhysicalDevice physicaldevice, uint planeindex, uint pdisplaycount, VkDisplayKHR pdisplays) @extern("vkGetDisplayPlaneSupportedDisplaysKHR");
+extern fn VkResult getDisplayModePropertiesKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, uint ppropertycount, VkDisplayModePropertiesKHR pproperties) @extern("vkGetDisplayModePropertiesKHR");
+extern fn VkResult createDisplayModeKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR pcreateinfo, VkAllocationCallbacks pallocator, VkDisplayModeKHR pmode) @extern("vkCreateDisplayModeKHR");
+extern fn VkResult getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkDisplayModeKHR mode, uint planeindex, VkDisplayPlaneCapabilitiesKHR pcapabilities) @extern("vkGetDisplayPlaneCapabilitiesKHR");
+extern fn VkResult createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR pcreateinfo, VkAllocationCallbacks pallocator, VkSurfaceKHR psurface) @extern("vkCreateDisplayPlaneSurfaceKHR");
+extern fn VkResult debugMarkerSetObjectTagEXT (VkDevice device, VkDebugMarkerObjectTagInfoEXT ptaginfo) @extern("vkDebugMarkerSetObjectTagEXT");
+extern fn VkResult debugMarkerSetObjectNameEXT (VkDevice device, VkDebugMarkerObjectNameInfoEXT pnameinfo) @extern("vkDebugMarkerSetObjectNameEXT");
+extern fn void* cmdDebugMarkerBeginEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT pmarkerinfo) @extern("vkCmdDebugMarkerBeginEXT");
+extern fn void* cmdDebugMarkerEndEXT (VkCommandBuffer commandbuffer) @extern("vkCmdDebugMarkerEndEXT");
+extern fn void* cmdDebugMarkerInsertEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT pmarkerinfo) @extern("vkCmdDebugMarkerInsertEXT");
+extern fn VkResult setDebugUtilsObjectNameEXT (VkDevice device, VkDebugUtilsObjectNameInfoEXT pnameinfo) @extern("vkSetDebugUtilsObjectNameEXT");
+extern fn VkResult setDebugUtilsObjectTagEXT (VkDevice device, VkDebugUtilsObjectTagInfoEXT ptaginfo) @extern("vkSetDebugUtilsObjectTagEXT");
+extern fn void* queueBeginDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT plabelinfo) @extern("vkQueueBeginDebugUtilsLabelEXT");
+extern fn void* queueEndDebugUtilsLabelEXT (VkQueue queue) @extern("vkQueueEndDebugUtilsLabelEXT");
+extern fn void* queueInsertDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT plabelinfo) @extern("vkQueueInsertDebugUtilsLabelEXT");
+extern fn void* cmdBeginDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT plabelinfo) @extern("vkCmdBeginDebugUtilsLabelEXT");
+extern fn void* cmdEndDebugUtilsLabelEXT (VkCommandBuffer commandbuffer) @extern("vkCmdEndDebugUtilsLabelEXT");
+extern fn void* cmdInsertDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT plabelinfo) @extern("vkCmdInsertDebugUtilsLabelEXT");
+extern fn VkResult createDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT pcreateinfo, VkAllocationCallbacks pallocator, VkDebugUtilsMessengerEXT pmessenger) @extern("vkCreateDebugUtilsMessengerEXT");
+extern fn void* destroyDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks pallocator) @extern("vkDestroyDebugUtilsMessengerEXT");
+extern fn void* submitDebugUtilsMessageEXT (VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageseverity, VkDebugUtilsMessageTypeFlagsEXT messagetypes, VkDebugUtilsMessengerCallbackDataEXT pcallbackdata) @extern("vkSubmitDebugUtilsMessageEXT");
 
 def VkResult = distinct inline long;
 const VkResult VK_SUCCESS = 0;
@@ -1848,10 +2005,12 @@ const VkResult VK_ERROR_TOO_MANY_OBJECTS = -10;
 const VkResult VK_ERROR_FORMAT_NOT_SUPPORTED = -11;
 const VkResult VK_ERROR_FRAGMENTED_POOL = -12;
 const VkResult VK_ERROR_UNKNOWN = -13;
-const VkResult VK_ERROR_OUT_OF_POOL_MEMORY = 1000069000;
-const VkResult VK_ERROR_INVALID_EXTERNAL_HANDLE = 1000072003;
-const VkResult VK_ERROR_INVALID_PIPELINE_CACHE_DATA = 1000298000;
-const VkResult VK_ERROR_NO_PIPELINE_MATCH = 1000298001;
+const VkResult VK_ERROR_OUT_OF_POOL_MEMORY = -1000069000;
+const VkResult VK_ERROR_INVALID_EXTERNAL_HANDLE = -1000072003;
+const VkResult VK_ERROR_SURFACE_LOST_KHR = -1000000000;
+const VkResult VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001;
+const VkResult VK_SUBOPTIMAL_KHR = 1000001003;
+const VkResult VK_ERROR_OUT_OF_DATE_KHR = -1000001004;
 
 def VkStructureType = distinct inline long;
 const VkStructureType VK_STRUCTURE_TYPE_APPLICATION_INFO = 0;
@@ -1968,17 +2127,27 @@ const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = 10000760
 const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000;
 const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001;
 const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000;
-const VkStructureType VK_STRUCTURE_TYPE_DEVICE_OBJECT_RESERVATION_CREATE_INFO = 1000298002;
-const VkStructureType VK_STRUCTURE_TYPE_COMMAND_POOL_MEMORY_RESERVATION_CREATE_INFO = 1000298003;
-const VkStructureType VK_STRUCTURE_TYPE_COMMAND_POOL_MEMORY_CONSUMPTION = 1000298004;
-const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_POOL_SIZE = 1000298005;
-const VkStructureType VK_STRUCTURE_TYPE_FAULT_DATA = 1000298007;
-const VkStructureType VK_STRUCTURE_TYPE_FAULT_CALLBACK_INFO = 1000298008;
-const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_OFFLINE_CREATE_INFO = 1000298010;
+const VkStructureType VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR = 1000001000;
+const VkStructureType VK_STRUCTURE_TYPE_PRESENT_INFO_KHR = 1000001001;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR = 1000001007;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR = 1000001008;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR = 1000001009;
+const VkStructureType VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR = 1000001010;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR = 1000001011;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000001012;
+const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
+const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = 1000022000;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = 1000022001;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = 1000022002;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT = 1000128003;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT = 1000128004;
 
 def VkPipelineCacheHeaderVersion = distinct inline long;
 const VkPipelineCacheHeaderVersion VK_PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
-const VkPipelineCacheHeaderVersion VK_PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE = 1000298001;
 
 def VkObjectType = distinct inline long;
 const VkObjectType VK_OBJECT_TYPE_UNKNOWN = 0;
@@ -2009,6 +2178,11 @@ const VkObjectType VK_OBJECT_TYPE_FRAMEBUFFER = 24;
 const VkObjectType VK_OBJECT_TYPE_COMMAND_POOL = 25;
 const VkObjectType VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = 1000156000;
 const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000;
+const VkObjectType VK_OBJECT_TYPE_SURFACE_KHR = 1000000000;
+const VkObjectType VK_OBJECT_TYPE_SWAPCHAIN_KHR = 1000001000;
+const VkObjectType VK_OBJECT_TYPE_DISPLAY_KHR = 1000002000;
+const VkObjectType VK_OBJECT_TYPE_DISPLAY_MODE_KHR = 1000002001;
+const VkObjectType VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000;
 
 def VkVendorId = distinct inline long;
 const VkVendorId VK_VENDOR_ID_VIV = 0x10001;
@@ -2306,7 +2480,6 @@ const VkInternalAllocationType VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
 def VkMemoryHeapFlagBits = distinct inline long;
 const VkMemoryHeapFlagBits VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
 const VkMemoryHeapFlagBits VK_MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
-const VkMemoryHeapFlagBits VK_MEMORY_HEAP_SEU_SAFE_BIT = 0x00000004;
 
 def VkMemoryPropertyFlagBits = distinct inline long;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
@@ -2445,6 +2618,7 @@ const VkImageLayout VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7;
 const VkImageLayout VK_IMAGE_LAYOUT_PREINITIALIZED = 8;
 const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = 1000117000;
 const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = 1000117001;
+const VkImageLayout VK_IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002;
 
 def VkComponentSwizzle = distinct inline long;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_IDENTITY = 0;
@@ -2820,30 +2994,90 @@ def VkExternalSemaphoreFeatureFlagBits = distinct inline long;
 const VkExternalSemaphoreFeatureFlagBits VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001;
 const VkExternalSemaphoreFeatureFlagBits VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002;
 
-def VkFaultLevel = distinct inline long;
-const VkFaultLevel VK_FAULT_LEVEL_UNASSIGNED = 0;
-const VkFaultLevel VK_FAULT_LEVEL_CRITICAL = 1;
-const VkFaultLevel VK_FAULT_LEVEL_RECOVERABLE = 2;
-const VkFaultLevel VK_FAULT_LEVEL_WARNING = 3;
+def VkSurfaceTransformFlagBitsKHR = distinct inline long;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = 0x00000002;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = 0x00000004;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = 0x00000008;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = 0x00000010;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = 0x00000020;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = 0x00000040;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080;
+const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100;
 
-def VkFaultType = distinct inline long;
-const VkFaultType VK_FAULT_TYPE_INVALID = 0;
-const VkFaultType VK_FAULT_TYPE_UNASSIGNED = 1;
-const VkFaultType VK_FAULT_TYPE_IMPLEMENTATION = 2;
-const VkFaultType VK_FAULT_TYPE_SYSTEM = 3;
-const VkFaultType VK_FAULT_TYPE_PHYSICAL_DEVICE = 4;
-const VkFaultType VK_FAULT_TYPE_COMMAND_BUFFER_FULL = 5;
-const VkFaultType VK_FAULT_TYPE_INVALID_API_USAGE = 6;
+def VkPresentModeKHR = distinct inline long;
+const VkPresentModeKHR VK_PRESENT_MODE_IMMEDIATE_KHR = 0;
+const VkPresentModeKHR VK_PRESENT_MODE_MAILBOX_KHR = 1;
+const VkPresentModeKHR VK_PRESENT_MODE_FIFO_KHR = 2;
+const VkPresentModeKHR VK_PRESENT_MODE_FIFO_RELAXED_KHR = 3;
 
-def VkFaultQueryBehavior = distinct inline long;
-const VkFaultQueryBehavior VK_FAULT_QUERY_BEHAVIOR_GET_AND_CLEAR_ALL_FAULTS = 0;
+def VkColorSpaceKHR = distinct inline long;
+const VkColorSpaceKHR VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
 
-def VkPipelineMatchControl = distinct inline long;
-const VkPipelineMatchControl VK_PIPELINE_MATCH_CONTROL_APPLICATION_UUID_EXACT_MATCH = 0;
+def VkCompositeAlphaFlagBitsKHR = distinct inline long;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004;
+const VkCompositeAlphaFlagBitsKHR VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008;
 
-def VkPipelineCacheCreateFlagBits = distinct inline long;
+def VkSwapchainCreateFlagBitsKHR = distinct inline long;
+const VkSwapchainCreateFlagBitsKHR VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = 0x00000001;
+const VkSwapchainCreateFlagBitsKHR VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = 0x00000002;
 
+def VkDeviceGroupPresentModeFlagBitsKHR = distinct inline long;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004;
+const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008;
 
-def VkPipelineCacheValidationVersion = distinct inline long;
-const VkPipelineCacheValidationVersion VK_PIPELINE_CACHE_VALIDATION_VERSION_SAFETY_CRITICAL_ONE = 1;
+def VkDisplayPlaneAlphaFlagBitsKHR = distinct inline long;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
+const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
+
+def VkDebugReportObjectTypeEXT = distinct inline long;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = 1;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = 2;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = 3;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = 4;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = 5;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = 6;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = 7;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = 8;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = 9;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = 10;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = 11;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = 12;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = 13;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = 14;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = 15;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = 16;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = 17;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = 18;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = 19;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = 20;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = 21;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = 22;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = 23;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = 24;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = 25;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = 26;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = 27;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT = 28;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT = 29;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = 30;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = 33;
+
+def VkDebugUtilsMessageSeverityFlagBitsEXT = distinct inline long;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = 0x00000010;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = 0x00000100;
+const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = 0x00001000;
+
+def VkDebugUtilsMessageTypeFlagBitsEXT = distinct inline long;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = 0x00000001;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = 0x00000002;
+const VkDebugUtilsMessageTypeFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
