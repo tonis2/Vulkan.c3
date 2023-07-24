@@ -3,7 +3,8 @@
 	"warnings": ["no-unused"],
 	"authors": [],
 	"version": "0.1.0",
-	"sources": ["./build/vk.c3"],
+	"linked-libraries": ["glfw"],
+	"sources": ["./build/vk.c3", "./tests/glfw.c3"],
 	"targets": {
 		"test": {
 			"type": "executable",

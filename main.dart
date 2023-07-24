@@ -76,7 +76,8 @@ var typeMap = {
   "null": "void*",
   "HANDLE": "void*",
   "void": "void*",
-  "char": "char*"
+  "char": "char*",
+  "VkBool32": "bool"
 };
 
 class VkStructMember {
