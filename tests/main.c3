@@ -1,9 +1,91 @@
 import std::io;
 import vk;
+import glfw;
 
 const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
+const WIDTH = 800;
+const HEIGHT = 600;
+const ENABLE_VALIDATION_LAYERS = true;
 
-fn void main()
+fn bool debugCallback(
+    vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    vk::VkDebugUtilsMessageTypeFlagsEXT messageType,
+    vk::VkDebugUtilsMessengerCallbackDataEXT* data,
+    void* userData,
+) {
+    if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+       io::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+       io::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+       io::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+       io::printf("%s \n", data.pMessage);
+    }
+    return false;
+}
+
+
+fn int main()
 {
+    String[] validation_layers = {"VK_LAYER_KHRONOS_validation"};
 
+    glfw::init();
+    glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
+    glfw::windowHint(glfw::GLFW_RESIZABLE, glfw::GLFW_FALSE);
+    glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
+    glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
+    GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
+
+    if (window == null)
+    {
+        io::printf("Failed to init gl window");
+        glfw::terminate();
+        return 1;
+    }
+
+    defer {
+        glfw::destroyWindow(window);
+        glfw::terminate();
+    }
+
+    VkApplicationInfo appInfo = {
+        .sType = vk::VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        .pApplicationName = "Hello Triangle",
+        .applicationVersion = vk::@makeApiVersion(0,1,1,0),
+        .pEngineName = "Super engine",
+        .engineVersion = vk::@makeApiVersion(0,1,1,0),
+        .apiVersion = vk::@makeApiVersion(0,1,1,0),
+        .pNext = null,
+    };
+
+    uint extensions_count = 0;
+    char* extensions = glfw::getRequiredInstanceExtensions(&extensions_count);
+
+    // defer mem::free(extensions);
+    VkDebugUtilsMessengerCreateInfoEXT debug_create_info;
+    if (ENABLE_VALIDATION_LAYERS) {
+        VkDebugUtilsMessengerCreateInfoEXT debugInfo = {
+            .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+            .pNext = null,
+            .flags = 0,
+            .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+            .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+            .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
+            .pUserData = null,
+        };
+    }
+
+    VkInstanceCreateInfo createInfo = {
+        .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .pApplicationInfo = appInfo,
+        .enabledExtensionCount = extensions_count,
+        .ppEnabledExtensionNames = extensions,
+        .enabledLayerCount = 1,
+        .ppEnabledLayerNames = (char*)&validation_layers,
+        .pNext = &debug_create_info,
+        .flags = 0,
+    };
+
+    return 0;
 }
