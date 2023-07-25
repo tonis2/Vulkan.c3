@@ -76,7 +76,6 @@ var typeMap = {
   "null": "void*",
   "HANDLE": "void*",
   "void": "void*",
-  "char": "char*",
   "VkBool32": "bool"
 };
 
@@ -95,7 +94,7 @@ class VkStructMember {
     bool optional = node.getAttribute("optional") == "true";
     bool nullTerminated = node.getAttribute("len") == "null-terminated";
     return VkStructMember(
-        type: typeMap[type] ?? type, name: name, api: api, optional: optional, nullTerminated: nullTerminated);
+        type: "${typeMap[type] ?? type}${optional ? "*": ""}", name: name, api: api, optional: optional, nullTerminated: nullTerminated);
   }
 }
 
@@ -184,8 +183,9 @@ class VKtype {
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
     String? requiredBy = node.getAttribute("requires");
+    String? optional = node.getAttribute("optional");
     String? api = node.getAttribute("api");
-    return VKtype(type: typeMap[type] ?? type, name: name, requiredBy: requiredBy, api: api);
+    return VKtype(type: typeMap[type] ?? type, name: "${optional != null ? "*": ""}$name", requiredBy: requiredBy, api: api);
   }
 }
 
@@ -443,7 +443,7 @@ void main() {
         String nodeType = node.name.qualified;
         if (api == "vulkansc") return;
         if (nodeType == "enum") {
-          // Add enum extentsion to parent
+          // Add enum extension to parent
           if (extension != null) {
             String? offset = node.getAttribute("offset");
             String? bitpos = node.getAttribute("bitpos");

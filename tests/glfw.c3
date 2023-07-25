@@ -47,7 +47,6 @@ extern fn void getFramebufferSize(GLFWwindow window, int*, int*) @extern("glfwGe
 extern fn double getTime() @extern("glfwGetTime");
 extern fn void terminate() @extern("glfwTerminate");
 
-
 extern fn GLproc getProcAddress(char*) @extern("glfwGetProcAddress");
 extern fn bool windowShouldClose(GLFWwindow window) @extern("glfwWindowShouldClose");
 extern fn bool getCursorPos(GLFWwindow window, double* x_pos, double* y_pos) @extern("glfwGetCursorPos");
