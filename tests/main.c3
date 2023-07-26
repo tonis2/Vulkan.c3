@@ -90,7 +90,7 @@ fn int main()
     VkInstanceCreateInfo createInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pApplicationInfo = &appInfo,
-        .enabledExtensionCount = &extensions_count,
+        .enabledExtensionCount = extensions_count,
         .ppEnabledExtensionNames = extensions,
         .enabledLayerCount = 1,
         .flags = 0,
@@ -102,7 +102,7 @@ fn int main()
         VkDebugUtilsMessengerCreateInfoEXT debugInfo = {
             .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
             .pNext = null,
-            .flags = null,
+            .flags = 0,
             .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
             .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
             .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,

@@ -207,7 +207,7 @@ struct VkRect2D {
 }
 struct VkBufferMemoryBarrier {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkAccessFlags srcAccessMask;
   VkAccessFlags dstAccessMask;
   uint srcQueueFamilyIndex;
@@ -236,7 +236,7 @@ struct VkDrawIndirectCommand {
 }
 struct VkImageMemoryBarrier {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkAccessFlags srcAccessMask;
   VkAccessFlags dstAccessMask;
   VkImageLayout oldLayout;
@@ -248,28 +248,28 @@ struct VkImageMemoryBarrier {
 }
 struct VkMemoryBarrier {
   VkStructureType sType;
-  void** pNext;
-  VkAccessFlags* srcAccessMask;
-  VkAccessFlags* dstAccessMask;
+  void* pNext;
+  VkAccessFlags srcAccessMask;
+  VkAccessFlags dstAccessMask;
 }
 struct VkPipelineCacheHeaderVersionOne {
   uint headerSize;
   VkPipelineCacheHeaderVersion headerVersion;
   uint vendorID;
   uint deviceID;
-  char pipelineCacheUUID;
+  char[VK_UUID_SIZE] pipelineCacheUUID;
 }
 struct VkAllocationCallbacks {
-  void** pUserData;
+  void* pUserData;
   PFN_vkAllocationFunction pfnAllocation;
   PFN_vkReallocationFunction pfnReallocation;
   PFN_vkFreeFunction pfnFree;
-  PFN_vkInternalAllocationNotification* pfnInternalAllocation;
-  PFN_vkInternalFreeNotification* pfnInternalFree;
+  PFN_vkInternalAllocationNotification pfnInternalAllocation;
+  PFN_vkInternalFreeNotification pfnInternalFree;
 }
 struct VkApplicationInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   char* pApplicationName;
   uint applicationVersion;
   char* pEngineName;
@@ -277,33 +277,33 @@ struct VkApplicationInfo {
   uint apiVersion;
 }
 struct VkFormatProperties {
-  VkFormatFeatureFlags* linearTilingFeatures;
-  VkFormatFeatureFlags* optimalTilingFeatures;
-  VkFormatFeatureFlags* bufferFeatures;
+  VkFormatFeatureFlags linearTilingFeatures;
+  VkFormatFeatureFlags optimalTilingFeatures;
+  VkFormatFeatureFlags bufferFeatures;
 }
 struct VkImageFormatProperties {
   VkExtent3D maxExtent;
   uint maxMipLevels;
   uint maxArrayLayers;
-  VkSampleCountFlags* sampleCounts;
+  VkSampleCountFlags sampleCounts;
   VkDeviceSize maxResourceSize;
 }
 struct VkInstanceCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkInstanceCreateFlags* flags;
+  void* pNext;
+  VkInstanceCreateFlags flags;
   VkApplicationInfo* pApplicationInfo;
-  uint* enabledLayerCount;
-  char ppEnabledLayerNames;
-  uint* enabledExtensionCount;
-  char ppEnabledExtensionNames;
+  uint enabledLayerCount;
+  char* ppEnabledLayerNames;
+  uint enabledExtensionCount;
+  char* ppEnabledExtensionNames;
 }
 struct VkMemoryHeap {
   VkDeviceSize size;
-  VkMemoryHeapFlags* flags;
+  VkMemoryHeapFlags flags;
 }
 struct VkMemoryType {
-  VkMemoryPropertyFlags* propertyFlags;
+  VkMemoryPropertyFlags propertyFlags;
   uint heapIndex;
 }
 struct VkPhysicalDeviceFeatures {
@@ -444,16 +444,16 @@ struct VkPhysicalDeviceLimits {
   uint maxFramebufferWidth;
   uint maxFramebufferHeight;
   uint maxFramebufferLayers;
-  VkSampleCountFlags* framebufferColorSampleCounts;
-  VkSampleCountFlags* framebufferDepthSampleCounts;
-  VkSampleCountFlags* framebufferStencilSampleCounts;
-  VkSampleCountFlags* framebufferNoAttachmentsSampleCounts;
+  VkSampleCountFlags framebufferColorSampleCounts;
+  VkSampleCountFlags framebufferDepthSampleCounts;
+  VkSampleCountFlags framebufferStencilSampleCounts;
+  VkSampleCountFlags framebufferNoAttachmentsSampleCounts;
   uint maxColorAttachments;
-  VkSampleCountFlags* sampledImageColorSampleCounts;
-  VkSampleCountFlags* sampledImageIntegerSampleCounts;
-  VkSampleCountFlags* sampledImageDepthSampleCounts;
-  VkSampleCountFlags* sampledImageStencilSampleCounts;
-  VkSampleCountFlags* storageImageSampleCounts;
+  VkSampleCountFlags sampledImageColorSampleCounts;
+  VkSampleCountFlags sampledImageIntegerSampleCounts;
+  VkSampleCountFlags sampledImageDepthSampleCounts;
+  VkSampleCountFlags sampledImageStencilSampleCounts;
+  VkSampleCountFlags storageImageSampleCounts;
   uint maxSampleMaskWords;
   bool timestampComputeAndGraphics;
   float timestampPeriod;
@@ -473,9 +473,9 @@ struct VkPhysicalDeviceLimits {
 }
 struct VkPhysicalDeviceMemoryProperties {
   uint memoryTypeCount;
-  VkMemoryType memoryTypes;
+  VkMemoryType[VK_MAX_MEMORY_TYPES] memoryTypes;
   uint memoryHeapCount;
-  VkMemoryHeap memoryHeaps;
+  VkMemoryHeap[VK_MAX_MEMORY_HEAPS] memoryHeaps;
 }
 struct VkPhysicalDeviceProperties {
   uint apiVersion;
@@ -483,8 +483,8 @@ struct VkPhysicalDeviceProperties {
   uint vendorID;
   uint deviceID;
   VkPhysicalDeviceType deviceType;
-  char deviceName;
-  char pipelineCacheUUID;
+  char[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE] deviceName;
+  char[VK_UUID_SIZE] pipelineCacheUUID;
   VkPhysicalDeviceLimits limits;
   VkPhysicalDeviceSparseProperties sparseProperties;
 }
@@ -496,62 +496,62 @@ struct VkPhysicalDeviceSparseProperties {
   bool residencyNonResidentStrict;
 }
 struct VkQueueFamilyProperties {
-  VkQueueFlags* queueFlags;
+  VkQueueFlags queueFlags;
   uint queueCount;
   uint timestampValidBits;
   VkExtent3D minImageTransferGranularity;
 }
 struct VkDeviceCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkDeviceCreateFlags* flags;
+  void* pNext;
+  VkDeviceCreateFlags flags;
   uint queueCreateInfoCount;
-  VkDeviceQueueCreateInfo pQueueCreateInfos;
-  uint* enabledLayerCount;
-  char ppEnabledLayerNames;
-  uint* enabledExtensionCount;
-  char ppEnabledExtensionNames;
+  VkDeviceQueueCreateInfo* pQueueCreateInfos;
+  uint enabledLayerCount;
+  char* ppEnabledLayerNames;
+  uint enabledExtensionCount;
+  char* ppEnabledExtensionNames;
   VkPhysicalDeviceFeatures* pEnabledFeatures;
 }
 struct VkDeviceQueueCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkDeviceQueueCreateFlags* flags;
+  void* pNext;
+  VkDeviceQueueCreateFlags flags;
   uint queueFamilyIndex;
   uint queueCount;
-  float pQueuePriorities;
+  float* pQueuePriorities;
 }
 struct VkExtensionProperties {
-  char extensionName;
+  char[VK_MAX_EXTENSION_NAME_SIZE] extensionName;
   uint specVersion;
 }
 struct VkLayerProperties {
-  char layerName;
+  char[VK_MAX_EXTENSION_NAME_SIZE] layerName;
   uint specVersion;
   uint implementationVersion;
-  char description;
+  char[VK_MAX_DESCRIPTION_SIZE] description;
 }
 struct VkSubmitInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* waitSemaphoreCount;
-  VkSemaphore pWaitSemaphores;
-  VkPipelineStageFlags pWaitDstStageMask;
-  uint* commandBufferCount;
-  VkCommandBuffer pCommandBuffers;
-  uint* signalSemaphoreCount;
-  VkSemaphore pSignalSemaphores;
+  void* pNext;
+  uint waitSemaphoreCount;
+  VkSemaphore* pWaitSemaphores;
+  VkPipelineStageFlags* pWaitDstStageMask;
+  uint commandBufferCount;
+  VkCommandBuffer* pCommandBuffers;
+  uint signalSemaphoreCount;
+  VkSemaphore* pSignalSemaphores;
 }
 struct VkMappedMemoryRange {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDeviceMemory memory;
   VkDeviceSize offset;
   VkDeviceSize size;
 }
 struct VkMemoryAllocateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDeviceSize allocationSize;
   uint memoryTypeIndex;
 }
@@ -562,17 +562,17 @@ struct VkMemoryRequirements {
 }
 struct VkBindSparseInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* waitSemaphoreCount;
-  VkSemaphore pWaitSemaphores;
-  uint* bufferBindCount;
-  VkSparseBufferMemoryBindInfo pBufferBinds;
-  uint* imageOpaqueBindCount;
-  VkSparseImageOpaqueMemoryBindInfo pImageOpaqueBinds;
-  uint* imageBindCount;
-  VkSparseImageMemoryBindInfo pImageBinds;
-  uint* signalSemaphoreCount;
-  VkSemaphore pSignalSemaphores;
+  void* pNext;
+  uint waitSemaphoreCount;
+  VkSemaphore* pWaitSemaphores;
+  uint bufferBindCount;
+  VkSparseBufferMemoryBindInfo* pBufferBinds;
+  uint imageOpaqueBindCount;
+  VkSparseImageOpaqueMemoryBindInfo* pImageOpaqueBinds;
+  uint imageBindCount;
+  VkSparseImageMemoryBindInfo* pImageBinds;
+  uint signalSemaphoreCount;
+  VkSemaphore* pSignalSemaphores;
 }
 struct VkImageSubresource {
   VkImageAspectFlags aspectMask;
@@ -582,25 +582,25 @@ struct VkImageSubresource {
 struct VkSparseBufferMemoryBindInfo {
   VkBuffer buffer;
   uint bindCount;
-  VkSparseMemoryBind pBinds;
+  VkSparseMemoryBind* pBinds;
 }
 struct VkSparseImageFormatProperties {
-  VkImageAspectFlags* aspectMask;
+  VkImageAspectFlags aspectMask;
   VkExtent3D imageGranularity;
-  VkSparseImageFormatFlags* flags;
+  VkSparseImageFormatFlags flags;
 }
 struct VkSparseImageMemoryBind {
   VkImageSubresource subresource;
   VkOffset3D offset;
   VkExtent3D extent;
-  VkDeviceMemory* memory;
+  VkDeviceMemory memory;
   VkDeviceSize memoryOffset;
-  VkSparseMemoryBindFlags* flags;
+  VkSparseMemoryBindFlags flags;
 }
 struct VkSparseImageMemoryBindInfo {
   VkImage image;
   uint bindCount;
-  VkSparseImageMemoryBind pBinds;
+  VkSparseImageMemoryBind* pBinds;
 }
 struct VkSparseImageMemoryRequirements {
   VkSparseImageFormatProperties formatProperties;
@@ -612,52 +612,52 @@ struct VkSparseImageMemoryRequirements {
 struct VkSparseImageOpaqueMemoryBindInfo {
   VkImage image;
   uint bindCount;
-  VkSparseMemoryBind pBinds;
+  VkSparseMemoryBind* pBinds;
 }
 struct VkSparseMemoryBind {
   VkDeviceSize resourceOffset;
   VkDeviceSize size;
-  VkDeviceMemory* memory;
+  VkDeviceMemory memory;
   VkDeviceSize memoryOffset;
-  VkSparseMemoryBindFlags* flags;
+  VkSparseMemoryBindFlags flags;
 }
 struct VkFenceCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkFenceCreateFlags* flags;
+  void* pNext;
+  VkFenceCreateFlags flags;
 }
 struct VkSemaphoreCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkSemaphoreCreateFlags* flags;
+  void* pNext;
+  VkSemaphoreCreateFlags flags;
 }
 struct VkEventCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkEventCreateFlags* flags;
+  void* pNext;
+  VkEventCreateFlags flags;
 }
 struct VkQueryPoolCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkQueryPoolCreateFlags* flags;
+  void* pNext;
+  VkQueryPoolCreateFlags flags;
   VkQueryType queryType;
   uint queryCount;
-  VkQueryPipelineStatisticFlags* pipelineStatistics;
+  VkQueryPipelineStatisticFlags pipelineStatistics;
 }
 struct VkBufferCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkBufferCreateFlags* flags;
+  void* pNext;
+  VkBufferCreateFlags flags;
   VkDeviceSize size;
   VkBufferUsageFlags usage;
   VkSharingMode sharingMode;
-  uint* queueFamilyIndexCount;
-  uint pQueueFamilyIndices;
+  uint queueFamilyIndexCount;
+  uint* pQueueFamilyIndices;
 }
 struct VkBufferViewCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkBufferViewCreateFlags* flags;
+  void* pNext;
+  VkBufferViewCreateFlags flags;
   VkBuffer buffer;
   VkFormat format;
   VkDeviceSize offset;
@@ -665,8 +665,8 @@ struct VkBufferViewCreateInfo {
 }
 struct VkImageCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkImageCreateFlags* flags;
+  void* pNext;
+  VkImageCreateFlags flags;
   VkImageType imageType;
   VkFormat format;
   VkExtent3D extent;
@@ -676,8 +676,8 @@ struct VkImageCreateInfo {
   VkImageTiling tiling;
   VkImageUsageFlags usage;
   VkSharingMode sharingMode;
-  uint* queueFamilyIndexCount;
-  uint pQueueFamilyIndices;
+  uint queueFamilyIndexCount;
+  uint* pQueueFamilyIndices;
   VkImageLayout initialLayout;
 }
 struct VkSubresourceLayout {
@@ -702,8 +702,8 @@ struct VkImageSubresourceRange {
 }
 struct VkImageViewCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkImageViewCreateFlags* flags;
+  void* pNext;
+  VkImageViewCreateFlags flags;
   VkImage image;
   VkImageViewType viewType;
   VkFormat format;
@@ -712,32 +712,32 @@ struct VkImageViewCreateInfo {
 }
 struct VkShaderModuleCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkShaderModuleCreateFlags* flags;
+  void* pNext;
+  VkShaderModuleCreateFlags flags;
   usz codeSize;
-  uint pCode;
+  uint* pCode;
 }
 struct VkPipelineCacheCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineCacheCreateFlags* flags;
-  usz* initialDataSize;
+  void* pNext;
+  VkPipelineCacheCreateFlags flags;
+  usz initialDataSize;
   void* pInitialData;
 }
 struct VkComputePipelineCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineCreateFlags* flags;
+  void* pNext;
+  VkPipelineCreateFlags flags;
   VkPipelineShaderStageCreateInfo stage;
   VkPipelineLayout layout;
-  VkPipeline* basePipelineHandle;
+  VkPipeline basePipelineHandle;
   int basePipelineIndex;
 }
 struct VkGraphicsPipelineCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineCreateFlags* flags;
-  uint* stageCount;
+  void* pNext;
+  VkPipelineCreateFlags flags;
+  uint stageCount;
   VkPipelineShaderStageCreateInfo* pStages;
   VkPipelineVertexInputStateCreateInfo* pVertexInputState;
   VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState;
@@ -748,10 +748,10 @@ struct VkGraphicsPipelineCreateInfo {
   VkPipelineDepthStencilStateCreateInfo* pDepthStencilState;
   VkPipelineColorBlendStateCreateInfo* pColorBlendState;
   VkPipelineDynamicStateCreateInfo* pDynamicState;
-  VkPipelineLayout* layout;
-  VkRenderPass* renderPass;
+  VkPipelineLayout layout;
+  VkRenderPass renderPass;
   uint subpass;
-  VkPipeline* basePipelineHandle;
+  VkPipeline basePipelineHandle;
   int basePipelineIndex;
 }
 struct VkPipelineColorBlendAttachmentState {
@@ -762,22 +762,22 @@ struct VkPipelineColorBlendAttachmentState {
   VkBlendFactor srcAlphaBlendFactor;
   VkBlendFactor dstAlphaBlendFactor;
   VkBlendOp alphaBlendOp;
-  VkColorComponentFlags* colorWriteMask;
+  VkColorComponentFlags colorWriteMask;
 }
 struct VkPipelineColorBlendStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineColorBlendStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineColorBlendStateCreateFlags flags;
   bool logicOpEnable;
   VkLogicOp logicOp;
-  uint* attachmentCount;
+  uint attachmentCount;
   VkPipelineColorBlendAttachmentState* pAttachments;
   float blendConstants;
 }
 struct VkPipelineDepthStencilStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineDepthStencilStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineDepthStencilStateCreateFlags flags;
   bool depthTestEnable;
   bool depthWriteEnable;
   VkCompareOp depthCompareOp;
@@ -790,22 +790,22 @@ struct VkPipelineDepthStencilStateCreateInfo {
 }
 struct VkPipelineDynamicStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineDynamicStateCreateFlags* flags;
-  uint* dynamicStateCount;
-  VkDynamicState pDynamicStates;
+  void* pNext;
+  VkPipelineDynamicStateCreateFlags flags;
+  uint dynamicStateCount;
+  VkDynamicState* pDynamicStates;
 }
 struct VkPipelineInputAssemblyStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineInputAssemblyStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineInputAssemblyStateCreateFlags flags;
   VkPrimitiveTopology topology;
   bool primitiveRestartEnable;
 }
 struct VkPipelineMultisampleStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineMultisampleStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineMultisampleStateCreateFlags flags;
   VkSampleCountFlagBits rasterizationSamples;
   bool sampleShadingEnable;
   float minSampleShading;
@@ -815,12 +815,12 @@ struct VkPipelineMultisampleStateCreateInfo {
 }
 struct VkPipelineRasterizationStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineRasterizationStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineRasterizationStateCreateFlags flags;
   bool depthClampEnable;
   bool rasterizerDiscardEnable;
   VkPolygonMode polygonMode;
-  VkCullModeFlags* cullMode;
+  VkCullModeFlags cullMode;
   VkFrontFace frontFace;
   bool depthBiasEnable;
   float depthBiasConstantFactor;
@@ -830,41 +830,41 @@ struct VkPipelineRasterizationStateCreateInfo {
 }
 struct VkPipelineShaderStageCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineShaderStageCreateFlags* flags;
+  void* pNext;
+  VkPipelineShaderStageCreateFlags flags;
   VkShaderStageFlagBits stage;
-  VkShaderModule* mod;
-  char pName;
+  VkShaderModule mod;
+  char* pName;
   VkSpecializationInfo* pSpecializationInfo;
 }
 struct VkPipelineTessellationStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineTessellationStateCreateFlags* flags;
+  void* pNext;
+  VkPipelineTessellationStateCreateFlags flags;
   uint patchControlPoints;
 }
 struct VkPipelineVertexInputStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineVertexInputStateCreateFlags* flags;
-  uint* vertexBindingDescriptionCount;
-  VkVertexInputBindingDescription pVertexBindingDescriptions;
-  uint* vertexAttributeDescriptionCount;
-  VkVertexInputAttributeDescription pVertexAttributeDescriptions;
+  void* pNext;
+  VkPipelineVertexInputStateCreateFlags flags;
+  uint vertexBindingDescriptionCount;
+  VkVertexInputBindingDescription* pVertexBindingDescriptions;
+  uint vertexAttributeDescriptionCount;
+  VkVertexInputAttributeDescription* pVertexAttributeDescriptions;
 }
 struct VkPipelineViewportStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineViewportStateCreateFlags* flags;
-  uint* viewportCount;
+  void* pNext;
+  VkPipelineViewportStateCreateFlags flags;
+  uint viewportCount;
   VkViewport* pViewports;
-  uint* scissorCount;
+  uint scissorCount;
   VkRect2D* pScissors;
 }
 struct VkSpecializationInfo {
-  uint* mapEntryCount;
-  VkSpecializationMapEntry pMapEntries;
-  usz* dataSize;
+  uint mapEntryCount;
+  VkSpecializationMapEntry* pMapEntries;
+  usz dataSize;
   void* pData;
 }
 struct VkSpecializationMapEntry {
@@ -902,12 +902,12 @@ struct VkViewport {
 }
 struct VkPipelineLayoutCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkPipelineLayoutCreateFlags* flags;
-  uint* setLayoutCount;
-  VkDescriptorSetLayout pSetLayouts;
-  uint* pushConstantRangeCount;
-  VkPushConstantRange pPushConstantRanges;
+  void* pNext;
+  VkPipelineLayoutCreateFlags flags;
+  uint setLayoutCount;
+  VkDescriptorSetLayout* pSetLayouts;
+  uint pushConstantRangeCount;
+  VkPushConstantRange* pPushConstantRanges;
 }
 struct VkPushConstantRange {
   VkShaderStageFlags stageFlags;
@@ -916,8 +916,8 @@ struct VkPushConstantRange {
 }
 struct VkSamplerCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkSamplerCreateFlags* flags;
+  void* pNext;
+  VkSamplerCreateFlags flags;
   VkFilter magFilter;
   VkFilter minFilter;
   VkSamplerMipmapMode mipmapMode;
@@ -936,7 +936,7 @@ struct VkSamplerCreateInfo {
 }
 struct VkCopyDescriptorSet {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDescriptorSet srcSet;
   uint srcBinding;
   uint srcArrayElement;
@@ -946,7 +946,7 @@ struct VkCopyDescriptorSet {
   uint descriptorCount;
 }
 struct VkDescriptorBufferInfo {
-  VkBuffer* buffer;
+  VkBuffer buffer;
   VkDeviceSize offset;
   VkDeviceSize range;
 }
@@ -957,11 +957,11 @@ struct VkDescriptorImageInfo {
 }
 struct VkDescriptorPoolCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkDescriptorPoolCreateFlags* flags;
+  void* pNext;
+  VkDescriptorPoolCreateFlags flags;
   uint maxSets;
-  uint* poolSizeCount;
-  VkDescriptorPoolSize pPoolSizes;
+  uint poolSizeCount;
+  VkDescriptorPoolSize* pPoolSizes;
 }
 struct VkDescriptorPoolSize {
   VkDescriptorType type;
@@ -969,39 +969,39 @@ struct VkDescriptorPoolSize {
 }
 struct VkDescriptorSetAllocateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDescriptorPool descriptorPool;
   uint descriptorSetCount;
-  VkDescriptorSetLayout pSetLayouts;
+  VkDescriptorSetLayout* pSetLayouts;
 }
 struct VkDescriptorSetLayoutBinding {
   uint binding;
   VkDescriptorType descriptorType;
-  uint* descriptorCount;
+  uint descriptorCount;
   VkShaderStageFlags stageFlags;
   VkSampler* pImmutableSamplers;
 }
 struct VkDescriptorSetLayoutCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkDescriptorSetLayoutCreateFlags* flags;
-  uint* bindingCount;
-  VkDescriptorSetLayoutBinding pBindings;
+  void* pNext;
+  VkDescriptorSetLayoutCreateFlags flags;
+  uint bindingCount;
+  VkDescriptorSetLayoutBinding* pBindings;
 }
 struct VkWriteDescriptorSet {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDescriptorSet dstSet;
   uint dstBinding;
   uint dstArrayElement;
   uint descriptorCount;
   VkDescriptorType descriptorType;
-  VkDescriptorImageInfo pImageInfo;
-  VkDescriptorBufferInfo pBufferInfo;
-  VkBufferView pTexelBufferView;
+  VkDescriptorImageInfo* pImageInfo;
+  VkDescriptorBufferInfo* pBufferInfo;
+  VkBufferView* pTexelBufferView;
 }
 struct VkAttachmentDescription {
-  VkAttachmentDescriptionFlags* flags;
+  VkAttachmentDescriptionFlags flags;
   VkFormat format;
   VkSampleCountFlagBits samples;
   VkAttachmentLoadOp loadOp;
@@ -1017,75 +1017,75 @@ struct VkAttachmentReference {
 }
 struct VkFramebufferCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkFramebufferCreateFlags* flags;
+  void* pNext;
+  VkFramebufferCreateFlags flags;
   VkRenderPass renderPass;
-  uint* attachmentCount;
-  VkImageView pAttachments;
+  uint attachmentCount;
+  VkImageView* pAttachments;
   uint width;
   uint height;
   uint layers;
 }
 struct VkRenderPassCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkRenderPassCreateFlags* flags;
-  uint* attachmentCount;
-  VkAttachmentDescription pAttachments;
+  void* pNext;
+  VkRenderPassCreateFlags flags;
+  uint attachmentCount;
+  VkAttachmentDescription* pAttachments;
   uint subpassCount;
-  VkSubpassDescription pSubpasses;
-  uint* dependencyCount;
-  VkSubpassDependency pDependencies;
+  VkSubpassDescription* pSubpasses;
+  uint dependencyCount;
+  VkSubpassDependency* pDependencies;
 }
 struct VkSubpassDependency {
   uint srcSubpass;
   uint dstSubpass;
-  VkPipelineStageFlags* srcStageMask;
-  VkPipelineStageFlags* dstStageMask;
-  VkAccessFlags* srcAccessMask;
-  VkAccessFlags* dstAccessMask;
-  VkDependencyFlags* dependencyFlags;
+  VkPipelineStageFlags srcStageMask;
+  VkPipelineStageFlags dstStageMask;
+  VkAccessFlags srcAccessMask;
+  VkAccessFlags dstAccessMask;
+  VkDependencyFlags dependencyFlags;
 }
 struct VkSubpassDescription {
-  VkSubpassDescriptionFlags* flags;
+  VkSubpassDescriptionFlags flags;
   VkPipelineBindPoint pipelineBindPoint;
-  uint* inputAttachmentCount;
-  VkAttachmentReference pInputAttachments;
-  uint* colorAttachmentCount;
-  VkAttachmentReference pColorAttachments;
+  uint inputAttachmentCount;
+  VkAttachmentReference* pInputAttachments;
+  uint colorAttachmentCount;
+  VkAttachmentReference* pColorAttachments;
   VkAttachmentReference* pResolveAttachments;
   VkAttachmentReference* pDepthStencilAttachment;
-  uint* preserveAttachmentCount;
-  uint pPreserveAttachments;
+  uint preserveAttachmentCount;
+  uint* pPreserveAttachments;
 }
 struct VkCommandPoolCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkCommandPoolCreateFlags* flags;
+  void* pNext;
+  VkCommandPoolCreateFlags flags;
   uint queueFamilyIndex;
 }
 struct VkCommandBufferAllocateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkCommandPool commandPool;
   VkCommandBufferLevel level;
   uint commandBufferCount;
 }
 struct VkCommandBufferBeginInfo {
   VkStructureType sType;
-  void** pNext;
-  VkCommandBufferUsageFlags* flags;
+  void* pNext;
+  VkCommandBufferUsageFlags flags;
   VkCommandBufferInheritanceInfo* pInheritanceInfo;
 }
 struct VkCommandBufferInheritanceInfo {
   VkStructureType sType;
-  void** pNext;
-  VkRenderPass* renderPass;
+  void* pNext;
+  VkRenderPass renderPass;
   uint subpass;
-  VkFramebuffer* framebuffer;
+  VkFramebuffer framebuffer;
   bool occlusionQueryEnable;
-  VkQueryControlFlags* queryFlags;
-  VkQueryPipelineStatisticFlags* pipelineStatistics;
+  VkQueryControlFlags queryFlags;
+  VkQueryPipelineStatisticFlags pipelineStatistics;
 }
 struct VkBufferCopy {
   VkDeviceSize srcOffset;
@@ -1151,16 +1151,16 @@ struct VkImageSubresourceLayers {
 }
 struct VkRenderPassBeginInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkRenderPass renderPass;
   VkFramebuffer framebuffer;
   VkRect2D renderArea;
-  uint* clearValueCount;
-  VkClearValue pClearValues;
+  uint clearValueCount;
+  VkClearValue* pClearValues;
 }
 struct VkPhysicalDeviceSubgroupProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint subgroupSize;
   VkShaderStageFlags supportedStages;
   VkSubgroupFeatureFlags supportedOperations;
@@ -1168,21 +1168,21 @@ struct VkPhysicalDeviceSubgroupProperties {
 }
 struct VkBindBufferMemoryInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkBuffer buffer;
   VkDeviceMemory memory;
   VkDeviceSize memoryOffset;
 }
 struct VkBindImageMemoryInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImage image;
   VkDeviceMemory memory;
   VkDeviceSize memoryOffset;
 }
 struct VkPhysicalDevice16BitStorageFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool storageBuffer16BitAccess;
   bool uniformAndStorageBuffer16BitAccess;
   bool storagePushConstant16;
@@ -1190,149 +1190,149 @@ struct VkPhysicalDevice16BitStorageFeatures {
 }
 struct VkMemoryDedicatedRequirements {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool prefersDedicatedAllocation;
   bool requiresDedicatedAllocation;
 }
 struct VkMemoryDedicatedAllocateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkImage* image;
-  VkBuffer* buffer;
+  void* pNext;
+  VkImage image;
+  VkBuffer buffer;
 }
 struct VkMemoryAllocateFlagsInfo {
   VkStructureType sType;
-  void** pNext;
-  VkMemoryAllocateFlags* flags;
+  void* pNext;
+  VkMemoryAllocateFlags flags;
   uint deviceMask;
 }
 struct VkDeviceGroupRenderPassBeginInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint deviceMask;
-  uint* deviceRenderAreaCount;
-  VkRect2D pDeviceRenderAreas;
+  uint deviceRenderAreaCount;
+  VkRect2D* pDeviceRenderAreas;
 }
 struct VkDeviceGroupCommandBufferBeginInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint deviceMask;
 }
 struct VkDeviceGroupSubmitInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* waitSemaphoreCount;
-  uint pWaitSemaphoreDeviceIndices;
-  uint* commandBufferCount;
-  uint pCommandBufferDeviceMasks;
-  uint* signalSemaphoreCount;
-  uint pSignalSemaphoreDeviceIndices;
+  void* pNext;
+  uint waitSemaphoreCount;
+  uint* pWaitSemaphoreDeviceIndices;
+  uint commandBufferCount;
+  uint* pCommandBufferDeviceMasks;
+  uint signalSemaphoreCount;
+  uint* pSignalSemaphoreDeviceIndices;
 }
 struct VkDeviceGroupBindSparseInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint resourceDeviceIndex;
   uint memoryDeviceIndex;
 }
 struct VkBindBufferMemoryDeviceGroupInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* deviceIndexCount;
-  uint pDeviceIndices;
+  void* pNext;
+  uint deviceIndexCount;
+  uint* pDeviceIndices;
 }
 struct VkBindImageMemoryDeviceGroupInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* deviceIndexCount;
-  uint pDeviceIndices;
-  uint* splitInstanceBindRegionCount;
-  VkRect2D pSplitInstanceBindRegions;
+  void* pNext;
+  uint deviceIndexCount;
+  uint* pDeviceIndices;
+  uint splitInstanceBindRegionCount;
+  VkRect2D* pSplitInstanceBindRegions;
 }
 struct VkPhysicalDeviceGroupProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint physicalDeviceCount;
-  VkPhysicalDevice physicalDevices;
+  VkPhysicalDevice[VK_MAX_DEVICE_GROUP_SIZE] physicalDevices;
   bool subsetAllocation;
 }
 struct VkDeviceGroupDeviceCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* physicalDeviceCount;
-  VkPhysicalDevice pPhysicalDevices;
+  void* pNext;
+  uint physicalDeviceCount;
+  VkPhysicalDevice* pPhysicalDevices;
 }
 struct VkBufferMemoryRequirementsInfo2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkBuffer buffer;
 }
 struct VkImageMemoryRequirementsInfo2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImage image;
 }
 struct VkImageSparseMemoryRequirementsInfo2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImage image;
 }
 struct VkMemoryRequirements2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkMemoryRequirements memoryRequirements;
 }
 struct VkSparseImageMemoryRequirements2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkSparseImageMemoryRequirements memoryRequirements;
 }
 struct VkPhysicalDeviceFeatures2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkPhysicalDeviceFeatures features;
 }
 struct VkPhysicalDeviceProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkPhysicalDeviceProperties properties;
 }
 struct VkFormatProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkFormatProperties formatProperties;
 }
 struct VkImageFormatProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImageFormatProperties imageFormatProperties;
 }
 struct VkPhysicalDeviceImageFormatInfo2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkFormat format;
   VkImageType type;
   VkImageTiling tiling;
   VkImageUsageFlags usage;
-  VkImageCreateFlags* flags;
+  VkImageCreateFlags flags;
 }
 struct VkQueueFamilyProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkQueueFamilyProperties queueFamilyProperties;
 }
 struct VkPhysicalDeviceMemoryProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkPhysicalDeviceMemoryProperties memoryProperties;
 }
 struct VkSparseImageFormatProperties2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkSparseImageFormatProperties properties;
 }
 struct VkPhysicalDeviceSparseImageFormatInfo2 {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkFormat format;
   VkImageType type;
   VkSampleCountFlagBits samples;
@@ -1341,14 +1341,14 @@ struct VkPhysicalDeviceSparseImageFormatInfo2 {
 }
 struct VkPhysicalDevicePointClippingProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkPointClippingBehavior pointClippingBehavior;
 }
 struct VkRenderPassInputAttachmentAspectCreateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint aspectReferenceCount;
-  VkInputAttachmentAspectReference pAspectReferences;
+  VkInputAttachmentAspectReference* pAspectReferences;
 }
 struct VkInputAttachmentAspectReference {
   uint subpass;
@@ -1357,68 +1357,68 @@ struct VkInputAttachmentAspectReference {
 }
 struct VkImageViewUsageCreateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImageUsageFlags usage;
 }
 struct VkPipelineTessellationDomainOriginStateCreateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkTessellationDomainOrigin domainOrigin;
 }
 struct VkRenderPassMultiviewCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  uint* subpassCount;
-  uint pViewMasks;
-  uint* dependencyCount;
-  int pViewOffsets;
-  uint* correlationMaskCount;
-  uint pCorrelationMasks;
+  void* pNext;
+  uint subpassCount;
+  uint* pViewMasks;
+  uint dependencyCount;
+  int* pViewOffsets;
+  uint correlationMaskCount;
+  uint* pCorrelationMasks;
 }
 struct VkPhysicalDeviceMultiviewFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool multiview;
   bool multiviewGeometryShader;
   bool multiviewTessellationShader;
 }
 struct VkPhysicalDeviceMultiviewProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint maxMultiviewViewCount;
   uint maxMultiviewInstanceIndex;
 }
 struct VkPhysicalDeviceVariablePointersFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool variablePointersStorageBuffer;
   bool variablePointers;
 }
 struct VkPhysicalDeviceProtectedMemoryFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool protectedMemory;
 }
 struct VkPhysicalDeviceProtectedMemoryProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool protectedNoFault;
 }
 struct VkDeviceQueueInfo2 {
   VkStructureType sType;
-  void** pNext;
-  VkDeviceQueueCreateFlags* flags;
+  void* pNext;
+  VkDeviceQueueCreateFlags flags;
   uint queueFamilyIndex;
   uint queueIndex;
 }
 struct VkProtectedSubmitInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool protectedSubmit;
 }
 struct VkSamplerYcbcrConversionCreateInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkFormat format;
   VkSamplerYcbcrModelConversion ycbcrModel;
   VkSamplerYcbcrRange ycbcrRange;
@@ -1430,27 +1430,27 @@ struct VkSamplerYcbcrConversionCreateInfo {
 }
 struct VkSamplerYcbcrConversionInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkSamplerYcbcrConversion conversion;
 }
 struct VkBindImagePlaneMemoryInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImageAspectFlagBits planeAspect;
 }
 struct VkImagePlaneMemoryRequirementsInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkImageAspectFlagBits planeAspect;
 }
 struct VkPhysicalDeviceSamplerYcbcrConversionFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool samplerYcbcrConversion;
 }
 struct VkSamplerYcbcrConversionImageFormatProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint combinedImageSamplerDescriptorCount;
 }
 struct VkDescriptorUpdateTemplateEntry {
@@ -1463,10 +1463,10 @@ struct VkDescriptorUpdateTemplateEntry {
 }
 struct VkDescriptorUpdateTemplateCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkDescriptorUpdateTemplateCreateFlags* flags;
+  void* pNext;
+  VkDescriptorUpdateTemplateCreateFlags flags;
   uint descriptorUpdateEntryCount;
-  VkDescriptorUpdateTemplateEntry pDescriptorUpdateEntries;
+  VkDescriptorUpdateTemplateEntry* pDescriptorUpdateEntries;
   VkDescriptorUpdateTemplateType templateType;
   VkDescriptorSetLayout descriptorSetLayout;
   VkPipelineBindPoint pipelineBindPoint;
@@ -1475,103 +1475,103 @@ struct VkDescriptorUpdateTemplateCreateInfo {
 }
 struct VkExternalMemoryProperties {
   VkExternalMemoryFeatureFlags externalMemoryFeatures;
-  VkExternalMemoryHandleTypeFlags* exportFromImportedHandleTypes;
+  VkExternalMemoryHandleTypeFlags exportFromImportedHandleTypes;
   VkExternalMemoryHandleTypeFlags compatibleHandleTypes;
 }
 struct VkPhysicalDeviceExternalImageFormatInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalMemoryHandleTypeFlagBits* handleType;
+  void* pNext;
+  VkExternalMemoryHandleTypeFlagBits handleType;
 }
 struct VkExternalImageFormatProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalMemoryProperties externalMemoryProperties;
 }
 struct VkPhysicalDeviceExternalBufferInfo {
   VkStructureType sType;
-  void** pNext;
-  VkBufferCreateFlags* flags;
+  void* pNext;
+  VkBufferCreateFlags flags;
   VkBufferUsageFlags usage;
   VkExternalMemoryHandleTypeFlagBits handleType;
 }
 struct VkExternalBufferProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalMemoryProperties externalMemoryProperties;
 }
 struct VkPhysicalDeviceIDProperties {
   VkStructureType sType;
-  void** pNext;
-  char deviceUUID;
-  char driverUUID;
-  char deviceLUID;
+  void* pNext;
+  char[VK_UUID_SIZE] deviceUUID;
+  char[VK_UUID_SIZE] driverUUID;
+  char[VK_LUID_SIZE] deviceLUID;
   uint deviceNodeMask;
   bool deviceLUIDValid;
 }
 struct VkExternalMemoryImageCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalMemoryHandleTypeFlags* handleTypes;
+  void* pNext;
+  VkExternalMemoryHandleTypeFlags handleTypes;
 }
 struct VkExternalMemoryBufferCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalMemoryHandleTypeFlags* handleTypes;
+  void* pNext;
+  VkExternalMemoryHandleTypeFlags handleTypes;
 }
 struct VkExportMemoryAllocateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalMemoryHandleTypeFlags* handleTypes;
+  void* pNext;
+  VkExternalMemoryHandleTypeFlags handleTypes;
 }
 struct VkPhysicalDeviceExternalFenceInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalFenceHandleTypeFlagBits handleType;
 }
 struct VkExternalFenceProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalFenceHandleTypeFlags exportFromImportedHandleTypes;
   VkExternalFenceHandleTypeFlags compatibleHandleTypes;
-  VkExternalFenceFeatureFlags* externalFenceFeatures;
+  VkExternalFenceFeatureFlags externalFenceFeatures;
 }
 struct VkExportFenceCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalFenceHandleTypeFlags* handleTypes;
+  void* pNext;
+  VkExternalFenceHandleTypeFlags handleTypes;
 }
 struct VkExportSemaphoreCreateInfo {
   VkStructureType sType;
-  void** pNext;
-  VkExternalSemaphoreHandleTypeFlags* handleTypes;
+  void* pNext;
+  VkExternalSemaphoreHandleTypeFlags handleTypes;
 }
 struct VkPhysicalDeviceExternalSemaphoreInfo {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalSemaphoreHandleTypeFlagBits handleType;
 }
 struct VkExternalSemaphoreProperties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes;
   VkExternalSemaphoreHandleTypeFlags compatibleHandleTypes;
-  VkExternalSemaphoreFeatureFlags* externalSemaphoreFeatures;
+  VkExternalSemaphoreFeatureFlags externalSemaphoreFeatures;
 }
 struct VkPhysicalDeviceMaintenance3Properties {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   uint maxPerSetDescriptors;
   VkDeviceSize maxMemoryAllocationSize;
 }
 struct VkDescriptorSetLayoutSupport {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool supported;
 }
 struct VkPhysicalDeviceShaderDrawParametersFeatures {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   bool shaderDrawParameters;
 }
 struct VkSurfaceCapabilitiesKHR {
@@ -1592,8 +1592,8 @@ struct VkSurfaceFormatKHR {
 }
 struct VkSwapchainCreateInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  VkSwapchainCreateFlagsKHR* flags;
+  void* pNext;
+  VkSwapchainCreateFlagsKHR flags;
   VkSurfaceKHR surface;
   uint minImageCount;
   VkFormat imageFormat;
@@ -1602,66 +1602,66 @@ struct VkSwapchainCreateInfoKHR {
   uint imageArrayLayers;
   VkImageUsageFlags imageUsage;
   VkSharingMode imageSharingMode;
-  uint* queueFamilyIndexCount;
-  uint pQueueFamilyIndices;
+  uint queueFamilyIndexCount;
+  uint* pQueueFamilyIndices;
   VkSurfaceTransformFlagBitsKHR preTransform;
   VkCompositeAlphaFlagBitsKHR compositeAlpha;
   VkPresentModeKHR presentMode;
   bool clipped;
-  VkSwapchainKHR* oldSwapchain;
+  VkSwapchainKHR oldSwapchain;
 }
 struct VkPresentInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  uint* waitSemaphoreCount;
-  VkSemaphore pWaitSemaphores;
+  void* pNext;
+  uint waitSemaphoreCount;
+  VkSemaphore* pWaitSemaphores;
   uint swapchainCount;
-  VkSwapchainKHR pSwapchains;
-  uint pImageIndices;
+  VkSwapchainKHR* pSwapchains;
+  uint* pImageIndices;
   VkResult* pResults;
 }
 struct VkImageSwapchainCreateInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  VkSwapchainKHR* swapchain;
+  void* pNext;
+  VkSwapchainKHR swapchain;
 }
 struct VkBindImageMemorySwapchainInfoKHR {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkSwapchainKHR swapchain;
   uint imageIndex;
 }
 struct VkAcquireNextImageInfoKHR {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkSwapchainKHR swapchain;
   ulong timeout;
-  VkSemaphore* semaphore;
-  VkFence* fence;
+  VkSemaphore semaphore;
+  VkFence fence;
   uint deviceMask;
 }
 struct VkDeviceGroupPresentCapabilitiesKHR {
   VkStructureType sType;
-  void** pNext;
-  uint presentMask;
+  void* pNext;
+  uint[VK_MAX_DEVICE_GROUP_SIZE] presentMask;
   VkDeviceGroupPresentModeFlagsKHR modes;
 }
 struct VkDeviceGroupPresentInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  uint* swapchainCount;
-  uint pDeviceMasks;
+  void* pNext;
+  uint swapchainCount;
+  uint* pDeviceMasks;
   VkDeviceGroupPresentModeFlagBitsKHR mode;
 }
 struct VkDeviceGroupSwapchainCreateInfoKHR {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDeviceGroupPresentModeFlagsKHR modes;
 }
 struct VkDisplayModeCreateInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  VkDisplayModeCreateFlagsKHR* flags;
+  void* pNext;
+  VkDisplayModeCreateFlagsKHR flags;
   VkDisplayModeParametersKHR parameters;
 }
 struct VkDisplayModeParametersKHR {
@@ -1673,7 +1673,7 @@ struct VkDisplayModePropertiesKHR {
   VkDisplayModeParametersKHR parameters;
 }
 struct VkDisplayPlaneCapabilitiesKHR {
-  VkDisplayPlaneAlphaFlagsKHR* supportedAlpha;
+  VkDisplayPlaneAlphaFlagsKHR supportedAlpha;
   VkOffset2D minSrcPosition;
   VkOffset2D maxSrcPosition;
   VkExtent2D minSrcExtent;
@@ -1689,17 +1689,17 @@ struct VkDisplayPlanePropertiesKHR {
 }
 struct VkDisplayPropertiesKHR {
   VkDisplayKHR display;
-  char displayName;
+  char* displayName;
   VkExtent2D physicalDimensions;
   VkExtent2D physicalResolution;
-  VkSurfaceTransformFlagsKHR* supportedTransforms;
+  VkSurfaceTransformFlagsKHR supportedTransforms;
   bool planeReorderPossible;
   bool persistentContent;
 }
 struct VkDisplaySurfaceCreateInfoKHR {
   VkStructureType sType;
-  void** pNext;
-  VkDisplaySurfaceCreateFlagsKHR* flags;
+  void* pNext;
+  VkDisplaySurfaceCreateFlagsKHR flags;
   VkDisplayModeKHR displayMode;
   uint planeIndex;
   uint planeStackIndex;
@@ -1710,14 +1710,14 @@ struct VkDisplaySurfaceCreateInfoKHR {
 }
 struct VkDebugMarkerObjectNameInfoEXT {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDebugReportObjectTypeEXT objectType;
   ulong object;
-  char pObjectName;
+  char* pObjectName;
 }
 struct VkDebugMarkerObjectTagInfoEXT {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkDebugReportObjectTypeEXT objectType;
   ulong object;
   ulong tagName;
@@ -1726,49 +1726,49 @@ struct VkDebugMarkerObjectTagInfoEXT {
 }
 struct VkDebugMarkerMarkerInfoEXT {
   VkStructureType sType;
-  void** pNext;
-  char pMarkerName;
+  void* pNext;
+  char* pMarkerName;
   float color;
 }
 struct VkDebugUtilsLabelEXT {
   VkStructureType sType;
-  void** pNext;
-  char pLabelName;
+  void* pNext;
+  char* pLabelName;
   float color;
 }
 struct VkDebugUtilsMessengerCallbackDataEXT {
   VkStructureType sType;
-  void** pNext;
-  VkDebugUtilsMessengerCallbackDataFlagsEXT* flags;
+  void* pNext;
+  VkDebugUtilsMessengerCallbackDataFlagsEXT flags;
   char* pMessageIdName;
   int messageIdNumber;
-  char pMessage;
-  uint* queueLabelCount;
-  VkDebugUtilsLabelEXT pQueueLabels;
-  uint* cmdBufLabelCount;
-  VkDebugUtilsLabelEXT pCmdBufLabels;
-  uint* objectCount;
-  VkDebugUtilsObjectNameInfoEXT pObjects;
+  char* pMessage;
+  uint queueLabelCount;
+  VkDebugUtilsLabelEXT* pQueueLabels;
+  uint cmdBufLabelCount;
+  VkDebugUtilsLabelEXT* pCmdBufLabels;
+  uint objectCount;
+  VkDebugUtilsObjectNameInfoEXT* pObjects;
 }
 struct VkDebugUtilsMessengerCreateInfoEXT {
   VkStructureType sType;
-  void** pNext;
-  VkDebugUtilsMessengerCreateFlagsEXT* flags;
+  void* pNext;
+  VkDebugUtilsMessengerCreateFlagsEXT flags;
   VkDebugUtilsMessageSeverityFlagsEXT messageSeverity;
   VkDebugUtilsMessageTypeFlagsEXT messageType;
   PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback;
-  void** pUserData;
+  void* pUserData;
 }
 struct VkDebugUtilsObjectNameInfoEXT {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkObjectType objectType;
   ulong objectHandle;
   char* pObjectName;
 }
 struct VkDebugUtilsObjectTagInfoEXT {
   VkStructureType sType;
-  void** pNext;
+  void* pNext;
   VkObjectType objectType;
   ulong objectHandle;
   ulong tagName;
@@ -1776,214 +1776,214 @@ struct VkDebugUtilsObjectTagInfoEXT {
   void* pTag;
 }
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, VkSystemAllocationScope);
-def PFN_vkFreeFunction = fn void* (void*, void*);
-def PFN_vkInternalAllocationNotification = fn void* (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
-def PFN_vkInternalFreeNotification = fn void* (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
+def PFN_vkFreeFunction = fn void (void*, void*);
+def PFN_vkInternalAllocationNotification = fn void (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
+def PFN_vkInternalFreeNotification = fn void (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
 def PFN_vkReallocationFunction = fn void* (void*, void*, usz, usz, VkSystemAllocationScope);
-def PFN_vkVoidFunction = fn void* ();
-def PFN_vkDebugUtilsMessengerCallbackEXT = fn bool (VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT, VkDebugUtilsMessengerCallbackDataEXT, void*);
-extern fn VkResult createInstance (VkInstanceCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkInstance pinstance) @extern("vkCreateInstance");
-extern fn void* destroyInstance (VkInstance *instance, VkAllocationCallbacks *pallocator) @extern("vkDestroyInstance");
-extern fn VkResult enumeratePhysicalDevices (VkInstance instance, uint *pphysicaldevicecount, VkPhysicalDevice *pphysicaldevices) @extern("vkEnumeratePhysicalDevices");
-extern fn void* getPhysicalDeviceFeatures (VkPhysicalDevice physicaldevice, VkPhysicalDeviceFeatures pfeatures) @extern("vkGetPhysicalDeviceFeatures");
-extern fn void* getPhysicalDeviceFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkFormatProperties pformatproperties) @extern("vkGetPhysicalDeviceFormatProperties");
-extern fn VkResult getPhysicalDeviceImageFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags *flags, VkImageFormatProperties pimageformatproperties) @extern("vkGetPhysicalDeviceImageFormatProperties");
-extern fn void* getPhysicalDeviceProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceProperties pproperties) @extern("vkGetPhysicalDeviceProperties");
-extern fn void* getPhysicalDeviceQueueFamilyProperties (VkPhysicalDevice physicaldevice, uint *pqueuefamilypropertycount, VkQueueFamilyProperties *pqueuefamilyproperties) @extern("vkGetPhysicalDeviceQueueFamilyProperties");
-extern fn void* getPhysicalDeviceMemoryProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceMemoryProperties pmemoryproperties) @extern("vkGetPhysicalDeviceMemoryProperties");
-extern fn PFN_vkVoidFunction getInstanceProcAddr (VkInstance *instance, char pname) @extern("vkGetInstanceProcAddr");
-extern fn PFN_vkVoidFunction getDeviceProcAddr (VkDevice device, char pname) @extern("vkGetDeviceProcAddr");
-extern fn VkResult createDevice (VkPhysicalDevice physicaldevice, VkDeviceCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkDevice pdevice) @extern("vkCreateDevice");
-extern fn void* destroyDevice (VkDevice *device, VkAllocationCallbacks *pallocator) @extern("vkDestroyDevice");
-extern fn VkResult enumerateInstanceExtensionProperties (char *playername, uint *ppropertycount, VkExtensionProperties *pproperties) @extern("vkEnumerateInstanceExtensionProperties");
-extern fn VkResult enumerateDeviceExtensionProperties (VkPhysicalDevice physicaldevice, char *playername, uint *ppropertycount, VkExtensionProperties *pproperties) @extern("vkEnumerateDeviceExtensionProperties");
-extern fn VkResult enumerateInstanceLayerProperties (uint *ppropertycount, VkLayerProperties *pproperties) @extern("vkEnumerateInstanceLayerProperties");
-extern fn VkResult enumerateDeviceLayerProperties (VkPhysicalDevice physicaldevice, uint *ppropertycount, VkLayerProperties *pproperties) @extern("vkEnumerateDeviceLayerProperties");
-extern fn void* getDeviceQueue (VkDevice device, uint queuefamilyindex, uint queueindex, VkQueue pqueue) @extern("vkGetDeviceQueue");
-extern fn VkResult queueSubmit (VkQueue queue, uint *submitcount, VkSubmitInfo psubmits, VkFence *fence) @extern("vkQueueSubmit");
+def PFN_vkVoidFunction = fn void ();
+def PFN_vkDebugUtilsMessengerCallbackEXT = fn bool (VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT, VkDebugUtilsMessengerCallbackDataEXT*, void*);
+extern fn VkResult createInstance (VkInstanceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkInstance* pinstance) @extern("vkCreateInstance");
+extern fn void destroyInstance (VkInstance instance, VkAllocationCallbacks* pallocator) @extern("vkDestroyInstance");
+extern fn VkResult enumeratePhysicalDevices (VkInstance instance, uint* pphysicaldevicecount, VkPhysicalDevice* pphysicaldevices) @extern("vkEnumeratePhysicalDevices");
+extern fn void getPhysicalDeviceFeatures (VkPhysicalDevice physicaldevice, VkPhysicalDeviceFeatures* pfeatures) @extern("vkGetPhysicalDeviceFeatures");
+extern fn void getPhysicalDeviceFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkFormatProperties* pformatproperties) @extern("vkGetPhysicalDeviceFormatProperties");
+extern fn VkResult getPhysicalDeviceImageFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pimageformatproperties) @extern("vkGetPhysicalDeviceImageFormatProperties");
+extern fn void getPhysicalDeviceProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceProperties* pproperties) @extern("vkGetPhysicalDeviceProperties");
+extern fn void getPhysicalDeviceQueueFamilyProperties (VkPhysicalDevice physicaldevice, uint* pqueuefamilypropertycount, VkQueueFamilyProperties* pqueuefamilyproperties) @extern("vkGetPhysicalDeviceQueueFamilyProperties");
+extern fn void getPhysicalDeviceMemoryProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceMemoryProperties* pmemoryproperties) @extern("vkGetPhysicalDeviceMemoryProperties");
+extern fn PFN_vkVoidFunction getInstanceProcAddr (VkInstance instance, char* pname) @extern("vkGetInstanceProcAddr");
+extern fn PFN_vkVoidFunction getDeviceProcAddr (VkDevice device, char* pname) @extern("vkGetDeviceProcAddr");
+extern fn VkResult createDevice (VkPhysicalDevice physicaldevice, VkDeviceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkDevice* pdevice) @extern("vkCreateDevice");
+extern fn void destroyDevice (VkDevice device, VkAllocationCallbacks* pallocator) @extern("vkDestroyDevice");
+extern fn VkResult enumerateInstanceExtensionProperties (char* playername, uint* ppropertycount, VkExtensionProperties* pproperties) @extern("vkEnumerateInstanceExtensionProperties");
+extern fn VkResult enumerateDeviceExtensionProperties (VkPhysicalDevice physicaldevice, char* playername, uint* ppropertycount, VkExtensionProperties* pproperties) @extern("vkEnumerateDeviceExtensionProperties");
+extern fn VkResult enumerateInstanceLayerProperties (uint* ppropertycount, VkLayerProperties* pproperties) @extern("vkEnumerateInstanceLayerProperties");
+extern fn VkResult enumerateDeviceLayerProperties (VkPhysicalDevice physicaldevice, uint* ppropertycount, VkLayerProperties* pproperties) @extern("vkEnumerateDeviceLayerProperties");
+extern fn void getDeviceQueue (VkDevice device, uint queuefamilyindex, uint queueindex, VkQueue* pqueue) @extern("vkGetDeviceQueue");
+extern fn VkResult queueSubmit (VkQueue queue, uint submitcount, VkSubmitInfo* psubmits, VkFence fence) @extern("vkQueueSubmit");
 extern fn VkResult queueWaitIdle (VkQueue queue) @extern("vkQueueWaitIdle");
 extern fn VkResult deviceWaitIdle (VkDevice device) @extern("vkDeviceWaitIdle");
-extern fn VkResult allocateMemory (VkDevice device, VkMemoryAllocateInfo pallocateinfo, VkAllocationCallbacks *pallocator, VkDeviceMemory pmemory) @extern("vkAllocateMemory");
-extern fn void* freeMemory (VkDevice device, VkDeviceMemory *memory, VkAllocationCallbacks *pallocator) @extern("vkFreeMemory");
-extern fn VkResult mapMemory (VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags *flags, void* *ppdata) @extern("vkMapMemory");
-extern fn void* unmapMemory (VkDevice device, VkDeviceMemory memory) @extern("vkUnmapMemory");
-extern fn VkResult flushMappedMemoryRanges (VkDevice device, uint memoryrangecount, VkMappedMemoryRange pmemoryranges) @extern("vkFlushMappedMemoryRanges");
-extern fn VkResult invalidateMappedMemoryRanges (VkDevice device, uint memoryrangecount, VkMappedMemoryRange pmemoryranges) @extern("vkInvalidateMappedMemoryRanges");
-extern fn void* getDeviceMemoryCommitment (VkDevice device, VkDeviceMemory memory, VkDeviceSize pcommittedmemoryinbytes) @extern("vkGetDeviceMemoryCommitment");
+extern fn VkResult allocateMemory (VkDevice device, VkMemoryAllocateInfo* pallocateinfo, VkAllocationCallbacks* pallocator, VkDeviceMemory* pmemory) @extern("vkAllocateMemory");
+extern fn void freeMemory (VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pallocator) @extern("vkFreeMemory");
+extern fn VkResult mapMemory (VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void* ppdata) @extern("vkMapMemory");
+extern fn void unmapMemory (VkDevice device, VkDeviceMemory memory) @extern("vkUnmapMemory");
+extern fn VkResult flushMappedMemoryRanges (VkDevice device, uint memoryrangecount, VkMappedMemoryRange* pmemoryranges) @extern("vkFlushMappedMemoryRanges");
+extern fn VkResult invalidateMappedMemoryRanges (VkDevice device, uint memoryrangecount, VkMappedMemoryRange* pmemoryranges) @extern("vkInvalidateMappedMemoryRanges");
+extern fn void getDeviceMemoryCommitment (VkDevice device, VkDeviceMemory memory, VkDeviceSize* pcommittedmemoryinbytes) @extern("vkGetDeviceMemoryCommitment");
 extern fn VkResult bindBufferMemory (VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryoffset) @extern("vkBindBufferMemory");
 extern fn VkResult bindImageMemory (VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryoffset) @extern("vkBindImageMemory");
-extern fn void* getBufferMemoryRequirements (VkDevice device, VkBuffer buffer, VkMemoryRequirements pmemoryrequirements) @extern("vkGetBufferMemoryRequirements");
-extern fn void* getImageMemoryRequirements (VkDevice device, VkImage image, VkMemoryRequirements pmemoryrequirements) @extern("vkGetImageMemoryRequirements");
-extern fn void* getImageSparseMemoryRequirements (VkDevice device, VkImage image, uint *psparsememoryrequirementcount, VkSparseImageMemoryRequirements *psparsememoryrequirements) @extern("vkGetImageSparseMemoryRequirements");
-extern fn void* getPhysicalDeviceSparseImageFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint *ppropertycount, VkSparseImageFormatProperties *pproperties) @extern("vkGetPhysicalDeviceSparseImageFormatProperties");
-extern fn VkResult queueBindSparse (VkQueue queue, uint *bindinfocount, VkBindSparseInfo pbindinfo, VkFence *fence) @extern("vkQueueBindSparse");
-extern fn VkResult createFence (VkDevice device, VkFenceCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkFence pfence) @extern("vkCreateFence");
-extern fn void* destroyFence (VkDevice device, VkFence *fence, VkAllocationCallbacks *pallocator) @extern("vkDestroyFence");
-extern fn VkResult resetFences (VkDevice device, uint fencecount, VkFence pfences) @extern("vkResetFences");
+extern fn void getBufferMemoryRequirements (VkDevice device, VkBuffer buffer, VkMemoryRequirements* pmemoryrequirements) @extern("vkGetBufferMemoryRequirements");
+extern fn void getImageMemoryRequirements (VkDevice device, VkImage image, VkMemoryRequirements* pmemoryrequirements) @extern("vkGetImageMemoryRequirements");
+extern fn void getImageSparseMemoryRequirements (VkDevice device, VkImage image, uint* psparsememoryrequirementcount, VkSparseImageMemoryRequirements* psparsememoryrequirements) @extern("vkGetImageSparseMemoryRequirements");
+extern fn void getPhysicalDeviceSparseImageFormatProperties (VkPhysicalDevice physicaldevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint* ppropertycount, VkSparseImageFormatProperties* pproperties) @extern("vkGetPhysicalDeviceSparseImageFormatProperties");
+extern fn VkResult queueBindSparse (VkQueue queue, uint bindinfocount, VkBindSparseInfo* pbindinfo, VkFence fence) @extern("vkQueueBindSparse");
+extern fn VkResult createFence (VkDevice device, VkFenceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkFence* pfence) @extern("vkCreateFence");
+extern fn void destroyFence (VkDevice device, VkFence fence, VkAllocationCallbacks* pallocator) @extern("vkDestroyFence");
+extern fn VkResult resetFences (VkDevice device, uint fencecount, VkFence* pfences) @extern("vkResetFences");
 extern fn VkResult getFenceStatus (VkDevice device, VkFence fence) @extern("vkGetFenceStatus");
-extern fn VkResult waitForFences (VkDevice device, uint fencecount, VkFence pfences, bool waitall, ulong timeout) @extern("vkWaitForFences");
-extern fn VkResult createSemaphore (VkDevice device, VkSemaphoreCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkSemaphore psemaphore) @extern("vkCreateSemaphore");
-extern fn void* destroySemaphore (VkDevice device, VkSemaphore *semaphore, VkAllocationCallbacks *pallocator) @extern("vkDestroySemaphore");
-extern fn VkResult createEvent (VkDevice device, VkEventCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkEvent pevent) @extern("vkCreateEvent");
-extern fn void* destroyEvent (VkDevice device, VkEvent *event, VkAllocationCallbacks *pallocator) @extern("vkDestroyEvent");
+extern fn VkResult waitForFences (VkDevice device, uint fencecount, VkFence* pfences, bool waitall, ulong timeout) @extern("vkWaitForFences");
+extern fn VkResult createSemaphore (VkDevice device, VkSemaphoreCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkSemaphore* psemaphore) @extern("vkCreateSemaphore");
+extern fn void destroySemaphore (VkDevice device, VkSemaphore semaphore, VkAllocationCallbacks* pallocator) @extern("vkDestroySemaphore");
+extern fn VkResult createEvent (VkDevice device, VkEventCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkEvent* pevent) @extern("vkCreateEvent");
+extern fn void destroyEvent (VkDevice device, VkEvent event, VkAllocationCallbacks* pallocator) @extern("vkDestroyEvent");
 extern fn VkResult getEventStatus (VkDevice device, VkEvent event) @extern("vkGetEventStatus");
 extern fn VkResult setEvent (VkDevice device, VkEvent event) @extern("vkSetEvent");
 extern fn VkResult resetEvent (VkDevice device, VkEvent event) @extern("vkResetEvent");
-extern fn VkResult createQueryPool (VkDevice device, VkQueryPoolCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkQueryPool pquerypool) @extern("vkCreateQueryPool");
-extern fn void* destroyQueryPool (VkDevice device, VkQueryPool *querypool, VkAllocationCallbacks *pallocator) @extern("vkDestroyQueryPool");
-extern fn VkResult getQueryPoolResults (VkDevice device, VkQueryPool querypool, uint firstquery, uint querycount, usz datasize, void* pdata, VkDeviceSize stride, VkQueryResultFlags *flags) @extern("vkGetQueryPoolResults");
-extern fn VkResult createBuffer (VkDevice device, VkBufferCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkBuffer pbuffer) @extern("vkCreateBuffer");
-extern fn void* destroyBuffer (VkDevice device, VkBuffer *buffer, VkAllocationCallbacks *pallocator) @extern("vkDestroyBuffer");
-extern fn VkResult createBufferView (VkDevice device, VkBufferViewCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkBufferView pview) @extern("vkCreateBufferView");
-extern fn void* destroyBufferView (VkDevice device, VkBufferView *bufferview, VkAllocationCallbacks *pallocator) @extern("vkDestroyBufferView");
-extern fn VkResult createImage (VkDevice device, VkImageCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkImage pimage) @extern("vkCreateImage");
-extern fn void* destroyImage (VkDevice device, VkImage *image, VkAllocationCallbacks *pallocator) @extern("vkDestroyImage");
-extern fn void* getImageSubresourceLayout (VkDevice device, VkImage image, VkImageSubresource psubresource, VkSubresourceLayout playout) @extern("vkGetImageSubresourceLayout");
-extern fn VkResult createImageView (VkDevice device, VkImageViewCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkImageView pview) @extern("vkCreateImageView");
-extern fn void* destroyImageView (VkDevice device, VkImageView *imageview, VkAllocationCallbacks *pallocator) @extern("vkDestroyImageView");
-extern fn VkResult createShaderModule (VkDevice device, VkShaderModuleCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkShaderModule pshadermodule) @extern("vkCreateShaderModule");
-extern fn void* destroyShaderModule (VkDevice device, VkShaderModule *shadermodule, VkAllocationCallbacks *pallocator) @extern("vkDestroyShaderModule");
-extern fn VkResult createPipelineCache (VkDevice device, VkPipelineCacheCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkPipelineCache ppipelinecache) @extern("vkCreatePipelineCache");
-extern fn void* destroyPipelineCache (VkDevice device, VkPipelineCache *pipelinecache, VkAllocationCallbacks *pallocator) @extern("vkDestroyPipelineCache");
-extern fn VkResult getPipelineCacheData (VkDevice device, VkPipelineCache pipelinecache, usz *pdatasize, void* *pdata) @extern("vkGetPipelineCacheData");
-extern fn VkResult mergePipelineCaches (VkDevice device, VkPipelineCache dstcache, uint srccachecount, VkPipelineCache psrccaches) @extern("vkMergePipelineCaches");
-extern fn VkResult createGraphicsPipelines (VkDevice device, VkPipelineCache *pipelinecache, uint createinfocount, VkGraphicsPipelineCreateInfo pcreateinfos, VkAllocationCallbacks *pallocator, VkPipeline ppipelines) @extern("vkCreateGraphicsPipelines");
-extern fn VkResult createComputePipelines (VkDevice device, VkPipelineCache *pipelinecache, uint createinfocount, VkComputePipelineCreateInfo pcreateinfos, VkAllocationCallbacks *pallocator, VkPipeline ppipelines) @extern("vkCreateComputePipelines");
-extern fn void* destroyPipeline (VkDevice device, VkPipeline *pipeline, VkAllocationCallbacks *pallocator) @extern("vkDestroyPipeline");
-extern fn VkResult createPipelineLayout (VkDevice device, VkPipelineLayoutCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkPipelineLayout ppipelinelayout) @extern("vkCreatePipelineLayout");
-extern fn void* destroyPipelineLayout (VkDevice device, VkPipelineLayout *pipelinelayout, VkAllocationCallbacks *pallocator) @extern("vkDestroyPipelineLayout");
-extern fn VkResult createSampler (VkDevice device, VkSamplerCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkSampler psampler) @extern("vkCreateSampler");
-extern fn void* destroySampler (VkDevice device, VkSampler *sampler, VkAllocationCallbacks *pallocator) @extern("vkDestroySampler");
-extern fn VkResult createDescriptorSetLayout (VkDevice device, VkDescriptorSetLayoutCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkDescriptorSetLayout psetlayout) @extern("vkCreateDescriptorSetLayout");
-extern fn void* destroyDescriptorSetLayout (VkDevice device, VkDescriptorSetLayout *descriptorsetlayout, VkAllocationCallbacks *pallocator) @extern("vkDestroyDescriptorSetLayout");
-extern fn VkResult createDescriptorPool (VkDevice device, VkDescriptorPoolCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkDescriptorPool pdescriptorpool) @extern("vkCreateDescriptorPool");
-extern fn void* destroyDescriptorPool (VkDevice device, VkDescriptorPool *descriptorpool, VkAllocationCallbacks *pallocator) @extern("vkDestroyDescriptorPool");
-extern fn VkResult resetDescriptorPool (VkDevice device, VkDescriptorPool descriptorpool, VkDescriptorPoolResetFlags *flags) @extern("vkResetDescriptorPool");
-extern fn VkResult allocateDescriptorSets (VkDevice device, VkDescriptorSetAllocateInfo pallocateinfo, VkDescriptorSet pdescriptorsets) @extern("vkAllocateDescriptorSets");
-extern fn VkResult freeDescriptorSets (VkDevice device, VkDescriptorPool descriptorpool, uint descriptorsetcount, VkDescriptorSet pdescriptorsets) @extern("vkFreeDescriptorSets");
-extern fn void* updateDescriptorSets (VkDevice device, uint *descriptorwritecount, VkWriteDescriptorSet pdescriptorwrites, uint *descriptorcopycount, VkCopyDescriptorSet pdescriptorcopies) @extern("vkUpdateDescriptorSets");
-extern fn VkResult createFramebuffer (VkDevice device, VkFramebufferCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkFramebuffer pframebuffer) @extern("vkCreateFramebuffer");
-extern fn void* destroyFramebuffer (VkDevice device, VkFramebuffer *framebuffer, VkAllocationCallbacks *pallocator) @extern("vkDestroyFramebuffer");
-extern fn VkResult createRenderPass (VkDevice device, VkRenderPassCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkRenderPass prenderpass) @extern("vkCreateRenderPass");
-extern fn void* destroyRenderPass (VkDevice device, VkRenderPass *renderpass, VkAllocationCallbacks *pallocator) @extern("vkDestroyRenderPass");
-extern fn void* getRenderAreaGranularity (VkDevice device, VkRenderPass renderpass, VkExtent2D pgranularity) @extern("vkGetRenderAreaGranularity");
-extern fn VkResult createCommandPool (VkDevice device, VkCommandPoolCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkCommandPool pcommandpool) @extern("vkCreateCommandPool");
-extern fn void* destroyCommandPool (VkDevice device, VkCommandPool *commandpool, VkAllocationCallbacks *pallocator) @extern("vkDestroyCommandPool");
-extern fn VkResult resetCommandPool (VkDevice device, VkCommandPool commandpool, VkCommandPoolResetFlags *flags) @extern("vkResetCommandPool");
-extern fn VkResult allocateCommandBuffers (VkDevice device, VkCommandBufferAllocateInfo pallocateinfo, VkCommandBuffer pcommandbuffers) @extern("vkAllocateCommandBuffers");
-extern fn void* freeCommandBuffers (VkDevice device, VkCommandPool commandpool, uint commandbuffercount, VkCommandBuffer pcommandbuffers) @extern("vkFreeCommandBuffers");
-extern fn VkResult beginCommandBuffer (VkCommandBuffer commandbuffer, VkCommandBufferBeginInfo pbegininfo) @extern("vkBeginCommandBuffer");
+extern fn VkResult createQueryPool (VkDevice device, VkQueryPoolCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkQueryPool* pquerypool) @extern("vkCreateQueryPool");
+extern fn void destroyQueryPool (VkDevice device, VkQueryPool querypool, VkAllocationCallbacks* pallocator) @extern("vkDestroyQueryPool");
+extern fn VkResult getQueryPoolResults (VkDevice device, VkQueryPool querypool, uint firstquery, uint querycount, usz datasize, void* pdata, VkDeviceSize stride, VkQueryResultFlags flags) @extern("vkGetQueryPoolResults");
+extern fn VkResult createBuffer (VkDevice device, VkBufferCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkBuffer* pbuffer) @extern("vkCreateBuffer");
+extern fn void destroyBuffer (VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pallocator) @extern("vkDestroyBuffer");
+extern fn VkResult createBufferView (VkDevice device, VkBufferViewCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkBufferView* pview) @extern("vkCreateBufferView");
+extern fn void destroyBufferView (VkDevice device, VkBufferView bufferview, VkAllocationCallbacks* pallocator) @extern("vkDestroyBufferView");
+extern fn VkResult createImage (VkDevice device, VkImageCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkImage* pimage) @extern("vkCreateImage");
+extern fn void destroyImage (VkDevice device, VkImage image, VkAllocationCallbacks* pallocator) @extern("vkDestroyImage");
+extern fn void getImageSubresourceLayout (VkDevice device, VkImage image, VkImageSubresource* psubresource, VkSubresourceLayout* playout) @extern("vkGetImageSubresourceLayout");
+extern fn VkResult createImageView (VkDevice device, VkImageViewCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkImageView* pview) @extern("vkCreateImageView");
+extern fn void destroyImageView (VkDevice device, VkImageView imageview, VkAllocationCallbacks* pallocator) @extern("vkDestroyImageView");
+extern fn VkResult createShaderModule (VkDevice device, VkShaderModuleCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkShaderModule* pshadermodule) @extern("vkCreateShaderModule");
+extern fn void destroyShaderModule (VkDevice device, VkShaderModule shadermodule, VkAllocationCallbacks* pallocator) @extern("vkDestroyShaderModule");
+extern fn VkResult createPipelineCache (VkDevice device, VkPipelineCacheCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkPipelineCache* ppipelinecache) @extern("vkCreatePipelineCache");
+extern fn void destroyPipelineCache (VkDevice device, VkPipelineCache pipelinecache, VkAllocationCallbacks* pallocator) @extern("vkDestroyPipelineCache");
+extern fn VkResult getPipelineCacheData (VkDevice device, VkPipelineCache pipelinecache, usz* pdatasize, void* pdata) @extern("vkGetPipelineCacheData");
+extern fn VkResult mergePipelineCaches (VkDevice device, VkPipelineCache dstcache, uint srccachecount, VkPipelineCache* psrccaches) @extern("vkMergePipelineCaches");
+extern fn VkResult createGraphicsPipelines (VkDevice device, VkPipelineCache pipelinecache, uint createinfocount, VkGraphicsPipelineCreateInfo* pcreateinfos, VkAllocationCallbacks* pallocator, VkPipeline* ppipelines) @extern("vkCreateGraphicsPipelines");
+extern fn VkResult createComputePipelines (VkDevice device, VkPipelineCache pipelinecache, uint createinfocount, VkComputePipelineCreateInfo* pcreateinfos, VkAllocationCallbacks* pallocator, VkPipeline* ppipelines) @extern("vkCreateComputePipelines");
+extern fn void destroyPipeline (VkDevice device, VkPipeline pipeline, VkAllocationCallbacks* pallocator) @extern("vkDestroyPipeline");
+extern fn VkResult createPipelineLayout (VkDevice device, VkPipelineLayoutCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkPipelineLayout* ppipelinelayout) @extern("vkCreatePipelineLayout");
+extern fn void destroyPipelineLayout (VkDevice device, VkPipelineLayout pipelinelayout, VkAllocationCallbacks* pallocator) @extern("vkDestroyPipelineLayout");
+extern fn VkResult createSampler (VkDevice device, VkSamplerCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkSampler* psampler) @extern("vkCreateSampler");
+extern fn void destroySampler (VkDevice device, VkSampler sampler, VkAllocationCallbacks* pallocator) @extern("vkDestroySampler");
+extern fn VkResult createDescriptorSetLayout (VkDevice device, VkDescriptorSetLayoutCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkDescriptorSetLayout* psetlayout) @extern("vkCreateDescriptorSetLayout");
+extern fn void destroyDescriptorSetLayout (VkDevice device, VkDescriptorSetLayout descriptorsetlayout, VkAllocationCallbacks* pallocator) @extern("vkDestroyDescriptorSetLayout");
+extern fn VkResult createDescriptorPool (VkDevice device, VkDescriptorPoolCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkDescriptorPool* pdescriptorpool) @extern("vkCreateDescriptorPool");
+extern fn void destroyDescriptorPool (VkDevice device, VkDescriptorPool descriptorpool, VkAllocationCallbacks* pallocator) @extern("vkDestroyDescriptorPool");
+extern fn VkResult resetDescriptorPool (VkDevice device, VkDescriptorPool descriptorpool, VkDescriptorPoolResetFlags flags) @extern("vkResetDescriptorPool");
+extern fn VkResult allocateDescriptorSets (VkDevice device, VkDescriptorSetAllocateInfo* pallocateinfo, VkDescriptorSet* pdescriptorsets) @extern("vkAllocateDescriptorSets");
+extern fn VkResult freeDescriptorSets (VkDevice device, VkDescriptorPool descriptorpool, uint descriptorsetcount, VkDescriptorSet* pdescriptorsets) @extern("vkFreeDescriptorSets");
+extern fn void updateDescriptorSets (VkDevice device, uint descriptorwritecount, VkWriteDescriptorSet* pdescriptorwrites, uint descriptorcopycount, VkCopyDescriptorSet* pdescriptorcopies) @extern("vkUpdateDescriptorSets");
+extern fn VkResult createFramebuffer (VkDevice device, VkFramebufferCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkFramebuffer* pframebuffer) @extern("vkCreateFramebuffer");
+extern fn void destroyFramebuffer (VkDevice device, VkFramebuffer framebuffer, VkAllocationCallbacks* pallocator) @extern("vkDestroyFramebuffer");
+extern fn VkResult createRenderPass (VkDevice device, VkRenderPassCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkRenderPass* prenderpass) @extern("vkCreateRenderPass");
+extern fn void destroyRenderPass (VkDevice device, VkRenderPass renderpass, VkAllocationCallbacks* pallocator) @extern("vkDestroyRenderPass");
+extern fn void getRenderAreaGranularity (VkDevice device, VkRenderPass renderpass, VkExtent2D* pgranularity) @extern("vkGetRenderAreaGranularity");
+extern fn VkResult createCommandPool (VkDevice device, VkCommandPoolCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkCommandPool* pcommandpool) @extern("vkCreateCommandPool");
+extern fn void destroyCommandPool (VkDevice device, VkCommandPool commandpool, VkAllocationCallbacks* pallocator) @extern("vkDestroyCommandPool");
+extern fn VkResult resetCommandPool (VkDevice device, VkCommandPool commandpool, VkCommandPoolResetFlags flags) @extern("vkResetCommandPool");
+extern fn VkResult allocateCommandBuffers (VkDevice device, VkCommandBufferAllocateInfo* pallocateinfo, VkCommandBuffer* pcommandbuffers) @extern("vkAllocateCommandBuffers");
+extern fn void freeCommandBuffers (VkDevice device, VkCommandPool commandpool, uint commandbuffercount, VkCommandBuffer* pcommandbuffers) @extern("vkFreeCommandBuffers");
+extern fn VkResult beginCommandBuffer (VkCommandBuffer commandbuffer, VkCommandBufferBeginInfo* pbegininfo) @extern("vkBeginCommandBuffer");
 extern fn VkResult endCommandBuffer (VkCommandBuffer commandbuffer) @extern("vkEndCommandBuffer");
-extern fn VkResult resetCommandBuffer (VkCommandBuffer commandbuffer, VkCommandBufferResetFlags *flags) @extern("vkResetCommandBuffer");
-extern fn void* cmdBindPipeline (VkCommandBuffer commandbuffer, VkPipelineBindPoint pipelinebindpoint, VkPipeline pipeline) @extern("vkCmdBindPipeline");
-extern fn void* cmdSetViewport (VkCommandBuffer commandbuffer, uint firstviewport, uint viewportcount, VkViewport pviewports) @extern("vkCmdSetViewport");
-extern fn void* cmdSetScissor (VkCommandBuffer commandbuffer, uint firstscissor, uint scissorcount, VkRect2D pscissors) @extern("vkCmdSetScissor");
-extern fn void* cmdSetLineWidth (VkCommandBuffer commandbuffer, float linewidth) @extern("vkCmdSetLineWidth");
-extern fn void* cmdSetDepthBias (VkCommandBuffer commandbuffer, float depthbiasconstantfactor, float depthbiasclamp, float depthbiasslopefactor) @extern("vkCmdSetDepthBias");
-extern fn void* cmdSetBlendConstants (VkCommandBuffer commandbuffer, float blendconstants) @extern("vkCmdSetBlendConstants");
-extern fn void* cmdSetDepthBounds (VkCommandBuffer commandbuffer, float mindepthbounds, float maxdepthbounds) @extern("vkCmdSetDepthBounds");
-extern fn void* cmdSetStencilCompareMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint comparemask) @extern("vkCmdSetStencilCompareMask");
-extern fn void* cmdSetStencilWriteMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint writemask) @extern("vkCmdSetStencilWriteMask");
-extern fn void* cmdSetStencilReference (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint reference) @extern("vkCmdSetStencilReference");
-extern fn void* cmdBindDescriptorSets (VkCommandBuffer commandbuffer, VkPipelineBindPoint pipelinebindpoint, VkPipelineLayout layout, uint firstset, uint descriptorsetcount, VkDescriptorSet *pdescriptorsets, uint *dynamicoffsetcount, uint pdynamicoffsets) @extern("vkCmdBindDescriptorSets");
-extern fn void* cmdBindIndexBuffer (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indextype) @extern("vkCmdBindIndexBuffer");
-extern fn void* cmdBindVertexBuffers (VkCommandBuffer commandbuffer, uint firstbinding, uint bindingcount, VkBuffer *pbuffers, VkDeviceSize poffsets) @extern("vkCmdBindVertexBuffers");
-extern fn void* cmdDraw (VkCommandBuffer commandbuffer, uint vertexcount, uint instancecount, uint firstvertex, uint firstinstance) @extern("vkCmdDraw");
-extern fn void* cmdDrawIndexed (VkCommandBuffer commandbuffer, uint indexcount, uint instancecount, uint firstindex, int vertexoffset, uint firstinstance) @extern("vkCmdDrawIndexed");
-extern fn void* cmdDrawIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, uint drawcount, uint stride) @extern("vkCmdDrawIndirect");
-extern fn void* cmdDrawIndexedIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, uint drawcount, uint stride) @extern("vkCmdDrawIndexedIndirect");
-extern fn void* cmdDispatch (VkCommandBuffer commandbuffer, uint groupcountx, uint groupcounty, uint groupcountz) @extern("vkCmdDispatch");
-extern fn void* cmdDispatchIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset) @extern("vkCmdDispatchIndirect");
-extern fn void* cmdCopyBuffer (VkCommandBuffer commandbuffer, VkBuffer srcbuffer, VkBuffer dstbuffer, uint regioncount, VkBufferCopy pregions) @extern("vkCmdCopyBuffer");
-extern fn void* cmdCopyImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageCopy pregions) @extern("vkCmdCopyImage");
-extern fn void* cmdBlitImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageBlit pregions, VkFilter filter) @extern("vkCmdBlitImage");
-extern fn void* cmdCopyBufferToImage (VkCommandBuffer commandbuffer, VkBuffer srcbuffer, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkBufferImageCopy pregions) @extern("vkCmdCopyBufferToImage");
-extern fn void* cmdCopyImageToBuffer (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkBuffer dstbuffer, uint regioncount, VkBufferImageCopy pregions) @extern("vkCmdCopyImageToBuffer");
-extern fn void* cmdUpdateBuffer (VkCommandBuffer commandbuffer, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize datasize, void* pdata) @extern("vkCmdUpdateBuffer");
-extern fn void* cmdFillBuffer (VkCommandBuffer commandbuffer, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize size, uint data) @extern("vkCmdFillBuffer");
-extern fn void* cmdClearColorImage (VkCommandBuffer commandbuffer, VkImage image, VkImageLayout imagelayout, VkClearColorValue pcolor, uint rangecount, VkImageSubresourceRange pranges) @extern("vkCmdClearColorImage");
-extern fn void* cmdClearDepthStencilImage (VkCommandBuffer commandbuffer, VkImage image, VkImageLayout imagelayout, VkClearDepthStencilValue pdepthstencil, uint rangecount, VkImageSubresourceRange pranges) @extern("vkCmdClearDepthStencilImage");
-extern fn void* cmdClearAttachments (VkCommandBuffer commandbuffer, uint attachmentcount, VkClearAttachment pattachments, uint rectcount, VkClearRect prects) @extern("vkCmdClearAttachments");
-extern fn void* cmdResolveImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageResolve pregions) @extern("vkCmdResolveImage");
-extern fn void* cmdSetEvent (VkCommandBuffer commandbuffer, VkEvent event, VkPipelineStageFlags *stagemask) @extern("vkCmdSetEvent");
-extern fn void* cmdResetEvent (VkCommandBuffer commandbuffer, VkEvent event, VkPipelineStageFlags *stagemask) @extern("vkCmdResetEvent");
-extern fn void* cmdWaitEvents (VkCommandBuffer commandbuffer, uint eventcount, VkEvent pevents, VkPipelineStageFlags *srcstagemask, VkPipelineStageFlags *dststagemask, uint *memorybarriercount, VkMemoryBarrier pmemorybarriers, uint *buffermemorybarriercount, VkBufferMemoryBarrier pbuffermemorybarriers, uint *imagememorybarriercount, VkImageMemoryBarrier pimagememorybarriers) @extern("vkCmdWaitEvents");
-extern fn void* cmdPipelineBarrier (VkCommandBuffer commandbuffer, VkPipelineStageFlags *srcstagemask, VkPipelineStageFlags *dststagemask, VkDependencyFlags *dependencyflags, uint *memorybarriercount, VkMemoryBarrier pmemorybarriers, uint *buffermemorybarriercount, VkBufferMemoryBarrier pbuffermemorybarriers, uint *imagememorybarriercount, VkImageMemoryBarrier pimagememorybarriers) @extern("vkCmdPipelineBarrier");
-extern fn void* cmdBeginQuery (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint query, VkQueryControlFlags *flags) @extern("vkCmdBeginQuery");
-extern fn void* cmdEndQuery (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint query) @extern("vkCmdEndQuery");
-extern fn void* cmdResetQueryPool (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint firstquery, uint querycount) @extern("vkCmdResetQueryPool");
-extern fn void* cmdWriteTimestamp (VkCommandBuffer commandbuffer, VkPipelineStageFlagBits pipelinestage, VkQueryPool querypool, uint query) @extern("vkCmdWriteTimestamp");
-extern fn void* cmdCopyQueryPoolResults (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint firstquery, uint querycount, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize stride, VkQueryResultFlags *flags) @extern("vkCmdCopyQueryPoolResults");
-extern fn void* cmdPushConstants (VkCommandBuffer commandbuffer, VkPipelineLayout layout, VkShaderStageFlags stageflags, uint offset, uint size, void* pvalues) @extern("vkCmdPushConstants");
-extern fn void* cmdBeginRenderPass (VkCommandBuffer commandbuffer, VkRenderPassBeginInfo prenderpassbegin, VkSubpassContents contents) @extern("vkCmdBeginRenderPass");
-extern fn void* cmdNextSubpass (VkCommandBuffer commandbuffer, VkSubpassContents contents) @extern("vkCmdNextSubpass");
-extern fn void* cmdEndRenderPass (VkCommandBuffer commandbuffer) @extern("vkCmdEndRenderPass");
-extern fn void* cmdExecuteCommands (VkCommandBuffer commandbuffer, uint commandbuffercount, VkCommandBuffer pcommandbuffers) @extern("vkCmdExecuteCommands");
-extern fn VkResult enumerateInstanceVersion (uint papiversion) @extern("vkEnumerateInstanceVersion");
-extern fn VkResult bindBufferMemory2 (VkDevice device, uint bindinfocount, VkBindBufferMemoryInfo pbindinfos) @extern("vkBindBufferMemory2");
-extern fn VkResult bindImageMemory2 (VkDevice device, uint bindinfocount, VkBindImageMemoryInfo pbindinfos) @extern("vkBindImageMemory2");
-extern fn void* getDeviceGroupPeerMemoryFeatures (VkDevice device, uint heapindex, uint localdeviceindex, uint remotedeviceindex, VkPeerMemoryFeatureFlags ppeermemoryfeatures) @extern("vkGetDeviceGroupPeerMemoryFeatures");
-extern fn void* cmdSetDeviceMask (VkCommandBuffer commandbuffer, uint devicemask) @extern("vkCmdSetDeviceMask");
-extern fn void* cmdDispatchBase (VkCommandBuffer commandbuffer, uint basegroupx, uint basegroupy, uint basegroupz, uint groupcountx, uint groupcounty, uint groupcountz) @extern("vkCmdDispatchBase");
-extern fn VkResult enumeratePhysicalDeviceGroups (VkInstance instance, uint *pphysicaldevicegroupcount, VkPhysicalDeviceGroupProperties *pphysicaldevicegroupproperties) @extern("vkEnumeratePhysicalDeviceGroups");
-extern fn void* getImageMemoryRequirements2 (VkDevice device, VkImageMemoryRequirementsInfo2 pinfo, VkMemoryRequirements2 pmemoryrequirements) @extern("vkGetImageMemoryRequirements2");
-extern fn void* getBufferMemoryRequirements2 (VkDevice device, VkBufferMemoryRequirementsInfo2 pinfo, VkMemoryRequirements2 pmemoryrequirements) @extern("vkGetBufferMemoryRequirements2");
-extern fn void* getImageSparseMemoryRequirements2 (VkDevice device, VkImageSparseMemoryRequirementsInfo2 pinfo, uint *psparsememoryrequirementcount, VkSparseImageMemoryRequirements2 *psparsememoryrequirements) @extern("vkGetImageSparseMemoryRequirements2");
-extern fn void* getPhysicalDeviceFeatures2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceFeatures2 pfeatures) @extern("vkGetPhysicalDeviceFeatures2");
-extern fn void* getPhysicalDeviceProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceProperties2 pproperties) @extern("vkGetPhysicalDeviceProperties2");
-extern fn void* getPhysicalDeviceFormatProperties2 (VkPhysicalDevice physicaldevice, VkFormat format, VkFormatProperties2 pformatproperties) @extern("vkGetPhysicalDeviceFormatProperties2");
-extern fn VkResult getPhysicalDeviceImageFormatProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceImageFormatInfo2 pimageformatinfo, VkImageFormatProperties2 pimageformatproperties) @extern("vkGetPhysicalDeviceImageFormatProperties2");
-extern fn void* getPhysicalDeviceQueueFamilyProperties2 (VkPhysicalDevice physicaldevice, uint *pqueuefamilypropertycount, VkQueueFamilyProperties2 *pqueuefamilyproperties) @extern("vkGetPhysicalDeviceQueueFamilyProperties2");
-extern fn void* getPhysicalDeviceMemoryProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceMemoryProperties2 pmemoryproperties) @extern("vkGetPhysicalDeviceMemoryProperties2");
-extern fn void* getPhysicalDeviceSparseImageFormatProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceSparseImageFormatInfo2 pformatinfo, uint *ppropertycount, VkSparseImageFormatProperties2 *pproperties) @extern("vkGetPhysicalDeviceSparseImageFormatProperties2");
-extern fn void* trimCommandPool (VkDevice device, VkCommandPool commandpool, VkCommandPoolTrimFlags *flags) @extern("vkTrimCommandPool");
-extern fn void* getDeviceQueue2 (VkDevice device, VkDeviceQueueInfo2 pqueueinfo, VkQueue pqueue) @extern("vkGetDeviceQueue2");
-extern fn VkResult createSamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversionCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkSamplerYcbcrConversion pycbcrconversion) @extern("vkCreateSamplerYcbcrConversion");
-extern fn void* destroySamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversion *ycbcrconversion, VkAllocationCallbacks *pallocator) @extern("vkDestroySamplerYcbcrConversion");
-extern fn VkResult createDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplateCreateInfo pcreateinfo, VkAllocationCallbacks *pallocator, VkDescriptorUpdateTemplate pdescriptorupdatetemplate) @extern("vkCreateDescriptorUpdateTemplate");
-extern fn void* destroyDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplate *descriptorupdatetemplate, VkAllocationCallbacks *pallocator) @extern("vkDestroyDescriptorUpdateTemplate");
-extern fn void* updateDescriptorSetWithTemplate (VkDevice device, VkDescriptorSet descriptorset, VkDescriptorUpdateTemplate descriptorupdatetemplate, void* pdata) @extern("vkUpdateDescriptorSetWithTemplate");
-extern fn void* getPhysicalDeviceExternalBufferProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalBufferInfo pexternalbufferinfo, VkExternalBufferProperties pexternalbufferproperties) @extern("vkGetPhysicalDeviceExternalBufferProperties");
-extern fn void* getPhysicalDeviceExternalFenceProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalFenceInfo pexternalfenceinfo, VkExternalFenceProperties pexternalfenceproperties) @extern("vkGetPhysicalDeviceExternalFenceProperties");
-extern fn void* getPhysicalDeviceExternalSemaphoreProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalSemaphoreInfo pexternalsemaphoreinfo, VkExternalSemaphoreProperties pexternalsemaphoreproperties) @extern("vkGetPhysicalDeviceExternalSemaphoreProperties");
-extern fn void* getDescriptorSetLayoutSupport (VkDevice device, VkDescriptorSetLayoutCreateInfo pcreateinfo, VkDescriptorSetLayoutSupport psupport) @extern("vkGetDescriptorSetLayoutSupport");
-extern fn void* destroySurfaceKHR (VkInstance instance, VkSurfaceKHR *surface, VkAllocationCallbacks *pallocator) @extern("vkDestroySurfaceKHR");
-extern fn VkResult getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physicaldevice, uint queuefamilyindex, VkSurfaceKHR surface, bool psupported) @extern("vkGetPhysicalDeviceSurfaceSupportKHR");
-extern fn VkResult getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR psurfacecapabilities) @extern("vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
-extern fn VkResult getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR *surface, uint *psurfaceformatcount, VkSurfaceFormatKHR *psurfaceformats) @extern("vkGetPhysicalDeviceSurfaceFormatsKHR");
-extern fn VkResult getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR *surface, uint *ppresentmodecount, VkPresentModeKHR *ppresentmodes) @extern("vkGetPhysicalDeviceSurfacePresentModesKHR");
-extern fn VkResult createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR pcreateinfo, VkAllocationCallbacks *pallocator, VkSwapchainKHR pswapchain) @extern("vkCreateSwapchainKHR");
-extern fn void* destroySwapchainKHR (VkDevice device, VkSwapchainKHR *swapchain, VkAllocationCallbacks *pallocator) @extern("vkDestroySwapchainKHR");
-extern fn VkResult getSwapchainImagesKHR (VkDevice device, VkSwapchainKHR swapchain, uint *pswapchainimagecount, VkImage *pswapchainimages) @extern("vkGetSwapchainImagesKHR");
-extern fn VkResult acquireNextImageKHR (VkDevice device, VkSwapchainKHR swapchain, ulong timeout, VkSemaphore *semaphore, VkFence *fence, uint pimageindex) @extern("vkAcquireNextImageKHR");
-extern fn VkResult queuePresentKHR (VkQueue queue, VkPresentInfoKHR ppresentinfo) @extern("vkQueuePresentKHR");
-extern fn VkResult getDeviceGroupPresentCapabilitiesKHR (VkDevice device, VkDeviceGroupPresentCapabilitiesKHR pdevicegrouppresentcapabilities) @extern("vkGetDeviceGroupPresentCapabilitiesKHR");
-extern fn VkResult getDeviceGroupSurfacePresentModesKHR (VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR *pmodes) @extern("vkGetDeviceGroupSurfacePresentModesKHR");
-extern fn VkResult getPhysicalDevicePresentRectanglesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint *prectcount, VkRect2D *prects) @extern("vkGetPhysicalDevicePresentRectanglesKHR");
-extern fn VkResult acquireNextImage2KHR (VkDevice device, VkAcquireNextImageInfoKHR pacquireinfo, uint pimageindex) @extern("vkAcquireNextImage2KHR");
-extern fn VkResult getPhysicalDeviceDisplayPropertiesKHR (VkPhysicalDevice physicaldevice, uint *ppropertycount, VkDisplayPropertiesKHR *pproperties) @extern("vkGetPhysicalDeviceDisplayPropertiesKHR");
-extern fn VkResult getPhysicalDeviceDisplayPlanePropertiesKHR (VkPhysicalDevice physicaldevice, uint *ppropertycount, VkDisplayPlanePropertiesKHR *pproperties) @extern("vkGetPhysicalDeviceDisplayPlanePropertiesKHR");
-extern fn VkResult getDisplayPlaneSupportedDisplaysKHR (VkPhysicalDevice physicaldevice, uint planeindex, uint *pdisplaycount, VkDisplayKHR *pdisplays) @extern("vkGetDisplayPlaneSupportedDisplaysKHR");
-extern fn VkResult getDisplayModePropertiesKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, uint *ppropertycount, VkDisplayModePropertiesKHR *pproperties) @extern("vkGetDisplayModePropertiesKHR");
-extern fn VkResult createDisplayModeKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR pcreateinfo, VkAllocationCallbacks *pallocator, VkDisplayModeKHR pmode) @extern("vkCreateDisplayModeKHR");
-extern fn VkResult getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkDisplayModeKHR mode, uint planeindex, VkDisplayPlaneCapabilitiesKHR pcapabilities) @extern("vkGetDisplayPlaneCapabilitiesKHR");
-extern fn VkResult createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR pcreateinfo, VkAllocationCallbacks *pallocator, VkSurfaceKHR psurface) @extern("vkCreateDisplayPlaneSurfaceKHR");
-extern fn VkResult debugMarkerSetObjectTagEXT (VkDevice device, VkDebugMarkerObjectTagInfoEXT ptaginfo) @extern("vkDebugMarkerSetObjectTagEXT");
-extern fn VkResult debugMarkerSetObjectNameEXT (VkDevice device, VkDebugMarkerObjectNameInfoEXT pnameinfo) @extern("vkDebugMarkerSetObjectNameEXT");
-extern fn void* cmdDebugMarkerBeginEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT pmarkerinfo) @extern("vkCmdDebugMarkerBeginEXT");
-extern fn void* cmdDebugMarkerEndEXT (VkCommandBuffer commandbuffer) @extern("vkCmdDebugMarkerEndEXT");
-extern fn void* cmdDebugMarkerInsertEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT pmarkerinfo) @extern("vkCmdDebugMarkerInsertEXT");
-extern fn VkResult setDebugUtilsObjectNameEXT (VkDevice device, VkDebugUtilsObjectNameInfoEXT pnameinfo) @extern("vkSetDebugUtilsObjectNameEXT");
-extern fn VkResult setDebugUtilsObjectTagEXT (VkDevice device, VkDebugUtilsObjectTagInfoEXT ptaginfo) @extern("vkSetDebugUtilsObjectTagEXT");
-extern fn void* queueBeginDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT plabelinfo) @extern("vkQueueBeginDebugUtilsLabelEXT");
-extern fn void* queueEndDebugUtilsLabelEXT (VkQueue queue) @extern("vkQueueEndDebugUtilsLabelEXT");
-extern fn void* queueInsertDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT plabelinfo) @extern("vkQueueInsertDebugUtilsLabelEXT");
-extern fn void* cmdBeginDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT plabelinfo) @extern("vkCmdBeginDebugUtilsLabelEXT");
-extern fn void* cmdEndDebugUtilsLabelEXT (VkCommandBuffer commandbuffer) @extern("vkCmdEndDebugUtilsLabelEXT");
-extern fn void* cmdInsertDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT plabelinfo) @extern("vkCmdInsertDebugUtilsLabelEXT");
-extern fn VkResult createDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT pcreateinfo, VkAllocationCallbacks *pallocator, VkDebugUtilsMessengerEXT pmessenger) @extern("vkCreateDebugUtilsMessengerEXT");
-extern fn void* destroyDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerEXT *messenger, VkAllocationCallbacks *pallocator) @extern("vkDestroyDebugUtilsMessengerEXT");
-extern fn void* submitDebugUtilsMessageEXT (VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageseverity, VkDebugUtilsMessageTypeFlagsEXT messagetypes, VkDebugUtilsMessengerCallbackDataEXT pcallbackdata) @extern("vkSubmitDebugUtilsMessageEXT");
+extern fn VkResult resetCommandBuffer (VkCommandBuffer commandbuffer, VkCommandBufferResetFlags flags) @extern("vkResetCommandBuffer");
+extern fn void cmdBindPipeline (VkCommandBuffer commandbuffer, VkPipelineBindPoint pipelinebindpoint, VkPipeline pipeline) @extern("vkCmdBindPipeline");
+extern fn void cmdSetViewport (VkCommandBuffer commandbuffer, uint firstviewport, uint viewportcount, VkViewport* pviewports) @extern("vkCmdSetViewport");
+extern fn void cmdSetScissor (VkCommandBuffer commandbuffer, uint firstscissor, uint scissorcount, VkRect2D* pscissors) @extern("vkCmdSetScissor");
+extern fn void cmdSetLineWidth (VkCommandBuffer commandbuffer, float linewidth) @extern("vkCmdSetLineWidth");
+extern fn void cmdSetDepthBias (VkCommandBuffer commandbuffer, float depthbiasconstantfactor, float depthbiasclamp, float depthbiasslopefactor) @extern("vkCmdSetDepthBias");
+extern fn void cmdSetBlendConstants (VkCommandBuffer commandbuffer, float blendconstants) @extern("vkCmdSetBlendConstants");
+extern fn void cmdSetDepthBounds (VkCommandBuffer commandbuffer, float mindepthbounds, float maxdepthbounds) @extern("vkCmdSetDepthBounds");
+extern fn void cmdSetStencilCompareMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint comparemask) @extern("vkCmdSetStencilCompareMask");
+extern fn void cmdSetStencilWriteMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint writemask) @extern("vkCmdSetStencilWriteMask");
+extern fn void cmdSetStencilReference (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint reference) @extern("vkCmdSetStencilReference");
+extern fn void cmdBindDescriptorSets (VkCommandBuffer commandbuffer, VkPipelineBindPoint pipelinebindpoint, VkPipelineLayout layout, uint firstset, uint descriptorsetcount, VkDescriptorSet* pdescriptorsets, uint dynamicoffsetcount, uint* pdynamicoffsets) @extern("vkCmdBindDescriptorSets");
+extern fn void cmdBindIndexBuffer (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indextype) @extern("vkCmdBindIndexBuffer");
+extern fn void cmdBindVertexBuffers (VkCommandBuffer commandbuffer, uint firstbinding, uint bindingcount, VkBuffer* pbuffers, VkDeviceSize* poffsets) @extern("vkCmdBindVertexBuffers");
+extern fn void cmdDraw (VkCommandBuffer commandbuffer, uint vertexcount, uint instancecount, uint firstvertex, uint firstinstance) @extern("vkCmdDraw");
+extern fn void cmdDrawIndexed (VkCommandBuffer commandbuffer, uint indexcount, uint instancecount, uint firstindex, int vertexoffset, uint firstinstance) @extern("vkCmdDrawIndexed");
+extern fn void cmdDrawIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, uint drawcount, uint stride) @extern("vkCmdDrawIndirect");
+extern fn void cmdDrawIndexedIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset, uint drawcount, uint stride) @extern("vkCmdDrawIndexedIndirect");
+extern fn void cmdDispatch (VkCommandBuffer commandbuffer, uint groupcountx, uint groupcounty, uint groupcountz) @extern("vkCmdDispatch");
+extern fn void cmdDispatchIndirect (VkCommandBuffer commandbuffer, VkBuffer buffer, VkDeviceSize offset) @extern("vkCmdDispatchIndirect");
+extern fn void cmdCopyBuffer (VkCommandBuffer commandbuffer, VkBuffer srcbuffer, VkBuffer dstbuffer, uint regioncount, VkBufferCopy* pregions) @extern("vkCmdCopyBuffer");
+extern fn void cmdCopyImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageCopy* pregions) @extern("vkCmdCopyImage");
+extern fn void cmdBlitImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageBlit* pregions, VkFilter filter) @extern("vkCmdBlitImage");
+extern fn void cmdCopyBufferToImage (VkCommandBuffer commandbuffer, VkBuffer srcbuffer, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkBufferImageCopy* pregions) @extern("vkCmdCopyBufferToImage");
+extern fn void cmdCopyImageToBuffer (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkBuffer dstbuffer, uint regioncount, VkBufferImageCopy* pregions) @extern("vkCmdCopyImageToBuffer");
+extern fn void cmdUpdateBuffer (VkCommandBuffer commandbuffer, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize datasize, void* pdata) @extern("vkCmdUpdateBuffer");
+extern fn void cmdFillBuffer (VkCommandBuffer commandbuffer, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize size, uint data) @extern("vkCmdFillBuffer");
+extern fn void cmdClearColorImage (VkCommandBuffer commandbuffer, VkImage image, VkImageLayout imagelayout, VkClearColorValue* pcolor, uint rangecount, VkImageSubresourceRange* pranges) @extern("vkCmdClearColorImage");
+extern fn void cmdClearDepthStencilImage (VkCommandBuffer commandbuffer, VkImage image, VkImageLayout imagelayout, VkClearDepthStencilValue* pdepthstencil, uint rangecount, VkImageSubresourceRange* pranges) @extern("vkCmdClearDepthStencilImage");
+extern fn void cmdClearAttachments (VkCommandBuffer commandbuffer, uint attachmentcount, VkClearAttachment* pattachments, uint rectcount, VkClearRect* prects) @extern("vkCmdClearAttachments");
+extern fn void cmdResolveImage (VkCommandBuffer commandbuffer, VkImage srcimage, VkImageLayout srcimagelayout, VkImage dstimage, VkImageLayout dstimagelayout, uint regioncount, VkImageResolve* pregions) @extern("vkCmdResolveImage");
+extern fn void cmdSetEvent (VkCommandBuffer commandbuffer, VkEvent event, VkPipelineStageFlags stagemask) @extern("vkCmdSetEvent");
+extern fn void cmdResetEvent (VkCommandBuffer commandbuffer, VkEvent event, VkPipelineStageFlags stagemask) @extern("vkCmdResetEvent");
+extern fn void cmdWaitEvents (VkCommandBuffer commandbuffer, uint eventcount, VkEvent* pevents, VkPipelineStageFlags srcstagemask, VkPipelineStageFlags dststagemask, uint memorybarriercount, VkMemoryBarrier* pmemorybarriers, uint buffermemorybarriercount, VkBufferMemoryBarrier* pbuffermemorybarriers, uint imagememorybarriercount, VkImageMemoryBarrier* pimagememorybarriers) @extern("vkCmdWaitEvents");
+extern fn void cmdPipelineBarrier (VkCommandBuffer commandbuffer, VkPipelineStageFlags srcstagemask, VkPipelineStageFlags dststagemask, VkDependencyFlags dependencyflags, uint memorybarriercount, VkMemoryBarrier* pmemorybarriers, uint buffermemorybarriercount, VkBufferMemoryBarrier* pbuffermemorybarriers, uint imagememorybarriercount, VkImageMemoryBarrier* pimagememorybarriers) @extern("vkCmdPipelineBarrier");
+extern fn void cmdBeginQuery (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint query, VkQueryControlFlags flags) @extern("vkCmdBeginQuery");
+extern fn void cmdEndQuery (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint query) @extern("vkCmdEndQuery");
+extern fn void cmdResetQueryPool (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint firstquery, uint querycount) @extern("vkCmdResetQueryPool");
+extern fn void cmdWriteTimestamp (VkCommandBuffer commandbuffer, VkPipelineStageFlagBits pipelinestage, VkQueryPool querypool, uint query) @extern("vkCmdWriteTimestamp");
+extern fn void cmdCopyQueryPoolResults (VkCommandBuffer commandbuffer, VkQueryPool querypool, uint firstquery, uint querycount, VkBuffer dstbuffer, VkDeviceSize dstoffset, VkDeviceSize stride, VkQueryResultFlags flags) @extern("vkCmdCopyQueryPoolResults");
+extern fn void cmdPushConstants (VkCommandBuffer commandbuffer, VkPipelineLayout layout, VkShaderStageFlags stageflags, uint offset, uint size, void* pvalues) @extern("vkCmdPushConstants");
+extern fn void cmdBeginRenderPass (VkCommandBuffer commandbuffer, VkRenderPassBeginInfo* prenderpassbegin, VkSubpassContents contents) @extern("vkCmdBeginRenderPass");
+extern fn void cmdNextSubpass (VkCommandBuffer commandbuffer, VkSubpassContents contents) @extern("vkCmdNextSubpass");
+extern fn void cmdEndRenderPass (VkCommandBuffer commandbuffer) @extern("vkCmdEndRenderPass");
+extern fn void cmdExecuteCommands (VkCommandBuffer commandbuffer, uint commandbuffercount, VkCommandBuffer* pcommandbuffers) @extern("vkCmdExecuteCommands");
+extern fn VkResult enumerateInstanceVersion (uint* papiversion) @extern("vkEnumerateInstanceVersion");
+extern fn VkResult bindBufferMemory2 (VkDevice device, uint bindinfocount, VkBindBufferMemoryInfo* pbindinfos) @extern("vkBindBufferMemory2");
+extern fn VkResult bindImageMemory2 (VkDevice device, uint bindinfocount, VkBindImageMemoryInfo* pbindinfos) @extern("vkBindImageMemory2");
+extern fn void getDeviceGroupPeerMemoryFeatures (VkDevice device, uint heapindex, uint localdeviceindex, uint remotedeviceindex, VkPeerMemoryFeatureFlags* ppeermemoryfeatures) @extern("vkGetDeviceGroupPeerMemoryFeatures");
+extern fn void cmdSetDeviceMask (VkCommandBuffer commandbuffer, uint devicemask) @extern("vkCmdSetDeviceMask");
+extern fn void cmdDispatchBase (VkCommandBuffer commandbuffer, uint basegroupx, uint basegroupy, uint basegroupz, uint groupcountx, uint groupcounty, uint groupcountz) @extern("vkCmdDispatchBase");
+extern fn VkResult enumeratePhysicalDeviceGroups (VkInstance instance, uint* pphysicaldevicegroupcount, VkPhysicalDeviceGroupProperties* pphysicaldevicegroupproperties) @extern("vkEnumeratePhysicalDeviceGroups");
+extern fn void getImageMemoryRequirements2 (VkDevice device, VkImageMemoryRequirementsInfo2* pinfo, VkMemoryRequirements2* pmemoryrequirements) @extern("vkGetImageMemoryRequirements2");
+extern fn void getBufferMemoryRequirements2 (VkDevice device, VkBufferMemoryRequirementsInfo2* pinfo, VkMemoryRequirements2* pmemoryrequirements) @extern("vkGetBufferMemoryRequirements2");
+extern fn void getImageSparseMemoryRequirements2 (VkDevice device, VkImageSparseMemoryRequirementsInfo2* pinfo, uint* psparsememoryrequirementcount, VkSparseImageMemoryRequirements2* psparsememoryrequirements) @extern("vkGetImageSparseMemoryRequirements2");
+extern fn void getPhysicalDeviceFeatures2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceFeatures2* pfeatures) @extern("vkGetPhysicalDeviceFeatures2");
+extern fn void getPhysicalDeviceProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceProperties2* pproperties) @extern("vkGetPhysicalDeviceProperties2");
+extern fn void getPhysicalDeviceFormatProperties2 (VkPhysicalDevice physicaldevice, VkFormat format, VkFormatProperties2* pformatproperties) @extern("vkGetPhysicalDeviceFormatProperties2");
+extern fn VkResult getPhysicalDeviceImageFormatProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceImageFormatInfo2* pimageformatinfo, VkImageFormatProperties2* pimageformatproperties) @extern("vkGetPhysicalDeviceImageFormatProperties2");
+extern fn void getPhysicalDeviceQueueFamilyProperties2 (VkPhysicalDevice physicaldevice, uint* pqueuefamilypropertycount, VkQueueFamilyProperties2* pqueuefamilyproperties) @extern("vkGetPhysicalDeviceQueueFamilyProperties2");
+extern fn void getPhysicalDeviceMemoryProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceMemoryProperties2* pmemoryproperties) @extern("vkGetPhysicalDeviceMemoryProperties2");
+extern fn void getPhysicalDeviceSparseImageFormatProperties2 (VkPhysicalDevice physicaldevice, VkPhysicalDeviceSparseImageFormatInfo2* pformatinfo, uint* ppropertycount, VkSparseImageFormatProperties2* pproperties) @extern("vkGetPhysicalDeviceSparseImageFormatProperties2");
+extern fn void trimCommandPool (VkDevice device, VkCommandPool commandpool, VkCommandPoolTrimFlags flags) @extern("vkTrimCommandPool");
+extern fn void getDeviceQueue2 (VkDevice device, VkDeviceQueueInfo2* pqueueinfo, VkQueue* pqueue) @extern("vkGetDeviceQueue2");
+extern fn VkResult createSamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversionCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkSamplerYcbcrConversion* pycbcrconversion) @extern("vkCreateSamplerYcbcrConversion");
+extern fn void destroySamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversion ycbcrconversion, VkAllocationCallbacks* pallocator) @extern("vkDestroySamplerYcbcrConversion");
+extern fn VkResult createDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkDescriptorUpdateTemplate* pdescriptorupdatetemplate) @extern("vkCreateDescriptorUpdateTemplate");
+extern fn void destroyDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplate descriptorupdatetemplate, VkAllocationCallbacks* pallocator) @extern("vkDestroyDescriptorUpdateTemplate");
+extern fn void updateDescriptorSetWithTemplate (VkDevice device, VkDescriptorSet descriptorset, VkDescriptorUpdateTemplate descriptorupdatetemplate, void* pdata) @extern("vkUpdateDescriptorSetWithTemplate");
+extern fn void getPhysicalDeviceExternalBufferProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalBufferInfo* pexternalbufferinfo, VkExternalBufferProperties* pexternalbufferproperties) @extern("vkGetPhysicalDeviceExternalBufferProperties");
+extern fn void getPhysicalDeviceExternalFenceProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalFenceInfo* pexternalfenceinfo, VkExternalFenceProperties* pexternalfenceproperties) @extern("vkGetPhysicalDeviceExternalFenceProperties");
+extern fn void getPhysicalDeviceExternalSemaphoreProperties (VkPhysicalDevice physicaldevice, VkPhysicalDeviceExternalSemaphoreInfo* pexternalsemaphoreinfo, VkExternalSemaphoreProperties* pexternalsemaphoreproperties) @extern("vkGetPhysicalDeviceExternalSemaphoreProperties");
+extern fn void getDescriptorSetLayoutSupport (VkDevice device, VkDescriptorSetLayoutCreateInfo* pcreateinfo, VkDescriptorSetLayoutSupport* psupport) @extern("vkGetDescriptorSetLayoutSupport");
+extern fn void destroySurfaceKHR (VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pallocator) @extern("vkDestroySurfaceKHR");
+extern fn VkResult getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physicaldevice, uint queuefamilyindex, VkSurfaceKHR surface, bool* psupported) @extern("vkGetPhysicalDeviceSurfaceSupportKHR");
+extern fn VkResult getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* psurfacecapabilities) @extern("vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+extern fn VkResult getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint* psurfaceformatcount, VkSurfaceFormatKHR* psurfaceformats) @extern("vkGetPhysicalDeviceSurfaceFormatsKHR");
+extern fn VkResult getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint* ppresentmodecount, VkPresentModeKHR* ppresentmodes) @extern("vkGetPhysicalDeviceSurfacePresentModesKHR");
+extern fn VkResult createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSwapchainKHR* pswapchain) @extern("vkCreateSwapchainKHR");
+extern fn void destroySwapchainKHR (VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pallocator) @extern("vkDestroySwapchainKHR");
+extern fn VkResult getSwapchainImagesKHR (VkDevice device, VkSwapchainKHR swapchain, uint* pswapchainimagecount, VkImage* pswapchainimages) @extern("vkGetSwapchainImagesKHR");
+extern fn VkResult acquireNextImageKHR (VkDevice device, VkSwapchainKHR swapchain, ulong timeout, VkSemaphore semaphore, VkFence fence, uint* pimageindex) @extern("vkAcquireNextImageKHR");
+extern fn VkResult queuePresentKHR (VkQueue queue, VkPresentInfoKHR* ppresentinfo) @extern("vkQueuePresentKHR");
+extern fn VkResult getDeviceGroupPresentCapabilitiesKHR (VkDevice device, VkDeviceGroupPresentCapabilitiesKHR* pdevicegrouppresentcapabilities) @extern("vkGetDeviceGroupPresentCapabilitiesKHR");
+extern fn VkResult getDeviceGroupSurfacePresentModesKHR (VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pmodes) @extern("vkGetDeviceGroupSurfacePresentModesKHR");
+extern fn VkResult getPhysicalDevicePresentRectanglesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint* prectcount, VkRect2D* prects) @extern("vkGetPhysicalDevicePresentRectanglesKHR");
+extern fn VkResult acquireNextImage2KHR (VkDevice device, VkAcquireNextImageInfoKHR* pacquireinfo, uint* pimageindex) @extern("vkAcquireNextImage2KHR");
+extern fn VkResult getPhysicalDeviceDisplayPropertiesKHR (VkPhysicalDevice physicaldevice, uint* ppropertycount, VkDisplayPropertiesKHR* pproperties) @extern("vkGetPhysicalDeviceDisplayPropertiesKHR");
+extern fn VkResult getPhysicalDeviceDisplayPlanePropertiesKHR (VkPhysicalDevice physicaldevice, uint* ppropertycount, VkDisplayPlanePropertiesKHR* pproperties) @extern("vkGetPhysicalDeviceDisplayPlanePropertiesKHR");
+extern fn VkResult getDisplayPlaneSupportedDisplaysKHR (VkPhysicalDevice physicaldevice, uint planeindex, uint* pdisplaycount, VkDisplayKHR* pdisplays) @extern("vkGetDisplayPlaneSupportedDisplaysKHR");
+extern fn VkResult getDisplayModePropertiesKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, uint* ppropertycount, VkDisplayModePropertiesKHR* pproperties) @extern("vkGetDisplayModePropertiesKHR");
+extern fn VkResult createDisplayModeKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkDisplayModeKHR* pmode) @extern("vkCreateDisplayModeKHR");
+extern fn VkResult getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkDisplayModeKHR mode, uint planeindex, VkDisplayPlaneCapabilitiesKHR* pcapabilities) @extern("vkGetDisplayPlaneCapabilitiesKHR");
+extern fn VkResult createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSurfaceKHR* psurface) @extern("vkCreateDisplayPlaneSurfaceKHR");
+extern fn VkResult debugMarkerSetObjectTagEXT (VkDevice device, VkDebugMarkerObjectTagInfoEXT* ptaginfo) @extern("vkDebugMarkerSetObjectTagEXT");
+extern fn VkResult debugMarkerSetObjectNameEXT (VkDevice device, VkDebugMarkerObjectNameInfoEXT* pnameinfo) @extern("vkDebugMarkerSetObjectNameEXT");
+extern fn void cmdDebugMarkerBeginEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT* pmarkerinfo) @extern("vkCmdDebugMarkerBeginEXT");
+extern fn void cmdDebugMarkerEndEXT (VkCommandBuffer commandbuffer) @extern("vkCmdDebugMarkerEndEXT");
+extern fn void cmdDebugMarkerInsertEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT* pmarkerinfo) @extern("vkCmdDebugMarkerInsertEXT");
+extern fn VkResult setDebugUtilsObjectNameEXT (VkDevice device, VkDebugUtilsObjectNameInfoEXT* pnameinfo) @extern("vkSetDebugUtilsObjectNameEXT");
+extern fn VkResult setDebugUtilsObjectTagEXT (VkDevice device, VkDebugUtilsObjectTagInfoEXT* ptaginfo) @extern("vkSetDebugUtilsObjectTagEXT");
+extern fn void queueBeginDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT* plabelinfo) @extern("vkQueueBeginDebugUtilsLabelEXT");
+extern fn void queueEndDebugUtilsLabelEXT (VkQueue queue) @extern("vkQueueEndDebugUtilsLabelEXT");
+extern fn void queueInsertDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT* plabelinfo) @extern("vkQueueInsertDebugUtilsLabelEXT");
+extern fn void cmdBeginDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT* plabelinfo) @extern("vkCmdBeginDebugUtilsLabelEXT");
+extern fn void cmdEndDebugUtilsLabelEXT (VkCommandBuffer commandbuffer) @extern("vkCmdEndDebugUtilsLabelEXT");
+extern fn void cmdInsertDebugUtilsLabelEXT (VkCommandBuffer commandbuffer, VkDebugUtilsLabelEXT* plabelinfo) @extern("vkCmdInsertDebugUtilsLabelEXT");
+extern fn VkResult createDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT* pcreateinfo, VkAllocationCallbacks* pallocator, VkDebugUtilsMessengerEXT* pmessenger) @extern("vkCreateDebugUtilsMessengerEXT");
+extern fn void destroyDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks* pallocator) @extern("vkDestroyDebugUtilsMessengerEXT");
+extern fn void submitDebugUtilsMessageEXT (VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageseverity, VkDebugUtilsMessageTypeFlagsEXT messagetypes, VkDebugUtilsMessengerCallbackDataEXT* pcallbackdata) @extern("vkSubmitDebugUtilsMessageEXT");
 
 def VkResult = distinct inline long;
 const VkResult VK_SUCCESS = 0;

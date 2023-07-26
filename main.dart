@@ -75,11 +75,10 @@ var typeMap = {
   "isize_t": "isz",
   "null": "void*",
   "HANDLE": "void*",
-  "void": "void*",
   "VkBool32": "bool"
 };
 
-class VkStructMember {
+/*class VkStructMember {
   String? type;
   String? name;
   String? api;
@@ -96,22 +95,22 @@ class VkStructMember {
     return VkStructMember(
         type: "${typeMap[type] ?? type}${optional ? "*": ""}", name: name, api: api, optional: optional, nullTerminated: nullTerminated);
   }
-}
+}*/
 
 class VKstruct {
   bool returnedOnly;
   String? name;
   String? extendsStruct;
   String? category;
-  List<VkStructMember> values = [];
+  List<VKtype> values = [];
 
   VKstruct({required this.returnedOnly, required this.name, required this.values, this.extendsStruct});
   static fromXML(XmlElement node) {
     String? returned = node.getAttribute("returnedonly");
     String? name = node.getAttribute("name");
     String? extendsStruct = node.getAttribute("structextends");
-    List<VkStructMember> values =
-        List<VkStructMember>.from(node.findAllElements('member').map((node) => VkStructMember.fromXML(node)));
+    List<VKtype> values =
+        List<VKtype>.from(node.findAllElements('member').map((node) => VKtype.fromXML(node)));
     return VKstruct(returnedOnly: returned == "true", name: name, values: values, extendsStruct: extendsStruct);
   }
 }
@@ -180,12 +179,17 @@ class VKtype {
 
   VKtype({required this.type, required this.name, required this.requiredBy, this.api});
   static fromXML(XmlElement node) {
+    String? enumValue = node.getElement("enum")?.innerText;
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
     String? requiredBy = node.getAttribute("requires");
     String? optional = node.getAttribute("optional");
     String? api = node.getAttribute("api");
-    return VKtype(type: typeMap[type] ?? type, name: "${optional != null ? "*": ""}$name", requiredBy: requiredBy, api: api);
+   /* String? len = node.getAttribute("len");*/
+
+    bool isPointer = node.innerText.contains("*");
+  /*  bool nullTerminated = node.getAttribute("len") == "null-terminated";*/
+    return VKtype(type: "${typeMap[type] ?? type}${enumValue != null ? "[${enumValue}]" : ""}${isPointer ? "*": ""}", name: name, requiredBy: requiredBy, api: api);
   }
 }
 
@@ -199,8 +203,11 @@ class VKfnPointer {
     String? name = node.getElement("name")?.innerText;
     String? returnType = node.innerText.split(" ")[1];
     String? requiredBy = node.getAttribute("requires");
-    List<String> values =
-        List<String>.from(node.findAllElements('type').map((value) => typeMap[value.innerText] ?? value.innerText));
+    List<String> values =a
+        List<String>.from(node.findAllElements('type').map((value) {
+          bool isOptional = value.following.toString().contains("*");
+          return "${typeMap[value.innerText] ?? value.innerText}${isOptional ? "*" : ""}";
+        } ));
     return VKfnPointer(
         name: name, requiredBy: requiredBy, values: values, returnType: typeMap[returnType] ?? returnType);
   }
