@@ -150,6 +150,8 @@ def VkDisplayModeKHR = void*;
 def VkDisplayPlaneAlphaFlagsKHR = VkFlags;
 def VkDisplaySurfaceCreateFlagsKHR = VkFlags;
 def VkSurfaceTransformFlagsKHR = VkFlags;
+def VkDebugReportCallbackEXT = void*;
+def VkDebugReportFlagsEXT = VkFlags;
 def VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
 def VkDebugUtilsMessageTypeFlagsEXT = VkFlags;
 def VkDebugUtilsMessengerCallbackDataFlagsEXT = VkFlags;
@@ -179,8 +181,8 @@ const uint VK_KHR_SWAPCHAIN_SPEC_VERSION = 70;
 const String VK_KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
 const uint VK_KHR_DISPLAY_SPEC_VERSION = 23;
 const String VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
-const uint VK_EXT_DEBUG_MARKER_SPEC_VERSION = 4;
-const String VK_EXT_DEBUG_MARKER_EXTENSION_NAME = "VK_EXT_debug_marker";
+const uint VK_EXT_DEBUG_REPORT_SPEC_VERSION = 10;
+const String VK_EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
 const uint VK_EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const String VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 struct VkExtent2D {
@@ -1708,27 +1710,12 @@ struct VkDisplaySurfaceCreateInfoKHR {
   VkDisplayPlaneAlphaFlagBitsKHR alphaMode;
   VkExtent2D imageExtent;
 }
-struct VkDebugMarkerObjectNameInfoEXT {
+struct VkDebugReportCallbackCreateInfoEXT {
   VkStructureType sType;
   void* pNext;
-  VkDebugReportObjectTypeEXT objectType;
-  ulong object;
-  char* pObjectName;
-}
-struct VkDebugMarkerObjectTagInfoEXT {
-  VkStructureType sType;
-  void* pNext;
-  VkDebugReportObjectTypeEXT objectType;
-  ulong object;
-  ulong tagName;
-  usz tagSize;
-  void* pTag;
-}
-struct VkDebugMarkerMarkerInfoEXT {
-  VkStructureType sType;
-  void* pNext;
-  char* pMarkerName;
-  float color;
+  VkDebugReportFlagsEXT flags;
+  PFN_vkDebugReportCallbackEXT pfnCallback;
+  void* pUserData;
 }
 struct VkDebugUtilsLabelEXT {
   VkStructureType sType;
@@ -1781,6 +1768,7 @@ def PFN_vkInternalAllocationNotification = fn void (void*, usz, VkInternalAlloca
 def PFN_vkInternalFreeNotification = fn void (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
 def PFN_vkReallocationFunction = fn void* (void*, void*, usz, usz, VkSystemAllocationScope);
 def PFN_vkVoidFunction = fn void ();
+def PFN_vkDebugReportCallbackEXT = fn bool (VkDebugReportFlagsEXT, VkDebugReportObjectTypeEXT, ulong, usz, int, char*, char*, void*);
 def PFN_vkDebugUtilsMessengerCallbackEXT = fn bool (VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT, VkDebugUtilsMessengerCallbackDataEXT*, void*);
 extern fn VkResult createInstance (VkInstanceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkInstance* pinstance) @extern("vkCreateInstance");
 extern fn void destroyInstance (VkInstance instance, VkAllocationCallbacks* pallocator) @extern("vkDestroyInstance");
@@ -1968,11 +1956,9 @@ extern fn VkResult getDisplayModePropertiesKHR (VkPhysicalDevice physicaldevice,
 extern fn VkResult createDisplayModeKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkDisplayModeKHR* pmode) @extern("vkCreateDisplayModeKHR");
 extern fn VkResult getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkDisplayModeKHR mode, uint planeindex, VkDisplayPlaneCapabilitiesKHR* pcapabilities) @extern("vkGetDisplayPlaneCapabilitiesKHR");
 extern fn VkResult createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSurfaceKHR* psurface) @extern("vkCreateDisplayPlaneSurfaceKHR");
-extern fn VkResult debugMarkerSetObjectTagEXT (VkDevice device, VkDebugMarkerObjectTagInfoEXT* ptaginfo) @extern("vkDebugMarkerSetObjectTagEXT");
-extern fn VkResult debugMarkerSetObjectNameEXT (VkDevice device, VkDebugMarkerObjectNameInfoEXT* pnameinfo) @extern("vkDebugMarkerSetObjectNameEXT");
-extern fn void cmdDebugMarkerBeginEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT* pmarkerinfo) @extern("vkCmdDebugMarkerBeginEXT");
-extern fn void cmdDebugMarkerEndEXT (VkCommandBuffer commandbuffer) @extern("vkCmdDebugMarkerEndEXT");
-extern fn void cmdDebugMarkerInsertEXT (VkCommandBuffer commandbuffer, VkDebugMarkerMarkerInfoEXT* pmarkerinfo) @extern("vkCmdDebugMarkerInsertEXT");
+extern fn VkResult createDebugReportCallbackEXT (VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pcreateinfo, VkAllocationCallbacks* pallocator, VkDebugReportCallbackEXT* pcallback) @extern("vkCreateDebugReportCallbackEXT");
+extern fn void destroyDebugReportCallbackEXT (VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pallocator) @extern("vkDestroyDebugReportCallbackEXT");
+extern fn void debugReportMessageEXT (VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objecttype, ulong object, usz location, int messagecode, char* playerprefix, char* pmessage) @extern("vkDebugReportMessageEXT");
 extern fn VkResult setDebugUtilsObjectNameEXT (VkDevice device, VkDebugUtilsObjectNameInfoEXT* pnameinfo) @extern("vkSetDebugUtilsObjectNameEXT");
 extern fn VkResult setDebugUtilsObjectTagEXT (VkDevice device, VkDebugUtilsObjectTagInfoEXT* ptaginfo) @extern("vkSetDebugUtilsObjectTagEXT");
 extern fn void queueBeginDebugUtilsLabelEXT (VkQueue queue, VkDebugUtilsLabelEXT* plabelinfo) @extern("vkQueueBeginDebugUtilsLabelEXT");
@@ -2011,6 +1997,7 @@ const VkResult VK_ERROR_SURFACE_LOST_KHR = -1000000000;
 const VkResult VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001;
 const VkResult VK_SUBOPTIMAL_KHR = 1000001003;
 const VkResult VK_ERROR_OUT_OF_DATE_KHR = -1000001004;
+const VkResult VK_ERROR_VALIDATION_FAILED_EXT = -1000011001;
 
 def VkStructureType = distinct inline long;
 const VkStructureType VK_STRUCTURE_TYPE_APPLICATION_INFO = 0;
@@ -2137,9 +2124,7 @@ const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR = 10000010
 const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000001012;
 const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
 const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
-const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = 1000022000;
-const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = 1000022001;
-const VkStructureType VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = 1000022002;
+const VkStructureType VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
@@ -2182,6 +2167,7 @@ const VkObjectType VK_OBJECT_TYPE_SURFACE_KHR = 1000000000;
 const VkObjectType VK_OBJECT_TYPE_SWAPCHAIN_KHR = 1000001000;
 const VkObjectType VK_OBJECT_TYPE_DISPLAY_KHR = 1000002000;
 const VkObjectType VK_OBJECT_TYPE_DISPLAY_MODE_KHR = 1000002001;
+const VkObjectType VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = 1000011000;
 const VkObjectType VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000;
 
 def VkVendorId = distinct inline long;
@@ -3036,6 +3022,13 @@ const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x0
 const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
 const VkDisplayPlaneAlphaFlagBitsKHR VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
 
+def VkDebugReportFlagBitsEXT = distinct inline long;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_INFORMATION_BIT_EXT = 0x00000001;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_WARNING_BIT_EXT = 0x00000002;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = 0x00000004;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_ERROR_BIT_EXT = 0x00000008;
+const VkDebugReportFlagBitsEXT VK_DEBUG_REPORT_DEBUG_BIT_EXT = 0x00000010;
+
 def VkDebugReportObjectTypeEXT = distinct inline long;
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = 1;
@@ -3069,6 +3062,8 @@ const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBA
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT = 29;
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = 30;
 const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = 33;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = 1000011000;
+const VkDebugReportObjectTypeEXT VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = 1000011000;
 
 def VkDebugUtilsMessageSeverityFlagBitsEXT = distinct inline long;
 const VkDebugUtilsMessageSeverityFlagBitsEXT VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
