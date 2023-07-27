@@ -3,6 +3,7 @@ import std::collections::list;
 import vk;
 import glfw;
 import libc;
+import std::core::string::conv;
 
 const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
 const WIDTH = 800;
@@ -42,8 +43,13 @@ fn bool checkValidationLayerSuppor() {
             io::printf("failed to get validation layers");
         }
 
-        io::printf("%s \n", layers[0].layerName);
-        libc::printf("%s \n", layers[0].layerName);
+        for (int i = 0; i < layerCount; ++i)
+        {
+          ZString name = (ZString)&layers[i].layerName;
+          if (mem::equals(name.as_str(), "VK_LAYER_KHRONOS_validation")) {
+             io::printfn("Found");
+          }
+        }
     };
 
     return true;
@@ -52,6 +58,7 @@ fn bool checkValidationLayerSuppor() {
 fn int main()
 {
     String[] validation_layers = {"VK_LAYER_KHRONOS_validation"};
+    String[] enabled_extensions = {"VK_KHR_surface", "VK_KHR_swapchain", "VK_EXT_debug_report", "VK_EXT_debug_utils"};
 
     glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
@@ -82,16 +89,16 @@ fn int main()
         .pNext = null,
     };
 
-    uint extensions_count = 0;
-    char* extensions = glfw::getRequiredInstanceExtensions(&extensions_count);
+  /*  uint extensions_count = 0;
+    char* extensions = glfw::getRequiredInstanceExtensions(&extensions_count);*/
 
     // defer mem::free(extensions);
 
     VkInstanceCreateInfo createInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pApplicationInfo = &appInfo,
-        .enabledExtensionCount = extensions_count,
-        .ppEnabledExtensionNames = extensions,
+        .enabledExtensionCount = 4,
+        .ppEnabledExtensionNames = (char*)&enabled_extensions,
         .enabledLayerCount = 1,
         .flags = 0,
     };
