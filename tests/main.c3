@@ -10,7 +10,7 @@ const WIDTH = 800;
 const HEIGHT = 600;
 const ENABLE_VALIDATION_LAYERS = true;
 
-def LayerProperties = List<VkLayerProperties>;
+def ExtensionList = List<String>;
 
 fn bool debugCallback(
     vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -30,14 +30,15 @@ fn bool debugCallback(
     return false;
 }
 
-fn bool checkValidationLayerSuppor() {
+fn bool checkValidationLayerSupport(String[] validationLayers) {
     uint layerCount;
     VkResult result = vk::enumerateInstanceLayerProperties(&layerCount, null);
+    uint foundLayers = 0;
 
     @pool()
     {
-       VkLayerProperties* layers = tmalloc(VkLayerProperties, layerCount);
-       result = vk::enumerateInstanceLayerProperties(&layerCount, layers);
+        VkLayerProperties* layers = tmalloc(VkLayerProperties, layerCount);
+        result = vk::enumerateInstanceLayerProperties(&layerCount, layers);
 
         if (result != vk::VK_SUCCESS) {
             io::printf("failed to get validation layers");
@@ -46,19 +47,25 @@ fn bool checkValidationLayerSuppor() {
         for (int i = 0; i < layerCount; ++i)
         {
           ZString name = (ZString)&layers[i].layerName;
-          if (mem::equals(name.as_str(), "VK_LAYER_KHRONOS_validation")) {
-             io::printfn("Found");
+          for (int o = 0; o < validationLayers.len; ++o) {
+             if (name.as_str() == validationLayers[o]) {
+               foundLayers += 1;
+             }
           }
         }
     };
 
-    return true;
+    if (validationLayers.len != foundLayers) {
+        io::printf("Required validation layers not found");
+    }
+
+    return validationLayers.len == foundLayers;
 }
 
 fn int main()
 {
     String[] validation_layers = {"VK_LAYER_KHRONOS_validation"};
-    String[] enabled_extensions = {"VK_KHR_surface", "VK_KHR_swapchain", "VK_EXT_debug_report", "VK_EXT_debug_utils"};
+  /*  String[] enabled_extensions = {"VK_KHR_surface", "VK_KHR_swapchain", "VK_EXT_debug_report", "VK_EXT_debug_utils"};*/
 
     glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
@@ -89,23 +96,33 @@ fn int main()
         .pNext = null,
     };
 
-  /*  uint extensions_count = 0;
-    char* extensions = glfw::getRequiredInstanceExtensions(&extensions_count);*/
+    ExtensionList extensions;
+    defer extensions.free();
 
+    uint glfwExtensions_count = 0;
+    ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
+
+    // Add GLFW extensions
+    for (int i = 0; i < glfwExtensions_count; ++i) {
+        extensions.push(glfwExtensions[i].as_str());
+    }
+
+    if (ENABLE_VALIDATION_LAYERS) {
+        extensions.push(vk::VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
     // defer mem::free(extensions);
 
     VkInstanceCreateInfo createInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pApplicationInfo = &appInfo,
-        .enabledExtensionCount = 4,
-        .ppEnabledExtensionNames = (char*)&enabled_extensions,
-        .enabledLayerCount = 1,
+        .enabledExtensionCount = (uint)extensions.size,
+        .ppEnabledExtensionNames = (char*)extensions.entries,
+        .enabledLayerCount = 0,
         .flags = 0,
     };
 
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info;
-    if (ENABLE_VALIDATION_LAYERS) {
-        checkValidationLayerSuppor();
+    if (ENABLE_VALIDATION_LAYERS && checkValidationLayerSupport(validation_layers)) {
         VkDebugUtilsMessengerCreateInfoEXT debugInfo = {
             .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
             .pNext = null,
@@ -115,6 +132,7 @@ fn int main()
             .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
             .pUserData = null,
         };
+        createInfo.enabledLayerCount = validation_layers.len;
         createInfo.ppEnabledLayerNames = (char*)&validation_layers;
         createInfo.pNext = &debug_create_info;
     }
