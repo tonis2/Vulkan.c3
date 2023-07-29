@@ -48,6 +48,7 @@ var filteredNames = [
 ];
 var extensions = [
   "VK_KHR_surface",
+  "VK_KHR_xcb_surface",
   "VK_KHR_swapchain",
   "VK_KHR_display",
   "VK_EXT_debug_report",
@@ -79,7 +80,8 @@ var typeMap = {
   "isize_t": "isz",
   "null": "void*",
   "HANDLE": "void*",
-  "VkBool32": "bool"
+  "VkBool32": "bool",
+  ...platformTypes
 };
 
 /*class VkStructMember {

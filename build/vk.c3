@@ -141,6 +141,7 @@ def VkExternalSemaphoreHandleTypeFlags = VkFlags;
 def VkExternalSemaphoreFeatureFlags = VkFlags;
 def VkSurfaceKHR = void*;
 def VkCompositeAlphaFlagsKHR = VkFlags;
+def VkXcbSurfaceCreateFlagsKHR = VkFlags;
 def VkSwapchainCreateFlagsKHR = VkFlags;
 def VkSwapchainKHR = void*;
 def VkDeviceGroupPresentModeFlagsKHR = VkFlags;
@@ -177,6 +178,8 @@ const uint VK_LUID_SIZE = 8;
 const uint VK_QUEUE_FAMILY_EXTERNAL = (~1U);
 const uint VK_KHR_SURFACE_SPEC_VERSION = 25;
 const String VK_KHR_SURFACE_EXTENSION_NAME = "VK_KHR_surface";
+const uint VK_KHR_XCB_SURFACE_SPEC_VERSION = 6;
+const String VK_KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
 const uint VK_KHR_SWAPCHAIN_SPEC_VERSION = 70;
 const String VK_KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
 const uint VK_KHR_DISPLAY_SPEC_VERSION = 23;
@@ -1592,6 +1595,13 @@ struct VkSurfaceFormatKHR {
   VkFormat format;
   VkColorSpaceKHR colorSpace;
 }
+struct VkXcbSurfaceCreateInfoKHR {
+  VkStructureType sType;
+  void* pNext;
+  VkXcbSurfaceCreateFlagsKHR flags;
+  void** connection;
+  uint window;
+}
 struct VkSwapchainCreateInfoKHR {
   VkStructureType sType;
   void* pNext;
@@ -1940,6 +1950,8 @@ extern fn VkResult getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physical
 extern fn VkResult getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* psurfacecapabilities) @extern("vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
 extern fn VkResult getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint* psurfaceformatcount, VkSurfaceFormatKHR* psurfaceformats) @extern("vkGetPhysicalDeviceSurfaceFormatsKHR");
 extern fn VkResult getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicaldevice, VkSurfaceKHR surface, uint* ppresentmodecount, VkPresentModeKHR* ppresentmodes) @extern("vkGetPhysicalDeviceSurfacePresentModesKHR");
+extern fn VkResult createXcbSurfaceKHR (VkInstance instance, VkXcbSurfaceCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSurfaceKHR* psurface) @extern("vkCreateXcbSurfaceKHR");
+extern fn bool getPhysicalDeviceXcbPresentationSupportKHR (VkPhysicalDevice physicaldevice, uint queuefamilyindex, void** connection, uint visualid) @extern("vkGetPhysicalDeviceXcbPresentationSupportKHR");
 extern fn VkResult createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSwapchainKHR* pswapchain) @extern("vkCreateSwapchainKHR");
 extern fn void destroySwapchainKHR (VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pallocator) @extern("vkDestroySwapchainKHR");
 extern fn VkResult getSwapchainImagesKHR (VkDevice device, VkSwapchainKHR swapchain, uint* pswapchainimagecount, VkImage* pswapchainimages) @extern("vkGetSwapchainImagesKHR");
@@ -2114,6 +2126,7 @@ const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = 10000760
 const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000;
 const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001;
 const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000;
+const VkStructureType VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
 const VkStructureType VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR = 1000001000;
 const VkStructureType VK_STRUCTURE_TYPE_PRESENT_INFO_KHR = 1000001001;
 const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR = 1000001007;
