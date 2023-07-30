@@ -52,6 +52,7 @@ var extensions = [
   "VK_KHR_swapchain",
   "VK_KHR_display",
   "VK_EXT_debug_report",
+  "VK_KHR_portability_enumeration",
 /*  "VK_EXT_debug_marker",*/
   "VK_EXT_debug_utils",
   // "VK_KHR_depth_stencil_resolve",
@@ -83,25 +84,6 @@ var typeMap = {
   "VkBool32": "bool",
   ...platformTypes
 };
-
-/*class VkStructMember {
-  String? type;
-  String? name;
-  String? api;
-  bool optional;
-  bool nullTerminated;
-  VkStructMember(
-      {required this.type, required this.name, this.optional = false, this.api, this.nullTerminated = false});
-  static fromXML(XmlElement node) {
-    String? name = node.getElement("name")?.innerText;
-    String? type = node.getElement("type")?.innerText;
-    String? api = node.getAttribute("api");
-    bool optional = node.getAttribute("optional") == "true";
-    bool nullTerminated = node.getAttribute("len") == "null-terminated";
-    return VkStructMember(
-        type: "${typeMap[type] ?? type}${optional ? "*": ""}", name: name, api: api, optional: optional, nullTerminated: nullTerminated);
-  }
-}*/
 
 class VKstruct {
   bool returnedOnly;

@@ -186,6 +186,8 @@ const uint VK_KHR_DISPLAY_SPEC_VERSION = 23;
 const String VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
 const uint VK_EXT_DEBUG_REPORT_SPEC_VERSION = 10;
 const String VK_EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
+const uint VK_KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
+const String VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
 const uint VK_EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const String VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 struct VkExtent2D {
@@ -2471,7 +2473,7 @@ const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040;
 const VkImageUsageFlagBits VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080;
 
 def VkInstanceCreateFlagBits = distinct inline long;
-
+const VkInstanceCreateFlagBits VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR = 0x00000001;
 
 def VkInternalAllocationType = distinct inline long;
 const VkInternalAllocationType VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
