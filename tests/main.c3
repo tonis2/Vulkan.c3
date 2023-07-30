@@ -31,7 +31,7 @@ fn bool debugCallback(
 fn int main()
 {
     ZString[] validation_layers = {"VK_LAYER_KHRONOS_validation"};
-    ZString[] enabled_extensions = {"VK_KHR_surface", "VK_KHR_xcb_surface", "VK_EXT_debug_utils"};
+    ZString[] extensions_list = {};
 
     glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
@@ -66,15 +66,14 @@ fn int main()
     };
 
 
+    // SETUP extensions
     uint glfwExtensions_count = 0;
     ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
     ZString* extensions = malloc(ZString, ENABLE_VALIDATION_LAYERS ? glfwExtensions_count + 1 : glfwExtensions_count);
-
     defer mem::free(extensions);
     mem::copy(extensions, &glfwExtensions[0], glfwExtensions_count * ZString.sizeof);
-
     if (ENABLE_VALIDATION_LAYERS) {
-        extensions[glfwExtensions_count] = vk::VK_EXT_DEBUG_UTILS_EXTENSION_NAME.zstr_copy();
+        extensions[glfwExtensions_count] = vk::VK_EXT_DEBUG_UTILS_EXTENSION_NAME.zstr_tcopy();
     }
 
     VkInstanceCreateInfo createInfo = {
@@ -94,8 +93,8 @@ fn int main()
             .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
             .pUserData = null,
         };
-        createInfo.enabledLayerCount = validation_layers.len;
-        createInfo.ppEnabledLayerNames = (char*)&validation_layers;
+        createInfo.enabledLayerCount = (uint)validation_layers.len;
+        createInfo.ppEnabledLayerNames = (char*)&validation_layers[0];
         createInfo.pNext = &debugInfo;
     }
 
