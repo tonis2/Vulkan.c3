@@ -31,7 +31,7 @@ fn bool checkValidationLayerSupport(ZString[] validationLayers) {
     return validationLayers.len == foundLayers;
 }
 
-fn bool checkExtensionsSupport(String[] extensions) {
+fn bool checkExtensionsSupport(ZString[] extensions) {
     uint extensionCount;
     uint foundExtensions = 0;
     if (vk::enumerateInstanceExtensionProperties(null, &extensionCount, null) != vk::VK_SUCCESS) {
@@ -48,7 +48,7 @@ fn bool checkExtensionsSupport(String[] extensions) {
         {
             ZString name = (ZString)&layers[i].extensionName;
             for (int o = 0; o < extensions.len; ++o) {
-              if (name.as_str() == extensions[o]) {
+              if (name.as_str() == extensions[o].as_str()) {
                 foundExtensions += 1;
               }
             }

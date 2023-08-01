@@ -211,9 +211,10 @@ class VKfnPointer {
   List<String> values;
   VKfnPointer(
       {required this.name,
-      required this.requiredBy,
       required this.values,
-      required this.returnType});
+      required this.returnType,
+      this.requiredBy
+      });
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
     String? returnType = node.innerText.split(" ")[1];
@@ -266,6 +267,14 @@ class VKCommand {
         errorCodes: errorCodes,
         successCodes: successCodes);
   }
+
+  String? C3Name() {
+    return name?.substring(2).camelCase().replaceAll("_", "");
+  }
+
+  String valuesString() {
+    return values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ");
+  }
 }
 
 extension ParseMethods on String {
@@ -284,26 +293,26 @@ extension ParseMethods on String {
   String camelCase() {
     return '${this[0].toLowerCase()}${this.substring(1)}';
   }
-
+/*
   bool is_nv_extension() {
     return this.substring(this.length - 2) == "NV";
   }
 
   bool is_extension() {
     return this.substring(this.length - 3) == "EXT";
-  }
+  }*/
 
   String to_bitvalue() {
     return "0x${(1 << int.parse(this)).toRadixString(16).padLeft(8, '0')}";
   }
 
-  bool is_khr_extension() {
+/*  bool is_khr_extension() {
     return this.substring(this.length - 3) == "KHR";
   }
 
   bool is_qnx_extension() {
     return this.substring(this.length - 3) == "QNX";
-  }
+  }*/
 
   String ext_num_enum(String offset, String? dir) {
     String newValue = (int.parse(this) - 1).toString();
@@ -341,6 +350,7 @@ void main() {
   List<VKstruct> structs = [];
   List<VKfnPointer> pointers = [];
   List<VKCommand> commands = [];
+  List<VKCommand> extensionCommands = [];
   List<VKenum> enums = [];
   List<VKenumValue> constants = [];
 
@@ -541,8 +551,9 @@ void main() {
               (element) =>
                   element.getElement("proto")?.getElement("name")?.innerText ==
                   extension_name);
-
-          commands.add(VKCommand.fromXML(VkNode));
+          VKCommand command = VKCommand.fromXML(VkNode);
+          pointers.add(VKfnPointer(name: "PFN_${command.name?.substring(2).camelCase()}", values: command.values.map((entry) => entry.type!).toList(), returnType: command.returnType));
+          extensionCommands.add(command);
         }
       });
     });
@@ -599,6 +610,29 @@ void main() {
   commands.forEach((command) {
     String code =
         "extern fn ${command.returnType} ${command.name?.substring(2).camelCase().replaceAll("_", "")} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) @extern(\"${command.name}\");\n";
+    output.writeAsStringSync(code, mode: FileMode.append);
+  });
+
+  // Extension bindings code
+  output.writeAsStringSync("\nstruct VK_extension_bindings {\n", mode: FileMode.append);
+  extensionCommands.forEach((command) {
+    output.writeAsStringSync(" PFN_${command.name?.substring(2).camelCase()} ${command.name?.substring(2).camelCase()};\n", mode: FileMode.append);
+  });
+  output.writeAsStringSync("}", mode: FileMode.append);
+  output.writeAsStringSync("\nVK_extension_bindings extensions;\n", mode: FileMode.append);
+
+  // Write extension commands
+  output.writeAsStringSync("\nfn void loadExtensions(VkInstance instance) {\n", mode: FileMode.append);
+  extensionCommands.forEach((command) {
+    String code =
+        " extensions.${command.C3Name()} = (PFN_${command.name?.substring(2).camelCase()})getInstanceProcAddr(instance, \"${command.name}\");\n";
+    output.writeAsStringSync(code, mode: FileMode.append);
+  });
+  output.writeAsStringSync("}\n", mode: FileMode.append);
+
+  extensionCommands.forEach((command) {
+    String code =
+        "fn ${command.returnType} ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) => extensions.${command.C3Name()}(${command.values.map((type) => type.name?.formatTypeName().camelCase().replaceAll("_","")).join(",")});\n";
     output.writeAsStringSync(code, mode: FileMode.append);
   });
 
