@@ -4,13 +4,14 @@ import vk;
 import glfw;
 import libc;
 import helpers;
+import types;
 
 const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
 const WIDTH = 800;
 const HEIGHT = 600;
 const ENABLE_VALIDATION_LAYERS = true;
 
-def StringList = List<ZString>;
+def StringList = List(<ZString>);
 
 fn bool debugCallback(
     vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -63,11 +64,14 @@ fn int main()
     }
 
     VkInstance instance;
+    VkSurfaceKHR surface;
     VkDebugUtilsMessengerCreateInfoEXT debugInfo;
     VkDebugUtilsMessengerEXT debugMessenger;
+    QueueFamily queueFamilyIndices;
 
     defer {
         if (ENABLE_VALIDATION_LAYERS) vk::destroyDebugUtilsMessengerEXT(instance, debugMessenger, null);
+        vk::destroySurfaceKHR(instance, surface, null);
         vk::destroyInstance(instance, null);
     }
 
@@ -132,6 +136,23 @@ fn int main()
           io::printfn("Failed to create instance");
           return 1;
         }
+    }
+
+    if (glfw::createWindowSurface(instance, window, null, &surface) != vk::VK_SUCCESS) {
+        io::printfn("Failed creating surface");
+        return 1;
+    }
+
+    uint deviceCount;
+    if (vk::enumeratePhysicalDevices(instance, &deviceCount, null) != vk::VK_SUCCESS) {
+        io::printf("Failed getting devices");
+        return 1;
+    }
+
+    VkPhysicalDevice! device = helpers::getSuitablePhysicalDevice(instance, surface);
+    if (catch err = device) {
+        io::printfn("Failed to create physical device");
+        return 1;
     }
 
     return 0;

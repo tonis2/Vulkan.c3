@@ -4,7 +4,7 @@
 	"authors": [],
 	"version": "0.1.0",
 	"linked-libraries": ["glfw", "vulkan"],
-	"sources": ["./build/vk.c3", "./tests/glfw.c3", "./tests/helpers.c3"],
+	"sources": ["./build/vk.c3", "./tests/*"],
 	"targets": {
 		"test": {
 			"type": "executable",
