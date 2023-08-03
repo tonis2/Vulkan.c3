@@ -38,6 +38,7 @@ fn int main()
     StringList extensions;
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
+    ZString[] device_extensions = {"VK_KHR_swapchain"};
 
     defer {
         validations.free();
@@ -149,11 +150,13 @@ fn int main()
         return 1;
     }
 
-    VkPhysicalDevice! device = helpers::getSuitablePhysicalDevice(instance, surface);
+    VkPhysicalDevice! device = helpers::getSuitablePhysicalDevice(instance, surface, device_extensions);
+
     if (catch err = device) {
         io::printfn("Failed to create physical device");
         return 1;
     }
+/*    defer mem::free(device);*/
 
     return 0;
 }
