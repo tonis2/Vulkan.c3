@@ -66,12 +66,14 @@ fn int main()
 
     VkInstance instance;
     VkSurfaceKHR surface;
+    VkDevice device;
+    VkQueue graphicsQueue;
     VkDebugUtilsMessengerCreateInfoEXT debugInfo;
     VkDebugUtilsMessengerEXT debugMessenger;
-    QueueFamily queueFamilyIndices;
 
     defer {
         if (ENABLE_VALIDATION_LAYERS) vk::destroyDebugUtilsMessengerEXT(instance, debugMessenger, null);
+        vk::destroyDevice(device, null);
         vk::destroySurfaceKHR(instance, surface, null);
         vk::destroyInstance(instance, null);
     }
@@ -150,13 +152,51 @@ fn int main()
         return 1;
     }
 
-    VkPhysicalDevice! device = helpers::getSuitablePhysicalDevice(instance, surface, device_extensions);
-
-    if (catch err = device) {
+    VkPhysicalDevice! physicalDevice = helpers::getSuitablePhysicalDevice(instance, surface, device_extensions);
+    if (catch err = physicalDevice) {
         io::printfn("Failed to create physical device");
         return 1;
     }
-/*    defer mem::free(device);*/
+
+    QueueFamily! indices = types::findQueueFamily(physicalDevice, surface);
+    if (catch err = indices) {
+        io::printfn("Failed to get Queue family indices");
+        return 1;
+    }
+
+    // Set-up Queues
+    float queuePriorities = 1.0;
+    VkDeviceQueueCreateInfo graphicsInfo = { .sType = vk::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+                                            .queueFamilyIndex = indices.graphics,
+                                            .queueCount = 1,
+                                            .pQueuePriorities = &queuePriorities};
+
+    VkDeviceCreateInfo deviceCreateInfo = {
+        .sType = vk::VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pQueueCreateInfos = &graphicsInfo,
+        .queueCreateInfoCount = 1,
+        .pEnabledFeatures = {},
+        .enabledExtensionCount = 0,
+        .enabledLayerCount = 0
+    };
+
+    if (ENABLE_VALIDATION_LAYERS) {
+        deviceCreateInfo.enabledLayerCount = (uint)validations.len();
+        deviceCreateInfo.ppEnabledLayerNames = (char*)&validations.to_array()[0];
+    }
+
+    if (vk::createDevice(physicalDevice, &deviceCreateInfo, null, &device) != vk::VK_SUCCESS) {
+      io::printfn("Failed to create logical device");
+      return 1;
+    }
+
+    vk::getDeviceQueue(device, indices.graphics, 0, &graphicsQueue);
+
+    SwapChain! swapchain = types::create_swapchain(physicalDevice, device, surface);
+    if (catch err = swapchain) {
+        io::printfn("Failed to create swapchain");
+        return 1;
+    }
 
     return 0;
 }
