@@ -70,11 +70,16 @@ fn int main()
     VkQueue graphicsQueue;
     VkDebugUtilsMessengerCreateInfoEXT debugInfo;
     VkDebugUtilsMessengerEXT debugMessenger;
+    VkCommandPool commandPool;
 
     defer {
-        if (ENABLE_VALIDATION_LAYERS) vk::destroyDebugUtilsMessengerEXT(instance, debugMessenger, null);
-        vk::destroyDevice(device, null);
+        vk::deviceWaitIdle(device);
+        if (ENABLE_VALIDATION_LAYERS) {
+            vk::destroyDebugUtilsMessengerEXT(instance, debugMessenger, null);
+        }
         vk::destroySurfaceKHR(instance, surface, null);
+        vk::destroyCommandPool(device, commandPool, null);
+        vk::destroyDevice(device, null);
         vk::destroyInstance(instance, null);
     }
 
@@ -176,8 +181,11 @@ fn int main()
         .pQueueCreateInfos = &graphicsInfo,
         .queueCreateInfoCount = 1,
         .pEnabledFeatures = {},
-        .enabledExtensionCount = 0,
-        .enabledLayerCount = 0
+        .enabledExtensionCount = (uint)device_extensions.len,
+        .ppEnabledExtensionNames = (char*)&device_extensions[0],
+        .enabledLayerCount = 0,
+        .pNext = null,
+        .flags = 0,
     };
 
     if (ENABLE_VALIDATION_LAYERS) {
@@ -191,10 +199,23 @@ fn int main()
     }
 
     vk::getDeviceQueue(device, indices.graphics, 0, &graphicsQueue);
-
     SwapChain! swapchain = types::create_swapchain(physicalDevice, device, surface);
+
     if (catch err = swapchain) {
         io::printfn("Failed to create swapchain");
+        return 1;
+    }
+    defer swapchain.free(device);
+
+    VkCommandPoolCreateInfo pool_info = {
+     .sType = vk::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+     .pNext = null,
+     .flags = 0,
+     .queueFamilyIndex = indices.graphics,
+    };
+
+    if (vk::createCommandPool(device, &pool_info, null, &commandPool) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create command pool");
         return 1;
     }
 
