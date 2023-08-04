@@ -639,7 +639,7 @@ void main() {
 //  Enums
   enums.forEach((entry) {
     String code =
-        "\ndef ${entry.name} = distinct inline long;\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
+        "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
     output.writeAsStringSync(code, mode: FileMode.append);
   });
 

@@ -43,7 +43,7 @@ extern fn void pollEvents() @extern("glfwPollEvents");
 extern fn void swapBuffers(GLFWwindow window) @extern("glfwSwapBuffers");
 extern fn void destroyWindow(GLFWwindow window) @extern("glfwDestroyWindow");
 extern fn void makeContextCurrent(GLFWwindow window) @extern("glfwMakeContextCurrent");
-extern fn void getFramebufferSize(GLFWwindow window, int*, int*) @extern("glfwGetFramebufferSize");
+extern fn void getFramebufferSize(GLFWwindow window, uint* width, uint* height) @extern("glfwGetFramebufferSize");
 extern fn double getTime() @extern("glfwGetTime");
 extern fn void terminate() @extern("glfwTerminate");
 
@@ -53,6 +53,7 @@ extern fn bool getCursorPos(GLFWwindow window, double* x_pos, double* y_pos) @ex
 extern fn void setKeyCallback(GLFWwindow window, KeyCallback* callback) @extern("glfwSetKeyCallback");
 extern fn void setMouseButtonCallback(GLFWwindow window, MouseCallback* callback) @extern("glfwSetMouseButtonCallback");
 extern fn GLFWwindow createWindow(int, int, char*, GLFWmonitor, GLFWwindow) @extern("glfwCreateWindow");
+
 
 extern fn char* getRequiredInstanceExtensions (uint *count) @extern("glfwGetRequiredInstanceExtensions");
 extern fn void* getInstanceProcAddress (VkInstance instance, char *procname) @extern("glfwGetInstanceProcAddress");

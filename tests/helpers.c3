@@ -50,6 +50,7 @@ fn bool checkExtensionsSupport(ZString[] extensions) {
     for (int i = 0; i < extensionCount; ++i)
     {
         ZString name = (ZString)&layers[i].extensionName;
+
         for (int o = 0; o < extensions.len; ++o) {
           if (name.as_str() == extensions[o].as_str()) {
             foundExtensions += 1;
