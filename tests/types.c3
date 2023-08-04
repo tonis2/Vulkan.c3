@@ -23,10 +23,11 @@ struct SurfaceCapabilities {
 
 struct SwapChain {
     VkSwapchainKHR swapchain;
-    VkImage[] images;
-    VkImageView[] image_views;
+    VkImage* images;
+    VkImageView* image_views;
     VkFormat image_format;
     VkExtent2D extent;
+    uint image_count;
 }
 
 fault DeviceErrors
@@ -40,6 +41,11 @@ fault DeviceErrors
 fn void SwapChain.free(&self, VkDevice device)
 {
     vk::destroySwapchainKHR(device, self.swapchain, null);
+    for (int i = 0; i < self.image_count; ++i) {
+        vk::destroyImageView(device, self.image_views[i], null);
+    }
+    mem::free(self.images);
+    mem::free(self.image_views);
 }
 
 fn bool QueueFamily.is_ready(&self)
@@ -110,11 +116,12 @@ fn SurfaceCapabilities! checkSurfaceCapabilities(VkPhysicalDevice device, VkSurf
     }
 
     data.formats.init(format_count);
+    data.formats.size = format_count;
     if (vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, data.formats.entries) != vk::VK_SUCCESS) {
         io::printfn("Failed getting surface formats");
         return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
     }
-    data.formats.size = format_count;
+
     uint present_count;
     if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null) != vk::VK_SUCCESS) {
         io::printfn("Failed getting surface presents");
@@ -122,12 +129,13 @@ fn SurfaceCapabilities! checkSurfaceCapabilities(VkPhysicalDevice device, VkSurf
     }
 
     data.present_modes.init(present_count);
+    data.present_modes.size = present_count;
+
     if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, data.present_modes.entries) != vk::VK_SUCCESS) {
         io::printfn("Failed getting surface presents");
         return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
     }
 
-    data.present_modes.size = present_count;
     return data;
 }
 
@@ -162,6 +170,7 @@ fn SwapChain! create_swapchain(VkPhysicalDevice physical_device, VkDevice logica
         io::printfn("Did not find required present_mode, returning first one");
         return capabilities.present_modes[0];
     |};
+
     SwapChain data = {
         .extent = capabilities.capabilities.currentExtent,
         .image_format = surface_format.format,
@@ -191,10 +200,55 @@ fn SwapChain! create_swapchain(VkPhysicalDevice physical_device, VkDevice logica
         .oldSwapchain = null,
     };
 
+    // Create SwapChainKHR
     if (vk::createSwapchainKHR(logical_device, &create_info, null, &data.swapchain) != vk::VK_SUCCESS) {
         io::printfn("Failed to create swaphcain");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+        return DeviceErrors.SWAPCHAIN_FAILED?;
     };
+
+    // Create SwapChain images
+    if (vk::getSwapchainImagesKHR(logical_device, data.swapchain, &data.image_count, null) != vk::VK_SUCCESS) {
+        io::printfn("Failed to get swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    // Allocate data for images
+    data.images = malloc(VkImage, (usz)data.image_count);
+    data.image_views = malloc(VkImageView, (usz)data.image_count);
+
+    if (vk::getSwapchainImagesKHR(logical_device, data.swapchain, &data.image_count, data.images) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    for (int i = 0; i < data.image_count; ++i) {
+        VkImageViewCreateInfo image_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .image = data.images[i],
+            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
+            .format = surface_format.format,
+            .components = {
+                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+            },
+            .subresourceRange = {
+                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+        };
+
+        if (vk::createImageView(logical_device, &image_info, null, &data.image_views[i]) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create swapchain image views");
+            return DeviceErrors.SWAPCHAIN_FAILED?;
+        }
+    }
 
     return data;
 }
