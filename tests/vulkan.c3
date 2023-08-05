@@ -8,11 +8,12 @@ import libc;
 import helpers;
 
 const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
-const WIDTH = 800;
-const HEIGHT = 600;
 const ENABLE_VALIDATION_LAYERS = true;
+const MAX_FRAMES_IN_FLIGHT = 2;
 
 def StringList = List(<ZString>);
+def SemaphoreList = List(<VkSemaphore>);
+def FenceList = List(<VkFence>);
 
 fault ContextErrors
 {
@@ -20,15 +21,21 @@ fault ContextErrors
 }
 
 struct VkContext {
-      SwapChain swapchain;
       VkInstance instance;
       VkSurfaceKHR surface;
       VkDevice device;
+
+      SwapChain swapchain;
       VkQueue graphicsQueue;
       VkDebugUtilsMessengerEXT debugMessenger;
       VkCommandPool commandPool;
       VkCommandBuffer* commandBuffers;
-      GLFWwindow window;
+
+      SemaphoreList image_available_semaphores;
+      SemaphoreList render_finished_semaphores;
+      FenceList in_flight_fences;
+
+      uint current_frame;
 }
 
 fn bool debugCallback(
@@ -55,6 +62,18 @@ fn void VkContext.free(&self)
     if (ENABLE_VALIDATION_LAYERS) {
       vk::destroyDebugUtilsMessengerEXT(self.instance, self.debugMessenger, null);
     }
+    foreach (semaphore : self.image_available_semaphores) {
+        vk::destroySemaphore(self.device, semaphore, null);
+    }
+    foreach (semaphore : self.render_finished_semaphores) {
+        vk::destroySemaphore(self.device, semaphore, null);
+    }
+    foreach (fence : self.in_flight_fences) {
+        vk::destroyFence(self.device, fence, null);
+    }
+    self.image_available_semaphores.free();
+    self.render_finished_semaphores.free();
+    self.in_flight_fences.free();
 
     self.swapchain.free(self.device);
     vk::destroySurfaceKHR(self.instance, self.surface, null);
@@ -62,12 +81,11 @@ fn void VkContext.free(&self)
     mem::free(self.commandBuffers);
     vk::destroyDevice(self.device, null);
     vk::destroyInstance(self.instance, null);
-    glfw::destroyWindow(self.window);
-    glfw::terminate();
 }
 
 
-fn VkContext! init() {
+fn VkContext! init(GLFWwindow window) {
+
     VkContext context;
     StringList validations;
     StringList extensions;
@@ -79,20 +97,6 @@ fn VkContext! init() {
         validations.free();
         extensions.free();
     };
-
-    glfw::init();
-    glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
-    glfw::windowHint(glfw::GLFW_RESIZABLE, glfw::GLFW_FALSE);
-    glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
-    glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
-    context.window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
-
-    if (context.window == null)
-    {
-        io::printfn("Failed to init gl window");
-        glfw::terminate();
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
 
     VkApplicationInfo appInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -158,7 +162,7 @@ fn VkContext! init() {
         }
     }
 
-    if (glfw::createWindowSurface(context.instance, context.window, null, &context.surface) != vk::VK_SUCCESS) {
+    if (glfw::createWindowSurface(context.instance, window, null, &context.surface) != vk::VK_SUCCESS) {
         io::printfn("Failed creating surface");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
@@ -241,6 +245,38 @@ fn VkContext! init() {
     if (vk::allocateCommandBuffers(context.device, &command_buffer_info, context.commandBuffers) != vk::VK_SUCCESS) {
         io::printfn("Failed to create command buffers");
         return ContextErrors.FAILED_CREATING_VULKAN?;
+    }
+
+    // Create Syncronisation buffers
+    for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        VkSemaphore image_available;
+        VkSemaphore render_finished;
+        VkFence in_flight_fence;
+        VkSemaphoreCreateInfo semaphore_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+        };
+        VkFenceCreateInfo fence_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .pNext = null,
+            .flags = vk::VK_FENCE_CREATE_SIGNALED_BIT,
+        };
+        if (vk::createSemaphore(context.device, &semaphore_info, null, &image_available) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create semaphore buffers");
+            return ContextErrors.FAILED_CREATING_VULKAN?;
+        }
+        if (vk::createSemaphore(context.device, &semaphore_info, null, &render_finished) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create semaphore buffers");
+            return ContextErrors.FAILED_CREATING_VULKAN?;
+        }
+        if (vk::createFence(context.device, &fence_info, null, &in_flight_fence) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create semaphore buffers");
+            return ContextErrors.FAILED_CREATING_VULKAN?;
+        }
+        context.image_available_semaphores.push(image_available);
+        context.render_finished_semaphores.push(render_finished);
+        context.in_flight_fences.push(in_flight_fence);
     }
 
     return context;
