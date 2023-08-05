@@ -1,6 +1,252 @@
-import std::io;
+module helpers;
+
 import vk;
-import types;
+import std::io;
+import std::collections::list;
+import glfw;
+
+def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
+def PresentModeList = List(<VkPresentModeKHR>);
+
+struct QueueFamily {
+    int graphics;
+    int present;
+    int compute;
+}
+
+struct SurfaceCapabilities {
+    VkSurfaceCapabilitiesKHR capabilities;
+    SurfaceFormatList formats;
+    PresentModeList present_modes;
+}
+
+struct SwapChain {
+    VkSwapchainKHR swapchain;
+    VkImage* images;
+    VkImageView* image_views;
+    VkFormat image_format;
+    VkExtent2D extent;
+    uint image_count;
+}
+
+fault DeviceErrors
+{
+    FAILED_GETTING_DEVICES,
+    QUEUE_FAMILY_FAILED,
+    DEVICE_CAPABILITIES_FAILED,
+    SWAPCHAIN_FAILED
+}
+
+fn void SwapChain.free(&self, VkDevice device)
+{
+    vk::destroySwapchainKHR(device, self.swapchain, null);
+    for (int i = 0; i < self.image_count; ++i) {
+        vk::destroyImageView(device, self.image_views[i], null);
+    }pMessage
+    mem::free(self.images);
+    mem::free(self.image_views);
+}
+
+fn bool QueueFamily.is_ready(&self)
+{
+    return self.graphics >= 0 && self.present >= 0;
+}
+
+fn void SurfaceCapabilities.free(&self)
+{
+   self.formats.free();
+   self.present_modes.free();
+}
+
+fn QueueFamily! findQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    QueueFamily family = {-1, -1, -1};
+    uint queueCount;
+
+    vk::getPhysicalDeviceQueueFamilyProperties(device, &queueCount, null);
+    if (queueCount == 0) return DeviceErrors.QUEUE_FAMILY_FAILED?;
+
+    VkQueueFamilyProperties* devices = malloc(VkQueueFamilyProperties, queueCount);
+    defer mem::free(devices);
+
+    vk::getPhysicalDeviceQueueFamilyProperties(device, &queueCount, devices);
+
+    for (int i = 0; i < queueCount; ++i) {
+        VkQueueFamilyProperties properties = devices[i];
+        bool presentSupport;
+
+        if ((ulong)properties.queueFlags & vk::VK_QUEUE_GRAPHICS_BIT != 0) {
+            family.graphics = i;
+        }
+
+        if (vk::getPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport) != vk::VK_SUCCESS) {
+           io::printfn("Failed to make surface support check");
+           return DeviceErrors.QUEUE_FAMILY_FAILED?;
+        };
+
+        if (presentSupport == true) {
+            family.present = i;
+        }
+
+        if (family.is_ready()) break;
+    }
+
+    if (family.present == -1) {
+        return DeviceErrors.QUEUE_FAMILY_FAILED?;
+    }
+
+   return family;
+}
+
+
+fn SurfaceCapabilities! checkSurfaceCapabilities(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    VkSurfaceCapabilitiesKHR capabilities;
+    SurfaceCapabilities data;
+
+    if (vk::getPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities) != vk::VK_SUCCESS) {
+        io::printfn("Failed getting surface capabilities");
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    }
+
+    data.capabilities = capabilities;
+    uint format_count;
+    if (vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null) != vk::VK_SUCCESS) {
+        io::printfn("Failed getting surface formats");
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    }
+
+    data.formats.init(format_count);
+    data.formats.size = format_count;
+    if (vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, data.formats.entries) != vk::VK_SUCCESS) {
+        io::printfn("Failed getting surface formats");
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    }
+
+    uint present_count;
+    if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null) != vk::VK_SUCCESS) {
+        io::printfn("Failed getting surface presents");
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    }
+
+    data.present_modes.init(present_count);
+    data.present_modes.size = present_count;
+
+    if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, data.present_modes.entries) != vk::VK_SUCCESS) {
+        io::printfn("Failed getting surface presents");
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    }
+
+    return data;
+}
+
+fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_device, VkSurfaceKHR surface, SwapChain* swapchain)
+{
+    SurfaceCapabilities! capabilities = checkSurfaceCapabilities(physical_device, surface);
+
+    if (catch err = capabilities) {
+        capabilities.free()!;
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    };
+   defer capabilities.free();
+
+   VkSurfaceFormatKHR surface_format = {|
+        foreach (format : capabilities.formats)
+        {
+            if (format.format == vk::VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == vk::VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+                return format;
+            }
+        }
+        io::printfn("Did not find required format, returning first one");
+        return capabilities.formats[0];
+    |};
+
+    VkPresentModeKHR present_mode = {|
+        foreach (present : capabilities.present_modes)
+        {
+            if (present == vk::VK_PRESENT_MODE_MAILBOX_KHR) {
+                return present;
+            }
+        }
+        io::printfn("Did not find required present_mode, returning first one");
+        return capabilities.present_modes[0];
+    |};
+
+    swapchain.extent = capabilities.capabilities.currentExtent;
+    swapchain.image_format = surface_format.format;
+
+    uint image_count = capabilities.capabilities.minImageCount + 1;
+    if (capabilities.capabilities.maxImageCount > 0 && image_count > capabilities.capabilities.maxImageCount) {
+     image_count = capabilities.capabilities.maxImageCount;
+    }
+
+    VkSwapchainCreateInfoKHR create_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .pNext = null,
+        .flags = 0,
+        .surface = surface,
+        .minImageCount = image_count,
+        .imageFormat = surface_format.format,
+        .imageColorSpace = surface_format.colorSpace,
+        .imageExtent = capabilities.capabilities.currentExtent,
+        .imageArrayLayers = 1,
+        .imageUsage = vk::VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageSharingMode = vk::VK_SHARING_MODE_EXCLUSIVE,
+        .preTransform = capabilities.capabilities.currentTransform,
+        .compositeAlpha = vk::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .presentMode = present_mode,
+        .clipped = true,
+        .oldSwapchain = null,
+    };
+
+    // Create SwapChainKHR
+    if (vk::createSwapchainKHR(logical_device, &create_info, null, &swapchain.swapchain) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create swaphcain");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    // Create SwapChain images
+    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, null) != vk::VK_SUCCESS) {
+        io::printfn("Failed to get swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    // Allocate data for images
+    swapchain.images = malloc(VkImage, (usz)swapchain.image_count);
+    swapchain.image_views = malloc(VkImageView, (usz)swapchain.image_count);
+
+    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, swapchain.images) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    for (int i = 0; i < swapchain.image_count; ++i) {
+        VkImageViewCreateInfo image_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .image = swapchain.images[i],
+            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
+            .format = surface_format.format,
+            .components = {
+                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+            },
+            .subresourceRange = {
+                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+        };
+
+        if (vk::createImageView(logical_device, &image_info, null, &swapchain.image_views[i]) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create swapchain image views");
+            return DeviceErrors.SWAPCHAIN_FAILED?;
+        }
+    }
+}
 
 
 fn bool checkValidationLayerSupport(ZString[] validationLayers) {
@@ -78,11 +324,11 @@ fn VkPhysicalDevice! getSuitablePhysicalDevice(VkInstance instance, VkSurfaceKHR
 
     for (int i = 0; i < deviceCount; ++i) {
         VkPhysicalDevice device = devices[i];
-        QueueFamily! queueFamily = types::findQueueFamily(device, surface);
+        QueueFamily! queueFamily = findQueueFamily(device, surface);
         if (catch err = queueFamily) return DeviceErrors.QUEUE_FAMILY_FAILED?;
 
         bool extension_support = checkDeviceExtensionSupport(device, deviceExtensions);
-        SurfaceCapabilities! capabilities = types::checkSurfaceCapabilities(device, surface);
+        SurfaceCapabilities! capabilities = checkSurfaceCapabilities(device, surface);
 
         if (catch err = capabilities) {
             capabilities.free()!;
