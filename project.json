@@ -5,7 +5,6 @@
 	"version": "0.1.0",
 	"linked-libraries": ["glfw", "vulkan"],
 	"sources": ["./build/vk.c3", "./tests/*"],
-	"cflags": "-g",
 	"targets": {
 		"test": {
 			"type": "executable",
