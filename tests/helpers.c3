@@ -138,117 +138,6 @@ fn SurfaceCapabilities! checkSurfaceCapabilities(VkPhysicalDevice device, VkSurf
     return data;
 }
 
-fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_device, VkSurfaceKHR surface, SwapChain* swapchain)
-{
-    SurfaceCapabilities! capabilities = checkSurfaceCapabilities(physical_device, surface);
-
-    if (catch err = capabilities) {
-        capabilities.free()!;
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    };
-   defer capabilities.free();
-
-   VkSurfaceFormatKHR surface_format = {|
-        foreach (format : capabilities.formats)
-        {
-            if (format.format == vk::VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == vk::VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-                return format;
-            }
-        }
-        io::printfn("Did not find required format, returning first one");
-        return capabilities.formats[0];
-    |};
-
-    VkPresentModeKHR present_mode = {|
-        foreach (present : capabilities.present_modes)
-        {
-            if (present == vk::VK_PRESENT_MODE_MAILBOX_KHR) {
-                return present;
-            }
-        }
-        io::printfn("Did not find required present_mode, returning first one");
-        return capabilities.present_modes[0];
-    |};
-
-    swapchain.extent = capabilities.capabilities.currentExtent;
-    swapchain.image_format = surface_format.format;
-
-    uint image_count = capabilities.capabilities.minImageCount + 1;
-    if (capabilities.capabilities.maxImageCount > 0 && image_count > capabilities.capabilities.maxImageCount) {
-     image_count = capabilities.capabilities.maxImageCount;
-    }
-
-    VkSwapchainCreateInfoKHR create_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-        .pNext = null,
-        .flags = 0,
-        .surface = surface,
-        .minImageCount = image_count,
-        .imageFormat = surface_format.format,
-        .imageColorSpace = surface_format.colorSpace,
-        .imageExtent = capabilities.capabilities.currentExtent,
-        .imageArrayLayers = 1,
-        .imageUsage = vk::VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-        .imageSharingMode = vk::VK_SHARING_MODE_EXCLUSIVE,
-        .preTransform = capabilities.capabilities.currentTransform,
-        .compositeAlpha = vk::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-        .presentMode = present_mode,
-        .clipped = true,
-        .oldSwapchain = null,
-    };
-
-    // Create SwapChainKHR
-    if (vk::createSwapchainKHR(logical_device, &create_info, null, &swapchain.swapchain) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create swaphcain");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
-
-    // Create SwapChain images
-    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, null) != vk::VK_SUCCESS) {
-        io::printfn("Failed to get swapchain images");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
-
-    // Allocate data for images
-    swapchain.images = malloc(VkImage, (usz)swapchain.image_count);
-    swapchain.image_views = malloc(VkImageView, (usz)swapchain.image_count);
-
-    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, swapchain.images) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create swapchain images");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
-
-    for (int i = 0; i < swapchain.image_count; ++i) {
-        VkImageViewCreateInfo image_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .image = swapchain.images[i],
-            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
-            .format = surface_format.format,
-            .components = {
-                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-            },
-            .subresourceRange = {
-                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .levelCount = 1,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-            },
-        };
-
-        if (vk::createImageView(logical_device, &image_info, null, &swapchain.image_views[i]) != vk::VK_SUCCESS) {
-            io::printfn("Failed to create swapchain image views");
-            return DeviceErrors.SWAPCHAIN_FAILED?;
-        }
-    }
-}
-
-
 fn bool checkValidationLayerSupport(ZString[] validationLayers) {
     uint layerCount;
     VkResult result = vk::enumerateInstanceLayerProperties(&layerCount, null);
@@ -373,3 +262,112 @@ fn bool checkDeviceExtensionSupport(VkPhysicalDevice device, ZString[] deviceExt
     return deviceExtensions.len == extensions_found;
 }
 
+fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_device, VkSurfaceKHR surface, SwapChain* swapchain)
+{
+    SurfaceCapabilities! capabilities = checkSurfaceCapabilities(physical_device, surface);
+
+    if (catch err = capabilities) {
+        capabilities.free()!;
+        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
+    };
+   defer capabilities.free();
+
+   VkSurfaceFormatKHR surface_format = {|
+        foreach (format : capabilities.formats)
+        {
+            if (format.format == vk::VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == vk::VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+                return format;
+            }
+        }
+        io::printfn("Did not find required format, returning first one");
+        return capabilities.formats[0];
+    |};
+
+    VkPresentModeKHR present_mode = {|
+        foreach (present : capabilities.present_modes)
+        {
+            if (present == vk::VK_PRESENT_MODE_MAILBOX_KHR) {
+                return present;
+            }
+        }
+        io::printfn("Did not find required present_mode, returning first one");
+        return capabilities.present_modes[0];
+    |};
+
+    swapchain.extent = capabilities.capabilities.currentExtent;
+    swapchain.image_format = surface_format.format;
+
+    uint image_count = capabilities.capabilities.minImageCount + 1;
+    if (capabilities.capabilities.maxImageCount > 0 && image_count > capabilities.capabilities.maxImageCount) {
+     image_count = capabilities.capabilities.maxImageCount;
+    }
+
+    VkSwapchainCreateInfoKHR create_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .pNext = null,
+        .flags = 0,
+        .surface = surface,
+        .minImageCount = image_count,
+        .imageFormat = surface_format.format,
+        .imageColorSpace = surface_format.colorSpace,
+        .imageExtent = capabilities.capabilities.currentExtent,
+        .imageArrayLayers = 1,
+        .imageUsage = vk::VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageSharingMode = vk::VK_SHARING_MODE_EXCLUSIVE,
+        .preTransform = capabilities.capabilities.currentTransform,
+        .compositeAlpha = vk::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .presentMode = present_mode,
+        .clipped = true,
+        .oldSwapchain = null,
+    };
+
+    // Create SwapChainKHR
+    if (vk::createSwapchainKHR(logical_device, &create_info, null, &swapchain.swapchain) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create swaphcain");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    // Create SwapChain images
+    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, null) != vk::VK_SUCCESS) {
+        io::printfn("Failed to get swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    // Allocate data for images
+    swapchain.images = malloc(VkImage, (usz)swapchain.image_count);
+    swapchain.image_views = malloc(VkImageView, (usz)swapchain.image_count);
+
+    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, swapchain.images) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create swapchain images");
+        return DeviceErrors.SWAPCHAIN_FAILED?;
+    };
+
+    for (int i = 0; i < swapchain.image_count; ++i) {
+        VkImageViewCreateInfo image_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .image = swapchain.images[i],
+            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
+            .format = surface_format.format,
+            .components = {
+                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+            },
+            .subresourceRange = {
+                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+        };
+
+        if (vk::createImageView(logical_device, &image_info, null, &swapchain.image_views[i]) != vk::VK_SUCCESS) {
+            io::printfn("Failed to create swapchain image views");
+            return DeviceErrors.SWAPCHAIN_FAILED?;
+        }
+    }
+}

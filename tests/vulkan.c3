@@ -18,7 +18,8 @@ def FenceList = List(<VkFence>);
 fault ContextErrors
 {
     FAILED_CREATING_VULKAN,
-    FAILED_DRAWING_FRAME
+    FAILED_DRAWING_FRAME,
+    DESCRIPTOR_FAILED
 }
 
 struct VkContext {
@@ -360,4 +361,73 @@ fn void! VkContext.draw_frame(&self)
     }
 
     self.current_frame = (self.current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
+}
+
+struct Descriptor {
+    VkDescriptorSetLayout* layouts;
+    VkDescriptorPoolSize* pool_sizes;
+    VkDescriptorSet* sets;
+    VkDescriptorPool pool;
+}
+
+fn void Descriptor.free(&self, VkContext context)
+{
+    for (int i = 0; i < context.swapchain.image_count; ++i) {
+        vk::destroyDescriptorSetLayout(context.device, self.layouts[i], null);
+    };
+    vk::destroyDescriptorPool(context.device, self.pool, null);
+}
+
+fn Descriptor! VkContext.create_descriptor(&self, VkDescriptorSetLayoutCreateInfo layout_info)
+{
+    uint max_size = self.swapchain.image_count;
+    VkDescriptorSetLayout* layouts = malloc(VkDescriptorSetLayout, max_size);
+    VkDescriptorSet* sets = malloc(VkDescriptorSet, max_size);
+    VkDescriptorPoolSize* pool_sizes = malloc(VkDescriptorPoolSize, layout_info.bindingCount);
+    VkDescriptorPool pool;
+
+    for (int i = 0; i < layout_info.bindingCount; ++i) {
+        pool_sizes[i] = {
+            .type = layout_info.pBindings[i].descriptorType,
+            .descriptorCount = max_size,
+        };
+    };
+
+    VkDescriptorPoolCreateInfo poolInfo = {
+        .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+        .poolSizeCount = 1,
+        .pPoolSizes = pool_sizes,
+        .maxSets = max_size,
+        .pNext = null,
+        .flags = 0,
+    };
+
+    if (vk::createDescriptorPool(self.device, &poolInfo, null, &pool) != vk::VK_SUCCESS) {
+        io::printfn("Failed creating descriptor pool");
+        return ContextErrors.DESCRIPTOR_FAILED?;
+    };
+
+    for (int i = 0; i < self.swapchain.image_count; ++i) {
+        vk::createDescriptorSetLayout(self.device, &layout_info, null, layouts[i]);
+    };
+
+    VkDescriptorSetAllocateInfo allocate_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+        .descriptorPool = pool,
+        .descriptorSetCount = max_size,
+        .pSetLayouts = layouts,
+        .pNext = null,
+    };
+
+    if (vk::allocateDescriptorSets(self.device, &allocate_info, sets) != vk::VK_SUCCESS) {
+        io::printfn("Failed allocationg descriptor sets");
+        return ContextErrors.DESCRIPTOR_FAILED?;
+    };
+
+    return Descriptor {
+        .pool_sizes = pool_sizes,
+        .pool = pool,
+        .layouts = layouts,
+        .sets = sets,
+    };
 }
