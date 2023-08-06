@@ -17,7 +17,8 @@ def FenceList = List(<VkFence>);
 
 fault ContextErrors
 {
-    FAILED_CREATING_VULKAN
+    FAILED_CREATING_VULKAN,
+    FAILED_DRAWING_FRAME
 }
 
 struct VkContext {
@@ -26,15 +27,15 @@ struct VkContext {
       VkDevice device;
 
       SwapChain swapchain;
-      VkQueue graphicsQueue;
+      VkQueue graphics_queue;
       VkDebugUtilsMessengerEXT debugMessenger;
-      VkCommandPool commandPool;
-      VkCommandBuffer* commandBuffers;
+      VkCommandPool command_pool;
+      VkCommandBuffer* command_buffers;
 
       SemaphoreList image_available_semaphores;
       SemaphoreList render_finished_semaphores;
       FenceList in_flight_fences;
-
+      VkFence* images_in_flight;
       uint current_frame;
 }
 
@@ -74,11 +75,12 @@ fn void VkContext.free(&self)
     self.image_available_semaphores.free();
     self.render_finished_semaphores.free();
     self.in_flight_fences.free();
+    mem::free(self.images_in_flight);
 
     self.swapchain.free(self.device);
     vk::destroySurfaceKHR(self.instance, self.surface, null);
-    vk::destroyCommandPool(self.device, self.commandPool, null);
-    mem::free(self.commandBuffers);
+    vk::destroyCommandPool(self.device, self.command_pool, null);
+    mem::free(self.command_buffers);
     vk::destroyDevice(self.device, null);
     vk::destroyInstance(self.instance, null);
 }
@@ -214,7 +216,7 @@ fn VkContext! init(GLFWwindow window) {
       return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
-    vk::getDeviceQueue(context.device, indices.graphics, 0, &context.graphicsQueue);
+    vk::getDeviceQueue(context.device, indices.graphics, 0, &context.graphics_queue);
 
     if (catch err = helpers::create_swapchain(physicalDevice, context.device, context.surface, &context.swapchain)) {
         io::printfn("Failed to create swapchain");
@@ -229,20 +231,20 @@ fn VkContext! init(GLFWwindow window) {
      .queueFamilyIndex = indices.graphics,
     };
 
-    if (vk::createCommandPool(context.device, &pool_info, null, &context.commandPool) != vk::VK_SUCCESS) {
+    if (vk::createCommandPool(context.device, &pool_info, null, &context.command_pool) != vk::VK_SUCCESS) {
         io::printfn("Failed to create command pool");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
-    context.commandBuffers = malloc(VkCommandBuffer, context.swapchain.image_count);
+    context.command_buffers = malloc(VkCommandBuffer, context.swapchain.image_count);
     VkCommandBufferAllocateInfo command_buffer_info = {
         .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-        .commandPool = context.commandPool,
+        .commandPool = context.command_pool,
         .level = vk::VK_COMMAND_BUFFER_LEVEL_PRIMARY,
         .commandBufferCount = context.swapchain.image_count,
     };
 
-    if (vk::allocateCommandBuffers(context.device, &command_buffer_info, context.commandBuffers) != vk::VK_SUCCESS) {
+    if (vk::allocateCommandBuffers(context.device, &command_buffer_info, context.command_buffers) != vk::VK_SUCCESS) {
         io::printfn("Failed to create command buffers");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
@@ -252,6 +254,7 @@ fn VkContext! init(GLFWwindow window) {
         VkSemaphore image_available;
         VkSemaphore render_finished;
         VkFence in_flight_fence;
+
         VkSemaphoreCreateInfo semaphore_info = {
             .sType = vk::VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
             .pNext = null,
@@ -274,10 +277,87 @@ fn VkContext! init(GLFWwindow window) {
             io::printfn("Failed to create semaphore buffers");
             return ContextErrors.FAILED_CREATING_VULKAN?;
         }
+
         context.image_available_semaphores.push(image_available);
         context.render_finished_semaphores.push(render_finished);
         context.in_flight_fences.push(in_flight_fence);
     }
 
+    context.images_in_flight = malloc(VkFence, context.swapchain.image_count);
+
     return context;
+}
+
+
+fn void! VkContext.draw_frame(&self)
+{
+   if (vk::waitForFences(self.device, 1, self.in_flight_fences[self.current_frame], true, uint.max) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create wait fence");
+        return ContextErrors.FAILED_DRAWING_FRAME?;
+   };
+
+    uint image_index;
+    VkResult next_image = vk::acquireNextImageKHR(self.device, self.swapchain.swapchain, uint.max, self.image_available_semaphores[self.current_frame], null, &image_index);
+
+    if (next_image == vk::VK_ERROR_OUT_OF_DATE_KHR) {
+        // Recreate swapchain
+        io::printfn("Vk needs new swapchain");
+    }
+
+    if (next_image != vk::VK_SUCCESS || next_image != vk::VK_SUBOPTIMAL_KHR) {
+        io::printfn("Failed to create wait fence");
+        return ContextErrors.FAILED_DRAWING_FRAME?;
+    }
+
+    if (vk::waitForFences(self.device, 1, &self.images_in_flight[image_index], true, uint.max) != vk::VK_SUCCESS) {
+        io::printfn("Previous frame still in use");
+        return ContextErrors.FAILED_DRAWING_FRAME?;
+    };
+
+     self.images_in_flight[image_index] = self.in_flight_fences[self.current_frame];
+
+    VkSemaphore[] wait_semaphores = {self.image_available_semaphores[self.current_frame]};
+    VkSemaphore[] signal_semaphores = {self.render_finished_semaphores[self.current_frame]};
+    VkPipelineStageFlags[] wait_stages = {vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+    VkSubmitInfo submit_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .pNext = null,
+        .waitSemaphoreCount = 1,
+        .pWaitSemaphores = &wait_semaphores,
+        .pWaitDstStageMask = &wait_stages,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &self.command_buffers[image_index],
+        .signalSemaphoreCount = 1,
+        .pSignalSemaphores = &signal_semaphores,
+    };
+
+    vk::resetFences(self.device, 1, &self.in_flight_fences[self.current_frame]);
+    if (vk::queueSubmit(self.graphics_queue, 1, &submit_info, self.in_flight_fences[self.current_frame]) != vk::VK_SUCCESS) {
+        io::printfn("Submitting draw queue failed");
+        return ContextErrors.FAILED_DRAWING_FRAME?;
+    }
+
+     VkSwapchainKHR[] swapchains = {self.swapchain.swapchain};
+     VkPresentInfoKHR present_info = {
+         .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+         .pNext = null,
+         .waitSemaphoreCount = 1,
+         .pWaitSemaphores = &signal_semaphores,
+         .swapchainCount = 1,
+         .pSwapchains = &swapchains,
+         .pImageIndices = &image_index,
+         .pResults = null,
+     };
+
+    VkResult present_result = vk::queuePresentKHR(self.graphics_queue, &present_info);
+    if (present_result == vk::VK_ERROR_OUT_OF_DATE_KHR || present_result == vk::VK_SUBOPTIMAL_KHR) {
+        // Recreate SwapChain
+        io::printfn("Vk needs new swapchain");
+    } else if (present_result != vk::VK_SUCCESS) {
+        io::printfn("Queue present failed");
+        return ContextErrors.FAILED_DRAWING_FRAME?;
+    }
+
+    self.current_frame = (self.current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
