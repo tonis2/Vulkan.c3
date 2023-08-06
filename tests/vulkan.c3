@@ -26,7 +26,7 @@ struct VkContext {
       VkInstance instance;
       VkSurfaceKHR surface;
       VkDevice device;
-
+      VkPhysicalDevice physical_device;
       SwapChain swapchain;
       VkQueue graphics_queue;
       VkDebugUtilsMessengerEXT debugMessenger;
@@ -181,6 +181,8 @@ fn VkContext! init(GLFWwindow window) {
         io::printfn("Failed to create physical device");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
+
+    context.physical_device = physicalDevice;
 
     QueueFamily! indices = helpers::findQueueFamily(physicalDevice, context.surface);
     if (catch err = indices) {
