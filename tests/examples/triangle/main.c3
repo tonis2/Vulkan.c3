@@ -41,9 +41,19 @@ fn int main()
 
     VkContext! context = context::init(window);
 
+    if (catch err = context) {
+        io::printfn("Failed to create vk context");
+        return 1;
+    }
+
     Buffer vertex_buffer = {
         .size = (vertex_data.len * float.sizeof),
         .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+    };
+
+    Buffer index_buffer = {
+        .size = (index_data.len * float.sizeof),
+        .usage = vk::VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
     };
 
     if (catch err = vertex_buffer.init(&vertex_data, context)) {
@@ -51,12 +61,13 @@ fn int main()
         return 1;
     }
 
-    if (catch err = context) {
-        io::printfn("Failed to create vk context");
+    if (catch err = index_buffer.init(&index_data, context)) {
+        io::printfn("Failed to create vertex buffer");
         return 1;
     }
 
     defer {
+        index_buffer.free(context.device);
         vertex_buffer.free(context.device);
         context.free();
     };

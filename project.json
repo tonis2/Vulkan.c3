@@ -4,11 +4,11 @@
 	"authors": [],
 	"version": "0.1.0",
 	"linked-libraries": ["glfw", "vulkan"],
-	"sources": ["./build/vk.c3", "./tests/*"],
+	"sources": ["./build/vk.c3", "./tests/boilerplate/*"],
 	"targets": {
-		"test": {
+		"triangle": {
 			"type": "executable",
-			"sources-add": ["./tests/main.c3"]
+			"sources-add": ["./tests/examples/triangle/main.c3"]
 		}
 	},
 	"output": "./build"
