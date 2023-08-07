@@ -56,8 +56,6 @@ fn int main()
         return 1;
     }
 
-
-
     defer {
         vertex_buffer.free(context.device);
         context.free();
