@@ -94,7 +94,7 @@ fn VkContext! init(GLFWwindow window) {
     StringList extensions;
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
-    ZString[] device_extensions = {"VK_KHR_swapchain"};
+    ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
 
     defer {
         validations.free();
@@ -366,40 +366,34 @@ fn void! VkContext.draw_frame(&self)
 }
 
 struct Descriptor {
-    VkDescriptorSetLayout* layouts;
-    VkDescriptorPoolSize* pool_sizes;
+    VkDescriptorSetLayout layout;
+    VkDescriptorPoolSize pool_size;
     VkDescriptorSet* sets;
     VkDescriptorPool pool;
+    uint size;
 }
 
 fn void Descriptor.free(&self, VkContext context)
 {
-    for (int i = 0; i < context.swapchain.image_count; ++i) {
-        vk::destroyDescriptorSetLayout(context.device, self.layouts[i], null);
-    };
+    vk::destroyDescriptorSetLayout(context.device, self.layout, null);
     vk::destroyDescriptorPool(context.device, self.pool, null);
 }
 
-fn Descriptor! VkContext.create_descriptor(&self, VkDescriptorSetLayoutCreateInfo layout_info)
+fn Descriptor! VkContext.createDescriptor(&self, VkDescriptorSetLayoutCreateInfo layout_info)
 {
-    uint max_size = self.swapchain.image_count;
-    VkDescriptorSetLayout* layouts = malloc(VkDescriptorSetLayout, max_size);
-    VkDescriptorSet* sets = malloc(VkDescriptorSet, max_size);
-    VkDescriptorPoolSize* pool_sizes = malloc(VkDescriptorPoolSize, layout_info.bindingCount);
+    VkDescriptorSetLayout layout;
     VkDescriptorPool pool;
-
-    for (int i = 0; i < layout_info.bindingCount; ++i) {
-        pool_sizes[i] = {
-            .type = layout_info.pBindings[i].descriptorType,
-            .descriptorCount = max_size,
-        };
+    VkDescriptorSet* sets = malloc(VkDescriptorSet, MAX_FRAMES_IN_FLIGHT);
+    VkDescriptorPoolSize pool_size = {
+        .type = layout_info.pBindings[0].descriptorType,
+        .descriptorCount = layout_info.pBindings[0].descriptorCount
     };
 
     VkDescriptorPoolCreateInfo poolInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
         .poolSizeCount = 1,
-        .pPoolSizes = pool_sizes,
-        .maxSets = max_size,
+        .pPoolSizes = &pool_size,
+        .maxSets = MAX_FRAMES_IN_FLIGHT,
         .pNext = null,
         .flags = 0,
     };
@@ -408,16 +402,13 @@ fn Descriptor! VkContext.create_descriptor(&self, VkDescriptorSetLayoutCreateInf
         io::printfn("Failed creating descriptor pool");
         return ContextErrors.DESCRIPTOR_FAILED?;
     };
-
-    for (int i = 0; i < self.swapchain.image_count; ++i) {
-        vk::createDescriptorSetLayout(self.device, &layout_info, null, layouts[i]);
-    };
-
+/*
+    vk::createDescriptorSetLayout(self.device, &layout_info, null, layout);
     VkDescriptorSetAllocateInfo allocate_info = {
         .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
         .descriptorPool = pool,
-        .descriptorSetCount = max_size,
-        .pSetLayouts = layouts,
+        .descriptorSetCount = MAX_FRAMES_IN_FLIGHT,
+        .pSetLayouts = layout,
         .pNext = null,
     };
 
@@ -425,11 +416,13 @@ fn Descriptor! VkContext.create_descriptor(&self, VkDescriptorSetLayoutCreateInf
         io::printfn("Failed allocationg descriptor sets");
         return ContextErrors.DESCRIPTOR_FAILED?;
     };
+*/
 
     return Descriptor {
-        .pool_sizes = pool_sizes,
+        .pool_size = pool_size,
         .pool = pool,
-        .layouts = layouts,
+        .layout = layout,
         .sets = sets,
+        .size = MAX_FRAMES_IN_FLIGHT,
     };
 }
