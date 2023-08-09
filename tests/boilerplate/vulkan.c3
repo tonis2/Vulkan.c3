@@ -93,7 +93,7 @@ fn VkContext! init(GLFWwindow window) {
     StringList validations;
     StringList extensions;
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
+    extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils", "VK_KHR_get_physical_device_properties2"});
     ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
 
     defer {
