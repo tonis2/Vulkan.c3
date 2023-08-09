@@ -62,9 +62,34 @@ fn int main()
     }
 
     if (catch err = index_buffer.init(&index_data, context)) {
-        io::printfn("Failed to create vertex buffer");
+        io::printfn("Failed to create index buffer");
         return 1;
     }
+
+/*    VkDescriptorSetLayoutBinding[] bindings = {
+        {
+            .binding = 0,
+            .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+            .descriptorCount = 1,
+            .stageFlags = vk::VK_SHADER_STAGE_VERTEX_BIT,
+            .pImmutableSamplers = null,
+        }
+    };
+
+    Descriptor! camera_buffer_descriptor = context.createDescriptor(
+        {
+            .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            .bindingCount = 1,
+            .pBindings = &bindings,
+            .pNext = null,
+            .flags = 0,
+        }
+    );*/
+
+/*    if (catch err = camera_buffer_descriptor) {
+        io::printfn("Failed to create camera descriptor");
+        return 1;
+    }*/
 
     defer {
         index_buffer.free(context.device);

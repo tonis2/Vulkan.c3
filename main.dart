@@ -46,15 +46,21 @@ var filteredNames = [
   "VkBaseOutStructure",
   "VkDependencyInfo"
 ];
+var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1"];
+
+const API = "vulkan";
 var extensions = [
   "VK_KHR_surface",
   "VK_KHR_xcb_surface",
   "VK_KHR_swapchain",
   "VK_KHR_display",
-  "VK_EXT_debug_report",
   "VK_KHR_portability_enumeration",
-/*  "VK_EXT_debug_marker",*/
+  "VK_KHR_get_physical_device_properties2",
+  "VK_KHR_push_descriptor",
+  "VK_EXT_debug_report",
   "VK_EXT_debug_utils",
+
+  //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
   // "VK_KHR_get_physical_device_properties2",
   // "VK_KHR_get_display_properties2",
@@ -321,8 +327,7 @@ extension ParseMethods on String {
 }
 
 void main() {
-  const API_VERSION = 1.1;
-  const API = "vulkan";
+
   var output = File('./build/vk.c3');
   var windowOutput = File('./build/window.c3');
 
@@ -331,7 +336,7 @@ void main() {
 
   // Find features for set api version
   var features = document.findAllElements("feature").where((element) =>
-      double.parse(element.getAttribute("number")!) <= API_VERSION &&
+      versions.contains(element.getAttribute("name")) &&
       element.getAttribute("api") != "vulkansc");
 
   output.writeAsStringSync("");
@@ -496,7 +501,13 @@ void main() {
         .findAllElements("extension")
         .firstWhere((element) => element.getAttribute("name") == name);
     List<XmlElement> requirements =
-        extension.findAllElements("require").toList();
+        extension.findAllElements("require").where((element) {
+          // Filter out dependency requirements
+          String? depends = element.getAttribute("depends");
+          if (depends != null) return (extensions.contains(depends) || versions.contains(depends));
+          return true;
+        }).toList();
+
     String? number = extension.getAttribute("number")!;
 
     requirements.forEach((element) {
@@ -547,10 +558,12 @@ void main() {
         }
 
         if (nodeType == "command") {
+          XmlElement? alias = document.findAllElements("command").where(
+                  (element) => ((element.getAttribute("name") == extension_name) && (element.getAttribute("alias") != null))).firstOrNull;
+          if(alias != null) return;
           XmlElement VkNode = document.findAllElements(nodeType).firstWhere(
               (element) =>
-                  element.getElement("proto")?.getElement("name")?.innerText ==
-                  extension_name);
+                  element.getElement("proto")?.getElement("name")?.innerText == extension_name);
           VKCommand command = VKCommand.fromXML(VkNode);
           pointers.add(VKfnPointer(name: "PFN_${command.name?.substring(2).camelCase()}", values: command.values.map((entry) => entry.type!).toList(), returnType: command.returnType));
           extensionCommands.add(command);

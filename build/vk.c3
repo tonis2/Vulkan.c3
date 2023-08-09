@@ -184,10 +184,14 @@ const uint VK_KHR_SWAPCHAIN_SPEC_VERSION = 70;
 const String VK_KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
 const uint VK_KHR_DISPLAY_SPEC_VERSION = 23;
 const String VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
-const uint VK_EXT_DEBUG_REPORT_SPEC_VERSION = 10;
-const String VK_EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
 const uint VK_KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
 const String VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
+const uint VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION = 2;
+const String VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_physical_device_properties2";
+const uint VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2;
+const String VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor";
+const uint VK_EXT_DEBUG_REPORT_SPEC_VERSION = 10;
+const String VK_EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
 const uint VK_EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const String VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 struct VkExtent2D {
@@ -1722,6 +1726,11 @@ struct VkDisplaySurfaceCreateInfoKHR {
   VkDisplayPlaneAlphaFlagBitsKHR alphaMode;
   VkExtent2D imageExtent;
 }
+struct VkPhysicalDevicePushDescriptorPropertiesKHR {
+  VkStructureType sType;
+  void* pNext;
+  uint maxPushDescriptors;
+}
 struct VkDebugReportCallbackCreateInfoEXT {
   VkStructureType sType;
   void* pNext;
@@ -1803,6 +1812,8 @@ def PFN_getDisplayModePropertiesKHR = fn VkResult (VkPhysicalDevice, VkDisplayKH
 def PFN_createDisplayModeKHR = fn VkResult (VkPhysicalDevice, VkDisplayKHR, VkDisplayModeCreateInfoKHR*, VkAllocationCallbacks*, VkDisplayModeKHR*);
 def PFN_getDisplayPlaneCapabilitiesKHR = fn VkResult (VkPhysicalDevice, VkDisplayModeKHR, uint, VkDisplayPlaneCapabilitiesKHR*);
 def PFN_createDisplayPlaneSurfaceKHR = fn VkResult (VkInstance, VkDisplaySurfaceCreateInfoKHR*, VkAllocationCallbacks*, VkSurfaceKHR*);
+def PFN_cmdPushDescriptorSetKHR = fn void (VkCommandBuffer, VkPipelineBindPoint, VkPipelineLayout, uint, uint, VkWriteDescriptorSet*);
+def PFN_cmdPushDescriptorSetWithTemplateKHR = fn void (VkCommandBuffer, VkDescriptorUpdateTemplate, VkPipelineLayout, uint, void*);
 def PFN_vkDebugReportCallbackEXT = fn bool (VkDebugReportFlagsEXT, VkDebugReportObjectTypeEXT, ulong, usz, int, char*, char*, void*);
 def PFN_createDebugReportCallbackEXT = fn VkResult (VkInstance, VkDebugReportCallbackCreateInfoEXT*, VkAllocationCallbacks*, VkDebugReportCallbackEXT*);
 def PFN_destroyDebugReportCallbackEXT = fn void (VkInstance, VkDebugReportCallbackEXT, VkAllocationCallbacks*);
@@ -2009,6 +2020,8 @@ struct VK_extension_bindings {
  PFN_createDisplayModeKHR createDisplayModeKHR;
  PFN_getDisplayPlaneCapabilitiesKHR getDisplayPlaneCapabilitiesKHR;
  PFN_createDisplayPlaneSurfaceKHR createDisplayPlaneSurfaceKHR;
+ PFN_cmdPushDescriptorSetKHR cmdPushDescriptorSetKHR;
+ PFN_cmdPushDescriptorSetWithTemplateKHR cmdPushDescriptorSetWithTemplateKHR;
  PFN_createDebugReportCallbackEXT createDebugReportCallbackEXT;
  PFN_destroyDebugReportCallbackEXT destroyDebugReportCallbackEXT;
  PFN_debugReportMessageEXT debugReportMessageEXT;
@@ -2050,6 +2063,8 @@ fn void loadExtensions(VkInstance instance) {
  extensions.createDisplayModeKHR = (PFN_createDisplayModeKHR)getInstanceProcAddr(instance, "vkCreateDisplayModeKHR");
  extensions.getDisplayPlaneCapabilitiesKHR = (PFN_getDisplayPlaneCapabilitiesKHR)getInstanceProcAddr(instance, "vkGetDisplayPlaneCapabilitiesKHR");
  extensions.createDisplayPlaneSurfaceKHR = (PFN_createDisplayPlaneSurfaceKHR)getInstanceProcAddr(instance, "vkCreateDisplayPlaneSurfaceKHR");
+ extensions.cmdPushDescriptorSetKHR = (PFN_cmdPushDescriptorSetKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetKHR");
+ extensions.cmdPushDescriptorSetWithTemplateKHR = (PFN_cmdPushDescriptorSetWithTemplateKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetWithTemplateKHR");
  extensions.createDebugReportCallbackEXT = (PFN_createDebugReportCallbackEXT)getInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
  extensions.destroyDebugReportCallbackEXT = (PFN_destroyDebugReportCallbackEXT)getInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT");
  extensions.debugReportMessageEXT = (PFN_debugReportMessageEXT)getInstanceProcAddr(instance, "vkDebugReportMessageEXT");
@@ -2088,6 +2103,8 @@ fn VkResult getDisplayModePropertiesKHR (VkPhysicalDevice physicaldevice, VkDisp
 fn VkResult createDisplayModeKHR (VkPhysicalDevice physicaldevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkDisplayModeKHR* pmode) => extensions.createDisplayModeKHR(physicaldevice,display,pcreateinfo,pallocator,pmode);
 fn VkResult getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicaldevice, VkDisplayModeKHR mode, uint planeindex, VkDisplayPlaneCapabilitiesKHR* pcapabilities) => extensions.getDisplayPlaneCapabilitiesKHR(physicaldevice,mode,planeindex,pcapabilities);
 fn VkResult createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pcreateinfo, VkAllocationCallbacks* pallocator, VkSurfaceKHR* psurface) => extensions.createDisplayPlaneSurfaceKHR(instance,pcreateinfo,pallocator,psurface);
+fn void cmdPushDescriptorSetKHR (VkCommandBuffer commandbuffer, VkPipelineBindPoint pipelinebindpoint, VkPipelineLayout layout, uint set, uint descriptorwritecount, VkWriteDescriptorSet* pdescriptorwrites) => extensions.cmdPushDescriptorSetKHR(commandbuffer,pipelinebindpoint,layout,set,descriptorwritecount,pdescriptorwrites);
+fn void cmdPushDescriptorSetWithTemplateKHR (VkCommandBuffer commandbuffer, VkDescriptorUpdateTemplate descriptorupdatetemplate, VkPipelineLayout layout, uint set, void* pdata) => extensions.cmdPushDescriptorSetWithTemplateKHR(commandbuffer,descriptorupdatetemplate,layout,set,pdata);
 fn VkResult createDebugReportCallbackEXT (VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pcreateinfo, VkAllocationCallbacks* pallocator, VkDebugReportCallbackEXT* pcallback) => extensions.createDebugReportCallbackEXT(instance,pcreateinfo,pallocator,pcallback);
 fn void destroyDebugReportCallbackEXT (VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pallocator) => extensions.destroyDebugReportCallbackEXT(instance,callback,pallocator);
 fn void debugReportMessageEXT (VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objecttype, ulong object, usz location, int messagecode, char* playerprefix, char* pmessage) => extensions.debugReportMessageEXT(instance,flags,objecttype,object,location,messagecode,playerprefix,pmessage);
@@ -2257,6 +2274,7 @@ const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR = 10000010
 const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000001012;
 const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
 const VkStructureType VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = 1000080000;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
@@ -2924,7 +2942,7 @@ def VkDescriptorPoolCreateFlagBits = distinct inline int;
 const VkDescriptorPoolCreateFlagBits VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
 
 def VkDescriptorSetLayoutCreateFlagBits = distinct inline int;
-
+const VkDescriptorSetLayoutCreateFlagBits VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = 0x00000001;
 
 def VkDescriptorType = distinct inline int;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_SAMPLER = 0;
