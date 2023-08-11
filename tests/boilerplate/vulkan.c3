@@ -88,12 +88,11 @@ fn void VkContext.free(&self)
 
 
 fn VkContext! init(GLFWwindow window) {
-
     VkContext context;
     StringList validations;
     StringList extensions;
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils", "VK_KHR_get_physical_device_properties2"});
+    extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
     ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
 
     defer {
@@ -291,6 +290,11 @@ fn VkContext! init(GLFWwindow window) {
     return context;
 }
 
+/*fn VkShaderModule VkContext.create_shader_module(&self, char* code) {
+
+
+    return shader_module;
+}*/
 
 fn void! VkContext.draw_frame(&self)
 {
