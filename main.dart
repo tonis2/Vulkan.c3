@@ -46,7 +46,7 @@ var filteredNames = [
   "VkBaseOutStructure",
   "VkDependencyInfo"
 ];
-var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1"];
+var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1", "VK_VERSION_1_2"];
 
 const API = "vulkan";
 var extensions = [
@@ -55,7 +55,6 @@ var extensions = [
   "VK_KHR_swapchain",
   "VK_KHR_display",
   "VK_KHR_portability_enumeration",
-  "VK_KHR_get_physical_device_properties2",
   "VK_KHR_push_descriptor",
   "VK_EXT_debug_report",
   "VK_EXT_debug_utils",
@@ -81,8 +80,8 @@ var typeMap = {
   "int32_t": "int",
   "uint64_t": "ulong",
   "int64_t": "long",
-  "uint8_t": "char",
-  "int8_t": "ichar",
+  "uint8_t": "uint",
+  "int8_t": "int",
   "size_t": "usz",
   "isize_t": "isz",
   "null": "void*",

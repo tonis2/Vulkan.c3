@@ -211,6 +211,7 @@ fn VkPhysicalDevice! getSuitablePhysicalDevice(VkInstance instance, VkSurfaceKHR
 
     for (int i = 0; i < deviceCount; ++i) {
         VkPhysicalDevice device = devices[i];
+
         QueueFamily! queueFamily = findQueueFamily(device, surface);
         if (catch err = queueFamily) return DeviceErrors.QUEUE_FAMILY_FAILED?;
 
