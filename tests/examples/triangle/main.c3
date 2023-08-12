@@ -5,6 +5,7 @@ import context;
 import buffer;
 import std::math;
 
+
 const WIDTH = 800;
 const HEIGHT = 600;
 
@@ -135,18 +136,32 @@ fn int main()
     };
 
     vk::getPhysicalDeviceProperties2(context.physical_device, &deviceProps2);
-/*    VkShaderModuleCreateInfo create_info = {
+
+    char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
+    char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
+
+    VkShaderModule vertex_module;
+    VkShaderModule frag_module;
+
+    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
         .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
         .pNext = null,
         .flags = 0,
-        .codeSize = code.len,
-        .pCode = code,
-    };
+        .codeSize = vertex_shader_data.len,
+        .pCode = (uint*)&vertex_shader_data,
+    }, null, &vertex_module);
 
-    VkShaderModule shader_module;
-    vk::createShaderModule(self.device, &create_info, null, &shader_module);*/
+    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
+        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+        .pNext = null,
+        .flags = 0,
+        .codeSize = fragment_shader_data.len,
+        .pCode = (uint*)&fragment_shader_data,
+    }, null, &frag_module);
 
     defer {
+        vk::destroyShaderModule(context.device, vertex_module, null);
+        vk::destroyShaderModule(context.device, frag_module, null);
         vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
         uniform_buffer.free(context.device);
         index_buffer.free(context.device);
