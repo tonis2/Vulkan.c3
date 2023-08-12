@@ -430,9 +430,9 @@ struct VkPhysicalDeviceLimits {
   uint maxFragmentDualSrcAttachments;
   uint maxFragmentCombinedOutputResources;
   uint maxComputeSharedMemorySize;
-  uint maxComputeWorkGroupCount;
+  uint[3] maxComputeWorkGroupCount;
   uint maxComputeWorkGroupInvocations;
-  uint maxComputeWorkGroupSize;
+  uint[3] maxComputeWorkGroupSize;
   uint subPixelPrecisionBits;
   uint subTexelPrecisionBits;
   uint mipmapPrecisionBits;
@@ -441,8 +441,8 @@ struct VkPhysicalDeviceLimits {
   float maxSamplerLodBias;
   float maxSamplerAnisotropy;
   uint maxViewports;
-  uint maxViewportDimensions;
-  float viewportBoundsRange;
+  uint[2] maxViewportDimensions;
+  float[2] viewportBoundsRange;
   uint viewportSubPixelBits;
   usz minMemoryMapAlignment;
   VkDeviceSize minTexelBufferOffsetAlignment;
@@ -475,8 +475,8 @@ struct VkPhysicalDeviceLimits {
   uint maxCullDistances;
   uint maxCombinedClipAndCullDistances;
   uint discreteQueuePriorities;
-  float pointSizeRange;
-  float lineWidthRange;
+  float[2] pointSizeRange;
+  float[2] lineWidthRange;
   float pointSizeGranularity;
   float lineWidthGranularity;
   bool strictLines;
@@ -786,7 +786,7 @@ struct VkPipelineColorBlendStateCreateInfo {
   VkLogicOp logicOp;
   uint attachmentCount;
   VkPipelineColorBlendAttachmentState* pAttachments;
-  float blendConstants;
+  float[4] blendConstants;
 }
 struct VkPipelineDepthStencilStateCreateInfo {
   VkStructureType sType;
@@ -1120,9 +1120,9 @@ struct VkClearAttachment {
   VkClearValue clearValue;
 }
 union VkClearColorValue {
-  float float32;
-  int int32;
-  uint uint32;
+  float[4] float32;
+  int[4] int32;
+  uint[4] uint32;
 }
 struct VkClearDepthStencilValue {
   float depth;
@@ -1139,9 +1139,9 @@ union VkClearValue {
 }
 struct VkImageBlit {
   VkImageSubresourceLayers srcSubresource;
-  VkOffset3D srcOffsets;
+  VkOffset3D[2] srcOffsets;
   VkImageSubresourceLayers dstSubresource;
-  VkOffset3D dstOffsets;
+  VkOffset3D[2] dstOffsets;
 }
 struct VkImageCopy {
   VkImageSubresourceLayers srcSubresource;
@@ -2109,7 +2109,7 @@ struct VkDebugUtilsLabelEXT {
   VkStructureType sType;
   void* pNext;
   char* pLabelName;
-  float color;
+  float[4] color;
 }
 struct VkDebugUtilsMessengerCallbackDataEXT {
   VkStructureType sType;
@@ -2295,7 +2295,7 @@ extern fn void cmdSetViewport (VkCommandBuffer commandbuffer, uint firstviewport
 extern fn void cmdSetScissor (VkCommandBuffer commandbuffer, uint firstscissor, uint scissorcount, VkRect2D* pscissors) @extern("vkCmdSetScissor");
 extern fn void cmdSetLineWidth (VkCommandBuffer commandbuffer, float linewidth) @extern("vkCmdSetLineWidth");
 extern fn void cmdSetDepthBias (VkCommandBuffer commandbuffer, float depthbiasconstantfactor, float depthbiasclamp, float depthbiasslopefactor) @extern("vkCmdSetDepthBias");
-extern fn void cmdSetBlendConstants (VkCommandBuffer commandbuffer, float blendconstants) @extern("vkCmdSetBlendConstants");
+extern fn void cmdSetBlendConstants (VkCommandBuffer commandbuffer, float[4] blendconstants) @extern("vkCmdSetBlendConstants");
 extern fn void cmdSetDepthBounds (VkCommandBuffer commandbuffer, float mindepthbounds, float maxdepthbounds) @extern("vkCmdSetDepthBounds");
 extern fn void cmdSetStencilCompareMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint comparemask) @extern("vkCmdSetStencilCompareMask");
 extern fn void cmdSetStencilWriteMask (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, uint writemask) @extern("vkCmdSetStencilWriteMask");

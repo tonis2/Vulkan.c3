@@ -14,6 +14,7 @@ const MAX_FRAMES_IN_FLIGHT = 2;
 def StringList = List(<ZString>);
 def SemaphoreList = List(<VkSemaphore>);
 def FenceList = List(<VkFence>);
+def CommandBufferList = List(<VkCommandBuffer>);
 
 fault ContextErrors
 {
@@ -31,8 +32,7 @@ struct VkContext {
       VkQueue graphics_queue;
       VkDebugUtilsMessengerEXT debugMessenger;
       VkCommandPool command_pool;
-      VkCommandBuffer* command_buffers;
-
+      CommandBufferList command_buffers;
       SemaphoreList image_available_semaphores;
       SemaphoreList render_finished_semaphores;
       FenceList in_flight_fences;
@@ -73,15 +73,16 @@ fn void VkContext.free(&self)
     foreach (fence : self.in_flight_fences) {
         vk::destroyFence(self.device, fence, null);
     }
+
+    mem::free(self.images_in_flight);
     self.image_available_semaphores.free();
     self.render_finished_semaphores.free();
     self.in_flight_fences.free();
-    mem::free(self.images_in_flight);
-
+    self.command_buffers.free();
     self.swapchain.free(self.device);
+
     vk::destroySurfaceKHR(self.instance, self.surface, null);
     vk::destroyCommandPool(self.device, self.command_pool, null);
-    mem::free(self.command_buffers);
     vk::destroyDevice(self.device, null);
     vk::destroyInstance(self.instance, null);
 }
@@ -91,6 +92,8 @@ fn VkContext! init(GLFWwindow window) {
     VkContext context;
     StringList validations;
     StringList extensions;
+
+    //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
     ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
@@ -196,6 +199,7 @@ fn VkContext! init(GLFWwindow window) {
                                             .queueCount = 1,
                                             .pQueuePriorities = &queuePriorities};
 
+
     VkDeviceCreateInfo deviceCreateInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .pQueueCreateInfos = &graphicsInfo,
@@ -238,17 +242,21 @@ fn VkContext! init(GLFWwindow window) {
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
-    context.command_buffers = malloc(VkCommandBuffer, context.swapchain.image_count);
+    VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, context.swapchain.image_count);
     VkCommandBufferAllocateInfo command_buffer_info = {
         .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = context.command_pool,
         .level = vk::VK_COMMAND_BUFFER_LEVEL_PRIMARY,
         .commandBufferCount = context.swapchain.image_count,
     };
-
-    if (vk::allocateCommandBuffers(context.device, &command_buffer_info, context.command_buffers) != vk::VK_SUCCESS) {
+    if (vk::allocateCommandBuffers(context.device, &command_buffer_info, command_buffers) != vk::VK_SUCCESS) {
         io::printfn("Failed to create command buffers");
         return ContextErrors.FAILED_CREATING_VULKAN?;
+    }
+    defer mem::free(command_buffers);
+
+    for (int i = 0; i < context.swapchain.image_count; ++i) {
+        context.command_buffers.push(command_buffers[i]);
     }
 
     // Create Syncronisation buffers
@@ -289,12 +297,6 @@ fn VkContext! init(GLFWwindow window) {
 
     return context;
 }
-
-/*fn VkShaderModule VkContext.create_shader_module(&self, char* code) {
-
-
-    return shader_module;
-}*/
 
 fn void! VkContext.draw_frame(&self)
 {

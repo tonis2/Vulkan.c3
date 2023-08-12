@@ -190,19 +190,29 @@ class VKtype {
       required this.requiredBy,
       this.api});
   static fromXML(XmlElement node) {
-    String? enumValue = node.getElement("enum")?.innerText;
     String? name = node.getElement("name")?.innerText;
     String? type = node.getElement("type")?.innerText;
     String? requiredBy = node.getAttribute("requires");
     String? optional = node.getAttribute("optional");
     String? api = node.getAttribute("api");
     /* String? len = node.getAttribute("len");*/
-
+    String hasLen = node.getElement("name")!.following.toString();
     bool isPointer = node.innerText.contains("*");
+    String? len;
+
+    if (hasLen.substring(1, 2) == "[") {
+      String? enumValue = node.getElement("enum")?.innerText;
+      if (enumValue != null) {
+        len = enumValue;
+      } else {
+        len = hasLen.substring(2, 3);
+      }
+    }
+
     /*  bool nullTerminated = node.getAttribute("len") == "null-terminated";*/
     return VKtype(
         type:
-            "${typeMap[type] ?? type}${enumValue != null ? "[${enumValue}]" : ""}${isPointer ? "*" : ""}",
+            "${typeMap[type] ?? type}${len != null ? "[${len}]" : ""}${isPointer ? "*" : ""}",
         name: name,
         requiredBy: requiredBy,
         api: api);
