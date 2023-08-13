@@ -72,7 +72,7 @@ fn QueueFamily! findQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface) {
 
     for (int i = 0; i < queueCount; ++i) {
         VkQueueFamilyProperties properties = devices[i];
-        bool presentSupport;
+        uint presentSupport;
 
         if ((ulong)properties.queueFlags & vk::VK_QUEUE_GRAPHICS_BIT != 0) {
             family.graphics = i;
@@ -83,7 +83,7 @@ fn QueueFamily! findQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface) {
            return DeviceErrors.QUEUE_FAMILY_FAILED?;
         };
 
-        if (presentSupport == true) {
+        if (presentSupport == vk::VK_TRUE) {
             family.present = i;
         }
 
@@ -318,7 +318,7 @@ fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_dev
         .preTransform = capabilities.capabilities.currentTransform,
         .compositeAlpha = vk::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
         .presentMode = present_mode,
-        .clipped = true,
+        .clipped = 0,
         .oldSwapchain = null,
     };
 

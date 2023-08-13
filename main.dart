@@ -86,7 +86,6 @@ var typeMap = {
   "isize_t": "isz",
   "null": "void*",
   "HANDLE": "void*",
-  "VkBool32": "bool",
   ...platformTypes
 };
 
