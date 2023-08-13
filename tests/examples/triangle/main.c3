@@ -428,10 +428,10 @@ fn int main()
         vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
     }
 
-/*    while(!glfw::windowShouldClose(window)) {
+    while(!glfw::windowShouldClose(window)) {
          glfw::pollEvents();
 
-        foreach (buffer : context.command_buffers) {
+        foreach (index, buffer : context.command_buffers) {
             VkCommandBufferBeginInfo begin_info = {
               .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
               .pNext = null,
@@ -447,24 +447,39 @@ fn int main()
                 }
             };
 
-            VkRenderPassBeginInfo render_pass_info = {
+            VkRenderPassBeginInfo render_pass_begin_info = {
                 .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
                 .pNext = null,
-                .renderPass = renderpass.renderpass,
-                .framebuffer = renderpass.framebuffers[i],
+                .renderPass = render_pass,
+                .framebuffer = frame_buffers[index],
                 .renderArea = VkRect2D{
                     .offset = VkOffset2D{ .x = 0, .y = 0 },
-                    .extent = vulkan.swapchain.extent,
+                    .extent = context.swapchain.extent,
                 },
                 .clearValueCount = 1,
                 .pClearValues = &clear_color,
             };
 
-            vk::cmdBeginRenderPass(buffer, &render_pass_info, vk::VK_SUBPASS_CONTENTS_INLINE);
-            vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
-            vk::cmdBindDescriptorSets(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, 1, &[_]VkDescriptorSet{pipeline.descriptor.sets[i]}, 0, null);
+            vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{ .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+            vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
+
+            vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
+            vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+            vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets);
+
+            vk::cmdBindVertexBuffers(buffer, 0, 1, &&VkBuffer[1]{vertex_buffer.buffer}, &&VkDeviceSize[1]{0});
+            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
+
+            vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
+
+            vk::cmdEndRenderPass(buffer);
+            vk::endCommandBuffer(buffer);
          }
-    }*/
+         vk::deviceWaitIdle(context.device);
+       /*  if (catch err = context.draw_frame()) {
+            io::printfn("Failed to draw frame");
+         }*/
+    }
 
     defer {
         vk::destroyShaderModule(context.device, vertex_module, null);
