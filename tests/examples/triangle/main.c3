@@ -259,7 +259,7 @@ fn int main()
         .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
         .pNext = null,
         .flags = 0,
-        .logicOpEnable = false,
+        .logicOpEnable = 0,
         .logicOp = vk::VK_LOGIC_OP_COPY,
         .attachmentCount = 1,
         .pAttachments = &&VkPipelineColorBlendAttachmentState{
@@ -267,7 +267,7 @@ fn int main()
               vk::VK_COLOR_COMPONENT_G_BIT |
               vk::VK_COLOR_COMPONENT_B_BIT |
               vk::VK_COLOR_COMPONENT_A_BIT,
-            .blendEnable = true,
+            .blendEnable = 0,
             .srcColorBlendFactor = vk::VK_BLEND_FACTOR_SRC_ALPHA,
             .dstColorBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
             .colorBlendOp = vk::VK_BLEND_OP_ADD,
@@ -294,12 +294,23 @@ fn int main()
         .pNext = null,
         .flags = 0,
         .stage = vk::VK_SHADER_STAGE_FRAGMENT_BIT,
-        .mod = vertex_module,
+        .mod = frag_module,
         .pName = "main",
         .pSpecializationInfo =  null,
     };
 
-  /*  VkGraphicsPipelineCreateInfo pipeline_info = {
+    VkPipelineDynamicStateCreateInfo dynamic_state = {
+     .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+     .pNext = null,
+     .flags = 0,
+     .dynamicStateCount = 2,
+     .pDynamicStates = &&VkDynamicState[2]{
+        vk::VK_DYNAMIC_STATE_VIEWPORT,
+        vk::VK_DYNAMIC_STATE_LINE_WIDTH,
+      },
+    };
+
+    VkGraphicsPipelineCreateInfo pipeline_info = {
         .sType = vk::VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
         .pNext = null,
         .flags = 0,
@@ -337,13 +348,13 @@ fn int main()
           .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
           .pNext = null,
           .flags = 0,
-          .depthClampEnable = false,
-          .rasterizerDiscardEnable = false,
-          .polygonMode = vk::VK_POLYGON_MODE_FILL,
+          .depthClampEnable = vk::VK_FALSE,
+          .rasterizerDiscardEnable = 0,
+          .polygonMode = vk::VK_POLYGON_MODE_POINT,
           .lineWidth = 1.0,
           .cullMode = vk::VK_CULL_MODE_BACK_BIT,
           .frontFace = vk::VK_FRONT_FACE_CLOCKWISE,
-          .depthBiasEnable = false,
+          .depthBiasEnable = vk::VK_FALSE,
           .depthBiasConstantFactor = 0.0,
           .depthBiasClamp = 0.0,
           .depthBiasSlopeFactor = 0.0,
@@ -353,7 +364,7 @@ fn int main()
             .pNext = null,
             .flags = 0,
             .topology = vk::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-            .primitiveRestartEnable = false,
+            .primitiveRestartEnable = vk::VK_FALSE,
         },
         .pViewportState = &&VkPipelineViewportStateCreateInfo{
            .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
@@ -378,25 +389,27 @@ fn int main()
           .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
           .pNext = null,
           .flags = 0,
-          .sampleShadingEnable = false,
+          .sampleShadingEnable = vk::VK_FALSE,
           .rasterizationSamples = vk::VK_SAMPLE_COUNT_1_BIT,
           .minSampleShading = 1.0,
           .pSampleMask = null,
-          .alphaToCoverageEnable = false,
-          .alphaToOneEnable = false,
+          .alphaToCoverageEnable = vk::VK_FALSE,
+          .alphaToOneEnable = vk::VK_FALSE,
         },
         .pDepthStencilState = null,
         .pColorBlendState = &color_blending,
-        .pDynamicState = null,
+        .pDynamicState = &dynamic_state,
         .pTessellationState = null,
-
         .subpass = 0,
         .basePipelineHandle = null,
         .basePipelineIndex = -1,
     };
 
     VkPipeline pipeline;
-    vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline);*/
+    if (vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline) != vk::VK_SUCCESS) {
+        io::printfn("Failed to create pipeline");
+        return 1;
+    };
 
     VkFramebuffer* frame_buffers = malloc(VkFramebuffer, context.swapchain.image_count);
     for (int i = 0; i < context.swapchain.image_count; ++i) {
@@ -459,7 +472,7 @@ fn int main()
         vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
         vk::destroyPipelineLayout(context.device, pipeline_layout, null);
         vk::destroyRenderPass(context.device, render_pass, null);
-       /* vk::destroyPipeline(context.device, pipeline, null);*/
+        vk::destroyPipeline(context.device, pipeline, null);
         for (int i = 0; i < context.swapchain.image_count; ++i) {
             vk::destroyFramebuffer(context.device, frame_buffers[i], null);
         }
