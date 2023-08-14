@@ -429,56 +429,64 @@ fn int main()
     }
 
     while(!glfw::windowShouldClose(window)) {
-         glfw::pollEvents();
+        glfw::pollEvents();
+        uint! image_index = context.swapchain.next_frame_index(context);
 
-        foreach (index, buffer : context.command_buffers) {
-            VkCommandBufferBeginInfo begin_info = {
-              .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-              .pNext = null,
-              .flags = 0,
-              .pInheritanceInfo = null,
-            };
+        if (catch err = image_index) {
+            io::printfn("Failed to get next image");
+            return 1;
+        }
+        io::printfn("%d", image_index);
+        VkCommandBuffer buffer = context.command_buffers[image_index];
 
-            vk::beginCommandBuffer(buffer, &begin_info);
+        vk::resetCommandBuffer(buffer, 0);
+        VkCommandBufferBeginInfo begin_info = {
+          .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+          .pNext = null,
+          .flags = 0,
+          .pInheritanceInfo = null,
+        };
 
-            VkClearValue[1] clear_color = {
-                VkClearValue{
-                    .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
-                }
-            };
+        vk::beginCommandBuffer(buffer, &begin_info);
 
-            VkRenderPassBeginInfo render_pass_begin_info = {
-                .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-                .pNext = null,
-                .renderPass = render_pass,
-                .framebuffer = frame_buffers[index],
-                .renderArea = VkRect2D{
-                    .offset = VkOffset2D{ .x = 0, .y = 0 },
-                    .extent = context.swapchain.extent,
-                },
-                .clearValueCount = 1,
-                .pClearValues = &clear_color,
-            };
+      VkClearValue[1] clear_color = {
+            VkClearValue{
+                .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
+            }
+        };
 
-            vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{ .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-            vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
+        VkRenderPassBeginInfo render_pass_begin_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+            .pNext = null,
+            .renderPass = render_pass,
+            .framebuffer = frame_buffers[image_index],
+            .renderArea = VkRect2D{
+                .offset = VkOffset2D{ .x = 0, .y = 0 },
+                .extent = context.swapchain.extent,
+            },
+            .clearValueCount = 1,
+            .pClearValues = &clear_color,
+        };
 
-            vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
-            vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-            vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets);
+        vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{ .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
 
-            vk::cmdBindVertexBuffers(buffer, 0, 1, &&VkBuffer[1]{vertex_buffer.buffer}, &&VkDeviceSize[1]{0});
-            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
+        vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
+        vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+        vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets);
 
-            vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
+        vk::cmdBindVertexBuffers(buffer, 0, 1, &&VkBuffer[1]{vertex_buffer.buffer}, &&VkDeviceSize[1]{0});
+        vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
 
-            vk::cmdEndRenderPass(buffer);
-            vk::endCommandBuffer(buffer);
-         }
-         vk::deviceWaitIdle(context.device);
-       /*  if (catch err = context.draw_frame()) {
-            io::printfn("Failed to draw frame");
-         }*/
+        vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
+
+        vk::cmdEndRenderPass(buffer);
+        vk::endCommandBuffer(buffer);
+
+        if (catch err = context.swapchain.presentFrame(context, buffer)) {
+            io::printfn("Failed to present frame");
+            return 1;
+        };
     }
 
     defer {
