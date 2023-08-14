@@ -9,7 +9,7 @@ import helpers;
 
 const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
 const ENABLE_VALIDATION_LAYERS = true;
-const MAX_FRAMES_IN_FLIGHT = 2;
+
 
 def StringList = List(<ZString>);
 /*def SemaphoreList = List(<VkSemaphore>);
@@ -33,11 +33,6 @@ struct VkContext {
       VkDebugUtilsMessengerEXT debugMessenger;
       VkCommandPool command_pool;
       CommandBufferList command_buffers;
-      VkSemaphore* image_available_semaphores;
-      VkSemaphore* render_finished_semaphores;
-      VkFence* in_flight_fences;
-      VkFence* images_in_flight;
-      uint current_frame;
 }
 
 fn bool debugCallback(
@@ -64,17 +59,6 @@ fn void VkContext.free(&self)
     if (ENABLE_VALIDATION_LAYERS) {
       vk::destroyDebugUtilsMessengerEXT(self.instance, self.debugMessenger, null);
     }
-
-    for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        vk::destroySemaphore(self.device, self.image_available_semaphores[i], null);
-        vk::destroyFence(self.device, self.in_flight_fences[i], null);
-        vk::destroySemaphore(self.device, self.render_finished_semaphores[i], null);
-    }
-
-    mem::free(self.images_in_flight);
-    mem::free(self.image_available_semaphores);
-    mem::free(self.render_finished_semaphores);
-    mem::free(self.in_flight_fences);
 
     self.command_buffers.free();
     self.swapchain.free(self.device);
@@ -307,55 +291,23 @@ fn VkContext! init(GLFWwindow window) {
         io::printfn("Failed to create command buffers");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
-    defer mem::free(command_buffers);
 
+    defer mem::free(command_buffers);
     for (int i = 0; i < context.swapchain.image_count; ++i) {
         context.command_buffers.push(command_buffers[i]);
     }
 
-    context.images_in_flight = malloc(VkFence, context.swapchain.image_count);
-    context.in_flight_fences = malloc(VkFence, MAX_FRAMES_IN_FLIGHT);
-    context.image_available_semaphores = malloc(VkSemaphore, MAX_FRAMES_IN_FLIGHT);
-    context.render_finished_semaphores = malloc(VkSemaphore, MAX_FRAMES_IN_FLIGHT);
-
-    // Create Syncronisation buffers
-    for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        VkSemaphoreCreateInfo semaphore_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-        };
-        VkFenceCreateInfo fence_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-            .pNext = null,
-            .flags = vk::VK_FENCE_CREATE_SIGNALED_BIT,
-        };
-        if (vk::createSemaphore(context.device, &semaphore_info, null, &context.image_available_semaphores[i]) != vk::VK_SUCCESS) {
-            io::printfn("Failed to create semaphore buffers");
-            return ContextErrors.FAILED_CREATING_VULKAN?;
-        }
-        if (vk::createSemaphore(context.device, &semaphore_info, null, &context.render_finished_semaphores[i]) != vk::VK_SUCCESS) {
-            io::printfn("Failed to create semaphore buffers");
-            return ContextErrors.FAILED_CREATING_VULKAN?;
-        }
-        if (vk::createFence(context.device, &fence_info, null, &context.in_flight_fences[i]) != vk::VK_SUCCESS) {
-            io::printfn("Failed to create semaphore buffers");
-            return ContextErrors.FAILED_CREATING_VULKAN?;
-        }
-    }
-
-    context.current_frame = 0;
     return context;
 }
 
-fn void! VkContext.draw_frame(&self)
+/*fn void! VkContext.draw_frame(&self)
 {
    if (vk::waitForFences(self.device, 1, &self.in_flight_fences[self.current_frame], vk::VK_TRUE, uint.max) != vk::VK_SUCCESS) {
         io::printfn("Failed to wait for fence");
         return ContextErrors.FAILED_DRAWING_FRAME?;
    };
 
- /*   vk::resetFences(self.device, 1, &self.in_flight_fences[self.current_frame]);*/
+    vk::resetFences(self.device, 1, &self.in_flight_fences[self.current_frame]);
 
     uint image_index;
     VkResult next_image = vk::acquireNextImageKHR(self.device, self.swapchain.swapchain, uint.max, self.image_available_semaphores[self.current_frame], null, &image_index);
@@ -367,7 +319,7 @@ fn void! VkContext.draw_frame(&self)
 
     if (next_image != vk::VK_SUBOPTIMAL_KHR) {
       io::printfn("Suboptimal swapchain");
-        /*return ContextErrors.FAILED_DRAWING_FRAME?;*/
+        *//*return ContextErrors.FAILED_DRAWING_FRAME?;*//*
     }
 
    if (vk::waitForFences(self.device, 1, &self.in_flight_fences[image_index], vk::VK_TRUE, uint.max) != vk::VK_SUCCESS) {
@@ -418,8 +370,10 @@ fn void! VkContext.draw_frame(&self)
         io::printfn("Queue present failed");
         return ContextErrors.FAILED_DRAWING_FRAME?;
     }
+
     self.current_frame = (self.current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
-}
+    io::printfn("frame %d", self.current_frame);
+}*/
 
 /*struct Descriptor {
     VkDescriptorSetLayout layout;
