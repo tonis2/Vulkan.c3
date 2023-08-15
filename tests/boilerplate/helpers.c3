@@ -6,7 +6,6 @@ import std::collections::list;
 import glfw;
 import context;
 
-def PresentCallback = fn void (VkCommandBuffer* buffer);
 def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
 def PresentModeList = List(<VkPresentModeKHR>);
 
@@ -64,86 +63,6 @@ fn void SwapChain.free(&self, VkDevice device)
     mem::free(self.images);
     mem::free(self.image_views);
 }
-
-fn uint! SwapChain.next_frame_index(&self, VkContext context) {
-    if (vk::waitForFences(context.device, 1, &self.syncImages[self.current_image].frame_fence, vk::VK_TRUE, uint.max) != vk::VK_SUCCESS) {
-        io::printfn("Failed to wait for fence");
-        return DeviceErrors.FAILED_DRAWING_FRAME?;
-    };
-    vk::resetFences(context.device, 1, &self.syncImages[self.current_image].frame_fence);
-
-    VkResult next_image = vk::acquireNextImageKHR(context.device, self.swapchain, uint.max, self.syncImages[self.current_image].image_acquired, null, &self.current_image);
-    switch (next_image) {
-        case vk::VK_ERROR_OUT_OF_DATE_KHR: {
-            io::printfn("Vk needs new swapchain");
-            return self.current_image;
-        }
-        case vk::VK_SUBOPTIMAL_KHR: {
-            io::printfn("Vk needs new swapchain");
-            return self.current_image;
-        }
-        case vk::VK_SUCCESS: {
-            return self.current_image;
-        }
-        default: {
-           return DeviceErrors.FAILED_DRAWING_FRAME?;
-        }
-    }
-}
-
-fn void! SwapChain.presentFrame(&self, VkContext context, VkCommandBuffer buffer)
-{
-
-    SyncImage active_sync = self.syncImages[self.current_image];
-    VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
-    VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
-    VkPipelineStageFlags[1] wait_stages = { vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-
-    VkSubmitInfo submit_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        .pNext = null,
-        .waitSemaphoreCount = 1,
-        .pWaitSemaphores = &wait_semaphores,
-        .pWaitDstStageMask = &wait_stages,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &&VkCommandBuffer[1]{ buffer },
-        .signalSemaphoreCount = 1,
-        .pSignalSemaphores = &signal_semaphores,
-    };
-
-    if (vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence) != vk::VK_SUCCESS) {
-        io::printfn("Submitting draw queue failed");
-        return DeviceErrors.FAILED_DRAWING_FRAME?;
-    }
-
-    VkPresentInfoKHR present_info = {
-         .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-         .waitSemaphoreCount = 1,
-         .pWaitSemaphores = &signal_semaphores,
-         .swapchainCount = 1,
-         .pSwapchains = &&VkSwapchainKHR[1]{ self.swapchain },
-         .pImageIndices = &self.current_image,
-         .pResults = null,
-    };
-
-    VkResult render_result = vk::queuePresentKHR(context.graphics_queue, &present_info);
-
-    switch (render_result) {
-        case vk::VK_ERROR_OUT_OF_DATE_KHR: {
-            io::printfn("Vk needs new swapchain");
-        }
-        case vk::VK_SUBOPTIMAL_KHR: {
-            io::printfn("Vk needs new swapchain");
-        }
-        case vk::VK_SUCCESS: {}
-        default: {
-           return DeviceErrors.FAILED_DRAWING_FRAME?;
-        }
-    }
-
-    self.current_image = (self.current_image + 1) % MAX_FRAMES_IN_FLIGHT;
-}
-
 
 fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_device, VkSurfaceKHR surface, SwapChain* swapchain)
 {
