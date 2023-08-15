@@ -3,6 +3,7 @@ import vk;
 import glfw;
 import context;
 import buffer;
+import helpers;
 import std::math;
 
 const WIDTH = 800;
@@ -428,18 +429,38 @@ fn int main()
         vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
     }
 
+    uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         glfw::pollEvents();
-        uint! image_index = context.swapchain.next_frame_index(context);
 
-        if (catch err = image_index) {
-            io::printfn("Failed to get next image");
-            return 1;
-        }
-        io::printfn("%d", image_index);
-        VkCommandBuffer buffer = context.command_buffers[image_index];
+        SyncImage active_sync = context.swapchain.syncImages[frame];
+        vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max);
+        vk::resetFences(context.device, 1, &active_sync.frame_fence);
+
+        uint next_image = {|
+            uint index;
+            vk::acquireNextImageKHR(context.device, context.swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index);
+            return index;
+        |};
+
+        VkCommandBuffer buffer = context.command_buffers[next_image];
+        VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
+        VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
+
+        VkSubmitInfo submit_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .pNext = null,
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = &wait_semaphores,
+            .pWaitDstStageMask = &&VkPipelineStageFlags[1]{ vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT },
+            .commandBufferCount = 1,
+            .pCommandBuffers = &&VkCommandBuffer[1]{ buffer },
+            .signalSemaphoreCount = 1,
+            .pSignalSemaphores = &signal_semaphores,
+        };
 
         vk::resetCommandBuffer(buffer, 0);
+
         VkCommandBufferBeginInfo begin_info = {
           .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
           .pNext = null,
@@ -449,7 +470,7 @@ fn int main()
 
         vk::beginCommandBuffer(buffer, &begin_info);
 
-      VkClearValue[1] clear_color = {
+        VkClearValue[1] clear_color = {
             VkClearValue{
                 .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
             }
@@ -459,7 +480,7 @@ fn int main()
             .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
             .pNext = null,
             .renderPass = render_pass,
-            .framebuffer = frame_buffers[image_index],
+            .framebuffer = frame_buffers[next_image],
             .renderArea = VkRect2D{
                 .offset = VkOffset2D{ .x = 0, .y = 0 },
                 .extent = context.swapchain.extent,
@@ -483,10 +504,20 @@ fn int main()
         vk::cmdEndRenderPass(buffer);
         vk::endCommandBuffer(buffer);
 
-        if (catch err = context.swapchain.presentFrame(context, buffer)) {
-            io::printfn("Failed to present frame");
-            return 1;
+        vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence);
+
+        VkPresentInfoKHR present_info = {
+             .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+             .waitSemaphoreCount = 1,
+             .pWaitSemaphores = &signal_semaphores,
+             .swapchainCount = 1,
+             .pSwapchains = &&VkSwapchainKHR[1]{ context.swapchain.swapchain },
+             .pImageIndices = &&uint[1]{next_image},
+             .pResults = null,
         };
+
+        vk::queuePresentKHR(context.graphics_queue, &present_info);
+        frame = (frame + 1) % 2;
     }
 
     defer {
