@@ -7,7 +7,7 @@ import glfw;
 import libc;
 import helpers;
 
-const VK_API_VERSION_1_1 = vk::@makeApiVersion(0,1,1,0);
+const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
 const ENABLE_VALIDATION_LAYERS = true;
 
 
@@ -77,7 +77,7 @@ fn VkContext! init(GLFWwindow window) {
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
+
     ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
 
     defer {
@@ -88,18 +88,14 @@ fn VkContext! init(GLFWwindow window) {
     VkApplicationInfo appInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName = "Hello Triangle",
-        .applicationVersion = VK_API_VERSION_1_1,
+        .applicationVersion = VK_API_VERSION_1_2,
         .pEngineName = "Super engine",
-        .engineVersion = VK_API_VERSION_1_1,
-        .apiVersion = VK_API_VERSION_1_1,
+        .engineVersion = VK_API_VERSION_1_2,
+        .apiVersion = VK_API_VERSION_1_2,
         .pNext = null,
     };
 
-    // Check if GPU supports requested extensions
-    if (!helpers::checkExtensionsSupport(extensions.to_array())) {
-        io::printfn("Requested extensions not available");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
+
 
     // SETUP extensions
     uint glfwExtensions_count = 0;
@@ -107,7 +103,13 @@ fn VkContext! init(GLFWwindow window) {
     for (int i = 0; i < glfwExtensions_count; ++i) extensions.push(glfwExtensions[i]);
 
     if (ENABLE_VALIDATION_LAYERS) {
-        extensions.push(vk::VK_EXT_DEBUG_UTILS_EXTENSION_NAME.zstr_tcopy());
+       extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
+    }
+
+    // Check if GPU supports requested extensions
+    if (!helpers::checkExtensionsSupport(extensions.to_array())) {
+        io::printfn("Requested extensions not available");
+        return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
     VkInstanceCreateInfo createInfo = {
