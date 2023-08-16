@@ -67,11 +67,8 @@ fn void! Buffer.init(&self, void* buffer_data, VkContext context) {
        .pQueueFamilyIndices = null,
     };
 
-    io::printfn("buffer size %d ", self.size);
-
     Buffer staging_buffer = createBuffer(staging_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
     defer staging_buffer.free(context.device);
-
 
     void* data;
     if (vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &data) != vk::VK_SUCCESS) {
