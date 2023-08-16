@@ -47,7 +47,7 @@ Vertex[] vertex_data = {
     Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 0, 1}},
 };
 
-float [] index_data = {
+uint[] index_data = {
     0, 1, 3,
     1, 2, 3
 };
@@ -107,12 +107,12 @@ fn int main()
         .usage = vk::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
-    if (catch err = vertex_buffer.init(&vertex_data, context)) {
+    if (catch err = vertex_buffer.init(&vertex_data[0], context)) {
         io::printfn("Failed to create vertex buffer");
         return 1;
     }
 
-    if (catch err = index_buffer.init(&index_data, context)) {
+    if (catch err = index_buffer.init(&index_data[0], context)) {
         io::printfn("Failed to create index buffer");
         return 1;
     }
@@ -144,7 +144,7 @@ fn int main()
     VkWriteDescriptorSet[1] descriptorSets = {
         {
             .sType = vk::VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-            .dstSet = (void*)0,
+            .dstSet = null,
             .dstBinding = 0,
             .descriptorCount = 1,
             .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -429,7 +429,7 @@ fn int main()
         vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
     }
 
-    uint frame = 0;
+  /*  uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         glfw::pollEvents();
 
@@ -494,9 +494,10 @@ fn int main()
 
         vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
         vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets);
+        vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
-        vk::cmdBindVertexBuffers(buffer, 0, 1, &&VkBuffer[1]{vertex_buffer.buffer}, &&VkDeviceSize[1]{0});
+        VkBuffer[1] buffers = {vertex_buffer.buffer};
+        vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &&VkDeviceSize[1]{0});
         vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
 
         vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
@@ -519,7 +520,7 @@ fn int main()
         vk::queuePresentKHR(context.graphics_queue, &present_info);
         frame = (frame + 1) % 2;
     }
-
+*/
     defer {
         vk::destroyShaderModule(context.device, vertex_module, null);
         vk::destroyShaderModule(context.device, frag_module, null);
