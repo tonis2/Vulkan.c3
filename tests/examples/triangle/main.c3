@@ -16,15 +16,15 @@ struct Vertex {
 }
 
 Vertex[] vertex_data = {
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255, 0, 0}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255, 0, 0}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255, 0, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255, 0, 0}},
+    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
+    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
+    Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
+    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
 
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255, 0}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255, 0}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255, 0}},
+    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
+    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
+    Vertex {{CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
+    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
 
     Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {245, 40, 145}},
     Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {245, 40, 145}},
@@ -48,8 +48,12 @@ Vertex[] vertex_data = {
 };
 
 uint[] index_data = {
-    0, 1, 3,
-    1, 2, 3
+    0,  1,  2,      0,  2,  3,    // front
+    4,  5,  6,      4,  6,  7,    // back
+    8,  9,  10,     8,  10, 11,   // top
+    12, 13, 14,     12, 14, 15,   // bottom
+    16, 17, 18,     16, 18, 19,   // right
+    20, 21, 22,     20, 22, 23    // left
 };
 
 struct UniformBuffer {
@@ -429,7 +433,7 @@ fn int main()
         vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
     }
 
-  /*  uint frame = 0;
+    uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         glfw::pollEvents();
 
@@ -497,9 +501,9 @@ fn int main()
         vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
         VkBuffer[1] buffers = {vertex_buffer.buffer};
-        vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &&VkDeviceSize[1]{0});
+        VkDeviceSize[1] deviceSizes = {0};
+        vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &deviceSizes);
         vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
-
         vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
 
         vk::cmdEndRenderPass(buffer);
@@ -520,7 +524,7 @@ fn int main()
         vk::queuePresentKHR(context.graphics_queue, &present_info);
         frame = (frame + 1) % 2;
     }
-*/
+
     defer {
         vk::destroyShaderModule(context.device, vertex_module, null);
         vk::destroyShaderModule(context.device, frag_module, null);
