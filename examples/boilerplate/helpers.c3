@@ -5,6 +5,7 @@ import std::io;
 import std::collections::list;
 import glfw;
 import context;
+import std::math;
 
 def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
 def PresentModeList = List(<VkPresentModeKHR>);
@@ -416,5 +417,8 @@ fn bool checkDeviceExtensionSupport(VkPhysicalDevice device, ZString[] deviceExt
 
     return deviceExtensions.len == extensions_found;
 }
+
+
+
 
 
