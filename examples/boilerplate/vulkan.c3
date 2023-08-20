@@ -8,7 +8,7 @@ import libc;
 import helpers;
 
 const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
-const ENABLE_VALIDATION_LAYERS = true;
+const ENABLE_VALIDATION_LAYERS = false;
 
 
 def StringList = List(<ZString>);
@@ -195,7 +195,7 @@ fn VkContext! init(GLFWwindow window) {
         .drawIndirectFirstInstance = 0,
         .depthClamp = 0,
         .depthBiasClamp = 0,
-        .fillModeNonSolid = 1,
+        .fillModeNonSolid = 0,
         .depthBounds = 0,
         .wideLines = 0,
         .largePoints = 0,

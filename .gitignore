@@ -8,6 +8,7 @@
 *.elf
 
 test
+./cube
 
 # Linker output
 *.ilk

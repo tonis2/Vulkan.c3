@@ -14,6 +14,7 @@ struct Buffer {
     VkBuffer buffer;
     VkDeviceMemory memory;
     ulong size;
+    void* mapped;
     VkBufferUsageFlags usage;
 }
 
@@ -70,13 +71,13 @@ fn void! Buffer.init(&self, void* buffer_data, VkContext context) {
     Buffer staging_buffer = createBuffer(staging_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
     defer staging_buffer.free(context.device);
 
-    void* data;
-    if (vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &data) != vk::VK_SUCCESS) {
+
+    if (vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped) != vk::VK_SUCCESS) {
         io::printfn("Failed mapping memory");
         return BufferErrors.FAILED_CREATING_BUFFER?;
     }
 
-    mem::copy(data, buffer_data, self.size);
+    mem::copy(self.mapped, buffer_data, self.size);
     vk::unmapMemory(context.device, staging_buffer.memory);
 
     VkBufferCreateInfo buffer_info = {

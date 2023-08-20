@@ -9,9 +9,10 @@ layout(binding = 0) uniform matrix
   mat4 projection;
   mat4 view;
   mat4 model;
+  mat4 clip;
 };
 
 void main() {
     outColor = v_color;
-    gl_Position = projection * view * model * vec4(vp, 1.0);
+    gl_Position = clip * projection * view * model * vec4(vp, 1.0);
 }
