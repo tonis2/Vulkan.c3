@@ -83,7 +83,7 @@ fn int main()
         .window = window,
     };
 
-    Camera camera = camera::new({0.0, 0.0, 0.0}, 5, 0.6);
+    Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
     eventHandler.init();
     VkContext! context = context::init(window);
@@ -352,7 +352,7 @@ fn int main()
           .flags = 0,
           .depthClampEnable = vk::VK_FALSE,
           .rasterizerDiscardEnable = 0,
-          .polygonMode = vk::VK_POLYGON_MODE_POINT,
+          .polygonMode = vk::VK_POLYGON_MODE_FILL,
           .lineWidth = 1.0,
           .cullMode = vk::VK_CULL_MODE_BACK_BIT,
           .frontFace = vk::VK_FRONT_FACE_CLOCKWISE,
@@ -432,7 +432,7 @@ fn int main()
 
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
-        glfw::pollEvents();
+
         eventHandler.update();
 
         if (eventHandler.left_mouse_click) {

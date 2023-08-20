@@ -92,6 +92,7 @@ fn void keyboardEvents(GLFWwindow window, int key, int scancode, int action, int
 
 
 fn void EventHandler.update(&self) {
+    glfw::pollEvents();
     double x_local, y_local;
     getCursorPos(self.window, &x_local, &y_local);
 

@@ -104,9 +104,9 @@ fn UniformData Camera.matrix(Camera* self, Matrix4f model = MATRIX4F_IDENTITY) {
         perspective,
         view,
         model,
-        OPENGL_VULKAN
+        FLIP_VULKAN_PROJECTION
     };
 }
 
 
-const Matrix4f OPENGL_VULKAN = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 0.5f, 1.0f};
+const Matrix4f FLIP_VULKAN_PROJECTION = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 0.5f, 1.0f};
