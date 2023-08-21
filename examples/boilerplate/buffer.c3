@@ -56,7 +56,7 @@ fn void Buffer.copy_to(&self, Buffer dst_buffer, VkContext context) {
     vk::freeCommandBuffers(context.device, context.command_pool, 1, &command_buffer);
 }
 
-fn void! Buffer.init(&self, void* buffer_data, VkContext context) {
+fn void! Buffer.device_only(&self, void* buffer_data, VkContext context) {
     VkBufferCreateInfo staging_info = {
        .sType = vk::VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
        .pNext = null,
@@ -70,7 +70,6 @@ fn void! Buffer.init(&self, void* buffer_data, VkContext context) {
 
     Buffer staging_buffer = createBuffer(staging_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
     defer staging_buffer.free(context.device);
-
 
     if (vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped) != vk::VK_SUCCESS) {
         io::printfn("Failed mapping memory");
@@ -93,6 +92,33 @@ fn void! Buffer.init(&self, void* buffer_data, VkContext context) {
 
     Buffer buffer = createBuffer(buffer_info, vk::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
     staging_buffer.copy_to(buffer, context);
+    self.buffer = buffer.buffer;
+    self.memory = buffer.memory;
+}
+
+fn void! Buffer.writable(&self, void* buffer_data, VkContext context) {
+    VkBufferCreateInfo buffer_info = {
+       .sType = vk::VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+       .pNext = null,
+       .flags = 0,
+       .size = self.size,
+       .usage = self.usage,
+       .sharingMode = vk::VK_SHARING_MODE_EXCLUSIVE,
+       .queueFamilyIndexCount = 0,
+       .pQueueFamilyIndices = null,
+    };
+
+    Buffer buffer = createBuffer(buffer_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | vk::VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
+/*    defer staging_buffer.free(context.device);*/
+
+    if (vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped) != vk::VK_SUCCESS) {
+        io::printfn("Failed mapping memory");
+        return BufferErrors.FAILED_CREATING_BUFFER?;
+    }
+
+    mem::copy(self.mapped, buffer_data, self.size);
+  /*  vk::unmapMemory(context.device, buffer.memory);*/
+
     self.buffer = buffer.buffer;
     self.memory = buffer.memory;
 }

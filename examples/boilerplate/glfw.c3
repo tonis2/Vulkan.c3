@@ -80,8 +80,6 @@ fn void mouseEvents(GLFWwindow window, int button, int action, int mods) {
         }
     }
 
-
-
   /*  handle.on_mouse_event(handle);*/
 }
 

@@ -43,10 +43,10 @@ Vertex[] vertex_data = {
     Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 193}},
     Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 193}},
 
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 0, 1}},
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 1}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 1}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 0, 1}},
+    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {150.0, 0, 0}},
+    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {150.0, 0, 0}},
+    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {150.0, 0, 0}},
+    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {150.0, 0, 0}},
 };
 
 uint[] index_data = {
@@ -108,17 +108,17 @@ fn int main()
         .usage = vk::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
-    if (catch err = vertex_buffer.init(&vertex_data[0], context)) {
+    if (catch err = vertex_buffer.device_only(&vertex_data[0], context)) {
         io::printfn("Failed to create vertex buffer");
         return 1;
     }
 
-    if (catch err = index_buffer.init(&index_data[0], context)) {
+    if (catch err = index_buffer.device_only(&index_data[0], context)) {
         io::printfn("Failed to create index buffer");
         return 1;
     }
 
-    if (catch err = uniform_buffer.init(&&camera.matrix(), context)) {
+    if (catch err = uniform_buffer.writable(&&camera.matrix(), context)) {
         io::printfn("Failed to create uniform buffer");
         return 1;
     }
@@ -438,7 +438,10 @@ fn int main()
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+
+     /*       vk::mapMemory(context.device, uniform_buffer.memory, 0, uniform_buffer.size, 0, &uniform_buffer.mapped);*/
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+         /*   vk::unmapMemory(context.device, uniform_buffer.memory);*/
         }
 
         SyncImage active_sync = context.swapchain.syncImages[frame];
@@ -452,6 +455,8 @@ fn int main()
         |};
 
         VkCommandBuffer buffer = context.command_buffers[next_image];
+        vk::resetCommandBuffer(buffer, 0);
+
         VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
         VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
 
@@ -466,8 +471,6 @@ fn int main()
             .signalSemaphoreCount = 1,
             .pSignalSemaphores = &signal_semaphores,
         };
-
-        vk::resetCommandBuffer(buffer, 0);
 
         VkCommandBufferBeginInfo begin_info = {
           .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
