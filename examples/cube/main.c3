@@ -9,44 +9,42 @@ import std::math;
 
 const WIDTH = 800;
 const HEIGHT = 600;
-const CUBE_WIDTH = 1.0;
 
 struct Vertex {
     Vec3f pos;
     Vec3f color;
 }
 
-
 Vertex[] vertex_data = {
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {255.0, 0, 0}},
+    Vertex {{-1.0, -1.0, 1.0}, {255.0, 0, 0}},
+    Vertex {{1.0, -1.0, 1.0}, {255.0, 0, 0}},
+    Vertex {{1.0, 1.0, 1.0}, {255.0, 0, 0}},
+    Vertex {{-1.0, 1.0, 1.0}, {255.0, 0, 0}},
 
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 255.0, 0}},
+    Vertex {{-1.0, -1.0, -1.0}, {0, 255.0, 0}},
+    Vertex {{-1.0, 1.0, -1.0}, {0, 255.0, 0}},
+    Vertex {{1.0, 1.0, -1.0}, {0, 255.0, 0}},
+    Vertex {{1.0, -1.0, -1.0}, {0, 255.0, 0}},
 
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {245, 40, 145}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {245, 40, 145}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {245, 40, 145}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {245, 40, 145}},
+    Vertex {{-1.0, 1.0, -1.0}, {245, 40, 145}},
+    Vertex {{-1.0, 1.0, 1.0}, {245, 40, 145}},
+    Vertex {{1.0, 1.0, 1.0}, {245, 40, 145}},
+    Vertex {{1.0, 1.0, -1.0}, {245, 40, 145}},
 
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {254, 206, 33}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {254, 206, 33}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {254, 206, 33}},
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {254, 206, 33}},
+    Vertex {{-1.0, -1.0, -1.0}, {0, 0, 1}},
+    Vertex {{1.0, -1.0, -1.0}, {0, 0, 1}},
+    Vertex {{1.0, -1.0, 1.0}, {0, 0, 1}},
+    Vertex {{-1.0, -1.0, 1.0}, {0, 0, 1}},
 
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {0, 0, 193}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {0, 0, 193}},
-    Vertex {{CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 193}},
-    Vertex {{CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {0, 0, 193}},
+    Vertex {{1.0, -1.0, -1.0}, {254, 206, 33}},
+    Vertex {{1.0, 1.0, -1.0}, {254, 206, 33}},
+    Vertex {{1.0, 1.0, 1.0}, {254, 206, 33}},
+    Vertex {{1.0, -1.0, 1.0}, {254, 206, 33}},
 
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, -CUBE_WIDTH}, {150.0, 0, 0}},
-    Vertex {{-CUBE_WIDTH, -CUBE_WIDTH, CUBE_WIDTH}, {150.0, 0, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, CUBE_WIDTH}, {150.0, 0, 0}},
-    Vertex {{-CUBE_WIDTH, CUBE_WIDTH, -CUBE_WIDTH}, {150.0, 0, 0}},
+    Vertex {{-1.0, -1.0, -1.0}, {0, 0, 193}},
+    Vertex {{-1.0, -1.0, 1.0}, {0, 0, 193}},
+    Vertex {{-1.0, 1.0, 1.0}, {0, 0, 193}},
+    Vertex {{-1.0, 1.0, -1.0}, {0, 0, 193}},
 };
 
 uint[] index_data = {
@@ -354,8 +352,8 @@ fn int main()
           .rasterizerDiscardEnable = 0,
           .polygonMode = vk::VK_POLYGON_MODE_FILL,
           .lineWidth = 1.0,
-          .cullMode = vk::VK_CULL_MODE_BACK_BIT,
-          .frontFace = vk::VK_FRONT_FACE_CLOCKWISE,
+          .cullMode = vk::VK_CULL_MODE_FRONT_BIT,
+          .frontFace = vk::VK_FRONT_FACE_COUNTER_CLOCKWISE,
           .depthBiasEnable = vk::VK_FALSE,
           .depthBiasConstantFactor = 0.0,
           .depthBiasClamp = 0.0,
@@ -383,7 +381,7 @@ fn int main()
            },
            .scissorCount = 1,
            .pScissors = &&VkRect2D{
-                .offset = VkOffset2D{ .x = 0, .y = 0 },
+                .offset = { .x = 0, .y = 0 },
                 .extent = context.swapchain.extent,
             },
         },
@@ -398,7 +396,15 @@ fn int main()
           .alphaToCoverageEnable = vk::VK_FALSE,
           .alphaToOneEnable = vk::VK_FALSE,
         },
-        .pDepthStencilState = null,
+        .pDepthStencilState = &&VkPipelineDepthStencilStateCreateInfo {
+            .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+            .depthTestEnable = vk::VK_FALSE,
+            .depthWriteEnable = vk::VK_FALSE,
+            .depthCompareOp = vk::VK_COMPARE_OP_LESS_OR_EQUAL,
+            .back = {
+                .compareOp = vk::VK_COMPARE_OP_ALWAYS
+            }
+        },
         .pColorBlendState = &color_blending,
         .pDynamicState = &dynamic_state,
         .pTessellationState = null,
@@ -438,10 +444,7 @@ fn int main()
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
-
-     /*       vk::mapMemory(context.device, uniform_buffer.memory, 0, uniform_buffer.size, 0, &uniform_buffer.mapped);*/
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
-         /*   vk::unmapMemory(context.device, uniform_buffer.memory);*/
         }
 
         SyncImage active_sync = context.swapchain.syncImages[frame];

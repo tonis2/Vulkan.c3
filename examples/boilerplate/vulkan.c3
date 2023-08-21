@@ -8,7 +8,7 @@ import libc;
 import helpers;
 
 const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
-const ENABLE_VALIDATION_LAYERS = true;
+const ENABLE_VALIDATION_LAYERS = false;
 
 
 def StringList = List(<ZString>);
