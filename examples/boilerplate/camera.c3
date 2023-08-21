@@ -11,7 +11,6 @@ struct UniformData {
     Matrix4f projection;
     Matrix4f view;
     Matrix4f model;
-    Matrix4f clip;
 }
 
 struct Camera {
@@ -103,8 +102,7 @@ fn UniformData Camera.matrix(Camera* self, Matrix4f model = MATRIX4F_IDENTITY) {
     return UniformData {
         perspective,
         view,
-        model,
-        FLIP_VULKAN_PROJECTION
+        model
     };
 }
 
