@@ -78,7 +78,7 @@ fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_dev
    VkSurfaceFormatKHR surface_format = {|
         foreach (format : capabilities.formats)
         {
-            if (format.format == vk::VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == vk::VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            if (format.format == vk::VK_FORMAT_B8G8R8A8_UNORM && format.colorSpace == vk::VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return format;
             }
         }

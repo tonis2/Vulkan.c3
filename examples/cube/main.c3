@@ -12,39 +12,39 @@ const HEIGHT = 600;
 
 struct Vertex {
     Vec3f pos;
-    Vec3f color;
+    Vec4f color;
 }
 
 Vertex[] vertex_data = {
-    Vertex {{-1.0, -1.0, 1.0}, {255.0, 0, 0}},
-    Vertex {{1.0, -1.0, 1.0}, {255.0, 0, 0}},
-    Vertex {{1.0, 1.0, 1.0}, {255.0, 0, 0}},
-    Vertex {{-1.0, 1.0, 1.0}, {255.0, 0, 0}},
+    Vertex {{-1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
+    Vertex {{1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
+    Vertex {{1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
+    Vertex {{-1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {0, 255.0, 0}},
-    Vertex {{-1.0, 1.0, -1.0}, {0, 255.0, 0}},
-    Vertex {{1.0, 1.0, -1.0}, {0, 255.0, 0}},
-    Vertex {{1.0, -1.0, -1.0}, {0, 255.0, 0}},
+    Vertex {{-1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
+    Vertex {{-1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
+    Vertex {{1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
+    Vertex {{1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
 
-    Vertex {{-1.0, 1.0, -1.0}, {245, 40, 145}},
-    Vertex {{-1.0, 1.0, 1.0}, {245, 40, 145}},
-    Vertex {{1.0, 1.0, 1.0}, {245, 40, 145}},
-    Vertex {{1.0, 1.0, -1.0}, {245, 40, 145}},
+    Vertex {{-1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
+    Vertex {{-1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
+    Vertex {{1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
+    Vertex {{1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {0, 0, 1}},
-    Vertex {{1.0, -1.0, -1.0}, {0, 0, 1}},
-    Vertex {{1.0, -1.0, 1.0}, {0, 0, 1}},
-    Vertex {{-1.0, -1.0, 1.0}, {0, 0, 1}},
+    Vertex {{-1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
+    Vertex {{1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
+    Vertex {{1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
+    Vertex {{-1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
 
-    Vertex {{1.0, -1.0, -1.0}, {254, 206, 33}},
-    Vertex {{1.0, 1.0, -1.0}, {254, 206, 33}},
-    Vertex {{1.0, 1.0, 1.0}, {254, 206, 33}},
-    Vertex {{1.0, -1.0, 1.0}, {254, 206, 33}},
+    Vertex {{1.0, -1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
+    Vertex {{1.0, 1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
+    Vertex {{1.0, 1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
+    Vertex {{1.0, -1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {0, 0, 193}},
-    Vertex {{-1.0, -1.0, 1.0}, {0, 0, 193}},
-    Vertex {{-1.0, 1.0, 1.0}, {0, 0, 193}},
-    Vertex {{-1.0, 1.0, -1.0}, {0, 0, 193}},
+    Vertex {{-1.0, -1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
+    Vertex {{-1.0, -1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
+    Vertex {{-1.0, 1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
+    Vertex {{-1.0, 1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
 };
 
 uint[] index_data = {
@@ -263,16 +263,17 @@ fn int main()
         .logicOp = vk::VK_LOGIC_OP_COPY,
         .attachmentCount = 1,
         .pAttachments = &&VkPipelineColorBlendAttachmentState{
-            .colorWriteMask = vk::VK_COLOR_COMPONENT_R_BIT |
+            .colorWriteMask =
+              vk::VK_COLOR_COMPONENT_R_BIT |
               vk::VK_COLOR_COMPONENT_G_BIT |
               vk::VK_COLOR_COMPONENT_B_BIT |
               vk::VK_COLOR_COMPONENT_A_BIT,
-            .blendEnable = 0,
+            .blendEnable = vk::VK_TRUE,
             .srcColorBlendFactor = vk::VK_BLEND_FACTOR_SRC_ALPHA,
             .dstColorBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
             .colorBlendOp = vk::VK_BLEND_OP_ADD,
             .srcAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE,
-            .dstAlphaBlendFactor = vk::VK_BLEND_FACTOR_ZERO,
+            .dstAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
             .alphaBlendOp = vk::VK_BLEND_OP_ADD,
         },
         .blendConstants = float[4]{ 0.0, 0.0, 0.0, 0.0 },
@@ -338,7 +339,7 @@ fn int main()
                    .binding = 0,
                    .location = 1,
                    .format = vk::VK_FORMAT_R32G32B32_SFLOAT,
-                   .offset = float.sizeof * 3,
+                   .offset = 16,
                 },
             },
         },
