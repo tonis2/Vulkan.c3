@@ -199,6 +199,8 @@ const uint VK_EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const String VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 const uint VK_EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4;
 const String VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME = "VK_EXT_swapchain_colorspace";
+const uint VK_KHR_PORTABILITY_SUBSET_SPEC_VERSION = 1;
+const String VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME = "VK_KHR_portability_subset";
 struct VkExtent2D {
   uint width;
   uint height;
@@ -2152,6 +2154,30 @@ struct VkDebugUtilsObjectTagInfoEXT {
   usz tagSize;
   void* pTag;
 }
+struct VkPhysicalDevicePortabilitySubsetFeaturesKHR {
+  VkStructureType sType;
+  void* pNext;
+  VkBool32 constantAlphaColorBlendFactors;
+  VkBool32 events;
+  VkBool32 imageViewFormatReinterpretation;
+  VkBool32 imageViewFormatSwizzle;
+  VkBool32 imageView2DOn3DImage;
+  VkBool32 multisampleArrayImage;
+  VkBool32 mutableComparisonSamplers;
+  VkBool32 pointPolygons;
+  VkBool32 samplerMipLodBias;
+  VkBool32 separateStencilMaskRef;
+  VkBool32 shaderSampleRateInterpolationFunctions;
+  VkBool32 tessellationIsolines;
+  VkBool32 tessellationPointMode;
+  VkBool32 triangleFans;
+  VkBool32 vertexAttributeAccessBeyondStride;
+}
+struct VkPhysicalDevicePortabilitySubsetPropertiesKHR {
+  VkStructureType sType;
+  void* pNext;
+  uint minVertexInputBindingStrideAlignment;
+}
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, VkSystemAllocationScope);
 def PFN_vkFreeFunction = fn void (void*, void*);
 def PFN_vkInternalAllocationNotification = fn void (void*, usz, VkInternalAllocationType, VkSystemAllocationScope);
@@ -2711,6 +2737,8 @@ const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 100012
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT = 1000128003;
 const VkStructureType VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT = 1000128004;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR = 1000163000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR = 1000163001;
 
 def VkPipelineCacheHeaderVersion = distinct inline int;
 const VkPipelineCacheHeaderVersion VK_PIPELINE_CACHE_HEADER_VERSION_ONE = 1;

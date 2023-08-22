@@ -1,6 +1,7 @@
 module context;
 
 import std::io;
+import std::core::env;
 import std::collections::list;
 import vk;
 import glfw;
@@ -105,6 +106,10 @@ fn VkContext! init(GLFWwindow window) {
        extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
     }
 
+    if (env::os_is_darwin()) {
+        extensions.push("VK_KHR_portability_subset");
+    }
+
     // Check if GPU supports requested extensions
     if (!helpers::checkExtensionsSupport(extensions.to_array())) {
         io::printfn("Requested extensions not available");
@@ -114,6 +119,7 @@ fn VkContext! init(GLFWwindow window) {
     VkInstanceCreateInfo createInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pApplicationInfo = &appInfo,
+        .flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0,
         .enabledExtensionCount = (uint)extensions.len(),
         .ppEnabledExtensionNames = (char*)&extensions.to_array()[0],
     };

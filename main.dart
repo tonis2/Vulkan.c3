@@ -59,6 +59,7 @@ var extensions = [
   "VK_EXT_debug_report",
   "VK_EXT_debug_utils",
   "VK_EXT_swapchain_colorspace",
+  "VK_KHR_portability_subset",
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
   // "VK_KHR_get_physical_device_properties2",
