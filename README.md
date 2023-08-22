@@ -19,6 +19,7 @@ Download VulkanSDK from https://vulkan.lunarg.com/sdk/home
 Make sure enviorment variables are set correctly, depending on the installed location.
 For example below config worked for me
 
+Example enviorment variables on MacOS and MoltenVk
 ```
 export VULKAN_SDK="$HOME/VulkanSDK/1.3.261.0/macOS"
 export DYLD_LIBRARY_PATH="$VULKAN_SDK/lib:${DYLD_LIBRARY_PATH:-}"
