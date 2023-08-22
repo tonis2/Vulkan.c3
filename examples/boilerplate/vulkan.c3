@@ -9,7 +9,7 @@ import libc;
 import helpers;
 
 const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 
 
 def StringList = List(<ZString>);
@@ -75,14 +75,16 @@ fn VkContext! init(GLFWwindow window) {
     VkContext context;
     StringList validations;
     StringList extensions;
+    StringList device_extensions;
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    ZString[] device_extensions = {"VK_KHR_swapchain", "VK_KHR_push_descriptor"};
+    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
 
     defer {
         validations.free();
         extensions.free();
+        device_extensions.free();
     };
 
     VkApplicationInfo appInfo = {
@@ -95,8 +97,6 @@ fn VkContext! init(GLFWwindow window) {
         .pNext = null,
     };
 
-
-
     // SETUP extensions
     uint glfwExtensions_count = 0;
     ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
@@ -107,7 +107,8 @@ fn VkContext! init(GLFWwindow window) {
     }
 
     if (env::os_is_darwin()) {
-        extensions.push("VK_KHR_portability_subset");
+        extensions.push("VK_KHR_portability_enumeration");
+        device_extensions.push("VK_KHR_portability_subset");
     }
 
     // Check if GPU supports requested extensions
@@ -167,7 +168,7 @@ fn VkContext! init(GLFWwindow window) {
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
-    VkPhysicalDevice! physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, device_extensions);
+    VkPhysicalDevice! physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, device_extensions.to_array());
     if (catch err = physicalDevice) {
         io::printfn("Failed to create physical device");
         return ContextErrors.FAILED_CREATING_VULKAN?;
@@ -250,8 +251,8 @@ fn VkContext! init(GLFWwindow window) {
         .pQueueCreateInfos = &graphicsInfo,
         .queueCreateInfoCount = 1,
         .pEnabledFeatures = &device_features,
-        .enabledExtensionCount = (uint)device_extensions.len,
-        .ppEnabledExtensionNames = (char*)&device_extensions[0],
+        .enabledExtensionCount = (uint)device_extensions.len(),
+        .ppEnabledExtensionNames = (char*)&device_extensions.to_array()[0],
         .enabledLayerCount = 0,
         .pNext = null,
         .flags = 0,

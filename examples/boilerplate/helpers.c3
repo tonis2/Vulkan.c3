@@ -308,18 +308,14 @@ fn bool checkValidationLayerSupport(ZString[] validationLayers) {
     for (int i = 0; i < layerCount; ++i)
     {
         ZString name = (ZString)&layers[i].layerName;
-        for (int o = 0; o < validationLayers.len; ++o) {
+        for (int o = 0; o < validationLayers.len; ++o) {  
            if (name.as_str() == validationLayers[o].as_str()) {
              foundLayers += 1;
            }
         }
     }
 
-    if (validationLayers.len != foundLayers) {
-        io::printfn("Required validation layers not found");
-    }
-
-    return validationLayers.len == foundLayers;
+    return validationLayers.len < foundLayers;
 }
 
 fn bool checkExtensionsSupport(ZString[] extensions) {
@@ -340,6 +336,7 @@ fn bool checkExtensionsSupport(ZString[] extensions) {
     for (int i = 0; i < extensionCount; ++i)
     {
         ZString name = (ZString)&layers[i].extensionName;
+        
         for (int o = 0; o < extensions.len; ++o) {
           if (name.as_str() == extensions[o].as_str()) {
             foundExtensions += 1;
@@ -394,7 +391,7 @@ fn bool checkDeviceExtensionSupport(VkPhysicalDevice device, ZString[] deviceExt
     uint count;
     uint extensions_found;
     if (vk::enumerateDeviceExtensionProperties(device, null, &count, null)) {
-        io::printfn("Failed getting degive extensions");
+        io::printfn("Failed getting device extensions");
         return false;
     }
 
@@ -409,6 +406,7 @@ fn bool checkDeviceExtensionSupport(VkPhysicalDevice device, ZString[] deviceExt
     for (int i = 0; i < count; ++i) {
         ZString device_extension = (ZString)&extensions[i].extensionName;
         for (int o = 0; o < deviceExtensions.len; ++o) {
+
             if (device_extension.as_str() == deviceExtensions[o].as_str()) {
                 extensions_found += 1;
             }
