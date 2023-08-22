@@ -8,7 +8,7 @@ Currently at very early stage, api will change often.
 
 Install Dart https://dart.dev/get-dart
 
-run `dart run main.dart`
+run `sh assets.sh && dart run main.dart`
 
 ### Building examples
 
