@@ -3,43 +3,43 @@
   "packages": [
     {
       "name": "clock",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/clock-1.1.1",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/clock-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/collection-1.18.0",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/intl-0.17.0",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/intl-0.17.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/meta-1.9.1",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/meta-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/path-1.8.3",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/path-1.8.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/petitparser-6.0.1",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/petitparser-6.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "xml",
-      "rootUri": "file:///Users/tonis/.pub-cache/hosted/pub.dev/xml-6.4.2",
+      "rootUri": "file:///home/deck/.pub-cache/hosted/pub.dev/xml-6.4.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -50,7 +50,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-08-22T09:07:10.952741Z",
+  "generated": "2023-08-22T18:43:00.535948Z",
   "generator": "pub",
   "generatorVersion": "3.1.0"
 }
