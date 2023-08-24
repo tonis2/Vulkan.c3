@@ -275,7 +275,7 @@ class VKCommand {
         .map((value) => VKtype.fromXML(value)));
 
     return VKCommand(
-        name: name,
+        name: name?.replaceAll("_", ""),
         values: values,
         returnType: typeMap[returnType] ?? returnType,
         errorCodes: errorCodes,
@@ -307,26 +307,10 @@ extension ParseMethods on String {
   String camelCase() {
     return '${this[0].toLowerCase()}${this.substring(1)}';
   }
-/*
-  bool is_nv_extension() {
-    return this.substring(this.length - 2) == "NV";
-  }
-
-  bool is_extension() {
-    return this.substring(this.length - 3) == "EXT";
-  }*/
 
   String to_bitvalue() {
     return "0x${(1 << int.parse(this)).toRadixString(16).padLeft(8, '0')}";
   }
-
-/*  bool is_khr_extension() {
-    return this.substring(this.length - 3) == "KHR";
-  }
-
-  bool is_qnx_extension() {
-    return this.substring(this.length - 3) == "QNX";
-  }*/
 
   String ext_num_enum(String offset, String? dir) {
     String newValue = (int.parse(this) - 1).toString();
@@ -427,6 +411,8 @@ void main() {
     }
   }
 
+
+
   // Parse by VK version
   features.forEach((feature) {
     var requirements = feature.findAllElements("require");
@@ -503,6 +489,7 @@ void main() {
     });
   });
 
+
   // Parse extensions
   extensions.forEach((name) {
     XmlElement extension = document
@@ -568,7 +555,7 @@ void main() {
         if (nodeType == "command") {
           XmlElement? alias = document.findAllElements("command").where(
                   (element) => ((element.getAttribute("name") == extension_name) && (element.getAttribute("alias") != null))).firstOrNull;
-          if(alias != null) return;
+          if (alias != null) return;
           XmlElement VkNode = document.findAllElements(nodeType).firstWhere(
               (element) =>
                   element.getElement("proto")?.getElement("name")?.innerText == extension_name);
@@ -580,101 +567,117 @@ void main() {
     });
   });
 
-  // Write the actual C3 code
-  types.forEach((type) {
-    if (type.category == "bitmask") {
-      output.writeAsStringSync("def ${type.name} = ${type.type};\n",
-          mode: FileMode.append);
-    }
-    if (type.category == "handle") {
-      output.writeAsStringSync("def ${type.name} = void*;\n",
-          mode: FileMode.append);
-    }
-    if (type.category == "basetype") {
-      output.writeAsStringSync("def ${type.name} = ${type.type};\n",
-          mode: FileMode.append);
-    }
-  });
 
-  constants.forEach((value) {
-    output.writeAsStringSync(
-        "const ${typeMap[value.type] ?? value.type} ${value.name} = ${value.value?.replaceAll("ULL", "UL")};\n",
+// Write all VKResults as C3 error
+VKenum? vulkan_results = enums.where((element) => element.name == "VkResult").firstOrNull;
+output.writeAsStringSync(
+"""
+fault VkErrors {
+  ${vulkan_results?.values.map((value) => value.name).join(",\n ")}
+}
+ """, mode: FileMode.append);
+
+
+// Write the actual C3 code
+types.forEach((type) {
+  if (type.category == "bitmask") {
+    output.writeAsStringSync("def ${type.name} = ${type.type};\n",
         mode: FileMode.append);
-  });
+  }
+  if (type.category == "handle") {
+    output.writeAsStringSync("def ${type.name} = void*;\n",
+        mode: FileMode.append);
+  }
+  if (type.category == "basetype") {
+    output.writeAsStringSync("def ${type.name} = ${type.type};\n",
+        mode: FileMode.append);
+  }
+});
 
-  structs.where((element) => element.values.length != 0).forEach((type) {
-    if (type.category == "struct") {
-      String code =
-          "struct ${type.name} {\n  ${type.values.where((struct) => struct.api != "vulkansc").map((value) {
-        String? newName = replaceNames[value.name] ?? value.name;
-        return "${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${newName?.camelCase()};";
-      }).join("\n  ")}\n}\n";
-      output.writeAsStringSync(code, mode: FileMode.append);
-    }
-    if (type.category == "union") {
-      String code =
-          "union ${type.name} {\n  ${type.values.where((struct) => struct.api != "vulkansc").map((value) {
-        String? newName = replaceNames[value.name] ?? value.name;
-        return "${value.type} ${newName?.camelCase()};";
-      }).join("\n  ")}\n}\n";
+constants.forEach((value) {
+  output.writeAsStringSync(
+      "const ${typeMap[value.type] ?? value.type} ${value.name} = ${value.value?.replaceAll("ULL", "UL")};\n",
+      mode: FileMode.append);
+});
 
-      output.writeAsStringSync(code, mode: FileMode.append);
-    }
-  });
-
-  pointers.forEach((command) {
-    String code =
-        "def ${command.name} = fn ${command.returnType} (${command.values.map((value) => value).join(", ")});\n";
+structs.where((element) => element.values.length != 0).forEach((type) {
+  if (type.category == "struct") {
+    String code = "struct ${type.name} {\n ${type.values.map((value) =>"${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${(replaceNames[value.name] ?? value.name)?.camelCase()};").join("\n ")}\n}\n";
     output.writeAsStringSync(code, mode: FileMode.append);
-  });
-
-  commands.forEach((command) {
-    String code =
-        "extern fn ${command.returnType} ${command.name?.substring(2).camelCase().replaceAll("_", "")} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) @extern(\"${command.name}\");\n";
+  }
+  if (type.category == "union") {
+    String code = "union ${type.name} {\n  ${type.values.map((value) => "${value.type} ${(replaceNames[value.name] ?? value.name)?.camelCase()};").join("\n  ")}\n}\n";
     output.writeAsStringSync(code, mode: FileMode.append);
-  });
+  }
+});
 
-  // Extension bindings code
-  output.writeAsStringSync("\nstruct VK_extension_bindings {\n", mode: FileMode.append);
-  extensionCommands.forEach((command) {
-    output.writeAsStringSync(" PFN_${command.name?.substring(2).camelCase()} ${command.name?.substring(2).camelCase()};\n", mode: FileMode.append);
-  });
-  output.writeAsStringSync("}", mode: FileMode.append);
-  output.writeAsStringSync("\nVK_extension_bindings extensions;\n", mode: FileMode.append);
+pointers.forEach((command) {
+  String code =
+      "def ${command.name} = fn ${command.returnType} (${command.values.map((value) => value).join(", ")});\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
 
-  // Write extension commands
-  output.writeAsStringSync("\nfn void loadExtensions(VkInstance instance) {\n", mode: FileMode.append);
-  extensionCommands.forEach((command) {
+commands.forEach((command) {
+  String code =
+      "extern fn ${command.returnType} ${command.name?.camelCase()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
+
+
+// Write commands with C3 error handling
+commands.where((element) => element.errorCodes.isNotEmpty).forEach((command) {
     String code =
-        " extensions.${command.C3Name()} = (PFN_${command.name?.substring(2).camelCase()})getInstanceProcAddr(instance, \"${command.name}\");\n";
-    output.writeAsStringSync(code, mode: FileMode.append);
-  });
-  output.writeAsStringSync("}\n", mode: FileMode.append);
+"""
+fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
+  VkResult result = ${command.name?.camelCase()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
+  switch(result) {
+    ${command.errorCodes.map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+  }
+}
+""";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
 
-  extensionCommands.forEach((command) {
-    String code =
-        "fn ${command.returnType} ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) => extensions.${command.C3Name()}(${command.values.map((type) => type.name?.formatTypeName().camelCase().replaceAll("_","")).join(",")});\n";
-    output.writeAsStringSync(code, mode: FileMode.append);
-  });
+// Extension bindings code
+ output.writeAsStringSync("""
+struct VK_extension_bindings {
+ ${extensionCommands.map((command) => "PFN_${command.name?.substring(2).camelCase()} ${command.name?.substring(2).camelCase()};").join("\n ")}
+}
+VK_extension_bindings extensions;
+fn void loadExtensions(VkInstance instance) {
+  ${extensionCommands.map((command) => "extensions.${command.C3Name()} = (PFN_${command.name?.substring(2).camelCase()})getInstanceProcAddr(instance, \"${command.name}\");").join("\n  ")}
+}
+${extensionCommands.where((entry) => entry.errorCodes.isEmpty).map((command) => "fn ${command.returnType} ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) => extensions.${command.C3Name()}(${command.values.map((type) => type.name?.formatTypeName().camelCase().replaceAll("_","")).join(",")});").join("\n")}
+${extensionCommands.where((entry) => entry.errorCodes.isNotEmpty).map((command)  {
+  return """
+fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
+  VkResult result = extensions.${command.C3Name()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
+  switch(result) {
+    ${command.errorCodes.map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+  }
+}
+""";
+ }).join("\n")}
+""", mode: FileMode.append);
 
 //  Enums
-  enums.forEach((entry) {
-    String code =
-        "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
-    output.writeAsStringSync(code, mode: FileMode.append);
-  });
+enums.forEach((entry) {
+  String code =
+      "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
 
-  // Make api version
-  output.writeAsStringSync(
-      "macro uint @makeApiVersion(uint \$variant, uint \$major, uint \$minor, uint \$patch) => ((\$variant << 29) | (\$major << 22) | (\$minor << 12) | \$patch);",
-      mode: FileMode.append);
+// Make api version
+output.writeAsStringSync(
+"macro uint @makeApiVersion(uint \$variant, uint \$major, uint \$minor, uint \$patch) => ((\$variant << 29) | (\$major << 22) | (\$minor << 12) | \$patch);",
+mode: FileMode.append);
 
   // GLFW stuff
-  windowOutput.writeAsStringSync("module window;\n");
+/*  windowOutput.writeAsStringSync("module window;\n");
   windowOutput.writeAsStringSync(
       "\nextern fn void* getInstanceProcAddress (VkInstance instance, char *procname) @extern(\"glfwGetInstanceProcAddress\");",
       mode: FileMode.append);
   windowOutput.writeAsStringSync(
       "\nextern fn VkResult createWindowSurface (VkInstance instance, GLFWwindow *window, VkAllocationCallbacks *allocator, VkSurfaceKHR *surface) @extern(\"glfwCreateWindowSurface\");",
-      mode: FileMode.append);
+      mode: FileMode.append);*/
 }

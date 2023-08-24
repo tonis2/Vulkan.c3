@@ -141,10 +141,7 @@ fn VkContext! init(GLFWwindow window) {
         createInfo.pNext = &debugInfo;
     }
 
-    if (vk::createInstance(&createInfo, null, &context.instance) != vk::VK_SUCCESS) {
-      io::printfn("Failed to create instance");
-      return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
+    vk::createInstance(null, null, &context.instance)!;
 
     // Must load extension pointers to cache, before using extensions !
     vk::loadExtensions(context.instance);

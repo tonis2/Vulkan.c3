@@ -88,6 +88,7 @@ fn int main()
 
     if (catch err = context) {
         io::printfn("Failed to create vk context");
+        io::printfn("%s", err);
         return 1;
     }
 
@@ -555,3 +556,26 @@ fn int main()
 
     return 0;
 }
+
+/*
+fn void! createInstance (VkInstanceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkInstance* pinstance) {
+    VkResult result = vKcreateInstance(pcreateinfo, pallocator, pinstance);
+
+    switch (result)
+    {
+      case VK_ERROR_OUT_OF_HOST_MEMORY:
+         return VKError.VK_ERROR_OUT_OF_HOST_MEMORY?;
+      case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+          return VKError.VK_ERROR_OUT_OF_DEVICE_MEMORY?;
+      case VK_ERROR_INITIALIZATION_FAILED:
+          return VKError.VK_ERROR_INITIALIZATION_FAILED?;
+      case VK_ERROR_LAYER_NOT_PRESENT:
+          return VKError.VK_ERROR_LAYER_NOT_PRESENT?;
+      case VK_ERROR_EXTENSION_NOT_PRESENT:
+          return VKError.VK_ERROR_EXTENSION_NOT_PRESENT?;
+      case VK_ERROR_INCOMPATIBLE_DRIVER:
+          return VKError.VK_ERROR_INCOMPATIBLE_DRIVER?;
+      default:
+        return;
+    }
+}*/
