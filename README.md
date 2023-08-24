@@ -28,9 +28,7 @@ export VK_ICD_FILENAMES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 export VK_DRIVER_FILES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 ```
 
-### Examples
-
-To see examples run `c3c run cube` in this repository
+Then run `c3c run cube` inside the cloned repository
 
 ### Roadmap
 
