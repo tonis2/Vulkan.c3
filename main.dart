@@ -106,7 +106,7 @@ class VKstruct {
     String? name = node.getAttribute("name");
     String? extendsStruct = node.getAttribute("structextends");
     List<VKtype> values = List<VKtype>.from(
-        node.findAllElements('member').map((node) => VKtype.fromXML(node)));
+        node.findAllElements('member').where((node) => node.getAttribute("api") != "vulkansc").map((node) => VKtype.fromXML(node)));
     return VKstruct(
         returnedOnly: returned == "true",
         name: name,
@@ -569,11 +569,13 @@ void main() {
 
 
 // Write all VKResults as C3 error
-VKenum? vulkan_results = enums.where((element) => element.name == "VkResult").firstOrNull;
+VKenum vulkan_results = enums.firstWhere((element) => element.name == "VkResult");
+List<String> error_names = vulkan_results.values.map((entry) => entry.name ?? "-").toList();
+
 output.writeAsStringSync(
 """
 fault VkErrors {
-  ${vulkan_results?.values.map((value) => value.name).join(",\n ")}
+  ${vulkan_results.values.map((value) => value.name).join(",\n ")}
 }
  """, mode: FileMode.append);
 
@@ -585,7 +587,7 @@ types.forEach((type) {
         mode: FileMode.append);
   }
   if (type.category == "handle") {
-    output.writeAsStringSync("def ${type.name} = void*;\n",
+    output.writeAsStringSync("def ${type.name} = distinct inline void*;\n",
         mode: FileMode.append);
   }
   if (type.category == "basetype") {
@@ -619,7 +621,7 @@ pointers.forEach((command) {
 
 commands.forEach((command) {
   String code =
-      "extern fn ${command.returnType} ${command.name?.camelCase()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
+      "extern fn ${command.returnType} ${command.errorCodes.isEmpty ? command.C3Name() :command.name?.camelCase() } (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
@@ -631,12 +633,13 @@ commands.where((element) => element.errorCodes.isNotEmpty).forEach((command) {
 fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
   VkResult result = ${command.name?.camelCase()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
   switch(result) {
-    ${command.errorCodes.map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
   }
 }
 """;
   output.writeAsStringSync(code, mode: FileMode.append);
 });
+
 
 // Extension bindings code
  output.writeAsStringSync("""
@@ -653,7 +656,7 @@ ${extensionCommands.where((entry) => entry.errorCodes.isNotEmpty).map((command) 
 fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
   VkResult result = extensions.${command.C3Name()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
   switch(result) {
-    ${command.errorCodes.map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
   }
 }
 """;

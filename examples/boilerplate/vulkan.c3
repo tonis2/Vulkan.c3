@@ -56,20 +56,18 @@ fn bool debugCallback(
 
 fn void VkContext.free(&self)
 {
-    vk::deviceWaitIdle(self.device);
+    vk::deviceWaitIdle(self.device)!!;
     if (ENABLE_VALIDATION_LAYERS) {
       vk::destroyDebugUtilsMessengerEXT(self.instance, self.debugMessenger, null);
     }
 
     self.command_buffers.free();
     self.swapchain.free(self.device);
-
     vk::destroySurfaceKHR(self.instance, self.surface, null);
     vk::destroyCommandPool(self.device, self.command_pool, null);
     vk::destroyDevice(self.device, null);
     vk::destroyInstance(self.instance, null);
 }
-
 
 fn VkContext! init(GLFWwindow window) {
     VkContext context;
@@ -141,17 +139,13 @@ fn VkContext! init(GLFWwindow window) {
         createInfo.pNext = &debugInfo;
     }
 
-    vk::createInstance(null, null, &context.instance)!;
-
+    vk::createInstance(&createInfo, null, &context.instance)!;
     // Must load extension pointers to cache, before using extensions !
     vk::loadExtensions(context.instance);
 
     // Load extension pointers
     if (ENABLE_VALIDATION_LAYERS) {
-       if (vk::createDebugUtilsMessengerEXT(context.instance, &debugInfo, null, &context.debugMessenger) != vk::VK_SUCCESS) {
-          io::printfn("Failed to create instance");
-          return ContextErrors.FAILED_CREATING_VULKAN?;
-        }
+       vk::createDebugUtilsMessengerEXT(context.instance, &debugInfo, null, &context.debugMessenger)!;
     }
 
     if (glfw::createWindowSurface(context.instance, window, null, &context.surface) != vk::VK_SUCCESS) {
@@ -160,10 +154,7 @@ fn VkContext! init(GLFWwindow window) {
     }
 
     uint deviceCount;
-    if (vk::enumeratePhysicalDevices(context.instance, &deviceCount, null) != vk::VK_SUCCESS) {
-        io::printf("Failed getting devices");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
+    vk::enumeratePhysicalDevices(context.instance, &deviceCount, null)!;
 
     VkPhysicalDevice! physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, device_extensions.to_array());
     if (catch err = physicalDevice) {
@@ -260,11 +251,7 @@ fn VkContext! init(GLFWwindow window) {
         deviceCreateInfo.ppEnabledLayerNames = (char*)&validations.to_array()[0];
     }
 
-    if (vk::createDevice(physicalDevice, &deviceCreateInfo, null, &context.device) != vk::VK_SUCCESS) {
-      io::printfn("Failed to create logical device");
-      return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
-
+    vk::createDevice(physicalDevice, &deviceCreateInfo, null, &context.device)!;
     vk::getDeviceQueue(context.device, indices.graphics, 0, &context.graphics_queue);
 
     if (catch err = helpers::create_swapchain(physicalDevice, context.device, context.surface, &context.swapchain)) {
@@ -280,11 +267,7 @@ fn VkContext! init(GLFWwindow window) {
      .queueFamilyIndex = indices.graphics,
     };
 
-    if (vk::createCommandPool(context.device, &pool_info, null, &context.command_pool) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create command pool");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
-
+    vk::createCommandPool(context.device, &pool_info, null, &context.command_pool)!;
     VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, context.swapchain.image_count);
     VkCommandBufferAllocateInfo command_buffer_info = {
         .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -292,12 +275,10 @@ fn VkContext! init(GLFWwindow window) {
         .level = vk::VK_COMMAND_BUFFER_LEVEL_PRIMARY,
         .commandBufferCount = context.swapchain.image_count,
     };
-    if (vk::allocateCommandBuffers(context.device, &command_buffer_info, command_buffers) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create command buffers");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
 
+    vk::allocateCommandBuffers(context.device, &command_buffer_info, command_buffers)!;
     defer mem::free(command_buffers);
+
     for (int i = 0; i < context.swapchain.image_count; ++i) {
         context.command_buffers.push(command_buffers[i]);
     }
