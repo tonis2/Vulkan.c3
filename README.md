@@ -2,7 +2,7 @@
 
 Vulkan bindings for C3 language
 
-Currently at very early stage, api will change often.
+Currently at very early stage, binding api could change.
 
 ### Building bindings
 
