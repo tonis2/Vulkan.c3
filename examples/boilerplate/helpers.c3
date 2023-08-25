@@ -15,7 +15,6 @@ fault ContextError
     FAILED_TO_GET_DEVICE
 }
 
-
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct QueueFamily {
@@ -295,6 +294,7 @@ fn bool checkExtensionsSupport(ZString[] extensions) {
     }
     return extensions.len == foundExtensions;
 }
+
 
 fn VkPhysicalDevice! getSuitablePhysicalDevice(VkInstance instance, VkSurfaceKHR surface, ZString[] deviceExtensions) {
     uint deviceCount;

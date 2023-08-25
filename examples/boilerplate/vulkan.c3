@@ -1,21 +1,36 @@
 module context;
 
+import libc;
 import std::io;
 import std::core::env;
 import std::collections::list;
 import vk;
 import glfw;
-import libc;
 import helpers;
 
 const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
 const ENABLE_VALIDATION_LAYERS = true;
 
-
 def StringList = List(<ZString>);
-/*def SemaphoreList = List(<VkSemaphore>);
-def FenceList = List(<VkFence>);*/
 def CommandBufferList = List(<VkCommandBuffer>);
+
+fn bool debugCallback(
+    vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    vk::VkDebugUtilsMessageTypeFlagsEXT messageType,
+    vk::VkDebugUtilsMessengerCallbackDataEXT* data,
+    void* userData
+) @private {
+    if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    }
+    return false;
+}
 
 fault ContextErrors
 {
@@ -31,36 +46,17 @@ struct VkContext {
       VkPhysicalDevice physical_device;
       SwapChain swapchain;
       VkQueue graphics_queue;
-      VkDebugUtilsMessengerEXT debugMessenger;
+      VkDebugUtilsMessengerEXT debug_messenger;
       VkCommandPool command_pool;
       CommandBufferList command_buffers;
-}
-
-fn bool debugCallback(
-    vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    vk::VkDebugUtilsMessageTypeFlagsEXT messageType,
-    vk::VkDebugUtilsMessengerCallbackDataEXT* data,
-    void* userData
-) {
-    if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    }
-    return false;
 }
 
 fn void VkContext.free(&self)
 {
     vk::deviceWaitIdle(self.device)!!;
     if (ENABLE_VALIDATION_LAYERS) {
-      vk::destroyDebugUtilsMessengerEXT(self.instance, self.debugMessenger, null);
+      vk::destroyDebugUtilsMessengerEXT(self.instance, self.debug_messenger, null);
     }
-
     self.command_buffers.free();
     self.swapchain.free(self.device);
     vk::destroySurfaceKHR(self.instance, self.surface, null);
@@ -71,108 +67,66 @@ fn void VkContext.free(&self)
 
 fn VkContext! init(GLFWwindow window) {
     VkContext context;
-    StringList validations;
-    StringList extensions;
-    StringList device_extensions;
-
-    //"VK_LAYER_LUNARG_api_dump"
-    validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
-
-    defer {
-        validations.free();
-        extensions.free();
-        device_extensions.free();
-    };
-
-    VkApplicationInfo appInfo = {
-        .sType = vk::VK_STRUCTURE_TYPE_APPLICATION_INFO,
-        .pApplicationName = "Hello Triangle",
+    AppInfo appInfo = {
+        .pApplicationName = "Hello Cube",
         .applicationVersion = VK_API_VERSION_1_2,
         .pEngineName = "Super engine",
         .engineVersion = VK_API_VERSION_1_2,
         .apiVersion = VK_API_VERSION_1_2,
-        .pNext = null,
+        .enable_validations = ENABLE_VALIDATION_LAYERS,
+        .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0,
+        .debug_info =  {
+              .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+              .flags = 0,
+              .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+              .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+              .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
+              .pUserData = null,
+         }
     };
+
+ /*   defer appInfo.free();*/
+
+    //"VK_LAYER_LUNARG_api_dump"
+    appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
+    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
 
     // SETUP extensions
     uint glfwExtensions_count = 0;
     ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
-    for (int i = 0; i < glfwExtensions_count; ++i) extensions.push(glfwExtensions[i]);
+    for (int i = 0; i < glfwExtensions_count; ++i) appInfo.extensions.push(glfwExtensions[i]);
 
     if (ENABLE_VALIDATION_LAYERS) {
-       extensions.add_array({"VK_EXT_debug_report", "VK_EXT_debug_utils"});
+       appInfo.extensions.add_array({"VK_EXT_debug_utils"});
     }
 
     if (env::os_is_darwin()) {
-        extensions.push("VK_KHR_portability_enumeration");
-        device_extensions.push("VK_KHR_portability_subset");
+        appInfo.extensions.push("VK_KHR_portability_enumeration");
+        appInfo.device_extensions.push("VK_KHR_portability_subset");
     }
 
-    // Check if GPU supports requested extensions
-    if (!helpers::checkExtensionsSupport(extensions.to_array())) {
-        io::printfn("Requested extensions not available");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
+    VkInstance instance = appInfo.createInstance()!;
+    // TODO get validation layers to work again
+/*    if (ENABLE_VALIDATION_LAYERS) {
+        vk::createDebugUtilsMessengerEXT(instance, &appInfo.debug_info, null, &context.debug_messenger)!;
+    }*/
 
-    VkInstanceCreateInfo createInfo = {
-        .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .pApplicationInfo = &appInfo,
-        .flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0,
-        .enabledExtensionCount = (uint)extensions.len(),
-        .ppEnabledExtensionNames = (char*)&extensions.to_array()[0],
-    };
-
-    VkDebugUtilsMessengerCreateInfoEXT debugInfo;
-    if (ENABLE_VALIDATION_LAYERS && helpers::checkValidationLayerSupport(validations.to_array())) {
-          debugInfo = {
-            .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-            .pNext = null,
-            .flags = 0,
-            .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-            .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-            .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
-            .pUserData = null,
-        };
-        createInfo.enabledLayerCount = (uint)validations.len();
-        createInfo.ppEnabledLayerNames = (char*)&validations.to_array()[0];
-        createInfo.pNext = &debugInfo;
-    }
-
-    vk::createInstance(&createInfo, null, &context.instance)!;
+    context.instance = instance;
     // Must load extension pointers to cache, before using extensions !
     vk::loadExtensions(context.instance);
-
-    // Load extension pointers
-    if (ENABLE_VALIDATION_LAYERS) {
-       vk::createDebugUtilsMessengerEXT(context.instance, &debugInfo, null, &context.debugMessenger)!;
-    }
 
     if (glfw::createWindowSurface(context.instance, window, null, &context.surface) != vk::VK_SUCCESS) {
         io::printfn("Failed creating surface");
         return ContextErrors.FAILED_CREATING_VULKAN?;
     }
 
-    uint deviceCount;
-    vk::enumeratePhysicalDevices(context.instance, &deviceCount, null)!;
-
-    VkPhysicalDevice! physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, device_extensions.to_array());
-    if (catch err = physicalDevice) {
-        io::printfn("Failed to create physical device");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
-
+    VkPhysicalDevice physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, appInfo.device_extensions.to_array())!;
     context.physical_device = physicalDevice;
 
-    QueueFamily! indices = helpers::findQueueFamily(physicalDevice, context.surface);
-    if (catch err = indices) {
-        io::printfn("Failed to get Queue family indices");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
-
+    QueueFamily indices = helpers::findQueueFamily(physicalDevice, context.surface)!;
     // Set-up Queues
     float queuePriorities = 1.0;
-    VkDeviceQueueCreateInfo graphicsInfo = { .sType = vk::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+    VkDeviceQueueCreateInfo graphicsInfo = {.sType = vk::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
                                             .queueFamilyIndex = indices.graphics,
                                             .queueCount = 1,
                                             .pQueuePriorities = &queuePriorities};
@@ -239,16 +193,16 @@ fn VkContext! init(GLFWwindow window) {
         .pQueueCreateInfos = &graphicsInfo,
         .queueCreateInfoCount = 1,
         .pEnabledFeatures = &device_features,
-        .enabledExtensionCount = (uint)device_extensions.len(),
-        .ppEnabledExtensionNames = (char*)&device_extensions.to_array()[0],
+        .enabledExtensionCount = (uint)appInfo.device_extensions.len(),
+        .ppEnabledExtensionNames = (char*)&appInfo.device_extensions.to_array()[0],
         .enabledLayerCount = 0,
         .pNext = null,
         .flags = 0,
     };
 
     if (ENABLE_VALIDATION_LAYERS) {
-        deviceCreateInfo.enabledLayerCount = (uint)validations.len();
-        deviceCreateInfo.ppEnabledLayerNames = (char*)&validations.to_array()[0];
+        deviceCreateInfo.enabledLayerCount = (uint)appInfo.validations.len();
+        deviceCreateInfo.ppEnabledLayerNames = (char*)&appInfo.validations.to_array()[0];
     }
 
     vk::createDevice(physicalDevice, &deviceCreateInfo, null, &context.device)!;
