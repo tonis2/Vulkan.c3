@@ -10,6 +10,12 @@ import std::math;
 def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
 def PresentModeList = List(<VkPresentModeKHR>);
 
+fault ContextError
+{
+    FAILED_TO_GET_DEVICE
+}
+
+
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct QueueFamily {
@@ -41,15 +47,6 @@ struct SyncImage {
     VkFence frame_fence;
 }
 
-fault DeviceErrors
-{
-    FAILED_GETTING_DEVICES,
-    QUEUE_FAMILY_FAILED,
-    DEVICE_CAPABILITIES_FAILED,
-    SWAPCHAIN_FAILED,
-    FAILED_DRAWING_FRAME
-}
-
 fn void SwapChain.free(&self, VkDevice device)
 {
     vk::destroySwapchainKHR(device, self.swapchain, null);
@@ -67,13 +64,8 @@ fn void SwapChain.free(&self, VkDevice device)
 
 fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_device, VkSurfaceKHR surface, SwapChain* swapchain)
 {
-    SurfaceCapabilities! capabilities = checkSurfaceCapabilities(physical_device, surface);
-
-    if (catch err = capabilities) {
-        capabilities.free()!;
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    };
-   defer capabilities.free();
+    SurfaceCapabilities capabilities = checkSurfaceCapabilities(physical_device, surface)!;
+    defer capabilities.free();
 
    VkSurfaceFormatKHR surface_format = {|
         foreach (format : capabilities.formats)
@@ -125,26 +117,17 @@ fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_dev
     };
 
     // Create SwapChainKHR
-    if (vk::createSwapchainKHR(logical_device, &create_info, null, &swapchain.swapchain) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create swaphcain");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
+    vk::createSwapchainKHR(logical_device, &create_info, null, &swapchain.swapchain)!;
 
     // Create SwapChain images
-    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, null) != vk::VK_SUCCESS) {
-        io::printfn("Failed to get swapchain images");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
+    vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, null)!;
 
     // Allocate data for images
     swapchain.images = malloc(VkImage, (usz)swapchain.image_count);
     swapchain.image_views = malloc(VkImageView, (usz)swapchain.image_count);
     swapchain.syncImages = malloc(SyncImage, (usz)swapchain.image_count);
 
-    if (vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, swapchain.images) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create swapchain images");
-        return DeviceErrors.SWAPCHAIN_FAILED?;
-    };
+    vk::getSwapchainImagesKHR(logical_device, swapchain.swapchain, &swapchain.image_count, swapchain.images)!;
 
     for (int i = 0; i < swapchain.image_count; ++i) {
         VkImageViewCreateInfo image_info = {
@@ -169,10 +152,7 @@ fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_dev
             },
         };
 
-        if (vk::createImageView(logical_device, &image_info, null, &swapchain.image_views[i]) != vk::VK_SUCCESS) {
-            io::printfn("Failed to create swapchain image views");
-            return DeviceErrors.SWAPCHAIN_FAILED?;
-        }
+        vk::createImageView(logical_device, &image_info, null, &swapchain.image_views[i])!;
 
         VkSemaphoreCreateInfo semaphore_info = {
            .sType = vk::VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
@@ -186,19 +166,9 @@ fn void! create_swapchain(VkPhysicalDevice physical_device, VkDevice logical_dev
            .flags = vk::VK_FENCE_CREATE_SIGNALED_BIT,
         };
 
-        if (vk::createSemaphore(logical_device, &semaphore_info, null, &swapchain.syncImages[i].image_acquired) != vk::VK_SUCCESS) {
-           io::printfn("Failed to create semaphore buffer");
-           return DeviceErrors.SWAPCHAIN_FAILED?;
-        }
-        if (vk::createSemaphore(logical_device, &semaphore_info, null, &swapchain.syncImages[i].render_finished) != vk::VK_SUCCESS) {
-           io::printfn("Failed to create semaphore buffer");
-           return DeviceErrors.SWAPCHAIN_FAILED?;
-        }
-
-        if (vk::createFence(logical_device, &fence_info, null, &swapchain.syncImages[i].frame_fence) != vk::VK_SUCCESS) {
-           io::printfn("Failed to create fence buffer");
-           return DeviceErrors.SWAPCHAIN_FAILED?;
-        }
+        vk::createSemaphore(logical_device, &semaphore_info, null, &swapchain.syncImages[i].image_acquired)!;
+        vk::createSemaphore(logical_device, &semaphore_info, null, &swapchain.syncImages[i].render_finished)!;
+        vk::createFence(logical_device, &fence_info, null, &swapchain.syncImages[i].frame_fence)!;
     }
 }
 
@@ -218,7 +188,6 @@ fn QueueFamily! findQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface) {
     uint queueCount;
 
     vk::getPhysicalDeviceQueueFamilyProperties(device, &queueCount, null);
-    if (queueCount == 0) return DeviceErrors.QUEUE_FAMILY_FAILED?;
 
     VkQueueFamilyProperties* devices = malloc(VkQueueFamilyProperties, queueCount);
     defer mem::free(devices);
@@ -233,20 +202,13 @@ fn QueueFamily! findQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface) {
             family.graphics = i;
         }
 
-        if (vk::getPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport) != vk::VK_SUCCESS) {
-           io::printfn("Failed to make surface support check");
-           return DeviceErrors.QUEUE_FAMILY_FAILED?;
-        };
+        vk::getPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport)!;
 
         if (presentSupport == vk::VK_TRUE) {
             family.present = i;
         }
 
         if (family.is_ready()) break;
-    }
-
-    if (family.present == -1) {
-        return DeviceErrors.QUEUE_FAMILY_FAILED?;
     }
 
    return family;
@@ -257,52 +219,40 @@ fn SurfaceCapabilities! checkSurfaceCapabilities(VkPhysicalDevice device, VkSurf
     VkSurfaceCapabilitiesKHR capabilities;
     SurfaceCapabilities data;
 
-    if (vk::getPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities) != vk::VK_SUCCESS) {
-        io::printfn("Failed getting surface capabilities");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    }
+    vk::getPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities)!;
 
     data.capabilities = capabilities;
     uint format_count;
-    if (vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null) != vk::VK_SUCCESS) {
-        io::printfn("Failed getting surface formats");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    }
+    vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null)!;
 
     data.formats.init(format_count);
     data.formats.size = format_count;
-    if (vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, data.formats.entries) != vk::VK_SUCCESS) {
-        io::printfn("Failed getting surface formats");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    }
+    vk::getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, data.formats.entries)!;
 
     uint present_count;
-    if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null) != vk::VK_SUCCESS) {
-        io::printfn("Failed getting surface presents");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    }
+    vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null)!;
 
     data.present_modes.init(present_count);
     data.present_modes.size = present_count;
 
-    if (vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, data.present_modes.entries) != vk::VK_SUCCESS) {
-        io::printfn("Failed getting surface presents");
-        return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-    }
+    vk::getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, data.present_modes.entries)!;
 
     return data;
 }
 
 fn bool checkValidationLayerSupport(ZString[] validationLayers) {
     uint layerCount;
-    VkResult result = vk::enumerateInstanceLayerProperties(&layerCount, null);
     uint foundLayers = 0;
+
+    if (catch err = vk::enumerateInstanceLayerProperties(&layerCount, null)) {
+        return false;
+    }
 
     VkLayerProperties* layers = malloc(VkLayerProperties, layerCount);
     defer mem::free(layers);
 
-    if (vk::enumerateInstanceLayerProperties(&layerCount, layers) != vk::VK_SUCCESS) {
-      io::printfn("failed to get validation layers");
+    if (catch err = vk::enumerateInstanceLayerProperties(&layerCount, layers)) {
+        return false;
     }
 
     for (int i = 0; i < layerCount; ++i)
@@ -322,15 +272,15 @@ fn bool checkExtensionsSupport(ZString[] extensions) {
     uint extensionCount;
     uint foundExtensions = 0;
 
-    if (vk::enumerateInstanceExtensionProperties(null, &extensionCount, null) != vk::VK_SUCCESS) {
-        io::printf("failed to get extension layers count");
+    if (catch err = vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)) {
+        return false;
     }
 
     VkExtensionProperties* layers = malloc(VkExtensionProperties, extensionCount);
     defer mem::free(layers);
 
-    if (vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers) != vk::VK_SUCCESS) {
-        io::printf("failed to get extension layers");
+    if (catch err = vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)) {
+        return false;
     }
 
     for (int i = 0; i < extensionCount; ++i)
@@ -348,32 +298,19 @@ fn bool checkExtensionsSupport(ZString[] extensions) {
 
 fn VkPhysicalDevice! getSuitablePhysicalDevice(VkInstance instance, VkSurfaceKHR surface, ZString[] deviceExtensions) {
     uint deviceCount;
-    if (vk::enumeratePhysicalDevices(instance, &deviceCount, null) != vk::VK_SUCCESS || deviceCount == 0) {
-        io::printfn("Failed getting devices");
-        return DeviceErrors.FAILED_GETTING_DEVICES?;
-    }
+    vk::enumeratePhysicalDevices(instance, &deviceCount, null)!;
 
     VkPhysicalDevice* devices = malloc(VkPhysicalDevice, deviceCount);
     defer mem::free(devices);
 
-    if (vk::enumeratePhysicalDevices(instance, &deviceCount, devices) != vk::VK_SUCCESS) {
-       io::printfn("Failed getting devices");
-       return DeviceErrors.FAILED_GETTING_DEVICES?;
-    }
+    vk::enumeratePhysicalDevices(instance, &deviceCount, devices)!;
 
     for (int i = 0; i < deviceCount; ++i) {
         VkPhysicalDevice device = devices[i];
 
-        QueueFamily! queueFamily = findQueueFamily(device, surface);
-        if (catch err = queueFamily) return DeviceErrors.QUEUE_FAMILY_FAILED?;
-
+        QueueFamily queueFamily = findQueueFamily(device, surface)!;
         bool extension_support = checkDeviceExtensionSupport(device, deviceExtensions);
-        SurfaceCapabilities! capabilities = checkSurfaceCapabilities(device, surface);
-
-        if (catch err = capabilities) {
-            capabilities.free()!;
-            return DeviceErrors.DEVICE_CAPABILITIES_FAILED?;
-        };
+        SurfaceCapabilities capabilities = checkSurfaceCapabilities(device, surface)!;
 
         defer capabilities.free();
         if (queueFamily.is_ready() && extension_support && capabilities.present_modes.len() != 0 && capabilities.formats.len() != 0) {
@@ -382,31 +319,27 @@ fn VkPhysicalDevice! getSuitablePhysicalDevice(VkInstance instance, VkSurfaceKHR
         }
     }
 
-    io::printfn("No suitable devices found");
-    return DeviceErrors.FAILED_GETTING_DEVICES?;
+    return ContextError.FAILED_TO_GET_DEVICE?;
 }
 
 
 fn bool checkDeviceExtensionSupport(VkPhysicalDevice device, ZString[] deviceExtensions) {
     uint count;
     uint extensions_found;
-    if (vk::enumerateDeviceExtensionProperties(device, null, &count, null)) {
-        io::printfn("Failed getting device extensions");
+    if (catch err = vk::enumerateDeviceExtensionProperties(device, null, &count, null)) {
         return false;
     }
 
     VkExtensionProperties* extensions = malloc(VkExtensionProperties, count);
     defer mem::free(extensions);
 
-    if (vk::enumerateDeviceExtensionProperties(device, null, &count, extensions)) {
-        io::printfn("Failed getting device extensions");
+    if (catch err = vk::enumerateDeviceExtensionProperties(device, null, &count, null)) {
         return false;
     }
 
     for (int i = 0; i < count; ++i) {
         ZString device_extension = (ZString)&extensions[i].extensionName;
         for (int o = 0; o < deviceExtensions.len; ++o) {
-
             if (device_extension.as_str() == deviceExtensions[o].as_str()) {
                 extensions_found += 1;
             }

@@ -24,7 +24,7 @@ fn void Buffer.free(&self, VkDevice device)
     vk::freeMemory(device, self.memory, null);
 }
 
-fn void Buffer.copy_to(&self, Buffer dst_buffer, VkContext context) {
+fn void! Buffer.copy_to(&self, Buffer dst_buffer, VkContext context) {
     VkCommandBufferAllocateInfo alloc_info = {
         .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .pNext = null,
@@ -33,26 +33,26 @@ fn void Buffer.copy_to(&self, Buffer dst_buffer, VkContext context) {
         .commandBufferCount = 1,
     };
     VkCommandBuffer command_buffer;
-    vk::allocateCommandBuffers(context.device, &alloc_info, &command_buffer);
+    vk::allocateCommandBuffers(context.device, &alloc_info, &command_buffer)!;
     VkCommandBufferBeginInfo beginInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
         .flags = vk::VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
     };
-    vk::beginCommandBuffer(command_buffer, &beginInfo);
+    vk::beginCommandBuffer(command_buffer, &beginInfo)!;
     VkBufferCopy copyRegion = {
         .srcOffset = 0,
         .dstOffset = 0,
         .size = self.size
     };
     vk::cmdCopyBuffer(command_buffer, self.buffer, dst_buffer.buffer, 1, &copyRegion);
-    vk::endCommandBuffer(command_buffer);
+    vk::endCommandBuffer(command_buffer)!;
     VkSubmitInfo submitInfo = {
         .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
         .commandBufferCount = 1,
         .pCommandBuffers = &command_buffer
     };
-    vk::queueSubmit(context.graphics_queue, 1, &submitInfo, null);
-    vk::queueWaitIdle(context.graphics_queue);
+    vk::queueSubmit(context.graphics_queue, 1, &submitInfo, null)!;
+    vk::queueWaitIdle(context.graphics_queue)!;
     vk::freeCommandBuffers(context.device, context.command_pool, 1, &command_buffer);
 }
 
@@ -71,10 +71,7 @@ fn void! Buffer.device_only(&self, void* buffer_data, VkContext context) {
     Buffer staging_buffer = createBuffer(staging_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
     defer staging_buffer.free(context.device);
 
-    if (vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped) != vk::VK_SUCCESS) {
-        io::printfn("Failed mapping memory");
-        return BufferErrors.FAILED_CREATING_BUFFER?;
-    }
+    vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
 
     mem::copy(self.mapped, buffer_data, self.size);
     vk::unmapMemory(context.device, staging_buffer.memory);
@@ -91,7 +88,7 @@ fn void! Buffer.device_only(&self, void* buffer_data, VkContext context) {
     };
 
     Buffer buffer = createBuffer(buffer_info, vk::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
-    staging_buffer.copy_to(buffer, context);
+    staging_buffer.copy_to(buffer, context)!;
     self.buffer = buffer.buffer;
     self.memory = buffer.memory;
 }
@@ -109,15 +106,9 @@ fn void! Buffer.writable(&self, void* buffer_data, VkContext context) {
     };
 
     Buffer buffer = createBuffer(buffer_info, vk::VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | vk::VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
-/*    defer staging_buffer.free(context.device);*/
-
-    if (vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped) != vk::VK_SUCCESS) {
-        io::printfn("Failed mapping memory");
-        return BufferErrors.FAILED_CREATING_BUFFER?;
-    }
+    vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
 
     mem::copy(self.mapped, buffer_data, self.size);
-  /*  vk::unmapMemory(context.device, buffer.memory);*/
 
     self.buffer = buffer.buffer;
     self.memory = buffer.memory;
@@ -128,11 +119,7 @@ fn Buffer! createBuffer(VkBufferCreateInfo info, VkMemoryPropertyFlags propertie
     VkBuffer buffer;
     VkDeviceMemory memory;
 
-    if (vk::createBuffer(context.device, &info, null, &buffer) != vk::VK_SUCCESS) {
-        io::printfn("Failed creating buffer");
-        return BufferErrors.FAILED_CREATING_BUFFER?;
-    }
-
+    vk::createBuffer(context.device, &info, null, &buffer)!;
     VkMemoryRequirements mem_reqs;
     vk::getBufferMemoryRequirements(context.device, buffer, &mem_reqs);
 
@@ -155,15 +142,8 @@ fn Buffer! createBuffer(VkBufferCreateInfo info, VkMemoryPropertyFlags propertie
         .memoryTypeIndex = memory_type,
     };
 
-    if (vk::allocateMemory(context.device, &alloc_info, null, &memory) != vk::VK_SUCCESS) {
-        io::printfn("Failed allocating buffer memory");
-        return BufferErrors.FAILED_CREATING_BUFFER?;
-    }
-
-    if (vk::bindBufferMemory(context.device, buffer, memory, 0) != vk::VK_SUCCESS) {
-        io::printfn("Failed binding memory");
-        return BufferErrors.FAILED_CREATING_BUFFER?;
-    }
+    vk::allocateMemory(context.device, &alloc_info, null, &memory)!;
+    vk::bindBufferMemory(context.device, buffer, memory, 0)!;
 
     return Buffer {
         .buffer = buffer,

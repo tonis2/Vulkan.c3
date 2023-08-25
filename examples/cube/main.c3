@@ -56,7 +56,7 @@ uint[] index_data = {
     20, 21, 22,     20, 22, 23    // left
 };
 
-fn int main()
+fn void! main()
 {
     glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
@@ -69,7 +69,7 @@ fn int main()
     {
         io::printfn("Failed to init glfw window");
         glfw::terminate();
-        return 1;
+        return;
     }
 
     defer {
@@ -89,7 +89,7 @@ fn int main()
     if (catch err = context) {
         io::printfn("Failed to create vk context");
         io::printfn("%s", err);
-        return 1;
+        return;
     }
 
     Buffer vertex_buffer = {
@@ -109,17 +109,17 @@ fn int main()
 
     if (catch err = vertex_buffer.device_only(&vertex_data[0], context)) {
         io::printfn("Failed to create vertex buffer");
-        return 1;
+        return;
     }
 
     if (catch err = index_buffer.device_only(&index_data[0], context)) {
         io::printfn("Failed to create index buffer");
-        return 1;
+        return;
     }
 
     if (catch err = uniform_buffer.writable(&&camera.matrix(), context)) {
         io::printfn("Failed to create uniform buffer");
-        return 1;
+        return;
     }
 
     // Descriptor info
@@ -139,7 +139,7 @@ fn int main()
         .flags = vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR,
     };
 
-    vk::createDescriptorSetLayout(context.device, &descriptor_info, null, &descriptorSetLayout);
+    vk::createDescriptorSetLayout(context.device, &descriptor_info, null, &descriptorSetLayout)!;
 
     VkWriteDescriptorSet[1] descriptorSets = {
         {
@@ -170,7 +170,6 @@ fn int main()
     };
     vk::getPhysicalDeviceProperties2(context.physical_device, &deviceProps2);
 
-
     // Pipeline info
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
@@ -184,7 +183,7 @@ fn int main()
         .flags = 0,
         .codeSize = vertex_shader_data.len,
         .pCode = (uint*)&vertex_shader_data,
-    }, null, &vertex_module);
+    }, null, &vertex_module)!;
 
     vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
         .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
@@ -192,7 +191,7 @@ fn int main()
         .flags = 0,
         .codeSize = fragment_shader_data.len,
         .pCode = (uint*)&fragment_shader_data,
-    }, null, &frag_module);
+    }, null, &frag_module)!;
 
     VkPipelineLayoutCreateInfo pipeline_layout_info = {
         .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
@@ -205,7 +204,7 @@ fn int main()
     };
 
     VkPipelineLayout pipeline_layout;
-    vk::createPipelineLayout(context.device, &pipeline_layout_info, null, &pipeline_layout);
+    vk::createPipelineLayout(context.device, &pipeline_layout_info, null, &pipeline_layout)!;
 
     // RenderPass info
     VkRenderPassCreateInfo render_pass_info = {
@@ -254,7 +253,7 @@ fn int main()
 
     // Create render pass
     VkRenderPass render_pass;
-    vk::createRenderPass(context.device, &render_pass_info, null, &render_pass);
+    vk::createRenderPass(context.device, &render_pass_info, null, &render_pass)!;
 
     VkPipelineColorBlendStateCreateInfo color_blending = {
         .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
@@ -416,10 +415,7 @@ fn int main()
     };
 
     VkPipeline pipeline;
-    if (vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create pipeline");
-        return 1;
-    };
+    vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline)!;
 
     VkFramebuffer* frame_buffers = malloc(VkFramebuffer, context.swapchain.image_count);
     for (int i = 0; i < context.swapchain.image_count; ++i) {
@@ -435,7 +431,7 @@ fn int main()
             .height = context.swapchain.extent.height,
             .layers = 1,
         };
-        vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
+        vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i])!;
     }
 
     uint frame = 0;
@@ -450,17 +446,17 @@ fn int main()
         }
 
         SyncImage active_sync = context.swapchain.syncImages[frame];
-        vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max);
-        vk::resetFences(context.device, 1, &active_sync.frame_fence);
+        vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max)!;
+        vk::resetFences(context.device, 1, &active_sync.frame_fence)!;
 
         uint next_image = {|
             uint index;
-            vk::acquireNextImageKHR(context.device, context.swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index);
+            vk::acquireNextImageKHR(context.device, context.swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index)!!;
             return index;
         |};
 
         VkCommandBuffer buffer = context.command_buffers[next_image];
-        vk::resetCommandBuffer(buffer, 0);
+        vk::resetCommandBuffer(buffer, 0)!;
 
         VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
         VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
@@ -484,7 +480,7 @@ fn int main()
           .pInheritanceInfo = null,
         };
 
-        vk::beginCommandBuffer(buffer, &begin_info);
+        vk::beginCommandBuffer(buffer, &begin_info)!;
 
         VkClearValue[1] clear_color = {
             VkClearValue{
@@ -519,9 +515,9 @@ fn int main()
         vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
 
         vk::cmdEndRenderPass(buffer);
-        vk::endCommandBuffer(buffer);
+        vk::endCommandBuffer(buffer)!;
 
-        vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence);
+        vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence)!;
 
         VkPresentInfoKHR present_info = {
              .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -533,7 +529,7 @@ fn int main()
              .pResults = null,
         };
 
-        vk::queuePresentKHR(context.graphics_queue, &present_info);
+        vk::queuePresentKHR(context.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
 
@@ -553,29 +549,5 @@ fn int main()
         vertex_buffer.free(context.device);
         context.free();
     };
-
-    return 0;
 }
 
-/*
-fn void! createInstance (VkInstanceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkInstance* pinstance) {
-    VkResult result = vKcreateInstance(pcreateinfo, pallocator, pinstance);
-
-    switch (result)
-    {
-      case VK_ERROR_OUT_OF_HOST_MEMORY:
-         return VKError.VK_ERROR_OUT_OF_HOST_MEMORY?;
-      case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-          return VKError.VK_ERROR_OUT_OF_DEVICE_MEMORY?;
-      case VK_ERROR_INITIALIZATION_FAILED:
-          return VKError.VK_ERROR_INITIALIZATION_FAILED?;
-      case VK_ERROR_LAYER_NOT_PRESENT:
-          return VKError.VK_ERROR_LAYER_NOT_PRESENT?;
-      case VK_ERROR_EXTENSION_NOT_PRESENT:
-          return VKError.VK_ERROR_EXTENSION_NOT_PRESENT?;
-      case VK_ERROR_INCOMPATIBLE_DRIVER:
-          return VKError.VK_ERROR_INCOMPATIBLE_DRIVER?;
-      default:
-        return;
-    }
-}*/
