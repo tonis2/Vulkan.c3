@@ -9,6 +9,7 @@
 
 test
 ./cube
+cube
 
 # Linker output
 *.ilk
