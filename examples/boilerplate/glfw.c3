@@ -10,6 +10,10 @@ def MouseCallback = fn void(GLFWwindow window, int button, int action, int mods)
 def MouseEvent = fn void(EventHandler*);
 def KeyboardEvent = fn void(EventHandler*, uint key);
 
+fault GlfwErrors {
+  FAILED_CREATING_SURFACE,
+}
+
 const GLFW_RELEASE = 0;
 const GLFW_PRESS = 1;
 const GLFW_REPEAT = 2;
@@ -120,4 +124,14 @@ extern fn GLFWwindow createWindow(int, int, char*, GLFWmonitor, GLFWwindow) @ext
 
 extern fn char* getRequiredInstanceExtensions (uint *count) @extern("glfwGetRequiredInstanceExtensions");
 extern fn void* getInstanceProcAddress (VkInstance instance, char *procname) @extern("glfwGetInstanceProcAddress");
-extern fn VkResult createWindowSurface (VkInstance instance, GLFWwindow *window, VkAllocationCallbacks *allocator, VkSurfaceKHR *surface) @extern("glfwCreateWindowSurface");
+extern fn VkResult vKcreateWindowSurface (VkInstance instance, GLFWwindow *window, VkAllocationCallbacks *allocator, VkSurfaceKHR *surface) @extern("glfwCreateWindowSurface");
+
+fn VkSurfaceKHR! createWindowSurface(VkInstance instance, GLFWwindow *window, VkAllocationCallbacks *allocator) {
+    VkSurfaceKHR surface;
+    if (vKcreateWindowSurface(instance, window, allocator, &surface) != 0)
+    {
+        return GlfwErrors.FAILED_CREATING_SURFACE?;
+    }
+
+    return surface;
+}
