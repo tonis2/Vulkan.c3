@@ -85,7 +85,7 @@ fn VkContext! init(GLFWwindow window) {
          }
     };
 
- /*   defer appInfo.free();*/
+    defer appInfo.free();
 
     //"VK_LAYER_LUNARG_api_dump"
     appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -105,15 +105,13 @@ fn VkContext! init(GLFWwindow window) {
         appInfo.device_extensions.push("VK_KHR_portability_subset");
     }
 
-    VkInstance instance = appInfo.createInstance()!;
-    // TODO get validation layers to work again
-/*    if (ENABLE_VALIDATION_LAYERS) {
-        vk::createDebugUtilsMessengerEXT(instance, &appInfo.debug_info, null, &context.debug_messenger)!;
-    }*/
-
-    context.instance = instance;
+    context.instance = appInfo.createInstance()!;
     // Must load extension pointers to cache, before using extensions !
     vk::loadExtensions(context.instance);
+
+    if (ENABLE_VALIDATION_LAYERS) {
+        vk::createDebugUtilsMessengerEXT(context.instance, &appInfo.debug_info, null, &context.debug_messenger)!;
+    }
 
     if (glfw::createWindowSurface(context.instance, window, null, &context.surface) != vk::VK_SUCCESS) {
         io::printfn("Failed creating surface");

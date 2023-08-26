@@ -50,10 +50,9 @@ fn void AppInfo.free(&self)
 
 fn VkInstance! AppInfo.createInstance(&self) {
         VkInstance instance;
-        VkDebugUtilsMessengerCreateInfoEXT debugInfo;
         VkInstanceCreateInfo createInfo = {
-            .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-            .pApplicationInfo = &&VkApplicationInfo {
+        .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .pApplicationInfo = &&VkApplicationInfo {
             .pApplicationName = self.pApplicationName,
             .applicationVersion = self.applicationVersion,
             .pEngineName = self.pEngineName,
