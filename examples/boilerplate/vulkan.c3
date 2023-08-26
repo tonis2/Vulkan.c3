@@ -1,6 +1,6 @@
 module context;
 
-import libc;
+
 import std::io;
 import std::core::env;
 import std::collections::list;
@@ -13,24 +13,6 @@ const ENABLE_VALIDATION_LAYERS = true;
 
 def StringList = List(<ZString>);
 def CommandBufferList = List(<VkCommandBuffer>);
-
-fn bool debugCallback(
-    vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    vk::VkDebugUtilsMessageTypeFlagsEXT messageType,
-    vk::VkDebugUtilsMessengerCallbackDataEXT* data,
-    void* userData
-) @private {
-    if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    }
-    return false;
-}
 
 fault ContextErrors
 {
@@ -67,22 +49,15 @@ fn void VkContext.free(&self)
 
 fn VkContext! init(GLFWwindow window) {
     VkContext context;
+
     AppInfo appInfo = {
         .pApplicationName = "Hello Cube",
         .applicationVersion = VK_API_VERSION_1_2,
         .pEngineName = "Super engine",
         .engineVersion = VK_API_VERSION_1_2,
         .apiVersion = VK_API_VERSION_1_2,
-        .enable_validations = ENABLE_VALIDATION_LAYERS,
-        .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0,
-        .debug_info =  {
-              .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-              .flags = 0,
-              .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-              .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-              .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
-              .pUserData = null,
-         }
+        .enable_debug = ENABLE_VALIDATION_LAYERS,
+        .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
     };
 
     defer appInfo.free();
@@ -105,23 +80,21 @@ fn VkContext! init(GLFWwindow window) {
         appInfo.device_extensions.push("VK_KHR_portability_subset");
     }
 
-    context.instance = appInfo.createInstance()!;
-    // Must load extension pointers to cache, before using extensions !
-    vk::loadExtensions(context.instance);
+    Device device = vk::requestDevice(&appInfo, window)!;
+    defer device.free();
+
+    context.instance = vk::getInstance(&appInfo)!;
 
     if (ENABLE_VALIDATION_LAYERS) {
-        vk::createDebugUtilsMessengerEXT(context.instance, &appInfo.debug_info, null, &context.debug_messenger)!;
+       context.debug_messenger = context.instance.createDebugUtilsMessenger()!;
     }
 
-    if (glfw::createWindowSurface(context.instance, window, null, &context.surface) != vk::VK_SUCCESS) {
-        io::printfn("Failed creating surface");
-        return ContextErrors.FAILED_CREATING_VULKAN?;
-    }
+    context.surface = glfw::createWindowSurface(context.instance, window, null)!;
 
     VkPhysicalDevice physicalDevice = helpers::getSuitablePhysicalDevice(context.instance, context.surface, appInfo.device_extensions.to_array())!;
     context.physical_device = physicalDevice;
 
-    QueueFamily indices = helpers::findQueueFamily(physicalDevice, context.surface)!;
+    helpers::QueueFamily indices = helpers::findQueueFamily(physicalDevice, context.surface)!;
     // Set-up Queues
     float queuePriorities = 1.0;
     VkDeviceQueueCreateInfo graphicsInfo = {.sType = vk::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
