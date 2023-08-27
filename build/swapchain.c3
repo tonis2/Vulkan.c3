@@ -22,12 +22,11 @@ struct SwapChain {
     VkFormat image_format;
     VkExtent2D extent;
     uint image_count;
-    uint current_image;
 }
 
 fn void SwapChain.free(&self, VkDevice device)
 {
-   destroySwapchainKHR(device, self.swapchain, null);
+    destroySwapchainKHR(device, self.swapchain, null);
     for (int i = 0; i < self.image_count; ++i) {
         destroyImageView(device, self.image_views[i], null);
     }

@@ -11,6 +11,7 @@ def DeviceList = List(<VkPhysicalDevice>);
 def QueuePropertiesList = List(<VkQueueFamilyProperties>);
 def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
 def PresentModeList = List(<VkPresentModeKHR>);
+def CommandBufferList = List(<VkCommandBuffer>);
 def CommandBufferCallback = fn void (VkCommandBuffer buffer);
 
 VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
@@ -139,15 +140,20 @@ fn void Device.free(self)
     vk::destroyInstance(self.instance, null);
 }
 
-fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR info)
+fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null)
 {
+    if (info == null) {
+        info = &&self.default_swapchain_info();
+    }
+
     VkSwapchainKHR swapchain;
     // Create SwapChainKHR
-    createSwapchainKHR(self.device, &info, null, &swapchain)!;
+    createSwapchainKHR(self.device, info, null, &swapchain)!;
     // Create SwapChain images
     getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, null)!;
     VkImage* images = malloc(VkImage, (usz)info.minImageCount);
     VkImageView* image_views = malloc(VkImageView, (usz)info.minImageCount);
+    getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, images)!;
 
     for (int i = 0; i < info.minImageCount; ++i) {
         VkImageViewCreateInfo image_info = {
@@ -184,6 +190,42 @@ fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR info)
         .image_count = info.minImageCount
     };
 }
+
+fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info = null)
+{
+   if (info == null) {
+    info = &&VkCommandPoolCreateInfo{
+        .sType = vk::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .pNext = null,
+        .flags = vk::VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+        .queueFamilyIndex = self.queue_family.graphics,
+    };
+   }
+
+   VkCommandPool pool;
+   createCommandPool(self.device, info, null, &pool)!;
+   return pool;
+}
+
+/*fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count)
+{
+    CommandBufferList buffers;
+    VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, count);
+    VkCommandBufferAllocateInfo command_buffer_info = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .commandPool = pool
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandBufferCount = count,
+    };
+
+    allocateCommandBuffers(self.device, &command_buffer_info, command_buffers)!;
+    for (int i = 0; i < count; ++i) {
+        buffers.push(command_buffers[i]);
+    }
+
+    return buffers;
+}*/
+
 
 fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreateInfoKHR info = defaultSwapchain)
 {
