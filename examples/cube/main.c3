@@ -117,6 +117,9 @@ fn void! main()
     Device device = vk::requestDevice(&appInfo, window)!;
     defer device.free();
 
+    SwapChain swapchain = device.createSwapchain()!;
+    defer swapchain.free(device.device);
+
     Buffer vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
         .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -141,6 +144,16 @@ fn void! main()
        index_buffer.free(device.device);
        vertex_buffer.free(device.device);
     }
+
+    VkCommandPool command_pool = device.createCommandPool()!;
+ /*   CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;*/
+/*    VkCommandBufferAllocateInfo command_buffer_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .commandPool = command_pool
+        .level = vk::VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandBufferCount = 3,
+    };*/
+    defer vk::destroyCommandPool(device.device, command_pool, null);
 
    /* // Descriptor info
     VkDescriptorSetLayout descriptorSetLayout;
