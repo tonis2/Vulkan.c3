@@ -21,10 +21,69 @@ VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
      .pUserData = null,
 };
 
+VkPhysicalDeviceFeatures default_device_features = {
+    .robustBufferAccess = 0,
+    .fullDrawIndexUint32 = 0,
+    .imageCubeArray = 0,
+    .independentBlend = 0,
+    .geometryShader = 0,
+    .tessellationShader = 0,
+    .sampleRateShading = 0,
+    .dualSrcBlend = 0,
+    .logicOp = 0,
+    .multiDrawIndirect = 0,
+    .drawIndirectFirstInstance = 0,
+    .depthClamp = 0,
+    .depthBiasClamp = 0,
+    .fillModeNonSolid = 0,
+    .depthBounds = 0,
+    .wideLines = 0,
+    .largePoints = 0,
+    .alphaToOne = 0,
+    .multiViewport = 0,
+    .samplerAnisotropy = 0,
+    .textureCompressionETC2 = 0,
+    .textureCompressionASTC_LDR = 0,
+    .textureCompressionBC = 0,
+    .occlusionQueryPrecise = 0,
+    .pipelineStatisticsQuery = 0,
+    .vertexPipelineStoresAndAtomics = 0,
+    .fragmentStoresAndAtomics = 0,
+    .shaderTessellationAndGeometryPointSize = 0,
+    .shaderImageGatherExtended = 0,
+    .shaderStorageImageExtendedFormats = 0,
+    .shaderStorageImageMultisample = 0,
+    .shaderStorageImageReadWithoutFormat = 0,
+    .shaderStorageImageWriteWithoutFormat = 0,
+    .shaderUniformBufferArrayDynamicIndexing = 0,
+    .shaderSampledImageArrayDynamicIndexing = 0,
+    .shaderStorageBufferArrayDynamicIndexing = 0,
+    .shaderStorageImageArrayDynamicIndexing = 0,
+    .shaderClipDistance = 0,
+    .shaderCullDistance = 0,
+    .shaderFloat64 = 0,
+    .shaderInt64 = 0,
+    .shaderInt16 = 0,
+    .shaderResourceResidency = 0,
+    .shaderResourceMinLod = 0,
+    .sparseBinding = 0,
+    .sparseResidencyBuffer = 0,
+    .sparseResidencyImage2D = 0,
+    .sparseResidencyImage3D = 0,
+    .sparseResidency2Samples = 0,
+    .sparseResidency4Samples = 0,
+    .sparseResidency8Samples = 0,
+    .sparseResidency16Samples = 0,
+    .sparseResidencyAliased = 0,
+    .variableMultisampleRate = 0,
+    .inheritedQueries = 0,
+};
+
 fault ContextErrors
 {
     FAILED_GETTING_EXTENSIONS,
-    EXTENSION_NOT_SUPPORTED
+    EXTENSION_NOT_SUPPORTED,
+    FAILED_GETTING_DEVICE
 }
 
 struct QueueFamily {
@@ -59,32 +118,138 @@ struct Device {
     VkPhysicalDevice physical_device;
     VkQueue graphics_queue;
     VkDebugUtilsMessengerEXT debug_messenger;
-
+    vk::QueueFamily queue_family;
     SurfaceFormatList surface_formats;
     PresentModeList present_modes;
+    VkSurfaceCapabilitiesKHR capabilities;
     bool enable_debug;
 }
 
 fn void Device.free(self)
 {
- /*   vk::deviceWaitIdle(self.device)!!;*/
+    vk::deviceWaitIdle(self.device)!!;
     self.surface_formats.free();
     self.present_modes.free();
     if (self.enable_debug) {
       vk::destroyDebugUtilsMessengerEXT(self.instance, self.debug_messenger, null);
     }
     vk::destroySurfaceKHR(self.instance, self.surface, null);
-  /*  vk::destroyDevice(self.device, null);*/
+    vk::destroyDevice(self.device, null);
     vk::destroyInstance(self.instance, null);
 }
 
-fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)
+fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR info)
+{
+    VkSwapchainKHR swapchain;
+    // Create SwapChainKHR
+    createSwapchainKHR(self.device, &info, null, &swapchain)!;
+    // Create SwapChain images
+    getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, null)!;
+    VkImage* images = malloc(VkImage, (usz)info.minImageCount);
+    VkImageView* image_views = malloc(VkImageView, (usz)info.minImageCount);
+
+    for (int i = 0; i < info.minImageCount; ++i) {
+        VkImageViewCreateInfo image_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .image = images[i],
+            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
+            .format = info.imageFormat,
+            .components = {
+                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+            },
+            .subresourceRange = {
+                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+        };
+        createImageView(self.device, &image_info, null, &image_views[i])!;
+    }
+
+
+    return SwapChain {
+        .swapchain = swapchain,
+        .images = images,
+        .image_views = image_views,
+        .image_format = info.imageFormat,
+        .extent = info.imageExtent,
+        .image_count = info.minImageCount
+    };
+}
+
+fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreateInfoKHR info = defaultSwapchain)
+{
+    VkSurfaceFormatKHR surface_format = {|
+        foreach (format : self.surface_formats)
+        {
+            if (format.format == VK_FORMAT_B8G8R8A8_UNORM && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+                return format;
+            }
+        }
+        io::printfn("Did not find required format, returning first one");
+        return self.surface_formats[0];
+    |};
+
+    VkPresentModeKHR present_mode = {|
+        foreach (present : self.present_modes)
+        {
+            if (present == VK_PRESENT_MODE_MAILBOX_KHR) {
+                return present;
+            }
+        }
+        io::printfn("Did not find required present_mode, returning first one");
+        return self.present_modes[0];
+    |};
+
+    VkExtent2D extent = self.capabilities.maxImageExtent;
+    VkFormat image_format = surface_format.format;
+
+    uint image_count = self.capabilities.minImageCount + 1;
+    if (self.capabilities.maxImageCount > 0 && image_count > self.capabilities.maxImageCount) {
+        image_count = self.capabilities.maxImageCount;
+    }
+
+   VkSwapchainCreateInfoKHR create_info = {
+        .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .pNext = null,
+        .flags = 0,
+        .surface = self.surface,
+        .minImageCount = image_count,
+        .imageFormat = surface_format.format,
+        .imageColorSpace = surface_format.colorSpace,
+        .imageExtent = extent,
+        .imageArrayLayers = 1,
+        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+        .preTransform = self.capabilities.currentTransform,
+        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .presentMode = present_mode,
+        .clipped = 0,
+        .oldSwapchain = null,
+    };
+
+    return create_info;
+}
+
+fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info, VkPhysicalDeviceFeatures device_features = default_device_features)
 {
     VkInstance instance = getInstance(info, debug_info)!;
     VkDebugUtilsMessengerEXT debug_messenger;
     VkPhysicalDevice physical_device;
     SurfaceFormatList surface_formats;
     PresentModeList present_modes;
+    vk::QueueFamily queue_family;
+    VkQueue graphics_queue;
+    VkDevice logical_device;
+    VkSurfaceCapabilitiesKHR device_capabilities;
+    bool physical_device_found = false;
 
     if (info.enable_debug) {
        debug_messenger = instance.createDebugUtilsMessenger()!;
@@ -135,22 +300,63 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
             presentModes.free();
         }
 
+        // Good physical device found
         if (queue.is_ready() && supports_extensions && presentModes.len() != 0 && surfaceFormats.len() != 0) {
             // Device is good
             physical_device = device;
             surface_formats.add_all(&surfaceFormats);
             present_modes.add_all(&presentModes);
+            physical_device_found = true;
+            queue_family = queue;
+            device_capabilities = capabilities;
         }
     }
+
+    if (!physical_device_found) {
+        io::printfn("Fitting physical device not found");
+        return ContextErrors.FAILED_GETTING_DEVICE?;
+    }
+
+    float queuePriorities = 1.0;
+    VkDeviceQueueCreateInfo graphicsInfo = {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+        .queueFamilyIndex = queue_family.graphics,
+        .queueCount = 1,
+        .pQueuePriorities = &queuePriorities
+    };
+
+    VkDeviceCreateInfo deviceCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pQueueCreateInfos = &graphicsInfo,
+        .queueCreateInfoCount = 1,
+        .pEnabledFeatures = &device_features,
+        .enabledExtensionCount = (uint)info.device_extensions.len(),
+        .ppEnabledExtensionNames = (char*)&info.device_extensions.to_array()[0],
+        .enabledLayerCount = 0,
+        .pNext = null,
+        .flags = 0,
+    };
+
+    if (info.enable_debug) {
+        deviceCreateInfo.enabledLayerCount = (uint)info.validations.len();
+        deviceCreateInfo.ppEnabledLayerNames = (char*)&info.validations.to_array()[0];
+    }
+
+    vk::createDevice(physical_device, &deviceCreateInfo, null, &logical_device)!;
+    vk::getDeviceQueue(logical_device, queue_family.graphics, 0, &graphics_queue);
 
     return Device {
         .instance = instance,
         .surface = surface,
+        .device = logical_device,
         .physical_device = physical_device,
         .debug_messenger = debug_messenger,
+        .graphics_queue = graphics_queue,
         .enable_debug = info.enable_debug,
         .surface_formats = surface_formats,
-        .present_modes = present_modes
+        .present_modes = present_modes,
+        .queue_family = queue_family,
+        .capabilities = device_capabilities
     };
 }
 
