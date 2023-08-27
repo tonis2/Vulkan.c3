@@ -1,14 +1,13 @@
 import std::io;
 import vk;
 import glfw;
-import context;
-import buffer;
-import helpers;
 import camera;
 import std::math;
 
 const WIDTH = 800;
 const HEIGHT = 600;
+const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
+const ENABLE_VALIDATION_LAYERS = true;
 
 struct Vertex {
     Vec3f pos;
@@ -84,14 +83,41 @@ fn void! main()
     Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
     eventHandler.init();
-    VkContext! context = context::init(window);
 
-    if (catch err = context) {
-        io::printfn("Failed to create vk context");
-        io::printfn("%s", err);
-        return;
+    AppInfo appInfo = {
+        .pApplicationName = "Hello Cube",
+        .applicationVersion = VK_API_VERSION_1_2,
+        .pEngineName = "Super engine",
+        .engineVersion = VK_API_VERSION_1_2,
+        .apiVersion = VK_API_VERSION_1_2,
+        .enable_debug = ENABLE_VALIDATION_LAYERS,
+        .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
+    };
+
+    defer appInfo.free();
+
+    //"VK_LAYER_LUNARG_api_dump"
+    appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
+    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
+
+    // SETUP extensions
+    uint glfwExtensions_count = 0;
+    ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
+    for (int i = 0; i < glfwExtensions_count; ++i) appInfo.extensions.push(glfwExtensions[i]);
+
+    if (ENABLE_VALIDATION_LAYERS) {
+       appInfo.extensions.add_array({"VK_EXT_debug_utils"});
     }
 
+    if (env::os_is_darwin()) {
+        appInfo.extensions.push("VK_KHR_portability_enumeration");
+        appInfo.device_extensions.push("VK_KHR_portability_subset");
+    }
+
+    Device device = vk::requestDevice(&appInfo, window)!;
+    defer device.free();
+
+/*
     Buffer vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
         .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -120,9 +146,9 @@ fn void! main()
     if (catch err = uniform_buffer.writable(&&camera.matrix(), context)) {
         io::printfn("Failed to create uniform buffer");
         return;
-    }
+    }*/
 
-    // Descriptor info
+   /* // Descriptor info
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorSetLayoutCreateInfo descriptor_info = {
         .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
@@ -532,8 +558,8 @@ fn void! main()
         vk::queuePresentKHR(context.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
-
-    defer {
+*/
+/*    defer {
         vk::destroyShaderModule(context.device, vertex_module, null);
         vk::destroyShaderModule(context.device, frag_module, null);
         vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
@@ -548,6 +574,6 @@ fn void! main()
         index_buffer.free(context.device);
         vertex_buffer.free(context.device);
         context.free();
-    };
+    };*/
 }
 
