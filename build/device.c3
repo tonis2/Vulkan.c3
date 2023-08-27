@@ -11,6 +11,7 @@ def DeviceList = List(<VkPhysicalDevice>);
 def QueuePropertiesList = List(<VkQueueFamilyProperties>);
 def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
 def PresentModeList = List(<VkPresentModeKHR>);
+def CommandBufferCallback = fn void (VkCommandBuffer buffer);
 
 VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
      .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
@@ -234,7 +235,6 @@ fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreat
         .clipped = 0,
         .oldSwapchain = null,
     };
-
     return create_info;
 }
 
@@ -358,6 +358,44 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
         .queue_family = queue_family,
         .capabilities = device_capabilities
     };
+}
+
+fn void! Device.single_time_buffer(self, CommandBufferCallback callback)
+{
+    VkCommandPool command_pool;
+    VkCommandPoolCreateInfo pool_info = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .pNext = null,
+        .queueFamilyIndex = self.queue_family.graphics,
+    };
+    createCommandPool(self.device, &pool_info, null, &command_pool)!;
+    VkCommandBufferAllocateInfo alloc_info = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .pNext = null,
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandPool = command_pool,
+        .commandBufferCount = 1,
+    };
+    VkCommandBuffer command_buffer;
+    allocateCommandBuffers(self.device, &alloc_info, &command_buffer)!;
+    VkCommandBufferBeginInfo beginInfo = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+    };
+
+    beginCommandBuffer(command_buffer, &beginInfo)!;
+    callback(command_buffer);
+    endCommandBuffer(command_buffer)!;
+
+    VkSubmitInfo submitInfo = {
+        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &command_buffer
+    };
+    queueSubmit(self.graphics_queue, 1, &submitInfo, null)!;
+    queueWaitIdle(self.graphics_queue)!;
+    freeCommandBuffers(self.device, command_pool, 1, &command_buffer);
+    destroyCommandPool(self.device, command_pool, null);
 }
 
 fn VkDebugUtilsMessengerEXT! VkInstance.createDebugUtilsMessenger(self, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)

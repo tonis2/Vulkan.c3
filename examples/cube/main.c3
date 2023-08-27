@@ -117,7 +117,6 @@ fn void! main()
     Device device = vk::requestDevice(&appInfo, window)!;
     defer device.free();
 
-/*
     Buffer vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
         .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -133,20 +132,15 @@ fn void! main()
         .usage = vk::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
-    if (catch err = vertex_buffer.device_only(&vertex_data[0], context)) {
-        io::printfn("Failed to create vertex buffer");
-        return;
-    }
+    vertex_buffer.device_only(&vertex_data[0], device)!;
+    index_buffer.device_only(&index_data[0], device)!;
+    uniform_buffer.writable(&&camera.matrix(), device)!;
 
-    if (catch err = index_buffer.device_only(&index_data[0], context)) {
-        io::printfn("Failed to create index buffer");
-        return;
+    defer {
+       uniform_buffer.free(device.device);
+       index_buffer.free(device.device);
+       vertex_buffer.free(device.device);
     }
-
-    if (catch err = uniform_buffer.writable(&&camera.matrix(), context)) {
-        io::printfn("Failed to create uniform buffer");
-        return;
-    }*/
 
    /* // Descriptor info
     VkDescriptorSetLayout descriptorSetLayout;
