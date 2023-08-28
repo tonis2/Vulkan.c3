@@ -115,10 +115,7 @@ fn void! main()
     }
 
     Device device = vk::requestDevice(&appInfo, window)!;
-    defer device.free();
-
     SwapChain swapchain = device.createSwapchain()!;
-    defer swapchain.free(device.device);
 
     Buffer vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
@@ -139,23 +136,10 @@ fn void! main()
     index_buffer.device_only(&index_data[0], device)!;
     uniform_buffer.writable(&&camera.matrix(), device)!;
 
-    defer {
-       uniform_buffer.free(device.device);
-       index_buffer.free(device.device);
-       vertex_buffer.free(device.device);
-    }
-
     VkCommandPool command_pool = device.createCommandPool()!;
- /*   CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;*/
-/*    VkCommandBufferAllocateInfo command_buffer_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-        .commandPool = command_pool
-        .level = vk::VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-        .commandBufferCount = 3,
-    };*/
-    defer vk::destroyCommandPool(device.device, command_pool, null);
+    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
-   /* // Descriptor info
+    // Descriptor info
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorSetLayoutCreateInfo descriptor_info = {
         .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
@@ -172,8 +156,7 @@ fn void! main()
         .flags = vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR,
     };
 
-    vk::createDescriptorSetLayout(context.device, &descriptor_info, null, &descriptorSetLayout)!;
-
+    vk::createDescriptorSetLayout(device.device, &descriptor_info, null, &descriptorSetLayout)!;
     VkWriteDescriptorSet[1] descriptorSets = {
         {
             .sType = vk::VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
@@ -201,30 +184,14 @@ fn void! main()
         .sType = vk::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
         .pNext = &pushDescriptorProperties
     };
-    vk::getPhysicalDeviceProperties2(context.physical_device, &deviceProps2);
+    vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
 
     // Pipeline info
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
 
-    VkShaderModule vertex_module;
-    VkShaderModule frag_module;
-
-    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
-        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .codeSize = vertex_shader_data.len,
-        .pCode = (uint*)&vertex_shader_data,
-    }, null, &vertex_module)!;
-
-    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
-        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .codeSize = fragment_shader_data.len,
-        .pCode = (uint*)&fragment_shader_data,
-    }, null, &frag_module)!;
+    VkShaderModule vertex_module = device.createShaderModule((uint*)&vertex_shader_data, vertex_shader_data.len)!;
+    VkShaderModule frag_module = device.createShaderModule((uint*)&fragment_shader_data, fragment_shader_data.len)!;
 
     VkPipelineLayoutCreateInfo pipeline_layout_info = {
         .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
@@ -237,10 +204,10 @@ fn void! main()
     };
 
     VkPipelineLayout pipeline_layout;
-    vk::createPipelineLayout(context.device, &pipeline_layout_info, null, &pipeline_layout)!;
+    vk::createPipelineLayout(device.device, &pipeline_layout_info, null, &pipeline_layout)!;
 
     // RenderPass info
-    VkRenderPassCreateInfo render_pass_info = {
+   /* VkRenderPassCreateInfo render_pass_info = {
         .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
         .pNext = null,
         .flags = 0,
@@ -469,7 +436,6 @@ fn void! main()
 
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
-
         eventHandler.update();
 
         if (eventHandler.left_mouse_click) {
@@ -564,13 +530,13 @@ fn void! main()
 
         vk::queuePresentKHR(context.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
-    }
-*/
+    }*/
+
 /*    defer {
         vk::destroyShaderModule(context.device, vertex_module, null);
         vk::destroyShaderModule(context.device, frag_module, null);
         vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
-        vk::destroyPipelineLayout(context.device, pipeline_layout, null);
+
         vk::destroyRenderPass(context.device, render_pass, null);
         vk::destroyPipeline(context.device, pipeline, null);
         for (int i = 0; i < context.swapchain.image_count; ++i) {
@@ -582,5 +548,18 @@ fn void! main()
         vertex_buffer.free(context.device);
         context.free();
     };*/
+
+    defer {
+        vertex_module.free(device.device);
+        frag_module.free(device.device);
+        uniform_buffer.free(device.device);
+        index_buffer.free(device.device);
+        vertex_buffer.free(device.device);
+        command_pool.free(device.device);
+        swapchain.free(device.device);
+        pipeline_layout.free(device.device);
+        descriptorSetLayout.free(device.device);
+        device.free();
+    }
 }
 

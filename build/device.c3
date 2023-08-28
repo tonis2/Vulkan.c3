@@ -127,17 +127,19 @@ struct Device {
     bool enable_debug;
 }
 
-fn void Device.free(self)
+
+
+fn VkShaderModule! Device.createShaderModule(self, uint* data, uint size)
 {
-    vk::deviceWaitIdle(self.device)!!;
-    self.surface_formats.free();
-    self.present_modes.free();
-    if (self.enable_debug) {
-      vk::destroyDebugUtilsMessengerEXT(self.instance, self.debug_messenger, null);
-    }
-    vk::destroySurfaceKHR(self.instance, self.surface, null);
-    vk::destroyDevice(self.device, null);
-    vk::destroyInstance(self.instance, null);
+    VkShaderModule shader;
+    createShaderModule(self.device, &&VkShaderModuleCreateInfo{
+       .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+       .pNext = null,
+       .flags = 0,
+       .codeSize = size,
+       .pCode = data,
+    }, null, &shader)!;
+    return shader;
 }
 
 fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null)
@@ -207,13 +209,13 @@ fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info =
    return pool;
 }
 
-/*fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count)
+fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count)
 {
     CommandBufferList buffers;
     VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, count);
     VkCommandBufferAllocateInfo command_buffer_info = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-        .commandPool = pool
+        .commandPool = pool,
         .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
         .commandBufferCount = count,
     };
@@ -224,7 +226,7 @@ fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info =
     }
 
     return buffers;
-}*/
+}
 
 
 fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreateInfoKHR info = defaultSwapchain)
@@ -627,5 +629,39 @@ fn bool debugCallback(
        libc::printf("%s \n", data.pMessage);
     }
     return false;
+}
+
+
+fn void Device.free(self)
+{
+    vk::deviceWaitIdle(self.device)!!;
+    self.surface_formats.free();
+    self.present_modes.free();
+    if (self.enable_debug) {
+      vk::destroyDebugUtilsMessengerEXT(self.instance, self.debug_messenger, null);
+    }
+    vk::destroySurfaceKHR(self.instance, self.surface, null);
+    vk::destroyDevice(self.device, null);
+    vk::destroyInstance(self.instance, null);
+}
+
+fn void VkCommandPool.free(self, VkDevice device)
+{
+   destroyCommandPool(device, self, null);
+}
+
+fn void VkShaderModule.free(self, VkDevice device)
+{
+    destroyShaderModule(device, self, null);
+}
+
+fn void VkPipelineLayout.free(self, VkDevice device)
+{
+    destroyPipelineLayout(device, self, null);
+}
+
+fn void VkDescriptorSetLayout.free(self, VkDevice device)
+{
+    destroyDescriptorSetLayout(device, self, null);
 }
 
