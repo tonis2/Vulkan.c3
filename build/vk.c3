@@ -60,6 +60,7 @@ fault VkErrors {
  VK_ERROR_INVALID_EXTERNAL_HANDLE,
  VK_ERROR_FRAGMENTATION,
  VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+ VK_PIPELINE_COMPILE_REQUIRED,
  VK_ERROR_SURFACE_LOST_KHR,
  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR,
  VK_SUBOPTIMAL_KHR,
@@ -172,6 +173,16 @@ def VkExternalSemaphoreFeatureFlags = VkFlags;
 def VkDescriptorBindingFlags = VkFlags;
 def VkResolveModeFlags = VkFlags;
 def VkSemaphoreWaitFlags = VkFlags;
+def VkFlags64 = ulong;
+def VkPipelineCreationFeedbackFlags = VkFlags;
+def VkToolPurposeFlags = VkFlags;
+def VkPrivateDataSlot = distinct inline void*;
+def VkPrivateDataSlotCreateFlags = VkFlags;
+def VkPipelineStageFlags2 = VkFlags64;
+def VkAccessFlags2 = VkFlags64;
+def VkSubmitFlags = VkFlags;
+def VkRenderingFlags = VkFlags;
+def VkFormatFeatureFlags2 = VkFlags64;
 def VkSurfaceKHR = distinct inline void*;
 def VkCompositeAlphaFlagsKHR = VkFlags;
 def VkXcbSurfaceCreateFlagsKHR = VkFlags;
@@ -1622,6 +1633,148 @@ struct VkPhysicalDeviceShaderDrawParametersFeatures {
  void* pNext;
  VkBool32 shaderDrawParameters;
 }
+struct VkPhysicalDeviceVulkan11Features {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 storageBuffer16BitAccess;
+ VkBool32 uniformAndStorageBuffer16BitAccess;
+ VkBool32 storagePushConstant16;
+ VkBool32 storageInputOutput16;
+ VkBool32 multiview;
+ VkBool32 multiviewGeometryShader;
+ VkBool32 multiviewTessellationShader;
+ VkBool32 variablePointersStorageBuffer;
+ VkBool32 variablePointers;
+ VkBool32 protectedMemory;
+ VkBool32 samplerYcbcrConversion;
+ VkBool32 shaderDrawParameters;
+}
+struct VkPhysicalDeviceVulkan11Properties {
+ VkStructureType sType;
+ void* pNext;
+ uint[VK_UUID_SIZE] deviceUUID;
+ uint[VK_UUID_SIZE] driverUUID;
+ uint[VK_LUID_SIZE] deviceLUID;
+ uint deviceNodeMask;
+ VkBool32 deviceLUIDValid;
+ uint subgroupSize;
+ VkShaderStageFlags subgroupSupportedStages;
+ VkSubgroupFeatureFlags subgroupSupportedOperations;
+ VkBool32 subgroupQuadOperationsInAllStages;
+ VkPointClippingBehavior pointClippingBehavior;
+ uint maxMultiviewViewCount;
+ uint maxMultiviewInstanceIndex;
+ VkBool32 protectedNoFault;
+ uint maxPerSetDescriptors;
+ VkDeviceSize maxMemoryAllocationSize;
+}
+struct VkPhysicalDeviceVulkan12Features {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 samplerMirrorClampToEdge;
+ VkBool32 drawIndirectCount;
+ VkBool32 storageBuffer8BitAccess;
+ VkBool32 uniformAndStorageBuffer8BitAccess;
+ VkBool32 storagePushConstant8;
+ VkBool32 shaderBufferInt64Atomics;
+ VkBool32 shaderSharedInt64Atomics;
+ VkBool32 shaderFloat16;
+ VkBool32 shaderInt8;
+ VkBool32 descriptorIndexing;
+ VkBool32 shaderInputAttachmentArrayDynamicIndexing;
+ VkBool32 shaderUniformTexelBufferArrayDynamicIndexing;
+ VkBool32 shaderStorageTexelBufferArrayDynamicIndexing;
+ VkBool32 shaderUniformBufferArrayNonUniformIndexing;
+ VkBool32 shaderSampledImageArrayNonUniformIndexing;
+ VkBool32 shaderStorageBufferArrayNonUniformIndexing;
+ VkBool32 shaderStorageImageArrayNonUniformIndexing;
+ VkBool32 shaderInputAttachmentArrayNonUniformIndexing;
+ VkBool32 shaderUniformTexelBufferArrayNonUniformIndexing;
+ VkBool32 shaderStorageTexelBufferArrayNonUniformIndexing;
+ VkBool32 descriptorBindingUniformBufferUpdateAfterBind;
+ VkBool32 descriptorBindingSampledImageUpdateAfterBind;
+ VkBool32 descriptorBindingStorageImageUpdateAfterBind;
+ VkBool32 descriptorBindingStorageBufferUpdateAfterBind;
+ VkBool32 descriptorBindingUniformTexelBufferUpdateAfterBind;
+ VkBool32 descriptorBindingStorageTexelBufferUpdateAfterBind;
+ VkBool32 descriptorBindingUpdateUnusedWhilePending;
+ VkBool32 descriptorBindingPartiallyBound;
+ VkBool32 descriptorBindingVariableDescriptorCount;
+ VkBool32 runtimeDescriptorArray;
+ VkBool32 samplerFilterMinmax;
+ VkBool32 scalarBlockLayout;
+ VkBool32 imagelessFramebuffer;
+ VkBool32 uniformBufferStandardLayout;
+ VkBool32 shaderSubgroupExtendedTypes;
+ VkBool32 separateDepthStencilLayouts;
+ VkBool32 hostQueryReset;
+ VkBool32 timelineSemaphore;
+ VkBool32 bufferDeviceAddress;
+ VkBool32 bufferDeviceAddressCaptureReplay;
+ VkBool32 bufferDeviceAddressMultiDevice;
+ VkBool32 vulkanMemoryModel;
+ VkBool32 vulkanMemoryModelDeviceScope;
+ VkBool32 vulkanMemoryModelAvailabilityVisibilityChains;
+ VkBool32 shaderOutputViewportIndex;
+ VkBool32 shaderOutputLayer;
+ VkBool32 subgroupBroadcastDynamicId;
+}
+struct VkPhysicalDeviceVulkan12Properties {
+ VkStructureType sType;
+ void* pNext;
+ VkDriverId driverID;
+ char[VK_MAX_DRIVER_NAME_SIZE] driverName;
+ char[VK_MAX_DRIVER_INFO_SIZE] driverInfo;
+ VkConformanceVersion conformanceVersion;
+ VkShaderFloatControlsIndependence denormBehaviorIndependence;
+ VkShaderFloatControlsIndependence roundingModeIndependence;
+ VkBool32 shaderSignedZeroInfNanPreserveFloat16;
+ VkBool32 shaderSignedZeroInfNanPreserveFloat32;
+ VkBool32 shaderSignedZeroInfNanPreserveFloat64;
+ VkBool32 shaderDenormPreserveFloat16;
+ VkBool32 shaderDenormPreserveFloat32;
+ VkBool32 shaderDenormPreserveFloat64;
+ VkBool32 shaderDenormFlushToZeroFloat16;
+ VkBool32 shaderDenormFlushToZeroFloat32;
+ VkBool32 shaderDenormFlushToZeroFloat64;
+ VkBool32 shaderRoundingModeRTEFloat16;
+ VkBool32 shaderRoundingModeRTEFloat32;
+ VkBool32 shaderRoundingModeRTEFloat64;
+ VkBool32 shaderRoundingModeRTZFloat16;
+ VkBool32 shaderRoundingModeRTZFloat32;
+ VkBool32 shaderRoundingModeRTZFloat64;
+ uint maxUpdateAfterBindDescriptorsInAllPools;
+ VkBool32 shaderUniformBufferArrayNonUniformIndexingNative;
+ VkBool32 shaderSampledImageArrayNonUniformIndexingNative;
+ VkBool32 shaderStorageBufferArrayNonUniformIndexingNative;
+ VkBool32 shaderStorageImageArrayNonUniformIndexingNative;
+ VkBool32 shaderInputAttachmentArrayNonUniformIndexingNative;
+ VkBool32 robustBufferAccessUpdateAfterBind;
+ VkBool32 quadDivergentImplicitLod;
+ uint maxPerStageDescriptorUpdateAfterBindSamplers;
+ uint maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+ uint maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+ uint maxPerStageDescriptorUpdateAfterBindSampledImages;
+ uint maxPerStageDescriptorUpdateAfterBindStorageImages;
+ uint maxPerStageDescriptorUpdateAfterBindInputAttachments;
+ uint maxPerStageUpdateAfterBindResources;
+ uint maxDescriptorSetUpdateAfterBindSamplers;
+ uint maxDescriptorSetUpdateAfterBindUniformBuffers;
+ uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+ uint maxDescriptorSetUpdateAfterBindStorageBuffers;
+ uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+ uint maxDescriptorSetUpdateAfterBindSampledImages;
+ uint maxDescriptorSetUpdateAfterBindStorageImages;
+ uint maxDescriptorSetUpdateAfterBindInputAttachments;
+ VkResolveModeFlags supportedDepthResolveModes;
+ VkResolveModeFlags supportedStencilResolveModes;
+ VkBool32 independentResolveNone;
+ VkBool32 independentResolve;
+ VkBool32 filterMinmaxSingleComponentFormats;
+ VkBool32 filterMinmaxImageComponentMapping;
+ ulong maxTimelineSemaphoreValueDifference;
+ VkSampleCountFlags framebufferIntegerColorSampleCounts;
+}
 struct VkImageFormatListCreateInfo {
  VkStructureType sType;
  void* pNext;
@@ -1985,6 +2138,484 @@ struct VkDeviceMemoryOpaqueCaptureAddressInfo {
  VkStructureType sType;
  void* pNext;
  VkDeviceMemory memory;
+}
+struct VkPhysicalDeviceVulkan13Features {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 robustImageAccess;
+ VkBool32 inlineUniformBlock;
+ VkBool32 descriptorBindingInlineUniformBlockUpdateAfterBind;
+ VkBool32 pipelineCreationCacheControl;
+ VkBool32 privateData;
+ VkBool32 shaderDemoteToHelperInvocation;
+ VkBool32 shaderTerminateInvocation;
+ VkBool32 subgroupSizeControl;
+ VkBool32 computeFullSubgroups;
+ VkBool32 synchronization2;
+ VkBool32 textureCompressionASTC_HDR;
+ VkBool32 shaderZeroInitializeWorkgroupMemory;
+ VkBool32 dynamicRendering;
+ VkBool32 shaderIntegerDotProduct;
+ VkBool32 maintenance4;
+}
+struct VkPhysicalDeviceVulkan13Properties {
+ VkStructureType sType;
+ void* pNext;
+ uint minSubgroupSize;
+ uint maxSubgroupSize;
+ uint maxComputeWorkgroupSubgroups;
+ VkShaderStageFlags requiredSubgroupSizeStages;
+ uint maxInlineUniformBlockSize;
+ uint maxPerStageDescriptorInlineUniformBlocks;
+ uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+ uint maxDescriptorSetInlineUniformBlocks;
+ uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+ uint maxInlineUniformTotalSize;
+ VkBool32 integerDotProduct8BitUnsignedAccelerated;
+ VkBool32 integerDotProduct8BitSignedAccelerated;
+ VkBool32 integerDotProduct8BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedUnsignedAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedSignedAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+ VkBool32 integerDotProduct16BitUnsignedAccelerated;
+ VkBool32 integerDotProduct16BitSignedAccelerated;
+ VkBool32 integerDotProduct16BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct32BitUnsignedAccelerated;
+ VkBool32 integerDotProduct32BitSignedAccelerated;
+ VkBool32 integerDotProduct32BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct64BitUnsignedAccelerated;
+ VkBool32 integerDotProduct64BitSignedAccelerated;
+ VkBool32 integerDotProduct64BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+ VkDeviceSize storageTexelBufferOffsetAlignmentBytes;
+ VkBool32 storageTexelBufferOffsetSingleTexelAlignment;
+ VkDeviceSize uniformTexelBufferOffsetAlignmentBytes;
+ VkBool32 uniformTexelBufferOffsetSingleTexelAlignment;
+ VkDeviceSize maxBufferSize;
+}
+struct VkPipelineCreationFeedbackCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkPipelineCreationFeedback* pPipelineCreationFeedback;
+ uint pipelineStageCreationFeedbackCount;
+ VkPipelineCreationFeedback* pPipelineStageCreationFeedbacks;
+}
+struct VkPipelineCreationFeedback {
+ VkPipelineCreationFeedbackFlags flags;
+ ulong duration;
+}
+struct VkPhysicalDeviceShaderTerminateInvocationFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 shaderTerminateInvocation;
+}
+struct VkPhysicalDeviceToolProperties {
+ VkStructureType sType;
+ void* pNext;
+ char[VK_MAX_EXTENSION_NAME_SIZE] name;
+ char[VK_MAX_EXTENSION_NAME_SIZE] version;
+ VkToolPurposeFlags purposes;
+ char[VK_MAX_DESCRIPTION_SIZE] description;
+ char[VK_MAX_EXTENSION_NAME_SIZE] layer;
+}
+struct VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 shaderDemoteToHelperInvocation;
+}
+struct VkPhysicalDevicePrivateDataFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 privateData;
+}
+struct VkDevicePrivateDataCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ uint privateDataSlotRequestCount;
+}
+struct VkPrivateDataSlotCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkPrivateDataSlotCreateFlags flags;
+}
+struct VkPhysicalDevicePipelineCreationCacheControlFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 pipelineCreationCacheControl;
+}
+struct VkMemoryBarrier2 {
+ VkStructureType sType;
+ void* pNext;
+ VkPipelineStageFlags2 srcStageMask;
+ VkAccessFlags2 srcAccessMask;
+ VkPipelineStageFlags2 dstStageMask;
+ VkAccessFlags2 dstAccessMask;
+}
+struct VkBufferMemoryBarrier2 {
+ VkStructureType sType;
+ void* pNext;
+ VkPipelineStageFlags2 srcStageMask;
+ VkAccessFlags2 srcAccessMask;
+ VkPipelineStageFlags2 dstStageMask;
+ VkAccessFlags2 dstAccessMask;
+ uint srcQueueFamilyIndex;
+ uint dstQueueFamilyIndex;
+ VkBuffer buffer;
+ VkDeviceSize offset;
+ VkDeviceSize size;
+}
+struct VkImageMemoryBarrier2 {
+ VkStructureType sType;
+ void* pNext;
+ VkPipelineStageFlags2 srcStageMask;
+ VkAccessFlags2 srcAccessMask;
+ VkPipelineStageFlags2 dstStageMask;
+ VkAccessFlags2 dstAccessMask;
+ VkImageLayout oldLayout;
+ VkImageLayout newLayout;
+ uint srcQueueFamilyIndex;
+ uint dstQueueFamilyIndex;
+ VkImage image;
+ VkImageSubresourceRange subresourceRange;
+}
+struct VkDependencyInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkDependencyFlags dependencyFlags;
+ uint memoryBarrierCount;
+ VkMemoryBarrier2* pMemoryBarriers;
+ uint bufferMemoryBarrierCount;
+ VkBufferMemoryBarrier2* pBufferMemoryBarriers;
+ uint imageMemoryBarrierCount;
+ VkImageMemoryBarrier2* pImageMemoryBarriers;
+}
+struct VkSubmitInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkSubmitFlags flags;
+ uint waitSemaphoreInfoCount;
+ VkSemaphoreSubmitInfo* pWaitSemaphoreInfos;
+ uint commandBufferInfoCount;
+ VkCommandBufferSubmitInfo* pCommandBufferInfos;
+ uint signalSemaphoreInfoCount;
+ VkSemaphoreSubmitInfo* pSignalSemaphoreInfos;
+}
+struct VkSemaphoreSubmitInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkSemaphore semaphore;
+ ulong value;
+ VkPipelineStageFlags2 stageMask;
+ uint deviceIndex;
+}
+struct VkCommandBufferSubmitInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkCommandBuffer commandBuffer;
+ uint deviceMask;
+}
+struct VkPhysicalDeviceSynchronization2Features {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 synchronization2;
+}
+struct VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 shaderZeroInitializeWorkgroupMemory;
+}
+struct VkPhysicalDeviceImageRobustnessFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 robustImageAccess;
+}
+struct VkCopyBufferInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkBuffer srcBuffer;
+ VkBuffer dstBuffer;
+ uint regionCount;
+ VkBufferCopy2* pRegions;
+}
+struct VkCopyImageInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImage srcImage;
+ VkImageLayout srcImageLayout;
+ VkImage dstImage;
+ VkImageLayout dstImageLayout;
+ uint regionCount;
+ VkImageCopy2* pRegions;
+}
+struct VkCopyBufferToImageInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkBuffer srcBuffer;
+ VkImage dstImage;
+ VkImageLayout dstImageLayout;
+ uint regionCount;
+ VkBufferImageCopy2* pRegions;
+}
+struct VkCopyImageToBufferInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImage srcImage;
+ VkImageLayout srcImageLayout;
+ VkBuffer dstBuffer;
+ uint regionCount;
+ VkBufferImageCopy2* pRegions;
+}
+struct VkBlitImageInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImage srcImage;
+ VkImageLayout srcImageLayout;
+ VkImage dstImage;
+ VkImageLayout dstImageLayout;
+ uint regionCount;
+ VkImageBlit2* pRegions;
+ VkFilter filter;
+}
+struct VkResolveImageInfo2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImage srcImage;
+ VkImageLayout srcImageLayout;
+ VkImage dstImage;
+ VkImageLayout dstImageLayout;
+ uint regionCount;
+ VkImageResolve2* pRegions;
+}
+struct VkBufferCopy2 {
+ VkStructureType sType;
+ void* pNext;
+ VkDeviceSize srcOffset;
+ VkDeviceSize dstOffset;
+ VkDeviceSize size;
+}
+struct VkImageCopy2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImageSubresourceLayers srcSubresource;
+ VkOffset3D srcOffset;
+ VkImageSubresourceLayers dstSubresource;
+ VkOffset3D dstOffset;
+ VkExtent3D extent;
+}
+struct VkImageBlit2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImageSubresourceLayers srcSubresource;
+ VkOffset3D[2] srcOffsets;
+ VkImageSubresourceLayers dstSubresource;
+ VkOffset3D[2] dstOffsets;
+}
+struct VkBufferImageCopy2 {
+ VkStructureType sType;
+ void* pNext;
+ VkDeviceSize bufferOffset;
+ uint bufferRowLength;
+ uint bufferImageHeight;
+ VkImageSubresourceLayers imageSubresource;
+ VkOffset3D imageOffset;
+ VkExtent3D imageExtent;
+}
+struct VkImageResolve2 {
+ VkStructureType sType;
+ void* pNext;
+ VkImageSubresourceLayers srcSubresource;
+ VkOffset3D srcOffset;
+ VkImageSubresourceLayers dstSubresource;
+ VkOffset3D dstOffset;
+ VkExtent3D extent;
+}
+struct VkPhysicalDeviceSubgroupSizeControlFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 subgroupSizeControl;
+ VkBool32 computeFullSubgroups;
+}
+struct VkPhysicalDeviceSubgroupSizeControlProperties {
+ VkStructureType sType;
+ void* pNext;
+ uint minSubgroupSize;
+ uint maxSubgroupSize;
+ uint maxComputeWorkgroupSubgroups;
+ VkShaderStageFlags requiredSubgroupSizeStages;
+}
+struct VkPipelineShaderStageRequiredSubgroupSizeCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ uint requiredSubgroupSize;
+}
+struct VkPhysicalDeviceInlineUniformBlockFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 inlineUniformBlock;
+ VkBool32 descriptorBindingInlineUniformBlockUpdateAfterBind;
+}
+struct VkPhysicalDeviceInlineUniformBlockProperties {
+ VkStructureType sType;
+ void* pNext;
+ uint maxInlineUniformBlockSize;
+ uint maxPerStageDescriptorInlineUniformBlocks;
+ uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+ uint maxDescriptorSetInlineUniformBlocks;
+ uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+}
+struct VkWriteDescriptorSetInlineUniformBlock {
+ VkStructureType sType;
+ void* pNext;
+ uint dataSize;
+ void* pData;
+}
+struct VkDescriptorPoolInlineUniformBlockCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ uint maxInlineUniformBlockBindings;
+}
+struct VkPhysicalDeviceTextureCompressionASTCHDRFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 textureCompressionASTC_HDR;
+}
+struct VkRenderingInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkRenderingFlags flags;
+ VkRect2D renderArea;
+ uint layerCount;
+ uint viewMask;
+ uint colorAttachmentCount;
+ VkRenderingAttachmentInfo* pColorAttachments;
+ VkRenderingAttachmentInfo* pDepthAttachment;
+ VkRenderingAttachmentInfo* pStencilAttachment;
+}
+struct VkRenderingAttachmentInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkImageView imageView;
+ VkImageLayout imageLayout;
+ VkResolveModeFlagBits resolveMode;
+ VkImageView resolveImageView;
+ VkImageLayout resolveImageLayout;
+ VkAttachmentLoadOp loadOp;
+ VkAttachmentStoreOp storeOp;
+ VkClearValue clearValue;
+}
+struct VkPipelineRenderingCreateInfo {
+ VkStructureType sType;
+ void* pNext;
+ uint viewMask;
+ uint colorAttachmentCount;
+ VkFormat* pColorAttachmentFormats;
+ VkFormat depthAttachmentFormat;
+ VkFormat stencilAttachmentFormat;
+}
+struct VkPhysicalDeviceDynamicRenderingFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 dynamicRendering;
+}
+struct VkCommandBufferInheritanceRenderingInfo {
+ VkStructureType sType;
+ void* pNext;
+ VkRenderingFlags flags;
+ uint viewMask;
+ uint colorAttachmentCount;
+ VkFormat* pColorAttachmentFormats;
+ VkFormat depthAttachmentFormat;
+ VkFormat stencilAttachmentFormat;
+ VkSampleCountFlagBits rasterizationSamples;
+}
+struct VkPhysicalDeviceShaderIntegerDotProductFeatures {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 shaderIntegerDotProduct;
+}
+struct VkPhysicalDeviceShaderIntegerDotProductProperties {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 integerDotProduct8BitUnsignedAccelerated;
+ VkBool32 integerDotProduct8BitSignedAccelerated;
+ VkBool32 integerDotProduct8BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedUnsignedAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedSignedAccelerated;
+ VkBool32 integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+ VkBool32 integerDotProduct16BitUnsignedAccelerated;
+ VkBool32 integerDotProduct16BitSignedAccelerated;
+ VkBool32 integerDotProduct16BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct32BitUnsignedAccelerated;
+ VkBool32 integerDotProduct32BitSignedAccelerated;
+ VkBool32 integerDotProduct32BitMixedSignednessAccelerated;
+ VkBool32 integerDotProduct64BitUnsignedAccelerated;
+ VkBool32 integerDotProduct64BitSignedAccelerated;
+ VkBool32 integerDotProduct64BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+ VkBool32 integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+}
+struct VkPhysicalDeviceTexelBufferAlignmentProperties {
+ VkStructureType sType;
+ void* pNext;
+ VkDeviceSize storageTexelBufferOffsetAlignmentBytes;
+ VkBool32 storageTexelBufferOffsetSingleTexelAlignment;
+ VkDeviceSize uniformTexelBufferOffsetAlignmentBytes;
+ VkBool32 uniformTexelBufferOffsetSingleTexelAlignment;
+}
+struct VkFormatProperties3 {
+ VkStructureType sType;
+ void* pNext;
+ VkFormatFeatureFlags2 linearTilingFeatures;
+ VkFormatFeatureFlags2 optimalTilingFeatures;
+ VkFormatFeatureFlags2 bufferFeatures;
+}
+struct VkPhysicalDeviceMaintenance4Features {
+ VkStructureType sType;
+ void* pNext;
+ VkBool32 maintenance4;
+}
+struct VkPhysicalDeviceMaintenance4Properties {
+ VkStructureType sType;
+ void* pNext;
+ VkDeviceSize maxBufferSize;
+}
+struct VkDeviceBufferMemoryRequirements {
+ VkStructureType sType;
+ void* pNext;
+ VkBufferCreateInfo* pCreateInfo;
+}
+struct VkDeviceImageMemoryRequirements {
+ VkStructureType sType;
+ void* pNext;
+ VkImageCreateInfo* pCreateInfo;
+ VkImageAspectFlagBits planeAspect;
 }
 struct VkSurfaceCapabilitiesKHR {
  uint minImageCount;
@@ -2433,6 +3064,43 @@ extern fn VkResult vkSignalSemaphore (VkDevice device, VkSemaphoreSignalInfo* ps
 extern fn VkDeviceAddress getBufferDeviceAddress (VkDevice device, VkBufferDeviceAddressInfo* pinfo) @extern("vkGetBufferDeviceAddress");
 extern fn ulong getBufferOpaqueCaptureAddress (VkDevice device, VkBufferDeviceAddressInfo* pinfo) @extern("vkGetBufferOpaqueCaptureAddress");
 extern fn ulong getDeviceMemoryOpaqueCaptureAddress (VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pinfo) @extern("vkGetDeviceMemoryOpaqueCaptureAddress");
+extern fn VkResult vkGetPhysicalDeviceToolProperties (VkPhysicalDevice physicaldevice, uint* ptoolcount, VkPhysicalDeviceToolProperties* ptoolproperties) @extern("vkGetPhysicalDeviceToolProperties");
+extern fn VkResult vkCreatePrivateDataSlot (VkDevice device, VkPrivateDataSlotCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkPrivateDataSlot* pprivatedataslot) @extern("vkCreatePrivateDataSlot");
+extern fn void destroyPrivateDataSlot (VkDevice device, VkPrivateDataSlot privatedataslot, VkAllocationCallbacks* pallocator) @extern("vkDestroyPrivateDataSlot");
+extern fn VkResult vkSetPrivateData (VkDevice device, VkObjectType objecttype, ulong objecthandle, VkPrivateDataSlot privatedataslot, ulong data) @extern("vkSetPrivateData");
+extern fn void getPrivateData (VkDevice device, VkObjectType objecttype, ulong objecthandle, VkPrivateDataSlot privatedataslot, ulong* pdata) @extern("vkGetPrivateData");
+extern fn void cmdSetEvent2 (VkCommandBuffer commandbuffer, VkEvent event, VkDependencyInfo* pdependencyinfo) @extern("vkCmdSetEvent2");
+extern fn void cmdResetEvent2 (VkCommandBuffer commandbuffer, VkEvent event, VkPipelineStageFlags2 stagemask) @extern("vkCmdResetEvent2");
+extern fn void cmdWaitEvents2 (VkCommandBuffer commandbuffer, uint eventcount, VkEvent* pevents, VkDependencyInfo* pdependencyinfos) @extern("vkCmdWaitEvents2");
+extern fn void cmdPipelineBarrier2 (VkCommandBuffer commandbuffer, VkDependencyInfo* pdependencyinfo) @extern("vkCmdPipelineBarrier2");
+extern fn void cmdWriteTimestamp2 (VkCommandBuffer commandbuffer, VkPipelineStageFlags2 stage, VkQueryPool querypool, uint query) @extern("vkCmdWriteTimestamp2");
+extern fn VkResult vkQueueSubmit2 (VkQueue queue, uint submitcount, VkSubmitInfo2* psubmits, VkFence fence) @extern("vkQueueSubmit2");
+extern fn void cmdCopyBuffer2 (VkCommandBuffer commandbuffer, VkCopyBufferInfo2* pcopybufferinfo) @extern("vkCmdCopyBuffer2");
+extern fn void cmdCopyImage2 (VkCommandBuffer commandbuffer, VkCopyImageInfo2* pcopyimageinfo) @extern("vkCmdCopyImage2");
+extern fn void cmdCopyBufferToImage2 (VkCommandBuffer commandbuffer, VkCopyBufferToImageInfo2* pcopybuffertoimageinfo) @extern("vkCmdCopyBufferToImage2");
+extern fn void cmdCopyImageToBuffer2 (VkCommandBuffer commandbuffer, VkCopyImageToBufferInfo2* pcopyimagetobufferinfo) @extern("vkCmdCopyImageToBuffer2");
+extern fn void cmdBlitImage2 (VkCommandBuffer commandbuffer, VkBlitImageInfo2* pblitimageinfo) @extern("vkCmdBlitImage2");
+extern fn void cmdResolveImage2 (VkCommandBuffer commandbuffer, VkResolveImageInfo2* presolveimageinfo) @extern("vkCmdResolveImage2");
+extern fn void cmdBeginRendering (VkCommandBuffer commandbuffer, VkRenderingInfo* prenderinginfo) @extern("vkCmdBeginRendering");
+extern fn void cmdEndRendering (VkCommandBuffer commandbuffer) @extern("vkCmdEndRendering");
+extern fn void cmdSetCullMode (VkCommandBuffer commandbuffer, VkCullModeFlags cullmode) @extern("vkCmdSetCullMode");
+extern fn void cmdSetFrontFace (VkCommandBuffer commandbuffer, VkFrontFace frontface) @extern("vkCmdSetFrontFace");
+extern fn void cmdSetPrimitiveTopology (VkCommandBuffer commandbuffer, VkPrimitiveTopology primitivetopology) @extern("vkCmdSetPrimitiveTopology");
+extern fn void cmdSetViewportWithCount (VkCommandBuffer commandbuffer, uint viewportcount, VkViewport* pviewports) @extern("vkCmdSetViewportWithCount");
+extern fn void cmdSetScissorWithCount (VkCommandBuffer commandbuffer, uint scissorcount, VkRect2D* pscissors) @extern("vkCmdSetScissorWithCount");
+extern fn void cmdBindVertexBuffers2 (VkCommandBuffer commandbuffer, uint firstbinding, uint bindingcount, VkBuffer* pbuffers, VkDeviceSize* poffsets, VkDeviceSize* psizes, VkDeviceSize* pstrides) @extern("vkCmdBindVertexBuffers2");
+extern fn void cmdSetDepthTestEnable (VkCommandBuffer commandbuffer, VkBool32 depthtestenable) @extern("vkCmdSetDepthTestEnable");
+extern fn void cmdSetDepthWriteEnable (VkCommandBuffer commandbuffer, VkBool32 depthwriteenable) @extern("vkCmdSetDepthWriteEnable");
+extern fn void cmdSetDepthCompareOp (VkCommandBuffer commandbuffer, VkCompareOp depthcompareop) @extern("vkCmdSetDepthCompareOp");
+extern fn void cmdSetDepthBoundsTestEnable (VkCommandBuffer commandbuffer, VkBool32 depthboundstestenable) @extern("vkCmdSetDepthBoundsTestEnable");
+extern fn void cmdSetStencilTestEnable (VkCommandBuffer commandbuffer, VkBool32 stenciltestenable) @extern("vkCmdSetStencilTestEnable");
+extern fn void cmdSetStencilOp (VkCommandBuffer commandbuffer, VkStencilFaceFlags facemask, VkStencilOp failop, VkStencilOp passop, VkStencilOp depthfailop, VkCompareOp compareop) @extern("vkCmdSetStencilOp");
+extern fn void cmdSetRasterizerDiscardEnable (VkCommandBuffer commandbuffer, VkBool32 rasterizerdiscardenable) @extern("vkCmdSetRasterizerDiscardEnable");
+extern fn void cmdSetDepthBiasEnable (VkCommandBuffer commandbuffer, VkBool32 depthbiasenable) @extern("vkCmdSetDepthBiasEnable");
+extern fn void cmdSetPrimitiveRestartEnable (VkCommandBuffer commandbuffer, VkBool32 primitiverestartenable) @extern("vkCmdSetPrimitiveRestartEnable");
+extern fn void getDeviceBufferMemoryRequirements (VkDevice device, VkDeviceBufferMemoryRequirements* pinfo, VkMemoryRequirements2* pmemoryrequirements) @extern("vkGetDeviceBufferMemoryRequirements");
+extern fn void getDeviceImageMemoryRequirements (VkDevice device, VkDeviceImageMemoryRequirements* pinfo, VkMemoryRequirements2* pmemoryrequirements) @extern("vkGetDeviceImageMemoryRequirements");
+extern fn void getDeviceImageSparseMemoryRequirements (VkDevice device, VkDeviceImageMemoryRequirements* pinfo, uint* psparsememoryrequirementcount, VkSparseImageMemoryRequirements2* psparsememoryrequirements) @extern("vkGetDeviceImageSparseMemoryRequirements");
 fn void! createInstance (VkInstanceCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkInstance* pinstance) {
   VkResult result = vkCreateInstance(pcreateinfo, pallocator, pinstance);
   switch(result) {
@@ -3048,6 +3716,38 @@ fn void! signalSemaphore (VkDevice device, VkSemaphoreSignalInfo* psignalinfo) {
         return VkErrors.VK_ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
+fn void! getPhysicalDeviceToolProperties (VkPhysicalDevice physicaldevice, uint* ptoolcount, VkPhysicalDeviceToolProperties* ptoolproperties) {
+  VkResult result = vkGetPhysicalDeviceToolProperties(physicaldevice, ptoolcount, ptoolproperties);
+  switch(result) {
+    case VK_ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.VK_ERROR_OUT_OF_HOST_MEMORY?;
+  }
+}
+fn void! createPrivateDataSlot (VkDevice device, VkPrivateDataSlotCreateInfo* pcreateinfo, VkAllocationCallbacks* pallocator, VkPrivateDataSlot* pprivatedataslot) {
+  VkResult result = vkCreatePrivateDataSlot(device, pcreateinfo, pallocator, pprivatedataslot);
+  switch(result) {
+    case VK_ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.VK_ERROR_OUT_OF_HOST_MEMORY?;
+  }
+}
+fn void! setPrivateData (VkDevice device, VkObjectType objecttype, ulong objecthandle, VkPrivateDataSlot privatedataslot, ulong data) {
+  VkResult result = vkSetPrivateData(device, objecttype, objecthandle, privatedataslot, data);
+  switch(result) {
+    case VK_ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.VK_ERROR_OUT_OF_HOST_MEMORY?;
+  }
+}
+fn void! queueSubmit2 (VkQueue queue, uint submitcount, VkSubmitInfo2* psubmits, VkFence fence) {
+  VkResult result = vkQueueSubmit2(queue, submitcount, psubmits, fence);
+  switch(result) {
+    case VK_ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.VK_ERROR_OUT_OF_HOST_MEMORY?;
+    case VK_ERROR_OUT_OF_DEVICE_MEMORY: 
+        return VkErrors.VK_ERROR_OUT_OF_DEVICE_MEMORY?;
+    case VK_ERROR_DEVICE_LOST: 
+        return VkErrors.VK_ERROR_DEVICE_LOST?;
+  }
+}
 struct VK_extension_bindings {
  PFN_destroySurfaceKHR destroySurfaceKHR;
  PFN_getPhysicalDeviceSurfaceSupportKHR getPhysicalDeviceSurfaceSupportKHR;
@@ -3445,6 +4145,7 @@ const VkResult VK_ERROR_OUT_OF_POOL_MEMORY = -1000069000;
 const VkResult VK_ERROR_INVALID_EXTERNAL_HANDLE = -1000072003;
 const VkResult VK_ERROR_FRAGMENTATION = -1000161000;
 const VkResult VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = -1000257000;
+const VkResult VK_PIPELINE_COMPILE_REQUIRED = 1000297000;
 const VkResult VK_ERROR_SURFACE_LOST_KHR = -1000000000;
 const VkResult VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001;
 const VkResult VK_SUBOPTIMAL_KHR = 1000001003;
@@ -3612,6 +4313,56 @@ const VkStructureType VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO = 1000244001;
 const VkStructureType VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO = 1000257002;
 const VkStructureType VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO = 1000257003;
 const VkStructureType VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = 1000257004;
+const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO = 1000192000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES = 1000215000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES = 1000245000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES = 1000276000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES = 1000295000;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO = 1000295001;
+const VkStructureType VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO = 1000295002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES = 1000297000;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_BARRIER_2 = 1000314000;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2 = 1000314001;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2 = 1000314002;
+const VkStructureType VK_STRUCTURE_TYPE_DEPENDENCY_INFO = 1000314003;
+const VkStructureType VK_STRUCTURE_TYPE_SUBMIT_INFO_2 = 1000314004;
+const VkStructureType VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO = 1000314005;
+const VkStructureType VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO = 1000314006;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES = 1000314007;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES = 1000325000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES = 1000335000;
+const VkStructureType VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2 = 1000337000;
+const VkStructureType VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2 = 1000337001;
+const VkStructureType VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2 = 1000337002;
+const VkStructureType VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2 = 1000337003;
+const VkStructureType VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 = 1000337004;
+const VkStructureType VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 = 1000337005;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_COPY_2 = 1000337006;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_COPY_2 = 1000337007;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_BLIT_2 = 1000337008;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 = 1000337009;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2 = 1000337010;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES = 1000225000;
+const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO = 1000225001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES = 1000225002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES = 1000138000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES = 1000138001;
+const VkStructureType VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK = 1000138002;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO = 1000138003;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES = 1000066000;
+const VkStructureType VK_STRUCTURE_TYPE_RENDERING_INFO = 1000044000;
+const VkStructureType VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO = 1000044001;
+const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO = 1000044002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES = 1000044003;
+const VkStructureType VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO = 1000044004;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES = 1000280000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES = 1000280001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES = 1000281001;
+const VkStructureType VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3 = 1000360000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES = 1000413000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES = 1000413001;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS = 1000413002;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS = 1000413003;
 const VkStructureType VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
 const VkStructureType VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR = 1000001000;
 const VkStructureType VK_STRUCTURE_TYPE_PRESENT_INFO_KHR = 1000001001;
@@ -3665,6 +4416,7 @@ const VkObjectType VK_OBJECT_TYPE_FRAMEBUFFER = 24;
 const VkObjectType VK_OBJECT_TYPE_COMMAND_POOL = 25;
 const VkObjectType VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = 1000156000;
 const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000;
+const VkObjectType VK_OBJECT_TYPE_PRIVATE_DATA_SLOT = 1000295000;
 const VkObjectType VK_OBJECT_TYPE_SURFACE_KHR = 1000000000;
 const VkObjectType VK_OBJECT_TYPE_SWAPCHAIN_KHR = 1000001000;
 const VkObjectType VK_OBJECT_TYPE_DISPLAY_KHR = 1000002000;
@@ -3901,6 +4653,26 @@ const VkFormat VK_FORMAT_G16_B16R16_2PLANE_420_UNORM = 1000156030;
 const VkFormat VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM = 1000156031;
 const VkFormat VK_FORMAT_G16_B16R16_2PLANE_422_UNORM = 1000156032;
 const VkFormat VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM = 1000156033;
+const VkFormat VK_FORMAT_G8_B8R8_2PLANE_444_UNORM = 1000330000;
+const VkFormat VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16 = 1000330001;
+const VkFormat VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16 = 1000330002;
+const VkFormat VK_FORMAT_G16_B16R16_2PLANE_444_UNORM = 1000330003;
+const VkFormat VK_FORMAT_A4R4G4B4_UNORM_PACK16 = 1000340000;
+const VkFormat VK_FORMAT_A4B4G4R4_UNORM_PACK16 = 1000340001;
+const VkFormat VK_FORMAT_ASTC_4X4_SFLOAT_BLOCK = 1000066000;
+const VkFormat VK_FORMAT_ASTC_5X4_SFLOAT_BLOCK = 1000066001;
+const VkFormat VK_FORMAT_ASTC_5X5_SFLOAT_BLOCK = 1000066002;
+const VkFormat VK_FORMAT_ASTC_6X5_SFLOAT_BLOCK = 1000066003;
+const VkFormat VK_FORMAT_ASTC_6X6_SFLOAT_BLOCK = 1000066004;
+const VkFormat VK_FORMAT_ASTC_8X5_SFLOAT_BLOCK = 1000066005;
+const VkFormat VK_FORMAT_ASTC_8X6_SFLOAT_BLOCK = 1000066006;
+const VkFormat VK_FORMAT_ASTC_8X8_SFLOAT_BLOCK = 1000066007;
+const VkFormat VK_FORMAT_ASTC_10X5_SFLOAT_BLOCK = 1000066008;
+const VkFormat VK_FORMAT_ASTC_10X6_SFLOAT_BLOCK = 1000066009;
+const VkFormat VK_FORMAT_ASTC_10X8_SFLOAT_BLOCK = 1000066010;
+const VkFormat VK_FORMAT_ASTC_10X10_SFLOAT_BLOCK = 1000066011;
+const VkFormat VK_FORMAT_ASTC_12X10_SFLOAT_BLOCK = 1000066012;
+const VkFormat VK_FORMAT_ASTC_12X12_SFLOAT_BLOCK = 1000066013;
 
 def VkFormatFeatureFlagBits = distinct inline int;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
@@ -4048,7 +4820,7 @@ def VkFenceCreateFlagBits = distinct inline int;
 const VkFenceCreateFlagBits VK_FENCE_CREATE_SIGNALED_BIT = 0x00000001;
 
 def VkEventCreateFlagBits = distinct inline int;
-
+const VkEventCreateFlagBits VK_EVENT_CREATE_DEVICE_ONLY_BIT = 0x00000001;
 
 def VkQueryPipelineStatisticFlagBits = distinct inline int;
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
@@ -4113,6 +4885,8 @@ const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL = 1000241000;
 const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL = 1000241001;
 const VkImageLayout VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL = 1000241002;
 const VkImageLayout VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = 1000241003;
+const VkImageLayout VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL = 1000314000;
+const VkImageLayout VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL = 1000314001;
 const VkImageLayout VK_IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002;
 
 def VkComponentSwizzle = distinct inline int;
@@ -4196,6 +4970,21 @@ const VkDynamicState VK_DYNAMIC_STATE_DEPTH_BOUNDS = 5;
 const VkDynamicState VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = 6;
 const VkDynamicState VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = 7;
 const VkDynamicState VK_DYNAMIC_STATE_STENCIL_REFERENCE = 8;
+const VkDynamicState VK_DYNAMIC_STATE_CULL_MODE = 1000267000;
+const VkDynamicState VK_DYNAMIC_STATE_FRONT_FACE = 1000267001;
+const VkDynamicState VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY = 1000267002;
+const VkDynamicState VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT = 1000267003;
+const VkDynamicState VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT = 1000267004;
+const VkDynamicState VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE = 1000267005;
+const VkDynamicState VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE = 1000267006;
+const VkDynamicState VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE = 1000267007;
+const VkDynamicState VK_DYNAMIC_STATE_DEPTH_COMPARE_OP = 1000267008;
+const VkDynamicState VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE = 1000267009;
+const VkDynamicState VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE = 1000267010;
+const VkDynamicState VK_DYNAMIC_STATE_STENCIL_OP = 1000267011;
+const VkDynamicState VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE = 1000377001;
+const VkDynamicState VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE = 1000377002;
+const VkDynamicState VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE = 1000377004;
 
 def VkFrontFace = distinct inline int;
 const VkFrontFace VK_FRONT_FACE_COUNTER_CLOCKWISE = 0;
@@ -4225,9 +5014,12 @@ const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x0000
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = 0x00000100;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = 0x00000200;
 
 def VkPipelineShaderStageCreateFlagBits = distinct inline int;
-
+const VkPipelineShaderStageCreateFlagBits VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT = 0x00000001;
+const VkPipelineShaderStageCreateFlagBits VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT = 0x00000002;
 
 def VkPolygonMode = distinct inline int;
 const VkPolygonMode VK_POLYGON_MODE_FILL = 0;
@@ -4316,6 +5108,7 @@ const VkDescriptorType VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = 7;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = 8;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = 9;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = 10;
+const VkDescriptorType VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK = 1000138000;
 
 def VkAccessFlagBits = distinct inline int;
 const VkAccessFlagBits VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
@@ -4347,6 +5140,7 @@ const VkAttachmentLoadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE = 2;
 def VkAttachmentStoreOp = distinct inline int;
 const VkAttachmentStoreOp VK_ATTACHMENT_STORE_OP_STORE = 0;
 const VkAttachmentStoreOp VK_ATTACHMENT_STORE_OP_DONT_CARE = 1;
+const VkAttachmentStoreOp VK_ATTACHMENT_STORE_OP_NONE = 1000301000;
 
 def VkDependencyFlagBits = distinct inline int;
 const VkDependencyFlagBits VK_DEPENDENCY_BY_REGION_BIT = 0x00000001;
@@ -4549,6 +5343,105 @@ const VkSemaphoreType VK_SEMAPHORE_TYPE_TIMELINE = 1;
 
 def VkSemaphoreWaitFlagBits = distinct inline int;
 const VkSemaphoreWaitFlagBits VK_SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
+
+def VkPipelineCreationFeedbackFlagBits = distinct inline int;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT = 0x00000001;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = 0x00000002;
+const VkPipelineCreationFeedbackFlagBits VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = 0x00000004;
+
+def VkToolPurposeFlagBits = distinct inline int;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_VALIDATION_BIT = 0x00000001;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_PROFILING_BIT = 0x00000002;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_TRACING_BIT = 0x00000004;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = 0x00000008;
+const VkToolPurposeFlagBits VK_TOOL_PURPOSE_MODIFYING_FEATURES_BIT = 0x00000010;
+
+def VkPipelineStageFlagBits2 = distinct inline ulong;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_NONE = 0;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = 0x00000001;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = 0x00000002;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT = 0x00000004;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT = 0x00000008;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT = 0x00000010;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT = 0x00000020;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT = 0x00000040;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT = 0x00000080;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = 0x00000100;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = 0x00000200;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT = 0x00000400;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT = 0x00000800;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT = 0x00001000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT = 0x00002000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_HOST_BIT = 0x00004000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT = 0x00008000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT = 0x00010000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_COPY_BIT = 0x100000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_RESOLVE_BIT = 0x200000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_BLIT_BIT = 0x400000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_CLEAR_BIT = 0x800000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT = 0x1000000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = 0x2000000000;
+const VkPipelineStageFlagBits2 VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = 0x4000000000;
+
+def VkAccessFlagBits2 = distinct inline ulong;
+const VkAccessFlagBits2 VK_ACCESS_2_NONE = 0;
+const VkAccessFlagBits2 VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT = 0x00000001;
+const VkAccessFlagBits2 VK_ACCESS_2_INDEX_READ_BIT = 0x00000002;
+const VkAccessFlagBits2 VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
+const VkAccessFlagBits2 VK_ACCESS_2_UNIFORM_READ_BIT = 0x00000008;
+const VkAccessFlagBits2 VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT = 0x00000010;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_READ_BIT = 0x00000020;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_WRITE_BIT = 0x00000040;
+const VkAccessFlagBits2 VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT = 0x00000080;
+const VkAccessFlagBits2 VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100;
+const VkAccessFlagBits2 VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200;
+const VkAccessFlagBits2 VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400;
+const VkAccessFlagBits2 VK_ACCESS_2_TRANSFER_READ_BIT = 0x00000800;
+const VkAccessFlagBits2 VK_ACCESS_2_TRANSFER_WRITE_BIT = 0x00001000;
+const VkAccessFlagBits2 VK_ACCESS_2_HOST_READ_BIT = 0x00002000;
+const VkAccessFlagBits2 VK_ACCESS_2_HOST_WRITE_BIT = 0x00004000;
+const VkAccessFlagBits2 VK_ACCESS_2_MEMORY_READ_BIT = 0x00008000;
+const VkAccessFlagBits2 VK_ACCESS_2_MEMORY_WRITE_BIT = 0x00010000;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_SAMPLED_READ_BIT = 0x100000000;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_STORAGE_READ_BIT = 0x200000000;
+const VkAccessFlagBits2 VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT = 0x400000000;
+
+def VkSubmitFlagBits = distinct inline int;
+const VkSubmitFlagBits VK_SUBMIT_PROTECTED_BIT = 0x00000001;
+
+def VkRenderingFlagBits = distinct inline int;
+const VkRenderingFlagBits VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = 0x00000001;
+const VkRenderingFlagBits VK_RENDERING_SUSPENDING_BIT = 0x00000002;
+const VkRenderingFlagBits VK_RENDERING_RESUMING_BIT = 0x00000004;
+
+def VkFormatFeatureFlagBits2 = distinct inline ulong;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = 0x00000001;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = 0x00000002;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT = 0x00000008;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT = 0x00000010;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = 0x00000020;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = 0x00000040;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = 0x00000080;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = 0x00000100;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000200;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BLIT_SRC_BIT = 0x00000400;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BLIT_DST_BIT = 0x00000800;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT = 0x00002000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT = 0x00004000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT = 0x00008000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_DISJOINT_BIT = 0x00400000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = 0x80000000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = 0x100000000;
+const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = 0x200000000;
 
 def VkSurfaceTransformFlagBitsKHR = distinct inline int;
 const VkSurfaceTransformFlagBitsKHR VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;

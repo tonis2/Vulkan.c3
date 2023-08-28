@@ -43,10 +43,9 @@ var platformTypes = {
 var replaceNames = {"module": "mod"};
 var filteredNames = [
   "VkBaseInStructure",
-  "VkBaseOutStructure",
-  "VkDependencyInfo"
+  "VkBaseOutStructure"
 ];
-var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1", "VK_VERSION_1_2"];
+var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1", "VK_VERSION_1_2", "VK_VERSION_1_3"];
 
 const API = "vulkan";
 var extensions = [
@@ -160,19 +159,20 @@ class VKenum {
   String? name;
   String? comment;
   String? category;
+  String? bit_width;
   List<VKenumValue> values;
-  VKenum({required this.name, this.type, required this.values, this.comment});
+  VKenum({required this.name, this.type, required this.values, this.comment, this.category, this.bit_width});
 
   static fromXML(XmlElement node) {
     String? name = node.getAttribute("name");
     String? type = node.getAttribute("type");
     String? comment = node.getAttribute("comment");
+    String? bit_width = node.getAttribute("bitwidth");
     List<VKenumValue> values = List<VKenumValue>.from(node
         .findAllElements('enum')
         .where((element) => element.getAttribute("deprecated") == null)
         .map((node) => VKenumValue.fromXML(node)));
-
-    return VKenum(type: type, name: name, values: values, comment: comment);
+    return VKenum(type: type, name: name, values: values, comment: comment, bit_width: bit_width);
   }
 }
 
@@ -326,10 +326,6 @@ void main() {
   final file = new File('assets/vk.xml');
   final document = XmlDocument.parse(file.readAsStringSync());
 
-  // Find features for set api version
-  var features = document.findAllElements("feature").where((element) =>
-      versions.contains(element.getAttribute("name")) &&
-      element.getAttribute("api") != "vulkansc");
 
   output.writeAsStringSync("");
   output.writeAsStringSync("module vk; \n", mode: FileMode.append);
@@ -411,81 +407,82 @@ void main() {
     }
   }
 
-
+  // Find features for set api version
+  var features = document.findAllElements("feature").where((element) {
+    String? apiName = element.getAttribute("name");
+    return apiName != "VKSC_VERSION_1_0" && versions.contains(apiName);
+  });
 
   // Parse by VK version
   features.forEach((feature) {
     var requirements = feature.findAllElements("require");
+    String? version = feature.getAttribute("number");
+    String? comment = feature.getAttribute("comment");
     requirements.forEach((element) {
-      String? name = element.getAttribute("comment");
+      // Loop throught api required components
+      element.childElements.forEach((child) {
+        String nodeType = child.name.qualified;
+        String? name = child.getAttribute("name");
+        if (name == null || filteredNames.contains(name)) return;
+        if (nodeType == "enum") {
+          String? extension = child.getAttribute("extends");
+          if (extension == null) {
+            var enumNode = document
+                .findAllElements("enum")
+                .firstWhere((value) => value.getAttribute("name") == name);
+            String? value = enumNode.getAttribute("value");
+            String? type = enumNode.getAttribute("type");
+            String? alias = enumNode.getAttribute("alias");
+            constants.add(VKenumValue(
+                name: name,
+                value: value,
+                index: null,
+                type: type,
+                alias: alias));
+          }
 
-      if (name != null && name != "Header boilerplate") {
-        // Loop throught api required components
-        element.childElements.forEach((child) {
-          String nodeType = child.name.qualified;
-          String? name = child.getAttribute("name");
-          if (name == null || filteredNames.contains(name)) return;
+          if (extension != null) {
+            // Extend previous enums
+            String? extNumber = child.getAttribute("extnumber");
+            String? offset = child.getAttribute("offset");
+            String? name = child.getAttribute("name");
+            String? bitpos = child.getAttribute("bitpos");
+            String? dir = child.getAttribute("dir");
 
-          if (nodeType == "enum") {
-            String? extension = child.getAttribute("extends");
-            if (extension == null) {
-              var enumNode = document
-                  .findAllElements("enum")
-                  .firstWhere((value) => value.getAttribute("name") == name);
-              String? value = enumNode.getAttribute("value");
-              String? type = enumNode.getAttribute("type");
-              String? alias = enumNode.getAttribute("alias");
-              constants.add(VKenumValue(
+            var previousEnum =
+            enums.where((element) => element.name == extension);
+
+            if (previousEnum.length != 0 && offset != null) {
+              previousEnum.first.values.add(VKenumValue(
                   name: name,
-                  value: value,
+                  value: extNumber?.ext_num_enum(offset, dir),
                   index: null,
-                  type: type,
-                  alias: alias));
+                  type: "uint"));
             }
 
-            if (extension != null) {
-              // Extend previous enums
-              String? extNumber = child.getAttribute("extnumber");
-              String? offset = child.getAttribute("offset");
-              String? name = child.getAttribute("name");
-              String? bitpos = child.getAttribute("bitpos");
-              String? dir = child.getAttribute("dir");
-
-              var previousEnum =
-                  enums.where((element) => element.name == extension);
-
-              if (previousEnum.length != 0 && offset != null) {
-                previousEnum.first.values.add(VKenumValue(
-                    name: name,
-                    value: extNumber?.ext_num_enum(offset, dir),
-                    index: null,
-                    type: "uint"));
-              }
-
-              if (previousEnum.length != 0 && bitpos != null) {
-                previousEnum.first.values.add(VKenumValue(
-                    name: name, value: bitpos.to_bitvalue(), index: null));
-              }
+            if (previousEnum.length != 0 && bitpos != null) {
+              previousEnum.first.values.add(VKenumValue(
+                  name: name, value: bitpos.to_bitvalue(), index: null));
             }
           }
+        }
 
-          if (nodeType == "type") {
-            parseType(nodeType, name);
-          }
+        if (nodeType == "type") {
+          parseType(nodeType, name);
+        }
 
-          if (nodeType == "command") {
-            XmlElement VkNode = document.findAllElements(nodeType).firstWhere(
-                (element) =>
-                    element
-                        .getElement("proto")
-                        ?.getElement("name")
-                        ?.innerText ==
-                    name);
+        if (nodeType == "command") {
+          XmlElement VkNode = document.findAllElements(nodeType).firstWhere(
+                  (element) =>
+              element
+                  .getElement("proto")
+                  ?.getElement("name")
+                  ?.innerText ==
+                  name);
 
-            commands.add(VKCommand.fromXML(VkNode));
-          }
-        });
-      }
+          commands.add(VKCommand.fromXML(VkNode));
+        }
+      });
     });
   });
 
@@ -512,6 +509,7 @@ void main() {
         String? api = node.getAttribute("api");
         String nodeType = node.name.qualified;
         if (api == "vulkansc") return;
+
         if (nodeType == "enum") {
           // Add enum extension to parent
           if (extension != null) {
@@ -666,7 +664,7 @@ fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${typ
 //  Enums
 enums.forEach((entry) {
   String code =
-      "\ndef ${entry.name} = distinct inline int;\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
+      "\ndef ${entry.name} = distinct inline ${entry?.bit_width != null ? "ulong" : "int"};\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
