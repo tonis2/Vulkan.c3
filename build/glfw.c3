@@ -59,10 +59,12 @@ struct EventHandler {
     uint last_key;
 }
 
-fn void EventHandler.init(&self) {
-    setMouseButtonCallback(self.window, (MouseCallback*)&mouseEvents);
-    setKeyCallback(self.window, (KeyCallback*)&keyboardEvents);
-    handle = self;
+
+fn EventHandler createHandler(EventHandler info) {
+    setMouseButtonCallback(info.window, (MouseCallback*)&mouseEvents);
+    setKeyCallback(info.window, (KeyCallback*)&keyboardEvents);
+    handle = &info;
+    return info;
 }
 
 fn void mouseEvents(GLFWwindow window, int button, int action, int mods) {

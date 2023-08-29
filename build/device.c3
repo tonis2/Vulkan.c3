@@ -14,73 +14,6 @@ def PresentModeList = List(<VkPresentModeKHR>);
 def CommandBufferList = List(<VkCommandBuffer>);
 def CommandBufferCallback = fn void (VkCommandBuffer buffer);
 
-VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
-     .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-     .flags = 0,
-     .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-     .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-     .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
-     .pUserData = null,
-};
-
-VkPhysicalDeviceFeatures default_device_features = {
-    .robustBufferAccess = 0,
-    .fullDrawIndexUint32 = 0,
-    .imageCubeArray = 0,
-    .independentBlend = 0,
-    .geometryShader = 0,
-    .tessellationShader = 0,
-    .sampleRateShading = 0,
-    .dualSrcBlend = 0,
-    .logicOp = 0,
-    .multiDrawIndirect = 0,
-    .drawIndirectFirstInstance = 0,
-    .depthClamp = 0,
-    .depthBiasClamp = 0,
-    .fillModeNonSolid = 0,
-    .depthBounds = 0,
-    .wideLines = 0,
-    .largePoints = 0,
-    .alphaToOne = 0,
-    .multiViewport = 0,
-    .samplerAnisotropy = 0,
-    .textureCompressionETC2 = 0,
-    .textureCompressionASTC_LDR = 0,
-    .textureCompressionBC = 0,
-    .occlusionQueryPrecise = 0,
-    .pipelineStatisticsQuery = 0,
-    .vertexPipelineStoresAndAtomics = 0,
-    .fragmentStoresAndAtomics = 0,
-    .shaderTessellationAndGeometryPointSize = 0,
-    .shaderImageGatherExtended = 0,
-    .shaderStorageImageExtendedFormats = 0,
-    .shaderStorageImageMultisample = 0,
-    .shaderStorageImageReadWithoutFormat = 0,
-    .shaderStorageImageWriteWithoutFormat = 0,
-    .shaderUniformBufferArrayDynamicIndexing = 0,
-    .shaderSampledImageArrayDynamicIndexing = 0,
-    .shaderStorageBufferArrayDynamicIndexing = 0,
-    .shaderStorageImageArrayDynamicIndexing = 0,
-    .shaderClipDistance = 0,
-    .shaderCullDistance = 0,
-    .shaderFloat64 = 0,
-    .shaderInt64 = 0,
-    .shaderInt16 = 0,
-    .shaderResourceResidency = 0,
-    .shaderResourceMinLod = 0,
-    .sparseBinding = 0,
-    .sparseResidencyBuffer = 0,
-    .sparseResidencyImage2D = 0,
-    .sparseResidencyImage3D = 0,
-    .sparseResidency2Samples = 0,
-    .sparseResidency4Samples = 0,
-    .sparseResidency8Samples = 0,
-    .sparseResidency16Samples = 0,
-    .sparseResidencyAliased = 0,
-    .variableMultisampleRate = 0,
-    .inheritedQueries = 0,
-};
-
 fault ContextErrors
 {
     FAILED_GETTING_EXTENSIONS,
@@ -127,17 +60,29 @@ struct Device {
     bool enable_debug;
 }
 
+fn VkDescriptorSetLayout! Device.createDescriptorSetLayout(self, VkDescriptorSetLayoutCreateInfo info)
+{
+    VkDescriptorSetLayout layout;
+    createDescriptorSetLayout(self.device, &info, null, &layout)!;
+    return layout;
+}
 
+fn VkPipelineLayout! Device.createPipelineLayout(self, VkPipelineLayoutCreateInfo info)
+{
+    VkPipelineLayout layout;
+    createPipelineLayout(self.device, &info, null, &layout)!;
+    return layout;
+}
 
-fn VkShaderModule! Device.createShaderModule(self, uint* data, uint size)
+fn VkShaderModule! Device.createShaderModule(self, char[] data)
 {
     VkShaderModule shader;
     createShaderModule(self.device, &&VkShaderModuleCreateInfo{
        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
        .pNext = null,
        .flags = 0,
-       .codeSize = size,
-       .pCode = data,
+       .codeSize = data.len,
+       .pCode = (uint*)&data[0],
     }, null, &shader)!;
     return shader;
 }
@@ -182,7 +127,6 @@ fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null
         createImageView(self.device, &image_info, null, &image_views[i])!;
     }
 
-
     return SwapChain {
         .swapchain = swapchain,
         .images = images,
@@ -195,14 +139,14 @@ fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null
 
 fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info = null)
 {
-   if (info == null) {
-    info = &&VkCommandPoolCreateInfo{
-        .sType = vk::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-        .pNext = null,
-        .flags = vk::VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-        .queueFamilyIndex = self.queue_family.graphics,
-    };
-   }
+    if (info == null) {
+        info = &&VkCommandPoolCreateInfo{
+            .sType = vk::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+            .pNext = null,
+            .flags = vk::VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+            .queueFamilyIndex = self.queue_family.graphics,
+        };
+    }
 
    VkCommandPool pool;
    createCommandPool(self.device, info, null, &pool)!;
@@ -227,7 +171,6 @@ fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint
 
     return buffers;
 }
-
 
 fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreateInfoKHR info = defaultSwapchain)
 {
@@ -664,4 +607,6 @@ fn void VkDescriptorSetLayout.free(self, VkDevice device)
 {
     destroyDescriptorSetLayout(device, self, null);
 }
+
+
 
