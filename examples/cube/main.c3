@@ -6,7 +6,7 @@ import std::math;
 
 const WIDTH = 800;
 const HEIGHT = 600;
-const VK_API_VERSION_1_2 = vk::@makeApiVersion(0,1,2,0);
+const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
 const ENABLE_VALIDATION_LAYERS = true;
 
 struct Vertex {
@@ -81,10 +81,10 @@ fn void! main()
 
     AppInfo appInfo = {
         .pApplicationName = "Hello Cube",
-        .applicationVersion = VK_API_VERSION_1_2,
+        .applicationVersion = vk::@makeApiVersion(0,1,0,0),
         .pEngineName = "Super engine",
-        .engineVersion = VK_API_VERSION_1_2,
-        .apiVersion = VK_API_VERSION_1_2,
+        .engineVersion = vk::@makeApiVersion(0,1,0,0),
+        .apiVersion = VK_API_VERSION_1_3,
         .enable_debug = ENABLE_VALIDATION_LAYERS,
         .dynamic_rendering = true,
         .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
