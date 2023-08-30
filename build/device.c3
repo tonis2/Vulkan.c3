@@ -40,6 +40,7 @@ struct AppInfo {
     uint engineVersion;
     uint apiVersion;
     bool enable_debug;
+    bool dynamic_rendering;
     ZStringList validations;
     ZStringList extensions;
     ZStringList device_extensions;
@@ -324,10 +325,18 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
         .flags = 0,
     };
 
+     // Deprecated
     if (info.enable_debug) {
         deviceCreateInfo.enabledLayerCount = (uint)info.validations.len();
         deviceCreateInfo.ppEnabledLayerNames = (char*)&info.validations.to_array()[0];
     }
+
+    VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {
+       .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+       .dynamicRendering = VK_TRUE,
+    };
+
+    deviceCreateInfo.pNext = &dynamicRenderingFeatures;
 
     vk::createDevice(physical_device, &deviceCreateInfo, null, &logical_device)!;
     vk::getDeviceQueue(logical_device, queue_family.graphics, 0, &graphics_queue);

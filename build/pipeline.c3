@@ -9,6 +9,7 @@ VkGraphicsPipelineCreateInfo pipelineDefaultInfo = {
     .subpass = 0,
     .basePipelineHandle = null,
     .basePipelineIndex = -1,
+    .renderPass = null,
     .pViewportState = &&VkPipelineViewportStateCreateInfo {
         .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
         .pNext = null,
@@ -105,6 +106,13 @@ fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.colorBlendState(sel
     return self;
 }
 
+fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.pipelineRendering(self, VkPipelineRenderingCreateInfo* info)
+{
+    info.sType = vk::VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
+    self.pNext = info;
+    return self;
+}
+
 fn VkPipelineShaderStageCreateInfo VkShaderModule.pipelineInfo(self, VkShaderStageFlagBits stage, VkSpecializationInfo* spec_info = null, VkPipelineShaderStageCreateFlags flags = 0)
 {
     return VkPipelineShaderStageCreateInfo {
@@ -116,4 +124,8 @@ fn VkPipelineShaderStageCreateInfo VkShaderModule.pipelineInfo(self, VkShaderSta
         .pName = "main",
         .pSpecializationInfo = spec_info,
     };
+}
+
+fn void VkPipeline.free(self, VkDevice device) {
+   destroyPipeline(device, self, null);
 }
