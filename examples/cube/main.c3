@@ -86,6 +86,7 @@ fn void! main()
         .engineVersion = VK_API_VERSION_1_2,
         .apiVersion = VK_API_VERSION_1_2,
         .enable_debug = ENABLE_VALIDATION_LAYERS,
+        .dynamic_rendering = true,
         .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
     };
 
@@ -93,7 +94,7 @@ fn void! main()
 
     //"VK_LAYER_LUNARG_api_dump"
     appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
+    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
 
     // SETUP extensions
     uint glfwExtensions_count = 0;
@@ -286,37 +287,15 @@ fn void! main()
             .compareOp = vk::VK_COMPARE_OP_ALWAYS
         }
     })
-    .colorBlendState(&color_blending);
+    .colorBlendState(&color_blending)
+    .pipelineRendering(&&VkPipelineRenderingCreateInfo {
+                           .colorAttachmentCount = 1,
+                           .pColorAttachmentFormats = &&VkFormat[1]{swapchain.image_format}
+                       });
 
     VkPipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
-
-    // RenderPass info
-   /*
-
-    // Shaders info
-
-
-    VkPipeline pipeline;
-    vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline)!;
-
-    VkFramebuffer* frame_buffers = malloc(VkFramebuffer, context.swapchain.image_count);
-    for (int i = 0; i < context.swapchain.image_count; ++i) {
-        VkImageView image_view = context.swapchain.image_views[i];
-        VkFramebufferCreateInfo frame_buffer_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .renderPass = render_pass,
-            .attachmentCount = 1,
-            .pAttachments = &&VkImageView[1]{image_view},
-            .width = context.swapchain.extent.width,
-            .height = context.swapchain.extent.height,
-            .layers = 1,
-        };
-        vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i])!;
-    }
-
+/*
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
@@ -327,7 +306,13 @@ fn void! main()
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
-        SyncImage active_sync = context.swapchain.syncImages[frame];
+         VkClearValue[] clear_color = {
+                {
+                    .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
+                }
+            };
+
+      SyncImage active_sync = context.swapchain.syncImages[frame];
         vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max)!;
         vk::resetFences(context.device, 1, &active_sync.frame_fence)!;
 
@@ -337,10 +322,27 @@ fn void! main()
             return index;
         |};
 
-        VkCommandBuffer buffer = context.command_buffers[next_image];
-        vk::resetCommandBuffer(buffer, 0)!;
+        VkRenderingAttachmentInfoKHR color_attachment_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR,
+            .imageView = swapchain.image_view[next_image],
+            .imageLayout = vk::VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR,
+            .loadOp = vk::VK_ATTACHMENT_LOAD_OP_CLEAR,
+            .storeOp = vk::VK_ATTACHMENT_STORE_OP_STORE,
+            .clearValue = clear_value,
+        };
 
-        VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
+        VkRenderingInfoKHR render_info = {
+            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_INFO_KHR,
+            .renderArea = render_area,
+            .layerCount = 1,
+            .colorAttachmentCount = 1,
+            .pColorAttachments = &color_attachment_info,
+        };
+
+        VkCommandBuffer buffer = context.command_buffers[next_image];
+        vk::resetCommandBuffer(buffer, 0)!;*//*
+
+       VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
         VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
 
         VkSubmitInfo submit_info = {
@@ -411,26 +413,11 @@ fn void! main()
              .pResults = null,
         };
 
-        vk::queuePresentKHR(context.graphics_queue, &present_info)!;
+        vk::queuePresentKHR(context.graphics_queue, &present_info)!;*//*
         frame = (frame + 1) % 2;
-    }*/
+    }
+    */
 
-/*    defer {
-        vk::destroyShaderModule(context.device, vertex_module, null);
-        vk::destroyShaderModule(context.device, frag_module, null);
-        vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
-
-        vk::destroyRenderPass(context.device, render_pass, null);
-        vk::destroyPipeline(context.device, pipeline, null);
-        for (int i = 0; i < context.swapchain.image_count; ++i) {
-            vk::destroyFramebuffer(context.device, frame_buffers[i], null);
-        }
-        mem::free(frame_buffers);
-        uniform_buffer.free(context.device);
-        index_buffer.free(context.device);
-        vertex_buffer.free(context.device);
-        context.free();
-    };*/
 
     defer {
         vertex_module.free(device.device);
@@ -440,6 +427,7 @@ fn void! main()
         vertex_buffer.free(device.device);
         command_pool.free(device.device);
         swapchain.free(device.device);
+        pipeline.free(device.device);
         pipeline_layout.free(device.device);
         descriptor_set_layout.free(device.device);
         device.free();
