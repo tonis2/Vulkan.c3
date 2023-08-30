@@ -295,7 +295,7 @@ fn void! main()
 
     VkPipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
-/*
+
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
@@ -306,43 +306,41 @@ fn void! main()
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
-         VkClearValue[] clear_color = {
-                {
-                    .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
-                }
-            };
-
-      SyncImage active_sync = context.swapchain.syncImages[frame];
-        vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max)!;
-        vk::resetFences(context.device, 1, &active_sync.frame_fence)!;
+        SyncImage active_sync = context.swapchain.syncImages[frame];
+        vk::waitForFences(device.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max)!;
+        vk::resetFences(device.device, 1, &active_sync.frame_fence)!;
 
         uint next_image = {|
             uint index;
-            vk::acquireNextImageKHR(context.device, context.swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index)!!;
+            vk::acquireNextImageKHR(device.device, swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index)!!;
             return index;
         |};
 
-        VkRenderingAttachmentInfoKHR color_attachment_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR,
-            .imageView = swapchain.image_view[next_image],
-            .imageLayout = vk::VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR,
+      VkRenderingInfo rendering_info = {
+        .sType = vk::VK_STRUCTURE_TYPE_RENDERING_INFO,
+        .pNext = null,
+        .flags = 0,
+        .layerCount = 1,
+        .colorAttachmentCount = 1,
+        .pColorAttachments = &&VkRenderingAttachmentInfo {
+            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+            .imageView = swapchain.image_views[next_image],
+            .imageLayout = vk::VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
             .loadOp = vk::VK_ATTACHMENT_LOAD_OP_CLEAR,
             .storeOp = vk::VK_ATTACHMENT_STORE_OP_STORE,
-            .clearValue = clear_value,
+            .clearValue = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
+            .renderArea = {
+                .offset = VkOffset2D{ .x = 0, .y = 0 },
+                .extent = swapchain.extent,
+                }
+            }
         };
 
-        VkRenderingInfoKHR render_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_INFO_KHR,
-            .renderArea = render_area,
-            .layerCount = 1,
-            .colorAttachmentCount = 1,
-            .pColorAttachments = &color_attachment_info,
-        };
+        VkCommandBuffer buffer = command_buffers[next_image];
+        vk::resetCommandBuffer(buffer, 0)!;
+        vk::cmdBeginRendering(buffer, &rendering_info);
 
-        VkCommandBuffer buffer = context.command_buffers[next_image];
-        vk::resetCommandBuffer(buffer, 0)!;*//*
-
-       VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
+        VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
         VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
 
         VkSubmitInfo submit_info = {
@@ -366,26 +364,7 @@ fn void! main()
 
         vk::beginCommandBuffer(buffer, &begin_info)!;
 
-        VkClearValue[1] clear_color = {
-            VkClearValue{
-                .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
-            }
-        };
-
-        VkRenderPassBeginInfo render_pass_begin_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-            .pNext = null,
-            .renderPass = render_pass,
-            .framebuffer = frame_buffers[next_image],
-            .renderArea = VkRect2D{
-                .offset = VkOffset2D{ .x = 0, .y = 0 },
-                .extent = context.swapchain.extent,
-            },
-            .clearValueCount = 1,
-            .pClearValues = &clear_color,
-        };
-
-        vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{ .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
 
         vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
@@ -397,11 +376,38 @@ fn void! main()
         vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &deviceSizes);
         vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
         vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
+        vk::cmdEndRendering(buffer);
 
-        vk::cmdEndRenderPass(buffer);
+        VkImageMemoryBarrier image_memory_barrier = {
+            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+            .srcAccessMask = vk::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            .oldLayout = vk::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = vk::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+            .image = swapchain.images[next_image],
+            .subresourceRange = {
+              .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+              .baseMipLevel = 0,
+              .levelCount = 1,
+              .baseArrayLayer = 0,
+              .layerCount = 1,
+            }
+        };
+
+        vk::cmdPipelineBarrier(
+            buffer,
+            vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_barrier
+        );
+
         vk::endCommandBuffer(buffer)!;
-
-        vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence)!;
+        vk::queueSubmit(device.graphics_queue, 1, &submit_info, active_sync.frame_fence)!;
 
         VkPresentInfoKHR present_info = {
              .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -412,11 +418,9 @@ fn void! main()
              .pImageIndices = &&uint[1]{next_image},
              .pResults = null,
         };
-
-        vk::queuePresentKHR(context.graphics_queue, &present_info)!;*//*
+        vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
-    */
 
 
     defer {
