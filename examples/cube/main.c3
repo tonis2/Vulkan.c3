@@ -179,23 +179,23 @@ fn void! main()
     VkShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
     VkShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
 
-    VkPipelineLayout pipeline_layout = device.createPipelineLayout({
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .setLayoutCount = 1,
-        .pSetLayouts = &descriptor_set_layout,
-        .pushConstantRangeCount = 0,
-        .pPushConstantRanges = null,
-    })!;
+    VkPipelineLayoutCreateInfo pipelineLayoutInfo = vk::pipelineLayoutCreateInfoBuilder()
+    .setSetLayouts({ descriptor_set_layout });
+/*    {
+            .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .setLayoutCount = 1,
+            .pSetLayouts = &descriptor_set_layout,
+            .pushConstantRangeCount = 0,
+            .pPushConstantRanges = null,
+        }*/
+    VkPipelineLayout pipeline_layout = device.createPipelineLayout(pipelineLayoutInfo)!;
 
-    VkPipelineColorBlendStateCreateInfo color_blending = VkPipelineColorBlendStateCreateInfo {
-        .pNext = null,
-        .flags = 0,
-        .logicOpEnable = 0,
-        .logicOp = vk::VK_LOGIC_OP_COPY,
-        .blendConstants = float[4]{ 0.0, 0.0, 0.0, 0.0 },
-    }.attachments({
+    VkPipelineColorBlendStateCreateInfo color_blending = vk::pipelineColorBlendStateCreateInfoBuilder()
+    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+    .setLogicOp(vk::VK_LOGIC_OP_COPY)
+    .setAttachments({
         {
             .colorWriteMask =
                 vk::VK_COLOR_COMPONENT_R_BIT |
@@ -295,6 +295,7 @@ fn void! main()
 
     VkPipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
+/*
 
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
@@ -421,6 +422,7 @@ fn void! main()
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
+*/
 
 
     defer {
