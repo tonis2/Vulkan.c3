@@ -8,6 +8,13 @@ fn VkBufferMemoryBarrier bufferMemoryBarrierBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
@@ -52,6 +59,13 @@ fn VkImageMemoryBarrier imageMemoryBarrierBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageMemoryBarrier VkImageMemoryBarrier.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageMemoryBarrier VkImageMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
@@ -101,6 +115,13 @@ fn VkMemoryBarrier memoryBarrierBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryBarrier VkMemoryBarrier.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryBarrier VkMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
@@ -120,6 +141,13 @@ fn VkApplicationInfo applicationInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkApplicationInfo VkApplicationInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkApplicationInfo VkApplicationInfo.setApplicationName(self, char* pApplicationName) {
   self.pApplicationName = pApplicationName;
   return self;
@@ -154,6 +182,13 @@ fn VkInstanceCreateInfo instanceCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkInstanceCreateInfo VkInstanceCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkInstanceCreateInfo VkInstanceCreateInfo.setFlags(self, VkInstanceCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -195,6 +230,13 @@ fn VkDeviceCreateInfo deviceCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceCreateInfo VkDeviceCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceCreateInfo VkDeviceCreateInfo.setFlags(self, VkDeviceCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -247,6 +289,13 @@ fn VkDeviceQueueCreateInfo deviceQueueCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setFlags(self, VkDeviceQueueCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -277,6 +326,13 @@ fn VkSubmitInfo submitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubmitInfo VkSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubmitInfo VkSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
@@ -325,6 +381,13 @@ fn VkMappedMemoryRange mappedMemoryRangeBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMappedMemoryRange VkMappedMemoryRange.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMappedMemoryRange VkMappedMemoryRange.setMemory(self, VkDeviceMemory memory) {
   self.memory = memory;
   return self;
@@ -349,6 +412,13 @@ fn VkMemoryAllocateInfo memoryAllocateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryAllocateInfo VkMemoryAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryAllocateInfo VkMemoryAllocateInfo.setAllocationSize(self, VkDeviceSize allocationSize) {
   self.allocationSize = allocationSize;
   return self;
@@ -368,6 +438,13 @@ fn VkBindSparseInfo bindSparseInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindSparseInfo VkBindSparseInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindSparseInfo VkBindSparseInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
@@ -432,6 +509,13 @@ fn VkFenceCreateInfo fenceCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFenceCreateInfo VkFenceCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFenceCreateInfo VkFenceCreateInfo.setFlags(self, VkFenceCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -446,6 +530,13 @@ fn VkSemaphoreCreateInfo semaphoreCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSemaphoreCreateInfo VkSemaphoreCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSemaphoreCreateInfo VkSemaphoreCreateInfo.setFlags(self, VkSemaphoreCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -460,6 +551,13 @@ fn VkEventCreateInfo eventCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkEventCreateInfo VkEventCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkEventCreateInfo VkEventCreateInfo.setFlags(self, VkEventCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -474,6 +572,13 @@ fn VkQueryPoolCreateInfo queryPoolCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setFlags(self, VkQueryPoolCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -503,6 +608,13 @@ fn VkBufferCreateInfo bufferCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferCreateInfo VkBufferCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferCreateInfo VkBufferCreateInfo.setFlags(self, VkBufferCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -543,6 +655,13 @@ fn VkBufferViewCreateInfo bufferViewCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setFlags(self, VkBufferViewCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -577,6 +696,13 @@ fn VkImageCreateInfo imageCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageCreateInfo VkImageCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageCreateInfo VkImageCreateInfo.setFlags(self, VkImageCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -652,6 +778,13 @@ fn VkImageViewCreateInfo imageViewCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageViewCreateInfo VkImageViewCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageViewCreateInfo VkImageViewCreateInfo.setFlags(self, VkImageViewCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -691,6 +824,13 @@ fn VkShaderModuleCreateInfo shaderModuleCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setFlags(self, VkShaderModuleCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -710,6 +850,13 @@ fn VkPipelineCacheCreateInfo pipelineCacheCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setFlags(self, VkPipelineCacheCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -734,6 +881,13 @@ fn VkComputePipelineCreateInfo computePipelineCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setFlags(self, VkPipelineCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -768,6 +922,13 @@ fn VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setFlags(self, VkPipelineCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -863,6 +1024,13 @@ fn VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfoBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setFlags(self, VkPipelineColorBlendStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -903,6 +1071,13 @@ fn VkPipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfoBuil
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setFlags(self, VkPipelineDepthStencilStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -962,6 +1137,13 @@ fn VkPipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setFlags(self, VkPipelineDynamicStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -987,6 +1169,13 @@ fn VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfoBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setFlags(self, VkPipelineInputAssemblyStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1011,6 +1200,13 @@ fn VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfoBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setFlags(self, VkPipelineMultisampleStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1050,6 +1246,13 @@ fn VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfoBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setFlags(self, VkPipelineRasterizationStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1114,6 +1317,13 @@ fn VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setFlags(self, VkPipelineShaderStageCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1148,6 +1358,13 @@ fn VkPipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfoBuil
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo.setFlags(self, VkPipelineTessellationStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1167,6 +1384,13 @@ fn VkPipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfoBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setFlags(self, VkPipelineVertexInputStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1203,6 +1427,13 @@ fn VkPipelineViewportStateCreateInfo pipelineViewportStateCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setFlags(self, VkPipelineViewportStateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1239,6 +1470,13 @@ fn VkPipelineLayoutCreateInfo pipelineLayoutCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setFlags(self, VkPipelineLayoutCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1275,6 +1513,13 @@ fn VkSamplerCreateInfo samplerCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSamplerCreateInfo VkSamplerCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSamplerCreateInfo VkSamplerCreateInfo.setFlags(self, VkSamplerCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1364,6 +1609,13 @@ fn VkCopyDescriptorSet copyDescriptorSetBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCopyDescriptorSet VkCopyDescriptorSet.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCopyDescriptorSet VkCopyDescriptorSet.setSrcSet(self, VkDescriptorSet srcSet) {
   self.srcSet = srcSet;
   return self;
@@ -1408,6 +1660,13 @@ fn VkDescriptorPoolCreateInfo descriptorPoolCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setFlags(self, VkDescriptorPoolCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1438,6 +1697,13 @@ fn VkDescriptorSetAllocateInfo descriptorSetAllocateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setDescriptorPool(self, VkDescriptorPool descriptorPool) {
   self.descriptorPool = descriptorPool;
   return self;
@@ -1463,6 +1729,13 @@ fn VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setFlags(self, VkDescriptorSetLayoutCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1488,6 +1761,13 @@ fn VkWriteDescriptorSet writeDescriptorSetBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkWriteDescriptorSet VkWriteDescriptorSet.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkWriteDescriptorSet VkWriteDescriptorSet.setDstSet(self, VkDescriptorSet dstSet) {
   self.dstSet = dstSet;
   return self;
@@ -1540,6 +1820,13 @@ fn VkFramebufferCreateInfo framebufferCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setFlags(self, VkFramebufferCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1585,6 +1872,13 @@ fn VkRenderPassCreateInfo renderPassCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setFlags(self, VkRenderPassCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1632,6 +1926,13 @@ fn VkCommandPoolCreateInfo commandPoolCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandPoolCreateInfo VkCommandPoolCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandPoolCreateInfo VkCommandPoolCreateInfo.setFlags(self, VkCommandPoolCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -1651,6 +1952,13 @@ fn VkCommandBufferAllocateInfo commandBufferAllocateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setCommandPool(self, VkCommandPool commandPool) {
   self.commandPool = commandPool;
   return self;
@@ -1675,6 +1983,13 @@ fn VkCommandBufferBeginInfo commandBufferBeginInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandBufferBeginInfo VkCommandBufferBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandBufferBeginInfo VkCommandBufferBeginInfo.setFlags(self, VkCommandBufferUsageFlags flags) {
   self.flags = flags;
   return self;
@@ -1694,6 +2009,13 @@ fn VkCommandBufferInheritanceInfo commandBufferInheritanceInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setRenderPass(self, VkRenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
@@ -1733,6 +2055,13 @@ fn VkRenderPassBeginInfo renderPassBeginInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setRenderPass(self, VkRenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
@@ -1768,6 +2097,13 @@ fn VkPhysicalDeviceSubgroupProperties physicalDeviceSubgroupPropertiesBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setSubgroupSize(self, uint subgroupSize) {
   self.subgroupSize = subgroupSize;
   return self;
@@ -1797,6 +2133,13 @@ fn VkBindBufferMemoryInfo bindBufferMemoryInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setBuffer(self, VkBuffer buffer) {
   self.buffer = buffer;
   return self;
@@ -1821,6 +2164,13 @@ fn VkBindImageMemoryInfo bindImageMemoryInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setImage(self, VkImage image) {
   self.image = image;
   return self;
@@ -1845,6 +2195,13 @@ fn VkPhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeaturesBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setStorageBuffer16BitAccess(self, VkBool32 storageBuffer16BitAccess) {
   self.storageBuffer16BitAccess = storageBuffer16BitAccess;
   return self;
@@ -1874,6 +2231,13 @@ fn VkMemoryDedicatedRequirements memoryDedicatedRequirementsBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryDedicatedRequirements VkMemoryDedicatedRequirements.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryDedicatedRequirements VkMemoryDedicatedRequirements.setPrefersDedicatedAllocation(self, VkBool32 prefersDedicatedAllocation) {
   self.prefersDedicatedAllocation = prefersDedicatedAllocation;
   return self;
@@ -1893,6 +2257,13 @@ fn VkMemoryDedicatedAllocateInfo memoryDedicatedAllocateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo.setImage(self, VkImage image) {
   self.image = image;
   return self;
@@ -1912,6 +2283,13 @@ fn VkMemoryAllocateFlagsInfo memoryAllocateFlagsInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo.setFlags(self, VkMemoryAllocateFlags flags) {
   self.flags = flags;
   return self;
@@ -1931,6 +2309,13 @@ fn VkDeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
@@ -1956,6 +2341,13 @@ fn VkDeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfoBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
@@ -1970,6 +2362,13 @@ fn VkDeviceGroupSubmitInfo deviceGroupSubmitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
@@ -2012,6 +2411,13 @@ fn VkDeviceGroupBindSparseInfo deviceGroupBindSparseInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo.setResourceDeviceIndex(self, uint resourceDeviceIndex) {
   self.resourceDeviceIndex = resourceDeviceIndex;
   return self;
@@ -2031,6 +2437,13 @@ fn VkBindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
   self.deviceIndexCount = deviceIndexCount;
   return self;
@@ -2051,6 +2464,13 @@ fn VkBindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
   self.deviceIndexCount = deviceIndexCount;
   return self;
@@ -2082,6 +2502,13 @@ fn VkPhysicalDeviceGroupProperties physicalDeviceGroupPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
@@ -2106,6 +2533,13 @@ fn VkDeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
@@ -2126,6 +2560,13 @@ fn VkBufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2.setBuffer(self, VkBuffer buffer) {
   self.buffer = buffer;
   return self;
@@ -2140,6 +2581,13 @@ fn VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2.setImage(self, VkImage image) {
   self.image = image;
   return self;
@@ -2154,6 +2602,13 @@ fn VkImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2Builde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2.setImage(self, VkImage image) {
   self.image = image;
   return self;
@@ -2168,6 +2623,13 @@ fn VkMemoryRequirements2 memoryRequirements2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryRequirements2 VkMemoryRequirements2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryRequirements2 VkMemoryRequirements2.setMemoryRequirements(self, VkMemoryRequirements memoryRequirements) {
   self.memoryRequirements = memoryRequirements;
   return self;
@@ -2182,6 +2644,13 @@ fn VkSparseImageMemoryRequirements2 sparseImageMemoryRequirements2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2.setMemoryRequirements(self, VkSparseImageMemoryRequirements memoryRequirements) {
   self.memoryRequirements = memoryRequirements;
   return self;
@@ -2196,6 +2665,13 @@ fn VkPhysicalDeviceFeatures2 physicalDeviceFeatures2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2.setFeatures(self, VkPhysicalDeviceFeatures features) {
   self.features = features;
   return self;
@@ -2210,6 +2686,13 @@ fn VkPhysicalDeviceProperties2 physicalDeviceProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceProperties2 VkPhysicalDeviceProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceProperties2 VkPhysicalDeviceProperties2.setProperties(self, VkPhysicalDeviceProperties properties) {
   self.properties = properties;
   return self;
@@ -2224,6 +2707,13 @@ fn VkFormatProperties2 formatProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFormatProperties2 VkFormatProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFormatProperties2 VkFormatProperties2.setFormatProperties(self, VkFormatProperties formatProperties) {
   self.formatProperties = formatProperties;
   return self;
@@ -2238,6 +2728,13 @@ fn VkImageFormatProperties2 imageFormatProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageFormatProperties2 VkImageFormatProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageFormatProperties2 VkImageFormatProperties2.setImageFormatProperties(self, VkImageFormatProperties imageFormatProperties) {
   self.imageFormatProperties = imageFormatProperties;
   return self;
@@ -2252,6 +2749,13 @@ fn VkPhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setFormat(self, VkFormat format) {
   self.format = format;
   return self;
@@ -2286,6 +2790,13 @@ fn VkQueueFamilyProperties2 queueFamilyProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkQueueFamilyProperties2 VkQueueFamilyProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkQueueFamilyProperties2 VkQueueFamilyProperties2.setQueueFamilyProperties(self, VkQueueFamilyProperties queueFamilyProperties) {
   self.queueFamilyProperties = queueFamilyProperties;
   return self;
@@ -2300,6 +2811,13 @@ fn VkPhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2.setMemoryProperties(self, VkPhysicalDeviceMemoryProperties memoryProperties) {
   self.memoryProperties = memoryProperties;
   return self;
@@ -2314,6 +2832,13 @@ fn VkSparseImageFormatProperties2 sparseImageFormatProperties2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSparseImageFormatProperties2 VkSparseImageFormatProperties2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSparseImageFormatProperties2 VkSparseImageFormatProperties2.setProperties(self, VkSparseImageFormatProperties properties) {
   self.properties = properties;
   return self;
@@ -2328,6 +2853,13 @@ fn VkPhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2Bu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setFormat(self, VkFormat format) {
   self.format = format;
   return self;
@@ -2362,6 +2894,13 @@ fn VkPhysicalDevicePointClippingProperties physicalDevicePointClippingProperties
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties.setPointClippingBehavior(self, VkPointClippingBehavior pointClippingBehavior) {
   self.pointClippingBehavior = pointClippingBehavior;
   return self;
@@ -2376,6 +2915,13 @@ fn VkRenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo.setAspectReferenceCount(self, uint aspectReferenceCount) {
   self.aspectReferenceCount = aspectReferenceCount;
   return self;
@@ -2396,6 +2942,13 @@ fn VkImageViewUsageCreateInfo imageViewUsageCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageViewUsageCreateInfo VkImageViewUsageCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageViewUsageCreateInfo VkImageViewUsageCreateInfo.setUsage(self, VkImageUsageFlags usage) {
   self.usage = usage;
   return self;
@@ -2410,6 +2963,13 @@ fn VkPipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainO
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo.setDomainOrigin(self, VkTessellationDomainOrigin domainOrigin) {
   self.domainOrigin = domainOrigin;
   return self;
@@ -2424,6 +2984,13 @@ fn VkRenderPassMultiviewCreateInfo renderPassMultiviewCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setSubpassCount(self, uint subpassCount) {
   self.subpassCount = subpassCount;
   return self;
@@ -2466,6 +3033,13 @@ fn VkPhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeaturesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setMultiview(self, VkBool32 multiview) {
   self.multiview = multiview;
   return self;
@@ -2490,6 +3064,13 @@ fn VkPhysicalDeviceMultiviewProperties physicalDeviceMultiviewPropertiesBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties.setMaxMultiviewViewCount(self, uint maxMultiviewViewCount) {
   self.maxMultiviewViewCount = maxMultiviewViewCount;
   return self;
@@ -2509,6 +3090,13 @@ fn VkPhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeatur
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures.setVariablePointersStorageBuffer(self, VkBool32 variablePointersStorageBuffer) {
   self.variablePointersStorageBuffer = variablePointersStorageBuffer;
   return self;
@@ -2528,6 +3116,13 @@ fn VkPhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeatures
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures.setProtectedMemory(self, VkBool32 protectedMemory) {
   self.protectedMemory = protectedMemory;
   return self;
@@ -2542,6 +3137,13 @@ fn VkPhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryProper
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties.setProtectedNoFault(self, VkBool32 protectedNoFault) {
   self.protectedNoFault = protectedNoFault;
   return self;
@@ -2556,6 +3158,13 @@ fn VkDeviceQueueInfo2 deviceQueueInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setFlags(self, VkDeviceQueueCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -2580,6 +3189,13 @@ fn VkProtectedSubmitInfo protectedSubmitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkProtectedSubmitInfo VkProtectedSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkProtectedSubmitInfo VkProtectedSubmitInfo.setProtectedSubmit(self, VkBool32 protectedSubmit) {
   self.protectedSubmit = protectedSubmit;
   return self;
@@ -2594,6 +3210,13 @@ fn VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfoBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setFormat(self, VkFormat format) {
   self.format = format;
   return self;
@@ -2643,6 +3266,13 @@ fn VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo.setConversion(self, VkSamplerYcbcrConversion conversion) {
   self.conversion = conversion;
   return self;
@@ -2657,6 +3287,13 @@ fn VkBindImagePlaneMemoryInfo bindImagePlaneMemoryInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo.setPlaneAspect(self, VkImageAspectFlagBits planeAspect) {
   self.planeAspect = planeAspect;
   return self;
@@ -2671,6 +3308,13 @@ fn VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfoBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo.setPlaneAspect(self, VkImageAspectFlagBits planeAspect) {
   self.planeAspect = planeAspect;
   return self;
@@ -2685,6 +3329,13 @@ fn VkPhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConv
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures.setSamplerYcbcrConversion(self, VkBool32 samplerYcbcrConversion) {
   self.samplerYcbcrConversion = samplerYcbcrConversion;
   return self;
@@ -2699,6 +3350,13 @@ fn VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageForm
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties.setCombinedImageSamplerDescriptorCount(self, uint combinedImageSamplerDescriptorCount) {
   self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
   return self;
@@ -2713,6 +3371,13 @@ fn VkDescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfoBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setFlags(self, VkDescriptorUpdateTemplateCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -2763,6 +3428,13 @@ fn VkPhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfo
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExternalImageFormatInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExternalImageFormatInfo.setHandleType(self, VkExternalMemoryHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
@@ -2777,6 +3449,13 @@ fn VkExternalImageFormatProperties externalImageFormatPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalImageFormatProperties VkExternalImageFormatProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalImageFormatProperties VkExternalImageFormatProperties.setExternalMemoryProperties(self, VkExternalMemoryProperties externalMemoryProperties) {
   self.externalMemoryProperties = externalMemoryProperties;
   return self;
@@ -2791,6 +3470,13 @@ fn VkPhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfoBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setFlags(self, VkBufferCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -2815,6 +3501,13 @@ fn VkExternalBufferProperties externalBufferPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalBufferProperties VkExternalBufferProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalBufferProperties VkExternalBufferProperties.setExternalMemoryProperties(self, VkExternalMemoryProperties externalMemoryProperties) {
   self.externalMemoryProperties = externalMemoryProperties;
   return self;
@@ -2829,6 +3522,13 @@ fn VkPhysicalDeviceIDProperties physicalDeviceIDPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDeviceUUID(self, uint[VK_UUID_SIZE] deviceUUID) {
   self.deviceUUID = deviceUUID;
   return self;
@@ -2863,6 +3563,13 @@ fn VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
@@ -2877,6 +3584,13 @@ fn VkExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
@@ -2891,6 +3605,13 @@ fn VkExportMemoryAllocateInfo exportMemoryAllocateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExportMemoryAllocateInfo VkExportMemoryAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExportMemoryAllocateInfo VkExportMemoryAllocateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
@@ -2905,6 +3626,13 @@ fn VkPhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo.setHandleType(self, VkExternalFenceHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
@@ -2919,6 +3647,13 @@ fn VkExternalFenceProperties externalFencePropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalFenceProperties VkExternalFenceProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalFenceProperties VkExternalFenceProperties.setExportFromImportedHandleTypes(self, VkExternalFenceHandleTypeFlags exportFromImportedHandleTypes) {
   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
   return self;
@@ -2943,6 +3678,13 @@ fn VkExportFenceCreateInfo exportFenceCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExportFenceCreateInfo VkExportFenceCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExportFenceCreateInfo VkExportFenceCreateInfo.setHandleTypes(self, VkExternalFenceHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
@@ -2957,6 +3699,13 @@ fn VkExportSemaphoreCreateInfo exportSemaphoreCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo.setHandleTypes(self, VkExternalSemaphoreHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
@@ -2971,6 +3720,13 @@ fn VkPhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfoBuil
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo.setHandleType(self, VkExternalSemaphoreHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
@@ -2985,6 +3741,13 @@ fn VkExternalSemaphoreProperties externalSemaphorePropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setExportFromImportedHandleTypes(self, VkExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes) {
   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
   return self;
@@ -3009,6 +3772,13 @@ fn VkPhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3PropertiesBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties.setMaxPerSetDescriptors(self, uint maxPerSetDescriptors) {
   self.maxPerSetDescriptors = maxPerSetDescriptors;
   return self;
@@ -3028,6 +3798,13 @@ fn VkDescriptorSetLayoutSupport descriptorSetLayoutSupportBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetLayoutSupport VkDescriptorSetLayoutSupport.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetLayoutSupport VkDescriptorSetLayoutSupport.setSupported(self, VkBool32 supported) {
   self.supported = supported;
   return self;
@@ -3042,6 +3819,13 @@ fn VkPhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParamete
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures.setShaderDrawParameters(self, VkBool32 shaderDrawParameters) {
   self.shaderDrawParameters = shaderDrawParameters;
   return self;
@@ -3056,6 +3840,13 @@ fn VkImageFormatListCreateInfo imageFormatListCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setViewFormatCount(self, uint viewFormatCount) {
   self.viewFormatCount = viewFormatCount;
   return self;
@@ -3076,6 +3867,13 @@ fn VkRenderPassCreateInfo2 renderPassCreateInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setFlags(self, VkRenderPassCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -3134,6 +3932,13 @@ fn VkAttachmentDescription2 attachmentDescription2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkAttachmentDescription2 VkAttachmentDescription2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkAttachmentDescription2 VkAttachmentDescription2.setFlags(self, VkAttachmentDescriptionFlags flags) {
   self.flags = flags;
   return self;
@@ -3188,6 +3993,13 @@ fn VkAttachmentReference2 attachmentReference2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkAttachmentReference2 VkAttachmentReference2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkAttachmentReference2 VkAttachmentReference2.setAttachment(self, uint attachment) {
   self.attachment = attachment;
   return self;
@@ -3212,6 +4024,13 @@ fn VkSubpassDescription2 subpassDescription2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubpassDescription2 VkSubpassDescription2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubpassDescription2 VkSubpassDescription2.setFlags(self, VkSubpassDescriptionFlags flags) {
   self.flags = flags;
   return self;
@@ -3280,6 +4099,13 @@ fn VkSubpassDependency2 subpassDependency2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubpassDependency2 VkSubpassDependency2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubpassDependency2 VkSubpassDependency2.setSrcSubpass(self, uint srcSubpass) {
   self.srcSubpass = srcSubpass;
   return self;
@@ -3329,6 +4155,13 @@ fn VkSubpassBeginInfo subpassBeginInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubpassBeginInfo VkSubpassBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubpassBeginInfo VkSubpassBeginInfo.setContents(self, VkSubpassContents contents) {
   self.contents = contents;
   return self;
@@ -3344,6 +4177,12 @@ fn VkSubpassEndInfo subpassEndInfoBuilder() {
   return defaultValue;
 }
 
+// Skip the .sType value
+fn VkSubpassEndInfo VkSubpassEndInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 
 
 fn VkPhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder() {
@@ -3353,6 +4192,13 @@ fn VkPhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setStorageBuffer8BitAccess(self, VkBool32 storageBuffer8BitAccess) {
   self.storageBuffer8BitAccess = storageBuffer8BitAccess;
   return self;
@@ -3377,6 +4223,13 @@ fn VkPhysicalDeviceDriverProperties physicalDeviceDriverPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setDriverID(self, VkDriverId driverID) {
   self.driverID = driverID;
   return self;
@@ -3406,6 +4259,13 @@ fn VkPhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64Feat
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderAtomicInt64Features VkPhysicalDeviceShaderAtomicInt64Features.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderAtomicInt64Features VkPhysicalDeviceShaderAtomicInt64Features.setShaderBufferInt64Atomics(self, VkBool32 shaderBufferInt64Atomics) {
   self.shaderBufferInt64Atomics = shaderBufferInt64Atomics;
   return self;
@@ -3425,6 +4285,13 @@ fn VkPhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8Feat
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderFloat16Int8Features VkPhysicalDeviceShaderFloat16Int8Features.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderFloat16Int8Features VkPhysicalDeviceShaderFloat16Int8Features.setShaderFloat16(self, VkBool32 shaderFloat16) {
   self.shaderFloat16 = shaderFloat16;
   return self;
@@ -3444,6 +4311,13 @@ fn VkPhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsProperties
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setDenormBehaviorIndependence(self, VkShaderFloatControlsIndependence denormBehaviorIndependence) {
   self.denormBehaviorIndependence = denormBehaviorIndependence;
   return self;
@@ -3538,6 +4412,13 @@ fn VkDescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlagsCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlagsCreateInfo.setBindingCount(self, uint bindingCount) {
   self.bindingCount = bindingCount;
   return self;
@@ -3558,6 +4439,13 @@ fn VkPhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFe
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayDynamicIndexing(self, VkBool32 shaderInputAttachmentArrayDynamicIndexing) {
   self.shaderInputAttachmentArrayDynamicIndexing = shaderInputAttachmentArrayDynamicIndexing;
   return self;
@@ -3667,6 +4555,13 @@ fn VkPhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexing
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxUpdateAfterBindDescriptorsInAllPools(self, uint maxUpdateAfterBindDescriptorsInAllPools) {
   self.maxUpdateAfterBindDescriptorsInAllPools = maxUpdateAfterBindDescriptorsInAllPools;
   return self;
@@ -3791,6 +4686,13 @@ fn VkDescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDescriptorCountAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
   self.descriptorSetCount = descriptorSetCount;
   return self;
@@ -3811,6 +4713,13 @@ fn VkDescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDesc
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorSetVariableDescriptorCountLayoutSupport VkDescriptorSetVariableDescriptorCountLayoutSupport.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorSetVariableDescriptorCountLayoutSupport VkDescriptorSetVariableDescriptorCountLayoutSupport.setMaxVariableDescriptorCount(self, uint maxVariableDescriptorCount) {
   self.maxVariableDescriptorCount = maxVariableDescriptorCount;
   return self;
@@ -3825,6 +4734,13 @@ fn VkSubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolve
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setDepthResolveMode(self, VkResolveModeFlagBits depthResolveMode) {
   self.depthResolveMode = depthResolveMode;
   return self;
@@ -3849,6 +4765,13 @@ fn VkPhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResol
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setSupportedDepthResolveModes(self, VkResolveModeFlags supportedDepthResolveModes) {
   self.supportedDepthResolveModes = supportedDepthResolveModes;
   return self;
@@ -3878,6 +4801,13 @@ fn VkPhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeat
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceScalarBlockLayoutFeatures VkPhysicalDeviceScalarBlockLayoutFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceScalarBlockLayoutFeatures VkPhysicalDeviceScalarBlockLayoutFeatures.setScalarBlockLayout(self, VkBool32 scalarBlockLayout) {
   self.scalarBlockLayout = scalarBlockLayout;
   return self;
@@ -3892,6 +4822,13 @@ fn VkImageStencilUsageCreateInfo imageStencilUsageCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageStencilUsageCreateInfo VkImageStencilUsageCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageStencilUsageCreateInfo VkImageStencilUsageCreateInfo.setStencilUsage(self, VkImageUsageFlags stencilUsage) {
   self.stencilUsage = stencilUsage;
   return self;
@@ -3906,6 +4843,13 @@ fn VkSamplerReductionModeCreateInfo samplerReductionModeCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSamplerReductionModeCreateInfo VkSamplerReductionModeCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSamplerReductionModeCreateInfo VkSamplerReductionModeCreateInfo.setReductionMode(self, VkSamplerReductionMode reductionMode) {
   self.reductionMode = reductionMode;
   return self;
@@ -3920,6 +4864,13 @@ fn VkPhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinm
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSamplerFilterMinmaxProperties VkPhysicalDeviceSamplerFilterMinmaxProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSamplerFilterMinmaxProperties VkPhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxSingleComponentFormats(self, VkBool32 filterMinmaxSingleComponentFormats) {
   self.filterMinmaxSingleComponentFormats = filterMinmaxSingleComponentFormats;
   return self;
@@ -3939,6 +4890,13 @@ fn VkPhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeat
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModel(self, VkBool32 vulkanMemoryModel) {
   self.vulkanMemoryModel = vulkanMemoryModel;
   return self;
@@ -3963,6 +4921,13 @@ fn VkPhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebuff
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceImagelessFramebufferFeatures VkPhysicalDeviceImagelessFramebufferFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceImagelessFramebufferFeatures VkPhysicalDeviceImagelessFramebufferFeatures.setImagelessFramebuffer(self, VkBool32 imagelessFramebuffer) {
   self.imagelessFramebuffer = imagelessFramebuffer;
   return self;
@@ -3977,6 +4942,13 @@ fn VkFramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfoBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setAttachmentImageInfoCount(self, uint attachmentImageInfoCount) {
   self.attachmentImageInfoCount = attachmentImageInfoCount;
   return self;
@@ -3997,6 +4969,13 @@ fn VkFramebufferAttachmentImageInfo framebufferAttachmentImageInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setFlags(self, VkImageCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -4042,6 +5021,13 @@ fn VkRenderPassAttachmentBeginInfo renderPassAttachmentBeginInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
@@ -4062,6 +5048,13 @@ fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBuff
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures VkPhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures VkPhysicalDeviceUniformBufferStandardLayoutFeatures.setUniformBufferStandardLayout(self, VkBool32 uniformBufferStandardLayout) {
   self.uniformBufferStandardLayout = uniformBufferStandardLayout;
   return self;
@@ -4076,6 +5069,13 @@ fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures.setShaderSubgroupExtendedTypes(self, VkBool32 shaderSubgroupExtendedTypes) {
   self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
   return self;
@@ -4090,6 +5090,13 @@ fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDep
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures.setSeparateDepthStencilLayouts(self, VkBool32 separateDepthStencilLayouts) {
   self.separateDepthStencilLayouts = separateDepthStencilLayouts;
   return self;
@@ -4104,6 +5111,13 @@ fn VkAttachmentReferenceStencilLayout attachmentReferenceStencilLayoutBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkAttachmentReferenceStencilLayout VkAttachmentReferenceStencilLayout.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkAttachmentReferenceStencilLayout VkAttachmentReferenceStencilLayout.setStencilLayout(self, VkImageLayout stencilLayout) {
   self.stencilLayout = stencilLayout;
   return self;
@@ -4118,6 +5132,13 @@ fn VkAttachmentDescriptionStencilLayout attachmentDescriptionStencilLayoutBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkAttachmentDescriptionStencilLayout VkAttachmentDescriptionStencilLayout.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkAttachmentDescriptionStencilLayout VkAttachmentDescriptionStencilLayout.setStencilInitialLayout(self, VkImageLayout stencilInitialLayout) {
   self.stencilInitialLayout = stencilInitialLayout;
   return self;
@@ -4137,6 +5158,13 @@ fn VkPhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeaturesBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceHostQueryResetFeatures VkPhysicalDeviceHostQueryResetFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceHostQueryResetFeatures VkPhysicalDeviceHostQueryResetFeatures.setHostQueryReset(self, VkBool32 hostQueryReset) {
   self.hostQueryReset = hostQueryReset;
   return self;
@@ -4151,6 +5179,13 @@ fn VkPhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeat
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceTimelineSemaphoreFeatures VkPhysicalDeviceTimelineSemaphoreFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceTimelineSemaphoreFeatures VkPhysicalDeviceTimelineSemaphoreFeatures.setTimelineSemaphore(self, VkBool32 timelineSemaphore) {
   self.timelineSemaphore = timelineSemaphore;
   return self;
@@ -4165,6 +5200,13 @@ fn VkPhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphorePr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceTimelineSemaphoreProperties VkPhysicalDeviceTimelineSemaphoreProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceTimelineSemaphoreProperties VkPhysicalDeviceTimelineSemaphoreProperties.setMaxTimelineSemaphoreValueDifference(self, ulong maxTimelineSemaphoreValueDifference) {
   self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
   return self;
@@ -4179,6 +5221,13 @@ fn VkSemaphoreTypeCreateInfo semaphoreTypeCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSemaphoreTypeCreateInfo VkSemaphoreTypeCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSemaphoreTypeCreateInfo VkSemaphoreTypeCreateInfo.setSemaphoreType(self, VkSemaphoreType semaphoreType) {
   self.semaphoreType = semaphoreType;
   return self;
@@ -4198,6 +5247,13 @@ fn VkTimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setWaitSemaphoreValueCount(self, uint waitSemaphoreValueCount) {
   self.waitSemaphoreValueCount = waitSemaphoreValueCount;
   return self;
@@ -4229,6 +5285,13 @@ fn VkSemaphoreWaitInfo semaphoreWaitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setFlags(self, VkSemaphoreWaitFlags flags) {
   self.flags = flags;
   return self;
@@ -4260,6 +5323,13 @@ fn VkSemaphoreSignalInfo semaphoreSignalInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSemaphoreSignalInfo VkSemaphoreSignalInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSemaphoreSignalInfo VkSemaphoreSignalInfo.setSemaphore(self, VkSemaphore semaphore) {
   self.semaphore = semaphore;
   return self;
@@ -4279,6 +5349,13 @@ fn VkPhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddress
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddress(self, VkBool32 bufferDeviceAddress) {
   self.bufferDeviceAddress = bufferDeviceAddress;
   return self;
@@ -4303,6 +5380,13 @@ fn VkBufferDeviceAddressInfo bufferDeviceAddressInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferDeviceAddressInfo VkBufferDeviceAddressInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferDeviceAddressInfo VkBufferDeviceAddressInfo.setBuffer(self, VkBuffer buffer) {
   self.buffer = buffer;
   return self;
@@ -4317,6 +5401,13 @@ fn VkBufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfoBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferOpaqueCaptureAddressCreateInfo VkBufferOpaqueCaptureAddressCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferOpaqueCaptureAddressCreateInfo VkBufferOpaqueCaptureAddressCreateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
   self.opaqueCaptureAddress = opaqueCaptureAddress;
   return self;
@@ -4331,6 +5422,13 @@ fn VkMemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateIn
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryOpaqueCaptureAddressAllocateInfo VkMemoryOpaqueCaptureAddressAllocateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryOpaqueCaptureAddressAllocateInfo VkMemoryOpaqueCaptureAddressAllocateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
   self.opaqueCaptureAddress = opaqueCaptureAddress;
   return self;
@@ -4345,6 +5443,13 @@ fn VkDeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfoBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceMemoryOpaqueCaptureAddressInfo VkDeviceMemoryOpaqueCaptureAddressInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceMemoryOpaqueCaptureAddressInfo VkDeviceMemoryOpaqueCaptureAddressInfo.setMemory(self, VkDeviceMemory memory) {
   self.memory = memory;
   return self;
@@ -4359,6 +5464,13 @@ fn VkPhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTermina
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderTerminateInvocationFeatures VkPhysicalDeviceShaderTerminateInvocationFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderTerminateInvocationFeatures VkPhysicalDeviceShaderTerminateInvocationFeatures.setShaderTerminateInvocation(self, VkBool32 shaderTerminateInvocation) {
   self.shaderTerminateInvocation = shaderTerminateInvocation;
   return self;
@@ -4373,6 +5485,13 @@ fn VkPhysicalDeviceToolProperties physicalDeviceToolPropertiesBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setName(self, char[VK_MAX_EXTENSION_NAME_SIZE] name) {
   self.name = name;
   return self;
@@ -4407,6 +5526,13 @@ fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDe
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures.setShaderDemoteToHelperInvocation(self, VkBool32 shaderDemoteToHelperInvocation) {
   self.shaderDemoteToHelperInvocation = shaderDemoteToHelperInvocation;
   return self;
@@ -4421,6 +5547,13 @@ fn VkPhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeaturesBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePrivateDataFeatures VkPhysicalDevicePrivateDataFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePrivateDataFeatures VkPhysicalDevicePrivateDataFeatures.setPrivateData(self, VkBool32 privateData) {
   self.privateData = privateData;
   return self;
@@ -4435,6 +5568,13 @@ fn VkDevicePrivateDataCreateInfo devicePrivateDataCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDevicePrivateDataCreateInfo VkDevicePrivateDataCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDevicePrivateDataCreateInfo VkDevicePrivateDataCreateInfo.setPrivateDataSlotRequestCount(self, uint privateDataSlotRequestCount) {
   self.privateDataSlotRequestCount = privateDataSlotRequestCount;
   return self;
@@ -4449,6 +5589,13 @@ fn VkPrivateDataSlotCreateInfo privateDataSlotCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPrivateDataSlotCreateInfo VkPrivateDataSlotCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPrivateDataSlotCreateInfo VkPrivateDataSlotCreateInfo.setFlags(self, VkPrivateDataSlotCreateFlags flags) {
   self.flags = flags;
   return self;
@@ -4463,6 +5610,13 @@ fn VkPhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePipelineCreationCacheControlFeatures VkPhysicalDevicePipelineCreationCacheControlFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePipelineCreationCacheControlFeatures VkPhysicalDevicePipelineCreationCacheControlFeatures.setPipelineCreationCacheControl(self, VkBool32 pipelineCreationCacheControl) {
   self.pipelineCreationCacheControl = pipelineCreationCacheControl;
   return self;
@@ -4477,6 +5631,13 @@ fn VkMemoryBarrier2 memoryBarrier2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkMemoryBarrier2 VkMemoryBarrier2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkMemoryBarrier2 VkMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
@@ -4506,6 +5667,13 @@ fn VkBufferMemoryBarrier2 bufferMemoryBarrier2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
@@ -4560,6 +5728,13 @@ fn VkImageMemoryBarrier2 imageMemoryBarrier2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
@@ -4619,6 +5794,13 @@ fn VkDependencyInfo dependencyInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDependencyInfo VkDependencyInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDependencyInfo VkDependencyInfo.setDependencyFlags(self, VkDependencyFlags dependencyFlags) {
   self.dependencyFlags = dependencyFlags;
   return self;
@@ -4666,6 +5848,13 @@ fn VkSubmitInfo2 submitInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSubmitInfo2 VkSubmitInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSubmitInfo2 VkSubmitInfo2.setFlags(self, VkSubmitFlags flags) {
   self.flags = flags;
   return self;
@@ -4713,6 +5902,13 @@ fn VkSemaphoreSubmitInfo semaphoreSubmitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setSemaphore(self, VkSemaphore semaphore) {
   self.semaphore = semaphore;
   return self;
@@ -4742,6 +5938,13 @@ fn VkCommandBufferSubmitInfo commandBufferSubmitInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandBufferSubmitInfo VkCommandBufferSubmitInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandBufferSubmitInfo VkCommandBufferSubmitInfo.setCommandBuffer(self, VkCommandBuffer commandBuffer) {
   self.commandBuffer = commandBuffer;
   return self;
@@ -4761,6 +5964,13 @@ fn VkPhysicalDeviceSynchronization2Features physicalDeviceSynchronization2Featur
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSynchronization2Features VkPhysicalDeviceSynchronization2Features.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSynchronization2Features VkPhysicalDeviceSynchronization2Features.setSynchronization2(self, VkBool32 synchronization2) {
   self.synchronization2 = synchronization2;
   return self;
@@ -4775,6 +5985,13 @@ fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroIniti
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setShaderZeroInitializeWorkgroupMemory(self, VkBool32 shaderZeroInitializeWorkgroupMemory) {
   self.shaderZeroInitializeWorkgroupMemory = shaderZeroInitializeWorkgroupMemory;
   return self;
@@ -4789,6 +6006,13 @@ fn VkPhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeatures
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceImageRobustnessFeatures VkPhysicalDeviceImageRobustnessFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceImageRobustnessFeatures VkPhysicalDeviceImageRobustnessFeatures.setRobustImageAccess(self, VkBool32 robustImageAccess) {
   self.robustImageAccess = robustImageAccess;
   return self;
@@ -4803,6 +6027,13 @@ fn VkCopyBufferInfo2 copyBufferInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCopyBufferInfo2 VkCopyBufferInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCopyBufferInfo2 VkCopyBufferInfo2.setSrcBuffer(self, VkBuffer srcBuffer) {
   self.srcBuffer = srcBuffer;
   return self;
@@ -4833,6 +6064,13 @@ fn VkCopyImageInfo2 copyImageInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCopyImageInfo2 VkCopyImageInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCopyImageInfo2 VkCopyImageInfo2.setSrcImage(self, VkImage srcImage) {
   self.srcImage = srcImage;
   return self;
@@ -4873,6 +6111,13 @@ fn VkCopyBufferToImageInfo2 copyBufferToImageInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setSrcBuffer(self, VkBuffer srcBuffer) {
   self.srcBuffer = srcBuffer;
   return self;
@@ -4908,6 +6153,13 @@ fn VkCopyImageToBufferInfo2 copyImageToBufferInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setSrcImage(self, VkImage srcImage) {
   self.srcImage = srcImage;
   return self;
@@ -4943,6 +6195,13 @@ fn VkBlitImageInfo2 blitImageInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBlitImageInfo2 VkBlitImageInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBlitImageInfo2 VkBlitImageInfo2.setSrcImage(self, VkImage srcImage) {
   self.srcImage = srcImage;
   return self;
@@ -4988,6 +6247,13 @@ fn VkResolveImageInfo2 resolveImageInfo2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkResolveImageInfo2 VkResolveImageInfo2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkResolveImageInfo2 VkResolveImageInfo2.setSrcImage(self, VkImage srcImage) {
   self.srcImage = srcImage;
   return self;
@@ -5028,6 +6294,13 @@ fn VkBufferCopy2 bufferCopy2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferCopy2 VkBufferCopy2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferCopy2 VkBufferCopy2.setSrcOffset(self, VkDeviceSize srcOffset) {
   self.srcOffset = srcOffset;
   return self;
@@ -5052,6 +6325,13 @@ fn VkImageCopy2 imageCopy2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageCopy2 VkImageCopy2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageCopy2 VkImageCopy2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
@@ -5086,6 +6366,13 @@ fn VkImageBlit2 imageBlit2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageBlit2 VkImageBlit2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageBlit2 VkImageBlit2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
@@ -5115,6 +6402,13 @@ fn VkBufferImageCopy2 bufferImageCopy2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBufferImageCopy2 VkBufferImageCopy2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBufferImageCopy2 VkBufferImageCopy2.setBufferOffset(self, VkDeviceSize bufferOffset) {
   self.bufferOffset = bufferOffset;
   return self;
@@ -5154,6 +6448,13 @@ fn VkImageResolve2 imageResolve2Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageResolve2 VkImageResolve2.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageResolve2 VkImageResolve2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
@@ -5188,6 +6489,13 @@ fn VkPhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControl
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSubgroupSizeControlFeatures VkPhysicalDeviceSubgroupSizeControlFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSubgroupSizeControlFeatures VkPhysicalDeviceSubgroupSizeControlFeatures.setSubgroupSizeControl(self, VkBool32 subgroupSizeControl) {
   self.subgroupSizeControl = subgroupSizeControl;
   return self;
@@ -5207,6 +6515,13 @@ fn VkPhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeContr
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setMinSubgroupSize(self, uint minSubgroupSize) {
   self.minSubgroupSize = minSubgroupSize;
   return self;
@@ -5236,6 +6551,13 @@ fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequir
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo VkPipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo VkPipelineShaderStageRequiredSubgroupSizeCreateInfo.setRequiredSubgroupSize(self, uint requiredSubgroupSize) {
   self.requiredSubgroupSize = requiredSubgroupSize;
   return self;
@@ -5250,6 +6572,13 @@ fn VkPhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFe
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceInlineUniformBlockFeatures VkPhysicalDeviceInlineUniformBlockFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceInlineUniformBlockFeatures VkPhysicalDeviceInlineUniformBlockFeatures.setInlineUniformBlock(self, VkBool32 inlineUniformBlock) {
   self.inlineUniformBlock = inlineUniformBlock;
   return self;
@@ -5269,6 +6598,13 @@ fn VkPhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlock
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxInlineUniformBlockSize(self, uint maxInlineUniformBlockSize) {
   self.maxInlineUniformBlockSize = maxInlineUniformBlockSize;
   return self;
@@ -5303,6 +6639,13 @@ fn VkWriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlockBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkWriteDescriptorSetInlineUniformBlock VkWriteDescriptorSetInlineUniformBlock.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkWriteDescriptorSetInlineUniformBlock VkWriteDescriptorSetInlineUniformBlock.setDataSize(self, uint dataSize) {
   self.dataSize = dataSize;
   return self;
@@ -5322,6 +6665,13 @@ fn VkDescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlock
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDescriptorPoolInlineUniformBlockCreateInfo VkDescriptorPoolInlineUniformBlockCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDescriptorPoolInlineUniformBlockCreateInfo VkDescriptorPoolInlineUniformBlockCreateInfo.setMaxInlineUniformBlockBindings(self, uint maxInlineUniformBlockBindings) {
   self.maxInlineUniformBlockBindings = maxInlineUniformBlockBindings;
   return self;
@@ -5336,6 +6686,13 @@ fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompre
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures VkPhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures VkPhysicalDeviceTextureCompressionASTCHDRFeatures.setTextureCompressionASTC_HDR(self, VkBool32 textureCompressionASTC_HDR) {
   self.textureCompressionASTC_HDR = textureCompressionASTC_HDR;
   return self;
@@ -5350,6 +6707,13 @@ fn VkRenderingInfo renderingInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderingInfo VkRenderingInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderingInfo VkRenderingInfo.setFlags(self, VkRenderingFlags flags) {
   self.flags = flags;
   return self;
@@ -5400,6 +6764,13 @@ fn VkRenderingAttachmentInfo renderingAttachmentInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setImageView(self, VkImageView imageView) {
   self.imageView = imageView;
   return self;
@@ -5449,6 +6820,13 @@ fn VkPipelineRenderingCreateInfo pipelineRenderingCreateInfoBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setViewMask(self, uint viewMask) {
   self.viewMask = viewMask;
   return self;
@@ -5484,6 +6862,13 @@ fn VkPhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatur
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceDynamicRenderingFeatures VkPhysicalDeviceDynamicRenderingFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceDynamicRenderingFeatures VkPhysicalDeviceDynamicRenderingFeatures.setDynamicRendering(self, VkBool32 dynamicRendering) {
   self.dynamicRendering = dynamicRendering;
   return self;
@@ -5498,6 +6883,13 @@ fn VkCommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfo
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setFlags(self, VkRenderingFlags flags) {
   self.flags = flags;
   return self;
@@ -5543,6 +6935,13 @@ fn VkPhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDo
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderIntegerDotProductFeatures VkPhysicalDeviceShaderIntegerDotProductFeatures.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderIntegerDotProductFeatures VkPhysicalDeviceShaderIntegerDotProductFeatures.setShaderIntegerDotProduct(self, VkBool32 shaderIntegerDotProduct) {
   self.shaderIntegerDotProduct = shaderIntegerDotProduct;
   return self;
@@ -5557,6 +6956,13 @@ fn VkPhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderInteger
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitUnsignedAccelerated(self, VkBool32 integerDotProduct8BitUnsignedAccelerated) {
   self.integerDotProduct8BitUnsignedAccelerated = integerDotProduct8BitUnsignedAccelerated;
   return self;
@@ -5716,6 +7122,13 @@ fn VkPhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlign
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setStorageTexelBufferOffsetAlignmentBytes(self, VkDeviceSize storageTexelBufferOffsetAlignmentBytes) {
   self.storageTexelBufferOffsetAlignmentBytes = storageTexelBufferOffsetAlignmentBytes;
   return self;
@@ -5745,6 +7158,13 @@ fn VkFormatProperties3 formatProperties3Builder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkFormatProperties3 VkFormatProperties3.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkFormatProperties3 VkFormatProperties3.setLinearTilingFeatures(self, VkFormatFeatureFlags2 linearTilingFeatures) {
   self.linearTilingFeatures = linearTilingFeatures;
   return self;
@@ -5769,6 +7189,13 @@ fn VkPhysicalDeviceMaintenance4Features physicalDeviceMaintenance4FeaturesBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMaintenance4Features VkPhysicalDeviceMaintenance4Features.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMaintenance4Features VkPhysicalDeviceMaintenance4Features.setMaintenance4(self, VkBool32 maintenance4) {
   self.maintenance4 = maintenance4;
   return self;
@@ -5783,6 +7210,13 @@ fn VkPhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4PropertiesBu
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDeviceMaintenance4Properties VkPhysicalDeviceMaintenance4Properties.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDeviceMaintenance4Properties VkPhysicalDeviceMaintenance4Properties.setMaxBufferSize(self, VkDeviceSize maxBufferSize) {
   self.maxBufferSize = maxBufferSize;
   return self;
@@ -5797,6 +7231,13 @@ fn VkDeviceBufferMemoryRequirements deviceBufferMemoryRequirementsBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceBufferMemoryRequirements VkDeviceBufferMemoryRequirements.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceBufferMemoryRequirements VkDeviceBufferMemoryRequirements.setCreateInfo(self, VkBufferCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
@@ -5811,6 +7252,13 @@ fn VkDeviceImageMemoryRequirements deviceImageMemoryRequirementsBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceImageMemoryRequirements VkDeviceImageMemoryRequirements.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceImageMemoryRequirements VkDeviceImageMemoryRequirements.setCreateInfo(self, VkImageCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
@@ -5830,6 +7278,13 @@ fn VkXcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setFlags(self, VkXcbSurfaceCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
@@ -5854,6 +7309,13 @@ fn VkSwapchainCreateInfoKHR swapchainCreateInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setFlags(self, VkSwapchainCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
@@ -5944,6 +7406,13 @@ fn VkPresentInfoKHR presentInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPresentInfoKHR VkPresentInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPresentInfoKHR VkPresentInfoKHR.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
@@ -5987,6 +7456,13 @@ fn VkImageSwapchainCreateInfoKHR imageSwapchainCreateInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
@@ -6001,6 +7477,13 @@ fn VkBindImageMemorySwapchainInfoKHR bindImageMemorySwapchainInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkBindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkBindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
@@ -6020,6 +7503,13 @@ fn VkAcquireNextImageInfoKHR acquireNextImageInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
@@ -6054,6 +7544,13 @@ fn VkDeviceGroupPresentCapabilitiesKHR deviceGroupPresentCapabilitiesKHRBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR.setPresentMask(self, uint[VK_MAX_DEVICE_GROUP_SIZE] presentMask) {
   self.presentMask = presentMask;
   return self;
@@ -6073,6 +7570,13 @@ fn VkDeviceGroupPresentInfoKHR deviceGroupPresentInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
   self.swapchainCount = swapchainCount;
   return self;
@@ -6098,6 +7602,13 @@ fn VkDeviceGroupSwapchainCreateInfoKHR deviceGroupSwapchainCreateInfoKHRBuilder(
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR.setModes(self, VkDeviceGroupPresentModeFlagsKHR modes) {
   self.modes = modes;
   return self;
@@ -6112,6 +7623,13 @@ fn VkDisplayModeCreateInfoKHR displayModeCreateInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR.setFlags(self, VkDisplayModeCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
@@ -6131,6 +7649,13 @@ fn VkDisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHRBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setFlags(self, VkDisplaySurfaceCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
@@ -6180,6 +7705,13 @@ fn VkPhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPrope
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR.setMaxPushDescriptors(self, uint maxPushDescriptors) {
   self.maxPushDescriptors = maxPushDescriptors;
   return self;
@@ -6194,6 +7726,13 @@ fn VkDebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXTBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setFlags(self, VkDebugReportFlagsEXT flags) {
   self.flags = flags;
   return self;
@@ -6218,6 +7757,13 @@ fn VkDebugUtilsLabelEXT debugUtilsLabelEXTBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugUtilsLabelEXT VkDebugUtilsLabelEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugUtilsLabelEXT VkDebugUtilsLabelEXT.setLabelName(self, char* pLabelName) {
   self.pLabelName = pLabelName;
   return self;
@@ -6237,6 +7783,13 @@ fn VkDebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXTBuilde
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setFlags(self, VkDebugUtilsMessengerCallbackDataFlagsEXT flags) {
   self.flags = flags;
   return self;
@@ -6299,6 +7852,13 @@ fn VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXTBuilder() 
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setFlags(self, VkDebugUtilsMessengerCreateFlagsEXT flags) {
   self.flags = flags;
   return self;
@@ -6333,6 +7893,13 @@ fn VkDebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXTBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setObjectType(self, VkObjectType objectType) {
   self.objectType = objectType;
   return self;
@@ -6357,6 +7924,13 @@ fn VkDebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXTBuilder() {
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setObjectType(self, VkObjectType objectType) {
   self.objectType = objectType;
   return self;
@@ -6391,6 +7965,13 @@ fn VkPhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetF
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setConstantAlphaColorBlendFactors(self, VkBool32 constantAlphaColorBlendFactors) {
   self.constantAlphaColorBlendFactors = constantAlphaColorBlendFactors;
   return self;
@@ -6475,6 +8056,13 @@ fn VkPhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubse
   };
   return defaultValue;
 }
+
+// Skip the .sType value
+fn VkPhysicalDevicePortabilitySubsetPropertiesKHR VkPhysicalDevicePortabilitySubsetPropertiesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
 fn VkPhysicalDevicePortabilitySubsetPropertiesKHR VkPhysicalDevicePortabilitySubsetPropertiesKHR.setMinVertexInputBindingStrideAlignment(self, uint minVertexInputBindingStrideAlignment) {
   self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
   return self;

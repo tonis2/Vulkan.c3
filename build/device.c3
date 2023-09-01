@@ -88,6 +88,19 @@ fn VkShaderModule! Device.createShaderModule(self, char[] data)
     return shader;
 }
 
+fn VkPipelineShaderStageCreateInfo VkShaderModule.info(self, VkShaderStageFlagBits stage, VkSpecializationInfo* spec_info = null, VkPipelineShaderStageCreateFlags flags = 0)
+{
+    return VkPipelineShaderStageCreateInfo {
+        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+        .pNext = null,
+        .flags = flags,
+        .stage = stage,
+        .mod = self,
+        .pName = "main",
+        .pSpecializationInfo = spec_info,
+    };
+}
+
 fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null)
 {
     if (info == null) {
@@ -154,14 +167,14 @@ fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info =
    return pool;
 }
 
-fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count)
+fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY)
 {
     CommandBufferList buffers;
     VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, count);
     VkCommandBufferAllocateInfo command_buffer_info = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = pool,
-        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .level = level,
         .commandBufferCount = count,
     };
 
@@ -617,5 +630,6 @@ fn void VkDescriptorSetLayout.free(self, VkDevice device)
     destroyDescriptorSetLayout(device, self, null);
 }
 
-
-
+fn void VkPipeline.free(self, VkDevice device) {
+   destroyPipeline(device, self, null);
+}

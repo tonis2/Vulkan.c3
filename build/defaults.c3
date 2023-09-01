@@ -1,63 +1,5 @@
 module vk;
 
-VkWriteDescriptorSet writeDescriptorSetDefault = {
-    .sType = vk::VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-    .dstSet = null,
-    .dstBinding = 0,
-    .descriptorCount = 1,
-};
-
-fn VkWriteDescriptorSet descriptorWriteSetTexel(VkDescriptorType type, VkBufferView[] bindings, VkDescriptorSet dstSet = null)
-{
-    VkWriteDescriptorSet writeDescriptorSetDefault;
-    writeDescriptorSetDefault.dstSet = dstSet;
-    writeDescriptorSetDefault.descriptorCount = bindings.len;
-    writeDescriptorSetDefault.pTexelBufferView = &bindings[0];
-    writeDescriptorSetDefault.descriptorType = type;
-    return writeDescriptorSetDefault;
-}
-
-fn VkWriteDescriptorSet descriptorWriteSetBuffer(VkDescriptorType type, VkDescriptorBufferInfo[] bindings, VkDescriptorSet dstSet = null)
-{
-    VkWriteDescriptorSet writeDescriptorSetDefault;
-    writeDescriptorSetDefault.dstSet = dstSet;
-    writeDescriptorSetDefault.descriptorCount = bindings.len;
-    writeDescriptorSetDefault.pBufferInfo = &bindings[0];
-    writeDescriptorSetDefault.descriptorType = type;
-    return writeDescriptorSetDefault;
-}
-
-fn VkWriteDescriptorSet descriptorWriteSetImage(VkDescriptorType type, VkDescriptorImageInfo[] bindings, VkDescriptorSet dstSet = null)
-{
-    VkWriteDescriptorSet writeDescriptorSetDefault;
-    writeDescriptorSetDefault.dstSet = dstSet;
-    writeDescriptorSetDefault.descriptorCount = bindings.len;
-    writeDescriptorSetDefault.pImageInfo = &bindings[0];
-    writeDescriptorSetDefault.descriptorType = type;
-    return writeDescriptorSetDefault;
-}
-
-
-VkDescriptorSetLayoutCreateInfo descriptorSetLayoutDefault = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-    .bindingCount = 0,
-    .pNext = null,
-    .flags = 0,
-};
-
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.bindings(self, VkDescriptorSetLayoutBinding[] bindings)
-{
-    self.bindingCount = bindings.len;
-    self.pBindings = &bindings[0];
-    return self;
-}
-
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.set_flags(self, VkDescriptorSetLayoutCreateFlags flag)
-{
-    self.flags = flag;
-    return self;
-}
-
 VkPhysicalDeviceFeatures default_device_features = {
     .robustBufferAccess = 0,
     .fullDrawIndexUint32 = 0,
@@ -124,4 +66,10 @@ VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
      .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
      .pUserData = null,
 };
+
+fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setCode(self, char[] data) {
+  self.codeSize = data.len;
+  self.pCode = (uint*)&data[0];
+  return self;
+}
 

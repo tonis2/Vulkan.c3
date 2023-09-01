@@ -660,7 +660,9 @@ fn ${type.name} ${type.C3Name()}Builder() {
   };
   return defaultValue;
 }
-${type.values.skip(2).where((element) => element.altLen == null).map((element) {
+
+// Skip the .sType value
+${type.values.skip(1).where((element) => element.altLen == null).map((element) {
 bool isArrayValue = element.lenValue != null && element.lenValue![0] != "null-terminated";
 String fnName = element.name!.capitalizeName();
 
