@@ -1,6 +1,6 @@
 module vk;
 
-VkPhysicalDeviceFeatures default_device_features = {
+PhysicalDeviceFeatures default_device_features = {
     .robustBufferAccess = 0,
     .fullDrawIndexUint32 = 0,
     .imageCubeArray = 0,
@@ -58,16 +58,16 @@ VkPhysicalDeviceFeatures default_device_features = {
     .inheritedQueries = 0,
 };
 
-VkDebugUtilsMessengerCreateInfoEXT default_debug_info =  {
-     .sType = vk::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+DebugUtilsMessengerCreateInfoEXT default_debug_info =  {
+     .sType = vk::STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
      .flags = 0,
-     .messageSeverity = vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-     .messageType = vk::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+     .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+     .messageType = vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
      .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
      .pUserData = null,
 };
 
-fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setCode(self, char[] data) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, char[] data) {
   self.codeSize = data.len;
   self.pCode = (uint*)&data[0];
   return self;

@@ -87,7 +87,7 @@ fn void! main()
         .apiVersion = VK_API_VERSION_1_3,
         .enable_debug = ENABLE_VALIDATION_LAYERS,
         .dynamic_rendering = true,
-        .instance_flags = env::os_is_darwin() ? vk::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
+        .instance_flags = env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
     };
 
     defer appInfo.free();
@@ -110,46 +110,46 @@ fn void! main()
         appInfo.device_extensions.push("VK_KHR_portability_subset");
     }
 
-    Device device = vk::requestDevice(&appInfo, window)!;
+    DeviceInfo device = vk::requestDevice(&appInfo, window)!;
     SwapChain swapchain = device.createSwapchain()!;
 
-    Buffer vertex_buffer = {
+    BufferInfo vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
-        .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
     };
 
-    Buffer index_buffer = {
+    BufferInfo index_buffer = {
         .size = (index_data.len * float.sizeof),
-        .usage = vk::VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
     };
 
-    Buffer uniform_buffer = {
+    BufferInfo uniform_buffer = {
         .size = UniformData.sizeof,
-        .usage = vk::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
     vertex_buffer.device_only(&vertex_data[0], device)!;
     index_buffer.device_only(&index_data[0], device)!;
     uniform_buffer.writable(&&camera.matrix(), device)!;
 
-    VkCommandPool command_pool = device.createCommandPool()!;
+    CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
-    VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
-    .setFlags(vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
       {
           .binding = 0,
-          .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+          .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
           .descriptorCount = 1,
-          .stageFlags = vk::VK_SHADER_STAGE_VERTEX_BIT
+          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
       }
     });
 
-    VkDescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
-    VkWriteDescriptorSet[] descriptorSets = {
+    DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+    WriteDescriptorSet[] descriptorSets = {
             vk::writeDescriptorSetBuilder()
-            .setDescriptorType(vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
             .setBufferInfo({
               {
                    .buffer = uniform_buffer.buffer,
@@ -160,7 +160,7 @@ fn void! main()
     };
 
 
-    VkPhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
+    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
                                                 .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
 
     vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
@@ -169,16 +169,15 @@ fn void! main()
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
 
-    VkShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
-    VkShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
-
-    VkPipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
+    ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
+    ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
+    PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
                                                                          .setSetLayouts({ descriptor_set_layout }))!;
 
-    VkGraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
+    GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
-        vertex_module.info(vk::VK_SHADER_STAGE_VERTEX_BIT),
-        frag_module.info(vk::VK_SHADER_STAGE_FRAGMENT_BIT)
+        vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
+        frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
     })
      .setLayout(pipeline_layout)
      .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
@@ -187,20 +186,20 @@ fn void! main()
             {
              .binding = 0,
              .stride = Vertex.sizeof,
-             .inputRate = vk::VK_VERTEX_INPUT_RATE_VERTEX,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
         })
         .setVertexAttributeDescriptions({
             {
                .binding = 0,
                .location = 0,
-               .format = vk::VK_FORMAT_R32G32B32_SFLOAT,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
                .offset = 0
             },
             {
                .binding = 0,
                .location = 1,
-               .format = vk::VK_FORMAT_R32G32B32_SFLOAT,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
                .offset = 4 * float.sizeof
             }
         })
@@ -209,56 +208,56 @@ fn void! main()
        &&vk::pipelineDynamicStateCreateInfoBuilder()
         .setDynamicStates(
         {
-            vk::VK_DYNAMIC_STATE_VIEWPORT,
-            vk::VK_DYNAMIC_STATE_LINE_WIDTH,
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
         })
     )
     .setRasterizationState(
         &&vk::pipelineRasterizationStateCreateInfoBuilder()
-        .setDepthClampEnable(vk::VK_FALSE)
-        .setRasterizerDiscardEnable(vk::VK_FALSE)
-        .setPolygonMode(vk::VK_POLYGON_MODE_FILL)
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::VK_CULL_MODE_FRONT_BIT)
-        .setFrontFace(vk::VK_FRONT_FACE_COUNTER_CLOCKWISE)
-        .setDepthBiasEnable(vk::VK_FALSE)
+        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
     )
-    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
     .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
-                      .setSampleShadingEnable(vk::VK_FALSE)
-                      .setRasterizationSamples(vk::VK_SAMPLE_COUNT_1_BIT)
+                      .setSampleShadingEnable(vk::FALSE)
+                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
                       .setMinSampleShading(1.0)
-                      .setAlphaToCoverageEnable(vk::VK_FALSE)
-                      .setAlphaToOneEnable(vk::VK_FALSE))
+                      .setAlphaToCoverageEnable(vk::FALSE)
+                      .setAlphaToOneEnable(vk::FALSE))
     .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
-                        .setDepthTestEnable(vk::VK_FALSE)
-                        .setDepthWriteEnable(vk::VK_FALSE)
-                        .setDepthCompareOp(vk::VK_COMPARE_OP_LESS_OR_EQUAL)
-                        .setBack({.compareOp = vk::VK_COMPARE_OP_ALWAYS}))
+                        .setDepthTestEnable(vk::FALSE)
+                        .setDepthWriteEnable(vk::FALSE)
+                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
     .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
-                    .setLogicOp(vk::VK_LOGIC_OP_COPY)
+                    .setLogicOp(vk::LOGIC_OP_COPY)
                     .setAttachments({
                        {
                            .colorWriteMask =
-                               vk::VK_COLOR_COMPONENT_R_BIT |
-                               vk::VK_COLOR_COMPONENT_G_BIT |
-                               vk::VK_COLOR_COMPONENT_B_BIT |
-                               vk::VK_COLOR_COMPONENT_A_BIT,
-                           .blendEnable = vk::VK_TRUE,
-                           .srcColorBlendFactor = vk::VK_BLEND_FACTOR_SRC_ALPHA,
-                           .dstColorBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .colorBlendOp = vk::VK_BLEND_OP_ADD,
-                           .srcAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE,
-                           .dstAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .alphaBlendOp = vk::VK_BLEND_OP_ADD,
+                               vk::COLOR_COMPONENT_R_BIT |
+                               vk::COLOR_COMPONENT_G_BIT |
+                               vk::COLOR_COMPONENT_B_BIT |
+                               vk::COLOR_COMPONENT_A_BIT,
+                           .blendEnable = vk::TRUE,
+                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .colorBlendOp = vk::BLEND_OP_ADD,
+                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
                    .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
                    .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
     .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
 
-    VkPipeline pipeline;
+    Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
 /*
 
@@ -273,7 +272,7 @@ fn void! main()
         }
 
         SyncImage active_sync = context.swapchain.syncImages[frame];
-        vk::waitForFences(device.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max)!;
+        vk::waitForFences(device.device, 1, &active_sync.frame_fence, vk::TRUE, uint.max)!;
         vk::resetFences(device.device, 1, &active_sync.frame_fence)!;
 
         uint next_image = {|
@@ -283,17 +282,17 @@ fn void! main()
         |};
 
       VkRenderingInfo rendering_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_RENDERING_INFO,
+        .sType = vk::STRUCTURE_TYPE_RENDERING_INFO,
         .pNext = null,
         .flags = 0,
         .layerCount = 1,
         .colorAttachmentCount = 1,
         .pColorAttachments = &&VkRenderingAttachmentInfo {
-            .sType = vk::VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+            .sType = vk::STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
             .imageView = swapchain.image_views[next_image],
-            .imageLayout = vk::VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
-            .loadOp = vk::VK_ATTACHMENT_LOAD_OP_CLEAR,
-            .storeOp = vk::VK_ATTACHMENT_STORE_OP_STORE,
+            .imageLayout = vk::IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+            .loadOp = vk::ATTACHMENT_LOAD_OP_CLEAR,
+            .storeOp = vk::ATTACHMENT_STORE_OP_STORE,
             .clearValue = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
             .renderArea = {
                 .offset = VkOffset2D{ .x = 0, .y = 0 },
@@ -310,11 +309,11 @@ fn void! main()
         VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
 
         VkSubmitInfo submit_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .sType = vk::STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = null,
             .waitSemaphoreCount = 1,
             .pWaitSemaphores = &wait_semaphores,
-            .pWaitDstStageMask = &&VkPipelineStageFlags[1]{ vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT },
+            .pWaitDstStageMask = &&VkPipelineStageFlags[1]{ vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT },
             .commandBufferCount = 1,
             .pCommandBuffers = &&VkCommandBuffer[1]{ buffer },
             .signalSemaphoreCount = 1,
@@ -322,7 +321,7 @@ fn void! main()
         };
 
         VkCommandBufferBeginInfo begin_info = {
-          .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+          .sType = vk::STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
           .pNext = null,
           .flags = 0,
           .pInheritanceInfo = null,
@@ -333,25 +332,25 @@ fn void! main()
         vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
 
-        vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
-        vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+        vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::SUBPASS_CONTENTS_INLINE);
+        vk::cmdBindPipeline(buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+        vk::cmdPushDescriptorSetKHR(buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
         VkBuffer[1] buffers = {vertex_buffer.buffer};
         VkDeviceSize[1] deviceSizes = {0};
         vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &deviceSizes);
-        vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
+        vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
         vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
         vk::cmdEndRendering(buffer);
 
         VkImageMemoryBarrier image_memory_barrier = {
-            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            .srcAccessMask = vk::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-            .oldLayout = vk::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-            .newLayout = vk::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+            .srcAccessMask = vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
             .image = swapchain.images[next_image],
             .subresourceRange = {
-              .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
               .baseMipLevel = 0,
               .levelCount = 1,
               .baseArrayLayer = 0,
@@ -361,8 +360,8 @@ fn void! main()
 
         vk::cmdPipelineBarrier(
             buffer,
-            vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             0,
             0,
             null,
@@ -376,7 +375,7 @@ fn void! main()
         vk::queueSubmit(device.graphics_queue, 1, &submit_info, active_sync.frame_fence)!;
 
         VkPresentInfoKHR present_info = {
-             .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+             .sType = vk::STRUCTURE_TYPE_PRESENT_INFO_KHR,
              .waitSemaphoreCount = 1,
              .pWaitSemaphores = &signal_semaphores,
              .swapchainCount = 1,

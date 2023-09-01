@@ -1,221 +1,221 @@
 module vk; 
 
 
-fn VkBufferMemoryBarrier bufferMemoryBarrierBuilder() {
-  VkBufferMemoryBarrier defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+fn BufferMemoryBarrier bufferMemoryBarrierBuilder() {
+  BufferMemoryBarrier defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setNext(self, void* pNext) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setSrcAccessMask(self, AccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setDstAccessMask(self, VkAccessFlags dstAccessMask) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setDstAccessMask(self, AccessFlags dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setBuffer(self, VkBuffer buffer) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setOffset(self, VkDeviceSize offset) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setOffset(self, DeviceSize offset) {
   self.offset = offset;
   return self;
 }
        
-fn VkBufferMemoryBarrier VkBufferMemoryBarrier.setSize(self, VkDeviceSize size) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setSize(self, DeviceSize size) {
   self.size = size;
   return self;
 }
        
 
 
-fn VkImageMemoryBarrier imageMemoryBarrierBuilder() {
-  VkImageMemoryBarrier defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+fn ImageMemoryBarrier imageMemoryBarrierBuilder() {
+  ImageMemoryBarrier defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setNext(self, void* pNext) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setSrcAccessMask(self, AccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setDstAccessMask(self, VkAccessFlags dstAccessMask) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setDstAccessMask(self, AccessFlags dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setOldLayout(self, VkImageLayout oldLayout) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setOldLayout(self, ImageLayout oldLayout) {
   self.oldLayout = oldLayout;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setNewLayout(self, VkImageLayout newLayout) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setNewLayout(self, ImageLayout newLayout) {
   self.newLayout = newLayout;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setImage(self, VkImage image) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
-fn VkImageMemoryBarrier VkImageMemoryBarrier.setSubresourceRange(self, VkImageSubresourceRange subresourceRange) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setSubresourceRange(self, ImageSubresourceRange subresourceRange) {
   self.subresourceRange = subresourceRange;
   return self;
 }
        
 
 
-fn VkMemoryBarrier memoryBarrierBuilder() {
-  VkMemoryBarrier defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+fn MemoryBarrier memoryBarrierBuilder() {
+  MemoryBarrier defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_BARRIER,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryBarrier VkMemoryBarrier.setNext(self, void* pNext) {
+fn MemoryBarrier MemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryBarrier VkMemoryBarrier.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
+fn MemoryBarrier MemoryBarrier.setSrcAccessMask(self, AccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkMemoryBarrier VkMemoryBarrier.setDstAccessMask(self, VkAccessFlags dstAccessMask) {
+fn MemoryBarrier MemoryBarrier.setDstAccessMask(self, AccessFlags dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
 
 
-fn VkApplicationInfo applicationInfoBuilder() {
-  VkApplicationInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+fn ApplicationInfo applicationInfoBuilder() {
+  ApplicationInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_APPLICATION_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkApplicationInfo VkApplicationInfo.setNext(self, void* pNext) {
+fn ApplicationInfo ApplicationInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkApplicationInfo VkApplicationInfo.setApplicationName(self, char* pApplicationName) {
+fn ApplicationInfo ApplicationInfo.setApplicationName(self, char* pApplicationName) {
   self.pApplicationName = pApplicationName;
   return self;
 }
        
-fn VkApplicationInfo VkApplicationInfo.setApplicationVersion(self, uint applicationVersion) {
+fn ApplicationInfo ApplicationInfo.setApplicationVersion(self, uint applicationVersion) {
   self.applicationVersion = applicationVersion;
   return self;
 }
        
-fn VkApplicationInfo VkApplicationInfo.setEngineName(self, char* pEngineName) {
+fn ApplicationInfo ApplicationInfo.setEngineName(self, char* pEngineName) {
   self.pEngineName = pEngineName;
   return self;
 }
        
-fn VkApplicationInfo VkApplicationInfo.setEngineVersion(self, uint engineVersion) {
+fn ApplicationInfo ApplicationInfo.setEngineVersion(self, uint engineVersion) {
   self.engineVersion = engineVersion;
   return self;
 }
        
-fn VkApplicationInfo VkApplicationInfo.setApiVersion(self, uint apiVersion) {
+fn ApplicationInfo ApplicationInfo.setApiVersion(self, uint apiVersion) {
   self.apiVersion = apiVersion;
   return self;
 }
        
 
 
-fn VkInstanceCreateInfo instanceCreateInfoBuilder() {
-  VkInstanceCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+fn InstanceCreateInfo instanceCreateInfoBuilder() {
+  InstanceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setNext(self, void* pNext) {
+fn InstanceCreateInfo InstanceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setFlags(self, VkInstanceCreateFlags flags) {
+fn InstanceCreateInfo InstanceCreateInfo.setFlags(self, InstanceCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setApplicationInfo(self, VkApplicationInfo* pApplicationInfo) {
+fn InstanceCreateInfo InstanceCreateInfo.setApplicationInfo(self, ApplicationInfo* pApplicationInfo) {
   self.pApplicationInfo = pApplicationInfo;
   return self;
 }
        
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setEnabledLayerCount(self, uint enabledLayerCount) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerCount(self, uint enabledLayerCount) {
   self.enabledLayerCount = enabledLayerCount;
   return self;
 }
        
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
   self.enabledLayerCount = (uint)ppEnabledLayerNames.len;
   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
   return self;
 }
 
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setEnabledExtensionCount(self, uint enabledExtensionCount) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionCount(self, uint enabledExtensionCount) {
   self.enabledExtensionCount = enabledExtensionCount;
   return self;
 }
        
-fn VkInstanceCreateInfo VkInstanceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
   self.enabledExtensionCount = (uint)ppEnabledExtensionNames.len;
   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
   return self;
@@ -223,95 +223,95 @@ fn VkInstanceCreateInfo VkInstanceCreateInfo.setEnabledExtensionNames(self, ZStr
 
 
 
-fn VkDeviceCreateInfo deviceCreateInfoBuilder() {
-  VkDeviceCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+fn DeviceCreateInfo deviceCreateInfoBuilder() {
+  DeviceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setNext(self, void* pNext) {
+fn DeviceCreateInfo DeviceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setFlags(self, VkDeviceCreateFlags flags) {
+fn DeviceCreateInfo DeviceCreateInfo.setFlags(self, DeviceCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setQueueCreateInfoCount(self, uint queueCreateInfoCount) {
+fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfoCount(self, uint queueCreateInfoCount) {
   self.queueCreateInfoCount = queueCreateInfoCount;
   return self;
 }
        
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setQueueCreateInfos(self, VkDeviceQueueCreateInfo[] pQueueCreateInfos) {
+fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfos(self, DeviceQueueCreateInfo[] pQueueCreateInfos) {
   self.queueCreateInfoCount = (uint)pQueueCreateInfos.len;
   self.pQueueCreateInfos = &pQueueCreateInfos[0];
   return self;
 }
 
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setEnabledLayerCount(self, uint enabledLayerCount) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerCount(self, uint enabledLayerCount) {
   self.enabledLayerCount = enabledLayerCount;
   return self;
 }
        
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
   self.enabledLayerCount = (uint)ppEnabledLayerNames.len;
   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
   return self;
 }
 
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setEnabledExtensionCount(self, uint enabledExtensionCount) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionCount(self, uint enabledExtensionCount) {
   self.enabledExtensionCount = enabledExtensionCount;
   return self;
 }
        
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
   self.enabledExtensionCount = (uint)ppEnabledExtensionNames.len;
   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
   return self;
 }
 
-fn VkDeviceCreateInfo VkDeviceCreateInfo.setEnabledFeatures(self, VkPhysicalDeviceFeatures* pEnabledFeatures) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledFeatures(self, PhysicalDeviceFeatures* pEnabledFeatures) {
   self.pEnabledFeatures = pEnabledFeatures;
   return self;
 }
        
 
 
-fn VkDeviceQueueCreateInfo deviceQueueCreateInfoBuilder() {
-  VkDeviceQueueCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+fn DeviceQueueCreateInfo deviceQueueCreateInfoBuilder() {
+  DeviceQueueCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setNext(self, void* pNext) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setFlags(self, VkDeviceQueueCreateFlags flags) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setFlags(self, DeviceQueueCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setQueueFamilyIndex(self, uint queueFamilyIndex) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueueFamilyIndex(self, uint queueFamilyIndex) {
   self.queueFamilyIndex = queueFamilyIndex;
   return self;
 }
        
-fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setQueueCount(self, uint queueCount) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueueCount(self, uint queueCount) {
   self.queueCount = queueCount;
   return self;
 }
        
-fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setQueuePriorities(self, float[] pQueuePriorities) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueuePriorities(self, float[] pQueuePriorities) {
   self.queueCount = (uint)pQueuePriorities.len;
   self.pQueuePriorities = &pQueuePriorities[0];
   return self;
@@ -319,54 +319,54 @@ fn VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo.setQueuePriorities(self, floa
 
 
 
-fn VkSubmitInfo submitInfoBuilder() {
-  VkSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+fn SubmitInfo submitInfoBuilder() {
+  SubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubmitInfo VkSubmitInfo.setNext(self, void* pNext) {
+fn SubmitInfo SubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubmitInfo VkSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
+fn SubmitInfo SubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
 }
        
-fn VkSubmitInfo VkSubmitInfo.setWaitSemaphores(self, VkSemaphore[] pWaitSemaphores) {
+fn SubmitInfo SubmitInfo.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
 }
 
-fn VkSubmitInfo VkSubmitInfo.setWaitDstStageMask(self, VkPipelineStageFlags[] pWaitDstStageMask) {
+fn SubmitInfo SubmitInfo.setWaitDstStageMask(self, PipelineStageFlags[] pWaitDstStageMask) {
   self.waitSemaphoreCount = (uint)pWaitDstStageMask.len;
   self.pWaitDstStageMask = &pWaitDstStageMask[0];
   return self;
 }
 
-fn VkSubmitInfo VkSubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
+fn SubmitInfo SubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
   self.commandBufferCount = commandBufferCount;
   return self;
 }
        
-fn VkSubmitInfo VkSubmitInfo.setCommandBuffers(self, VkCommandBuffer[] pCommandBuffers) {
+fn SubmitInfo SubmitInfo.setCommandBuffers(self, CommandBuffer[] pCommandBuffers) {
   self.commandBufferCount = (uint)pCommandBuffers.len;
   self.pCommandBuffers = &pCommandBuffers[0];
   return self;
 }
 
-fn VkSubmitInfo VkSubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
+fn SubmitInfo SubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
   self.signalSemaphoreCount = signalSemaphoreCount;
   return self;
 }
        
-fn VkSubmitInfo VkSubmitInfo.setSignalSemaphores(self, VkSemaphore[] pSignalSemaphores) {
+fn SubmitInfo SubmitInfo.setSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
   self.signalSemaphoreCount = (uint)pSignalSemaphores.len;
   self.pSignalSemaphores = &pSignalSemaphores[0];
   return self;
@@ -374,127 +374,127 @@ fn VkSubmitInfo VkSubmitInfo.setSignalSemaphores(self, VkSemaphore[] pSignalSema
 
 
 
-fn VkMappedMemoryRange mappedMemoryRangeBuilder() {
-  VkMappedMemoryRange defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+fn MappedMemoryRange mappedMemoryRangeBuilder() {
+  MappedMemoryRange defaultValue = {
+    .sType = STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMappedMemoryRange VkMappedMemoryRange.setNext(self, void* pNext) {
+fn MappedMemoryRange MappedMemoryRange.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMappedMemoryRange VkMappedMemoryRange.setMemory(self, VkDeviceMemory memory) {
+fn MappedMemoryRange MappedMemoryRange.setMemory(self, DeviceMemory memory) {
   self.memory = memory;
   return self;
 }
        
-fn VkMappedMemoryRange VkMappedMemoryRange.setOffset(self, VkDeviceSize offset) {
+fn MappedMemoryRange MappedMemoryRange.setOffset(self, DeviceSize offset) {
   self.offset = offset;
   return self;
 }
        
-fn VkMappedMemoryRange VkMappedMemoryRange.setSize(self, VkDeviceSize size) {
+fn MappedMemoryRange MappedMemoryRange.setSize(self, DeviceSize size) {
   self.size = size;
   return self;
 }
        
 
 
-fn VkMemoryAllocateInfo memoryAllocateInfoBuilder() {
-  VkMemoryAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+fn MemoryAllocateInfo memoryAllocateInfoBuilder() {
+  MemoryAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryAllocateInfo VkMemoryAllocateInfo.setNext(self, void* pNext) {
+fn MemoryAllocateInfo MemoryAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryAllocateInfo VkMemoryAllocateInfo.setAllocationSize(self, VkDeviceSize allocationSize) {
+fn MemoryAllocateInfo MemoryAllocateInfo.setAllocationSize(self, DeviceSize allocationSize) {
   self.allocationSize = allocationSize;
   return self;
 }
        
-fn VkMemoryAllocateInfo VkMemoryAllocateInfo.setMemoryTypeIndex(self, uint memoryTypeIndex) {
+fn MemoryAllocateInfo MemoryAllocateInfo.setMemoryTypeIndex(self, uint memoryTypeIndex) {
   self.memoryTypeIndex = memoryTypeIndex;
   return self;
 }
        
 
 
-fn VkBindSparseInfo bindSparseInfoBuilder() {
-  VkBindSparseInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_SPARSE_INFO,
+fn BindSparseInfo bindSparseInfoBuilder() {
+  BindSparseInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_SPARSE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindSparseInfo VkBindSparseInfo.setNext(self, void* pNext) {
+fn BindSparseInfo BindSparseInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
+fn BindSparseInfo BindSparseInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setWaitSemaphores(self, VkSemaphore[] pWaitSemaphores) {
+fn BindSparseInfo BindSparseInfo.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
 }
 
-fn VkBindSparseInfo VkBindSparseInfo.setBufferBindCount(self, uint bufferBindCount) {
+fn BindSparseInfo BindSparseInfo.setBufferBindCount(self, uint bufferBindCount) {
   self.bufferBindCount = bufferBindCount;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setBufferBinds(self, VkSparseBufferMemoryBindInfo[] pBufferBinds) {
+fn BindSparseInfo BindSparseInfo.setBufferBinds(self, SparseBufferMemoryBindInfo[] pBufferBinds) {
   self.bufferBindCount = (uint)pBufferBinds.len;
   self.pBufferBinds = &pBufferBinds[0];
   return self;
 }
 
-fn VkBindSparseInfo VkBindSparseInfo.setImageOpaqueBindCount(self, uint imageOpaqueBindCount) {
+fn BindSparseInfo BindSparseInfo.setImageOpaqueBindCount(self, uint imageOpaqueBindCount) {
   self.imageOpaqueBindCount = imageOpaqueBindCount;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setImageOpaqueBinds(self, VkSparseImageOpaqueMemoryBindInfo[] pImageOpaqueBinds) {
+fn BindSparseInfo BindSparseInfo.setImageOpaqueBinds(self, SparseImageOpaqueMemoryBindInfo[] pImageOpaqueBinds) {
   self.imageOpaqueBindCount = (uint)pImageOpaqueBinds.len;
   self.pImageOpaqueBinds = &pImageOpaqueBinds[0];
   return self;
 }
 
-fn VkBindSparseInfo VkBindSparseInfo.setImageBindCount(self, uint imageBindCount) {
+fn BindSparseInfo BindSparseInfo.setImageBindCount(self, uint imageBindCount) {
   self.imageBindCount = imageBindCount;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setImageBinds(self, VkSparseImageMemoryBindInfo[] pImageBinds) {
+fn BindSparseInfo BindSparseInfo.setImageBinds(self, SparseImageMemoryBindInfo[] pImageBinds) {
   self.imageBindCount = (uint)pImageBinds.len;
   self.pImageBinds = &pImageBinds[0];
   return self;
 }
 
-fn VkBindSparseInfo VkBindSparseInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
+fn BindSparseInfo BindSparseInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
   self.signalSemaphoreCount = signalSemaphoreCount;
   return self;
 }
        
-fn VkBindSparseInfo VkBindSparseInfo.setSignalSemaphores(self, VkSemaphore[] pSignalSemaphores) {
+fn BindSparseInfo BindSparseInfo.setSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
   self.signalSemaphoreCount = (uint)pSignalSemaphores.len;
   self.pSignalSemaphores = &pSignalSemaphores[0];
   return self;
@@ -502,145 +502,145 @@ fn VkBindSparseInfo VkBindSparseInfo.setSignalSemaphores(self, VkSemaphore[] pSi
 
 
 
-fn VkFenceCreateInfo fenceCreateInfoBuilder() {
-  VkFenceCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+fn FenceCreateInfo fenceCreateInfoBuilder() {
+  FenceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FENCE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFenceCreateInfo VkFenceCreateInfo.setNext(self, void* pNext) {
+fn FenceCreateInfo FenceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFenceCreateInfo VkFenceCreateInfo.setFlags(self, VkFenceCreateFlags flags) {
+fn FenceCreateInfo FenceCreateInfo.setFlags(self, FenceCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
 
 
-fn VkSemaphoreCreateInfo semaphoreCreateInfoBuilder() {
-  VkSemaphoreCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+fn SemaphoreCreateInfo semaphoreCreateInfoBuilder() {
+  SemaphoreCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSemaphoreCreateInfo VkSemaphoreCreateInfo.setNext(self, void* pNext) {
+fn SemaphoreCreateInfo SemaphoreCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSemaphoreCreateInfo VkSemaphoreCreateInfo.setFlags(self, VkSemaphoreCreateFlags flags) {
+fn SemaphoreCreateInfo SemaphoreCreateInfo.setFlags(self, SemaphoreCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
 
 
-fn VkEventCreateInfo eventCreateInfoBuilder() {
-  VkEventCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO,
+fn EventCreateInfo eventCreateInfoBuilder() {
+  EventCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EVENT_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkEventCreateInfo VkEventCreateInfo.setNext(self, void* pNext) {
+fn EventCreateInfo EventCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkEventCreateInfo VkEventCreateInfo.setFlags(self, VkEventCreateFlags flags) {
+fn EventCreateInfo EventCreateInfo.setFlags(self, EventCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
 
 
-fn VkQueryPoolCreateInfo queryPoolCreateInfoBuilder() {
-  VkQueryPoolCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
+fn QueryPoolCreateInfo queryPoolCreateInfoBuilder() {
+  QueryPoolCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setNext(self, void* pNext) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setFlags(self, VkQueryPoolCreateFlags flags) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setFlags(self, QueryPoolCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setQueryType(self, VkQueryType queryType) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setQueryType(self, QueryType queryType) {
   self.queryType = queryType;
   return self;
 }
        
-fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setQueryCount(self, uint queryCount) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setQueryCount(self, uint queryCount) {
   self.queryCount = queryCount;
   return self;
 }
        
-fn VkQueryPoolCreateInfo VkQueryPoolCreateInfo.setPipelineStatistics(self, VkQueryPipelineStatisticFlags pipelineStatistics) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setPipelineStatistics(self, QueryPipelineStatisticFlags pipelineStatistics) {
   self.pipelineStatistics = pipelineStatistics;
   return self;
 }
        
 
 
-fn VkBufferCreateInfo bufferCreateInfoBuilder() {
-  VkBufferCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+fn BufferCreateInfo bufferCreateInfoBuilder() {
+  BufferCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferCreateInfo VkBufferCreateInfo.setNext(self, void* pNext) {
+fn BufferCreateInfo BufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setFlags(self, VkBufferCreateFlags flags) {
+fn BufferCreateInfo BufferCreateInfo.setFlags(self, BufferCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setSize(self, VkDeviceSize size) {
+fn BufferCreateInfo BufferCreateInfo.setSize(self, DeviceSize size) {
   self.size = size;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setUsage(self, VkBufferUsageFlags usage) {
+fn BufferCreateInfo BufferCreateInfo.setUsage(self, BufferUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setSharingMode(self, VkSharingMode sharingMode) {
+fn BufferCreateInfo BufferCreateInfo.setSharingMode(self, SharingMode sharingMode) {
   self.sharingMode = sharingMode;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
+fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
   self.queueFamilyIndexCount = queueFamilyIndexCount;
   return self;
 }
        
-fn VkBufferCreateInfo VkBufferCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
@@ -648,513 +648,513 @@ fn VkBufferCreateInfo VkBufferCreateInfo.setQueueFamilyIndices(self, uint[] pQue
 
 
 
-fn VkBufferViewCreateInfo bufferViewCreateInfoBuilder() {
-  VkBufferViewCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO,
+fn BufferViewCreateInfo bufferViewCreateInfoBuilder() {
+  BufferViewCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setNext(self, void* pNext) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setFlags(self, VkBufferViewCreateFlags flags) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setFlags(self, BufferViewCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setBuffer(self, VkBuffer buffer) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setFormat(self, VkFormat format) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setOffset(self, VkDeviceSize offset) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setOffset(self, DeviceSize offset) {
   self.offset = offset;
   return self;
 }
        
-fn VkBufferViewCreateInfo VkBufferViewCreateInfo.setRange(self, VkDeviceSize range) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setRange(self, DeviceSize range) {
   self.range = range;
   return self;
 }
        
 
 
-fn VkImageCreateInfo imageCreateInfoBuilder() {
-  VkImageCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+fn ImageCreateInfo imageCreateInfoBuilder() {
+  ImageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageCreateInfo VkImageCreateInfo.setNext(self, void* pNext) {
+fn ImageCreateInfo ImageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setFlags(self, VkImageCreateFlags flags) {
+fn ImageCreateInfo ImageCreateInfo.setFlags(self, ImageCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setImageType(self, VkImageType imageType) {
+fn ImageCreateInfo ImageCreateInfo.setImageType(self, ImageType imageType) {
   self.imageType = imageType;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setFormat(self, VkFormat format) {
+fn ImageCreateInfo ImageCreateInfo.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setExtent(self, VkExtent3D extent) {
+fn ImageCreateInfo ImageCreateInfo.setExtent(self, Extent3D extent) {
   self.extent = extent;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setMipLevels(self, uint mipLevels) {
+fn ImageCreateInfo ImageCreateInfo.setMipLevels(self, uint mipLevels) {
   self.mipLevels = mipLevels;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setArrayLayers(self, uint arrayLayers) {
+fn ImageCreateInfo ImageCreateInfo.setArrayLayers(self, uint arrayLayers) {
   self.arrayLayers = arrayLayers;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setSamples(self, VkSampleCountFlagBits samples) {
+fn ImageCreateInfo ImageCreateInfo.setSamples(self, SampleCountFlagBits samples) {
   self.samples = samples;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setTiling(self, VkImageTiling tiling) {
+fn ImageCreateInfo ImageCreateInfo.setTiling(self, ImageTiling tiling) {
   self.tiling = tiling;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setUsage(self, VkImageUsageFlags usage) {
+fn ImageCreateInfo ImageCreateInfo.setUsage(self, ImageUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setSharingMode(self, VkSharingMode sharingMode) {
+fn ImageCreateInfo ImageCreateInfo.setSharingMode(self, SharingMode sharingMode) {
   self.sharingMode = sharingMode;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
+fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
   self.queueFamilyIndexCount = queueFamilyIndexCount;
   return self;
 }
        
-fn VkImageCreateInfo VkImageCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
 }
 
-fn VkImageCreateInfo VkImageCreateInfo.setInitialLayout(self, VkImageLayout initialLayout) {
+fn ImageCreateInfo ImageCreateInfo.setInitialLayout(self, ImageLayout initialLayout) {
   self.initialLayout = initialLayout;
   return self;
 }
        
 
 
-fn VkImageViewCreateInfo imageViewCreateInfoBuilder() {
-  VkImageViewCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+fn ImageViewCreateInfo imageViewCreateInfoBuilder() {
+  ImageViewCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setNext(self, void* pNext) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setFlags(self, VkImageViewCreateFlags flags) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setFlags(self, ImageViewCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setImage(self, VkImage image) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setViewType(self, VkImageViewType viewType) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setViewType(self, ImageViewType viewType) {
   self.viewType = viewType;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setFormat(self, VkFormat format) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setComponents(self, VkComponentMapping components) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setComponents(self, ComponentMapping components) {
   self.components = components;
   return self;
 }
        
-fn VkImageViewCreateInfo VkImageViewCreateInfo.setSubresourceRange(self, VkImageSubresourceRange subresourceRange) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setSubresourceRange(self, ImageSubresourceRange subresourceRange) {
   self.subresourceRange = subresourceRange;
   return self;
 }
        
 
 
-fn VkShaderModuleCreateInfo shaderModuleCreateInfoBuilder() {
-  VkShaderModuleCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+fn ShaderModuleCreateInfo shaderModuleCreateInfoBuilder() {
+  ShaderModuleCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setNext(self, void* pNext) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setFlags(self, VkShaderModuleCreateFlags flags) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setFlags(self, ShaderModuleCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkShaderModuleCreateInfo VkShaderModuleCreateInfo.setCodeSize(self, usz codeSize) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCodeSize(self, usz codeSize) {
   self.codeSize = codeSize;
   return self;
 }
        
 
 
-fn VkPipelineCacheCreateInfo pipelineCacheCreateInfoBuilder() {
-  VkPipelineCacheCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
+fn PipelineCacheCreateInfo pipelineCacheCreateInfoBuilder() {
+  PipelineCacheCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setNext(self, void* pNext) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setFlags(self, VkPipelineCacheCreateFlags flags) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setFlags(self, PipelineCacheCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setInitialDataSize(self, usz initialDataSize) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(self, usz initialDataSize) {
   self.initialDataSize = initialDataSize;
   return self;
 }
        
-fn VkPipelineCacheCreateInfo VkPipelineCacheCreateInfo.setInitialData(self, void* pInitialData) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(self, void* pInitialData) {
   self.pInitialData = pInitialData;
   return self;
 }
        
 
 
-fn VkComputePipelineCreateInfo computePipelineCreateInfoBuilder() {
-  VkComputePipelineCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
+fn ComputePipelineCreateInfo computePipelineCreateInfoBuilder() {
+  ComputePipelineCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setNext(self, void* pNext) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setFlags(self, VkPipelineCreateFlags flags) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setFlags(self, PipelineCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setStage(self, VkPipelineShaderStageCreateInfo stage) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setStage(self, PipelineShaderStageCreateInfo stage) {
   self.stage = stage;
   return self;
 }
        
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setLayout(self, VkPipelineLayout layout) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setLayout(self, PipelineLayout layout) {
   self.layout = layout;
   return self;
 }
        
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setBasePipelineHandle(self, VkPipeline basePipelineHandle) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setBasePipelineHandle(self, Pipeline basePipelineHandle) {
   self.basePipelineHandle = basePipelineHandle;
   return self;
 }
        
-fn VkComputePipelineCreateInfo VkComputePipelineCreateInfo.setBasePipelineIndex(self, int basePipelineIndex) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setBasePipelineIndex(self, int basePipelineIndex) {
   self.basePipelineIndex = basePipelineIndex;
   return self;
 }
        
 
 
-fn VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfoBuilder() {
-  VkGraphicsPipelineCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+fn GraphicsPipelineCreateInfo graphicsPipelineCreateInfoBuilder() {
+  GraphicsPipelineCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setNext(self, void* pNext) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setFlags(self, VkPipelineCreateFlags flags) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setFlags(self, PipelineCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setStageCount(self, uint stageCount) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStageCount(self, uint stageCount) {
   self.stageCount = stageCount;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setStages(self, VkPipelineShaderStageCreateInfo[] pStages) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStages(self, PipelineShaderStageCreateInfo[] pStages) {
   self.stageCount = (uint)pStages.len;
   self.pStages = &pStages[0];
   return self;
 }
 
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setVertexInputState(self, VkPipelineVertexInputStateCreateInfo* pVertexInputState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setVertexInputState(self, PipelineVertexInputStateCreateInfo* pVertexInputState) {
   self.pVertexInputState = pVertexInputState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setInputAssemblyState(self, VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setInputAssemblyState(self, PipelineInputAssemblyStateCreateInfo* pInputAssemblyState) {
   self.pInputAssemblyState = pInputAssemblyState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setTessellationState(self, VkPipelineTessellationStateCreateInfo* pTessellationState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setTessellationState(self, PipelineTessellationStateCreateInfo* pTessellationState) {
   self.pTessellationState = pTessellationState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setViewportState(self, VkPipelineViewportStateCreateInfo* pViewportState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setViewportState(self, PipelineViewportStateCreateInfo* pViewportState) {
   self.pViewportState = pViewportState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setRasterizationState(self, VkPipelineRasterizationStateCreateInfo* pRasterizationState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setRasterizationState(self, PipelineRasterizationStateCreateInfo* pRasterizationState) {
   self.pRasterizationState = pRasterizationState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setMultisampleState(self, VkPipelineMultisampleStateCreateInfo* pMultisampleState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setMultisampleState(self, PipelineMultisampleStateCreateInfo* pMultisampleState) {
   self.pMultisampleState = pMultisampleState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setDepthStencilState(self, VkPipelineDepthStencilStateCreateInfo* pDepthStencilState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setDepthStencilState(self, PipelineDepthStencilStateCreateInfo* pDepthStencilState) {
   self.pDepthStencilState = pDepthStencilState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setColorBlendState(self, VkPipelineColorBlendStateCreateInfo* pColorBlendState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setColorBlendState(self, PipelineColorBlendStateCreateInfo* pColorBlendState) {
   self.pColorBlendState = pColorBlendState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setDynamicState(self, VkPipelineDynamicStateCreateInfo* pDynamicState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setDynamicState(self, PipelineDynamicStateCreateInfo* pDynamicState) {
   self.pDynamicState = pDynamicState;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setLayout(self, VkPipelineLayout layout) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setLayout(self, PipelineLayout layout) {
   self.layout = layout;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setRenderPass(self, VkRenderPass renderPass) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setRenderPass(self, RenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setSubpass(self, uint subpass) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setSubpass(self, uint subpass) {
   self.subpass = subpass;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setBasePipelineHandle(self, VkPipeline basePipelineHandle) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setBasePipelineHandle(self, Pipeline basePipelineHandle) {
   self.basePipelineHandle = basePipelineHandle;
   return self;
 }
        
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setBasePipelineIndex(self, int basePipelineIndex) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setBasePipelineIndex(self, int basePipelineIndex) {
   self.basePipelineIndex = basePipelineIndex;
   return self;
 }
        
 
 
-fn VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfoBuilder() {
-  VkPipelineColorBlendStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+fn PipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfoBuilder() {
+  PipelineColorBlendStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setFlags(self, VkPipelineColorBlendStateCreateFlags flags) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setFlags(self, PipelineColorBlendStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setLogicOpEnable(self, VkBool32 logicOpEnable) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setLogicOpEnable(self, Bool32 logicOpEnable) {
   self.logicOpEnable = logicOpEnable;
   return self;
 }
        
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setLogicOp(self, VkLogicOp logicOp) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setLogicOp(self, LogicOp logicOp) {
   self.logicOp = logicOp;
   return self;
 }
        
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setAttachmentCount(self, uint attachmentCount) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
 }
        
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setAttachments(self, VkPipelineColorBlendAttachmentState[] pAttachments) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttachments(self, PipelineColorBlendAttachmentState[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
 }
 
-fn VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo.setBlendConstants(self, float[4] blendConstants) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setBlendConstants(self, float[4] blendConstants) {
   self.blendConstants = blendConstants;
   return self;
 }
        
 
 
-fn VkPipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfoBuilder() {
-  VkPipelineDepthStencilStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+fn PipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfoBuilder() {
+  PipelineDepthStencilStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setFlags(self, VkPipelineDepthStencilStateCreateFlags flags) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setFlags(self, PipelineDepthStencilStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setDepthTestEnable(self, VkBool32 depthTestEnable) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setDepthTestEnable(self, Bool32 depthTestEnable) {
   self.depthTestEnable = depthTestEnable;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setDepthWriteEnable(self, VkBool32 depthWriteEnable) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setDepthWriteEnable(self, Bool32 depthWriteEnable) {
   self.depthWriteEnable = depthWriteEnable;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setDepthCompareOp(self, VkCompareOp depthCompareOp) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setDepthCompareOp(self, CompareOp depthCompareOp) {
   self.depthCompareOp = depthCompareOp;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setDepthBoundsTestEnable(self, VkBool32 depthBoundsTestEnable) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setDepthBoundsTestEnable(self, Bool32 depthBoundsTestEnable) {
   self.depthBoundsTestEnable = depthBoundsTestEnable;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setStencilTestEnable(self, VkBool32 stencilTestEnable) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setStencilTestEnable(self, Bool32 stencilTestEnable) {
   self.stencilTestEnable = stencilTestEnable;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setFront(self, VkStencilOpState front) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setFront(self, StencilOpState front) {
   self.front = front;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setBack(self, VkStencilOpState back) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setBack(self, StencilOpState back) {
   self.back = back;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setMinDepthBounds(self, float minDepthBounds) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setMinDepthBounds(self, float minDepthBounds) {
   self.minDepthBounds = minDepthBounds;
   return self;
 }
        
-fn VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo.setMaxDepthBounds(self, float maxDepthBounds) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setMaxDepthBounds(self, float maxDepthBounds) {
   self.maxDepthBounds = maxDepthBounds;
   return self;
 }
        
 
 
-fn VkPipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfoBuilder() {
-  VkPipelineDynamicStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+fn PipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfoBuilder() {
+  PipelineDynamicStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setFlags(self, VkPipelineDynamicStateCreateFlags flags) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setFlags(self, PipelineDynamicStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setDynamicStateCount(self, uint dynamicStateCount) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicStateCount(self, uint dynamicStateCount) {
   self.dynamicStateCount = dynamicStateCount;
   return self;
 }
        
-fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setDynamicStates(self, VkDynamicState[] pDynamicStates) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicStates(self, DynamicState[] pDynamicStates) {
   self.dynamicStateCount = (uint)pDynamicStates.len;
   self.pDynamicStates = &pDynamicStates[0];
   return self;
@@ -1162,257 +1162,257 @@ fn VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo.setDynamicS
 
 
 
-fn VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfoBuilder() {
-  VkPipelineInputAssemblyStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+fn PipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfoBuilder() {
+  PipelineInputAssemblyStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setFlags(self, VkPipelineInputAssemblyStateCreateFlags flags) {
+fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setFlags(self, PipelineInputAssemblyStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setTopology(self, VkPrimitiveTopology topology) {
+fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setTopology(self, PrimitiveTopology topology) {
   self.topology = topology;
   return self;
 }
        
-fn VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo.setPrimitiveRestartEnable(self, VkBool32 primitiveRestartEnable) {
+fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setPrimitiveRestartEnable(self, Bool32 primitiveRestartEnable) {
   self.primitiveRestartEnable = primitiveRestartEnable;
   return self;
 }
        
 
 
-fn VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfoBuilder() {
-  VkPipelineMultisampleStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+fn PipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfoBuilder() {
+  PipelineMultisampleStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setFlags(self, VkPipelineMultisampleStateCreateFlags flags) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setFlags(self, PipelineMultisampleStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setRasterizationSamples(self, VkSampleCountFlagBits rasterizationSamples) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setRasterizationSamples(self, SampleCountFlagBits rasterizationSamples) {
   self.rasterizationSamples = rasterizationSamples;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setSampleShadingEnable(self, VkBool32 sampleShadingEnable) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setSampleShadingEnable(self, Bool32 sampleShadingEnable) {
   self.sampleShadingEnable = sampleShadingEnable;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setMinSampleShading(self, float minSampleShading) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setMinSampleShading(self, float minSampleShading) {
   self.minSampleShading = minSampleShading;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setAlphaToCoverageEnable(self, VkBool32 alphaToCoverageEnable) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setAlphaToCoverageEnable(self, Bool32 alphaToCoverageEnable) {
   self.alphaToCoverageEnable = alphaToCoverageEnable;
   return self;
 }
        
-fn VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo.setAlphaToOneEnable(self, VkBool32 alphaToOneEnable) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setAlphaToOneEnable(self, Bool32 alphaToOneEnable) {
   self.alphaToOneEnable = alphaToOneEnable;
   return self;
 }
        
 
 
-fn VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfoBuilder() {
-  VkPipelineRasterizationStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+fn PipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfoBuilder() {
+  PipelineRasterizationStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setFlags(self, VkPipelineRasterizationStateCreateFlags flags) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setFlags(self, PipelineRasterizationStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setDepthClampEnable(self, VkBool32 depthClampEnable) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setDepthClampEnable(self, Bool32 depthClampEnable) {
   self.depthClampEnable = depthClampEnable;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setRasterizerDiscardEnable(self, VkBool32 rasterizerDiscardEnable) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setRasterizerDiscardEnable(self, Bool32 rasterizerDiscardEnable) {
   self.rasterizerDiscardEnable = rasterizerDiscardEnable;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setPolygonMode(self, VkPolygonMode polygonMode) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setPolygonMode(self, PolygonMode polygonMode) {
   self.polygonMode = polygonMode;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setCullMode(self, VkCullModeFlags cullMode) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setCullMode(self, CullModeFlags cullMode) {
   self.cullMode = cullMode;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setFrontFace(self, VkFrontFace frontFace) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setFrontFace(self, FrontFace frontFace) {
   self.frontFace = frontFace;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setDepthBiasEnable(self, VkBool32 depthBiasEnable) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setDepthBiasEnable(self, Bool32 depthBiasEnable) {
   self.depthBiasEnable = depthBiasEnable;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setDepthBiasConstantFactor(self, float depthBiasConstantFactor) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setDepthBiasConstantFactor(self, float depthBiasConstantFactor) {
   self.depthBiasConstantFactor = depthBiasConstantFactor;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setDepthBiasClamp(self, float depthBiasClamp) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setDepthBiasClamp(self, float depthBiasClamp) {
   self.depthBiasClamp = depthBiasClamp;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setDepthBiasSlopeFactor(self, float depthBiasSlopeFactor) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setDepthBiasSlopeFactor(self, float depthBiasSlopeFactor) {
   self.depthBiasSlopeFactor = depthBiasSlopeFactor;
   return self;
 }
        
-fn VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo.setLineWidth(self, float lineWidth) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setLineWidth(self, float lineWidth) {
   self.lineWidth = lineWidth;
   return self;
 }
        
 
 
-fn VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfoBuilder() {
-  VkPipelineShaderStageCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+fn PipelineShaderStageCreateInfo pipelineShaderStageCreateInfoBuilder() {
+  PipelineShaderStageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setNext(self, void* pNext) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setFlags(self, VkPipelineShaderStageCreateFlags flags) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setFlags(self, PipelineShaderStageCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setStage(self, VkShaderStageFlagBits stage) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setStage(self, ShaderStageFlagBits stage) {
   self.stage = stage;
   return self;
 }
        
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setMod(self, VkShaderModule mod) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setMod(self, ShaderModule mod) {
   self.mod = mod;
   return self;
 }
        
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setName(self, char* pName) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setName(self, char* pName) {
   self.pName = pName;
   return self;
 }
        
-fn VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo.setSpecializationInfo(self, VkSpecializationInfo* pSpecializationInfo) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setSpecializationInfo(self, SpecializationInfo* pSpecializationInfo) {
   self.pSpecializationInfo = pSpecializationInfo;
   return self;
 }
        
 
 
-fn VkPipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfoBuilder() {
-  VkPipelineTessellationStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO,
+fn PipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfoBuilder() {
+  PipelineTessellationStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo.setFlags(self, VkPipelineTessellationStateCreateFlags flags) {
+fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setFlags(self, PipelineTessellationStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo.setPatchControlPoints(self, uint patchControlPoints) {
+fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setPatchControlPoints(self, uint patchControlPoints) {
   self.patchControlPoints = patchControlPoints;
   return self;
 }
        
 
 
-fn VkPipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfoBuilder() {
-  VkPipelineVertexInputStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+fn PipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfoBuilder() {
+  PipelineVertexInputStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setFlags(self, VkPipelineVertexInputStateCreateFlags flags) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setFlags(self, PipelineVertexInputStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setVertexBindingDescriptionCount(self, uint vertexBindingDescriptionCount) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexBindingDescriptionCount(self, uint vertexBindingDescriptionCount) {
   self.vertexBindingDescriptionCount = vertexBindingDescriptionCount;
   return self;
 }
        
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setVertexBindingDescriptions(self, VkVertexInputBindingDescription[] pVertexBindingDescriptions) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexBindingDescriptions(self, VertexInputBindingDescription[] pVertexBindingDescriptions) {
   self.vertexBindingDescriptionCount = (uint)pVertexBindingDescriptions.len;
   self.pVertexBindingDescriptions = &pVertexBindingDescriptions[0];
   return self;
 }
 
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setVertexAttributeDescriptionCount(self, uint vertexAttributeDescriptionCount) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexAttributeDescriptionCount(self, uint vertexAttributeDescriptionCount) {
   self.vertexAttributeDescriptionCount = vertexAttributeDescriptionCount;
   return self;
 }
        
-fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.setVertexAttributeDescriptions(self, VkVertexInputAttributeDescription[] pVertexAttributeDescriptions) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexAttributeDescriptions(self, VertexInputAttributeDescription[] pVertexAttributeDescriptions) {
   self.vertexAttributeDescriptionCount = (uint)pVertexAttributeDescriptions.len;
   self.pVertexAttributeDescriptions = &pVertexAttributeDescriptions[0];
   return self;
@@ -1420,42 +1420,42 @@ fn VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo.set
 
 
 
-fn VkPipelineViewportStateCreateInfo pipelineViewportStateCreateInfoBuilder() {
-  VkPipelineViewportStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+fn PipelineViewportStateCreateInfo pipelineViewportStateCreateInfoBuilder() {
+  PipelineViewportStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setFlags(self, VkPipelineViewportStateCreateFlags flags) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setFlags(self, PipelineViewportStateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setViewportCount(self, uint viewportCount) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewportCount(self, uint viewportCount) {
   self.viewportCount = viewportCount;
   return self;
 }
        
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setViewports(self, VkViewport[] pViewports) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewports(self, Viewport[] pViewports) {
   self.viewportCount = (uint)pViewports.len;
   self.pViewports = &pViewports[0];
   return self;
 }
 
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setScissorCount(self, uint scissorCount) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissorCount(self, uint scissorCount) {
   self.scissorCount = scissorCount;
   return self;
 }
        
-fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setScissors(self, VkRect2D[] pScissors) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissors(self, Rect2D[] pScissors) {
   self.scissorCount = (uint)pScissors.len;
   self.pScissors = &pScissors[0];
   return self;
@@ -1463,42 +1463,42 @@ fn VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo.setScisso
 
 
 
-fn VkPipelineLayoutCreateInfo pipelineLayoutCreateInfoBuilder() {
-  VkPipelineLayoutCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+fn PipelineLayoutCreateInfo pipelineLayoutCreateInfoBuilder() {
+  PipelineLayoutCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setNext(self, void* pNext) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setFlags(self, VkPipelineLayoutCreateFlags flags) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setFlags(self, PipelineLayoutCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setSetLayoutCount(self, uint setLayoutCount) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayoutCount(self, uint setLayoutCount) {
   self.setLayoutCount = setLayoutCount;
   return self;
 }
        
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setSetLayouts(self, VkDescriptorSetLayout[] pSetLayouts) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
   self.setLayoutCount = (uint)pSetLayouts.len;
   self.pSetLayouts = &pSetLayouts[0];
   return self;
 }
 
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setPushConstantRangeCount(self, uint pushConstantRangeCount) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRangeCount(self, uint pushConstantRangeCount) {
   self.pushConstantRangeCount = pushConstantRangeCount;
   return self;
 }
        
-fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setPushConstantRanges(self, VkPushConstantRange[] pPushConstantRanges) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRanges(self, PushConstantRange[] pPushConstantRanges) {
   self.pushConstantRangeCount = (uint)pPushConstantRanges.len;
   self.pPushConstantRanges = &pPushConstantRanges[0];
   return self;
@@ -1506,183 +1506,183 @@ fn VkPipelineLayoutCreateInfo VkPipelineLayoutCreateInfo.setPushConstantRanges(s
 
 
 
-fn VkSamplerCreateInfo samplerCreateInfoBuilder() {
-  VkSamplerCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+fn SamplerCreateInfo samplerCreateInfoBuilder() {
+  SamplerCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setNext(self, void* pNext) {
+fn SamplerCreateInfo SamplerCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setFlags(self, VkSamplerCreateFlags flags) {
+fn SamplerCreateInfo SamplerCreateInfo.setFlags(self, SamplerCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMagFilter(self, VkFilter magFilter) {
+fn SamplerCreateInfo SamplerCreateInfo.setMagFilter(self, Filter magFilter) {
   self.magFilter = magFilter;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMinFilter(self, VkFilter minFilter) {
+fn SamplerCreateInfo SamplerCreateInfo.setMinFilter(self, Filter minFilter) {
   self.minFilter = minFilter;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMipmapMode(self, VkSamplerMipmapMode mipmapMode) {
+fn SamplerCreateInfo SamplerCreateInfo.setMipmapMode(self, SamplerMipmapMode mipmapMode) {
   self.mipmapMode = mipmapMode;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setAddressModeU(self, VkSamplerAddressMode addressModeU) {
+fn SamplerCreateInfo SamplerCreateInfo.setAddressModeU(self, SamplerAddressMode addressModeU) {
   self.addressModeU = addressModeU;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setAddressModeV(self, VkSamplerAddressMode addressModeV) {
+fn SamplerCreateInfo SamplerCreateInfo.setAddressModeV(self, SamplerAddressMode addressModeV) {
   self.addressModeV = addressModeV;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setAddressModeW(self, VkSamplerAddressMode addressModeW) {
+fn SamplerCreateInfo SamplerCreateInfo.setAddressModeW(self, SamplerAddressMode addressModeW) {
   self.addressModeW = addressModeW;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMipLodBias(self, float mipLodBias) {
+fn SamplerCreateInfo SamplerCreateInfo.setMipLodBias(self, float mipLodBias) {
   self.mipLodBias = mipLodBias;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setAnisotropyEnable(self, VkBool32 anisotropyEnable) {
+fn SamplerCreateInfo SamplerCreateInfo.setAnisotropyEnable(self, Bool32 anisotropyEnable) {
   self.anisotropyEnable = anisotropyEnable;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMaxAnisotropy(self, float maxAnisotropy) {
+fn SamplerCreateInfo SamplerCreateInfo.setMaxAnisotropy(self, float maxAnisotropy) {
   self.maxAnisotropy = maxAnisotropy;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setCompareEnable(self, VkBool32 compareEnable) {
+fn SamplerCreateInfo SamplerCreateInfo.setCompareEnable(self, Bool32 compareEnable) {
   self.compareEnable = compareEnable;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setCompareOp(self, VkCompareOp compareOp) {
+fn SamplerCreateInfo SamplerCreateInfo.setCompareOp(self, CompareOp compareOp) {
   self.compareOp = compareOp;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMinLod(self, float minLod) {
+fn SamplerCreateInfo SamplerCreateInfo.setMinLod(self, float minLod) {
   self.minLod = minLod;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setMaxLod(self, float maxLod) {
+fn SamplerCreateInfo SamplerCreateInfo.setMaxLod(self, float maxLod) {
   self.maxLod = maxLod;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setBorderColor(self, VkBorderColor borderColor) {
+fn SamplerCreateInfo SamplerCreateInfo.setBorderColor(self, BorderColor borderColor) {
   self.borderColor = borderColor;
   return self;
 }
        
-fn VkSamplerCreateInfo VkSamplerCreateInfo.setUnnormalizedCoordinates(self, VkBool32 unnormalizedCoordinates) {
+fn SamplerCreateInfo SamplerCreateInfo.setUnnormalizedCoordinates(self, Bool32 unnormalizedCoordinates) {
   self.unnormalizedCoordinates = unnormalizedCoordinates;
   return self;
 }
        
 
 
-fn VkCopyDescriptorSet copyDescriptorSetBuilder() {
-  VkCopyDescriptorSet defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET,
+fn CopyDescriptorSet copyDescriptorSetBuilder() {
+  CopyDescriptorSet defaultValue = {
+    .sType = STRUCTURE_TYPE_COPY_DESCRIPTOR_SET,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setNext(self, void* pNext) {
+fn CopyDescriptorSet CopyDescriptorSet.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setSrcSet(self, VkDescriptorSet srcSet) {
+fn CopyDescriptorSet CopyDescriptorSet.setSrcSet(self, DescriptorSet srcSet) {
   self.srcSet = srcSet;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setSrcBinding(self, uint srcBinding) {
+fn CopyDescriptorSet CopyDescriptorSet.setSrcBinding(self, uint srcBinding) {
   self.srcBinding = srcBinding;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setSrcArrayElement(self, uint srcArrayElement) {
+fn CopyDescriptorSet CopyDescriptorSet.setSrcArrayElement(self, uint srcArrayElement) {
   self.srcArrayElement = srcArrayElement;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setDstSet(self, VkDescriptorSet dstSet) {
+fn CopyDescriptorSet CopyDescriptorSet.setDstSet(self, DescriptorSet dstSet) {
   self.dstSet = dstSet;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setDstBinding(self, uint dstBinding) {
+fn CopyDescriptorSet CopyDescriptorSet.setDstBinding(self, uint dstBinding) {
   self.dstBinding = dstBinding;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setDstArrayElement(self, uint dstArrayElement) {
+fn CopyDescriptorSet CopyDescriptorSet.setDstArrayElement(self, uint dstArrayElement) {
   self.dstArrayElement = dstArrayElement;
   return self;
 }
        
-fn VkCopyDescriptorSet VkCopyDescriptorSet.setDescriptorCount(self, uint descriptorCount) {
+fn CopyDescriptorSet CopyDescriptorSet.setDescriptorCount(self, uint descriptorCount) {
   self.descriptorCount = descriptorCount;
   return self;
 }
        
 
 
-fn VkDescriptorPoolCreateInfo descriptorPoolCreateInfoBuilder() {
-  VkDescriptorPoolCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+fn DescriptorPoolCreateInfo descriptorPoolCreateInfoBuilder() {
+  DescriptorPoolCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setNext(self, void* pNext) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setFlags(self, VkDescriptorPoolCreateFlags flags) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setFlags(self, DescriptorPoolCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setMaxSets(self, uint maxSets) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setMaxSets(self, uint maxSets) {
   self.maxSets = maxSets;
   return self;
 }
        
-fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setPoolSizeCount(self, uint poolSizeCount) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizeCount(self, uint poolSizeCount) {
   self.poolSizeCount = poolSizeCount;
   return self;
 }
        
-fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setPoolSizes(self, VkDescriptorPoolSize[] pPoolSizes) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizes(self, DescriptorPoolSize[] pPoolSizes) {
   self.poolSizeCount = (uint)pPoolSizes.len;
   self.pPoolSizes = &pPoolSizes[0];
   return self;
@@ -1690,31 +1690,31 @@ fn VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo.setPoolSizes(self, VkDe
 
 
 
-fn VkDescriptorSetAllocateInfo descriptorSetAllocateInfoBuilder() {
-  VkDescriptorSetAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+fn DescriptorSetAllocateInfo descriptorSetAllocateInfoBuilder() {
+  DescriptorSetAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setNext(self, void* pNext) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setDescriptorPool(self, VkDescriptorPool descriptorPool) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setDescriptorPool(self, DescriptorPool descriptorPool) {
   self.descriptorPool = descriptorPool;
   return self;
 }
        
-fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
   self.descriptorSetCount = descriptorSetCount;
   return self;
 }
        
-fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setSetLayouts(self, VkDescriptorSetLayout[] pSetLayouts) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
   self.descriptorSetCount = (uint)pSetLayouts.len;
   self.pSetLayouts = &pSetLayouts[0];
   return self;
@@ -1722,31 +1722,31 @@ fn VkDescriptorSetAllocateInfo VkDescriptorSetAllocateInfo.setSetLayouts(self, V
 
 
 
-fn VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfoBuilder() {
-  VkDescriptorSetLayoutCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+fn DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfoBuilder() {
+  DescriptorSetLayoutCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setNext(self, void* pNext) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setFlags(self, VkDescriptorSetLayoutCreateFlags flags) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setFlags(self, DescriptorSetLayoutCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setBindingCount(self, uint bindingCount) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindingCount(self, uint bindingCount) {
   self.bindingCount = bindingCount;
   return self;
 }
        
-fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setBindings(self, VkDescriptorSetLayoutBinding[] pBindings) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindings(self, DescriptorSetLayoutBinding[] pBindings) {
   self.bindingCount = (uint)pBindings.len;
   self.pBindings = &pBindings[0];
   return self;
@@ -1754,58 +1754,58 @@ fn VkDescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo.setBindings(s
 
 
 
-fn VkWriteDescriptorSet writeDescriptorSetBuilder() {
-  VkWriteDescriptorSet defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+fn WriteDescriptorSet writeDescriptorSetBuilder() {
+  WriteDescriptorSet defaultValue = {
+    .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setNext(self, void* pNext) {
+fn WriteDescriptorSet WriteDescriptorSet.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setDstSet(self, VkDescriptorSet dstSet) {
+fn WriteDescriptorSet WriteDescriptorSet.setDstSet(self, DescriptorSet dstSet) {
   self.dstSet = dstSet;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setDstBinding(self, uint dstBinding) {
+fn WriteDescriptorSet WriteDescriptorSet.setDstBinding(self, uint dstBinding) {
   self.dstBinding = dstBinding;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setDstArrayElement(self, uint dstArrayElement) {
+fn WriteDescriptorSet WriteDescriptorSet.setDstArrayElement(self, uint dstArrayElement) {
   self.dstArrayElement = dstArrayElement;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setDescriptorCount(self, uint descriptorCount) {
+fn WriteDescriptorSet WriteDescriptorSet.setDescriptorCount(self, uint descriptorCount) {
   self.descriptorCount = descriptorCount;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setDescriptorType(self, VkDescriptorType descriptorType) {
+fn WriteDescriptorSet WriteDescriptorSet.setDescriptorType(self, DescriptorType descriptorType) {
   self.descriptorType = descriptorType;
   return self;
 }
        
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setImageInfo(self, VkDescriptorImageInfo[] pImageInfo) {
+fn WriteDescriptorSet WriteDescriptorSet.setImageInfo(self, DescriptorImageInfo[] pImageInfo) {
   self.descriptorCount = (uint)pImageInfo.len;
   self.pImageInfo = &pImageInfo[0];
   return self;
 }
 
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setBufferInfo(self, VkDescriptorBufferInfo[] pBufferInfo) {
+fn WriteDescriptorSet WriteDescriptorSet.setBufferInfo(self, DescriptorBufferInfo[] pBufferInfo) {
   self.descriptorCount = (uint)pBufferInfo.len;
   self.pBufferInfo = &pBufferInfo[0];
   return self;
 }
 
-fn VkWriteDescriptorSet VkWriteDescriptorSet.setTexelBufferView(self, VkBufferView[] pTexelBufferView) {
+fn WriteDescriptorSet WriteDescriptorSet.setTexelBufferView(self, BufferView[] pTexelBufferView) {
   self.descriptorCount = (uint)pTexelBufferView.len;
   self.pTexelBufferView = &pTexelBufferView[0];
   return self;
@@ -1813,105 +1813,105 @@ fn VkWriteDescriptorSet VkWriteDescriptorSet.setTexelBufferView(self, VkBufferVi
 
 
 
-fn VkFramebufferCreateInfo framebufferCreateInfoBuilder() {
-  VkFramebufferCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+fn FramebufferCreateInfo framebufferCreateInfoBuilder() {
+  FramebufferCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setNext(self, void* pNext) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setFlags(self, VkFramebufferCreateFlags flags) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setFlags(self, FramebufferCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setRenderPass(self, VkRenderPass renderPass) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setRenderPass(self, RenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setAttachmentCount(self, uint attachmentCount) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setAttachments(self, VkImageView[] pAttachments) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setAttachments(self, ImageView[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
 }
 
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setWidth(self, uint width) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setWidth(self, uint width) {
   self.width = width;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setHeight(self, uint height) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setHeight(self, uint height) {
   self.height = height;
   return self;
 }
        
-fn VkFramebufferCreateInfo VkFramebufferCreateInfo.setLayers(self, uint layers) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setLayers(self, uint layers) {
   self.layers = layers;
   return self;
 }
        
 
 
-fn VkRenderPassCreateInfo renderPassCreateInfoBuilder() {
-  VkRenderPassCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+fn RenderPassCreateInfo renderPassCreateInfoBuilder() {
+  RenderPassCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setNext(self, void* pNext) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setFlags(self, VkRenderPassCreateFlags flags) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setFlags(self, RenderPassCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setAttachmentCount(self, uint attachmentCount) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setAttachments(self, VkAttachmentDescription[] pAttachments) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setAttachments(self, AttachmentDescription[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
 }
 
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setSubpassCount(self, uint subpassCount) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setSubpassCount(self, uint subpassCount) {
   self.subpassCount = subpassCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setSubpasses(self, VkSubpassDescription[] pSubpasses) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setSubpasses(self, SubpassDescription[] pSubpasses) {
   self.subpassCount = (uint)pSubpasses.len;
   self.pSubpasses = &pSubpasses[0];
   return self;
 }
 
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setDependencyCount(self, uint dependencyCount) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setDependencyCount(self, uint dependencyCount) {
   self.dependencyCount = dependencyCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setDependencies(self, VkSubpassDependency[] pDependencies) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setDependencies(self, SubpassDependency[] pDependencies) {
   self.dependencyCount = (uint)pDependencies.len;
   self.pDependencies = &pDependencies[0];
   return self;
@@ -1919,170 +1919,170 @@ fn VkRenderPassCreateInfo VkRenderPassCreateInfo.setDependencies(self, VkSubpass
 
 
 
-fn VkCommandPoolCreateInfo commandPoolCreateInfoBuilder() {
-  VkCommandPoolCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+fn CommandPoolCreateInfo commandPoolCreateInfoBuilder() {
+  CommandPoolCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandPoolCreateInfo VkCommandPoolCreateInfo.setNext(self, void* pNext) {
+fn CommandPoolCreateInfo CommandPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandPoolCreateInfo VkCommandPoolCreateInfo.setFlags(self, VkCommandPoolCreateFlags flags) {
+fn CommandPoolCreateInfo CommandPoolCreateInfo.setFlags(self, CommandPoolCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkCommandPoolCreateInfo VkCommandPoolCreateInfo.setQueueFamilyIndex(self, uint queueFamilyIndex) {
+fn CommandPoolCreateInfo CommandPoolCreateInfo.setQueueFamilyIndex(self, uint queueFamilyIndex) {
   self.queueFamilyIndex = queueFamilyIndex;
   return self;
 }
        
 
 
-fn VkCommandBufferAllocateInfo commandBufferAllocateInfoBuilder() {
-  VkCommandBufferAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+fn CommandBufferAllocateInfo commandBufferAllocateInfoBuilder() {
+  CommandBufferAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setNext(self, void* pNext) {
+fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setCommandPool(self, VkCommandPool commandPool) {
+fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setCommandPool(self, CommandPool commandPool) {
   self.commandPool = commandPool;
   return self;
 }
        
-fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setLevel(self, VkCommandBufferLevel level) {
+fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setLevel(self, CommandBufferLevel level) {
   self.level = level;
   return self;
 }
        
-fn VkCommandBufferAllocateInfo VkCommandBufferAllocateInfo.setCommandBufferCount(self, uint commandBufferCount) {
+fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setCommandBufferCount(self, uint commandBufferCount) {
   self.commandBufferCount = commandBufferCount;
   return self;
 }
        
 
 
-fn VkCommandBufferBeginInfo commandBufferBeginInfoBuilder() {
-  VkCommandBufferBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+fn CommandBufferBeginInfo commandBufferBeginInfoBuilder() {
+  CommandBufferBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandBufferBeginInfo VkCommandBufferBeginInfo.setNext(self, void* pNext) {
+fn CommandBufferBeginInfo CommandBufferBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandBufferBeginInfo VkCommandBufferBeginInfo.setFlags(self, VkCommandBufferUsageFlags flags) {
+fn CommandBufferBeginInfo CommandBufferBeginInfo.setFlags(self, CommandBufferUsageFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkCommandBufferBeginInfo VkCommandBufferBeginInfo.setInheritanceInfo(self, VkCommandBufferInheritanceInfo* pInheritanceInfo) {
+fn CommandBufferBeginInfo CommandBufferBeginInfo.setInheritanceInfo(self, CommandBufferInheritanceInfo* pInheritanceInfo) {
   self.pInheritanceInfo = pInheritanceInfo;
   return self;
 }
        
 
 
-fn VkCommandBufferInheritanceInfo commandBufferInheritanceInfoBuilder() {
-  VkCommandBufferInheritanceInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
+fn CommandBufferInheritanceInfo commandBufferInheritanceInfoBuilder() {
+  CommandBufferInheritanceInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setNext(self, void* pNext) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setRenderPass(self, VkRenderPass renderPass) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setRenderPass(self, RenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setSubpass(self, uint subpass) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setSubpass(self, uint subpass) {
   self.subpass = subpass;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setFramebuffer(self, VkFramebuffer framebuffer) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setFramebuffer(self, Framebuffer framebuffer) {
   self.framebuffer = framebuffer;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setOcclusionQueryEnable(self, VkBool32 occlusionQueryEnable) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setOcclusionQueryEnable(self, Bool32 occlusionQueryEnable) {
   self.occlusionQueryEnable = occlusionQueryEnable;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setQueryFlags(self, VkQueryControlFlags queryFlags) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setQueryFlags(self, QueryControlFlags queryFlags) {
   self.queryFlags = queryFlags;
   return self;
 }
        
-fn VkCommandBufferInheritanceInfo VkCommandBufferInheritanceInfo.setPipelineStatistics(self, VkQueryPipelineStatisticFlags pipelineStatistics) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setPipelineStatistics(self, QueryPipelineStatisticFlags pipelineStatistics) {
   self.pipelineStatistics = pipelineStatistics;
   return self;
 }
        
 
 
-fn VkRenderPassBeginInfo renderPassBeginInfoBuilder() {
-  VkRenderPassBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+fn RenderPassBeginInfo renderPassBeginInfoBuilder() {
+  RenderPassBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setNext(self, void* pNext) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setRenderPass(self, VkRenderPass renderPass) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setRenderPass(self, RenderPass renderPass) {
   self.renderPass = renderPass;
   return self;
 }
        
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setFramebuffer(self, VkFramebuffer framebuffer) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setFramebuffer(self, Framebuffer framebuffer) {
   self.framebuffer = framebuffer;
   return self;
 }
        
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setRenderArea(self, VkRect2D renderArea) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setRenderArea(self, Rect2D renderArea) {
   self.renderArea = renderArea;
   return self;
 }
        
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setClearValueCount(self, uint clearValueCount) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setClearValueCount(self, uint clearValueCount) {
   self.clearValueCount = clearValueCount;
   return self;
 }
        
-fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setClearValues(self, VkClearValue[] pClearValues) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setClearValues(self, ClearValue[] pClearValues) {
   self.clearValueCount = (uint)pClearValues.len;
   self.pClearValues = &pClearValues[0];
   return self;
@@ -2090,243 +2090,243 @@ fn VkRenderPassBeginInfo VkRenderPassBeginInfo.setClearValues(self, VkClearValue
 
 
 
-fn VkPhysicalDeviceSubgroupProperties physicalDeviceSubgroupPropertiesBuilder() {
-  VkPhysicalDeviceSubgroupProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES,
+fn PhysicalDeviceSubgroupProperties physicalDeviceSubgroupPropertiesBuilder() {
+  PhysicalDeviceSubgroupProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setSubgroupSize(self, uint subgroupSize) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSubgroupSize(self, uint subgroupSize) {
   self.subgroupSize = subgroupSize;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setSupportedStages(self, VkShaderStageFlags supportedStages) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSupportedStages(self, ShaderStageFlags supportedStages) {
   self.supportedStages = supportedStages;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setSupportedOperations(self, VkSubgroupFeatureFlags supportedOperations) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSupportedOperations(self, SubgroupFeatureFlags supportedOperations) {
   self.supportedOperations = supportedOperations;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties.setQuadOperationsInAllStages(self, VkBool32 quadOperationsInAllStages) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setQuadOperationsInAllStages(self, Bool32 quadOperationsInAllStages) {
   self.quadOperationsInAllStages = quadOperationsInAllStages;
   return self;
 }
        
 
 
-fn VkBindBufferMemoryInfo bindBufferMemoryInfoBuilder() {
-  VkBindBufferMemoryInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO,
+fn BindBufferMemoryInfo bindBufferMemoryInfoBuilder() {
+  BindBufferMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setNext(self, void* pNext) {
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setBuffer(self, VkBuffer buffer) {
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
-fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setMemory(self, VkDeviceMemory memory) {
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemory(self, DeviceMemory memory) {
   self.memory = memory;
   return self;
 }
        
-fn VkBindBufferMemoryInfo VkBindBufferMemoryInfo.setMemoryOffset(self, VkDeviceSize memoryOffset) {
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemoryOffset(self, DeviceSize memoryOffset) {
   self.memoryOffset = memoryOffset;
   return self;
 }
        
 
 
-fn VkBindImageMemoryInfo bindImageMemoryInfoBuilder() {
-  VkBindImageMemoryInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO,
+fn BindImageMemoryInfo bindImageMemoryInfoBuilder() {
+  BindImageMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setNext(self, void* pNext) {
+fn BindImageMemoryInfo BindImageMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setImage(self, VkImage image) {
+fn BindImageMemoryInfo BindImageMemoryInfo.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
-fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setMemory(self, VkDeviceMemory memory) {
+fn BindImageMemoryInfo BindImageMemoryInfo.setMemory(self, DeviceMemory memory) {
   self.memory = memory;
   return self;
 }
        
-fn VkBindImageMemoryInfo VkBindImageMemoryInfo.setMemoryOffset(self, VkDeviceSize memoryOffset) {
+fn BindImageMemoryInfo BindImageMemoryInfo.setMemoryOffset(self, DeviceSize memoryOffset) {
   self.memoryOffset = memoryOffset;
   return self;
 }
        
 
 
-fn VkPhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeaturesBuilder() {
-  VkPhysicalDevice16BitStorageFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES,
+fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeaturesBuilder() {
+  PhysicalDevice16BitStorageFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setNext(self, void* pNext) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setStorageBuffer16BitAccess(self, VkBool32 storageBuffer16BitAccess) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStorageBuffer16BitAccess(self, Bool32 storageBuffer16BitAccess) {
   self.storageBuffer16BitAccess = storageBuffer16BitAccess;
   return self;
 }
        
-fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setUniformAndStorageBuffer16BitAccess(self, VkBool32 uniformAndStorageBuffer16BitAccess) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setUniformAndStorageBuffer16BitAccess(self, Bool32 uniformAndStorageBuffer16BitAccess) {
   self.uniformAndStorageBuffer16BitAccess = uniformAndStorageBuffer16BitAccess;
   return self;
 }
        
-fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setStoragePushConstant16(self, VkBool32 storagePushConstant16) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStoragePushConstant16(self, Bool32 storagePushConstant16) {
   self.storagePushConstant16 = storagePushConstant16;
   return self;
 }
        
-fn VkPhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures.setStorageInputOutput16(self, VkBool32 storageInputOutput16) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStorageInputOutput16(self, Bool32 storageInputOutput16) {
   self.storageInputOutput16 = storageInputOutput16;
   return self;
 }
        
 
 
-fn VkMemoryDedicatedRequirements memoryDedicatedRequirementsBuilder() {
-  VkMemoryDedicatedRequirements defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+fn MemoryDedicatedRequirements memoryDedicatedRequirementsBuilder() {
+  MemoryDedicatedRequirements defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryDedicatedRequirements VkMemoryDedicatedRequirements.setNext(self, void* pNext) {
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryDedicatedRequirements VkMemoryDedicatedRequirements.setPrefersDedicatedAllocation(self, VkBool32 prefersDedicatedAllocation) {
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setPrefersDedicatedAllocation(self, Bool32 prefersDedicatedAllocation) {
   self.prefersDedicatedAllocation = prefersDedicatedAllocation;
   return self;
 }
        
-fn VkMemoryDedicatedRequirements VkMemoryDedicatedRequirements.setRequiresDedicatedAllocation(self, VkBool32 requiresDedicatedAllocation) {
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setRequiresDedicatedAllocation(self, Bool32 requiresDedicatedAllocation) {
   self.requiresDedicatedAllocation = requiresDedicatedAllocation;
   return self;
 }
        
 
 
-fn VkMemoryDedicatedAllocateInfo memoryDedicatedAllocateInfoBuilder() {
-  VkMemoryDedicatedAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
+fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfoBuilder() {
+  MemoryDedicatedAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo.setNext(self, void* pNext) {
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo.setImage(self, VkImage image) {
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
-fn VkMemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo.setBuffer(self, VkBuffer buffer) {
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
 
 
-fn VkMemoryAllocateFlagsInfo memoryAllocateFlagsInfoBuilder() {
-  VkMemoryAllocateFlagsInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
+fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfoBuilder() {
+  MemoryAllocateFlagsInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo.setNext(self, void* pNext) {
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo.setFlags(self, VkMemoryAllocateFlags flags) {
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setFlags(self, MemoryAllocateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkMemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo.setDeviceMask(self, uint deviceMask) {
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
 }
        
 
 
-fn VkDeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfoBuilder() {
-  VkDeviceGroupRenderPassBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO,
+fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfoBuilder() {
+  DeviceGroupRenderPassBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setNext(self, void* pNext) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setDeviceMask(self, uint deviceMask) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
 }
        
-fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setDeviceRenderAreaCount(self, uint deviceRenderAreaCount) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRenderAreaCount(self, uint deviceRenderAreaCount) {
   self.deviceRenderAreaCount = deviceRenderAreaCount;
   return self;
 }
        
-fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setDeviceRenderAreas(self, VkRect2D[] pDeviceRenderAreas) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRenderAreas(self, Rect2D[] pDeviceRenderAreas) {
   self.deviceRenderAreaCount = (uint)pDeviceRenderAreas.len;
   self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
   return self;
@@ -2334,69 +2334,69 @@ fn VkDeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo.setDeviceRe
 
 
 
-fn VkDeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfoBuilder() {
-  VkDeviceGroupCommandBufferBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO,
+fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfoBuilder() {
+  DeviceGroupCommandBufferBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo.setNext(self, void* pNext) {
+fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo.setDeviceMask(self, uint deviceMask) {
+fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
 }
        
 
 
-fn VkDeviceGroupSubmitInfo deviceGroupSubmitInfoBuilder() {
-  VkDeviceGroupSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO,
+fn DeviceGroupSubmitInfo deviceGroupSubmitInfoBuilder() {
+  DeviceGroupSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setNext(self, void* pNext) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
 }
        
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setWaitSemaphoreDeviceIndices(self, uint[] pWaitSemaphoreDeviceIndices) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreDeviceIndices(self, uint[] pWaitSemaphoreDeviceIndices) {
   self.waitSemaphoreCount = (uint)pWaitSemaphoreDeviceIndices.len;
   self.pWaitSemaphoreDeviceIndices = &pWaitSemaphoreDeviceIndices[0];
   return self;
 }
 
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
   self.commandBufferCount = commandBufferCount;
   return self;
 }
        
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setCommandBufferDeviceMasks(self, uint[] pCommandBufferDeviceMasks) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferDeviceMasks(self, uint[] pCommandBufferDeviceMasks) {
   self.commandBufferCount = (uint)pCommandBufferDeviceMasks.len;
   self.pCommandBufferDeviceMasks = &pCommandBufferDeviceMasks[0];
   return self;
 }
 
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
   self.signalSemaphoreCount = signalSemaphoreCount;
   return self;
 }
        
-fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(self, uint[] pSignalSemaphoreDeviceIndices) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(self, uint[] pSignalSemaphoreDeviceIndices) {
   self.signalSemaphoreCount = (uint)pSignalSemaphoreDeviceIndices.len;
   self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
   return self;
@@ -2404,52 +2404,52 @@ fn VkDeviceGroupSubmitInfo VkDeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndic
 
 
 
-fn VkDeviceGroupBindSparseInfo deviceGroupBindSparseInfoBuilder() {
-  VkDeviceGroupBindSparseInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO,
+fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfoBuilder() {
+  DeviceGroupBindSparseInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo.setNext(self, void* pNext) {
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo.setResourceDeviceIndex(self, uint resourceDeviceIndex) {
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setResourceDeviceIndex(self, uint resourceDeviceIndex) {
   self.resourceDeviceIndex = resourceDeviceIndex;
   return self;
 }
        
-fn VkDeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo.setMemoryDeviceIndex(self, uint memoryDeviceIndex) {
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setMemoryDeviceIndex(self, uint memoryDeviceIndex) {
   self.memoryDeviceIndex = memoryDeviceIndex;
   return self;
 }
        
 
 
-fn VkBindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfoBuilder() {
-  VkBindBufferMemoryDeviceGroupInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO,
+fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfoBuilder() {
+  BindBufferMemoryDeviceGroupInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setNext(self, void* pNext) {
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
   self.deviceIndexCount = deviceIndexCount;
   return self;
 }
        
-fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
   self.deviceIndexCount = (uint)pDeviceIndices.len;
   self.pDeviceIndices = &pDeviceIndices[0];
   return self;
@@ -2457,37 +2457,37 @@ fn VkBindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo.setDevice
 
 
 
-fn VkBindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfoBuilder() {
-  VkBindImageMemoryDeviceGroupInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO,
+fn BindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfoBuilder() {
+  BindImageMemoryDeviceGroupInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setNext(self, void* pNext) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
   self.deviceIndexCount = deviceIndexCount;
   return self;
 }
        
-fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
   self.deviceIndexCount = (uint)pDeviceIndices.len;
   self.pDeviceIndices = &pDeviceIndices[0];
   return self;
 }
 
-fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegionCount(self, uint splitInstanceBindRegionCount) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegionCount(self, uint splitInstanceBindRegionCount) {
   self.splitInstanceBindRegionCount = splitInstanceBindRegionCount;
   return self;
 }
        
-fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegions(self, VkRect2D[] pSplitInstanceBindRegions) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegions(self, Rect2D[] pSplitInstanceBindRegions) {
   self.splitInstanceBindRegionCount = (uint)pSplitInstanceBindRegions.len;
   self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
   return self;
@@ -2495,57 +2495,57 @@ fn VkBindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo.setSplitIns
 
 
 
-fn VkPhysicalDeviceGroupProperties physicalDeviceGroupPropertiesBuilder() {
-  VkPhysicalDeviceGroupProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES,
+fn PhysicalDeviceGroupProperties physicalDeviceGroupPropertiesBuilder() {
+  PhysicalDeviceGroupProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
 }
        
-fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setPhysicalDevices(self, VkPhysicalDevice[VK_MAX_DEVICE_GROUP_SIZE] physicalDevices) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices) {
   self.physicalDevices = physicalDevices;
   return self;
 }
        
-fn VkPhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties.setSubsetAllocation(self, VkBool32 subsetAllocation) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocation(self, Bool32 subsetAllocation) {
   self.subsetAllocation = subsetAllocation;
   return self;
 }
        
 
 
-fn VkDeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfoBuilder() {
-  VkDeviceGroupDeviceCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO,
+fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfoBuilder() {
+  DeviceGroupDeviceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setNext(self, void* pNext) {
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
 }
        
-fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setPhysicalDevices(self, VkPhysicalDevice[] pPhysicalDevices) {
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDevices(self, PhysicalDevice[] pPhysicalDevices) {
   self.physicalDeviceCount = (uint)pPhysicalDevices.len;
   self.pPhysicalDevices = &pPhysicalDevices[0];
   return self;
@@ -2553,381 +2553,381 @@ fn VkDeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo.setPhysicalDevice
 
 
 
-fn VkBufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2Builder() {
-  VkBufferMemoryRequirementsInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
+fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2Builder() {
+  BufferMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2.setNext(self, void* pNext) {
+fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2.setBuffer(self, VkBuffer buffer) {
+fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
 
 
-fn VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2Builder() {
-  VkImageMemoryRequirementsInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2Builder() {
+  ImageMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2.setNext(self, void* pNext) {
+fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2.setImage(self, VkImage image) {
+fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
 
 
-fn VkImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2Builder() {
-  VkImageSparseMemoryRequirementsInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2,
+fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2Builder() {
+  ImageSparseMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2.setNext(self, void* pNext) {
+fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2.setImage(self, VkImage image) {
+fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
 
 
-fn VkMemoryRequirements2 memoryRequirements2Builder() {
-  VkMemoryRequirements2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+fn MemoryRequirements2 memoryRequirements2Builder() {
+  MemoryRequirements2 defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryRequirements2 VkMemoryRequirements2.setNext(self, void* pNext) {
+fn MemoryRequirements2 MemoryRequirements2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryRequirements2 VkMemoryRequirements2.setMemoryRequirements(self, VkMemoryRequirements memoryRequirements) {
+fn MemoryRequirements2 MemoryRequirements2.setMemoryRequirements(self, MemoryRequirements memoryRequirements) {
   self.memoryRequirements = memoryRequirements;
   return self;
 }
        
 
 
-fn VkSparseImageMemoryRequirements2 sparseImageMemoryRequirements2Builder() {
-  VkSparseImageMemoryRequirements2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2,
+fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2Builder() {
+  SparseImageMemoryRequirements2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2.setNext(self, void* pNext) {
+fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2.setMemoryRequirements(self, VkSparseImageMemoryRequirements memoryRequirements) {
+fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setMemoryRequirements(self, SparseImageMemoryRequirements memoryRequirements) {
   self.memoryRequirements = memoryRequirements;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceFeatures2 physicalDeviceFeatures2Builder() {
-  VkPhysicalDeviceFeatures2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+fn PhysicalDeviceFeatures2 physicalDeviceFeatures2Builder() {
+  PhysicalDeviceFeatures2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2.setNext(self, void* pNext) {
+fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2.setFeatures(self, VkPhysicalDeviceFeatures features) {
+fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setFeatures(self, PhysicalDeviceFeatures features) {
   self.features = features;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceProperties2 physicalDeviceProperties2Builder() {
-  VkPhysicalDeviceProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+fn PhysicalDeviceProperties2 physicalDeviceProperties2Builder() {
+  PhysicalDeviceProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceProperties2 VkPhysicalDeviceProperties2.setNext(self, void* pNext) {
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceProperties2 VkPhysicalDeviceProperties2.setProperties(self, VkPhysicalDeviceProperties properties) {
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setProperties(self, PhysicalDeviceProperties properties) {
   self.properties = properties;
   return self;
 }
        
 
 
-fn VkFormatProperties2 formatProperties2Builder() {
-  VkFormatProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
+fn FormatProperties2 formatProperties2Builder() {
+  FormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFormatProperties2 VkFormatProperties2.setNext(self, void* pNext) {
+fn FormatProperties2 FormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFormatProperties2 VkFormatProperties2.setFormatProperties(self, VkFormatProperties formatProperties) {
+fn FormatProperties2 FormatProperties2.setFormatProperties(self, FormatProperties formatProperties) {
   self.formatProperties = formatProperties;
   return self;
 }
        
 
 
-fn VkImageFormatProperties2 imageFormatProperties2Builder() {
-  VkImageFormatProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
+fn ImageFormatProperties2 imageFormatProperties2Builder() {
+  ImageFormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageFormatProperties2 VkImageFormatProperties2.setNext(self, void* pNext) {
+fn ImageFormatProperties2 ImageFormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageFormatProperties2 VkImageFormatProperties2.setImageFormatProperties(self, VkImageFormatProperties imageFormatProperties) {
+fn ImageFormatProperties2 ImageFormatProperties2.setImageFormatProperties(self, ImageFormatProperties imageFormatProperties) {
   self.imageFormatProperties = imageFormatProperties;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2Builder() {
-  VkPhysicalDeviceImageFormatInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
+fn PhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2Builder() {
+  PhysicalDeviceImageFormatInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setNext(self, void* pNext) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setFormat(self, VkFormat format) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setType(self, VkImageType type) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setType(self, ImageType type) {
   self.type = type;
   return self;
 }
        
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setTiling(self, VkImageTiling tiling) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setTiling(self, ImageTiling tiling) {
   self.tiling = tiling;
   return self;
 }
        
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setUsage(self, VkImageUsageFlags usage) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setUsage(self, ImageUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkPhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2.setFlags(self, VkImageCreateFlags flags) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setFlags(self, ImageCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
 
 
-fn VkQueueFamilyProperties2 queueFamilyProperties2Builder() {
-  VkQueueFamilyProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
+fn QueueFamilyProperties2 queueFamilyProperties2Builder() {
+  QueueFamilyProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkQueueFamilyProperties2 VkQueueFamilyProperties2.setNext(self, void* pNext) {
+fn QueueFamilyProperties2 QueueFamilyProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkQueueFamilyProperties2 VkQueueFamilyProperties2.setQueueFamilyProperties(self, VkQueueFamilyProperties queueFamilyProperties) {
+fn QueueFamilyProperties2 QueueFamilyProperties2.setQueueFamilyProperties(self, QueueFamilyProperties queueFamilyProperties) {
   self.queueFamilyProperties = queueFamilyProperties;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2Builder() {
-  VkPhysicalDeviceMemoryProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2,
+fn PhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2Builder() {
+  PhysicalDeviceMemoryProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2.setNext(self, void* pNext) {
+fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2.setMemoryProperties(self, VkPhysicalDeviceMemoryProperties memoryProperties) {
+fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setMemoryProperties(self, PhysicalDeviceMemoryProperties memoryProperties) {
   self.memoryProperties = memoryProperties;
   return self;
 }
        
 
 
-fn VkSparseImageFormatProperties2 sparseImageFormatProperties2Builder() {
-  VkSparseImageFormatProperties2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2,
+fn SparseImageFormatProperties2 sparseImageFormatProperties2Builder() {
+  SparseImageFormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSparseImageFormatProperties2 VkSparseImageFormatProperties2.setNext(self, void* pNext) {
+fn SparseImageFormatProperties2 SparseImageFormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSparseImageFormatProperties2 VkSparseImageFormatProperties2.setProperties(self, VkSparseImageFormatProperties properties) {
+fn SparseImageFormatProperties2 SparseImageFormatProperties2.setProperties(self, SparseImageFormatProperties properties) {
   self.properties = properties;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2Builder() {
-  VkPhysicalDeviceSparseImageFormatInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2,
+fn PhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2Builder() {
+  PhysicalDeviceSparseImageFormatInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setNext(self, void* pNext) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setFormat(self, VkFormat format) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setType(self, VkImageType type) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setType(self, ImageType type) {
   self.type = type;
   return self;
 }
        
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setSamples(self, VkSampleCountFlagBits samples) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setSamples(self, SampleCountFlagBits samples) {
   self.samples = samples;
   return self;
 }
        
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setUsage(self, VkImageUsageFlags usage) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setUsage(self, ImageUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkPhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2.setTiling(self, VkImageTiling tiling) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setTiling(self, ImageTiling tiling) {
   self.tiling = tiling;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePointClippingProperties physicalDevicePointClippingPropertiesBuilder() {
-  VkPhysicalDevicePointClippingProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES,
+fn PhysicalDevicePointClippingProperties physicalDevicePointClippingPropertiesBuilder() {
+  PhysicalDevicePointClippingProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties.setNext(self, void* pNext) {
+fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties.setPointClippingBehavior(self, VkPointClippingBehavior pointClippingBehavior) {
+fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setPointClippingBehavior(self, PointClippingBehavior pointClippingBehavior) {
   self.pointClippingBehavior = pointClippingBehavior;
   return self;
 }
        
 
 
-fn VkRenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfoBuilder() {
-  VkRenderPassInputAttachmentAspectCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO,
+fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfoBuilder() {
+  RenderPassInputAttachmentAspectCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo.setNext(self, void* pNext) {
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo.setAspectReferenceCount(self, uint aspectReferenceCount) {
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setAspectReferenceCount(self, uint aspectReferenceCount) {
   self.aspectReferenceCount = aspectReferenceCount;
   return self;
 }
        
-fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo.setAspectReferences(self, VkInputAttachmentAspectReference[] pAspectReferences) {
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setAspectReferences(self, InputAttachmentAspectReference[] pAspectReferences) {
   self.aspectReferenceCount = (uint)pAspectReferences.len;
   self.pAspectReferences = &pAspectReferences[0];
   return self;
@@ -2935,90 +2935,90 @@ fn VkRenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspect
 
 
 
-fn VkImageViewUsageCreateInfo imageViewUsageCreateInfoBuilder() {
-  VkImageViewUsageCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+fn ImageViewUsageCreateInfo imageViewUsageCreateInfoBuilder() {
+  ImageViewUsageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageViewUsageCreateInfo VkImageViewUsageCreateInfo.setNext(self, void* pNext) {
+fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageViewUsageCreateInfo VkImageViewUsageCreateInfo.setUsage(self, VkImageUsageFlags usage) {
+fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setUsage(self, ImageUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
 
 
-fn VkPipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfoBuilder() {
-  VkPipelineTessellationDomainOriginStateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO,
+fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfoBuilder() {
+  PipelineTessellationDomainOriginStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo.setNext(self, void* pNext) {
+fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo.setDomainOrigin(self, VkTessellationDomainOrigin domainOrigin) {
+fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setDomainOrigin(self, TessellationDomainOrigin domainOrigin) {
   self.domainOrigin = domainOrigin;
   return self;
 }
        
 
 
-fn VkRenderPassMultiviewCreateInfo renderPassMultiviewCreateInfoBuilder() {
-  VkRenderPassMultiviewCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO,
+fn RenderPassMultiviewCreateInfo renderPassMultiviewCreateInfoBuilder() {
+  RenderPassMultiviewCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setNext(self, void* pNext) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setSubpassCount(self, uint subpassCount) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setSubpassCount(self, uint subpassCount) {
   self.subpassCount = subpassCount;
   return self;
 }
        
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setViewMasks(self, uint[] pViewMasks) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewMasks(self, uint[] pViewMasks) {
   self.subpassCount = (uint)pViewMasks.len;
   self.pViewMasks = &pViewMasks[0];
   return self;
 }
 
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setDependencyCount(self, uint dependencyCount) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setDependencyCount(self, uint dependencyCount) {
   self.dependencyCount = dependencyCount;
   return self;
 }
        
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setViewOffsets(self, int[] pViewOffsets) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewOffsets(self, int[] pViewOffsets) {
   self.dependencyCount = (uint)pViewOffsets.len;
   self.pViewOffsets = &pViewOffsets[0];
   return self;
 }
 
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setCorrelationMaskCount(self, uint correlationMaskCount) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMaskCount(self, uint correlationMaskCount) {
   self.correlationMaskCount = correlationMaskCount;
   return self;
 }
        
-fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setCorrelationMasks(self, uint[] pCorrelationMasks) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMasks(self, uint[] pCorrelationMasks) {
   self.correlationMaskCount = (uint)pCorrelationMasks.len;
   self.pCorrelationMasks = &pCorrelationMasks[0];
   return self;
@@ -3026,833 +3026,833 @@ fn VkRenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo.setCorrelatio
 
 
 
-fn VkPhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeaturesBuilder() {
-  VkPhysicalDeviceMultiviewFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES,
+fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeaturesBuilder() {
+  PhysicalDeviceMultiviewFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setMultiview(self, VkBool32 multiview) {
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiview(self, Bool32 multiview) {
   self.multiview = multiview;
   return self;
 }
        
-fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setMultiviewGeometryShader(self, VkBool32 multiviewGeometryShader) {
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiviewGeometryShader(self, Bool32 multiviewGeometryShader) {
   self.multiviewGeometryShader = multiviewGeometryShader;
   return self;
 }
        
-fn VkPhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures.setMultiviewTessellationShader(self, VkBool32 multiviewTessellationShader) {
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiviewTessellationShader(self, Bool32 multiviewTessellationShader) {
   self.multiviewTessellationShader = multiviewTessellationShader;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceMultiviewProperties physicalDeviceMultiviewPropertiesBuilder() {
-  VkPhysicalDeviceMultiviewProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES,
+fn PhysicalDeviceMultiviewProperties physicalDeviceMultiviewPropertiesBuilder() {
+  PhysicalDeviceMultiviewProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties.setMaxMultiviewViewCount(self, uint maxMultiviewViewCount) {
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setMaxMultiviewViewCount(self, uint maxMultiviewViewCount) {
   self.maxMultiviewViewCount = maxMultiviewViewCount;
   return self;
 }
        
-fn VkPhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties.setMaxMultiviewInstanceIndex(self, uint maxMultiviewInstanceIndex) {
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setMaxMultiviewInstanceIndex(self, uint maxMultiviewInstanceIndex) {
   self.maxMultiviewInstanceIndex = maxMultiviewInstanceIndex;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeaturesBuilder() {
-  VkPhysicalDeviceVariablePointersFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES,
+fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeaturesBuilder() {
+  PhysicalDeviceVariablePointersFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures.setVariablePointersStorageBuffer(self, VkBool32 variablePointersStorageBuffer) {
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setVariablePointersStorageBuffer(self, Bool32 variablePointersStorageBuffer) {
   self.variablePointersStorageBuffer = variablePointersStorageBuffer;
   return self;
 }
        
-fn VkPhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures.setVariablePointers(self, VkBool32 variablePointers) {
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setVariablePointers(self, Bool32 variablePointers) {
   self.variablePointers = variablePointers;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeaturesBuilder() {
-  VkPhysicalDeviceProtectedMemoryFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES,
+fn PhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeaturesBuilder() {
+  PhysicalDeviceProtectedMemoryFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures.setProtectedMemory(self, VkBool32 protectedMemory) {
+fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setProtectedMemory(self, Bool32 protectedMemory) {
   self.protectedMemory = protectedMemory;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryPropertiesBuilder() {
-  VkPhysicalDeviceProtectedMemoryProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES,
+fn PhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryPropertiesBuilder() {
+  PhysicalDeviceProtectedMemoryProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties.setProtectedNoFault(self, VkBool32 protectedNoFault) {
+fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setProtectedNoFault(self, Bool32 protectedNoFault) {
   self.protectedNoFault = protectedNoFault;
   return self;
 }
        
 
 
-fn VkDeviceQueueInfo2 deviceQueueInfo2Builder() {
-  VkDeviceQueueInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
+fn DeviceQueueInfo2 deviceQueueInfo2Builder() {
+  DeviceQueueInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setNext(self, void* pNext) {
+fn DeviceQueueInfo2 DeviceQueueInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setFlags(self, VkDeviceQueueCreateFlags flags) {
+fn DeviceQueueInfo2 DeviceQueueInfo2.setFlags(self, DeviceQueueCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setQueueFamilyIndex(self, uint queueFamilyIndex) {
+fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueFamilyIndex(self, uint queueFamilyIndex) {
   self.queueFamilyIndex = queueFamilyIndex;
   return self;
 }
        
-fn VkDeviceQueueInfo2 VkDeviceQueueInfo2.setQueueIndex(self, uint queueIndex) {
+fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueIndex(self, uint queueIndex) {
   self.queueIndex = queueIndex;
   return self;
 }
        
 
 
-fn VkProtectedSubmitInfo protectedSubmitInfoBuilder() {
-  VkProtectedSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO,
+fn ProtectedSubmitInfo protectedSubmitInfoBuilder() {
+  ProtectedSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkProtectedSubmitInfo VkProtectedSubmitInfo.setNext(self, void* pNext) {
+fn ProtectedSubmitInfo ProtectedSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkProtectedSubmitInfo VkProtectedSubmitInfo.setProtectedSubmit(self, VkBool32 protectedSubmit) {
+fn ProtectedSubmitInfo ProtectedSubmitInfo.setProtectedSubmit(self, Bool32 protectedSubmit) {
   self.protectedSubmit = protectedSubmit;
   return self;
 }
        
 
 
-fn VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfoBuilder() {
-  VkSamplerYcbcrConversionCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
+fn SamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfoBuilder() {
+  SamplerYcbcrConversionCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setNext(self, void* pNext) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setFormat(self, VkFormat format) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setYcbcrModel(self, VkSamplerYcbcrModelConversion ycbcrModel) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYcbcrModel(self, SamplerYcbcrModelConversion ycbcrModel) {
   self.ycbcrModel = ycbcrModel;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setYcbcrRange(self, VkSamplerYcbcrRange ycbcrRange) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYcbcrRange(self, SamplerYcbcrRange ycbcrRange) {
   self.ycbcrRange = ycbcrRange;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setComponents(self, VkComponentMapping components) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setComponents(self, ComponentMapping components) {
   self.components = components;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setXChromaOffset(self, VkChromaLocation xChromaOffset) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setXChromaOffset(self, ChromaLocation xChromaOffset) {
   self.xChromaOffset = xChromaOffset;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setYChromaOffset(self, VkChromaLocation yChromaOffset) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYChromaOffset(self, ChromaLocation yChromaOffset) {
   self.yChromaOffset = yChromaOffset;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setChromaFilter(self, VkFilter chromaFilter) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setChromaFilter(self, Filter chromaFilter) {
   self.chromaFilter = chromaFilter;
   return self;
 }
        
-fn VkSamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo.setForceExplicitReconstruction(self, VkBool32 forceExplicitReconstruction) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setForceExplicitReconstruction(self, Bool32 forceExplicitReconstruction) {
   self.forceExplicitReconstruction = forceExplicitReconstruction;
   return self;
 }
        
 
 
-fn VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfoBuilder() {
-  VkSamplerYcbcrConversionInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO,
+fn SamplerYcbcrConversionInfo samplerYcbcrConversionInfoBuilder() {
+  SamplerYcbcrConversionInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo.setNext(self, void* pNext) {
+fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo.setConversion(self, VkSamplerYcbcrConversion conversion) {
+fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setConversion(self, SamplerYcbcrConversion conversion) {
   self.conversion = conversion;
   return self;
 }
        
 
 
-fn VkBindImagePlaneMemoryInfo bindImagePlaneMemoryInfoBuilder() {
-  VkBindImagePlaneMemoryInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO,
+fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfoBuilder() {
+  BindImagePlaneMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo.setNext(self, void* pNext) {
+fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo.setPlaneAspect(self, VkImageAspectFlagBits planeAspect) {
+fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPlaneAspect(self, ImageAspectFlagBits planeAspect) {
   self.planeAspect = planeAspect;
   return self;
 }
        
 
 
-fn VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfoBuilder() {
-  VkImagePlaneMemoryRequirementsInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO,
+fn ImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfoBuilder() {
+  ImagePlaneMemoryRequirementsInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo.setNext(self, void* pNext) {
+fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo.setPlaneAspect(self, VkImageAspectFlagBits planeAspect) {
+fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPlaneAspect(self, ImageAspectFlagBits planeAspect) {
   self.planeAspect = planeAspect;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeaturesBuilder() {
-  VkPhysicalDeviceSamplerYcbcrConversionFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES,
+fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeaturesBuilder() {
+  PhysicalDeviceSamplerYcbcrConversionFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures.setSamplerYcbcrConversion(self, VkBool32 samplerYcbcrConversion) {
+fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setSamplerYcbcrConversion(self, Bool32 samplerYcbcrConversion) {
   self.samplerYcbcrConversion = samplerYcbcrConversion;
   return self;
 }
        
 
 
-fn VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatPropertiesBuilder() {
-  VkSamplerYcbcrConversionImageFormatProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES,
+fn SamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatPropertiesBuilder() {
+  SamplerYcbcrConversionImageFormatProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties.setNext(self, void* pNext) {
+fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties.setCombinedImageSamplerDescriptorCount(self, uint combinedImageSamplerDescriptorCount) {
+fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setCombinedImageSamplerDescriptorCount(self, uint combinedImageSamplerDescriptorCount) {
   self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
   return self;
 }
        
 
 
-fn VkDescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfoBuilder() {
-  VkDescriptorUpdateTemplateCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfoBuilder() {
+  DescriptorUpdateTemplateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setNext(self, void* pNext) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setFlags(self, VkDescriptorUpdateTemplateCreateFlags flags) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setFlags(self, DescriptorUpdateTemplateCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntryCount(self, uint descriptorUpdateEntryCount) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntryCount(self, uint descriptorUpdateEntryCount) {
   self.descriptorUpdateEntryCount = descriptorUpdateEntryCount;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntries(self, VkDescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntries(self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
   self.descriptorUpdateEntryCount = (uint)pDescriptorUpdateEntries.len;
   self.pDescriptorUpdateEntries = &pDescriptorUpdateEntries[0];
   return self;
 }
 
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setTemplateType(self, VkDescriptorUpdateTemplateType templateType) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setTemplateType(self, DescriptorUpdateTemplateType templateType) {
   self.templateType = templateType;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setDescriptorSetLayout(self, VkDescriptorSetLayout descriptorSetLayout) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorSetLayout(self, DescriptorSetLayout descriptorSetLayout) {
   self.descriptorSetLayout = descriptorSetLayout;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setPipelineBindPoint(self, VkPipelineBindPoint pipelineBindPoint) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPipelineBindPoint(self, PipelineBindPoint pipelineBindPoint) {
   self.pipelineBindPoint = pipelineBindPoint;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setPipelineLayout(self, VkPipelineLayout pipelineLayout) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPipelineLayout(self, PipelineLayout pipelineLayout) {
   self.pipelineLayout = pipelineLayout;
   return self;
 }
        
-fn VkDescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo.setSet(self, uint set) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setSet(self, uint set) {
   self.set = set;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfoBuilder() {
-  VkPhysicalDeviceExternalImageFormatInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
+fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfoBuilder() {
+  PhysicalDeviceExternalImageFormatInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExternalImageFormatInfo.setNext(self, void* pNext) {
+fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExternalImageFormatInfo.setHandleType(self, VkExternalMemoryHandleTypeFlagBits handleType) {
+fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setHandleType(self, ExternalMemoryHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
 }
        
 
 
-fn VkExternalImageFormatProperties externalImageFormatPropertiesBuilder() {
-  VkExternalImageFormatProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES,
+fn ExternalImageFormatProperties externalImageFormatPropertiesBuilder() {
+  ExternalImageFormatProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalImageFormatProperties VkExternalImageFormatProperties.setNext(self, void* pNext) {
+fn ExternalImageFormatProperties ExternalImageFormatProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalImageFormatProperties VkExternalImageFormatProperties.setExternalMemoryProperties(self, VkExternalMemoryProperties externalMemoryProperties) {
+fn ExternalImageFormatProperties ExternalImageFormatProperties.setExternalMemoryProperties(self, ExternalMemoryProperties externalMemoryProperties) {
   self.externalMemoryProperties = externalMemoryProperties;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfoBuilder() {
-  VkPhysicalDeviceExternalBufferInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO,
+fn PhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfoBuilder() {
+  PhysicalDeviceExternalBufferInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setNext(self, void* pNext) {
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setFlags(self, VkBufferCreateFlags flags) {
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setFlags(self, BufferCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setUsage(self, VkBufferUsageFlags usage) {
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setUsage(self, BufferUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkPhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo.setHandleType(self, VkExternalMemoryHandleTypeFlagBits handleType) {
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setHandleType(self, ExternalMemoryHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
 }
        
 
 
-fn VkExternalBufferProperties externalBufferPropertiesBuilder() {
-  VkExternalBufferProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES,
+fn ExternalBufferProperties externalBufferPropertiesBuilder() {
+  ExternalBufferProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalBufferProperties VkExternalBufferProperties.setNext(self, void* pNext) {
+fn ExternalBufferProperties ExternalBufferProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalBufferProperties VkExternalBufferProperties.setExternalMemoryProperties(self, VkExternalMemoryProperties externalMemoryProperties) {
+fn ExternalBufferProperties ExternalBufferProperties.setExternalMemoryProperties(self, ExternalMemoryProperties externalMemoryProperties) {
   self.externalMemoryProperties = externalMemoryProperties;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceIDProperties physicalDeviceIDPropertiesBuilder() {
-  VkPhysicalDeviceIDProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
+fn PhysicalDeviceIDProperties physicalDeviceIDPropertiesBuilder() {
+  PhysicalDeviceIDProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDeviceUUID(self, uint[VK_UUID_SIZE] deviceUUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceUUID(self, uint[UUID_SIZE] deviceUUID) {
   self.deviceUUID = deviceUUID;
   return self;
 }
        
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDriverUUID(self, uint[VK_UUID_SIZE] driverUUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDriverUUID(self, uint[UUID_SIZE] driverUUID) {
   self.driverUUID = driverUUID;
   return self;
 }
        
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDeviceLUID(self, uint[VK_LUID_SIZE] deviceLUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUID(self, uint[LUID_SIZE] deviceLUID) {
   self.deviceLUID = deviceLUID;
   return self;
 }
        
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDeviceNodeMask(self, uint deviceNodeMask) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceNodeMask(self, uint deviceNodeMask) {
   self.deviceNodeMask = deviceNodeMask;
   return self;
 }
        
-fn VkPhysicalDeviceIDProperties VkPhysicalDeviceIDProperties.setDeviceLUIDValid(self, VkBool32 deviceLUIDValid) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUIDValid(self, Bool32 deviceLUIDValid) {
   self.deviceLUIDValid = deviceLUIDValid;
   return self;
 }
        
 
 
-fn VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfoBuilder() {
-  VkExternalMemoryImageCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
+fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfoBuilder() {
+  ExternalMemoryImageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo.setNext(self, void* pNext) {
+fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
+fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
 }
        
 
 
-fn VkExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfoBuilder() {
-  VkExternalMemoryBufferCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
+fn ExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfoBuilder() {
+  ExternalMemoryBufferCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo.setNext(self, void* pNext) {
+fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
+fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
 }
        
 
 
-fn VkExportMemoryAllocateInfo exportMemoryAllocateInfoBuilder() {
-  VkExportMemoryAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO,
+fn ExportMemoryAllocateInfo exportMemoryAllocateInfoBuilder() {
+  ExportMemoryAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExportMemoryAllocateInfo VkExportMemoryAllocateInfo.setNext(self, void* pNext) {
+fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExportMemoryAllocateInfo VkExportMemoryAllocateInfo.setHandleTypes(self, VkExternalMemoryHandleTypeFlags handleTypes) {
+fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfoBuilder() {
-  VkPhysicalDeviceExternalFenceInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO,
+fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfoBuilder() {
+  PhysicalDeviceExternalFenceInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo.setNext(self, void* pNext) {
+fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo.setHandleType(self, VkExternalFenceHandleTypeFlagBits handleType) {
+fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setHandleType(self, ExternalFenceHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
 }
        
 
 
-fn VkExternalFenceProperties externalFencePropertiesBuilder() {
-  VkExternalFenceProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES,
+fn ExternalFenceProperties externalFencePropertiesBuilder() {
+  ExternalFenceProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalFenceProperties VkExternalFenceProperties.setNext(self, void* pNext) {
+fn ExternalFenceProperties ExternalFenceProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalFenceProperties VkExternalFenceProperties.setExportFromImportedHandleTypes(self, VkExternalFenceHandleTypeFlags exportFromImportedHandleTypes) {
+fn ExternalFenceProperties ExternalFenceProperties.setExportFromImportedHandleTypes(self, ExternalFenceHandleTypeFlags exportFromImportedHandleTypes) {
   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
   return self;
 }
        
-fn VkExternalFenceProperties VkExternalFenceProperties.setCompatibleHandleTypes(self, VkExternalFenceHandleTypeFlags compatibleHandleTypes) {
+fn ExternalFenceProperties ExternalFenceProperties.setCompatibleHandleTypes(self, ExternalFenceHandleTypeFlags compatibleHandleTypes) {
   self.compatibleHandleTypes = compatibleHandleTypes;
   return self;
 }
        
-fn VkExternalFenceProperties VkExternalFenceProperties.setExternalFenceFeatures(self, VkExternalFenceFeatureFlags externalFenceFeatures) {
+fn ExternalFenceProperties ExternalFenceProperties.setExternalFenceFeatures(self, ExternalFenceFeatureFlags externalFenceFeatures) {
   self.externalFenceFeatures = externalFenceFeatures;
   return self;
 }
        
 
 
-fn VkExportFenceCreateInfo exportFenceCreateInfoBuilder() {
-  VkExportFenceCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO,
+fn ExportFenceCreateInfo exportFenceCreateInfoBuilder() {
+  ExportFenceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExportFenceCreateInfo VkExportFenceCreateInfo.setNext(self, void* pNext) {
+fn ExportFenceCreateInfo ExportFenceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExportFenceCreateInfo VkExportFenceCreateInfo.setHandleTypes(self, VkExternalFenceHandleTypeFlags handleTypes) {
+fn ExportFenceCreateInfo ExportFenceCreateInfo.setHandleTypes(self, ExternalFenceHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
 }
        
 
 
-fn VkExportSemaphoreCreateInfo exportSemaphoreCreateInfoBuilder() {
-  VkExportSemaphoreCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
+fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfoBuilder() {
+  ExportSemaphoreCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo.setNext(self, void* pNext) {
+fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo.setHandleTypes(self, VkExternalSemaphoreHandleTypeFlags handleTypes) {
+fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setHandleTypes(self, ExternalSemaphoreHandleTypeFlags handleTypes) {
   self.handleTypes = handleTypes;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfoBuilder() {
-  VkPhysicalDeviceExternalSemaphoreInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO,
+fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfoBuilder() {
+  PhysicalDeviceExternalSemaphoreInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo.setNext(self, void* pNext) {
+fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo.setHandleType(self, VkExternalSemaphoreHandleTypeFlagBits handleType) {
+fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setHandleType(self, ExternalSemaphoreHandleTypeFlagBits handleType) {
   self.handleType = handleType;
   return self;
 }
        
 
 
-fn VkExternalSemaphoreProperties externalSemaphorePropertiesBuilder() {
-  VkExternalSemaphoreProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES,
+fn ExternalSemaphoreProperties externalSemaphorePropertiesBuilder() {
+  ExternalSemaphoreProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setNext(self, void* pNext) {
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setExportFromImportedHandleTypes(self, VkExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes) {
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExportFromImportedHandleTypes(self, ExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes) {
   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
   return self;
 }
        
-fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setCompatibleHandleTypes(self, VkExternalSemaphoreHandleTypeFlags compatibleHandleTypes) {
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setCompatibleHandleTypes(self, ExternalSemaphoreHandleTypeFlags compatibleHandleTypes) {
   self.compatibleHandleTypes = compatibleHandleTypes;
   return self;
 }
        
-fn VkExternalSemaphoreProperties VkExternalSemaphoreProperties.setExternalSemaphoreFeatures(self, VkExternalSemaphoreFeatureFlags externalSemaphoreFeatures) {
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExternalSemaphoreFeatures(self, ExternalSemaphoreFeatureFlags externalSemaphoreFeatures) {
   self.externalSemaphoreFeatures = externalSemaphoreFeatures;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3PropertiesBuilder() {
-  VkPhysicalDeviceMaintenance3Properties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES,
+fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3PropertiesBuilder() {
+  PhysicalDeviceMaintenance3Properties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties.setNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties.setMaxPerSetDescriptors(self, uint maxPerSetDescriptors) {
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setMaxPerSetDescriptors(self, uint maxPerSetDescriptors) {
   self.maxPerSetDescriptors = maxPerSetDescriptors;
   return self;
 }
        
-fn VkPhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties.setMaxMemoryAllocationSize(self, VkDeviceSize maxMemoryAllocationSize) {
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setMaxMemoryAllocationSize(self, DeviceSize maxMemoryAllocationSize) {
   self.maxMemoryAllocationSize = maxMemoryAllocationSize;
   return self;
 }
        
 
 
-fn VkDescriptorSetLayoutSupport descriptorSetLayoutSupportBuilder() {
-  VkDescriptorSetLayoutSupport defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT,
+fn DescriptorSetLayoutSupport descriptorSetLayoutSupportBuilder() {
+  DescriptorSetLayoutSupport defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetLayoutSupport VkDescriptorSetLayoutSupport.setNext(self, void* pNext) {
+fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetLayoutSupport VkDescriptorSetLayoutSupport.setSupported(self, VkBool32 supported) {
+fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setSupported(self, Bool32 supported) {
   self.supported = supported;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParametersFeaturesBuilder() {
-  VkPhysicalDeviceShaderDrawParametersFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES,
+fn PhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParametersFeaturesBuilder() {
+  PhysicalDeviceShaderDrawParametersFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures.setShaderDrawParameters(self, VkBool32 shaderDrawParameters) {
+fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setShaderDrawParameters(self, Bool32 shaderDrawParameters) {
   self.shaderDrawParameters = shaderDrawParameters;
   return self;
 }
        
 
 
-fn VkImageFormatListCreateInfo imageFormatListCreateInfoBuilder() {
-  VkImageFormatListCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO,
+fn ImageFormatListCreateInfo imageFormatListCreateInfoBuilder() {
+  ImageFormatListCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setNext(self, void* pNext) {
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setViewFormatCount(self, uint viewFormatCount) {
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormatCount(self, uint viewFormatCount) {
   self.viewFormatCount = viewFormatCount;
   return self;
 }
        
-fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setViewFormats(self, VkFormat[] pViewFormats) {
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormats(self, Format[] pViewFormats) {
   self.viewFormatCount = (uint)pViewFormats.len;
   self.pViewFormats = &pViewFormats[0];
   return self;
@@ -3860,64 +3860,64 @@ fn VkImageFormatListCreateInfo VkImageFormatListCreateInfo.setViewFormats(self, 
 
 
 
-fn VkRenderPassCreateInfo2 renderPassCreateInfo2Builder() {
-  VkRenderPassCreateInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2,
+fn RenderPassCreateInfo2 renderPassCreateInfo2Builder() {
+  RenderPassCreateInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setNext(self, void* pNext) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setFlags(self, VkRenderPassCreateFlags flags) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setFlags(self, RenderPassCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setAttachmentCount(self, uint attachmentCount) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setAttachments(self, VkAttachmentDescription2[] pAttachments) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachments(self, AttachmentDescription2[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
 }
 
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setSubpassCount(self, uint subpassCount) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpassCount(self, uint subpassCount) {
   self.subpassCount = subpassCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setSubpasses(self, VkSubpassDescription2[] pSubpasses) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpasses(self, SubpassDescription2[] pSubpasses) {
   self.subpassCount = (uint)pSubpasses.len;
   self.pSubpasses = &pSubpasses[0];
   return self;
 }
 
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setDependencyCount(self, uint dependencyCount) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencyCount(self, uint dependencyCount) {
   self.dependencyCount = dependencyCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setDependencies(self, VkSubpassDependency2[] pDependencies) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencies(self, SubpassDependency2[] pDependencies) {
   self.dependencyCount = (uint)pDependencies.len;
   self.pDependencies = &pDependencies[0];
   return self;
 }
 
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setCorrelatedViewMaskCount(self, uint correlatedViewMaskCount) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMaskCount(self, uint correlatedViewMaskCount) {
   self.correlatedViewMaskCount = correlatedViewMaskCount;
   return self;
 }
        
-fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setCorrelatedViewMasks(self, uint[] pCorrelatedViewMasks) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMasks(self, uint[] pCorrelatedViewMasks) {
   self.correlatedViewMaskCount = (uint)pCorrelatedViewMasks.len;
   self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
   return self;
@@ -3925,166 +3925,166 @@ fn VkRenderPassCreateInfo2 VkRenderPassCreateInfo2.setCorrelatedViewMasks(self, 
 
 
 
-fn VkAttachmentDescription2 attachmentDescription2Builder() {
-  VkAttachmentDescription2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
+fn AttachmentDescription2 attachmentDescription2Builder() {
+  AttachmentDescription2 defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkAttachmentDescription2 VkAttachmentDescription2.setNext(self, void* pNext) {
+fn AttachmentDescription2 AttachmentDescription2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setFlags(self, VkAttachmentDescriptionFlags flags) {
+fn AttachmentDescription2 AttachmentDescription2.setFlags(self, AttachmentDescriptionFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setFormat(self, VkFormat format) {
+fn AttachmentDescription2 AttachmentDescription2.setFormat(self, Format format) {
   self.format = format;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setSamples(self, VkSampleCountFlagBits samples) {
+fn AttachmentDescription2 AttachmentDescription2.setSamples(self, SampleCountFlagBits samples) {
   self.samples = samples;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setLoadOp(self, VkAttachmentLoadOp loadOp) {
+fn AttachmentDescription2 AttachmentDescription2.setLoadOp(self, AttachmentLoadOp loadOp) {
   self.loadOp = loadOp;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setStoreOp(self, VkAttachmentStoreOp storeOp) {
+fn AttachmentDescription2 AttachmentDescription2.setStoreOp(self, AttachmentStoreOp storeOp) {
   self.storeOp = storeOp;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setStencilLoadOp(self, VkAttachmentLoadOp stencilLoadOp) {
+fn AttachmentDescription2 AttachmentDescription2.setStencilLoadOp(self, AttachmentLoadOp stencilLoadOp) {
   self.stencilLoadOp = stencilLoadOp;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setStencilStoreOp(self, VkAttachmentStoreOp stencilStoreOp) {
+fn AttachmentDescription2 AttachmentDescription2.setStencilStoreOp(self, AttachmentStoreOp stencilStoreOp) {
   self.stencilStoreOp = stencilStoreOp;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setInitialLayout(self, VkImageLayout initialLayout) {
+fn AttachmentDescription2 AttachmentDescription2.setInitialLayout(self, ImageLayout initialLayout) {
   self.initialLayout = initialLayout;
   return self;
 }
        
-fn VkAttachmentDescription2 VkAttachmentDescription2.setFinalLayout(self, VkImageLayout finalLayout) {
+fn AttachmentDescription2 AttachmentDescription2.setFinalLayout(self, ImageLayout finalLayout) {
   self.finalLayout = finalLayout;
   return self;
 }
        
 
 
-fn VkAttachmentReference2 attachmentReference2Builder() {
-  VkAttachmentReference2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
+fn AttachmentReference2 attachmentReference2Builder() {
+  AttachmentReference2 defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkAttachmentReference2 VkAttachmentReference2.setNext(self, void* pNext) {
+fn AttachmentReference2 AttachmentReference2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkAttachmentReference2 VkAttachmentReference2.setAttachment(self, uint attachment) {
+fn AttachmentReference2 AttachmentReference2.setAttachment(self, uint attachment) {
   self.attachment = attachment;
   return self;
 }
        
-fn VkAttachmentReference2 VkAttachmentReference2.setLayout(self, VkImageLayout layout) {
+fn AttachmentReference2 AttachmentReference2.setLayout(self, ImageLayout layout) {
   self.layout = layout;
   return self;
 }
        
-fn VkAttachmentReference2 VkAttachmentReference2.setAspectMask(self, VkImageAspectFlags aspectMask) {
+fn AttachmentReference2 AttachmentReference2.setAspectMask(self, ImageAspectFlags aspectMask) {
   self.aspectMask = aspectMask;
   return self;
 }
        
 
 
-fn VkSubpassDescription2 subpassDescription2Builder() {
-  VkSubpassDescription2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
+fn SubpassDescription2 subpassDescription2Builder() {
+  SubpassDescription2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubpassDescription2 VkSubpassDescription2.setNext(self, void* pNext) {
+fn SubpassDescription2 SubpassDescription2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setFlags(self, VkSubpassDescriptionFlags flags) {
+fn SubpassDescription2 SubpassDescription2.setFlags(self, SubpassDescriptionFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setPipelineBindPoint(self, VkPipelineBindPoint pipelineBindPoint) {
+fn SubpassDescription2 SubpassDescription2.setPipelineBindPoint(self, PipelineBindPoint pipelineBindPoint) {
   self.pipelineBindPoint = pipelineBindPoint;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setViewMask(self, uint viewMask) {
+fn SubpassDescription2 SubpassDescription2.setViewMask(self, uint viewMask) {
   self.viewMask = viewMask;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setInputAttachmentCount(self, uint inputAttachmentCount) {
+fn SubpassDescription2 SubpassDescription2.setInputAttachmentCount(self, uint inputAttachmentCount) {
   self.inputAttachmentCount = inputAttachmentCount;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setInputAttachments(self, VkAttachmentReference2[] pInputAttachments) {
+fn SubpassDescription2 SubpassDescription2.setInputAttachments(self, AttachmentReference2[] pInputAttachments) {
   self.inputAttachmentCount = (uint)pInputAttachments.len;
   self.pInputAttachments = &pInputAttachments[0];
   return self;
 }
 
-fn VkSubpassDescription2 VkSubpassDescription2.setColorAttachmentCount(self, uint colorAttachmentCount) {
+fn SubpassDescription2 SubpassDescription2.setColorAttachmentCount(self, uint colorAttachmentCount) {
   self.colorAttachmentCount = colorAttachmentCount;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setColorAttachments(self, VkAttachmentReference2[] pColorAttachments) {
+fn SubpassDescription2 SubpassDescription2.setColorAttachments(self, AttachmentReference2[] pColorAttachments) {
   self.colorAttachmentCount = (uint)pColorAttachments.len;
   self.pColorAttachments = &pColorAttachments[0];
   return self;
 }
 
-fn VkSubpassDescription2 VkSubpassDescription2.setResolveAttachments(self, VkAttachmentReference2[] pResolveAttachments) {
+fn SubpassDescription2 SubpassDescription2.setResolveAttachments(self, AttachmentReference2[] pResolveAttachments) {
   self.colorAttachmentCount = (uint)pResolveAttachments.len;
   self.pResolveAttachments = &pResolveAttachments[0];
   return self;
 }
 
-fn VkSubpassDescription2 VkSubpassDescription2.setDepthStencilAttachment(self, VkAttachmentReference2* pDepthStencilAttachment) {
+fn SubpassDescription2 SubpassDescription2.setDepthStencilAttachment(self, AttachmentReference2* pDepthStencilAttachment) {
   self.pDepthStencilAttachment = pDepthStencilAttachment;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setPreserveAttachmentCount(self, uint preserveAttachmentCount) {
+fn SubpassDescription2 SubpassDescription2.setPreserveAttachmentCount(self, uint preserveAttachmentCount) {
   self.preserveAttachmentCount = preserveAttachmentCount;
   return self;
 }
        
-fn VkSubpassDescription2 VkSubpassDescription2.setPreserveAttachments(self, uint[] pPreserveAttachments) {
+fn SubpassDescription2 SubpassDescription2.setPreserveAttachments(self, uint[] pPreserveAttachments) {
   self.preserveAttachmentCount = (uint)pPreserveAttachments.len;
   self.pPreserveAttachments = &pPreserveAttachments[0];
   return self;
@@ -4092,339 +4092,339 @@ fn VkSubpassDescription2 VkSubpassDescription2.setPreserveAttachments(self, uint
 
 
 
-fn VkSubpassDependency2 subpassDependency2Builder() {
-  VkSubpassDependency2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
+fn SubpassDependency2 subpassDependency2Builder() {
+  SubpassDependency2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubpassDependency2 VkSubpassDependency2.setNext(self, void* pNext) {
+fn SubpassDependency2 SubpassDependency2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setSrcSubpass(self, uint srcSubpass) {
+fn SubpassDependency2 SubpassDependency2.setSrcSubpass(self, uint srcSubpass) {
   self.srcSubpass = srcSubpass;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setDstSubpass(self, uint dstSubpass) {
+fn SubpassDependency2 SubpassDependency2.setDstSubpass(self, uint dstSubpass) {
   self.dstSubpass = dstSubpass;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setSrcStageMask(self, VkPipelineStageFlags srcStageMask) {
+fn SubpassDependency2 SubpassDependency2.setSrcStageMask(self, PipelineStageFlags srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setDstStageMask(self, VkPipelineStageFlags dstStageMask) {
+fn SubpassDependency2 SubpassDependency2.setDstStageMask(self, PipelineStageFlags dstStageMask) {
   self.dstStageMask = dstStageMask;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setSrcAccessMask(self, VkAccessFlags srcAccessMask) {
+fn SubpassDependency2 SubpassDependency2.setSrcAccessMask(self, AccessFlags srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setDstAccessMask(self, VkAccessFlags dstAccessMask) {
+fn SubpassDependency2 SubpassDependency2.setDstAccessMask(self, AccessFlags dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setDependencyFlags(self, VkDependencyFlags dependencyFlags) {
+fn SubpassDependency2 SubpassDependency2.setDependencyFlags(self, DependencyFlags dependencyFlags) {
   self.dependencyFlags = dependencyFlags;
   return self;
 }
        
-fn VkSubpassDependency2 VkSubpassDependency2.setViewOffset(self, int viewOffset) {
+fn SubpassDependency2 SubpassDependency2.setViewOffset(self, int viewOffset) {
   self.viewOffset = viewOffset;
   return self;
 }
        
 
 
-fn VkSubpassBeginInfo subpassBeginInfoBuilder() {
-  VkSubpassBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+fn SubpassBeginInfo subpassBeginInfoBuilder() {
+  SubpassBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubpassBeginInfo VkSubpassBeginInfo.setNext(self, void* pNext) {
+fn SubpassBeginInfo SubpassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubpassBeginInfo VkSubpassBeginInfo.setContents(self, VkSubpassContents contents) {
+fn SubpassBeginInfo SubpassBeginInfo.setContents(self, SubpassContents contents) {
   self.contents = contents;
   return self;
 }
        
 
 
-fn VkSubpassEndInfo subpassEndInfoBuilder() {
-  VkSubpassEndInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+fn SubpassEndInfo subpassEndInfoBuilder() {
+  SubpassEndInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_END_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubpassEndInfo VkSubpassEndInfo.setNext(self, void* pNext) {
+fn SubpassEndInfo SubpassEndInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
 
 
-fn VkPhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder() {
-  VkPhysicalDevice8BitStorageFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES,
+fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder() {
+  PhysicalDevice8BitStorageFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setNext(self, void* pNext) {
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setStorageBuffer8BitAccess(self, VkBool32 storageBuffer8BitAccess) {
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStorageBuffer8BitAccess(self, Bool32 storageBuffer8BitAccess) {
   self.storageBuffer8BitAccess = storageBuffer8BitAccess;
   return self;
 }
        
-fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setUniformAndStorageBuffer8BitAccess(self, VkBool32 uniformAndStorageBuffer8BitAccess) {
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setUniformAndStorageBuffer8BitAccess(self, Bool32 uniformAndStorageBuffer8BitAccess) {
   self.uniformAndStorageBuffer8BitAccess = uniformAndStorageBuffer8BitAccess;
   return self;
 }
        
-fn VkPhysicalDevice8BitStorageFeatures VkPhysicalDevice8BitStorageFeatures.setStoragePushConstant8(self, VkBool32 storagePushConstant8) {
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStoragePushConstant8(self, Bool32 storagePushConstant8) {
   self.storagePushConstant8 = storagePushConstant8;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceDriverProperties physicalDeviceDriverPropertiesBuilder() {
-  VkPhysicalDeviceDriverProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES,
+fn PhysicalDeviceDriverProperties physicalDeviceDriverPropertiesBuilder() {
+  PhysicalDeviceDriverProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setDriverID(self, VkDriverId driverID) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverID(self, DriverId driverID) {
   self.driverID = driverID;
   return self;
 }
        
-fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setDriverName(self, char[VK_MAX_DRIVER_NAME_SIZE] driverName) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverName(self, char[MAX_DRIVER_NAME_SIZE] driverName) {
   self.driverName = driverName;
   return self;
 }
        
-fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setDriverInfo(self, char[VK_MAX_DRIVER_INFO_SIZE] driverInfo) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverInfo(self, char[MAX_DRIVER_INFO_SIZE] driverInfo) {
   self.driverInfo = driverInfo;
   return self;
 }
        
-fn VkPhysicalDeviceDriverProperties VkPhysicalDeviceDriverProperties.setConformanceVersion(self, VkConformanceVersion conformanceVersion) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setConformanceVersion(self, ConformanceVersion conformanceVersion) {
   self.conformanceVersion = conformanceVersion;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64FeaturesBuilder() {
-  VkPhysicalDeviceShaderAtomicInt64Features defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES,
+fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64FeaturesBuilder() {
+  PhysicalDeviceShaderAtomicInt64Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderAtomicInt64Features VkPhysicalDeviceShaderAtomicInt64Features.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderAtomicInt64Features VkPhysicalDeviceShaderAtomicInt64Features.setShaderBufferInt64Atomics(self, VkBool32 shaderBufferInt64Atomics) {
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setShaderBufferInt64Atomics(self, Bool32 shaderBufferInt64Atomics) {
   self.shaderBufferInt64Atomics = shaderBufferInt64Atomics;
   return self;
 }
        
-fn VkPhysicalDeviceShaderAtomicInt64Features VkPhysicalDeviceShaderAtomicInt64Features.setShaderSharedInt64Atomics(self, VkBool32 shaderSharedInt64Atomics) {
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setShaderSharedInt64Atomics(self, Bool32 shaderSharedInt64Atomics) {
   self.shaderSharedInt64Atomics = shaderSharedInt64Atomics;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8FeaturesBuilder() {
-  VkPhysicalDeviceShaderFloat16Int8Features defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES,
+fn PhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8FeaturesBuilder() {
+  PhysicalDeviceShaderFloat16Int8Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderFloat16Int8Features VkPhysicalDeviceShaderFloat16Int8Features.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderFloat16Int8Features VkPhysicalDeviceShaderFloat16Int8Features.setShaderFloat16(self, VkBool32 shaderFloat16) {
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setShaderFloat16(self, Bool32 shaderFloat16) {
   self.shaderFloat16 = shaderFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceShaderFloat16Int8Features VkPhysicalDeviceShaderFloat16Int8Features.setShaderInt8(self, VkBool32 shaderInt8) {
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setShaderInt8(self, Bool32 shaderInt8) {
   self.shaderInt8 = shaderInt8;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsPropertiesBuilder() {
-  VkPhysicalDeviceFloatControlsProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES,
+fn PhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsPropertiesBuilder() {
+  PhysicalDeviceFloatControlsProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setDenormBehaviorIndependence(self, VkShaderFloatControlsIndependence denormBehaviorIndependence) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setDenormBehaviorIndependence(self, ShaderFloatControlsIndependence denormBehaviorIndependence) {
   self.denormBehaviorIndependence = denormBehaviorIndependence;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setRoundingModeIndependence(self, VkShaderFloatControlsIndependence roundingModeIndependence) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setRoundingModeIndependence(self, ShaderFloatControlsIndependence roundingModeIndependence) {
   self.roundingModeIndependence = roundingModeIndependence;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat16(self, VkBool32 shaderSignedZeroInfNanPreserveFloat16) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat16(self, Bool32 shaderSignedZeroInfNanPreserveFloat16) {
   self.shaderSignedZeroInfNanPreserveFloat16 = shaderSignedZeroInfNanPreserveFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat32(self, VkBool32 shaderSignedZeroInfNanPreserveFloat32) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat32(self, Bool32 shaderSignedZeroInfNanPreserveFloat32) {
   self.shaderSignedZeroInfNanPreserveFloat32 = shaderSignedZeroInfNanPreserveFloat32;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat64(self, VkBool32 shaderSignedZeroInfNanPreserveFloat64) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat64(self, Bool32 shaderSignedZeroInfNanPreserveFloat64) {
   self.shaderSignedZeroInfNanPreserveFloat64 = shaderSignedZeroInfNanPreserveFloat64;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat16(self, VkBool32 shaderDenormPreserveFloat16) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat16(self, Bool32 shaderDenormPreserveFloat16) {
   self.shaderDenormPreserveFloat16 = shaderDenormPreserveFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat32(self, VkBool32 shaderDenormPreserveFloat32) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat32(self, Bool32 shaderDenormPreserveFloat32) {
   self.shaderDenormPreserveFloat32 = shaderDenormPreserveFloat32;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat64(self, VkBool32 shaderDenormPreserveFloat64) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat64(self, Bool32 shaderDenormPreserveFloat64) {
   self.shaderDenormPreserveFloat64 = shaderDenormPreserveFloat64;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat16(self, VkBool32 shaderDenormFlushToZeroFloat16) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat16(self, Bool32 shaderDenormFlushToZeroFloat16) {
   self.shaderDenormFlushToZeroFloat16 = shaderDenormFlushToZeroFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat32(self, VkBool32 shaderDenormFlushToZeroFloat32) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat32(self, Bool32 shaderDenormFlushToZeroFloat32) {
   self.shaderDenormFlushToZeroFloat32 = shaderDenormFlushToZeroFloat32;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat64(self, VkBool32 shaderDenormFlushToZeroFloat64) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat64(self, Bool32 shaderDenormFlushToZeroFloat64) {
   self.shaderDenormFlushToZeroFloat64 = shaderDenormFlushToZeroFloat64;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat16(self, VkBool32 shaderRoundingModeRTEFloat16) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat16(self, Bool32 shaderRoundingModeRTEFloat16) {
   self.shaderRoundingModeRTEFloat16 = shaderRoundingModeRTEFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat32(self, VkBool32 shaderRoundingModeRTEFloat32) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat32(self, Bool32 shaderRoundingModeRTEFloat32) {
   self.shaderRoundingModeRTEFloat32 = shaderRoundingModeRTEFloat32;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat64(self, VkBool32 shaderRoundingModeRTEFloat64) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat64(self, Bool32 shaderRoundingModeRTEFloat64) {
   self.shaderRoundingModeRTEFloat64 = shaderRoundingModeRTEFloat64;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat16(self, VkBool32 shaderRoundingModeRTZFloat16) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat16(self, Bool32 shaderRoundingModeRTZFloat16) {
   self.shaderRoundingModeRTZFloat16 = shaderRoundingModeRTZFloat16;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat32(self, VkBool32 shaderRoundingModeRTZFloat32) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat32(self, Bool32 shaderRoundingModeRTZFloat32) {
   self.shaderRoundingModeRTZFloat32 = shaderRoundingModeRTZFloat32;
   return self;
 }
        
-fn VkPhysicalDeviceFloatControlsProperties VkPhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat64(self, VkBool32 shaderRoundingModeRTZFloat64) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat64(self, Bool32 shaderRoundingModeRTZFloat64) {
   self.shaderRoundingModeRTZFloat64 = shaderRoundingModeRTZFloat64;
   return self;
 }
        
 
 
-fn VkDescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfoBuilder() {
-  VkDescriptorSetLayoutBindingFlagsCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
+fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfoBuilder() {
+  DescriptorSetLayoutBindingFlagsCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlagsCreateInfo.setNext(self, void* pNext) {
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlagsCreateInfo.setBindingCount(self, uint bindingCount) {
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingCount(self, uint bindingCount) {
   self.bindingCount = bindingCount;
   return self;
 }
        
-fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlagsCreateInfo.setBindingFlags(self, VkDescriptorBindingFlags[] pBindingFlags) {
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingFlags(self, DescriptorBindingFlags[] pBindingFlags) {
   self.bindingCount = (uint)pBindingFlags.len;
   self.pBindingFlags = &pBindingFlags[0];
   return self;
@@ -4432,273 +4432,273 @@ fn VkDescriptorSetLayoutBindingFlagsCreateInfo VkDescriptorSetLayoutBindingFlags
 
 
 
-fn VkPhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeaturesBuilder() {
-  VkPhysicalDeviceDescriptorIndexingFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeaturesBuilder() {
+  PhysicalDeviceDescriptorIndexingFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayDynamicIndexing(self, VkBool32 shaderInputAttachmentArrayDynamicIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayDynamicIndexing(self, Bool32 shaderInputAttachmentArrayDynamicIndexing) {
   self.shaderInputAttachmentArrayDynamicIndexing = shaderInputAttachmentArrayDynamicIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayDynamicIndexing(self, VkBool32 shaderUniformTexelBufferArrayDynamicIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayDynamicIndexing(self, Bool32 shaderUniformTexelBufferArrayDynamicIndexing) {
   self.shaderUniformTexelBufferArrayDynamicIndexing = shaderUniformTexelBufferArrayDynamicIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayDynamicIndexing(self, VkBool32 shaderStorageTexelBufferArrayDynamicIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayDynamicIndexing(self, Bool32 shaderStorageTexelBufferArrayDynamicIndexing) {
   self.shaderStorageTexelBufferArrayDynamicIndexing = shaderStorageTexelBufferArrayDynamicIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderUniformBufferArrayNonUniformIndexing(self, VkBool32 shaderUniformBufferArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformBufferArrayNonUniformIndexing(self, Bool32 shaderUniformBufferArrayNonUniformIndexing) {
   self.shaderUniformBufferArrayNonUniformIndexing = shaderUniformBufferArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderSampledImageArrayNonUniformIndexing(self, VkBool32 shaderSampledImageArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderSampledImageArrayNonUniformIndexing(self, Bool32 shaderSampledImageArrayNonUniformIndexing) {
   self.shaderSampledImageArrayNonUniformIndexing = shaderSampledImageArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderStorageBufferArrayNonUniformIndexing(self, VkBool32 shaderStorageBufferArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageBufferArrayNonUniformIndexing(self, Bool32 shaderStorageBufferArrayNonUniformIndexing) {
   self.shaderStorageBufferArrayNonUniformIndexing = shaderStorageBufferArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderStorageImageArrayNonUniformIndexing(self, VkBool32 shaderStorageImageArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageImageArrayNonUniformIndexing(self, Bool32 shaderStorageImageArrayNonUniformIndexing) {
   self.shaderStorageImageArrayNonUniformIndexing = shaderStorageImageArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayNonUniformIndexing(self, VkBool32 shaderInputAttachmentArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayNonUniformIndexing(self, Bool32 shaderInputAttachmentArrayNonUniformIndexing) {
   self.shaderInputAttachmentArrayNonUniformIndexing = shaderInputAttachmentArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayNonUniformIndexing(self, VkBool32 shaderUniformTexelBufferArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayNonUniformIndexing(self, Bool32 shaderUniformTexelBufferArrayNonUniformIndexing) {
   self.shaderUniformTexelBufferArrayNonUniformIndexing = shaderUniformTexelBufferArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayNonUniformIndexing(self, VkBool32 shaderStorageTexelBufferArrayNonUniformIndexing) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayNonUniformIndexing(self, Bool32 shaderStorageTexelBufferArrayNonUniformIndexing) {
   self.shaderStorageTexelBufferArrayNonUniformIndexing = shaderStorageTexelBufferArrayNonUniformIndexing;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformBufferUpdateAfterBind(self, VkBool32 descriptorBindingUniformBufferUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformBufferUpdateAfterBind(self, Bool32 descriptorBindingUniformBufferUpdateAfterBind) {
   self.descriptorBindingUniformBufferUpdateAfterBind = descriptorBindingUniformBufferUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingSampledImageUpdateAfterBind(self, VkBool32 descriptorBindingSampledImageUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingSampledImageUpdateAfterBind(self, Bool32 descriptorBindingSampledImageUpdateAfterBind) {
   self.descriptorBindingSampledImageUpdateAfterBind = descriptorBindingSampledImageUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageImageUpdateAfterBind(self, VkBool32 descriptorBindingStorageImageUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageImageUpdateAfterBind(self, Bool32 descriptorBindingStorageImageUpdateAfterBind) {
   self.descriptorBindingStorageImageUpdateAfterBind = descriptorBindingStorageImageUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageBufferUpdateAfterBind(self, VkBool32 descriptorBindingStorageBufferUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageBufferUpdateAfterBind(self, Bool32 descriptorBindingStorageBufferUpdateAfterBind) {
   self.descriptorBindingStorageBufferUpdateAfterBind = descriptorBindingStorageBufferUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformTexelBufferUpdateAfterBind(self, VkBool32 descriptorBindingUniformTexelBufferUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformTexelBufferUpdateAfterBind(self, Bool32 descriptorBindingUniformTexelBufferUpdateAfterBind) {
   self.descriptorBindingUniformTexelBufferUpdateAfterBind = descriptorBindingUniformTexelBufferUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageTexelBufferUpdateAfterBind(self, VkBool32 descriptorBindingStorageTexelBufferUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageTexelBufferUpdateAfterBind(self, Bool32 descriptorBindingStorageTexelBufferUpdateAfterBind) {
   self.descriptorBindingStorageTexelBufferUpdateAfterBind = descriptorBindingStorageTexelBufferUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUpdateUnusedWhilePending(self, VkBool32 descriptorBindingUpdateUnusedWhilePending) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUpdateUnusedWhilePending(self, Bool32 descriptorBindingUpdateUnusedWhilePending) {
   self.descriptorBindingUpdateUnusedWhilePending = descriptorBindingUpdateUnusedWhilePending;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingPartiallyBound(self, VkBool32 descriptorBindingPartiallyBound) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingPartiallyBound(self, Bool32 descriptorBindingPartiallyBound) {
   self.descriptorBindingPartiallyBound = descriptorBindingPartiallyBound;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingVariableDescriptorCount(self, VkBool32 descriptorBindingVariableDescriptorCount) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingVariableDescriptorCount(self, Bool32 descriptorBindingVariableDescriptorCount) {
   self.descriptorBindingVariableDescriptorCount = descriptorBindingVariableDescriptorCount;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingFeatures VkPhysicalDeviceDescriptorIndexingFeatures.setRuntimeDescriptorArray(self, VkBool32 runtimeDescriptorArray) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setRuntimeDescriptorArray(self, Bool32 runtimeDescriptorArray) {
   self.runtimeDescriptorArray = runtimeDescriptorArray;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingPropertiesBuilder() {
-  VkPhysicalDeviceDescriptorIndexingProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES,
+fn PhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingPropertiesBuilder() {
+  PhysicalDeviceDescriptorIndexingProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxUpdateAfterBindDescriptorsInAllPools(self, uint maxUpdateAfterBindDescriptorsInAllPools) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxUpdateAfterBindDescriptorsInAllPools(self, uint maxUpdateAfterBindDescriptorsInAllPools) {
   self.maxUpdateAfterBindDescriptorsInAllPools = maxUpdateAfterBindDescriptorsInAllPools;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setShaderUniformBufferArrayNonUniformIndexingNative(self, VkBool32 shaderUniformBufferArrayNonUniformIndexingNative) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderUniformBufferArrayNonUniformIndexingNative(self, Bool32 shaderUniformBufferArrayNonUniformIndexingNative) {
   self.shaderUniformBufferArrayNonUniformIndexingNative = shaderUniformBufferArrayNonUniformIndexingNative;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setShaderSampledImageArrayNonUniformIndexingNative(self, VkBool32 shaderSampledImageArrayNonUniformIndexingNative) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderSampledImageArrayNonUniformIndexingNative(self, Bool32 shaderSampledImageArrayNonUniformIndexingNative) {
   self.shaderSampledImageArrayNonUniformIndexingNative = shaderSampledImageArrayNonUniformIndexingNative;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setShaderStorageBufferArrayNonUniformIndexingNative(self, VkBool32 shaderStorageBufferArrayNonUniformIndexingNative) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderStorageBufferArrayNonUniformIndexingNative(self, Bool32 shaderStorageBufferArrayNonUniformIndexingNative) {
   self.shaderStorageBufferArrayNonUniformIndexingNative = shaderStorageBufferArrayNonUniformIndexingNative;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setShaderStorageImageArrayNonUniformIndexingNative(self, VkBool32 shaderStorageImageArrayNonUniformIndexingNative) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderStorageImageArrayNonUniformIndexingNative(self, Bool32 shaderStorageImageArrayNonUniformIndexingNative) {
   self.shaderStorageImageArrayNonUniformIndexingNative = shaderStorageImageArrayNonUniformIndexingNative;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setShaderInputAttachmentArrayNonUniformIndexingNative(self, VkBool32 shaderInputAttachmentArrayNonUniformIndexingNative) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderInputAttachmentArrayNonUniformIndexingNative(self, Bool32 shaderInputAttachmentArrayNonUniformIndexingNative) {
   self.shaderInputAttachmentArrayNonUniformIndexingNative = shaderInputAttachmentArrayNonUniformIndexingNative;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setRobustBufferAccessUpdateAfterBind(self, VkBool32 robustBufferAccessUpdateAfterBind) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setRobustBufferAccessUpdateAfterBind(self, Bool32 robustBufferAccessUpdateAfterBind) {
   self.robustBufferAccessUpdateAfterBind = robustBufferAccessUpdateAfterBind;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setQuadDivergentImplicitLod(self, VkBool32 quadDivergentImplicitLod) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setQuadDivergentImplicitLod(self, Bool32 quadDivergentImplicitLod) {
   self.quadDivergentImplicitLod = quadDivergentImplicitLod;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSamplers(self, uint maxPerStageDescriptorUpdateAfterBindSamplers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSamplers(self, uint maxPerStageDescriptorUpdateAfterBindSamplers) {
   self.maxPerStageDescriptorUpdateAfterBindSamplers = maxPerStageDescriptorUpdateAfterBindSamplers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindUniformBuffers(self, uint maxPerStageDescriptorUpdateAfterBindUniformBuffers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindUniformBuffers(self, uint maxPerStageDescriptorUpdateAfterBindUniformBuffers) {
   self.maxPerStageDescriptorUpdateAfterBindUniformBuffers = maxPerStageDescriptorUpdateAfterBindUniformBuffers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageBuffers(self, uint maxPerStageDescriptorUpdateAfterBindStorageBuffers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageBuffers(self, uint maxPerStageDescriptorUpdateAfterBindStorageBuffers) {
   self.maxPerStageDescriptorUpdateAfterBindStorageBuffers = maxPerStageDescriptorUpdateAfterBindStorageBuffers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSampledImages(self, uint maxPerStageDescriptorUpdateAfterBindSampledImages) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSampledImages(self, uint maxPerStageDescriptorUpdateAfterBindSampledImages) {
   self.maxPerStageDescriptorUpdateAfterBindSampledImages = maxPerStageDescriptorUpdateAfterBindSampledImages;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageImages(self, uint maxPerStageDescriptorUpdateAfterBindStorageImages) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageImages(self, uint maxPerStageDescriptorUpdateAfterBindStorageImages) {
   self.maxPerStageDescriptorUpdateAfterBindStorageImages = maxPerStageDescriptorUpdateAfterBindStorageImages;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindInputAttachments(self, uint maxPerStageDescriptorUpdateAfterBindInputAttachments) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindInputAttachments(self, uint maxPerStageDescriptorUpdateAfterBindInputAttachments) {
   self.maxPerStageDescriptorUpdateAfterBindInputAttachments = maxPerStageDescriptorUpdateAfterBindInputAttachments;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxPerStageUpdateAfterBindResources(self, uint maxPerStageUpdateAfterBindResources) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageUpdateAfterBindResources(self, uint maxPerStageUpdateAfterBindResources) {
   self.maxPerStageUpdateAfterBindResources = maxPerStageUpdateAfterBindResources;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSamplers(self, uint maxDescriptorSetUpdateAfterBindSamplers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSamplers(self, uint maxDescriptorSetUpdateAfterBindSamplers) {
   self.maxDescriptorSetUpdateAfterBindSamplers = maxDescriptorSetUpdateAfterBindSamplers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffers(self, uint maxDescriptorSetUpdateAfterBindUniformBuffers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffers(self, uint maxDescriptorSetUpdateAfterBindUniformBuffers) {
   self.maxDescriptorSetUpdateAfterBindUniformBuffers = maxDescriptorSetUpdateAfterBindUniformBuffers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic) {
   self.maxDescriptorSetUpdateAfterBindUniformBuffersDynamic = maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffers(self, uint maxDescriptorSetUpdateAfterBindStorageBuffers) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffers(self, uint maxDescriptorSetUpdateAfterBindStorageBuffers) {
   self.maxDescriptorSetUpdateAfterBindStorageBuffers = maxDescriptorSetUpdateAfterBindStorageBuffers;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic) {
   self.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic = maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSampledImages(self, uint maxDescriptorSetUpdateAfterBindSampledImages) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSampledImages(self, uint maxDescriptorSetUpdateAfterBindSampledImages) {
   self.maxDescriptorSetUpdateAfterBindSampledImages = maxDescriptorSetUpdateAfterBindSampledImages;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageImages(self, uint maxDescriptorSetUpdateAfterBindStorageImages) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageImages(self, uint maxDescriptorSetUpdateAfterBindStorageImages) {
   self.maxDescriptorSetUpdateAfterBindStorageImages = maxDescriptorSetUpdateAfterBindStorageImages;
   return self;
 }
        
-fn VkPhysicalDeviceDescriptorIndexingProperties VkPhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindInputAttachments(self, uint maxDescriptorSetUpdateAfterBindInputAttachments) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindInputAttachments(self, uint maxDescriptorSetUpdateAfterBindInputAttachments) {
   self.maxDescriptorSetUpdateAfterBindInputAttachments = maxDescriptorSetUpdateAfterBindInputAttachments;
   return self;
 }
        
 
 
-fn VkDescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescriptorCountAllocateInfoBuilder() {
-  VkDescriptorSetVariableDescriptorCountAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO,
+fn DescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescriptorCountAllocateInfoBuilder() {
+  DescriptorSetVariableDescriptorCountAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDescriptorCountAllocateInfo.setNext(self, void* pNext) {
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
   self.descriptorSetCount = descriptorSetCount;
   return self;
 }
        
-fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorCounts(self, uint[] pDescriptorCounts) {
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorCounts(self, uint[] pDescriptorCounts) {
   self.descriptorSetCount = (uint)pDescriptorCounts.len;
   self.pDescriptorCounts = &pDescriptorCounts[0];
   return self;
@@ -4706,255 +4706,255 @@ fn VkDescriptorSetVariableDescriptorCountAllocateInfo VkDescriptorSetVariableDes
 
 
 
-fn VkDescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupportBuilder() {
-  VkDescriptorSetVariableDescriptorCountLayoutSupport defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT,
+fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupportBuilder() {
+  DescriptorSetVariableDescriptorCountLayoutSupport defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorSetVariableDescriptorCountLayoutSupport VkDescriptorSetVariableDescriptorCountLayoutSupport.setNext(self, void* pNext) {
+fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorSetVariableDescriptorCountLayoutSupport VkDescriptorSetVariableDescriptorCountLayoutSupport.setMaxVariableDescriptorCount(self, uint maxVariableDescriptorCount) {
+fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setMaxVariableDescriptorCount(self, uint maxVariableDescriptorCount) {
   self.maxVariableDescriptorCount = maxVariableDescriptorCount;
   return self;
 }
        
 
 
-fn VkSubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolveBuilder() {
-  VkSubpassDescriptionDepthStencilResolve defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE,
+fn SubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolveBuilder() {
+  SubpassDescriptionDepthStencilResolve defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setNext(self, void* pNext) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setDepthResolveMode(self, VkResolveModeFlagBits depthResolveMode) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setDepthResolveMode(self, ResolveModeFlagBits depthResolveMode) {
   self.depthResolveMode = depthResolveMode;
   return self;
 }
        
-fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setStencilResolveMode(self, VkResolveModeFlagBits stencilResolveMode) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setStencilResolveMode(self, ResolveModeFlagBits stencilResolveMode) {
   self.stencilResolveMode = stencilResolveMode;
   return self;
 }
        
-fn VkSubpassDescriptionDepthStencilResolve VkSubpassDescriptionDepthStencilResolve.setDepthStencilResolveAttachment(self, VkAttachmentReference2* pDepthStencilResolveAttachment) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setDepthStencilResolveAttachment(self, AttachmentReference2* pDepthStencilResolveAttachment) {
   self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolvePropertiesBuilder() {
-  VkPhysicalDeviceDepthStencilResolveProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES,
+fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolvePropertiesBuilder() {
+  PhysicalDeviceDepthStencilResolveProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setSupportedDepthResolveModes(self, VkResolveModeFlags supportedDepthResolveModes) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setSupportedDepthResolveModes(self, ResolveModeFlags supportedDepthResolveModes) {
   self.supportedDepthResolveModes = supportedDepthResolveModes;
   return self;
 }
        
-fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setSupportedStencilResolveModes(self, VkResolveModeFlags supportedStencilResolveModes) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setSupportedStencilResolveModes(self, ResolveModeFlags supportedStencilResolveModes) {
   self.supportedStencilResolveModes = supportedStencilResolveModes;
   return self;
 }
        
-fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setIndependentResolveNone(self, VkBool32 independentResolveNone) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setIndependentResolveNone(self, Bool32 independentResolveNone) {
   self.independentResolveNone = independentResolveNone;
   return self;
 }
        
-fn VkPhysicalDeviceDepthStencilResolveProperties VkPhysicalDeviceDepthStencilResolveProperties.setIndependentResolve(self, VkBool32 independentResolve) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setIndependentResolve(self, Bool32 independentResolve) {
   self.independentResolve = independentResolve;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeaturesBuilder() {
-  VkPhysicalDeviceScalarBlockLayoutFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES,
+fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeaturesBuilder() {
+  PhysicalDeviceScalarBlockLayoutFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceScalarBlockLayoutFeatures VkPhysicalDeviceScalarBlockLayoutFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceScalarBlockLayoutFeatures VkPhysicalDeviceScalarBlockLayoutFeatures.setScalarBlockLayout(self, VkBool32 scalarBlockLayout) {
+fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setScalarBlockLayout(self, Bool32 scalarBlockLayout) {
   self.scalarBlockLayout = scalarBlockLayout;
   return self;
 }
        
 
 
-fn VkImageStencilUsageCreateInfo imageStencilUsageCreateInfoBuilder() {
-  VkImageStencilUsageCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
+fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfoBuilder() {
+  ImageStencilUsageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageStencilUsageCreateInfo VkImageStencilUsageCreateInfo.setNext(self, void* pNext) {
+fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageStencilUsageCreateInfo VkImageStencilUsageCreateInfo.setStencilUsage(self, VkImageUsageFlags stencilUsage) {
+fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setStencilUsage(self, ImageUsageFlags stencilUsage) {
   self.stencilUsage = stencilUsage;
   return self;
 }
        
 
 
-fn VkSamplerReductionModeCreateInfo samplerReductionModeCreateInfoBuilder() {
-  VkSamplerReductionModeCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
+fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfoBuilder() {
+  SamplerReductionModeCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSamplerReductionModeCreateInfo VkSamplerReductionModeCreateInfo.setNext(self, void* pNext) {
+fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSamplerReductionModeCreateInfo VkSamplerReductionModeCreateInfo.setReductionMode(self, VkSamplerReductionMode reductionMode) {
+fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setReductionMode(self, SamplerReductionMode reductionMode) {
   self.reductionMode = reductionMode;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxPropertiesBuilder() {
-  VkPhysicalDeviceSamplerFilterMinmaxProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES,
+fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxPropertiesBuilder() {
+  PhysicalDeviceSamplerFilterMinmaxProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSamplerFilterMinmaxProperties VkPhysicalDeviceSamplerFilterMinmaxProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSamplerFilterMinmaxProperties VkPhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxSingleComponentFormats(self, VkBool32 filterMinmaxSingleComponentFormats) {
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxSingleComponentFormats(self, Bool32 filterMinmaxSingleComponentFormats) {
   self.filterMinmaxSingleComponentFormats = filterMinmaxSingleComponentFormats;
   return self;
 }
        
-fn VkPhysicalDeviceSamplerFilterMinmaxProperties VkPhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxImageComponentMapping(self, VkBool32 filterMinmaxImageComponentMapping) {
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxImageComponentMapping(self, Bool32 filterMinmaxImageComponentMapping) {
   self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeaturesBuilder() {
-  VkPhysicalDeviceVulkanMemoryModelFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES,
+fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeaturesBuilder() {
+  PhysicalDeviceVulkanMemoryModelFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModel(self, VkBool32 vulkanMemoryModel) {
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModel(self, Bool32 vulkanMemoryModel) {
   self.vulkanMemoryModel = vulkanMemoryModel;
   return self;
 }
        
-fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelDeviceScope(self, VkBool32 vulkanMemoryModelDeviceScope) {
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelDeviceScope(self, Bool32 vulkanMemoryModelDeviceScope) {
   self.vulkanMemoryModelDeviceScope = vulkanMemoryModelDeviceScope;
   return self;
 }
        
-fn VkPhysicalDeviceVulkanMemoryModelFeatures VkPhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelAvailabilityVisibilityChains(self, VkBool32 vulkanMemoryModelAvailabilityVisibilityChains) {
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelAvailabilityVisibilityChains(self, Bool32 vulkanMemoryModelAvailabilityVisibilityChains) {
   self.vulkanMemoryModelAvailabilityVisibilityChains = vulkanMemoryModelAvailabilityVisibilityChains;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeaturesBuilder() {
-  VkPhysicalDeviceImagelessFramebufferFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES,
+fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeaturesBuilder() {
+  PhysicalDeviceImagelessFramebufferFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceImagelessFramebufferFeatures VkPhysicalDeviceImagelessFramebufferFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceImagelessFramebufferFeatures VkPhysicalDeviceImagelessFramebufferFeatures.setImagelessFramebuffer(self, VkBool32 imagelessFramebuffer) {
+fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setImagelessFramebuffer(self, Bool32 imagelessFramebuffer) {
   self.imagelessFramebuffer = imagelessFramebuffer;
   return self;
 }
        
 
 
-fn VkFramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfoBuilder() {
-  VkFramebufferAttachmentsCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO,
+fn FramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfoBuilder() {
+  FramebufferAttachmentsCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setNext(self, void* pNext) {
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setAttachmentImageInfoCount(self, uint attachmentImageInfoCount) {
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfoCount(self, uint attachmentImageInfoCount) {
   self.attachmentImageInfoCount = attachmentImageInfoCount;
   return self;
 }
        
-fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setAttachmentImageInfos(self, VkFramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfos(self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
   self.attachmentImageInfoCount = (uint)pAttachmentImageInfos.len;
   self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
   return self;
@@ -4962,51 +4962,51 @@ fn VkFramebufferAttachmentsCreateInfo VkFramebufferAttachmentsCreateInfo.setAtta
 
 
 
-fn VkFramebufferAttachmentImageInfo framebufferAttachmentImageInfoBuilder() {
-  VkFramebufferAttachmentImageInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO,
+fn FramebufferAttachmentImageInfo framebufferAttachmentImageInfoBuilder() {
+  FramebufferAttachmentImageInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setNext(self, void* pNext) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setFlags(self, VkImageCreateFlags flags) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setFlags(self, ImageCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setUsage(self, VkImageUsageFlags usage) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setUsage(self, ImageUsageFlags usage) {
   self.usage = usage;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setWidth(self, uint width) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setWidth(self, uint width) {
   self.width = width;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setHeight(self, uint height) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setHeight(self, uint height) {
   self.height = height;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setLayerCount(self, uint layerCount) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setLayerCount(self, uint layerCount) {
   self.layerCount = layerCount;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setViewFormatCount(self, uint viewFormatCount) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormatCount(self, uint viewFormatCount) {
   self.viewFormatCount = viewFormatCount;
   return self;
 }
        
-fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setViewFormats(self, VkFormat[] pViewFormats) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormats(self, Format[] pViewFormats) {
   self.viewFormatCount = (uint)pViewFormats.len;
   self.pViewFormats = &pViewFormats[0];
   return self;
@@ -5014,26 +5014,26 @@ fn VkFramebufferAttachmentImageInfo VkFramebufferAttachmentImageInfo.setViewForm
 
 
 
-fn VkRenderPassAttachmentBeginInfo renderPassAttachmentBeginInfoBuilder() {
-  VkRenderPassAttachmentBeginInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO,
+fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfoBuilder() {
+  RenderPassAttachmentBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setNext(self, void* pNext) {
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setAttachmentCount(self, uint attachmentCount) {
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachmentCount(self, uint attachmentCount) {
   self.attachmentCount = attachmentCount;
   return self;
 }
        
-fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setAttachments(self, VkImageView[] pAttachments) {
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachments(self, ImageView[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -5041,236 +5041,236 @@ fn VkRenderPassAttachmentBeginInfo VkRenderPassAttachmentBeginInfo.setAttachment
 
 
 
-fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeaturesBuilder() {
-  VkPhysicalDeviceUniformBufferStandardLayoutFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES,
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeaturesBuilder() {
+  PhysicalDeviceUniformBufferStandardLayoutFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures VkPhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceUniformBufferStandardLayoutFeatures VkPhysicalDeviceUniformBufferStandardLayoutFeatures.setUniformBufferStandardLayout(self, VkBool32 uniformBufferStandardLayout) {
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setUniformBufferStandardLayout(self, Bool32 uniformBufferStandardLayout) {
   self.uniformBufferStandardLayout = uniformBufferStandardLayout;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgroupExtendedTypesFeaturesBuilder() {
-  VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES,
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgroupExtendedTypesFeaturesBuilder() {
+  PhysicalDeviceShaderSubgroupExtendedTypesFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures.setShaderSubgroupExtendedTypes(self, VkBool32 shaderSubgroupExtendedTypes) {
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setShaderSubgroupExtendedTypes(self, Bool32 shaderSubgroupExtendedTypes) {
   self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeaturesBuilder() {
-  VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES,
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeaturesBuilder() {
+  PhysicalDeviceSeparateDepthStencilLayoutsFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures.setSeparateDepthStencilLayouts(self, VkBool32 separateDepthStencilLayouts) {
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setSeparateDepthStencilLayouts(self, Bool32 separateDepthStencilLayouts) {
   self.separateDepthStencilLayouts = separateDepthStencilLayouts;
   return self;
 }
        
 
 
-fn VkAttachmentReferenceStencilLayout attachmentReferenceStencilLayoutBuilder() {
-  VkAttachmentReferenceStencilLayout defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT,
+fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayoutBuilder() {
+  AttachmentReferenceStencilLayout defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkAttachmentReferenceStencilLayout VkAttachmentReferenceStencilLayout.setNext(self, void* pNext) {
+fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkAttachmentReferenceStencilLayout VkAttachmentReferenceStencilLayout.setStencilLayout(self, VkImageLayout stencilLayout) {
+fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setStencilLayout(self, ImageLayout stencilLayout) {
   self.stencilLayout = stencilLayout;
   return self;
 }
        
 
 
-fn VkAttachmentDescriptionStencilLayout attachmentDescriptionStencilLayoutBuilder() {
-  VkAttachmentDescriptionStencilLayout defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT,
+fn AttachmentDescriptionStencilLayout attachmentDescriptionStencilLayoutBuilder() {
+  AttachmentDescriptionStencilLayout defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkAttachmentDescriptionStencilLayout VkAttachmentDescriptionStencilLayout.setNext(self, void* pNext) {
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkAttachmentDescriptionStencilLayout VkAttachmentDescriptionStencilLayout.setStencilInitialLayout(self, VkImageLayout stencilInitialLayout) {
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setStencilInitialLayout(self, ImageLayout stencilInitialLayout) {
   self.stencilInitialLayout = stencilInitialLayout;
   return self;
 }
        
-fn VkAttachmentDescriptionStencilLayout VkAttachmentDescriptionStencilLayout.setStencilFinalLayout(self, VkImageLayout stencilFinalLayout) {
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setStencilFinalLayout(self, ImageLayout stencilFinalLayout) {
   self.stencilFinalLayout = stencilFinalLayout;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeaturesBuilder() {
-  VkPhysicalDeviceHostQueryResetFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
+fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeaturesBuilder() {
+  PhysicalDeviceHostQueryResetFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceHostQueryResetFeatures VkPhysicalDeviceHostQueryResetFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceHostQueryResetFeatures VkPhysicalDeviceHostQueryResetFeatures.setHostQueryReset(self, VkBool32 hostQueryReset) {
+fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setHostQueryReset(self, Bool32 hostQueryReset) {
   self.hostQueryReset = hostQueryReset;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeaturesBuilder() {
-  VkPhysicalDeviceTimelineSemaphoreFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES,
+fn PhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeaturesBuilder() {
+  PhysicalDeviceTimelineSemaphoreFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceTimelineSemaphoreFeatures VkPhysicalDeviceTimelineSemaphoreFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceTimelineSemaphoreFeatures VkPhysicalDeviceTimelineSemaphoreFeatures.setTimelineSemaphore(self, VkBool32 timelineSemaphore) {
+fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setTimelineSemaphore(self, Bool32 timelineSemaphore) {
   self.timelineSemaphore = timelineSemaphore;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphorePropertiesBuilder() {
-  VkPhysicalDeviceTimelineSemaphoreProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES,
+fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphorePropertiesBuilder() {
+  PhysicalDeviceTimelineSemaphoreProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceTimelineSemaphoreProperties VkPhysicalDeviceTimelineSemaphoreProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceTimelineSemaphoreProperties VkPhysicalDeviceTimelineSemaphoreProperties.setMaxTimelineSemaphoreValueDifference(self, ulong maxTimelineSemaphoreValueDifference) {
+fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setMaxTimelineSemaphoreValueDifference(self, ulong maxTimelineSemaphoreValueDifference) {
   self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
   return self;
 }
        
 
 
-fn VkSemaphoreTypeCreateInfo semaphoreTypeCreateInfoBuilder() {
-  VkSemaphoreTypeCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
+fn SemaphoreTypeCreateInfo semaphoreTypeCreateInfoBuilder() {
+  SemaphoreTypeCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSemaphoreTypeCreateInfo VkSemaphoreTypeCreateInfo.setNext(self, void* pNext) {
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSemaphoreTypeCreateInfo VkSemaphoreTypeCreateInfo.setSemaphoreType(self, VkSemaphoreType semaphoreType) {
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setSemaphoreType(self, SemaphoreType semaphoreType) {
   self.semaphoreType = semaphoreType;
   return self;
 }
        
-fn VkSemaphoreTypeCreateInfo VkSemaphoreTypeCreateInfo.setInitialValue(self, ulong initialValue) {
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setInitialValue(self, ulong initialValue) {
   self.initialValue = initialValue;
   return self;
 }
        
 
 
-fn VkTimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfoBuilder() {
-  VkTimelineSemaphoreSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
+fn TimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfoBuilder() {
+  TimelineSemaphoreSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setNext(self, void* pNext) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setWaitSemaphoreValueCount(self, uint waitSemaphoreValueCount) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValueCount(self, uint waitSemaphoreValueCount) {
   self.waitSemaphoreValueCount = waitSemaphoreValueCount;
   return self;
 }
        
-fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setWaitSemaphoreValues(self, ulong[] pWaitSemaphoreValues) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValues(self, ulong[] pWaitSemaphoreValues) {
   self.waitSemaphoreValueCount = (uint)pWaitSemaphoreValues.len;
   self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
   return self;
 }
 
-fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setSignalSemaphoreValueCount(self, uint signalSemaphoreValueCount) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValueCount(self, uint signalSemaphoreValueCount) {
   self.signalSemaphoreValueCount = signalSemaphoreValueCount;
   return self;
 }
        
-fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setSignalSemaphoreValues(self, ulong[] pSignalSemaphoreValues) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValues(self, ulong[] pSignalSemaphoreValues) {
   self.signalSemaphoreValueCount = (uint)pSignalSemaphoreValues.len;
   self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
   return self;
@@ -5278,37 +5278,37 @@ fn VkTimelineSemaphoreSubmitInfo VkTimelineSemaphoreSubmitInfo.setSignalSemaphor
 
 
 
-fn VkSemaphoreWaitInfo semaphoreWaitInfoBuilder() {
-  VkSemaphoreWaitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
+fn SemaphoreWaitInfo semaphoreWaitInfoBuilder() {
+  SemaphoreWaitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setNext(self, void* pNext) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setFlags(self, VkSemaphoreWaitFlags flags) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setFlags(self, SemaphoreWaitFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setSemaphoreCount(self, uint semaphoreCount) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphoreCount(self, uint semaphoreCount) {
   self.semaphoreCount = semaphoreCount;
   return self;
 }
        
-fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setSemaphores(self, VkSemaphore[] pSemaphores) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphores(self, Semaphore[] pSemaphores) {
   self.semaphoreCount = (uint)pSemaphores.len;
   self.pSemaphores = &pSemaphores[0];
   return self;
 }
 
-fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setValues(self, ulong[] pValues) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setValues(self, ulong[] pValues) {
   self.semaphoreCount = (uint)pValues.len;
   self.pValues = &pValues[0];
   return self;
@@ -5316,524 +5316,524 @@ fn VkSemaphoreWaitInfo VkSemaphoreWaitInfo.setValues(self, ulong[] pValues) {
 
 
 
-fn VkSemaphoreSignalInfo semaphoreSignalInfoBuilder() {
-  VkSemaphoreSignalInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
+fn SemaphoreSignalInfo semaphoreSignalInfoBuilder() {
+  SemaphoreSignalInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSemaphoreSignalInfo VkSemaphoreSignalInfo.setNext(self, void* pNext) {
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSemaphoreSignalInfo VkSemaphoreSignalInfo.setSemaphore(self, VkSemaphore semaphore) {
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setSemaphore(self, Semaphore semaphore) {
   self.semaphore = semaphore;
   return self;
 }
        
-fn VkSemaphoreSignalInfo VkSemaphoreSignalInfo.setValue(self, ulong value) {
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setValue(self, ulong value) {
   self.value = value;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeaturesBuilder() {
-  VkPhysicalDeviceBufferDeviceAddressFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeaturesBuilder() {
+  PhysicalDeviceBufferDeviceAddressFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddress(self, VkBool32 bufferDeviceAddress) {
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddress(self, Bool32 bufferDeviceAddress) {
   self.bufferDeviceAddress = bufferDeviceAddress;
   return self;
 }
        
-fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressCaptureReplay(self, VkBool32 bufferDeviceAddressCaptureReplay) {
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressCaptureReplay(self, Bool32 bufferDeviceAddressCaptureReplay) {
   self.bufferDeviceAddressCaptureReplay = bufferDeviceAddressCaptureReplay;
   return self;
 }
        
-fn VkPhysicalDeviceBufferDeviceAddressFeatures VkPhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressMultiDevice(self, VkBool32 bufferDeviceAddressMultiDevice) {
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressMultiDevice(self, Bool32 bufferDeviceAddressMultiDevice) {
   self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
   return self;
 }
        
 
 
-fn VkBufferDeviceAddressInfo bufferDeviceAddressInfoBuilder() {
-  VkBufferDeviceAddressInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+fn BufferDeviceAddressInfo bufferDeviceAddressInfoBuilder() {
+  BufferDeviceAddressInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferDeviceAddressInfo VkBufferDeviceAddressInfo.setNext(self, void* pNext) {
+fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferDeviceAddressInfo VkBufferDeviceAddressInfo.setBuffer(self, VkBuffer buffer) {
+fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
 
 
-fn VkBufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfoBuilder() {
-  VkBufferOpaqueCaptureAddressCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO,
+fn BufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfoBuilder() {
+  BufferOpaqueCaptureAddressCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferOpaqueCaptureAddressCreateInfo VkBufferOpaqueCaptureAddressCreateInfo.setNext(self, void* pNext) {
+fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferOpaqueCaptureAddressCreateInfo VkBufferOpaqueCaptureAddressCreateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
+fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
   self.opaqueCaptureAddress = opaqueCaptureAddress;
   return self;
 }
        
 
 
-fn VkMemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfoBuilder() {
-  VkMemoryOpaqueCaptureAddressAllocateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
+fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfoBuilder() {
+  MemoryOpaqueCaptureAddressAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryOpaqueCaptureAddressAllocateInfo VkMemoryOpaqueCaptureAddressAllocateInfo.setNext(self, void* pNext) {
+fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryOpaqueCaptureAddressAllocateInfo VkMemoryOpaqueCaptureAddressAllocateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
+fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
   self.opaqueCaptureAddress = opaqueCaptureAddress;
   return self;
 }
        
 
 
-fn VkDeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfoBuilder() {
-  VkDeviceMemoryOpaqueCaptureAddressInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
+fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfoBuilder() {
+  DeviceMemoryOpaqueCaptureAddressInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceMemoryOpaqueCaptureAddressInfo VkDeviceMemoryOpaqueCaptureAddressInfo.setNext(self, void* pNext) {
+fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceMemoryOpaqueCaptureAddressInfo VkDeviceMemoryOpaqueCaptureAddressInfo.setMemory(self, VkDeviceMemory memory) {
+fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setMemory(self, DeviceMemory memory) {
   self.memory = memory;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeaturesBuilder() {
-  VkPhysicalDeviceShaderTerminateInvocationFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES,
+fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeaturesBuilder() {
+  PhysicalDeviceShaderTerminateInvocationFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderTerminateInvocationFeatures VkPhysicalDeviceShaderTerminateInvocationFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderTerminateInvocationFeatures VkPhysicalDeviceShaderTerminateInvocationFeatures.setShaderTerminateInvocation(self, VkBool32 shaderTerminateInvocation) {
+fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setShaderTerminateInvocation(self, Bool32 shaderTerminateInvocation) {
   self.shaderTerminateInvocation = shaderTerminateInvocation;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceToolProperties physicalDeviceToolPropertiesBuilder() {
-  VkPhysicalDeviceToolProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES,
+fn PhysicalDeviceToolProperties physicalDeviceToolPropertiesBuilder() {
+  PhysicalDeviceToolProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setName(self, char[VK_MAX_EXTENSION_NAME_SIZE] name) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setName(self, char[MAX_EXTENSION_NAME_SIZE] name) {
   self.name = name;
   return self;
 }
        
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setVersion(self, char[VK_MAX_EXTENSION_NAME_SIZE] version) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setVersion(self, char[MAX_EXTENSION_NAME_SIZE] version) {
   self.version = version;
   return self;
 }
        
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setPurposes(self, VkToolPurposeFlags purposes) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setPurposes(self, ToolPurposeFlags purposes) {
   self.purposes = purposes;
   return self;
 }
        
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setDescription(self, char[VK_MAX_DESCRIPTION_SIZE] description) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setDescription(self, char[MAX_DESCRIPTION_SIZE] description) {
   self.description = description;
   return self;
 }
        
-fn VkPhysicalDeviceToolProperties VkPhysicalDeviceToolProperties.setLayer(self, char[VK_MAX_EXTENSION_NAME_SIZE] layer) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setLayer(self, char[MAX_EXTENSION_NAME_SIZE] layer) {
   self.layer = layer;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemoteToHelperInvocationFeaturesBuilder() {
-  VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES,
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemoteToHelperInvocationFeaturesBuilder() {
+  PhysicalDeviceShaderDemoteToHelperInvocationFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures.setShaderDemoteToHelperInvocation(self, VkBool32 shaderDemoteToHelperInvocation) {
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setShaderDemoteToHelperInvocation(self, Bool32 shaderDemoteToHelperInvocation) {
   self.shaderDemoteToHelperInvocation = shaderDemoteToHelperInvocation;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeaturesBuilder() {
-  VkPhysicalDevicePrivateDataFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES,
+fn PhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeaturesBuilder() {
+  PhysicalDevicePrivateDataFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePrivateDataFeatures VkPhysicalDevicePrivateDataFeatures.setNext(self, void* pNext) {
+fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePrivateDataFeatures VkPhysicalDevicePrivateDataFeatures.setPrivateData(self, VkBool32 privateData) {
+fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setPrivateData(self, Bool32 privateData) {
   self.privateData = privateData;
   return self;
 }
        
 
 
-fn VkDevicePrivateDataCreateInfo devicePrivateDataCreateInfoBuilder() {
-  VkDevicePrivateDataCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO,
+fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfoBuilder() {
+  DevicePrivateDataCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDevicePrivateDataCreateInfo VkDevicePrivateDataCreateInfo.setNext(self, void* pNext) {
+fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDevicePrivateDataCreateInfo VkDevicePrivateDataCreateInfo.setPrivateDataSlotRequestCount(self, uint privateDataSlotRequestCount) {
+fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setPrivateDataSlotRequestCount(self, uint privateDataSlotRequestCount) {
   self.privateDataSlotRequestCount = privateDataSlotRequestCount;
   return self;
 }
        
 
 
-fn VkPrivateDataSlotCreateInfo privateDataSlotCreateInfoBuilder() {
-  VkPrivateDataSlotCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO,
+fn PrivateDataSlotCreateInfo privateDataSlotCreateInfoBuilder() {
+  PrivateDataSlotCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPrivateDataSlotCreateInfo VkPrivateDataSlotCreateInfo.setNext(self, void* pNext) {
+fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPrivateDataSlotCreateInfo VkPrivateDataSlotCreateInfo.setFlags(self, VkPrivateDataSlotCreateFlags flags) {
+fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setFlags(self, PrivateDataSlotCreateFlags flags) {
   self.flags = flags;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCreationCacheControlFeaturesBuilder() {
-  VkPhysicalDevicePipelineCreationCacheControlFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES,
+fn PhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCreationCacheControlFeaturesBuilder() {
+  PhysicalDevicePipelineCreationCacheControlFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePipelineCreationCacheControlFeatures VkPhysicalDevicePipelineCreationCacheControlFeatures.setNext(self, void* pNext) {
+fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePipelineCreationCacheControlFeatures VkPhysicalDevicePipelineCreationCacheControlFeatures.setPipelineCreationCacheControl(self, VkBool32 pipelineCreationCacheControl) {
+fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setPipelineCreationCacheControl(self, Bool32 pipelineCreationCacheControl) {
   self.pipelineCreationCacheControl = pipelineCreationCacheControl;
   return self;
 }
        
 
 
-fn VkMemoryBarrier2 memoryBarrier2Builder() {
-  VkMemoryBarrier2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+fn MemoryBarrier2 memoryBarrier2Builder() {
+  MemoryBarrier2 defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_BARRIER_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkMemoryBarrier2 VkMemoryBarrier2.setNext(self, void* pNext) {
+fn MemoryBarrier2 MemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkMemoryBarrier2 VkMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
+fn MemoryBarrier2 MemoryBarrier2.setSrcStageMask(self, PipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
 }
        
-fn VkMemoryBarrier2 VkMemoryBarrier2.setSrcAccessMask(self, VkAccessFlags2 srcAccessMask) {
+fn MemoryBarrier2 MemoryBarrier2.setSrcAccessMask(self, AccessFlags2 srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkMemoryBarrier2 VkMemoryBarrier2.setDstStageMask(self, VkPipelineStageFlags2 dstStageMask) {
+fn MemoryBarrier2 MemoryBarrier2.setDstStageMask(self, PipelineStageFlags2 dstStageMask) {
   self.dstStageMask = dstStageMask;
   return self;
 }
        
-fn VkMemoryBarrier2 VkMemoryBarrier2.setDstAccessMask(self, VkAccessFlags2 dstAccessMask) {
+fn MemoryBarrier2 MemoryBarrier2.setDstAccessMask(self, AccessFlags2 dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
 
 
-fn VkBufferMemoryBarrier2 bufferMemoryBarrier2Builder() {
-  VkBufferMemoryBarrier2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+fn BufferMemoryBarrier2 bufferMemoryBarrier2Builder() {
+  BufferMemoryBarrier2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setNext(self, void* pNext) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSrcStageMask(self, PipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setSrcAccessMask(self, VkAccessFlags2 srcAccessMask) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSrcAccessMask(self, AccessFlags2 srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setDstStageMask(self, VkPipelineStageFlags2 dstStageMask) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setDstStageMask(self, PipelineStageFlags2 dstStageMask) {
   self.dstStageMask = dstStageMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setDstAccessMask(self, VkAccessFlags2 dstAccessMask) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setDstAccessMask(self, AccessFlags2 dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setBuffer(self, VkBuffer buffer) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setBuffer(self, Buffer buffer) {
   self.buffer = buffer;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setOffset(self, VkDeviceSize offset) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setOffset(self, DeviceSize offset) {
   self.offset = offset;
   return self;
 }
        
-fn VkBufferMemoryBarrier2 VkBufferMemoryBarrier2.setSize(self, VkDeviceSize size) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSize(self, DeviceSize size) {
   self.size = size;
   return self;
 }
        
 
 
-fn VkImageMemoryBarrier2 imageMemoryBarrier2Builder() {
-  VkImageMemoryBarrier2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+fn ImageMemoryBarrier2 imageMemoryBarrier2Builder() {
+  ImageMemoryBarrier2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setNext(self, void* pNext) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setSrcStageMask(self, VkPipelineStageFlags2 srcStageMask) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSrcStageMask(self, PipelineStageFlags2 srcStageMask) {
   self.srcStageMask = srcStageMask;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setSrcAccessMask(self, VkAccessFlags2 srcAccessMask) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSrcAccessMask(self, AccessFlags2 srcAccessMask) {
   self.srcAccessMask = srcAccessMask;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setDstStageMask(self, VkPipelineStageFlags2 dstStageMask) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setDstStageMask(self, PipelineStageFlags2 dstStageMask) {
   self.dstStageMask = dstStageMask;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setDstAccessMask(self, VkAccessFlags2 dstAccessMask) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setDstAccessMask(self, AccessFlags2 dstAccessMask) {
   self.dstAccessMask = dstAccessMask;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setOldLayout(self, VkImageLayout oldLayout) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setOldLayout(self, ImageLayout oldLayout) {
   self.oldLayout = oldLayout;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setNewLayout(self, VkImageLayout newLayout) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setNewLayout(self, ImageLayout newLayout) {
   self.newLayout = newLayout;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSrcQueueFamilyIndex(self, uint srcQueueFamilyIndex) {
   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setDstQueueFamilyIndex(self, uint dstQueueFamilyIndex) {
   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setImage(self, VkImage image) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setImage(self, Image image) {
   self.image = image;
   return self;
 }
        
-fn VkImageMemoryBarrier2 VkImageMemoryBarrier2.setSubresourceRange(self, VkImageSubresourceRange subresourceRange) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSubresourceRange(self, ImageSubresourceRange subresourceRange) {
   self.subresourceRange = subresourceRange;
   return self;
 }
        
 
 
-fn VkDependencyInfo dependencyInfoBuilder() {
-  VkDependencyInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+fn DependencyInfo dependencyInfoBuilder() {
+  DependencyInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEPENDENCY_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDependencyInfo VkDependencyInfo.setNext(self, void* pNext) {
+fn DependencyInfo DependencyInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDependencyInfo VkDependencyInfo.setDependencyFlags(self, VkDependencyFlags dependencyFlags) {
+fn DependencyInfo DependencyInfo.setDependencyFlags(self, DependencyFlags dependencyFlags) {
   self.dependencyFlags = dependencyFlags;
   return self;
 }
        
-fn VkDependencyInfo VkDependencyInfo.setMemoryBarrierCount(self, uint memoryBarrierCount) {
+fn DependencyInfo DependencyInfo.setMemoryBarrierCount(self, uint memoryBarrierCount) {
   self.memoryBarrierCount = memoryBarrierCount;
   return self;
 }
        
-fn VkDependencyInfo VkDependencyInfo.setMemoryBarriers(self, VkMemoryBarrier2[] pMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setMemoryBarriers(self, MemoryBarrier2[] pMemoryBarriers) {
   self.memoryBarrierCount = (uint)pMemoryBarriers.len;
   self.pMemoryBarriers = &pMemoryBarriers[0];
   return self;
 }
 
-fn VkDependencyInfo VkDependencyInfo.setBufferMemoryBarrierCount(self, uint bufferMemoryBarrierCount) {
+fn DependencyInfo DependencyInfo.setBufferMemoryBarrierCount(self, uint bufferMemoryBarrierCount) {
   self.bufferMemoryBarrierCount = bufferMemoryBarrierCount;
   return self;
 }
        
-fn VkDependencyInfo VkDependencyInfo.setBufferMemoryBarriers(self, VkBufferMemoryBarrier2[] pBufferMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setBufferMemoryBarriers(self, BufferMemoryBarrier2[] pBufferMemoryBarriers) {
   self.bufferMemoryBarrierCount = (uint)pBufferMemoryBarriers.len;
   self.pBufferMemoryBarriers = &pBufferMemoryBarriers[0];
   return self;
 }
 
-fn VkDependencyInfo VkDependencyInfo.setImageMemoryBarrierCount(self, uint imageMemoryBarrierCount) {
+fn DependencyInfo DependencyInfo.setImageMemoryBarrierCount(self, uint imageMemoryBarrierCount) {
   self.imageMemoryBarrierCount = imageMemoryBarrierCount;
   return self;
 }
        
-fn VkDependencyInfo VkDependencyInfo.setImageMemoryBarriers(self, VkImageMemoryBarrier2[] pImageMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setImageMemoryBarriers(self, ImageMemoryBarrier2[] pImageMemoryBarriers) {
   self.imageMemoryBarrierCount = (uint)pImageMemoryBarriers.len;
   self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
   return self;
@@ -5841,53 +5841,53 @@ fn VkDependencyInfo VkDependencyInfo.setImageMemoryBarriers(self, VkImageMemoryB
 
 
 
-fn VkSubmitInfo2 submitInfo2Builder() {
-  VkSubmitInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+fn SubmitInfo2 submitInfo2Builder() {
+  SubmitInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBMIT_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSubmitInfo2 VkSubmitInfo2.setNext(self, void* pNext) {
+fn SubmitInfo2 SubmitInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSubmitInfo2 VkSubmitInfo2.setFlags(self, VkSubmitFlags flags) {
+fn SubmitInfo2 SubmitInfo2.setFlags(self, SubmitFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkSubmitInfo2 VkSubmitInfo2.setWaitSemaphoreInfoCount(self, uint waitSemaphoreInfoCount) {
+fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfoCount(self, uint waitSemaphoreInfoCount) {
   self.waitSemaphoreInfoCount = waitSemaphoreInfoCount;
   return self;
 }
        
-fn VkSubmitInfo2 VkSubmitInfo2.setWaitSemaphoreInfos(self, VkSemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
+fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfos(self, SemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
   self.waitSemaphoreInfoCount = (uint)pWaitSemaphoreInfos.len;
   self.pWaitSemaphoreInfos = &pWaitSemaphoreInfos[0];
   return self;
 }
 
-fn VkSubmitInfo2 VkSubmitInfo2.setCommandBufferInfoCount(self, uint commandBufferInfoCount) {
+fn SubmitInfo2 SubmitInfo2.setCommandBufferInfoCount(self, uint commandBufferInfoCount) {
   self.commandBufferInfoCount = commandBufferInfoCount;
   return self;
 }
        
-fn VkSubmitInfo2 VkSubmitInfo2.setCommandBufferInfos(self, VkCommandBufferSubmitInfo[] pCommandBufferInfos) {
+fn SubmitInfo2 SubmitInfo2.setCommandBufferInfos(self, CommandBufferSubmitInfo[] pCommandBufferInfos) {
   self.commandBufferInfoCount = (uint)pCommandBufferInfos.len;
   self.pCommandBufferInfos = &pCommandBufferInfos[0];
   return self;
 }
 
-fn VkSubmitInfo2 VkSubmitInfo2.setSignalSemaphoreInfoCount(self, uint signalSemaphoreInfoCount) {
+fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfoCount(self, uint signalSemaphoreInfoCount) {
   self.signalSemaphoreInfoCount = signalSemaphoreInfoCount;
   return self;
 }
        
-fn VkSubmitInfo2 VkSubmitInfo2.setSignalSemaphoreInfos(self, VkSemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
+fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfos(self, SemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
   self.signalSemaphoreInfoCount = (uint)pSignalSemaphoreInfos.len;
   self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
   return self;
@@ -5895,161 +5895,161 @@ fn VkSubmitInfo2 VkSubmitInfo2.setSignalSemaphoreInfos(self, VkSemaphoreSubmitIn
 
 
 
-fn VkSemaphoreSubmitInfo semaphoreSubmitInfoBuilder() {
-  VkSemaphoreSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+fn SemaphoreSubmitInfo semaphoreSubmitInfoBuilder() {
+  SemaphoreSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setNext(self, void* pNext) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setSemaphore(self, VkSemaphore semaphore) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setSemaphore(self, Semaphore semaphore) {
   self.semaphore = semaphore;
   return self;
 }
        
-fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setValue(self, ulong value) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setValue(self, ulong value) {
   self.value = value;
   return self;
 }
        
-fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setStageMask(self, VkPipelineStageFlags2 stageMask) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setStageMask(self, PipelineStageFlags2 stageMask) {
   self.stageMask = stageMask;
   return self;
 }
        
-fn VkSemaphoreSubmitInfo VkSemaphoreSubmitInfo.setDeviceIndex(self, uint deviceIndex) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setDeviceIndex(self, uint deviceIndex) {
   self.deviceIndex = deviceIndex;
   return self;
 }
        
 
 
-fn VkCommandBufferSubmitInfo commandBufferSubmitInfoBuilder() {
-  VkCommandBufferSubmitInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
+fn CommandBufferSubmitInfo commandBufferSubmitInfoBuilder() {
+  CommandBufferSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandBufferSubmitInfo VkCommandBufferSubmitInfo.setNext(self, void* pNext) {
+fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandBufferSubmitInfo VkCommandBufferSubmitInfo.setCommandBuffer(self, VkCommandBuffer commandBuffer) {
+fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setCommandBuffer(self, CommandBuffer commandBuffer) {
   self.commandBuffer = commandBuffer;
   return self;
 }
        
-fn VkCommandBufferSubmitInfo VkCommandBufferSubmitInfo.setDeviceMask(self, uint deviceMask) {
+fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSynchronization2Features physicalDeviceSynchronization2FeaturesBuilder() {
-  VkPhysicalDeviceSynchronization2Features defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
+fn PhysicalDeviceSynchronization2Features physicalDeviceSynchronization2FeaturesBuilder() {
+  PhysicalDeviceSynchronization2Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSynchronization2Features VkPhysicalDeviceSynchronization2Features.setNext(self, void* pNext) {
+fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSynchronization2Features VkPhysicalDeviceSynchronization2Features.setSynchronization2(self, VkBool32 synchronization2) {
+fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setSynchronization2(self, Bool32 synchronization2) {
   self.synchronization2 = synchronization2;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeaturesBuilder() {
-  VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES,
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeaturesBuilder() {
+  PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setShaderZeroInitializeWorkgroupMemory(self, VkBool32 shaderZeroInitializeWorkgroupMemory) {
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setShaderZeroInitializeWorkgroupMemory(self, Bool32 shaderZeroInitializeWorkgroupMemory) {
   self.shaderZeroInitializeWorkgroupMemory = shaderZeroInitializeWorkgroupMemory;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeaturesBuilder() {
-  VkPhysicalDeviceImageRobustnessFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES,
+fn PhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeaturesBuilder() {
+  PhysicalDeviceImageRobustnessFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceImageRobustnessFeatures VkPhysicalDeviceImageRobustnessFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceImageRobustnessFeatures VkPhysicalDeviceImageRobustnessFeatures.setRobustImageAccess(self, VkBool32 robustImageAccess) {
+fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setRobustImageAccess(self, Bool32 robustImageAccess) {
   self.robustImageAccess = robustImageAccess;
   return self;
 }
        
 
 
-fn VkCopyBufferInfo2 copyBufferInfo2Builder() {
-  VkCopyBufferInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2,
+fn CopyBufferInfo2 copyBufferInfo2Builder() {
+  CopyBufferInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_COPY_BUFFER_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCopyBufferInfo2 VkCopyBufferInfo2.setNext(self, void* pNext) {
+fn CopyBufferInfo2 CopyBufferInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCopyBufferInfo2 VkCopyBufferInfo2.setSrcBuffer(self, VkBuffer srcBuffer) {
+fn CopyBufferInfo2 CopyBufferInfo2.setSrcBuffer(self, Buffer srcBuffer) {
   self.srcBuffer = srcBuffer;
   return self;
 }
        
-fn VkCopyBufferInfo2 VkCopyBufferInfo2.setDstBuffer(self, VkBuffer dstBuffer) {
+fn CopyBufferInfo2 CopyBufferInfo2.setDstBuffer(self, Buffer dstBuffer) {
   self.dstBuffer = dstBuffer;
   return self;
 }
        
-fn VkCopyBufferInfo2 VkCopyBufferInfo2.setRegionCount(self, uint regionCount) {
+fn CopyBufferInfo2 CopyBufferInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkCopyBufferInfo2 VkCopyBufferInfo2.setRegions(self, VkBufferCopy2[] pRegions) {
+fn CopyBufferInfo2 CopyBufferInfo2.setRegions(self, BufferCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6057,46 +6057,46 @@ fn VkCopyBufferInfo2 VkCopyBufferInfo2.setRegions(self, VkBufferCopy2[] pRegions
 
 
 
-fn VkCopyImageInfo2 copyImageInfo2Builder() {
-  VkCopyImageInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2,
+fn CopyImageInfo2 copyImageInfo2Builder() {
+  CopyImageInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_COPY_IMAGE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCopyImageInfo2 VkCopyImageInfo2.setNext(self, void* pNext) {
+fn CopyImageInfo2 CopyImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setSrcImage(self, VkImage srcImage) {
+fn CopyImageInfo2 CopyImageInfo2.setSrcImage(self, Image srcImage) {
   self.srcImage = srcImage;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setSrcImageLayout(self, VkImageLayout srcImageLayout) {
+fn CopyImageInfo2 CopyImageInfo2.setSrcImageLayout(self, ImageLayout srcImageLayout) {
   self.srcImageLayout = srcImageLayout;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setDstImage(self, VkImage dstImage) {
+fn CopyImageInfo2 CopyImageInfo2.setDstImage(self, Image dstImage) {
   self.dstImage = dstImage;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setDstImageLayout(self, VkImageLayout dstImageLayout) {
+fn CopyImageInfo2 CopyImageInfo2.setDstImageLayout(self, ImageLayout dstImageLayout) {
   self.dstImageLayout = dstImageLayout;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setRegionCount(self, uint regionCount) {
+fn CopyImageInfo2 CopyImageInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkCopyImageInfo2 VkCopyImageInfo2.setRegions(self, VkImageCopy2[] pRegions) {
+fn CopyImageInfo2 CopyImageInfo2.setRegions(self, ImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6104,41 +6104,41 @@ fn VkCopyImageInfo2 VkCopyImageInfo2.setRegions(self, VkImageCopy2[] pRegions) {
 
 
 
-fn VkCopyBufferToImageInfo2 copyBufferToImageInfo2Builder() {
-  VkCopyBufferToImageInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2,
+fn CopyBufferToImageInfo2 copyBufferToImageInfo2Builder() {
+  CopyBufferToImageInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setNext(self, void* pNext) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setSrcBuffer(self, VkBuffer srcBuffer) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setSrcBuffer(self, Buffer srcBuffer) {
   self.srcBuffer = srcBuffer;
   return self;
 }
        
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setDstImage(self, VkImage dstImage) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setDstImage(self, Image dstImage) {
   self.dstImage = dstImage;
   return self;
 }
        
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setDstImageLayout(self, VkImageLayout dstImageLayout) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setDstImageLayout(self, ImageLayout dstImageLayout) {
   self.dstImageLayout = dstImageLayout;
   return self;
 }
        
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setRegionCount(self, uint regionCount) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setRegions(self, VkBufferImageCopy2[] pRegions) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegions(self, BufferImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6146,41 +6146,41 @@ fn VkCopyBufferToImageInfo2 VkCopyBufferToImageInfo2.setRegions(self, VkBufferIm
 
 
 
-fn VkCopyImageToBufferInfo2 copyImageToBufferInfo2Builder() {
-  VkCopyImageToBufferInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2,
+fn CopyImageToBufferInfo2 copyImageToBufferInfo2Builder() {
+  CopyImageToBufferInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setNext(self, void* pNext) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setSrcImage(self, VkImage srcImage) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setSrcImage(self, Image srcImage) {
   self.srcImage = srcImage;
   return self;
 }
        
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setSrcImageLayout(self, VkImageLayout srcImageLayout) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setSrcImageLayout(self, ImageLayout srcImageLayout) {
   self.srcImageLayout = srcImageLayout;
   return self;
 }
        
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setDstBuffer(self, VkBuffer dstBuffer) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setDstBuffer(self, Buffer dstBuffer) {
   self.dstBuffer = dstBuffer;
   return self;
 }
        
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setRegionCount(self, uint regionCount) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setRegions(self, VkBufferImageCopy2[] pRegions) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegions(self, BufferImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6188,98 +6188,98 @@ fn VkCopyImageToBufferInfo2 VkCopyImageToBufferInfo2.setRegions(self, VkBufferIm
 
 
 
-fn VkBlitImageInfo2 blitImageInfo2Builder() {
-  VkBlitImageInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+fn BlitImageInfo2 blitImageInfo2Builder() {
+  BlitImageInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBlitImageInfo2 VkBlitImageInfo2.setNext(self, void* pNext) {
+fn BlitImageInfo2 BlitImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setSrcImage(self, VkImage srcImage) {
+fn BlitImageInfo2 BlitImageInfo2.setSrcImage(self, Image srcImage) {
   self.srcImage = srcImage;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setSrcImageLayout(self, VkImageLayout srcImageLayout) {
+fn BlitImageInfo2 BlitImageInfo2.setSrcImageLayout(self, ImageLayout srcImageLayout) {
   self.srcImageLayout = srcImageLayout;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setDstImage(self, VkImage dstImage) {
+fn BlitImageInfo2 BlitImageInfo2.setDstImage(self, Image dstImage) {
   self.dstImage = dstImage;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setDstImageLayout(self, VkImageLayout dstImageLayout) {
+fn BlitImageInfo2 BlitImageInfo2.setDstImageLayout(self, ImageLayout dstImageLayout) {
   self.dstImageLayout = dstImageLayout;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setRegionCount(self, uint regionCount) {
+fn BlitImageInfo2 BlitImageInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkBlitImageInfo2 VkBlitImageInfo2.setRegions(self, VkImageBlit2[] pRegions) {
+fn BlitImageInfo2 BlitImageInfo2.setRegions(self, ImageBlit2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
 }
 
-fn VkBlitImageInfo2 VkBlitImageInfo2.setFilter(self, VkFilter filter) {
+fn BlitImageInfo2 BlitImageInfo2.setFilter(self, Filter filter) {
   self.filter = filter;
   return self;
 }
        
 
 
-fn VkResolveImageInfo2 resolveImageInfo2Builder() {
-  VkResolveImageInfo2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2,
+fn ResolveImageInfo2 resolveImageInfo2Builder() {
+  ResolveImageInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkResolveImageInfo2 VkResolveImageInfo2.setNext(self, void* pNext) {
+fn ResolveImageInfo2 ResolveImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setSrcImage(self, VkImage srcImage) {
+fn ResolveImageInfo2 ResolveImageInfo2.setSrcImage(self, Image srcImage) {
   self.srcImage = srcImage;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setSrcImageLayout(self, VkImageLayout srcImageLayout) {
+fn ResolveImageInfo2 ResolveImageInfo2.setSrcImageLayout(self, ImageLayout srcImageLayout) {
   self.srcImageLayout = srcImageLayout;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setDstImage(self, VkImage dstImage) {
+fn ResolveImageInfo2 ResolveImageInfo2.setDstImage(self, Image dstImage) {
   self.dstImage = dstImage;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setDstImageLayout(self, VkImageLayout dstImageLayout) {
+fn ResolveImageInfo2 ResolveImageInfo2.setDstImageLayout(self, ImageLayout dstImageLayout) {
   self.dstImageLayout = dstImageLayout;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setRegionCount(self, uint regionCount) {
+fn ResolveImageInfo2 ResolveImageInfo2.setRegionCount(self, uint regionCount) {
   self.regionCount = regionCount;
   return self;
 }
        
-fn VkResolveImageInfo2 VkResolveImageInfo2.setRegions(self, VkImageResolve2[] pRegions) {
+fn ResolveImageInfo2 ResolveImageInfo2.setRegions(self, ImageResolve2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6287,1161 +6287,1161 @@ fn VkResolveImageInfo2 VkResolveImageInfo2.setRegions(self, VkImageResolve2[] pR
 
 
 
-fn VkBufferCopy2 bufferCopy2Builder() {
-  VkBufferCopy2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_COPY_2,
+fn BufferCopy2 bufferCopy2Builder() {
+  BufferCopy2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_COPY_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferCopy2 VkBufferCopy2.setNext(self, void* pNext) {
+fn BufferCopy2 BufferCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferCopy2 VkBufferCopy2.setSrcOffset(self, VkDeviceSize srcOffset) {
+fn BufferCopy2 BufferCopy2.setSrcOffset(self, DeviceSize srcOffset) {
   self.srcOffset = srcOffset;
   return self;
 }
        
-fn VkBufferCopy2 VkBufferCopy2.setDstOffset(self, VkDeviceSize dstOffset) {
+fn BufferCopy2 BufferCopy2.setDstOffset(self, DeviceSize dstOffset) {
   self.dstOffset = dstOffset;
   return self;
 }
        
-fn VkBufferCopy2 VkBufferCopy2.setSize(self, VkDeviceSize size) {
+fn BufferCopy2 BufferCopy2.setSize(self, DeviceSize size) {
   self.size = size;
   return self;
 }
        
 
 
-fn VkImageCopy2 imageCopy2Builder() {
-  VkImageCopy2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_COPY_2,
+fn ImageCopy2 imageCopy2Builder() {
+  ImageCopy2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_COPY_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageCopy2 VkImageCopy2.setNext(self, void* pNext) {
+fn ImageCopy2 ImageCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageCopy2 VkImageCopy2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
+fn ImageCopy2 ImageCopy2.setSrcSubresource(self, ImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
 }
        
-fn VkImageCopy2 VkImageCopy2.setSrcOffset(self, VkOffset3D srcOffset) {
+fn ImageCopy2 ImageCopy2.setSrcOffset(self, Offset3D srcOffset) {
   self.srcOffset = srcOffset;
   return self;
 }
        
-fn VkImageCopy2 VkImageCopy2.setDstSubresource(self, VkImageSubresourceLayers dstSubresource) {
+fn ImageCopy2 ImageCopy2.setDstSubresource(self, ImageSubresourceLayers dstSubresource) {
   self.dstSubresource = dstSubresource;
   return self;
 }
        
-fn VkImageCopy2 VkImageCopy2.setDstOffset(self, VkOffset3D dstOffset) {
+fn ImageCopy2 ImageCopy2.setDstOffset(self, Offset3D dstOffset) {
   self.dstOffset = dstOffset;
   return self;
 }
        
-fn VkImageCopy2 VkImageCopy2.setExtent(self, VkExtent3D extent) {
+fn ImageCopy2 ImageCopy2.setExtent(self, Extent3D extent) {
   self.extent = extent;
   return self;
 }
        
 
 
-fn VkImageBlit2 imageBlit2Builder() {
-  VkImageBlit2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+fn ImageBlit2 imageBlit2Builder() {
+  ImageBlit2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_BLIT_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageBlit2 VkImageBlit2.setNext(self, void* pNext) {
+fn ImageBlit2 ImageBlit2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageBlit2 VkImageBlit2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
+fn ImageBlit2 ImageBlit2.setSrcSubresource(self, ImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
 }
        
-fn VkImageBlit2 VkImageBlit2.setSrcOffsets(self, VkOffset3D[2] srcOffsets) {
+fn ImageBlit2 ImageBlit2.setSrcOffsets(self, Offset3D[2] srcOffsets) {
   self.srcOffsets = srcOffsets;
   return self;
 }
        
-fn VkImageBlit2 VkImageBlit2.setDstSubresource(self, VkImageSubresourceLayers dstSubresource) {
+fn ImageBlit2 ImageBlit2.setDstSubresource(self, ImageSubresourceLayers dstSubresource) {
   self.dstSubresource = dstSubresource;
   return self;
 }
        
-fn VkImageBlit2 VkImageBlit2.setDstOffsets(self, VkOffset3D[2] dstOffsets) {
+fn ImageBlit2 ImageBlit2.setDstOffsets(self, Offset3D[2] dstOffsets) {
   self.dstOffsets = dstOffsets;
   return self;
 }
        
 
 
-fn VkBufferImageCopy2 bufferImageCopy2Builder() {
-  VkBufferImageCopy2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2,
+fn BufferImageCopy2 bufferImageCopy2Builder() {
+  BufferImageCopy2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBufferImageCopy2 VkBufferImageCopy2.setNext(self, void* pNext) {
+fn BufferImageCopy2 BufferImageCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setBufferOffset(self, VkDeviceSize bufferOffset) {
+fn BufferImageCopy2 BufferImageCopy2.setBufferOffset(self, DeviceSize bufferOffset) {
   self.bufferOffset = bufferOffset;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setBufferRowLength(self, uint bufferRowLength) {
+fn BufferImageCopy2 BufferImageCopy2.setBufferRowLength(self, uint bufferRowLength) {
   self.bufferRowLength = bufferRowLength;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setBufferImageHeight(self, uint bufferImageHeight) {
+fn BufferImageCopy2 BufferImageCopy2.setBufferImageHeight(self, uint bufferImageHeight) {
   self.bufferImageHeight = bufferImageHeight;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setImageSubresource(self, VkImageSubresourceLayers imageSubresource) {
+fn BufferImageCopy2 BufferImageCopy2.setImageSubresource(self, ImageSubresourceLayers imageSubresource) {
   self.imageSubresource = imageSubresource;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setImageOffset(self, VkOffset3D imageOffset) {
+fn BufferImageCopy2 BufferImageCopy2.setImageOffset(self, Offset3D imageOffset) {
   self.imageOffset = imageOffset;
   return self;
 }
        
-fn VkBufferImageCopy2 VkBufferImageCopy2.setImageExtent(self, VkExtent3D imageExtent) {
+fn BufferImageCopy2 BufferImageCopy2.setImageExtent(self, Extent3D imageExtent) {
   self.imageExtent = imageExtent;
   return self;
 }
        
 
 
-fn VkImageResolve2 imageResolve2Builder() {
-  VkImageResolve2 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2,
+fn ImageResolve2 imageResolve2Builder() {
+  ImageResolve2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_RESOLVE_2,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageResolve2 VkImageResolve2.setNext(self, void* pNext) {
+fn ImageResolve2 ImageResolve2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageResolve2 VkImageResolve2.setSrcSubresource(self, VkImageSubresourceLayers srcSubresource) {
+fn ImageResolve2 ImageResolve2.setSrcSubresource(self, ImageSubresourceLayers srcSubresource) {
   self.srcSubresource = srcSubresource;
   return self;
 }
        
-fn VkImageResolve2 VkImageResolve2.setSrcOffset(self, VkOffset3D srcOffset) {
+fn ImageResolve2 ImageResolve2.setSrcOffset(self, Offset3D srcOffset) {
   self.srcOffset = srcOffset;
   return self;
 }
        
-fn VkImageResolve2 VkImageResolve2.setDstSubresource(self, VkImageSubresourceLayers dstSubresource) {
+fn ImageResolve2 ImageResolve2.setDstSubresource(self, ImageSubresourceLayers dstSubresource) {
   self.dstSubresource = dstSubresource;
   return self;
 }
        
-fn VkImageResolve2 VkImageResolve2.setDstOffset(self, VkOffset3D dstOffset) {
+fn ImageResolve2 ImageResolve2.setDstOffset(self, Offset3D dstOffset) {
   self.dstOffset = dstOffset;
   return self;
 }
        
-fn VkImageResolve2 VkImageResolve2.setExtent(self, VkExtent3D extent) {
+fn ImageResolve2 ImageResolve2.setExtent(self, Extent3D extent) {
   self.extent = extent;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFeaturesBuilder() {
-  VkPhysicalDeviceSubgroupSizeControlFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES,
+fn PhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFeaturesBuilder() {
+  PhysicalDeviceSubgroupSizeControlFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSubgroupSizeControlFeatures VkPhysicalDeviceSubgroupSizeControlFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlFeatures VkPhysicalDeviceSubgroupSizeControlFeatures.setSubgroupSizeControl(self, VkBool32 subgroupSizeControl) {
+fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setSubgroupSizeControl(self, Bool32 subgroupSizeControl) {
   self.subgroupSizeControl = subgroupSizeControl;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlFeatures VkPhysicalDeviceSubgroupSizeControlFeatures.setComputeFullSubgroups(self, VkBool32 computeFullSubgroups) {
+fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setComputeFullSubgroups(self, Bool32 computeFullSubgroups) {
   self.computeFullSubgroups = computeFullSubgroups;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeControlPropertiesBuilder() {
-  VkPhysicalDeviceSubgroupSizeControlProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES,
+fn PhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeControlPropertiesBuilder() {
+  PhysicalDeviceSubgroupSizeControlProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setMinSubgroupSize(self, uint minSubgroupSize) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setMinSubgroupSize(self, uint minSubgroupSize) {
   self.minSubgroupSize = minSubgroupSize;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setMaxSubgroupSize(self, uint maxSubgroupSize) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setMaxSubgroupSize(self, uint maxSubgroupSize) {
   self.maxSubgroupSize = maxSubgroupSize;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setMaxComputeWorkgroupSubgroups(self, uint maxComputeWorkgroupSubgroups) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setMaxComputeWorkgroupSubgroups(self, uint maxComputeWorkgroupSubgroups) {
   self.maxComputeWorkgroupSubgroups = maxComputeWorkgroupSubgroups;
   return self;
 }
        
-fn VkPhysicalDeviceSubgroupSizeControlProperties VkPhysicalDeviceSubgroupSizeControlProperties.setRequiredSubgroupSizeStages(self, VkShaderStageFlags requiredSubgroupSizeStages) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setRequiredSubgroupSizeStages(self, ShaderStageFlags requiredSubgroupSizeStages) {
   self.requiredSubgroupSizeStages = requiredSubgroupSizeStages;
   return self;
 }
        
 
 
-fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequiredSubgroupSizeCreateInfoBuilder() {
-  VkPipelineShaderStageRequiredSubgroupSizeCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO,
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequiredSubgroupSizeCreateInfoBuilder() {
+  PipelineShaderStageRequiredSubgroupSizeCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo VkPipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(self, void* pNext) {
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineShaderStageRequiredSubgroupSizeCreateInfo VkPipelineShaderStageRequiredSubgroupSizeCreateInfo.setRequiredSubgroupSize(self, uint requiredSubgroupSize) {
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setRequiredSubgroupSize(self, uint requiredSubgroupSize) {
   self.requiredSubgroupSize = requiredSubgroupSize;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeaturesBuilder() {
-  VkPhysicalDeviceInlineUniformBlockFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES,
+fn PhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeaturesBuilder() {
+  PhysicalDeviceInlineUniformBlockFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceInlineUniformBlockFeatures VkPhysicalDeviceInlineUniformBlockFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockFeatures VkPhysicalDeviceInlineUniformBlockFeatures.setInlineUniformBlock(self, VkBool32 inlineUniformBlock) {
+fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setInlineUniformBlock(self, Bool32 inlineUniformBlock) {
   self.inlineUniformBlock = inlineUniformBlock;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockFeatures VkPhysicalDeviceInlineUniformBlockFeatures.setDescriptorBindingInlineUniformBlockUpdateAfterBind(self, VkBool32 descriptorBindingInlineUniformBlockUpdateAfterBind) {
+fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setDescriptorBindingInlineUniformBlockUpdateAfterBind(self, Bool32 descriptorBindingInlineUniformBlockUpdateAfterBind) {
   self.descriptorBindingInlineUniformBlockUpdateAfterBind = descriptorBindingInlineUniformBlockUpdateAfterBind;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlockPropertiesBuilder() {
-  VkPhysicalDeviceInlineUniformBlockProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES,
+fn PhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlockPropertiesBuilder() {
+  PhysicalDeviceInlineUniformBlockProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxInlineUniformBlockSize(self, uint maxInlineUniformBlockSize) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setMaxInlineUniformBlockSize(self, uint maxInlineUniformBlockSize) {
   self.maxInlineUniformBlockSize = maxInlineUniformBlockSize;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxPerStageDescriptorInlineUniformBlocks(self, uint maxPerStageDescriptorInlineUniformBlocks) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setMaxPerStageDescriptorInlineUniformBlocks(self, uint maxPerStageDescriptorInlineUniformBlocks) {
   self.maxPerStageDescriptorInlineUniformBlocks = maxPerStageDescriptorInlineUniformBlocks;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks(self, uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks(self, uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks) {
   self.maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks = maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxDescriptorSetInlineUniformBlocks(self, uint maxDescriptorSetInlineUniformBlocks) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setMaxDescriptorSetInlineUniformBlocks(self, uint maxDescriptorSetInlineUniformBlocks) {
   self.maxDescriptorSetInlineUniformBlocks = maxDescriptorSetInlineUniformBlocks;
   return self;
 }
        
-fn VkPhysicalDeviceInlineUniformBlockProperties VkPhysicalDeviceInlineUniformBlockProperties.setMaxDescriptorSetUpdateAfterBindInlineUniformBlocks(self, uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setMaxDescriptorSetUpdateAfterBindInlineUniformBlocks(self, uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks) {
   self.maxDescriptorSetUpdateAfterBindInlineUniformBlocks = maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
   return self;
 }
        
 
 
-fn VkWriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlockBuilder() {
-  VkWriteDescriptorSetInlineUniformBlock defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK,
+fn WriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlockBuilder() {
+  WriteDescriptorSetInlineUniformBlock defaultValue = {
+    .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkWriteDescriptorSetInlineUniformBlock VkWriteDescriptorSetInlineUniformBlock.setNext(self, void* pNext) {
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkWriteDescriptorSetInlineUniformBlock VkWriteDescriptorSetInlineUniformBlock.setDataSize(self, uint dataSize) {
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setDataSize(self, uint dataSize) {
   self.dataSize = dataSize;
   return self;
 }
        
-fn VkWriteDescriptorSetInlineUniformBlock VkWriteDescriptorSetInlineUniformBlock.setData(self, void* pData) {
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setData(self, void* pData) {
   self.pData = pData;
   return self;
 }
        
 
 
-fn VkDescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfoBuilder() {
-  VkDescriptorPoolInlineUniformBlockCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO,
+fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfoBuilder() {
+  DescriptorPoolInlineUniformBlockCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDescriptorPoolInlineUniformBlockCreateInfo VkDescriptorPoolInlineUniformBlockCreateInfo.setNext(self, void* pNext) {
+fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDescriptorPoolInlineUniformBlockCreateInfo VkDescriptorPoolInlineUniformBlockCreateInfo.setMaxInlineUniformBlockBindings(self, uint maxInlineUniformBlockBindings) {
+fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setMaxInlineUniformBlockBindings(self, uint maxInlineUniformBlockBindings) {
   self.maxInlineUniformBlockBindings = maxInlineUniformBlockBindings;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompressionASTCHDRFeaturesBuilder() {
-  VkPhysicalDeviceTextureCompressionASTCHDRFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES,
+fn PhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompressionASTCHDRFeaturesBuilder() {
+  PhysicalDeviceTextureCompressionASTCHDRFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures VkPhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceTextureCompressionASTCHDRFeatures VkPhysicalDeviceTextureCompressionASTCHDRFeatures.setTextureCompressionASTC_HDR(self, VkBool32 textureCompressionASTC_HDR) {
+fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setTextureCompressionASTC_HDR(self, Bool32 textureCompressionASTC_HDR) {
   self.textureCompressionASTC_HDR = textureCompressionASTC_HDR;
   return self;
 }
        
 
 
-fn VkRenderingInfo renderingInfoBuilder() {
-  VkRenderingInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDERING_INFO,
+fn RenderingInfo renderingInfoBuilder() {
+  RenderingInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDERING_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderingInfo VkRenderingInfo.setNext(self, void* pNext) {
+fn RenderingInfo RenderingInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setFlags(self, VkRenderingFlags flags) {
+fn RenderingInfo RenderingInfo.setFlags(self, RenderingFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setRenderArea(self, VkRect2D renderArea) {
+fn RenderingInfo RenderingInfo.setRenderArea(self, Rect2D renderArea) {
   self.renderArea = renderArea;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setLayerCount(self, uint layerCount) {
+fn RenderingInfo RenderingInfo.setLayerCount(self, uint layerCount) {
   self.layerCount = layerCount;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setViewMask(self, uint viewMask) {
+fn RenderingInfo RenderingInfo.setViewMask(self, uint viewMask) {
   self.viewMask = viewMask;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
+fn RenderingInfo RenderingInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
   self.colorAttachmentCount = colorAttachmentCount;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setColorAttachments(self, VkRenderingAttachmentInfo[] pColorAttachments) {
+fn RenderingInfo RenderingInfo.setColorAttachments(self, RenderingAttachmentInfo[] pColorAttachments) {
   self.colorAttachmentCount = (uint)pColorAttachments.len;
   self.pColorAttachments = &pColorAttachments[0];
   return self;
 }
 
-fn VkRenderingInfo VkRenderingInfo.setDepthAttachment(self, VkRenderingAttachmentInfo* pDepthAttachment) {
+fn RenderingInfo RenderingInfo.setDepthAttachment(self, RenderingAttachmentInfo* pDepthAttachment) {
   self.pDepthAttachment = pDepthAttachment;
   return self;
 }
        
-fn VkRenderingInfo VkRenderingInfo.setStencilAttachment(self, VkRenderingAttachmentInfo* pStencilAttachment) {
+fn RenderingInfo RenderingInfo.setStencilAttachment(self, RenderingAttachmentInfo* pStencilAttachment) {
   self.pStencilAttachment = pStencilAttachment;
   return self;
 }
        
 
 
-fn VkRenderingAttachmentInfo renderingAttachmentInfoBuilder() {
-  VkRenderingAttachmentInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+fn RenderingAttachmentInfo renderingAttachmentInfoBuilder() {
+  RenderingAttachmentInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setNext(self, void* pNext) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setImageView(self, VkImageView imageView) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setImageView(self, ImageView imageView) {
   self.imageView = imageView;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setImageLayout(self, VkImageLayout imageLayout) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setImageLayout(self, ImageLayout imageLayout) {
   self.imageLayout = imageLayout;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setResolveMode(self, VkResolveModeFlagBits resolveMode) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setResolveMode(self, ResolveModeFlagBits resolveMode) {
   self.resolveMode = resolveMode;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setResolveImageView(self, VkImageView resolveImageView) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setResolveImageView(self, ImageView resolveImageView) {
   self.resolveImageView = resolveImageView;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setResolveImageLayout(self, VkImageLayout resolveImageLayout) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setResolveImageLayout(self, ImageLayout resolveImageLayout) {
   self.resolveImageLayout = resolveImageLayout;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setLoadOp(self, VkAttachmentLoadOp loadOp) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setLoadOp(self, AttachmentLoadOp loadOp) {
   self.loadOp = loadOp;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setStoreOp(self, VkAttachmentStoreOp storeOp) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setStoreOp(self, AttachmentStoreOp storeOp) {
   self.storeOp = storeOp;
   return self;
 }
        
-fn VkRenderingAttachmentInfo VkRenderingAttachmentInfo.setClearValue(self, VkClearValue clearValue) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setClearValue(self, ClearValue clearValue) {
   self.clearValue = clearValue;
   return self;
 }
        
 
 
-fn VkPipelineRenderingCreateInfo pipelineRenderingCreateInfoBuilder() {
-  VkPipelineRenderingCreateInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
+fn PipelineRenderingCreateInfo pipelineRenderingCreateInfoBuilder() {
+  PipelineRenderingCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setNext(self, void* pNext) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setViewMask(self, uint viewMask) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setViewMask(self, uint viewMask) {
   self.viewMask = viewMask;
   return self;
 }
        
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
   self.colorAttachmentCount = colorAttachmentCount;
   return self;
 }
        
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setColorAttachmentFormats(self, VkFormat[] pColorAttachmentFormats) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
   self.colorAttachmentCount = (uint)pColorAttachmentFormats.len;
   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
   return self;
 }
 
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setDepthAttachmentFormat(self, VkFormat depthAttachmentFormat) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setDepthAttachmentFormat(self, Format depthAttachmentFormat) {
   self.depthAttachmentFormat = depthAttachmentFormat;
   return self;
 }
        
-fn VkPipelineRenderingCreateInfo VkPipelineRenderingCreateInfo.setStencilAttachmentFormat(self, VkFormat stencilAttachmentFormat) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setStencilAttachmentFormat(self, Format stencilAttachmentFormat) {
   self.stencilAttachmentFormat = stencilAttachmentFormat;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeaturesBuilder() {
-  VkPhysicalDeviceDynamicRenderingFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeaturesBuilder() {
+  PhysicalDeviceDynamicRenderingFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceDynamicRenderingFeatures VkPhysicalDeviceDynamicRenderingFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceDynamicRenderingFeatures VkPhysicalDeviceDynamicRenderingFeatures.setDynamicRendering(self, VkBool32 dynamicRendering) {
+fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setDynamicRendering(self, Bool32 dynamicRendering) {
   self.dynamicRendering = dynamicRendering;
   return self;
 }
        
 
 
-fn VkCommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfoBuilder() {
-  VkCommandBufferInheritanceRenderingInfo defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO,
+fn CommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfoBuilder() {
+  CommandBufferInheritanceRenderingInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setNext(self, void* pNext) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setFlags(self, VkRenderingFlags flags) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setFlags(self, RenderingFlags flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setViewMask(self, uint viewMask) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setViewMask(self, uint viewMask) {
   self.viewMask = viewMask;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setColorAttachmentCount(self, uint colorAttachmentCount) {
   self.colorAttachmentCount = colorAttachmentCount;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setColorAttachmentFormats(self, VkFormat[] pColorAttachmentFormats) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
   self.colorAttachmentCount = (uint)pColorAttachmentFormats.len;
   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
   return self;
 }
 
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setDepthAttachmentFormat(self, VkFormat depthAttachmentFormat) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setDepthAttachmentFormat(self, Format depthAttachmentFormat) {
   self.depthAttachmentFormat = depthAttachmentFormat;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setStencilAttachmentFormat(self, VkFormat stencilAttachmentFormat) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setStencilAttachmentFormat(self, Format stencilAttachmentFormat) {
   self.stencilAttachmentFormat = stencilAttachmentFormat;
   return self;
 }
        
-fn VkCommandBufferInheritanceRenderingInfo VkCommandBufferInheritanceRenderingInfo.setRasterizationSamples(self, VkSampleCountFlagBits rasterizationSamples) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setRasterizationSamples(self, SampleCountFlagBits rasterizationSamples) {
   self.rasterizationSamples = rasterizationSamples;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDotProductFeaturesBuilder() {
-  VkPhysicalDeviceShaderIntegerDotProductFeatures defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES,
+fn PhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDotProductFeaturesBuilder() {
+  PhysicalDeviceShaderIntegerDotProductFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderIntegerDotProductFeatures VkPhysicalDeviceShaderIntegerDotProductFeatures.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductFeatures VkPhysicalDeviceShaderIntegerDotProductFeatures.setShaderIntegerDotProduct(self, VkBool32 shaderIntegerDotProduct) {
+fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setShaderIntegerDotProduct(self, Bool32 shaderIntegerDotProduct) {
   self.shaderIntegerDotProduct = shaderIntegerDotProduct;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderIntegerDotProductPropertiesBuilder() {
-  VkPhysicalDeviceShaderIntegerDotProductProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES,
+fn PhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderIntegerDotProductPropertiesBuilder() {
+  PhysicalDeviceShaderIntegerDotProductProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitUnsignedAccelerated(self, VkBool32 integerDotProduct8BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitUnsignedAccelerated(self, Bool32 integerDotProduct8BitUnsignedAccelerated) {
   self.integerDotProduct8BitUnsignedAccelerated = integerDotProduct8BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitSignedAccelerated(self, VkBool32 integerDotProduct8BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitSignedAccelerated(self, Bool32 integerDotProduct8BitSignedAccelerated) {
   self.integerDotProduct8BitSignedAccelerated = integerDotProduct8BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitMixedSignednessAccelerated(self, VkBool32 integerDotProduct8BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct8BitMixedSignednessAccelerated(self, Bool32 integerDotProduct8BitMixedSignednessAccelerated) {
   self.integerDotProduct8BitMixedSignednessAccelerated = integerDotProduct8BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedUnsignedAccelerated(self, VkBool32 integerDotProduct4x8BitPackedUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedUnsignedAccelerated(self, Bool32 integerDotProduct4x8BitPackedUnsignedAccelerated) {
   self.integerDotProduct4x8BitPackedUnsignedAccelerated = integerDotProduct4x8BitPackedUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedSignedAccelerated(self, VkBool32 integerDotProduct4x8BitPackedSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedSignedAccelerated(self, Bool32 integerDotProduct4x8BitPackedSignedAccelerated) {
   self.integerDotProduct4x8BitPackedSignedAccelerated = integerDotProduct4x8BitPackedSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedMixedSignednessAccelerated(self, VkBool32 integerDotProduct4x8BitPackedMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct4x8BitPackedMixedSignednessAccelerated(self, Bool32 integerDotProduct4x8BitPackedMixedSignednessAccelerated) {
   self.integerDotProduct4x8BitPackedMixedSignednessAccelerated = integerDotProduct4x8BitPackedMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitUnsignedAccelerated(self, VkBool32 integerDotProduct16BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitUnsignedAccelerated(self, Bool32 integerDotProduct16BitUnsignedAccelerated) {
   self.integerDotProduct16BitUnsignedAccelerated = integerDotProduct16BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitSignedAccelerated(self, VkBool32 integerDotProduct16BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitSignedAccelerated(self, Bool32 integerDotProduct16BitSignedAccelerated) {
   self.integerDotProduct16BitSignedAccelerated = integerDotProduct16BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitMixedSignednessAccelerated(self, VkBool32 integerDotProduct16BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct16BitMixedSignednessAccelerated(self, Bool32 integerDotProduct16BitMixedSignednessAccelerated) {
   self.integerDotProduct16BitMixedSignednessAccelerated = integerDotProduct16BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitUnsignedAccelerated(self, VkBool32 integerDotProduct32BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitUnsignedAccelerated(self, Bool32 integerDotProduct32BitUnsignedAccelerated) {
   self.integerDotProduct32BitUnsignedAccelerated = integerDotProduct32BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitSignedAccelerated(self, VkBool32 integerDotProduct32BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitSignedAccelerated(self, Bool32 integerDotProduct32BitSignedAccelerated) {
   self.integerDotProduct32BitSignedAccelerated = integerDotProduct32BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitMixedSignednessAccelerated(self, VkBool32 integerDotProduct32BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct32BitMixedSignednessAccelerated(self, Bool32 integerDotProduct32BitMixedSignednessAccelerated) {
   self.integerDotProduct32BitMixedSignednessAccelerated = integerDotProduct32BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitUnsignedAccelerated(self, VkBool32 integerDotProduct64BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitUnsignedAccelerated(self, Bool32 integerDotProduct64BitUnsignedAccelerated) {
   self.integerDotProduct64BitUnsignedAccelerated = integerDotProduct64BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitSignedAccelerated(self, VkBool32 integerDotProduct64BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitSignedAccelerated(self, Bool32 integerDotProduct64BitSignedAccelerated) {
   self.integerDotProduct64BitSignedAccelerated = integerDotProduct64BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitMixedSignednessAccelerated(self, VkBool32 integerDotProduct64BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProduct64BitMixedSignednessAccelerated(self, Bool32 integerDotProduct64BitMixedSignednessAccelerated) {
   self.integerDotProduct64BitMixedSignednessAccelerated = integerDotProduct64BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitUnsignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating8BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitUnsignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating8BitUnsignedAccelerated) {
   self.integerDotProductAccumulatingSaturating8BitUnsignedAccelerated = integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitSignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating8BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitSignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating8BitSignedAccelerated) {
   self.integerDotProductAccumulatingSaturating8BitSignedAccelerated = integerDotProductAccumulatingSaturating8BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated(self, Bool32 integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated) {
   self.integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated) {
   self.integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated) {
   self.integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated(self, Bool32 integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated) {
   self.integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitUnsignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating16BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitUnsignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating16BitUnsignedAccelerated) {
   self.integerDotProductAccumulatingSaturating16BitUnsignedAccelerated = integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitSignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating16BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitSignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating16BitSignedAccelerated) {
   self.integerDotProductAccumulatingSaturating16BitSignedAccelerated = integerDotProductAccumulatingSaturating16BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated(self, Bool32 integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated) {
   self.integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitUnsignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating32BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitUnsignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating32BitUnsignedAccelerated) {
   self.integerDotProductAccumulatingSaturating32BitUnsignedAccelerated = integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitSignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating32BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitSignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating32BitSignedAccelerated) {
   self.integerDotProductAccumulatingSaturating32BitSignedAccelerated = integerDotProductAccumulatingSaturating32BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated(self, Bool32 integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated) {
   self.integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitUnsignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating64BitUnsignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitUnsignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating64BitUnsignedAccelerated) {
   self.integerDotProductAccumulatingSaturating64BitUnsignedAccelerated = integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitSignedAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating64BitSignedAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitSignedAccelerated(self, Bool32 integerDotProductAccumulatingSaturating64BitSignedAccelerated) {
   self.integerDotProductAccumulatingSaturating64BitSignedAccelerated = integerDotProductAccumulatingSaturating64BitSignedAccelerated;
   return self;
 }
        
-fn VkPhysicalDeviceShaderIntegerDotProductProperties VkPhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated(self, VkBool32 integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setIntegerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated(self, Bool32 integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated) {
   self.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignmentPropertiesBuilder() {
-  VkPhysicalDeviceTexelBufferAlignmentProperties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES,
+fn PhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignmentPropertiesBuilder() {
+  PhysicalDeviceTexelBufferAlignmentProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setNext(self, void* pNext) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setStorageTexelBufferOffsetAlignmentBytes(self, VkDeviceSize storageTexelBufferOffsetAlignmentBytes) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setStorageTexelBufferOffsetAlignmentBytes(self, DeviceSize storageTexelBufferOffsetAlignmentBytes) {
   self.storageTexelBufferOffsetAlignmentBytes = storageTexelBufferOffsetAlignmentBytes;
   return self;
 }
        
-fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setStorageTexelBufferOffsetSingleTexelAlignment(self, VkBool32 storageTexelBufferOffsetSingleTexelAlignment) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setStorageTexelBufferOffsetSingleTexelAlignment(self, Bool32 storageTexelBufferOffsetSingleTexelAlignment) {
   self.storageTexelBufferOffsetSingleTexelAlignment = storageTexelBufferOffsetSingleTexelAlignment;
   return self;
 }
        
-fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setUniformTexelBufferOffsetAlignmentBytes(self, VkDeviceSize uniformTexelBufferOffsetAlignmentBytes) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setUniformTexelBufferOffsetAlignmentBytes(self, DeviceSize uniformTexelBufferOffsetAlignmentBytes) {
   self.uniformTexelBufferOffsetAlignmentBytes = uniformTexelBufferOffsetAlignmentBytes;
   return self;
 }
        
-fn VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBufferAlignmentProperties.setUniformTexelBufferOffsetSingleTexelAlignment(self, VkBool32 uniformTexelBufferOffsetSingleTexelAlignment) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setUniformTexelBufferOffsetSingleTexelAlignment(self, Bool32 uniformTexelBufferOffsetSingleTexelAlignment) {
   self.uniformTexelBufferOffsetSingleTexelAlignment = uniformTexelBufferOffsetSingleTexelAlignment;
   return self;
 }
        
 
 
-fn VkFormatProperties3 formatProperties3Builder() {
-  VkFormatProperties3 defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
+fn FormatProperties3 formatProperties3Builder() {
+  FormatProperties3 defaultValue = {
+    .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkFormatProperties3 VkFormatProperties3.setNext(self, void* pNext) {
+fn FormatProperties3 FormatProperties3.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkFormatProperties3 VkFormatProperties3.setLinearTilingFeatures(self, VkFormatFeatureFlags2 linearTilingFeatures) {
+fn FormatProperties3 FormatProperties3.setLinearTilingFeatures(self, FormatFeatureFlags2 linearTilingFeatures) {
   self.linearTilingFeatures = linearTilingFeatures;
   return self;
 }
        
-fn VkFormatProperties3 VkFormatProperties3.setOptimalTilingFeatures(self, VkFormatFeatureFlags2 optimalTilingFeatures) {
+fn FormatProperties3 FormatProperties3.setOptimalTilingFeatures(self, FormatFeatureFlags2 optimalTilingFeatures) {
   self.optimalTilingFeatures = optimalTilingFeatures;
   return self;
 }
        
-fn VkFormatProperties3 VkFormatProperties3.setBufferFeatures(self, VkFormatFeatureFlags2 bufferFeatures) {
+fn FormatProperties3 FormatProperties3.setBufferFeatures(self, FormatFeatureFlags2 bufferFeatures) {
   self.bufferFeatures = bufferFeatures;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceMaintenance4Features physicalDeviceMaintenance4FeaturesBuilder() {
-  VkPhysicalDeviceMaintenance4Features defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES,
+fn PhysicalDeviceMaintenance4Features physicalDeviceMaintenance4FeaturesBuilder() {
+  PhysicalDeviceMaintenance4Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMaintenance4Features VkPhysicalDeviceMaintenance4Features.setNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMaintenance4Features VkPhysicalDeviceMaintenance4Features.setMaintenance4(self, VkBool32 maintenance4) {
+fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setMaintenance4(self, Bool32 maintenance4) {
   self.maintenance4 = maintenance4;
   return self;
 }
        
 
 
-fn VkPhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4PropertiesBuilder() {
-  VkPhysicalDeviceMaintenance4Properties defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES,
+fn PhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4PropertiesBuilder() {
+  PhysicalDeviceMaintenance4Properties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDeviceMaintenance4Properties VkPhysicalDeviceMaintenance4Properties.setNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDeviceMaintenance4Properties VkPhysicalDeviceMaintenance4Properties.setMaxBufferSize(self, VkDeviceSize maxBufferSize) {
+fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.setMaxBufferSize(self, DeviceSize maxBufferSize) {
   self.maxBufferSize = maxBufferSize;
   return self;
 }
        
 
 
-fn VkDeviceBufferMemoryRequirements deviceBufferMemoryRequirementsBuilder() {
-  VkDeviceBufferMemoryRequirements defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS,
+fn DeviceBufferMemoryRequirements deviceBufferMemoryRequirementsBuilder() {
+  DeviceBufferMemoryRequirements defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceBufferMemoryRequirements VkDeviceBufferMemoryRequirements.setNext(self, void* pNext) {
+fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceBufferMemoryRequirements VkDeviceBufferMemoryRequirements.setCreateInfo(self, VkBufferCreateInfo* pCreateInfo) {
+fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setCreateInfo(self, BufferCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
 }
        
 
 
-fn VkDeviceImageMemoryRequirements deviceImageMemoryRequirementsBuilder() {
-  VkDeviceImageMemoryRequirements defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS,
+fn DeviceImageMemoryRequirements deviceImageMemoryRequirementsBuilder() {
+  DeviceImageMemoryRequirements defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceImageMemoryRequirements VkDeviceImageMemoryRequirements.setNext(self, void* pNext) {
+fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceImageMemoryRequirements VkDeviceImageMemoryRequirements.setCreateInfo(self, VkImageCreateInfo* pCreateInfo) {
+fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setCreateInfo(self, ImageCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
 }
        
-fn VkDeviceImageMemoryRequirements VkDeviceImageMemoryRequirements.setPlaneAspect(self, VkImageAspectFlagBits planeAspect) {
+fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setPlaneAspect(self, ImageAspectFlagBits planeAspect) {
   self.planeAspect = planeAspect;
   return self;
 }
        
 
 
-fn VkXcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHRBuilder() {
-  VkXcbSurfaceCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
+fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHRBuilder() {
+  XcbSurfaceCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setNext(self, void* pNext) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setFlags(self, VkXcbSurfaceCreateFlagsKHR flags) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setFlags(self, XcbSurfaceCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setOnnection(self, void** connection) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setOnnection(self, void** connection) {
   self.connection = connection;
   return self;
 }
        
-fn VkXcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR.setWindow(self, uint window) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setWindow(self, uint window) {
   self.window = window;
   return self;
 }
        
 
 
-fn VkSwapchainCreateInfoKHR swapchainCreateInfoKHRBuilder() {
-  VkSwapchainCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+fn SwapchainCreateInfoKHR swapchainCreateInfoKHRBuilder() {
+  SwapchainCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setFlags(self, VkSwapchainCreateFlagsKHR flags) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setFlags(self, SwapchainCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setSurface(self, VkSurfaceKHR surface) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setSurface(self, SurfaceKHR surface) {
   self.surface = surface;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setMinImageCount(self, uint minImageCount) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setMinImageCount(self, uint minImageCount) {
   self.minImageCount = minImageCount;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageFormat(self, VkFormat imageFormat) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageFormat(self, Format imageFormat) {
   self.imageFormat = imageFormat;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageColorSpace(self, VkColorSpaceKHR imageColorSpace) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageColorSpace(self, ColorSpaceKHR imageColorSpace) {
   self.imageColorSpace = imageColorSpace;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageExtent(self, VkExtent2D imageExtent) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageExtent(self, Extent2D imageExtent) {
   self.imageExtent = imageExtent;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageArrayLayers(self, uint imageArrayLayers) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageArrayLayers(self, uint imageArrayLayers) {
   self.imageArrayLayers = imageArrayLayers;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageUsage(self, VkImageUsageFlags imageUsage) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageUsage(self, ImageUsageFlags imageUsage) {
   self.imageUsage = imageUsage;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setImageSharingMode(self, VkSharingMode imageSharingMode) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setImageSharingMode(self, SharingMode imageSharingMode) {
   self.imageSharingMode = imageSharingMode;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndexCount(self, uint queueFamilyIndexCount) {
   self.queueFamilyIndexCount = queueFamilyIndexCount;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
 }
 
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setPreTransform(self, VkSurfaceTransformFlagBitsKHR preTransform) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setPreTransform(self, SurfaceTransformFlagBitsKHR preTransform) {
   self.preTransform = preTransform;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setCompositeAlpha(self, VkCompositeAlphaFlagBitsKHR compositeAlpha) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setCompositeAlpha(self, CompositeAlphaFlagBitsKHR compositeAlpha) {
   self.compositeAlpha = compositeAlpha;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setPresentMode(self, VkPresentModeKHR presentMode) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setPresentMode(self, PresentModeKHR presentMode) {
   self.presentMode = presentMode;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setClipped(self, VkBool32 clipped) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setClipped(self, Bool32 clipped) {
   self.clipped = clipped;
   return self;
 }
        
-fn VkSwapchainCreateInfoKHR VkSwapchainCreateInfoKHR.setOldSwapchain(self, VkSwapchainKHR oldSwapchain) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setOldSwapchain(self, SwapchainKHR oldSwapchain) {
   self.oldSwapchain = oldSwapchain;
   return self;
 }
        
 
 
-fn VkPresentInfoKHR presentInfoKHRBuilder() {
-  VkPresentInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+fn PresentInfoKHR presentInfoKHRBuilder() {
+  PresentInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PRESENT_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPresentInfoKHR VkPresentInfoKHR.setNext(self, void* pNext) {
+fn PresentInfoKHR PresentInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPresentInfoKHR VkPresentInfoKHR.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
+fn PresentInfoKHR PresentInfoKHR.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   self.waitSemaphoreCount = waitSemaphoreCount;
   return self;
 }
        
-fn VkPresentInfoKHR VkPresentInfoKHR.setWaitSemaphores(self, VkSemaphore[] pWaitSemaphores) {
+fn PresentInfoKHR PresentInfoKHR.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
 }
 
-fn VkPresentInfoKHR VkPresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
+fn PresentInfoKHR PresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
   self.swapchainCount = swapchainCount;
   return self;
 }
        
-fn VkPresentInfoKHR VkPresentInfoKHR.setSwapchains(self, VkSwapchainKHR[] pSwapchains) {
+fn PresentInfoKHR PresentInfoKHR.setSwapchains(self, SwapchainKHR[] pSwapchains) {
   self.swapchainCount = (uint)pSwapchains.len;
   self.pSwapchains = &pSwapchains[0];
   return self;
 }
 
-fn VkPresentInfoKHR VkPresentInfoKHR.setImageIndices(self, uint[] pImageIndices) {
+fn PresentInfoKHR PresentInfoKHR.setImageIndices(self, uint[] pImageIndices) {
   self.swapchainCount = (uint)pImageIndices.len;
   self.pImageIndices = &pImageIndices[0];
   return self;
 }
 
-fn VkPresentInfoKHR VkPresentInfoKHR.setResults(self, VkResult[] pResults) {
+fn PresentInfoKHR PresentInfoKHR.setResults(self, Result[] pResults) {
   self.swapchainCount = (uint)pResults.len;
   self.pResults = &pResults[0];
   return self;
@@ -7449,395 +7449,395 @@ fn VkPresentInfoKHR VkPresentInfoKHR.setResults(self, VkResult[] pResults) {
 
 
 
-fn VkImageSwapchainCreateInfoKHR imageSwapchainCreateInfoKHRBuilder() {
-  VkImageSwapchainCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR,
+fn ImageSwapchainCreateInfoKHR imageSwapchainCreateInfoKHRBuilder() {
+  ImageSwapchainCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
+fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setSwapchain(self, SwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
 }
        
 
 
-fn VkBindImageMemorySwapchainInfoKHR bindImageMemorySwapchainInfoKHRBuilder() {
-  VkBindImageMemorySwapchainInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR,
+fn BindImageMemorySwapchainInfoKHR bindImageMemorySwapchainInfoKHRBuilder() {
+  BindImageMemorySwapchainInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkBindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR.setNext(self, void* pNext) {
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkBindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setSwapchain(self, SwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
 }
        
-fn VkBindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR.setImageIndex(self, uint imageIndex) {
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setImageIndex(self, uint imageIndex) {
   self.imageIndex = imageIndex;
   return self;
 }
        
 
 
-fn VkAcquireNextImageInfoKHR acquireNextImageInfoKHRBuilder() {
-  VkAcquireNextImageInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR,
+fn AcquireNextImageInfoKHR acquireNextImageInfoKHRBuilder() {
+  AcquireNextImageInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setNext(self, void* pNext) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setSwapchain(self, VkSwapchainKHR swapchain) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setSwapchain(self, SwapchainKHR swapchain) {
   self.swapchain = swapchain;
   return self;
 }
        
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setTimeout(self, ulong timeout) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setTimeout(self, ulong timeout) {
   self.timeout = timeout;
   return self;
 }
        
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setSemaphore(self, VkSemaphore semaphore) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setSemaphore(self, Semaphore semaphore) {
   self.semaphore = semaphore;
   return self;
 }
        
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setFence(self, VkFence fence) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setFence(self, Fence fence) {
   self.fence = fence;
   return self;
 }
        
-fn VkAcquireNextImageInfoKHR VkAcquireNextImageInfoKHR.setDeviceMask(self, uint deviceMask) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setDeviceMask(self, uint deviceMask) {
   self.deviceMask = deviceMask;
   return self;
 }
        
 
 
-fn VkDeviceGroupPresentCapabilitiesKHR deviceGroupPresentCapabilitiesKHRBuilder() {
-  VkDeviceGroupPresentCapabilitiesKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR,
+fn DeviceGroupPresentCapabilitiesKHR deviceGroupPresentCapabilitiesKHRBuilder() {
+  DeviceGroupPresentCapabilitiesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR.setNext(self, void* pNext) {
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR.setPresentMask(self, uint[VK_MAX_DEVICE_GROUP_SIZE] presentMask) {
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setPresentMask(self, uint[MAX_DEVICE_GROUP_SIZE] presentMask) {
   self.presentMask = presentMask;
   return self;
 }
        
-fn VkDeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR.setModes(self, VkDeviceGroupPresentModeFlagsKHR modes) {
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setModes(self, DeviceGroupPresentModeFlagsKHR modes) {
   self.modes = modes;
   return self;
 }
        
 
 
-fn VkDeviceGroupPresentInfoKHR deviceGroupPresentInfoKHRBuilder() {
-  VkDeviceGroupPresentInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR,
+fn DeviceGroupPresentInfoKHR deviceGroupPresentInfoKHRBuilder() {
+  DeviceGroupPresentInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setNext(self, void* pNext) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
   self.swapchainCount = swapchainCount;
   return self;
 }
        
-fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setDeviceMasks(self, uint[] pDeviceMasks) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setDeviceMasks(self, uint[] pDeviceMasks) {
   self.swapchainCount = (uint)pDeviceMasks.len;
   self.pDeviceMasks = &pDeviceMasks[0];
   return self;
 }
 
-fn VkDeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR.setMode(self, VkDeviceGroupPresentModeFlagBitsKHR mode) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setMode(self, DeviceGroupPresentModeFlagBitsKHR mode) {
   self.mode = mode;
   return self;
 }
        
 
 
-fn VkDeviceGroupSwapchainCreateInfoKHR deviceGroupSwapchainCreateInfoKHRBuilder() {
-  VkDeviceGroupSwapchainCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR,
+fn DeviceGroupSwapchainCreateInfoKHR deviceGroupSwapchainCreateInfoKHRBuilder() {
+  DeviceGroupSwapchainCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR.setNext(self, void* pNext) {
+fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR.setModes(self, VkDeviceGroupPresentModeFlagsKHR modes) {
+fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setModes(self, DeviceGroupPresentModeFlagsKHR modes) {
   self.modes = modes;
   return self;
 }
        
 
 
-fn VkDisplayModeCreateInfoKHR displayModeCreateInfoKHRBuilder() {
-  VkDisplayModeCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR,
+fn DisplayModeCreateInfoKHR displayModeCreateInfoKHRBuilder() {
+  DisplayModeCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR.setNext(self, void* pNext) {
+fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR.setFlags(self, VkDisplayModeCreateFlagsKHR flags) {
+fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setFlags(self, DisplayModeCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR.setParameters(self, VkDisplayModeParametersKHR parameters) {
+fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setParameters(self, DisplayModeParametersKHR parameters) {
   self.parameters = parameters;
   return self;
 }
        
 
 
-fn VkDisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHRBuilder() {
-  VkDisplaySurfaceCreateInfoKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR,
+fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHRBuilder() {
+  DisplaySurfaceCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setNext(self, void* pNext) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setFlags(self, VkDisplaySurfaceCreateFlagsKHR flags) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setFlags(self, DisplaySurfaceCreateFlagsKHR flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setDisplayMode(self, VkDisplayModeKHR displayMode) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setDisplayMode(self, DisplayModeKHR displayMode) {
   self.displayMode = displayMode;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setPlaneIndex(self, uint planeIndex) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setPlaneIndex(self, uint planeIndex) {
   self.planeIndex = planeIndex;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setPlaneStackIndex(self, uint planeStackIndex) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setPlaneStackIndex(self, uint planeStackIndex) {
   self.planeStackIndex = planeStackIndex;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setTransform(self, VkSurfaceTransformFlagBitsKHR transform) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setTransform(self, SurfaceTransformFlagBitsKHR transform) {
   self.transform = transform;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setGlobalAlpha(self, float globalAlpha) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setGlobalAlpha(self, float globalAlpha) {
   self.globalAlpha = globalAlpha;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setAlphaMode(self, VkDisplayPlaneAlphaFlagBitsKHR alphaMode) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setAlphaMode(self, DisplayPlaneAlphaFlagBitsKHR alphaMode) {
   self.alphaMode = alphaMode;
   return self;
 }
        
-fn VkDisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR.setImageExtent(self, VkExtent2D imageExtent) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(self, Extent2D imageExtent) {
   self.imageExtent = imageExtent;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHRBuilder() {
-  VkPhysicalDevicePushDescriptorPropertiesKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
+fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHRBuilder() {
+  PhysicalDevicePushDescriptorPropertiesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR.setNext(self, void* pNext) {
+fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR.setMaxPushDescriptors(self, uint maxPushDescriptors) {
+fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setMaxPushDescriptors(self, uint maxPushDescriptors) {
   self.maxPushDescriptors = maxPushDescriptors;
   return self;
 }
        
 
 
-fn VkDebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXTBuilder() {
-  VkDebugReportCallbackCreateInfoEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
+fn DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXTBuilder() {
+  DebugReportCallbackCreateInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setNext(self, void* pNext) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setFlags(self, VkDebugReportFlagsEXT flags) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setFlags(self, DebugReportFlagsEXT flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setPfnCallback(self, PFN_vkDebugReportCallbackEXT pfnCallback) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setPfnCallback(self, PFN_vkDebugReportCallbackEXT pfnCallback) {
   self.pfnCallback = pfnCallback;
   return self;
 }
        
-fn VkDebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT.setUserData(self, void* pUserData) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setUserData(self, void* pUserData) {
   self.pUserData = pUserData;
   return self;
 }
        
 
 
-fn VkDebugUtilsLabelEXT debugUtilsLabelEXTBuilder() {
-  VkDebugUtilsLabelEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+fn DebugUtilsLabelEXT debugUtilsLabelEXTBuilder() {
+  DebugUtilsLabelEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugUtilsLabelEXT VkDebugUtilsLabelEXT.setNext(self, void* pNext) {
+fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugUtilsLabelEXT VkDebugUtilsLabelEXT.setLabelName(self, char* pLabelName) {
+fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setLabelName(self, char* pLabelName) {
   self.pLabelName = pLabelName;
   return self;
 }
        
-fn VkDebugUtilsLabelEXT VkDebugUtilsLabelEXT.setColor(self, float[4] color) {
+fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setColor(self, float[4] color) {
   self.color = color;
   return self;
 }
        
 
 
-fn VkDebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXTBuilder() {
-  VkDebugUtilsMessengerCallbackDataEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
+fn DebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXTBuilder() {
+  DebugUtilsMessengerCallbackDataEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setNext(self, void* pNext) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setFlags(self, VkDebugUtilsMessengerCallbackDataFlagsEXT flags) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setFlags(self, DebugUtilsMessengerCallbackDataFlagsEXT flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setMessageIdName(self, char* pMessageIdName) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMessageIdName(self, char* pMessageIdName) {
   self.pMessageIdName = pMessageIdName;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setMessageIdNumber(self, int messageIdNumber) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMessageIdNumber(self, int messageIdNumber) {
   self.messageIdNumber = messageIdNumber;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setMessage(self, char* pMessage) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMessage(self, char* pMessage) {
   self.pMessage = pMessage;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setQueueLabelCount(self, uint queueLabelCount) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueueLabelCount(self, uint queueLabelCount) {
   self.queueLabelCount = queueLabelCount;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setQueueLabels(self, VkDebugUtilsLabelEXT[] pQueueLabels) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueueLabels(self, DebugUtilsLabelEXT[] pQueueLabels) {
   self.queueLabelCount = (uint)pQueueLabels.len;
   self.pQueueLabels = &pQueueLabels[0];
   return self;
 }
 
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setCmdBufLabelCount(self, uint cmdBufLabelCount) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdBufLabelCount(self, uint cmdBufLabelCount) {
   self.cmdBufLabelCount = cmdBufLabelCount;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setCmdBufLabels(self, VkDebugUtilsLabelEXT[] pCmdBufLabels) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdBufLabels(self, DebugUtilsLabelEXT[] pCmdBufLabels) {
   self.cmdBufLabelCount = (uint)pCmdBufLabels.len;
   self.pCmdBufLabels = &pCmdBufLabels[0];
   return self;
 }
 
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setObjectCount(self, uint objectCount) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObjectCount(self, uint objectCount) {
   self.objectCount = objectCount;
   return self;
 }
        
-fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.setObjects(self, VkDebugUtilsObjectNameInfoEXT[] pObjects) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObjects(self, DebugUtilsObjectNameInfoEXT[] pObjects) {
   self.objectCount = (uint)pObjects.len;
   self.pObjects = &pObjects[0];
   return self;
@@ -7845,225 +7845,225 @@ fn VkDebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT.set
 
 
 
-fn VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXTBuilder() {
-  VkDebugUtilsMessengerCreateInfoEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+fn DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXTBuilder() {
+  DebugUtilsMessengerCreateInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setNext(self, void* pNext) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setFlags(self, VkDebugUtilsMessengerCreateFlagsEXT flags) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setFlags(self, DebugUtilsMessengerCreateFlagsEXT flags) {
   self.flags = flags;
   return self;
 }
        
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setMessageSeverity(self, VkDebugUtilsMessageSeverityFlagsEXT messageSeverity) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setMessageSeverity(self, DebugUtilsMessageSeverityFlagsEXT messageSeverity) {
   self.messageSeverity = messageSeverity;
   return self;
 }
        
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setMessageType(self, VkDebugUtilsMessageTypeFlagsEXT messageType) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setMessageType(self, DebugUtilsMessageTypeFlagsEXT messageType) {
   self.messageType = messageType;
   return self;
 }
        
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setPfnUserCallback(self, PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setPfnUserCallback(self, PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback) {
   self.pfnUserCallback = pfnUserCallback;
   return self;
 }
        
-fn VkDebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT.setUserData(self, void* pUserData) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setUserData(self, void* pUserData) {
   self.pUserData = pUserData;
   return self;
 }
        
 
 
-fn VkDebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXTBuilder() {
-  VkDebugUtilsObjectNameInfoEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+fn DebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXTBuilder() {
+  DebugUtilsObjectNameInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setNext(self, void* pNext) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setObjectType(self, VkObjectType objectType) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectType(self, ObjectType objectType) {
   self.objectType = objectType;
   return self;
 }
        
-fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setObjectHandle(self, ulong objectHandle) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectHandle(self, ulong objectHandle) {
   self.objectHandle = objectHandle;
   return self;
 }
        
-fn VkDebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT.setObjectName(self, char* pObjectName) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectName(self, char* pObjectName) {
   self.pObjectName = pObjectName;
   return self;
 }
        
 
 
-fn VkDebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXTBuilder() {
-  VkDebugUtilsObjectTagInfoEXT defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT,
+fn DebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXTBuilder() {
+  DebugUtilsObjectTagInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setNext(self, void* pNext) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setObjectType(self, VkObjectType objectType) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setObjectType(self, ObjectType objectType) {
   self.objectType = objectType;
   return self;
 }
        
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setObjectHandle(self, ulong objectHandle) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setObjectHandle(self, ulong objectHandle) {
   self.objectHandle = objectHandle;
   return self;
 }
        
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setTagName(self, ulong tagName) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagName(self, ulong tagName) {
   self.tagName = tagName;
   return self;
 }
        
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setTagSize(self, usz tagSize) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagSize(self, usz tagSize) {
   self.tagSize = tagSize;
   return self;
 }
        
-fn VkDebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT.setTag(self, void* pTag) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTag(self, void* pTag) {
   self.pTag = pTag;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHRBuilder() {
-  VkPhysicalDevicePortabilitySubsetFeaturesKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR,
+fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHRBuilder() {
+  PhysicalDevicePortabilitySubsetFeaturesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setNext(self, void* pNext) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setConstantAlphaColorBlendFactors(self, VkBool32 constantAlphaColorBlendFactors) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setConstantAlphaColorBlendFactors(self, Bool32 constantAlphaColorBlendFactors) {
   self.constantAlphaColorBlendFactors = constantAlphaColorBlendFactors;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setEvents(self, VkBool32 events) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setEvents(self, Bool32 events) {
   self.events = events;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatReinterpretation(self, VkBool32 imageViewFormatReinterpretation) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatReinterpretation(self, Bool32 imageViewFormatReinterpretation) {
   self.imageViewFormatReinterpretation = imageViewFormatReinterpretation;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatSwizzle(self, VkBool32 imageViewFormatSwizzle) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatSwizzle(self, Bool32 imageViewFormatSwizzle) {
   self.imageViewFormatSwizzle = imageViewFormatSwizzle;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setImageView2DOn3DImage(self, VkBool32 imageView2DOn3DImage) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageView2DOn3DImage(self, Bool32 imageView2DOn3DImage) {
   self.imageView2DOn3DImage = imageView2DOn3DImage;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setMultisampleArrayImage(self, VkBool32 multisampleArrayImage) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setMultisampleArrayImage(self, Bool32 multisampleArrayImage) {
   self.multisampleArrayImage = multisampleArrayImage;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setMutableComparisonSamplers(self, VkBool32 mutableComparisonSamplers) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setMutableComparisonSamplers(self, Bool32 mutableComparisonSamplers) {
   self.mutableComparisonSamplers = mutableComparisonSamplers;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setPointPolygons(self, VkBool32 pointPolygons) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setPointPolygons(self, Bool32 pointPolygons) {
   self.pointPolygons = pointPolygons;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setSamplerMipLodBias(self, VkBool32 samplerMipLodBias) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setSamplerMipLodBias(self, Bool32 samplerMipLodBias) {
   self.samplerMipLodBias = samplerMipLodBias;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setSeparateStencilMaskRef(self, VkBool32 separateStencilMaskRef) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setSeparateStencilMaskRef(self, Bool32 separateStencilMaskRef) {
   self.separateStencilMaskRef = separateStencilMaskRef;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setShaderSampleRateInterpolationFunctions(self, VkBool32 shaderSampleRateInterpolationFunctions) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setShaderSampleRateInterpolationFunctions(self, Bool32 shaderSampleRateInterpolationFunctions) {
   self.shaderSampleRateInterpolationFunctions = shaderSampleRateInterpolationFunctions;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationIsolines(self, VkBool32 tessellationIsolines) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationIsolines(self, Bool32 tessellationIsolines) {
   self.tessellationIsolines = tessellationIsolines;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationPointMode(self, VkBool32 tessellationPointMode) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationPointMode(self, Bool32 tessellationPointMode) {
   self.tessellationPointMode = tessellationPointMode;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setTriangleFans(self, VkBool32 triangleFans) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTriangleFans(self, Bool32 triangleFans) {
   self.triangleFans = triangleFans;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetFeaturesKHR VkPhysicalDevicePortabilitySubsetFeaturesKHR.setVertexAttributeAccessBeyondStride(self, VkBool32 vertexAttributeAccessBeyondStride) {
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setVertexAttributeAccessBeyondStride(self, Bool32 vertexAttributeAccessBeyondStride) {
   self.vertexAttributeAccessBeyondStride = vertexAttributeAccessBeyondStride;
   return self;
 }
        
 
 
-fn VkPhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHRBuilder() {
-  VkPhysicalDevicePortabilitySubsetPropertiesKHR defaultValue = {
-    .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR,
+fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHRBuilder() {
+  PhysicalDevicePortabilitySubsetPropertiesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR,
     .pNext = null
   };
   return defaultValue;
 }
 
 // Skip the .sType value
-fn VkPhysicalDevicePortabilitySubsetPropertiesKHR VkPhysicalDevicePortabilitySubsetPropertiesKHR.setNext(self, void* pNext) {
+fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn VkPhysicalDevicePortabilitySubsetPropertiesKHR VkPhysicalDevicePortabilitySubsetPropertiesKHR.setMinVertexInputBindingStrideAlignment(self, uint minVertexInputBindingStrideAlignment) {
+fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setMinVertexInputBindingStrideAlignment(self, uint minVertexInputBindingStrideAlignment) {
   self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
   return self;
 }

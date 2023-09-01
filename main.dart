@@ -125,8 +125,8 @@ class VKstruct {
         extendsStruct: extendsStruct);
   }
 
-  String? C3Name() {
-    return name?.substring(2).camelCase().replaceAll("_", "");
+  String? get C3Name {
+    return name?.substring(2).replaceAll("_", "");
   }
 }
 
@@ -229,7 +229,7 @@ class VKtype {
     if (hasLen.substring(1, 2) == "[") {
       String? enumValue = node.getElement("enum")?.innerText;
       if (enumValue != null) {
-        len = enumValue;
+        len = enumValue?.substring(3);
       } else {
         len = hasLen.substring(2, 3);
       }
@@ -247,6 +247,10 @@ class VKtype {
         altLen: altlen,
         lenValue: lenValue?.split(",").toList(),
         api: api);
+  }
+
+  String? get C3Name {
+    return name?.substring(2).replaceAll("_", "");
   }
 
 }
@@ -276,6 +280,10 @@ class VKfnPointer {
         requiredBy: requiredBy,
         values: values,
         returnType: typeMap[returnType] ?? returnType);
+  }
+
+  String? get C3Name {
+    return name?.substring(2).replaceAll("_", "");
   }
 }
 
@@ -315,8 +323,8 @@ class VKCommand {
         successCodes: successCodes);
   }
 
-  String? C3Name() {
-    return name?.substring(2).camelCase().replaceAll("_", "");
+  String? get C3Name {
+    return name?.substring(2).replaceAll("_", "");
   }
 
   String valuesString() {
@@ -339,6 +347,11 @@ extension ParseMethods on String {
 
   String capitalizeName() {
     return '${this?[0].toUpperCase()}${this?.substring(1)}';
+  }
+
+  String? get C3Name {
+    bool hasVK = this.toLowerCase().substring(0, 2).contains("vk");
+    return hasVK ? this?.substring(2) : this;
   }
 
   String camelCase() {
@@ -595,7 +608,7 @@ void main() {
               (element) =>
                   element.getElement("proto")?.getElement("name")?.innerText == extension_name);
           VKCommand command = VKCommand.fromXML(VkNode);
-          pointers.add(VKfnPointer(name: "PFN_${command.name?.substring(2).camelCase()}", values: command.values.map((entry) => entry.type!).toList(), returnType: command.returnType));
+          pointers.add(VKfnPointer(name: "PFN_${command.C3Name}", values: command.values.map((entry) => entry.type!).toList(), returnType: command.returnType));
           extensionCommands.add(command);
         }
       });
@@ -610,7 +623,7 @@ List<String> error_names = vulkan_results.values.map((entry) => entry.name ?? "-
 output.writeAsStringSync(
 """
 fault VkErrors {
-  ${vulkan_results.values.map((value) => value.name).join(",\n ")}
+  ${vulkan_results.values.map((value) => value.name?.substring(3)).join(",\n ")}
 }
  """, mode: FileMode.append);
 
@@ -619,33 +632,33 @@ fault VkErrors {
 
 
 bitmasks.forEach((element) {
-  output.writeAsStringSync("def ${element.name} = ${element.type};\n",
+  output.writeAsStringSync("def ${element.C3Name} = ${element.type?.C3Name};\n",
       mode: FileMode.append);
 });
 
 handles.forEach((element) {
-  output.writeAsStringSync("def ${element.name} = distinct inline void*;\n",
+  output.writeAsStringSync("def ${element.C3Name} = distinct inline void*;\n",
       mode: FileMode.append);
 });
 
 basetypes.forEach((element) {
-  output.writeAsStringSync("def ${element.name} = ${element.type};\n",
+  output.writeAsStringSync("def ${element.C3Name} = ${element.type};\n",
       mode: FileMode.append);
 });
 
 constants.forEach((value) {
   output.writeAsStringSync(
-      "const ${typeMap[value.type] ?? value.type} ${value.name} = ${value.value?.replaceAll("ULL", "UL")};\n",
+      "const ${typeMap[value.type] ?? value.type} ${value.name?.substring(3)} = ${value.value?.replaceAll("ULL", "UL")};\n",
       mode: FileMode.append);
 });
 
 unions.forEach((element) {
-  String code = "union ${element.name} {\n  ${element.values.map((value) => "${value.type} ${value.name?.camelCase()};").join("\n  ")}\n}\n";
+  String code = "union ${element.C3Name} {\n  ${element.values.map((value) => "${value.type?.C3Name} ${value.name?.camelCase()};").join("\n  ")}\n}\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
 structs.where((element) => element.values.length != 0).forEach((type) {
-  String code = "struct ${type.name} {\n ${type.values.map((value) =>"${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${value.name?.camelCase()};").join("\n ")}\n}\n";
+  String code = "struct ${type.C3Name} {\n ${type.values.map((value) =>"${value.type?.C3Name} ${value.name?.camelCase()};").join("\n ")}\n}\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
@@ -653,9 +666,9 @@ structs.where((element) => element.values.length != 0).forEach((type) {
 structs.where((element) => element.values.length != 0 && element.values[0].defaultValue != null && !filteredNames.contains(element.name)).forEach((type) {
   builders.writeAsStringSync(
 """\n
-fn ${type.name} ${type.C3Name()}Builder() {
-  ${type.name} defaultValue = {
-    .sType = ${type.values[0].defaultValue},
+fn ${type.C3Name} ${type.C3Name?.camelCase()}Builder() {
+  ${type.C3Name} defaultValue = {
+    .sType = ${type.values[0].defaultValue?.substring(3)},
     .pNext = null
   };
   return defaultValue;
@@ -676,7 +689,7 @@ if (element.isDoublePointer) {
 
 if (element.type == "char*" && isArrayValue) {
   return """
-fn ${type.name} ${type.name}.set${fnName}(self, ZString[] ${element.name}) {
+fn ${type.C3Name} ${type.C3Name}.set${fnName}(self, ZString[] ${element.name}) {
   self.${element.lenValue![0]} = (uint)${element.name}.len;
   self.${element.name} = (char*)&${element.name}[0];
   return self;
@@ -686,7 +699,7 @@ fn ${type.name} ${type.name}.set${fnName}(self, ZString[] ${element.name}) {
 
 if (isArrayValue && (element.type != "void*")) {
   return """
-fn ${type.name} ${type.name}.set${fnName}(self, ${element.type?.substring(0, element.type!.length - 1)}[] ${element.name}) {
+fn ${type.C3Name} ${type.C3Name}.set${fnName}(self, ${element.type?.C3Name?.replaceAll("*", "")}[] ${element.name}) {
   self.${element.lenValue![0]} = (uint)${element.name}.len;
   self.${element.name} = &${element.name}[0];
   return self;
@@ -695,7 +708,7 @@ fn ${type.name} ${type.name}.set${fnName}(self, ${element.type?.substring(0, ele
 }
 
 return """
-fn ${type.name} ${type.name}.set${fnName}(self, ${element.type} ${element.name}) {
+fn ${type.C3Name} ${type.C3Name}.set${fnName}(self, ${element.type?.C3Name} ${element.name}) {
   self.${element.name} = ${element.name};
   return self;
 }
@@ -706,25 +719,30 @@ fn ${type.name} ${type.name}.set${fnName}(self, ${element.type} ${element.name})
 
 pointers.forEach((command) {
   String code =
-      "def ${command.name} = fn ${command.returnType} (${command.values.map((value) => value).join(", ")});\n";
+      "def ${command.name} = fn ${command.returnType?.C3Name} (${command.values.map((value) => value.C3Name).join(", ")});\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
-commands.forEach((command) {
+commands.where((element) => element.errorCodes.isEmpty).forEach((command) {
   String code =
-      "extern fn ${command.returnType} ${command.errorCodes.isEmpty ? command.C3Name() :command.name?.camelCase() } (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
+      "extern fn ${command.returnType?.C3Name} ${command.name?.C3Name?.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 
+commands.where((element) => element.errorCodes.isNotEmpty).forEach((command) {
+  String code =
+      "extern fn ${command.returnType?.C3Name} ${command.name?.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name?.formatTypeName().camelCase()}").join(", ")}) @extern(\"${command.name}\");\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
 
 // Write commands with C3 error handling
 commands.where((element) => element.errorCodes.isNotEmpty).forEach((command) {
     String code =
 """
-fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
-  VkResult result = ${command.name?.camelCase()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
+fn void! ${command.name?.C3Name?.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
+  Result result = ${command.name?.camelCase()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
   switch(result) {
-    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err.substring(3)}: \n        return VkErrors.${err.substring(3)}?;").join("\n    ")}
   }
 }
 """;
@@ -735,19 +753,19 @@ fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${typ
 // Extension bindings code
  output.writeAsStringSync("""
 struct VK_extension_bindings {
- ${extensionCommands.map((command) => "PFN_${command.name?.substring(2).camelCase()} ${command.name?.substring(2).camelCase()};").join("\n ")}
+ ${extensionCommands.map((command) => "PFN_${command.name?.C3Name} ${command.name?.substring(2).camelCase()};").join("\n ")}
 }
 VK_extension_bindings extensions;
-fn void loadExtensions(VkInstance instance) {
-  ${extensionCommands.map((command) => "extensions.${command.C3Name()} = (PFN_${command.name?.substring(2).camelCase()})getInstanceProcAddr(instance, \"${command.name}\");").join("\n  ")}
+fn void loadExtensions(Instance instance) {
+  ${extensionCommands.map((command) => "extensions.${command?.C3Name?.camelCase()} = (PFN_${command.name?.C3Name})getInstanceProcAddr(instance, \"${command.name}\");").join("\n  ")}
 }
-${extensionCommands.where((entry) => entry.errorCodes.isEmpty).map((command) => "fn ${command.returnType} ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) => extensions.${command.C3Name()}(${command.values.map((type) => type.name?.formatTypeName().camelCase().replaceAll("_","")).join(",")});").join("\n")}
+${extensionCommands.where((entry) => entry.errorCodes.isEmpty).map((command) => "fn ${command.returnType?.C3Name} ${command?.C3Name?.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name?.formatTypeName().camelCase().replaceAll("_", "")}").join(", ")}) => extensions.${command.C3Name?.camelCase()}(${command.values.map((type) => type.name?.formatTypeName().camelCase().replaceAll("_","")).join(",")});").join("\n")}
 ${extensionCommands.where((entry) => entry.errorCodes.isNotEmpty).map((command)  {
   return """
-fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
-  VkResult result = extensions.${command.C3Name()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
+fn void! ${command.C3Name?.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name?.formatTypeName().camelCase()}").join(", ")}) {
+  Result result = extensions.${command.C3Name?.camelCase()}(${command.values.map((type) => "${type.name?.formatTypeName().camelCase()}").join(", ")});
   switch(result) {
-    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err}: \n        return VkErrors.${err}?;").join("\n    ")}
+    ${command.errorCodes.where((value) => error_names.contains(value)).map((err) => "case ${err.substring(3)}: \n        return VkErrors.${err.substring(3)}?;").join("\n    ")}
   }
 }
 """;
@@ -757,7 +775,7 @@ fn void! ${command.C3Name()} (${command.values.map((type) => "${type.type} ${typ
 //  Enums
 enums.forEach((entry) {
   String code =
-      "\ndef ${entry.name} = distinct inline ${entry?.bit_width != null ? "ulong" : "int"};\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name} ${value.name?.toUpperCase()} = ${value.bitValue ?? value.value};").join("\n")}\n";
+      "\ndef ${entry.name?.C3Name} = distinct inline ${entry?.bit_width != null ? "ulong" : "int"};\n${entry.values.where((element) => element.alias == null).map((value) => "const ${entry.name?.C3Name} ${value.name?.C3Name?.toUpperCase().substring(1)} = ${value.bitValue ?? value.value};").join("\n")}\n";
   output.writeAsStringSync(code, mode: FileMode.append);
 });
 

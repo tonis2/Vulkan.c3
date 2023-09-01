@@ -7,12 +7,12 @@ import glfw;
 
 def StringList = List(<String>);
 def ZStringList = List(<ZString>);
-def DeviceList = List(<VkPhysicalDevice>);
-def QueuePropertiesList = List(<VkQueueFamilyProperties>);
-def SurfaceFormatList = List(<VkSurfaceFormatKHR>);
-def PresentModeList = List(<VkPresentModeKHR>);
-def CommandBufferList = List(<VkCommandBuffer>);
-def CommandBufferCallback = fn void (VkCommandBuffer buffer);
+def DeviceList = List(<PhysicalDevice>);
+def QueuePropertiesList = List(<QueueFamilyProperties>);
+def SurfaceFormatList = List(<SurfaceFormatKHR>);
+def PresentModeList = List(<PresentModeKHR>);
+def CommandBufferList = List(<CommandBuffer>);
+def CommandBufferCallback = fn void (CommandBuffer buffer);
 
 fault ContextErrors
 {
@@ -44,42 +44,42 @@ struct AppInfo {
     ZStringList validations;
     ZStringList extensions;
     ZStringList device_extensions;
-    VkInstanceCreateFlags instance_flags;
+    InstanceCreateFlags instance_flags;
 }
 
-struct Device {
-    VkInstance instance;
-    VkSurfaceKHR surface;
-    VkDevice device;
-    VkPhysicalDevice physical_device;
-    VkQueue graphics_queue;
-    VkDebugUtilsMessengerEXT debug_messenger;
-    vk::QueueFamily queue_family;
+struct DeviceInfo {
+    Instance instance;
+    SurfaceKHR surface;
+    Device device;
+    PhysicalDevice physical_device;
+    Queue graphics_queue;
+    DebugUtilsMessengerEXT debug_messenger;
+    QueueFamily queue_family;
     SurfaceFormatList surface_formats;
     PresentModeList present_modes;
-    VkSurfaceCapabilitiesKHR capabilities;
+    SurfaceCapabilitiesKHR capabilities;
     bool enable_debug;
 }
 
-fn VkDescriptorSetLayout! Device.createDescriptorSetLayout(self, VkDescriptorSetLayoutCreateInfo info)
+fn DescriptorSetLayout! DeviceInfo.createDescriptorSetLayout(self, DescriptorSetLayoutCreateInfo info)
 {
-    VkDescriptorSetLayout layout;
+    DescriptorSetLayout layout;
     createDescriptorSetLayout(self.device, &info, null, &layout)!;
     return layout;
 }
 
-fn VkPipelineLayout! Device.createPipelineLayout(self, VkPipelineLayoutCreateInfo info)
+fn PipelineLayout! DeviceInfo.createPipelineLayout(self, PipelineLayoutCreateInfo info)
 {
-    VkPipelineLayout layout;
+    PipelineLayout layout;
     createPipelineLayout(self.device, &info, null, &layout)!;
     return layout;
 }
 
-fn VkShaderModule! Device.createShaderModule(self, char[] data)
+fn ShaderModule! DeviceInfo.createShaderModule(self, char[] data)
 {
-    VkShaderModule shader;
-    createShaderModule(self.device, &&VkShaderModuleCreateInfo{
-       .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+    ShaderModule shader;
+    createShaderModule(self.device, &&ShaderModuleCreateInfo{
+       .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
        .pNext = null,
        .flags = 0,
        .codeSize = data.len,
@@ -88,10 +88,10 @@ fn VkShaderModule! Device.createShaderModule(self, char[] data)
     return shader;
 }
 
-fn VkPipelineShaderStageCreateInfo VkShaderModule.info(self, VkShaderStageFlagBits stage, VkSpecializationInfo* spec_info = null, VkPipelineShaderStageCreateFlags flags = 0)
+fn PipelineShaderStageCreateInfo ShaderModule.info(self, ShaderStageFlagBits stage, SpecializationInfo* spec_info = null, PipelineShaderStageCreateFlags flags = 0)
 {
-    return VkPipelineShaderStageCreateInfo {
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+    return PipelineShaderStageCreateInfo {
+        .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
         .pNext = null,
         .flags = flags,
         .stage = stage,
@@ -101,37 +101,37 @@ fn VkPipelineShaderStageCreateInfo VkShaderModule.info(self, VkShaderStageFlagBi
     };
 }
 
-fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null)
+fn SwapChain! DeviceInfo.createSwapchain(self, SwapchainCreateInfoKHR* info = null)
 {
     if (info == null) {
         info = &&self.default_swapchain_info();
     }
 
-    VkSwapchainKHR swapchain;
+    SwapchainKHR swapchain;
     // Create SwapChainKHR
     createSwapchainKHR(self.device, info, null, &swapchain)!;
     // Create SwapChain images
     getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, null)!;
-    VkImage* images = malloc(VkImage, (usz)info.minImageCount);
-    VkImageView* image_views = malloc(VkImageView, (usz)info.minImageCount);
+    Image* images = malloc(Image, (usz)info.minImageCount);
+    ImageView* image_views = malloc(ImageView, (usz)info.minImageCount);
     getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, images)!;
 
     for (int i = 0; i < info.minImageCount; ++i) {
-        VkImageViewCreateInfo image_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+        ImageViewCreateInfo image_info = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
             .pNext = null,
             .flags = 0,
             .image = images[i],
-            .viewType = vk::VK_IMAGE_VIEW_TYPE_2D,
+            .viewType = vk::IMAGE_VIEW_TYPE_2D,
             .format = info.imageFormat,
             .components = {
-                .r = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .g = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .b = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
-                .a = vk::VK_COMPONENT_SWIZZLE_IDENTITY,
+                .r = vk::COMPONENT_SWIZZLE_IDENTITY,
+                .g = vk::COMPONENT_SWIZZLE_IDENTITY,
+                .b = vk::COMPONENT_SWIZZLE_IDENTITY,
+                .a = vk::COMPONENT_SWIZZLE_IDENTITY,
             },
             .subresourceRange = {
-                .aspectMask = vk::VK_IMAGE_ASPECT_COLOR_BIT,
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
                 .baseMipLevel = 0,
                 .levelCount = 1,
                 .baseArrayLayer = 0,
@@ -151,28 +151,28 @@ fn SwapChain! Device.createSwapchain(self, VkSwapchainCreateInfoKHR* info = null
     };
 }
 
-fn VkCommandPool! Device.createCommandPool(self, VkCommandPoolCreateInfo* info = null)
+fn CommandPool! DeviceInfo.createCommandPool(self, CommandPoolCreateInfo* info = null)
 {
     if (info == null) {
-        info = &&VkCommandPoolCreateInfo{
-            .sType = vk::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        info = &&CommandPoolCreateInfo{
+            .sType = vk::STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             .pNext = null,
-            .flags = vk::VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+            .flags = vk::COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
             .queueFamilyIndex = self.queue_family.graphics,
         };
     }
 
-   VkCommandPool pool;
+   CommandPool pool;
    createCommandPool(self.device, info, null, &pool)!;
    return pool;
 }
 
-fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint count, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY)
+fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
 {
     CommandBufferList buffers;
-    VkCommandBuffer* command_buffers = malloc(VkCommandBuffer, count);
-    VkCommandBufferAllocateInfo command_buffer_info = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+    CommandBuffer* command_buffers = malloc(CommandBuffer, count);
+    CommandBufferAllocateInfo command_buffer_info = {
+        .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = pool,
         .level = level,
         .commandBufferCount = count,
@@ -186,12 +186,12 @@ fn CommandBufferList! Device.createCommandBuffers(self, VkCommandPool pool, uint
     return buffers;
 }
 
-fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreateInfoKHR info = defaultSwapchain)
+fn SwapchainCreateInfoKHR DeviceInfo.default_swapchain_info(self, SwapchainCreateInfoKHR info = defaultSwapchain)
 {
-    VkSurfaceFormatKHR surface_format = {|
+    SurfaceFormatKHR surface_format = {|
         foreach (format : self.surface_formats)
         {
-            if (format.format == VK_FORMAT_B8G8R8A8_UNORM && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            if (format.format == FORMAT_B8G8R8A8_UNORM && format.colorSpace == COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return format;
             }
         }
@@ -199,10 +199,10 @@ fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreat
         return self.surface_formats[0];
     |};
 
-    VkPresentModeKHR present_mode = {|
+    PresentModeKHR present_mode = {|
         foreach (present : self.present_modes)
         {
-            if (present == VK_PRESENT_MODE_MAILBOX_KHR) {
+            if (present == PRESENT_MODE_MAILBOX_KHR) {
                 return present;
             }
         }
@@ -210,16 +210,16 @@ fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreat
         return self.present_modes[0];
     |};
 
-    VkExtent2D extent = self.capabilities.maxImageExtent;
-    VkFormat image_format = surface_format.format;
+    Extent2D extent = self.capabilities.maxImageExtent;
+    Format image_format = surface_format.format;
 
     uint image_count = self.capabilities.minImageCount + 1;
     if (self.capabilities.maxImageCount > 0 && image_count > self.capabilities.maxImageCount) {
         image_count = self.capabilities.maxImageCount;
     }
 
-   VkSwapchainCreateInfoKHR create_info = {
-        .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+   SwapchainCreateInfoKHR create_info = {
+        .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
         .pNext = null,
         .flags = 0,
         .surface = self.surface,
@@ -228,10 +228,10 @@ fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreat
         .imageColorSpace = surface_format.colorSpace,
         .imageExtent = extent,
         .imageArrayLayers = 1,
-        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-        .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+        .imageUsage = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageSharingMode = SHARING_MODE_EXCLUSIVE,
         .preTransform = self.capabilities.currentTransform,
-        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .compositeAlpha = COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
         .presentMode = present_mode,
         .clipped = 0,
         .oldSwapchain = null,
@@ -239,33 +239,33 @@ fn VkSwapchainCreateInfoKHR Device.default_swapchain_info(self, VkSwapchainCreat
     return create_info;
 }
 
-fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info, VkPhysicalDeviceFeatures device_features = default_device_features)
+fn DeviceInfo! requestDevice(AppInfo* info, GLFWwindow window, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info, PhysicalDeviceFeatures device_features = default_device_features)
 {
-    VkInstance instance = getInstance(info, debug_info)!;
-    VkDebugUtilsMessengerEXT debug_messenger;
-    VkPhysicalDevice physical_device;
+    Instance instance = getInstance(info, debug_info)!;
+    DebugUtilsMessengerEXT debug_messenger;
+    PhysicalDevice physical_device;
     SurfaceFormatList surface_formats;
     PresentModeList present_modes;
-    vk::QueueFamily queue_family;
-    VkQueue graphics_queue;
-    VkDevice logical_device;
-    VkSurfaceCapabilitiesKHR device_capabilities;
+    QueueFamily queue_family;
+    Queue graphics_queue;
+    Device logical_device;
+    SurfaceCapabilitiesKHR device_capabilities;
     bool physical_device_found = false;
 
     if (info.enable_debug) {
        debug_messenger = instance.createDebugUtilsMessenger()!;
     }
 
-    VkSurfaceKHR surface = glfw::createWindowSurface(instance, window, null)!;
+    SurfaceKHR surface = glfw::createWindowSurface(instance, window, null)!;
     DeviceList physical_devices = getPhysicalDevices(instance)!;
     defer physical_devices.free();
 
     // Find usable physical device (GPU)
     foreach (i, device : physical_devices)
     {
-        vk::QueueFamily queue;
+        QueueFamily queue;
         bool supports_extensions = true;
-        VkSurfaceCapabilitiesKHR capabilities;
+        SurfaceCapabilitiesKHR capabilities;
         // Check for device extension support
         StringList device_extensions = getDeviceExtensions(device)!;
         defer device_extensions.free();
@@ -280,12 +280,12 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
         foreach (o, properties : queue_properties) {
             uint presentSupport;
 
-            if ((ulong)properties.queueFlags & VK_QUEUE_GRAPHICS_BIT != 0) {
+            if ((ulong)properties.queueFlags & QUEUE_GRAPHICS_BIT != 0) {
                 queue.graphics = (uint)o;
             }
             getPhysicalDeviceSurfaceSupportKHR(device, (uint)o, surface, &presentSupport)!;
 
-            if (presentSupport == VK_TRUE) {
+            if (presentSupport == vk::TRUE) {
                 queue.present = (uint)o;
             }
 
@@ -319,15 +319,15 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
     }
 
     float queuePriorities = 1.0;
-    VkDeviceQueueCreateInfo graphicsInfo = {
-        .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+    DeviceQueueCreateInfo graphicsInfo = {
+        .sType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
         .queueFamilyIndex = queue_family.graphics,
         .queueCount = 1,
         .pQueuePriorities = &queuePriorities
     };
 
-    VkDeviceCreateInfo deviceCreateInfo = {
-        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+    DeviceCreateInfo deviceCreateInfo = {
+        .sType = STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .pQueueCreateInfos = &graphicsInfo,
         .queueCreateInfoCount = 1,
         .pEnabledFeatures = &device_features,
@@ -344,9 +344,9 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
         deviceCreateInfo.ppEnabledLayerNames = (char*)&info.validations.to_array()[0];
     }
 
-    VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {
-       .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-       .dynamicRendering = VK_TRUE,
+    PhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {
+       .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+       .dynamicRendering = vk::TRUE,
     };
 
     deviceCreateInfo.pNext = &dynamicRenderingFeatures;
@@ -354,7 +354,7 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
     vk::createDevice(physical_device, &deviceCreateInfo, null, &logical_device)!;
     vk::getDeviceQueue(logical_device, queue_family.graphics, 0, &graphics_queue);
 
-    return Device {
+    return DeviceInfo {
         .instance = instance,
         .surface = surface,
         .device = logical_device,
@@ -369,35 +369,35 @@ fn Device! requestDevice(AppInfo* info, GLFWwindow window, VkDebugUtilsMessenger
     };
 }
 
-fn void! Device.single_time_buffer(self, CommandBufferCallback callback)
+fn void! DeviceInfo.single_time_buffer(self, CommandBufferCallback callback)
 {
-    VkCommandPool command_pool;
-    VkCommandPoolCreateInfo pool_info = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+    CommandPool command_pool;
+    CommandPoolCreateInfo pool_info = {
+        .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = null,
         .queueFamilyIndex = self.queue_family.graphics,
     };
     createCommandPool(self.device, &pool_info, null, &command_pool)!;
-    VkCommandBufferAllocateInfo alloc_info = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+    CommandBufferAllocateInfo alloc_info = {
+        .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .pNext = null,
-        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .level = COMMAND_BUFFER_LEVEL_PRIMARY,
         .commandPool = command_pool,
         .commandBufferCount = 1,
     };
-    VkCommandBuffer command_buffer;
+    CommandBuffer command_buffer;
     allocateCommandBuffers(self.device, &alloc_info, &command_buffer)!;
-    VkCommandBufferBeginInfo beginInfo = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+    CommandBufferBeginInfo beginInfo = {
+        .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
     };
 
     beginCommandBuffer(command_buffer, &beginInfo)!;
     callback(command_buffer);
     endCommandBuffer(command_buffer)!;
 
-    VkSubmitInfo submitInfo = {
-        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    SubmitInfo submitInfo = {
+        .sType = STRUCTURE_TYPE_SUBMIT_INFO,
         .commandBufferCount = 1,
         .pCommandBuffers = &command_buffer
     };
@@ -407,9 +407,9 @@ fn void! Device.single_time_buffer(self, CommandBufferCallback callback)
     destroyCommandPool(self.device, command_pool, null);
 }
 
-fn VkDebugUtilsMessengerEXT! VkInstance.createDebugUtilsMessenger(self, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)
+fn DebugUtilsMessengerEXT! Instance.createDebugUtilsMessenger(self, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)
 {
-    VkDebugUtilsMessengerEXT messenger;
+    DebugUtilsMessengerEXT messenger;
     createDebugUtilsMessengerEXT(self, &debug_info, null, &messenger)!;
     return messenger;
 }
@@ -421,11 +421,11 @@ fn void AppInfo.free(&self)
     self.device_extensions.free();
 }
 
-fn VkInstance! getInstance(AppInfo* info, VkDebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info) {
-        VkInstance instance;
-        VkInstanceCreateInfo createInfo = {
-        .sType = vk::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .pApplicationInfo = &&VkApplicationInfo {
+fn Instance! getInstance(AppInfo* info, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info) {
+        Instance instance;
+        InstanceCreateInfo createInfo = {
+        .sType = vk::STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .pApplicationInfo = &&ApplicationInfo {
             .pApplicationName = info.pApplicationName,
             .applicationVersion = info.applicationVersion,
             .pEngineName = info.pEngineName,
@@ -475,7 +475,7 @@ fn StringList! getInstanceExtensions() {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)!;
-    VkExtensionProperties* layers = malloc(VkExtensionProperties, extensionCount);
+    ExtensionProperties* layers = malloc(ExtensionProperties, extensionCount);
     defer mem::free(layers);
 
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
@@ -487,12 +487,12 @@ fn StringList! getInstanceExtensions() {
 }
 
 
-fn StringList! getDeviceExtensions(VkPhysicalDevice device) {
+fn StringList! getDeviceExtensions(PhysicalDevice device) {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
 
-    VkExtensionProperties* layers = malloc(VkExtensionProperties, extensionCount);
+    ExtensionProperties* layers = malloc(ExtensionProperties, extensionCount);
     defer mem::free(layers);
 
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
@@ -503,12 +503,12 @@ fn StringList! getDeviceExtensions(VkPhysicalDevice device) {
     return extensionList;
 }
 
-fn DeviceList! getPhysicalDevices(VkInstance instance) {
+fn DeviceList! getPhysicalDevices(Instance instance) {
     uint deviceCount;
     DeviceList deviceList;
     vk::enumeratePhysicalDevices(instance, &deviceCount, null)!;
 
-    VkPhysicalDevice* devices = malloc(VkPhysicalDevice, deviceCount);
+    PhysicalDevice* devices = malloc(PhysicalDevice, deviceCount);
     defer mem::free(devices);
 
     vk::enumeratePhysicalDevices(instance, &deviceCount, devices)!;
@@ -521,7 +521,7 @@ fn StringList! getValidationLayers() {
     StringList layersList;
     vk::enumerateInstanceLayerProperties(&layerCount, null)!;
 
-    VkLayerProperties* layers = malloc(VkLayerProperties, layerCount);
+    LayerProperties* layers = malloc(LayerProperties, layerCount);
     defer mem::free(layers);
 
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
@@ -532,12 +532,12 @@ fn StringList! getValidationLayers() {
     return layersList;
 }
 
-fn QueuePropertiesList! getQueueProperties(VkPhysicalDevice device) {
+fn QueuePropertiesList! getQueueProperties(PhysicalDevice device) {
     uint queueCount;
     QueuePropertiesList propertiesList;
     getPhysicalDeviceQueueFamilyProperties(device, &queueCount, null);
 
-    VkQueueFamilyProperties* properties = malloc(VkQueueFamilyProperties, queueCount);
+    QueueFamilyProperties* properties = malloc(QueueFamilyProperties, queueCount);
     defer mem::free(properties);
     getPhysicalDeviceQueueFamilyProperties(device, &queueCount, properties);
 
@@ -547,12 +547,12 @@ fn QueuePropertiesList! getQueueProperties(VkPhysicalDevice device) {
     return propertiesList;
 }
 
-fn SurfaceFormatList! getSurfaceFormats(VkPhysicalDevice device, VkSurfaceKHR surface) {
+fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surface) {
     uint format_count;
     SurfaceFormatList formatList;
     getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null)!;
 
-    VkSurfaceFormatKHR* formats = malloc(VkSurfaceFormatKHR, format_count);
+    SurfaceFormatKHR* formats = malloc(SurfaceFormatKHR, format_count);
     defer mem::free(formats);
     getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, formats)!;
 
@@ -562,12 +562,12 @@ fn SurfaceFormatList! getSurfaceFormats(VkPhysicalDevice device, VkSurfaceKHR su
     return formatList;
 }
 
-fn PresentModeList! getSurfacePresentModes(VkPhysicalDevice device, VkSurfaceKHR surface) {
+fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR surface) {
     uint present_count;
     PresentModeList presentList;
     getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null)!;
 
-    VkPresentModeKHR* presents = malloc(VkPresentModeKHR, present_count);
+    PresentModeKHR* presents = malloc(PresentModeKHR, present_count);
     defer mem::free(presents);
     getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, presents)!;
 
@@ -579,25 +579,25 @@ fn PresentModeList! getSurfacePresentModes(VkPhysicalDevice device, VkSurfaceKHR
 
 
 fn bool debugCallback(
-    vk::VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    vk::VkDebugUtilsMessageTypeFlagsEXT messageType,
-    vk::VkDebugUtilsMessengerCallbackDataEXT* data,
+    vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    vk::DebugUtilsMessageTypeFlagsEXT messageType,
+    vk::DebugUtilsMessengerCallbackDataEXT* data,
     void* userData
 ) @private {
-    if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+    if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
        libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
        libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
        libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
        libc::printf("%s \n", data.pMessage);
     }
     return false;
 }
 
 
-fn void Device.free(self)
+fn void DeviceInfo.free(self)
 {
     vk::deviceWaitIdle(self.device)!!;
     self.surface_formats.free();
@@ -610,26 +610,26 @@ fn void Device.free(self)
     vk::destroyInstance(self.instance, null);
 }
 
-fn void VkCommandPool.free(self, VkDevice device)
+fn void CommandPool.free(self, Device device)
 {
    destroyCommandPool(device, self, null);
 }
 
-fn void VkShaderModule.free(self, VkDevice device)
+fn void ShaderModule.free(self, Device device)
 {
     destroyShaderModule(device, self, null);
 }
 
-fn void VkPipelineLayout.free(self, VkDevice device)
+fn void PipelineLayout.free(self, Device device)
 {
     destroyPipelineLayout(device, self, null);
 }
 
-fn void VkDescriptorSetLayout.free(self, VkDevice device)
+fn void DescriptorSetLayout.free(self, Device device)
 {
     destroyDescriptorSetLayout(device, self, null);
 }
 
-fn void VkPipeline.free(self, VkDevice device) {
+fn void Pipeline.free(self, Device device) {
    destroyPipeline(device, self, null);
 }
