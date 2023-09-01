@@ -43,7 +43,14 @@ var platformTypes = {
 var replaceNames = {"module": "mod"};
 var filteredNames = [
   "VkBaseInStructure",
-  "VkBaseOutStructure"
+  "VkBaseOutStructure",
+  "VkPhysicalDeviceVulkan11Features",
+  "VkPhysicalDeviceVulkan12Features",
+  "VkPhysicalDeviceVulkan13Features",
+  "VkPhysicalDeviceVulkan11Properties",
+  "VkPhysicalDeviceVulkan12Properties",
+  "VkPhysicalDeviceVulkan13Properties",
+  "VkPipelineCreationFeedbackCreateInfo"
 ];
 var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1", "VK_VERSION_1_2", "VK_VERSION_1_3"];
 
@@ -88,11 +95,16 @@ var typeMap = {
   ...platformTypes
 };
 
+var defaultValues = {
+  "uint": 0,
+  "short": 0,
+  "int": 0,
+};
+
 class VKstruct {
   bool returnedOnly;
   String? name;
   String? extendsStruct;
-  String? category;
   List<VKtype> values = [];
 
   VKstruct(
@@ -111,6 +123,10 @@ class VKstruct {
         name: name,
         values: values,
         extendsStruct: extendsStruct);
+  }
+
+  String? C3Name() {
+    return name?.substring(2).camelCase().replaceAll("_", "");
   }
 }
 
@@ -158,10 +174,9 @@ class VKenum {
   String? type;
   String? name;
   String? comment;
-  String? category;
   String? bit_width;
   List<VKenumValue> values;
-  VKenum({required this.name, this.type, required this.values, this.comment, this.category, this.bit_width});
+  VKenum({required this.name, this.type, required this.values, this.comment, this.bit_width});
 
   static fromXML(XmlElement node) {
     String? name = node.getAttribute("name");
@@ -181,12 +196,20 @@ class VKtype {
   String? name;
   String? requiredBy;
   String? api;
-  String? category;
-
+  String? defaultValue;
+  List<String>? lenValue;
+  String? altLen;
+  bool isPointer;
+  bool isDoublePointer;
   VKtype(
       {required this.type,
       required this.name,
       required this.requiredBy,
+        this.isPointer = false,
+        this.isDoublePointer = false,
+        this.defaultValue,
+        this.altLen,
+        this.lenValue,
       this.api});
   static fromXML(XmlElement node) {
     String? name = node.getElement("name")?.innerText;
@@ -194,9 +217,13 @@ class VKtype {
     String? requiredBy = node.getAttribute("requires");
     String? optional = node.getAttribute("optional");
     String? api = node.getAttribute("api");
-    /* String? len = node.getAttribute("len");*/
+    String? values = node.getAttribute("values");
+    String? lenValue = node.getAttribute("len");
+    String? altlen = node.getAttribute("altlen");
     String hasLen = node.getElement("name")!.following.toString();
-    bool isPointer = node.innerText.contains("*");
+    int pointing = node.innerText.split('*').length;
+    bool isPointer = pointing > 1;
+    bool isDoublePointer = pointing > 2;
     String? len;
 
     if (hasLen.substring(1, 2) == "[") {
@@ -212,10 +239,16 @@ class VKtype {
     return VKtype(
         type:
             "${typeMap[type] ?? type}${len != null ? "[${len}]" : ""}${isPointer ? "*" : ""}",
-        name: name,
+        name: replaceNames[name] ?? name,
         requiredBy: requiredBy,
+        defaultValue: values,
+        isPointer: isPointer,
+        isDoublePointer: isDoublePointer,
+        altLen: altlen,
+        lenValue: lenValue?.split(",").toList(),
         api: api);
   }
+
 }
 
 class VKfnPointer {
@@ -304,6 +337,10 @@ extension ParseMethods on String {
     return value;
   }
 
+  String capitalizeName() {
+    return '${this?[0].toUpperCase()}${this?.substring(1)}';
+  }
+
   String camelCase() {
     return '${this[0].toLowerCase()}${this.substring(1)}';
   }
@@ -321,13 +358,15 @@ extension ParseMethods on String {
 void main() {
 
   var output = File('./build/vk.c3');
+  var builders = File('./build/builders.c3');
   var windowOutput = File('./build/window.c3');
 
   final file = new File('assets/vk.xml');
   final document = XmlDocument.parse(file.readAsStringSync());
 
-
   output.writeAsStringSync("");
+  builders.writeAsStringSync("");
+  builders.writeAsStringSync("module vk; \n", mode: FileMode.append);
   output.writeAsStringSync("module vk; \n", mode: FileMode.append);
 
   // Plaform types
@@ -340,6 +379,10 @@ void main() {
   output.writeAsStringSync("\n", mode: FileMode.append);
 
   List<VKtype> types = [];
+  List<VKtype> bitmasks = [];
+  List<VKtype> handles = [];
+  List<VKtype> basetypes = [];
+  List<VKstruct> unions = [];
   List<VKstruct> structs = [];
   List<VKfnPointer> pointers = [];
   List<VKCommand> commands = [];
@@ -365,20 +408,17 @@ void main() {
     // Parse Vulkan types
     if (category == "bitmask") {
       VKtype value = VKtype.fromXML(node);
-      value.category = category;
-      types.add(value);
+      bitmasks.add(value);
     }
 
     if (category == "handle") {
       VKtype value = VKtype.fromXML(node);
-      value.category = category;
-      types.add(value);
+      handles.add(value);
     }
 
     if (category == "basetype") {
       VKtype value = VKtype.fromXML(node);
-      value.category = category;
-      types.add(value);
+      basetypes.add(value);
     }
 
     if (category == "enum") {
@@ -386,19 +426,16 @@ void main() {
           element.getAttribute("name") == name &&
           element.getAttribute("api") != "vulkansc");
       VKenum value = VKenum.fromXML(enumNode);
-      value.category = category;
       enums.add(value);
     }
 
     if (category == "union") {
       VKstruct value = VKstruct.fromXML(node);
-      value.category = category;
-      structs.add(value);
+      unions.add(value);
     }
 
     if (category == "struct") {
       VKstruct value = VKstruct.fromXML(node);
-      value.category = category;
       structs.add(value);
     }
 
@@ -579,19 +616,21 @@ fault VkErrors {
 
 
 // Write the actual C3 code
-types.forEach((type) {
-  if (type.category == "bitmask") {
-    output.writeAsStringSync("def ${type.name} = ${type.type};\n",
-        mode: FileMode.append);
-  }
-  if (type.category == "handle") {
-    output.writeAsStringSync("def ${type.name} = distinct inline void*;\n",
-        mode: FileMode.append);
-  }
-  if (type.category == "basetype") {
-    output.writeAsStringSync("def ${type.name} = ${type.type};\n",
-        mode: FileMode.append);
-  }
+
+
+bitmasks.forEach((element) {
+  output.writeAsStringSync("def ${element.name} = ${element.type};\n",
+      mode: FileMode.append);
+});
+
+handles.forEach((element) {
+  output.writeAsStringSync("def ${element.name} = distinct inline void*;\n",
+      mode: FileMode.append);
+});
+
+basetypes.forEach((element) {
+  output.writeAsStringSync("def ${element.name} = ${element.type};\n",
+      mode: FileMode.append);
 });
 
 constants.forEach((value) {
@@ -600,15 +639,67 @@ constants.forEach((value) {
       mode: FileMode.append);
 });
 
+unions.forEach((element) {
+  String code = "union ${element.name} {\n  ${element.values.map((value) => "${value.type} ${value.name?.camelCase()};").join("\n  ")}\n}\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
+
 structs.where((element) => element.values.length != 0).forEach((type) {
-  if (type.category == "struct") {
-    String code = "struct ${type.name} {\n ${type.values.map((value) =>"${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${(replaceNames[value.name] ?? value.name)?.camelCase()};").join("\n ")}\n}\n";
-    output.writeAsStringSync(code, mode: FileMode.append);
-  }
-  if (type.category == "union") {
-    String code = "union ${type.name} {\n  ${type.values.map((value) => "${value.type} ${(replaceNames[value.name] ?? value.name)?.camelCase()};").join("\n  ")}\n}\n";
-    output.writeAsStringSync(code, mode: FileMode.append);
-  }
+  String code = "struct ${type.name} {\n ${type.values.map((value) =>"${platformTypes.keys.contains(value.type) ? value.type?.formatTypeName() : value.type} ${value.name?.camelCase()};").join("\n ")}\n}\n";
+  output.writeAsStringSync(code, mode: FileMode.append);
+});
+
+// Struct builders
+structs.where((element) => element.values.length != 0 && element.values[0].defaultValue != null && !filteredNames.contains(element.name)).forEach((type) {
+  builders.writeAsStringSync(
+"""\n
+fn ${type.name} ${type.C3Name()}Builder() {
+  ${type.name} defaultValue = {
+    .sType = ${type.values[0].defaultValue},
+    .pNext = null
+  };
+  return defaultValue;
+}
+${type.values.skip(2).where((element) => element.altLen == null).map((element) {
+bool isArrayValue = element.lenValue != null && element.lenValue![0] != "null-terminated";
+String fnName = element.name!.capitalizeName();
+
+if (element.isPointer) {
+  fnName = element.name!.substring(1).capitalizeName()!;
+}
+
+if (element.isDoublePointer) {
+  fnName = element.name!.substring(2).capitalizeName()!;
+}
+
+if (element.type == "char*" && isArrayValue) {
+  return """
+fn ${type.name} ${type.name}.set${fnName}(self, ZString[] ${element.name}) {
+  self.${element.lenValue![0]} = (uint)${element.name}.len;
+  self.${element.name} = (char*)&${element.name}[0];
+  return self;
+}
+""";
+}
+
+if (isArrayValue && (element.type != "void*")) {
+  return """
+fn ${type.name} ${type.name}.set${fnName}(self, ${element.type?.substring(0, element.type!.length - 1)}[] ${element.name}) {
+  self.${element.lenValue![0]} = (uint)${element.name}.len;
+  self.${element.name} = &${element.name}[0];
+  return self;
+}
+""";
+}
+
+return """
+fn ${type.name} ${type.name}.set${fnName}(self, ${element.type} ${element.name}) {
+  self.${element.name} = ${element.name};
+  return self;
+}
+       """;
+}).join("\n")}
+""", mode: FileMode.append);
 });
 
 pointers.forEach((command) {

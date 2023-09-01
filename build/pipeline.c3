@@ -40,12 +40,6 @@ fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.vertexInput(self, V
     return self;
 }
 
-fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.setLayout(self, VkPipelineLayout layout)
-{
-    self.layout = layout;
-    return self;
-}
-
 fn VkGraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo.rasterizationState(self, VkPipelineRasterizationStateCreateInfo* info)
 {
     info.sType = vk::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
