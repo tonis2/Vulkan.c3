@@ -135,9 +135,9 @@ fn void! main()
     VkCommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
-    VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutDefault
-    .set_flags(vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-    .bindings(VkDescriptorSetLayoutBinding[]{
+    VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
       {
           .binding = 0,
           .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -148,28 +148,21 @@ fn void! main()
 
     VkDescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
     VkWriteDescriptorSet[] descriptorSets = {
-            vk::descriptorWriteSetBuffer(
-                vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                VkDescriptorBufferInfo[]{
-                   {
-                        .buffer = uniform_buffer.buffer,
-                        .offset = 0,
-                        .range = UniformData.sizeof,
-                    },
-                }
-            ),
+            vk::writeDescriptorSetBuilder()
+            .setDescriptorType(vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+            .setBufferInfo({
+              {
+                   .buffer = uniform_buffer.buffer,
+                   .offset = 0,
+                   .range = UniformData.sizeof,
+               },
+           })
     };
 
-    VkPhysicalDevicePushDescriptorPropertiesKHR pushDescriptorProperties = {
-        .sType = vk::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
-        .pNext = null,
-        .maxPushDescriptors = 1,
-    };
 
-    VkPhysicalDeviceProperties2 deviceProps2 = {
-        .sType = vk::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-        .pNext = &pushDescriptorProperties
-    };
+    VkPhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
+                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
+
     vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
 
     // Pipeline info
@@ -184,8 +177,8 @@ fn void! main()
 
     VkGraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
-        vertex_module.pipelineInfo(vk::VK_SHADER_STAGE_VERTEX_BIT),
-        frag_module.pipelineInfo(vk::VK_SHADER_STAGE_FRAGMENT_BIT)
+        vertex_module.info(vk::VK_SHADER_STAGE_VERTEX_BIT),
+        frag_module.info(vk::VK_SHADER_STAGE_FRAGMENT_BIT)
     })
      .setLayout(pipeline_layout)
      .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
@@ -231,21 +224,18 @@ fn void! main()
         .setDepthBiasEnable(vk::VK_FALSE)
     )
     .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
-    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
     .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
                       .setSampleShadingEnable(vk::VK_FALSE)
                       .setRasterizationSamples(vk::VK_SAMPLE_COUNT_1_BIT)
                       .setMinSampleShading(1.0)
                       .setAlphaToCoverageEnable(vk::VK_FALSE)
                       .setAlphaToOneEnable(vk::VK_FALSE))
-    .depthStensilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
                         .setDepthTestEnable(vk::VK_FALSE)
                         .setDepthWriteEnable(vk::VK_FALSE)
                         .setDepthCompareOp(vk::VK_COMPARE_OP_LESS_OR_EQUAL)
                         .setBack({.compareOp = vk::VK_COMPARE_OP_ALWAYS}))
-    .colorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
                     .setLogicOp(vk::VK_LOGIC_OP_COPY)
                     .setAttachments({
@@ -262,8 +252,12 @@ fn void! main()
                            .srcAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE,
                            .dstAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
                            .alphaBlendOp = vk::VK_BLEND_OP_ADD,
-                       }}));
-    pipeline_info.pNext = &&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format});
+                       }}))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
+
     VkPipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
 /*
