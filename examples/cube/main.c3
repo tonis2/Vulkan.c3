@@ -147,6 +147,7 @@ fn void! main()
     });
 
     DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+
     WriteDescriptorSet[] descriptorSets = {
             vk::writeDescriptorSetBuilder()
             .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
