@@ -10,6 +10,10 @@ def MouseCallback = fn void(GLFWwindow window, int button, int action, int mods)
 def MouseEvent = fn void(EventHandler*);
 def KeyboardEvent = fn void(EventHandler*, uint key);
 
+fault GlfwErrors {
+  FAILED_CREATING_SURFACE,
+}
+
 const GLFW_RELEASE = 0;
 const GLFW_PRESS = 1;
 const GLFW_REPEAT = 2;
@@ -54,6 +58,7 @@ struct EventHandler {
     MouseEvent on_mouse_event;
     uint last_key;
 }
+
 
 fn void EventHandler.init(&self) {
     setMouseButtonCallback(self.window, (MouseCallback*)&mouseEvents);
@@ -119,5 +124,15 @@ extern fn void setMouseButtonCallback(GLFWwindow window, MouseCallback* callback
 extern fn GLFWwindow createWindow(int, int, char*, GLFWmonitor, GLFWwindow) @extern("glfwCreateWindow");
 
 extern fn char* getRequiredInstanceExtensions (uint *count) @extern("glfwGetRequiredInstanceExtensions");
-extern fn void* getInstanceProcAddress (VkInstance instance, char *procname) @extern("glfwGetInstanceProcAddress");
-extern fn VkResult createWindowSurface (VkInstance instance, GLFWwindow *window, VkAllocationCallbacks *allocator, VkSurfaceKHR *surface) @extern("glfwCreateWindowSurface");
+extern fn void* getInstanceProcAddress (vk::Instance instance, char *procname) @extern("glfwGetInstanceProcAddress");
+extern fn vk::Result vKcreateWindowSurface (vk::Instance instance, GLFWwindow *window, vk::AllocationCallbacks *allocator, vk::SurfaceKHR *surface) @extern("glfwCreateWindowSurface");
+
+fn vk::SurfaceKHR! createWindowSurface(vk::Instance instance, GLFWwindow *window, vk::AllocationCallbacks *allocator) {
+    vk::SurfaceKHR surface;
+    if (vKcreateWindowSurface(instance, window, allocator, &surface) != 0)
+    {
+        return GlfwErrors.FAILED_CREATING_SURFACE?;
+    }
+
+    return surface;
+}

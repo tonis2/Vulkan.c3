@@ -1,14 +1,14 @@
 import std::io;
 import vk;
 import glfw;
-import context;
-import buffer;
-import helpers;
 import camera;
 import std::math;
 
 const WIDTH = 800;
 const HEIGHT = 600;
+const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
+const ENABLE_VALIDATION_LAYERS = true;
+const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
     Vec3f pos;
@@ -56,7 +56,7 @@ uint[] index_data = {
     20, 21, 22,     20, 22, 23    // left
 };
 
-fn int main()
+fn void! main()
 {
     glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
@@ -69,7 +69,7 @@ fn int main()
     {
         io::printfn("Failed to init glfw window");
         glfw::terminate();
-        return 1;
+        return;
     }
 
     defer {
@@ -77,481 +77,352 @@ fn int main()
         glfw::terminate();
     }
 
-    EventHandler eventHandler = {
-        .window = window,
-    };
+    EventHandler eventHandler = { .window = window };
+    eventHandler.init();
 
     Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
-    eventHandler.init();
-    VkContext! context = context::init(window);
+    AppInfo appInfo = {
+        .pApplicationName = "Hello Cube",
+        .applicationVersion = vk::@makeApiVersion(0,1,0,0),
+        .pEngineName = "Super engine",
+        .engineVersion = vk::@makeApiVersion(0,1,0,0),
+        .apiVersion = VK_API_VERSION_1_3,
+        .enable_debug = ENABLE_VALIDATION_LAYERS,
+        .dynamic_rendering = true,
+        .instance_flags = env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
+    };
 
-    if (catch err = context) {
-        io::printfn("Failed to create vk context");
-        return 1;
+    defer appInfo.free();
+
+    //"VK_LAYER_LUNARG_api_dump"
+    appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
+    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
+
+    // SETUP extensions
+    uint glfwExtensions_count = 0;
+    ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
+    for (int i = 0; i < glfwExtensions_count; ++i) appInfo.extensions.push(glfwExtensions[i]);
+
+    if (ENABLE_VALIDATION_LAYERS) {
+       appInfo.extensions.add_array({"VK_EXT_debug_utils"});
     }
 
-    Buffer vertex_buffer = {
+    if (env::os_is_darwin()) {
+        appInfo.extensions.push("VK_KHR_portability_enumeration");
+        appInfo.device_extensions.push("VK_KHR_portability_subset");
+    }
+
+    DeviceInfo device = vk::requestDevice(&appInfo, window)!;
+    SwapChain swapchain = device.createSwapchain()!;
+
+    BufferInfo vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
-        .usage = vk::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
     };
 
-    Buffer index_buffer = {
+    BufferInfo index_buffer = {
         .size = (index_data.len * float.sizeof),
-        .usage = vk::VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
     };
 
-    Buffer uniform_buffer = {
+    BufferInfo uniform_buffer = {
         .size = UniformData.sizeof,
-        .usage = vk::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
-    if (catch err = vertex_buffer.device_only(&vertex_data[0], context)) {
-        io::printfn("Failed to create vertex buffer");
-        return 1;
-    }
+    // Create buffers and attach data
+    vertex_buffer.device_only(&vertex_data[0], device)!;
+    index_buffer.device_only(&index_data[0], device)!;
+    uniform_buffer.writable(&&camera.matrix(), device)!;
 
-    if (catch err = index_buffer.device_only(&index_data[0], context)) {
-        io::printfn("Failed to create index buffer");
-        return 1;
-    }
+    CommandPool command_pool = device.createCommandPool()!;
+    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
-    if (catch err = uniform_buffer.writable(&&camera.matrix(), context)) {
-        io::printfn("Failed to create uniform buffer");
-        return 1;
-    }
+    // Set-up descriptor info for uniform buffer usage
+    DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
+      {
+          .binding = 0,
+          .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+          .descriptorCount = 1,
+          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+      }
+    });
 
-    // Descriptor info
-    VkDescriptorSetLayout descriptorSetLayout;
-    VkDescriptorSetLayoutCreateInfo descriptor_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-        .bindingCount = 1,
-        .pBindings = &&VkDescriptorSetLayoutBinding[1]{
-            {
-              .binding = 0,
-              .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-              .descriptorCount = 1,
-              .stageFlags = vk::VK_SHADER_STAGE_VERTEX_BIT
-            }
-        },
-        .pNext = null,
-        .flags = vk::VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR,
+    DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+
+    WriteDescriptorSet[] descriptorSets = {
+            vk::writeDescriptorSetBuilder()
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+            .setBufferInfo({
+              {
+                   .buffer = uniform_buffer.buffer,
+                   .offset = 0,
+                   .range = UniformData.sizeof,
+               },
+           })
     };
 
-    vk::createDescriptorSetLayout(context.device, &descriptor_info, null, &descriptorSetLayout);
+    // Required for using push descriptors
+    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
+                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
 
-    VkWriteDescriptorSet[1] descriptorSets = {
-        {
-            .sType = vk::VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-            .dstSet = null,
-            .dstBinding = 0,
-            .descriptorCount = 1,
-            .descriptorType = vk::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            .pBufferInfo = &&VkDescriptorBufferInfo[1]{
-                 {
-                     .buffer = uniform_buffer.buffer,
-                     .offset = 0,
-                     .range = UniformData.sizeof,
-                 }
-             }
-        }
-    };
+    vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
 
-    VkPhysicalDevicePushDescriptorPropertiesKHR pushDescriptorProperties = {
-        .sType = vk::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
-        .pNext = null,
-        .maxPushDescriptors = 1,
-    };
-
-    VkPhysicalDeviceProperties2 deviceProps2 = {
-        .sType = vk::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-        .pNext = &pushDescriptorProperties
-    };
-    vk::getPhysicalDeviceProperties2(context.physical_device, &deviceProps2);
-
-
-    // Pipeline info
+    // Load shaders
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
 
-    VkShaderModule vertex_module;
-    VkShaderModule frag_module;
+    ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
+    ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
+    PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
+                                                                         .setSetLayouts({ descriptor_set_layout }))!;
 
-    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
-        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .codeSize = vertex_shader_data.len,
-        .pCode = (uint*)&vertex_shader_data,
-    }, null, &vertex_module);
-
-    vk::createShaderModule(context.device, &&VkShaderModuleCreateInfo{
-        .sType = vk::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .codeSize = fragment_shader_data.len,
-        .pCode = (uint*)&fragment_shader_data,
-    }, null, &frag_module);
-
-    VkPipelineLayoutCreateInfo pipeline_layout_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .setLayoutCount = 1,
-        .pSetLayouts = &descriptorSetLayout,
-        .pushConstantRangeCount = 0,
-        .pPushConstantRanges = null,
-    };
-
-    VkPipelineLayout pipeline_layout;
-    vk::createPipelineLayout(context.device, &pipeline_layout_info, null, &pipeline_layout);
-
-    // RenderPass info
-    VkRenderPassCreateInfo render_pass_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .attachmentCount = 1,
-        .pAttachments = &&VkAttachmentDescription{
-             .flags = 0,
-             .format = context.swapchain.image_format,
-             .samples = vk::VK_SAMPLE_COUNT_1_BIT,
-             .loadOp = vk::VK_ATTACHMENT_LOAD_OP_CLEAR,
-             .storeOp = vk::VK_ATTACHMENT_STORE_OP_STORE,
-             .stencilLoadOp = vk::VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-             .stencilStoreOp = vk::VK_ATTACHMENT_STORE_OP_DONT_CARE,
-             .initialLayout = vk::VK_IMAGE_LAYOUT_UNDEFINED,
-             .finalLayout = vk::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-         },
-        .subpassCount = 1,
-        .pSubpasses = &&VkSubpassDescription{
-            .flags = 0,
-            .pipelineBindPoint = vk::VK_PIPELINE_BIND_POINT_GRAPHICS,
-            .colorAttachmentCount = 1,
-            .pColorAttachments = &&VkAttachmentReference{
-               .attachment = 0,
-               .layout = vk::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-            },
-            .inputAttachmentCount = 0,
-            .pInputAttachments = null,
-            .pResolveAttachments = null,
-            .pDepthStencilAttachment = null,
-            .preserveAttachmentCount = 0,
-            .pPreserveAttachments = null,
-        },
-        .dependencyCount = 1,
-        .pDependencies = &&VkSubpassDependency{
-          .srcSubpass = vk::VK_SUBPASS_EXTERNAL,
-          .dstSubpass = 0,
-          .srcStageMask = vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-          .srcAccessMask = 0,
-          .dstStageMask = vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-          .dstAccessMask = vk::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-          .dependencyFlags = 0,
-        },
-    };
-
-    // Create render pass
-    VkRenderPass render_pass;
-    vk::createRenderPass(context.device, &render_pass_info, null, &render_pass);
-
-    VkPipelineColorBlendStateCreateInfo color_blending = {
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .logicOpEnable = 0,
-        .logicOp = vk::VK_LOGIC_OP_COPY,
-        .attachmentCount = 1,
-        .pAttachments = &&VkPipelineColorBlendAttachmentState{
-            .colorWriteMask =
-              vk::VK_COLOR_COMPONENT_R_BIT |
-              vk::VK_COLOR_COMPONENT_G_BIT |
-              vk::VK_COLOR_COMPONENT_B_BIT |
-              vk::VK_COLOR_COMPONENT_A_BIT,
-            .blendEnable = vk::VK_TRUE,
-            .srcColorBlendFactor = vk::VK_BLEND_FACTOR_SRC_ALPHA,
-            .dstColorBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-            .colorBlendOp = vk::VK_BLEND_OP_ADD,
-            .srcAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE,
-            .dstAlphaBlendFactor = vk::VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-            .alphaBlendOp = vk::VK_BLEND_OP_ADD,
-        },
-        .blendConstants = float[4]{ 0.0, 0.0, 0.0, 0.0 },
-    };
-
-    // Shaders info
-    VkPipelineShaderStageCreateInfo vert_stage_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .stage = vk::VK_SHADER_STAGE_VERTEX_BIT,
-        .mod = vertex_module,
-        .pName = "main",
-        .pSpecializationInfo =  null,
-    };
-
-    VkPipelineShaderStageCreateInfo frag_stage_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .stage = vk::VK_SHADER_STAGE_FRAGMENT_BIT,
-        .mod = frag_module,
-        .pName = "main",
-        .pSpecializationInfo =  null,
-    };
-
-    VkPipelineDynamicStateCreateInfo dynamic_state = {
-     .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-     .pNext = null,
-     .flags = 0,
-     .dynamicStateCount = 2,
-     .pDynamicStates = &&VkDynamicState[2]{
-        vk::VK_DYNAMIC_STATE_VIEWPORT,
-        vk::VK_DYNAMIC_STATE_LINE_WIDTH,
-      },
-    };
-
-    VkGraphicsPipelineCreateInfo pipeline_info = {
-        .sType = vk::VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-        .pNext = null,
-        .flags = 0,
-        .stageCount = 2,
-        .pStages = &&VkPipelineShaderStageCreateInfo[2]{ vert_stage_info, frag_stage_info },
-        .pVertexInputState = &&VkPipelineVertexInputStateCreateInfo{
-          .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-          .pNext = null,
-          .flags = 0,
-          .vertexBindingDescriptionCount = 1,
-          .pVertexBindingDescriptions = &&VkVertexInputBindingDescription{
+    // Create Renderpipeline info
+    GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
+    .setStages({
+        vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
+        frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+    })
+     .setLayout(pipeline_layout)
+     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptions(
+        {
+            {
              .binding = 0,
              .stride = Vertex.sizeof,
-             .inputRate = vk::VK_VERTEX_INPUT_RATE_VERTEX,
-            },
-          .vertexAttributeDescriptionCount = 2,
-          .pVertexAttributeDescriptions = &&VkVertexInputAttributeDescription[2]{
-                VkVertexInputAttributeDescription{
-                   .binding = 0,
-                   .location = 0,
-                   .format = vk::VK_FORMAT_R32G32B32_SFLOAT,
-                   .offset = 0
-                },
-                VkVertexInputAttributeDescription{
-                   .binding = 0,
-                   .location = 1,
-                   .format = vk::VK_FORMAT_R32G32B32_SFLOAT,
-                   .offset = 16,
-                },
-            },
-        },
-        .layout = pipeline_layout,
-        .renderPass = render_pass,
-        .pRasterizationState = &&VkPipelineRasterizationStateCreateInfo {
-          .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
-          .pNext = null,
-          .flags = 0,
-          .depthClampEnable = vk::VK_FALSE,
-          .rasterizerDiscardEnable = 0,
-          .polygonMode = vk::VK_POLYGON_MODE_FILL,
-          .lineWidth = 1.0,
-          .cullMode = vk::VK_CULL_MODE_FRONT_BIT,
-          .frontFace = vk::VK_FRONT_FACE_COUNTER_CLOCKWISE,
-          .depthBiasEnable = vk::VK_FALSE,
-          .depthBiasConstantFactor = 0.0,
-          .depthBiasClamp = 0.0,
-          .depthBiasSlopeFactor = 0.0,
-        },
-        .pInputAssemblyState = &&VkPipelineInputAssemblyStateCreateInfo{
-            .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .topology = vk::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-            .primitiveRestartEnable = vk::VK_FALSE,
-        },
-        .pViewportState = &&VkPipelineViewportStateCreateInfo{
-           .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
-           .pNext = null,
-           .flags = 0,
-           .viewportCount = 1,
-           .pViewports = &&VkViewport{
-               .x = 0.0,
-               .y = 0.0,
-               .width = context.swapchain.extent.width,
-               .height = context.swapchain.extent.height,
-               .minDepth = 0.0,
-               .maxDepth = 1.0,
-           },
-           .scissorCount = 1,
-           .pScissors = &&VkRect2D{
-                .offset = { .x = 0, .y = 0 },
-                .extent = context.swapchain.extent,
-            },
-        },
-        .pMultisampleState = &&VkPipelineMultisampleStateCreateInfo{
-          .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
-          .pNext = null,
-          .flags = 0,
-          .sampleShadingEnable = vk::VK_FALSE,
-          .rasterizationSamples = vk::VK_SAMPLE_COUNT_1_BIT,
-          .minSampleShading = 1.0,
-          .pSampleMask = null,
-          .alphaToCoverageEnable = vk::VK_FALSE,
-          .alphaToOneEnable = vk::VK_FALSE,
-        },
-        .pDepthStencilState = &&VkPipelineDepthStencilStateCreateInfo {
-            .sType = vk::VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
-            .depthTestEnable = vk::VK_FALSE,
-            .depthWriteEnable = vk::VK_FALSE,
-            .depthCompareOp = vk::VK_COMPARE_OP_LESS_OR_EQUAL,
-            .back = {
-                .compareOp = vk::VK_COMPARE_OP_ALWAYS
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
-        },
-        .pColorBlendState = &color_blending,
-        .pDynamicState = &dynamic_state,
-        .pTessellationState = null,
-        .subpass = 0,
-        .basePipelineHandle = null,
-        .basePipelineIndex = -1,
-    };
+        })
+        .setVertexAttributeDescriptions({
+            {
+               .binding = 0,
+               .location = 0,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 0
+            },
+            {
+               .binding = 0,
+               .location = 1,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 4 * float.sizeof
+            }
+        })
+    )
+    .setDynamicState(
+       &&vk::pipelineDynamicStateCreateInfoBuilder()
+        .setDynamicStates(
+        {
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
+        })
+    )
+    .setRasterizationState(
+        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
+    )
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+                      .setSampleShadingEnable(vk::FALSE)
+                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+                      .setMinSampleShading(1.0)
+                      .setAlphaToCoverageEnable(vk::FALSE)
+                      .setAlphaToOneEnable(vk::FALSE))
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+                        .setDepthTestEnable(vk::FALSE)
+                        .setDepthWriteEnable(vk::FALSE)
+                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+                    .setLogicOp(vk::LOGIC_OP_COPY)
+                    .setAttachments({
+                       {
+                           .colorWriteMask =
+                               vk::COLOR_COMPONENT_R_BIT |
+                               vk::COLOR_COMPONENT_G_BIT |
+                               vk::COLOR_COMPONENT_B_BIT |
+                               vk::COLOR_COMPONENT_A_BIT,
+                           .blendEnable = vk::TRUE,
+                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .colorBlendOp = vk::BLEND_OP_ADD,
+                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .alphaBlendOp = vk::BLEND_OP_ADD,
+                       }}))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
 
-    VkPipeline pipeline;
-    if (vk::createGraphicsPipelines(context.device, null, 1, &pipeline_info, null, &pipeline) != vk::VK_SUCCESS) {
-        io::printfn("Failed to create pipeline");
-        return 1;
-    };
+    Pipeline pipeline;
+    vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
 
-    VkFramebuffer* frame_buffers = malloc(VkFramebuffer, context.swapchain.image_count);
-    for (int i = 0; i < context.swapchain.image_count; ++i) {
-        VkImageView image_view = context.swapchain.image_views[i];
-        VkFramebufferCreateInfo frame_buffer_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .renderPass = render_pass,
-            .attachmentCount = 1,
-            .pAttachments = &&VkImageView[1]{image_view},
-            .width = context.swapchain.extent.width,
-            .height = context.swapchain.extent.height,
-            .layers = 1,
-        };
-        vk::createFramebuffer(context.device, &frame_buffer_info, null, &frame_buffers[i]);
+
+    // Create syncronisation stuff
+    SemaphoreList wait_semaphores;
+    SemaphoreList signal_semaphores;
+    FenceList frame_fences;
+
+    for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        wait_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        signal_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        frame_fences.push(device.createFence(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT)))!;
     }
 
+    // Rendering loop
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
-
         eventHandler.update();
 
+        // Update cube rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
-        SyncImage active_sync = context.swapchain.syncImages[frame];
-        vk::waitForFences(context.device, 1, &active_sync.frame_fence, vk::VK_TRUE, uint.max);
-        vk::resetFences(context.device, 1, &active_sync.frame_fence);
+        Fence frame_fence = frame_fences[frame];
+        Semaphore wait_semaphore = wait_semaphores[frame];
+        Semaphore signal_semaphore = signal_semaphores[frame];
 
-        uint next_image = {|
-            uint index;
-            vk::acquireNextImageKHR(context.device, context.swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index);
-            return index;
-        |};
+        frame_fence.waitFor(device.device)!;
+        frame_fence.reset(device.device)!;
 
-        VkCommandBuffer buffer = context.command_buffers[next_image];
-        vk::resetCommandBuffer(buffer, 0);
+        uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
 
-        VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
-        VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
+        // Start dynamic rendering
+        RenderingInfo rendering_info = vk::renderingInfoBuilder()
+        .setLayerCount(1)
+        .setRenderArea({
+            .offset = Offset2D{ .x = 0, .y = 0 },
+            .extent = swapchain.extent,
+        })
+        .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+            .setImageView(swapchain.image_views[next_image])
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            })
+        });
 
-        VkSubmitInfo submit_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = null,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &wait_semaphores,
-            .pWaitDstStageMask = &&VkPipelineStageFlags[1]{ vk::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT },
-            .commandBufferCount = 1,
-            .pCommandBuffers = &&VkCommandBuffer[1]{ buffer },
-            .signalSemaphoreCount = 1,
-            .pSignalSemaphores = &signal_semaphores,
-        };
+        CommandBuffer command_buffer = command_buffers[next_image];
+        vk::resetCommandBuffer(command_buffer, 0)!;
+        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
 
-        VkCommandBufferBeginInfo begin_info = {
-          .sType = vk::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-          .pNext = null,
-          .flags = 0,
-          .pInheritanceInfo = null,
-        };
+        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
+        .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+        .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
 
-        vk::beginCommandBuffer(buffer, &begin_info);
+        vk::cmdPipelineBarrier(
+            command_buffer,
+            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_start
+        );
 
-        VkClearValue[1] clear_color = {
-            VkClearValue{
-                .color = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
-            }
-        };
+        vk::cmdBeginRendering(command_buffer, &rendering_info);
 
-        VkRenderPassBeginInfo render_pass_begin_info = {
-            .sType = vk::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-            .pNext = null,
-            .renderPass = render_pass,
-            .framebuffer = frame_buffers[next_image],
-            .renderArea = VkRect2D{
-                .offset = VkOffset2D{ .x = 0, .y = 0 },
-                .extent = context.swapchain.extent,
-            },
-            .clearValueCount = 1,
-            .pClearValues = &clear_color,
-        };
+        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
 
-        vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{ .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
-        vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::VK_SUBPASS_CONTENTS_INLINE);
-        vk::cmdBindPipeline(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(buffer, vk::VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+        vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+        vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
+        vk::cmdDrawIndexed(command_buffer, index_data.len, 1, 0, 0, 0);
+        vk::cmdEndRendering(command_buffer);
 
-        VkBuffer[1] buffers = {vertex_buffer.buffer};
-        VkDeviceSize[1] deviceSizes = {0};
-        vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &deviceSizes);
-        vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::VK_INDEX_TYPE_UINT32);
-        vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
+        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
+        .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
 
-        vk::cmdEndRenderPass(buffer);
-        vk::endCommandBuffer(buffer);
+        vk::cmdPipelineBarrier(
+            command_buffer,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_end
+        );
 
-        vk::queueSubmit(context.graphics_queue, 1, &submit_info, active_sync.frame_fence);
+        SubmitInfo submit_info = vk::submitInfoBuilder()
+        .setWaitSemaphores({ wait_semaphore })
+        .setCommandBuffers({ command_buffer })
+        .setSignalSemaphores({ signal_semaphore })
+        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
 
-        VkPresentInfoKHR present_info = {
-             .sType = vk::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-             .waitSemaphoreCount = 1,
-             .pWaitSemaphores = &signal_semaphores,
-             .swapchainCount = 1,
-             .pSwapchains = &&VkSwapchainKHR[1]{ context.swapchain.swapchain },
-             .pImageIndices = &&uint[1]{next_image},
-             .pResults = null,
-        };
+        vk::endCommandBuffer(command_buffer)!;
+        vk::queueSubmit(device.graphics_queue, 1, &submit_info, frame_fence)!;
 
-        vk::queuePresentKHR(context.graphics_queue, &present_info);
+        PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
+        .setWaitSemaphores({ signal_semaphore })
+        .setSwapchains({ swapchain.swapchain })
+        .setImageIndices({ next_image });
+
+        vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
 
-    defer {
-        vk::destroyShaderModule(context.device, vertex_module, null);
-        vk::destroyShaderModule(context.device, frag_module, null);
-        vk::destroyDescriptorSetLayout(context.device, descriptorSetLayout, null);
-        vk::destroyPipelineLayout(context.device, pipeline_layout, null);
-        vk::destroyRenderPass(context.device, render_pass, null);
-        vk::destroyPipeline(context.device, pipeline, null);
-        for (int i = 0; i < context.swapchain.image_count; ++i) {
-            vk::destroyFramebuffer(context.device, frame_buffers[i], null);
-        }
-        mem::free(frame_buffers);
-        uniform_buffer.free(context.device);
-        index_buffer.free(context.device);
-        vertex_buffer.free(context.device);
-        context.free();
-    };
 
-    return 0;
+    defer {
+        // Use release instead of free here, cause this will free buffer and also destroys the vk instace
+        wait_semaphores.release(device.device);
+        signal_semaphores.release(device.device);
+        frame_fences.release(device.device);
+
+        vertex_module.free(device.device);
+        frag_module.free(device.device);
+        uniform_buffer.free(device.device);
+        index_buffer.free(device.device);
+        vertex_buffer.free(device.device);
+        command_pool.free(device.device);
+        swapchain.free(device.device);
+        pipeline.free(device.device);
+        pipeline_layout.free(device.device);
+        descriptor_set_layout.free(device.device);
+        device.free();
+    }
 }
+

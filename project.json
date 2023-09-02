@@ -4,7 +4,7 @@
 	"authors": [],
 	"version": "0.1.0",
 	"linked-libraries": ["glfw", "vulkan"],
-	"sources": ["./build/vk.c3", "./examples/boilerplate/*"],
+	"sources": ["./build/*", "./examples/dependencies/*"],
 	"targets": {
 		"cube": {
 			"type": "executable",
