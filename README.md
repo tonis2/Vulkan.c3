@@ -33,6 +33,6 @@ To see examples run `c3c run cube` in this repository
 
 ### Roadmap
 
-* Get C3 error handling working with vulkan
-* Get MacOS and Windows examples working.
+* Get windows example working
+* Make GLTF loading example
 * Build vulkan xml parser in C3 instead of Dart
