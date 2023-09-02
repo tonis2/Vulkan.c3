@@ -1,7 +1,6 @@
 module camera;
 import std::math;
 import std::io;
-import helpers;
 
 fn float radians(float value) {
     return value * (float)math::PI / 180;
