@@ -8,6 +8,7 @@ const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
 const ENABLE_VALIDATION_LAYERS = true;
+const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
     Vec3f pos;
@@ -76,7 +77,9 @@ fn void! main()
         glfw::terminate();
     }
 
-    EventHandler eventHandler = glfw::createHandler({ .window = window });
+    EventHandler eventHandler = { .window = window };
+    eventHandler.init();
+
     Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
     AppInfo appInfo = {
@@ -128,6 +131,7 @@ fn void! main()
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     };
 
+    // Create buffers and attach data
     vertex_buffer.device_only(&vertex_data[0], device)!;
     index_buffer.device_only(&index_data[0], device)!;
     uniform_buffer.writable(&&camera.matrix(), device)!;
@@ -135,6 +139,7 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
+    // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
@@ -160,13 +165,13 @@ fn void! main()
            })
     };
 
-
+    // Required for using push descriptors
     PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
                                                 .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
 
     vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
 
-    // Pipeline info
+    // Load shaders
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
 
@@ -175,6 +180,7 @@ fn void! main()
     PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
                                                                          .setSetLayouts({ descriptor_set_layout }))!;
 
+    // Create Renderpipeline info
     GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
         vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
@@ -260,108 +266,78 @@ fn void! main()
 
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
-/*
 
+
+    // Create syncronisation stuff
+    SemaphoreList wait_semaphores;
+    SemaphoreList signal_semaphores;
+    FenceList frame_fences;
+
+    for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        wait_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        signal_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        frame_fences.push(device.createFence(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT)))!;
+    }
+
+    // Rendering loop
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
+        // Update cube rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
             mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
-        SyncImage active_sync = context.swapchain.syncImages[frame];
-        vk::waitForFences(device.device, 1, &active_sync.frame_fence, vk::TRUE, uint.max)!;
-        vk::resetFences(device.device, 1, &active_sync.frame_fence)!;
+        Fence frame_fence = frame_fences[frame];
+        Semaphore wait_semaphore = wait_semaphores[frame];
+        Semaphore signal_semaphore = signal_semaphores[frame];
 
-        uint next_image = {|
-            uint index;
-            vk::acquireNextImageKHR(device.device, swapchain.swapchain, uint.max, active_sync.image_acquired, null, &index)!!;
-            return index;
-        |};
+        frame_fence.waitFor(device.device)!;
+        frame_fence.reset(device.device)!;
 
-      VkRenderingInfo rendering_info = {
-        .sType = vk::STRUCTURE_TYPE_RENDERING_INFO,
-        .pNext = null,
-        .flags = 0,
-        .layerCount = 1,
-        .colorAttachmentCount = 1,
-        .pColorAttachments = &&VkRenderingAttachmentInfo {
-            .sType = vk::STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
-            .imageView = swapchain.image_views[next_image],
-            .imageLayout = vk::IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
-            .loadOp = vk::ATTACHMENT_LOAD_OP_CLEAR,
-            .storeOp = vk::ATTACHMENT_STORE_OP_STORE,
-            .clearValue = VkClearColorValue{ .float32 = { 0.0, 0.0, 0.0, 1.0 } },
-            .renderArea = {
-                .offset = VkOffset2D{ .x = 0, .y = 0 },
-                .extent = swapchain.extent,
-                }
-            }
-        };
+        uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
 
-        VkCommandBuffer buffer = command_buffers[next_image];
-        vk::resetCommandBuffer(buffer, 0)!;
-        vk::cmdBeginRendering(buffer, &rendering_info);
+        // Start dynamic rendering
+        RenderingInfo rendering_info = vk::renderingInfoBuilder()
+        .setLayerCount(1)
+        .setRenderArea({
+            .offset = Offset2D{ .x = 0, .y = 0 },
+            .extent = swapchain.extent,
+        })
+        .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+            .setImageView(swapchain.image_views[next_image])
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            })
+        });
 
-        VkSemaphore[1] wait_semaphores = { active_sync.image_acquired };
-        VkSemaphore[1] signal_semaphores = { active_sync.render_finished};
+        CommandBuffer command_buffer = command_buffers[next_image];
+        vk::resetCommandBuffer(command_buffer, 0)!;
+        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
 
-        VkSubmitInfo submit_info = {
-            .sType = vk::STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = null,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &wait_semaphores,
-            .pWaitDstStageMask = &&VkPipelineStageFlags[1]{ vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT },
-            .commandBufferCount = 1,
-            .pCommandBuffers = &&VkCommandBuffer[1]{ buffer },
-            .signalSemaphoreCount = 1,
-            .pSignalSemaphores = &signal_semaphores,
-        };
-
-        VkCommandBufferBeginInfo begin_info = {
-          .sType = vk::STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-          .pNext = null,
-          .flags = 0,
-          .pInheritanceInfo = null,
-        };
-
-        vk::beginCommandBuffer(buffer, &begin_info)!;
-
-        vk::cmdSetViewport(buffer, 0, 1, &&VkViewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(buffer, 0, 1, &&VkRect2D {.extent = context.swapchain.extent, .offset = VkOffset2D{ .x = 0, .y = 0 }});
-
-        vk::cmdBeginRenderPass(buffer, &render_pass_begin_info, vk::SUBPASS_CONTENTS_INLINE);
-        vk::cmdBindPipeline(buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
-
-        VkBuffer[1] buffers = {vertex_buffer.buffer};
-        VkDeviceSize[1] deviceSizes = {0};
-        vk::cmdBindVertexBuffers(buffer, 0, 1, &buffers, &deviceSizes);
-        vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
-        vk::cmdDrawIndexed(buffer, index_data.len, 1, 0, 0, 0);
-        vk::cmdEndRendering(buffer);
-
-        VkImageMemoryBarrier image_memory_barrier = {
-            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            .srcAccessMask = vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-            .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-            .newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
-            .image = swapchain.images[next_image],
-            .subresourceRange = {
-              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-              .baseMipLevel = 0,
-              .levelCount = 1,
-              .baseArrayLayer = 0,
-              .layerCount = 1,
-            }
-        };
+        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
+        .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+        .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
 
         vk::cmdPipelineBarrier(
-            buffer,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            command_buffer,
+            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
             vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             0,
             0,
@@ -369,28 +345,73 @@ fn void! main()
             0,
             null,
             1,
-            &image_memory_barrier
+            &image_memory_start
         );
 
-        vk::endCommandBuffer(buffer)!;
-        vk::queueSubmit(device.graphics_queue, 1, &submit_info, active_sync.frame_fence)!;
+        vk::cmdBeginRendering(command_buffer, &rendering_info);
 
-        VkPresentInfoKHR present_info = {
-             .sType = vk::STRUCTURE_TYPE_PRESENT_INFO_KHR,
-             .waitSemaphoreCount = 1,
-             .pWaitSemaphores = &signal_semaphores,
-             .swapchainCount = 1,
-             .pSwapchains = &&VkSwapchainKHR[1]{ context.swapchain.swapchain },
-             .pImageIndices = &&uint[1]{next_image},
-             .pResults = null,
-        };
+        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
+
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+
+        vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+        vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
+        vk::cmdDrawIndexed(command_buffer, index_data.len, 1, 0, 0, 0);
+        vk::cmdEndRendering(command_buffer);
+
+        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
+        .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
+
+        vk::cmdPipelineBarrier(
+            command_buffer,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_end
+        );
+
+        SubmitInfo submit_info = vk::submitInfoBuilder()
+        .setWaitSemaphores({ wait_semaphore })
+        .setCommandBuffers({ command_buffer })
+        .setSignalSemaphores({ signal_semaphore })
+        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
+
+        vk::endCommandBuffer(command_buffer)!;
+        vk::queueSubmit(device.graphics_queue, 1, &submit_info, frame_fence)!;
+
+        PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
+        .setWaitSemaphores({ signal_semaphore })
+        .setSwapchains({ swapchain.swapchain })
+        .setImageIndices({ next_image });
+
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
-*/
 
 
     defer {
+        // Use release instead of free here, cause this will free buffer and also destroys the vk instace
+        wait_semaphores.release(device.device);
+        signal_semaphores.release(device.device);
+        frame_fences.release(device.device);
+
         vertex_module.free(device.device);
         frag_module.free(device.device);
         uniform_buffer.free(device.device);

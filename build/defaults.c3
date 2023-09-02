@@ -1,4 +1,8 @@
 module vk;
+import std::collections::list;
+
+def FenceList = List(<vk::Fence>);
+def SemaphoreList = List(<vk::Semaphore>);
 
 PhysicalDeviceFeatures default_device_features = {
     .robustBufferAccess = 0,
@@ -72,4 +76,6 @@ fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, char[] data) {
   self.pCode = (uint*)&data[0];
   return self;
 }
+
+
 

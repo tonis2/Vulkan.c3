@@ -414,11 +414,19 @@ fn DebugUtilsMessengerEXT! Instance.createDebugUtilsMessenger(self, DebugUtilsMe
     return messenger;
 }
 
-fn void AppInfo.free(&self)
+
+fn Semaphore! DeviceInfo.createSemaphore(&self, SemaphoreCreateInfo info)
 {
-    self.validations.free();
-    self.extensions.free();
-    self.device_extensions.free();
+    Semaphore semaphore;
+    vk::createSemaphore(self.device, &info, null, &semaphore)!;
+    return semaphore;
+}
+
+fn Fence! DeviceInfo.createFence(&self, FenceCreateInfo info)
+{
+    Fence fence;
+    vk::createFence(self.device, &info, null, &fence)!;
+    return fence;
 }
 
 fn Instance! getInstance(AppInfo* info, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info) {
@@ -632,4 +640,40 @@ fn void DescriptorSetLayout.free(self, Device device)
 
 fn void Pipeline.free(self, Device device) {
    destroyPipeline(device, self, null);
+}
+
+fn void AppInfo.free(&self)
+{
+    self.validations.free();
+    self.extensions.free();
+    self.device_extensions.free();
+}
+
+
+fn void FenceList.release(self, vk::Device device) {
+  for (uint i = 0; i < self.len(); ++i) {
+      vk::destroyFence(device, self.entries[i], null);
+  }
+  self.free();
+}
+
+fn void SemaphoreList.release(self, vk::Device device) {
+  for (uint i = 0; i < self.len(); ++i) {
+      vk::destroySemaphore(device, self.entries[i], null);
+  }
+  self.free();
+}
+
+fn void! Fence.waitFor(&self, vk::Device device) {
+  vk::waitForFences(device, 1, self, vk::TRUE, uint.max)!;
+}
+
+fn void! Fence.reset(&self, vk::Device device) {
+  vk::resetFences(device, 1, self)!;
+}
+
+fn uint! Semaphore.getNextImage(self, vk::Device device, vk::SwapchainKHR swapchain) {
+    uint index;
+    vk::acquireNextImageKHR(device, swapchain, uint.max, self, null, &index)!!;
+    return index;
 }
