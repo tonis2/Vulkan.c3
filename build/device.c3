@@ -369,6 +369,12 @@ fn DeviceInfo! requestDevice(AppInfo* info, GLFWwindow window, DebugUtilsMesseng
     };
 }
 
+fn void DeviceInfo.waitIdle(self) {
+ if (catch err = vk::deviceWaitIdle(self.device)) {
+    io::printfn("failed to wait idle");
+ }
+}
+
 fn void! DeviceInfo.single_time_buffer(self, CommandBufferCallback callback)
 {
     CommandPool command_pool;
