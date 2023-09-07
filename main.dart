@@ -169,39 +169,52 @@ void main() {
       requirement.childElements.where((child) => !filteredNames.contains(child.getAttribute("name"))).forEach((child) {
           String nodeType = child.name.qualified;
           String? name = child.getAttribute("name");
+          String? extension = child.getAttribute("extends");
 
           if (nodeType == "enum") {
+            XmlElement? node = document.findParentNode(nodeType, name);
+            String? direction = node?.getAttribute("dir");
+            String? offset = node?.getAttribute("offset");
 
+            if (requirement_comment == "API constants") {
+              constants.add(VkValue(name: name ?? "-" , type: node?.getAttribute("type"), defaultValue: node?.getAttribute("value")));
+            }
           }
 
           if (nodeType == "type") {
-            XmlElement? node = document.findAllElements(nodeType).where((element) => (element.getElement("name")?.innerText == name || element.getAttribute("name") == name) && element.getAttribute("category") != null).firstOrNull;
+            XmlElement? node = document.findParentNode(nodeType, name, hasCategory: true);
             String? node_category = node?.getAttribute("category");
-            String? node_type = node?.getElement("type")?.innerText;
+            String? type = node?.getElement("type")?.innerText;
 
             switch(node_category) {
               case "handle": {
                 handles.add(VkValue(name: name ?? "-", type: "void*"));
               }
               case "basetype":{
-                basetypes.add(VkValue(name: name ?? "-", type: typeMap[node_type] ?? "void*"));
+                basetypes.add(VkValue(name: name ?? "-", type: typeMap[type] ?? "void*"));
               }
               case "bitmask": {
-                bitmasks.add(VkValue(name: name ?? "-", type: node_type ?? "void*"));
+                bitmasks.add(VkValue(name: name ?? "-", type: type ?? "void*"));
               }
-              case "enum": {}
+              case "enum": {
+                XmlElement? enum_parent = document.findParentNode("enums", name);
+
+                var values = enum_parent?.findAllElements("enum")
+                    .map((entry) {
+                      var default_value = entry.getAttribute("value");
+                      var bit_pos = entry.getAttribute("bitpos");
+                      return VkValue(name: entry.getAttribute("name") ?? "-", defaultValue: bit_pos != null ? bit_pos.to_bitvalue() : default_value);
+                    }).toList();
+
+                enums.add(VkType(name: name ?? "-" , category: nodeType, values: values ?? [], bitwidth: enum_parent?.getAttribute("bitwidth")));
+              }
               case "union": {}
               case "struct": {
                 structs.add(VkType.fromStructXML(node!));
               }
               case "funcpointer": {}
             }
-
-         /*   if (node_category == "enum") {
-              handles.add(VkValue(name: name ?? "-", type: "void*"));
-            }*/
           }
-
       });
     });
   });
@@ -221,8 +234,20 @@ void main() {
         mode: FileMode.append);
   });
 
+  constants.forEach((value) {
+    output.writeAsStringSync(
+        "const ${typeMap[value.type] ?? value.type} ${value.name.substring(3)} = ${value.defaultValue?.replaceAll("ULL", "UL")};\n",
+        mode: FileMode.append);
+  });
+
+  enums.forEach((entry) {
+    String code =
+        "\ndef ${entry.name.C3Name} = distinct inline ${entry.bitwidth != null ? "ulong" : "int"};\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
+    output.writeAsStringSync(code, mode: FileMode.append);
+  });
+
   structs.where((element) => element.values.length != 0).forEach((type) {
-    String code = "struct ${type.name.C3Name} {\n ${type.values.map((value) =>"${value.type.C3Name} ${value.name.camelCase()};").join("\n ")}\n}\n";
+    String code = "struct ${type.name.C3Name} {\n ${type.values.map((value) =>"${value.type?.C3Name} ${value.name.camelCase()};").join("\n ")}\n}\n";
     output.writeAsStringSync(code, mode: FileMode.append);
   });
 
@@ -262,9 +287,9 @@ fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ZString[] ${elemen
 """;
           }
 
-          if (isArrayValue && (element.type != "void*")) {
-            return """
-fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type.C3Name.replaceAll("*", "")}[] ${element.name}) {
+if (isArrayValue && (element.type != "void*")) {
+  return """
+fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type?.C3Name.replaceAll("*", "")}[] ${element.name}) {
   self.${element.lenValue?[0]} = (uint)${element.name}.len;
   self.${element.name} = &${element.name}[0];
   return self;
@@ -273,7 +298,7 @@ fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type.C3N
           }
 
           return """
-fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type.C3Name} ${element.name}) {
+fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type?.C3Name} ${element.name}) {
   self.${element.name} = ${element.name};
   return self;
 }
@@ -287,11 +312,12 @@ class VkType {
   String name;
   String? comment;
   String category;
+  String? bitwidth;
   List<String>? successCodes;
   List<String>? errorCodes;
   List<VkValue> values;
 
-  VkType({ this.name = "-", required this.category, this.comment, this.successCodes, this.errorCodes, required this.values});
+  VkType({ this.name = "-", required this.category, required this.values, this.comment, this.successCodes, this.errorCodes, this.bitwidth});
 
   static fromStructXML(XmlElement element) {
     String? name = element.getAttribute("name");
@@ -331,17 +357,56 @@ class VkType {
 
       return VkType(name: name ?? "-", values: values, category: "struct");
   }
+
+  static fromEnumXML(XmlElement element) {
+    String? name = element.getAttribute("name");
+    List<VkValue> values = List<VkValue>.from(
+        element.findAllElements('member').map((node) {
+          String? name = node.getElement("name")?.innerText;
+          String? type = node.getElement("type")?.innerText;
+          String? lenValue = node.getAttribute("len");
+          String? altlen = node.getAttribute("altlen");
+          String? default_value = node.getAttribute("values");
+
+          String? len;
+          String? hasLen = node.getElement("name")?.following.toString();
+
+          int pointing = node.innerText.split('*').length;
+          bool isPointer = pointing > 1;
+          bool isDoublePointer = pointing > 2;
+
+          if (hasLen?.substring(1, 2) == "[") {
+            String? enumValue = node.getElement("enum")?.innerText;
+            if (enumValue != null) {
+              len = enumValue.substring(3);
+            } else {
+              len = hasLen?.substring(2, 3);
+            }
+          }
+
+          if (altlen != null) lenValue = "codeSize";
+          if (replaceNames.containsKey(name)) name = replaceNames[name];
+
+          if (typeMap.containsKey(type)) type = typeMap[type];
+          if (len != null) type = "$type[${len}]";
+          if (isPointer) type = "$type*";
+
+          return VkValue(name: name ?? "-", type: type ?? "-", lenValue: lenValue?.split(",").toList(), defaultValue: default_value);
+        }));
+
+    return VkType(name: name ?? "-", values: values, category: "struct");
+  }
 }
 
 class VkValue {
   String name;
   String? bitpos;
-  String type;
+  String? type;
   bool isPointer;
   String? api;
   String? defaultValue;
   List<String>? lenValue;
 
-  VkValue({required this.name, required this.type, this.bitpos, this.isPointer = false, this.api, this.defaultValue, this.lenValue});
+  VkValue({required this.name, this.type, this.bitpos, this.isPointer = false, this.api, this.defaultValue, this.lenValue});
 }
 
