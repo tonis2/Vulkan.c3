@@ -1,4 +1,17 @@
 
+import 'package:xml/xml.dart';
+
+extension SearchMethods on XmlDocument {
+  XmlElement? findParentNode(String nodeType, String? node_name,  {bool hasCategory = false}) {
+    if (hasCategory) {
+      return this.findAllElements(nodeType).where((element) => (element.getElement("name")?.innerText == node_name || element.getAttribute("name") == node_name) && element.getAttribute("category") != null).firstOrNull;
+    }
+    else {
+      return this.findAllElements(nodeType).where((element) => (element.getElement("name")?.innerText == node_name || element.getAttribute("name") == node_name)).firstOrNull;
+    }
+  }
+}
+
 extension ParseMethods on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${this.toLowerCase().substring(1)}';
