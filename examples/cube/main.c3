@@ -262,7 +262,7 @@ fn void! main()
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
                    .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
                    .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
+    .setNext(&&vk::pipelineRenderingCreateInfoKHRBuilder().setColorAttachmentFormats({swapchain.image_format}));
 
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
