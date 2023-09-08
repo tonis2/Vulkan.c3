@@ -895,6 +895,15 @@ def PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = fn Bool32 (PhysicalDevice
 def PFN_vkCreateDebugReportCallbackEXT = fn Result (Instance, DebugReportCallbackCreateInfoEXT*, AllocationCallbacks*, DebugReportCallbackEXT*);
 def PFN_vkDestroyDebugReportCallbackEXT = fn void (Instance, DebugReportCallbackEXT, AllocationCallbacks*);
 def PFN_vkDebugReportMessageEXT = fn void (Instance, DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, usz, int, char*, char*);
+def PFN_vkGetPhysicalDeviceFeatures2KHR = fn void (PhysicalDevice, PhysicalDeviceFeatures2*);
+def PFN_vkGetPhysicalDeviceProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceProperties2*);
+def PFN_vkGetPhysicalDeviceFormatProperties2KHR = fn void (PhysicalDevice, Format, FormatProperties2*);
+def PFN_vkGetPhysicalDeviceImageFormatProperties2KHR = fn Result (PhysicalDevice, PhysicalDeviceImageFormatInfo2*, ImageFormatProperties2*);
+def PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR = fn void (PhysicalDevice, uint*, QueueFamilyProperties2*);
+def PFN_vkGetPhysicalDeviceMemoryProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceMemoryProperties2*);
+def PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceSparseImageFormatInfo2*, uint*, SparseImageFormatProperties2*);
+def PFN_vkCmdPushDescriptorSetKHR = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, WriteDescriptorSet*);
+def PFN_vkCmdPushDescriptorSetWithTemplateKHR = fn void (CommandBuffer, DescriptorUpdateTemplate, PipelineLayout, uint, void*);
 def PFN_vkSetDebugUtilsObjectNameEXT = fn Result (Device, DebugUtilsObjectNameInfoEXT*);
 def PFN_vkSetDebugUtilsObjectTagEXT = fn Result (Device, DebugUtilsObjectTagInfoEXT*);
 def PFN_vkQueueBeginDebugUtilsLabelEXT = fn void (Queue, DebugUtilsLabelEXT*);
@@ -934,6 +943,15 @@ struct VK_extension_bindings {
  PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
  PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
  PFN_vkDebugReportMessageEXT vkDebugReportMessageEXT;
+ PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+ PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+ PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
+ PFN_vkGetPhysicalDeviceImageFormatProperties2KHR vkGetPhysicalDeviceImageFormatProperties2KHR;
+ PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
+ PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
+ PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR;
+ PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
+ PFN_vkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHR;
  PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
  PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT;
  PFN_vkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXT;
@@ -974,6 +992,15 @@ fn void loadExtensions(Instance instance) {
   extensions.vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)getInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
   extensions.vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)getInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT");
   extensions.vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT)getInstanceProcAddr(instance, "vkDebugReportMessageEXT");
+  extensions.vkGetPhysicalDeviceFeatures2KHR = (PFN_vkGetPhysicalDeviceFeatures2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceFeatures2KHR");
+  extensions.vkGetPhysicalDeviceProperties2KHR = (PFN_vkGetPhysicalDeviceProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceProperties2KHR");
+  extensions.vkGetPhysicalDeviceFormatProperties2KHR = (PFN_vkGetPhysicalDeviceFormatProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceFormatProperties2KHR");
+  extensions.vkGetPhysicalDeviceImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceImageFormatProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceImageFormatProperties2KHR");
+  extensions.vkGetPhysicalDeviceQueueFamilyProperties2KHR = (PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceQueueFamilyProperties2KHR");
+  extensions.vkGetPhysicalDeviceMemoryProperties2KHR = (PFN_vkGetPhysicalDeviceMemoryProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceMemoryProperties2KHR");
+  extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceSparseImageFormatProperties2KHR");
+  extensions.vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetKHR");
+  extensions.vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetWithTemplateKHR");
   extensions.vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)getInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
   extensions.vkSetDebugUtilsObjectTagEXT = (PFN_vkSetDebugUtilsObjectTagEXT)getInstanceProcAddr(instance, "vkSetDebugUtilsObjectTagEXT");
   extensions.vkQueueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)getInstanceProcAddr(instance, "vkQueueBeginDebugUtilsLabelEXT");
@@ -991,6 +1018,14 @@ fn void destroySwapchainKHR (Device device, SwapchainKHR swapchain, AllocationCa
 fn Bool32 getPhysicalDeviceXcbPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, void** connection, uint visual_id) => extensions.vkGetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice,queueFamilyIndex,connection,visual_id);
 fn void destroyDebugReportCallbackEXT (Instance instance, DebugReportCallbackEXT callback, AllocationCallbacks* pAllocator) => extensions.vkDestroyDebugReportCallbackEXT(instance,callback,pAllocator);
 fn void debugReportMessageEXT (Instance instance, DebugReportFlagsEXT flags, DebugReportObjectTypeEXT objectType, ulong object, usz location, int messageCode, char* pLayerPrefix, char* pMessage) => extensions.vkDebugReportMessageEXT(instance,flags,objectType,object,location,messageCode,pLayerPrefix,pMessage);
+fn void getPhysicalDeviceFeatures2KHR (PhysicalDevice physicalDevice, PhysicalDeviceFeatures2* pFeatures) => extensions.vkGetPhysicalDeviceFeatures2KHR(physicalDevice,pFeatures);
+fn void getPhysicalDeviceProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceProperties2* pProperties) => extensions.vkGetPhysicalDeviceProperties2KHR(physicalDevice,pProperties);
+fn void getPhysicalDeviceFormatProperties2KHR (PhysicalDevice physicalDevice, Format format, FormatProperties2* pFormatProperties) => extensions.vkGetPhysicalDeviceFormatProperties2KHR(physicalDevice,format,pFormatProperties);
+fn void getPhysicalDeviceQueueFamilyProperties2KHR (PhysicalDevice physicalDevice, uint* pQueueFamilyPropertyCount, QueueFamilyProperties2* pQueueFamilyProperties) => extensions.vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice,pQueueFamilyPropertyCount,pQueueFamilyProperties);
+fn void getPhysicalDeviceMemoryProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceMemoryProperties2* pMemoryProperties) => extensions.vkGetPhysicalDeviceMemoryProperties2KHR(physicalDevice,pMemoryProperties);
+fn void getPhysicalDeviceSparseImageFormatProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint* pPropertyCount, SparseImageFormatProperties2* pProperties) => extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice,pFormatInfo,pPropertyCount,pProperties);
+fn void cmdPushDescriptorSetKHR (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set, uint descriptorWriteCount, WriteDescriptorSet* pDescriptorWrites) => extensions.vkCmdPushDescriptorSetKHR(commandBuffer,pipelineBindPoint,layout,set,descriptorWriteCount,pDescriptorWrites);
+fn void cmdPushDescriptorSetWithTemplateKHR (CommandBuffer commandBuffer, DescriptorUpdateTemplate descriptorUpdateTemplate, PipelineLayout layout, uint set, void* pData) => extensions.vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer,descriptorUpdateTemplate,layout,set,pData);
 fn void queueBeginDebugUtilsLabelEXT (Queue queue, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkQueueBeginDebugUtilsLabelEXT(queue,pLabelInfo);
 fn void queueEndDebugUtilsLabelEXT (Queue queue) => extensions.vkQueueEndDebugUtilsLabelEXT(queue);
 fn void queueInsertDebugUtilsLabelEXT (Queue queue, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkQueueInsertDebugUtilsLabelEXT(queue,pLabelInfo);
@@ -1242,6 +1277,18 @@ fn void! createDebugReportCallbackEXT (Instance instance, DebugReportCallbackCre
   switch(result) {
     case ERROR_OUT_OF_HOST_MEMORY: 
         return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+  }
+}
+
+fn void! getPhysicalDeviceImageFormatProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceImageFormatInfo2* pImageFormatInfo, ImageFormatProperties2* pImageFormatProperties) {
+  Result result = extensions.vkGetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+  switch(result) {
+    case ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+    case ERROR_OUT_OF_DEVICE_MEMORY: 
+        return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+    case ERROR_FORMAT_NOT_SUPPORTED: 
+        return VkErrors.ERROR_FORMAT_NOT_SUPPORTED?;
   }
 }
 

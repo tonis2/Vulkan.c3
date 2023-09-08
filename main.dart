@@ -74,6 +74,7 @@ var enabled_extensions = [
   "VK_EXT_debug_report",
   "VK_EXT_debug_utils",
   "VK_EXT_swapchain_colorspace",
+  "VK_KHR_get_physical_device_properties2"
 /*  "VK_KHR_dynamic_rendering"*/
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
@@ -153,6 +154,7 @@ void main() {
     if (depends != null && isEnabled) {
       var dependencies = depends.split(",").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
       if (dependencies.isNotEmpty) {
+        print(depends);
         print("extension dependency not met $extension_name");
         return false;
       }
@@ -167,6 +169,15 @@ void main() {
 
     feature.findAllElements("require")
          .where((requirement) => !filteredComments.contains(requirement.getAttribute("comment")))
+    .where((requirement) {
+      String? dependency = requirement.getAttribute("depends");
+      if (dependency != null) {
+        return versions.contains(dependency) || enabled_extensions.contains(dependency);
+      }
+      else {
+        return true;
+      }
+    })
         .forEach((requirement) {
       String? requirement_comment = requirement.getAttribute("comment");
 
@@ -251,9 +262,11 @@ void main() {
 
 
           if (nodeType == "command") {
-             XmlNode? node = document.findParentNode("proto", name)?.parent;
-             XmlElement? proto = node?.getElement("proto");
 
+             XmlNode? node = document.findParentNode("proto", name)?.parent;
+             if (node == null) node = document.findParentNode("proto", name?.replaceAll("KHR", ""))?.parent;
+
+             XmlElement? proto = node?.getElement("proto");
              String? returnType = proto?.getElement("type")?.innerText;
 
              List<String> successCodes =
@@ -345,9 +358,9 @@ ${type.values.skip(1).map((element) {
     fnName = element.name.substring(1).capitalizeName();
   }
 
-/*  if (element.isDoublePointer) {
-    fnName = element.name!.substring(2).capitalizeName()!;
-  }*/
+  if (element.isDoublePointer) {
+    fnName = element.name.substring(2).capitalizeName();
+  }
 
   if (element.type == "char*" && isArrayValue) {
     return """
@@ -454,11 +467,12 @@ class VkValue {
   String? bitpos;
   String? type;
   bool isPointer;
+  bool isDoublePointer;
   String? api;
   String? defaultValue;
   List<String>? lenValue;
 
-  VkValue({required this.name, this.type, this.bitpos, this.isPointer = false, this.api, this.defaultValue, this.lenValue});
+  VkValue({required this.name, this.type, this.bitpos, this.isPointer = false, this.isDoublePointer = false, this.api, this.defaultValue, this.lenValue});
 
 
   static VkValue fromXML(XmlNode node) {
@@ -491,7 +505,7 @@ class VkValue {
     if (len != null) type = "$type[${len}]";
     if (isPointer) type = "$type*";
 
-    return VkValue(name: name ?? "-", type: type ?? "-", lenValue: lenValue?.split(",").toList(), defaultValue: default_value);
+    return VkValue(name: name ?? "-", type: type ?? "-", lenValue: lenValue?.split(",").toList(), defaultValue: default_value, isPointer: isPointer, isDoublePointer: isDoublePointer);
   }
 }
 

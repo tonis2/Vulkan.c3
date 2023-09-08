@@ -232,10 +232,16 @@ const KHR_XCB_SURFACE_SPEC_VERSION = 6;
 const KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
 const EXT_DEBUG_REPORT_SPEC_VERSION = 10;
 const EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
+const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION = 2;
+const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_physical_device_properties2";
+const KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2;
+const KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor";
 const EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4;
 const EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME = "VK_EXT_swapchain_colorspace";
 const EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
+const KHR_PORTABILITY_SUBSET_SPEC_VERSION = 1;
+const KHR_PORTABILITY_SUBSET_EXTENSION_NAME = "VK_KHR_portability_subset";
 const KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
 const KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
 union ClearColorValue {
@@ -511,11 +517,23 @@ const StructureType STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
 const StructureType STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_FORMAT_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = 1000080000;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT = 1000128003;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT = 1000128004;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR = 1000163000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR = 1000163001;
 
 def PipelineCacheHeaderVersion = distinct inline int;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
@@ -1231,6 +1249,7 @@ const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT 
 
 def DescriptorSetLayoutCreateFlagBits = distinct inline int;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = 0x00000002;
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = 0x00000001;
 
 def DescriptorType = distinct inline int;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLER = 0;
@@ -1382,6 +1401,7 @@ const ChromaLocation CHROMA_LOCATION_MIDPOINT = 1;
 
 def DescriptorUpdateTemplateType = distinct inline int;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0;
+const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = 1;
 
 def ExternalMemoryHandleTypeFlagBits = distinct inline int;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
@@ -3987,6 +4007,11 @@ struct DebugReportCallbackCreateInfoEXT {
  PFN_vkDebugReportCallbackEXT pfnCallback;
  void* pUserData;
 }
+struct PhysicalDevicePushDescriptorPropertiesKHR {
+ StructureType sType;
+ void* pNext;
+ uint maxPushDescriptors;
+}
 struct DebugUtilsLabelEXT {
  StructureType sType;
  void* pNext;
@@ -4031,4 +4056,28 @@ struct DebugUtilsObjectTagInfoEXT {
  ulong tagName;
  usz tagSize;
  void* pTag;
+}
+struct PhysicalDevicePortabilitySubsetFeaturesKHR {
+ StructureType sType;
+ void* pNext;
+ Bool32 constantAlphaColorBlendFactors;
+ Bool32 events;
+ Bool32 imageViewFormatReinterpretation;
+ Bool32 imageViewFormatSwizzle;
+ Bool32 imageView2DOn3DImage;
+ Bool32 multisampleArrayImage;
+ Bool32 mutableComparisonSamplers;
+ Bool32 pointPolygons;
+ Bool32 samplerMipLodBias;
+ Bool32 separateStencilMaskRef;
+ Bool32 shaderSampleRateInterpolationFunctions;
+ Bool32 tessellationIsolines;
+ Bool32 tessellationPointMode;
+ Bool32 triangleFans;
+ Bool32 vertexAttributeAccessBeyondStride;
+}
+struct PhysicalDevicePortabilitySubsetPropertiesKHR {
+ StructureType sType;
+ void* pNext;
+ uint minVertexInputBindingStrideAlignment;
 }

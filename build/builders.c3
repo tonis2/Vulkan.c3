@@ -10,7 +10,7 @@ fn BufferMemoryBarrier bufferMemoryBarrierBuilder() {
 }
 
 // Skip the .sType value
-fn BufferMemoryBarrier BufferMemoryBarrier.setPNext(self, void* pNext) {
+fn BufferMemoryBarrier BufferMemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -61,7 +61,7 @@ fn ImageMemoryBarrier imageMemoryBarrierBuilder() {
 }
 
 // Skip the .sType value
-fn ImageMemoryBarrier ImageMemoryBarrier.setPNext(self, void* pNext) {
+fn ImageMemoryBarrier ImageMemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -117,7 +117,7 @@ fn MemoryBarrier memoryBarrierBuilder() {
 }
 
 // Skip the .sType value
-fn MemoryBarrier MemoryBarrier.setPNext(self, void* pNext) {
+fn MemoryBarrier MemoryBarrier.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -143,12 +143,12 @@ fn ApplicationInfo applicationInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ApplicationInfo ApplicationInfo.setPNext(self, void* pNext) {
+fn ApplicationInfo ApplicationInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn ApplicationInfo ApplicationInfo.setPApplicationName(self, char* pApplicationName) {
+fn ApplicationInfo ApplicationInfo.setApplicationName(self, char* pApplicationName) {
   self.pApplicationName = pApplicationName;
   return self;
 }
@@ -158,7 +158,7 @@ fn ApplicationInfo ApplicationInfo.setApplicationVersion(self, uint applicationV
   return self;
 }
        
-fn ApplicationInfo ApplicationInfo.setPEngineName(self, char* pEngineName) {
+fn ApplicationInfo ApplicationInfo.setEngineName(self, char* pEngineName) {
   self.pEngineName = pEngineName;
   return self;
 }
@@ -184,7 +184,7 @@ fn InstanceCreateInfo instanceCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn InstanceCreateInfo InstanceCreateInfo.setPNext(self, void* pNext) {
+fn InstanceCreateInfo InstanceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -194,7 +194,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setFlags(self, InstanceCreateFlags flag
   return self;
 }
        
-fn InstanceCreateInfo InstanceCreateInfo.setPApplicationInfo(self, ApplicationInfo* pApplicationInfo) {
+fn InstanceCreateInfo InstanceCreateInfo.setApplicationInfo(self, ApplicationInfo* pApplicationInfo) {
   self.pApplicationInfo = pApplicationInfo;
   return self;
 }
@@ -204,7 +204,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerCount(self, uint enabled
   return self;
 }
        
-fn InstanceCreateInfo InstanceCreateInfo.setPpEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
   self.enabledLayerCount = (uint)ppEnabledLayerNames.len;
   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
   return self;
@@ -215,7 +215,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionCount(self, uint ena
   return self;
 }
        
-fn InstanceCreateInfo InstanceCreateInfo.setPpEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
   self.enabledExtensionCount = (uint)ppEnabledExtensionNames.len;
   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
   return self;
@@ -232,7 +232,7 @@ fn DeviceCreateInfo deviceCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceCreateInfo DeviceCreateInfo.setPNext(self, void* pNext) {
+fn DeviceCreateInfo DeviceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -247,7 +247,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfoCount(self, uint queueCre
   return self;
 }
        
-fn DeviceCreateInfo DeviceCreateInfo.setPQueueCreateInfos(self, DeviceQueueCreateInfo[] pQueueCreateInfos) {
+fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfos(self, DeviceQueueCreateInfo[] pQueueCreateInfos) {
   self.queueCreateInfoCount = (uint)pQueueCreateInfos.len;
   self.pQueueCreateInfos = &pQueueCreateInfos[0];
   return self;
@@ -258,7 +258,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerCount(self, uint enabledLaye
   return self;
 }
        
-fn DeviceCreateInfo DeviceCreateInfo.setPpEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerNames(self, ZString[] ppEnabledLayerNames) {
   self.enabledLayerCount = (uint)ppEnabledLayerNames.len;
   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
   return self;
@@ -269,13 +269,13 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionCount(self, uint enabled
   return self;
 }
        
-fn DeviceCreateInfo DeviceCreateInfo.setPpEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionNames(self, ZString[] ppEnabledExtensionNames) {
   self.enabledExtensionCount = (uint)ppEnabledExtensionNames.len;
   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
   return self;
 }
 
-fn DeviceCreateInfo DeviceCreateInfo.setPEnabledFeatures(self, PhysicalDeviceFeatures* pEnabledFeatures) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledFeatures(self, PhysicalDeviceFeatures* pEnabledFeatures) {
   self.pEnabledFeatures = pEnabledFeatures;
   return self;
 }
@@ -291,7 +291,7 @@ fn DeviceQueueCreateInfo deviceQueueCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setPNext(self, void* pNext) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -311,7 +311,7 @@ fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueueCount(self, uint queueCou
   return self;
 }
        
-fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setPQueuePriorities(self, float[] pQueuePriorities) {
+fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueuePriorities(self, float[] pQueuePriorities) {
   self.queueCount = (uint)pQueuePriorities.len;
   self.pQueuePriorities = &pQueuePriorities[0];
   return self;
@@ -328,7 +328,7 @@ fn SubmitInfo submitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SubmitInfo SubmitInfo.setPNext(self, void* pNext) {
+fn SubmitInfo SubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -338,13 +338,13 @@ fn SubmitInfo SubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
   return self;
 }
        
-fn SubmitInfo SubmitInfo.setPWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
+fn SubmitInfo SubmitInfo.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
 }
 
-fn SubmitInfo SubmitInfo.setPWaitDstStageMask(self, PipelineStageFlags[] pWaitDstStageMask) {
+fn SubmitInfo SubmitInfo.setWaitDstStageMask(self, PipelineStageFlags[] pWaitDstStageMask) {
   self.waitSemaphoreCount = (uint)pWaitDstStageMask.len;
   self.pWaitDstStageMask = &pWaitDstStageMask[0];
   return self;
@@ -355,7 +355,7 @@ fn SubmitInfo SubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
   return self;
 }
        
-fn SubmitInfo SubmitInfo.setPCommandBuffers(self, CommandBuffer[] pCommandBuffers) {
+fn SubmitInfo SubmitInfo.setCommandBuffers(self, CommandBuffer[] pCommandBuffers) {
   self.commandBufferCount = (uint)pCommandBuffers.len;
   self.pCommandBuffers = &pCommandBuffers[0];
   return self;
@@ -366,7 +366,7 @@ fn SubmitInfo SubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount
   return self;
 }
        
-fn SubmitInfo SubmitInfo.setPSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
+fn SubmitInfo SubmitInfo.setSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
   self.signalSemaphoreCount = (uint)pSignalSemaphores.len;
   self.pSignalSemaphores = &pSignalSemaphores[0];
   return self;
@@ -383,7 +383,7 @@ fn MappedMemoryRange mappedMemoryRangeBuilder() {
 }
 
 // Skip the .sType value
-fn MappedMemoryRange MappedMemoryRange.setPNext(self, void* pNext) {
+fn MappedMemoryRange MappedMemoryRange.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -414,7 +414,7 @@ fn MemoryAllocateInfo memoryAllocateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn MemoryAllocateInfo MemoryAllocateInfo.setPNext(self, void* pNext) {
+fn MemoryAllocateInfo MemoryAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -440,7 +440,7 @@ fn BindSparseInfo bindSparseInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindSparseInfo BindSparseInfo.setPNext(self, void* pNext) {
+fn BindSparseInfo BindSparseInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -450,7 +450,7 @@ fn BindSparseInfo BindSparseInfo.setWaitSemaphoreCount(self, uint waitSemaphoreC
   return self;
 }
        
-fn BindSparseInfo BindSparseInfo.setPWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
+fn BindSparseInfo BindSparseInfo.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
@@ -461,7 +461,7 @@ fn BindSparseInfo BindSparseInfo.setBufferBindCount(self, uint bufferBindCount) 
   return self;
 }
        
-fn BindSparseInfo BindSparseInfo.setPBufferBinds(self, SparseBufferMemoryBindInfo[] pBufferBinds) {
+fn BindSparseInfo BindSparseInfo.setBufferBinds(self, SparseBufferMemoryBindInfo[] pBufferBinds) {
   self.bufferBindCount = (uint)pBufferBinds.len;
   self.pBufferBinds = &pBufferBinds[0];
   return self;
@@ -472,7 +472,7 @@ fn BindSparseInfo BindSparseInfo.setImageOpaqueBindCount(self, uint imageOpaqueB
   return self;
 }
        
-fn BindSparseInfo BindSparseInfo.setPImageOpaqueBinds(self, SparseImageOpaqueMemoryBindInfo[] pImageOpaqueBinds) {
+fn BindSparseInfo BindSparseInfo.setImageOpaqueBinds(self, SparseImageOpaqueMemoryBindInfo[] pImageOpaqueBinds) {
   self.imageOpaqueBindCount = (uint)pImageOpaqueBinds.len;
   self.pImageOpaqueBinds = &pImageOpaqueBinds[0];
   return self;
@@ -483,7 +483,7 @@ fn BindSparseInfo BindSparseInfo.setImageBindCount(self, uint imageBindCount) {
   return self;
 }
        
-fn BindSparseInfo BindSparseInfo.setPImageBinds(self, SparseImageMemoryBindInfo[] pImageBinds) {
+fn BindSparseInfo BindSparseInfo.setImageBinds(self, SparseImageMemoryBindInfo[] pImageBinds) {
   self.imageBindCount = (uint)pImageBinds.len;
   self.pImageBinds = &pImageBinds[0];
   return self;
@@ -494,7 +494,7 @@ fn BindSparseInfo BindSparseInfo.setSignalSemaphoreCount(self, uint signalSemaph
   return self;
 }
        
-fn BindSparseInfo BindSparseInfo.setPSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
+fn BindSparseInfo BindSparseInfo.setSignalSemaphores(self, Semaphore[] pSignalSemaphores) {
   self.signalSemaphoreCount = (uint)pSignalSemaphores.len;
   self.pSignalSemaphores = &pSignalSemaphores[0];
   return self;
@@ -511,7 +511,7 @@ fn FenceCreateInfo fenceCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn FenceCreateInfo FenceCreateInfo.setPNext(self, void* pNext) {
+fn FenceCreateInfo FenceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -532,7 +532,7 @@ fn SemaphoreCreateInfo semaphoreCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SemaphoreCreateInfo SemaphoreCreateInfo.setPNext(self, void* pNext) {
+fn SemaphoreCreateInfo SemaphoreCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -553,7 +553,7 @@ fn EventCreateInfo eventCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn EventCreateInfo EventCreateInfo.setPNext(self, void* pNext) {
+fn EventCreateInfo EventCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -574,7 +574,7 @@ fn QueryPoolCreateInfo queryPoolCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn QueryPoolCreateInfo QueryPoolCreateInfo.setPNext(self, void* pNext) {
+fn QueryPoolCreateInfo QueryPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -610,7 +610,7 @@ fn BufferCreateInfo bufferCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BufferCreateInfo BufferCreateInfo.setPNext(self, void* pNext) {
+fn BufferCreateInfo BufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -640,7 +640,7 @@ fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndexCount(self, uint queueFa
   return self;
 }
        
-fn BufferCreateInfo BufferCreateInfo.setPQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
@@ -657,7 +657,7 @@ fn BufferViewCreateInfo bufferViewCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BufferViewCreateInfo BufferViewCreateInfo.setPNext(self, void* pNext) {
+fn BufferViewCreateInfo BufferViewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -698,7 +698,7 @@ fn ImageCreateInfo imageCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImageCreateInfo ImageCreateInfo.setPNext(self, void* pNext) {
+fn ImageCreateInfo ImageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -758,7 +758,7 @@ fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndexCount(self, uint queueFami
   return self;
 }
        
-fn ImageCreateInfo ImageCreateInfo.setPQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
@@ -780,7 +780,7 @@ fn ImageViewCreateInfo imageViewCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImageViewCreateInfo ImageViewCreateInfo.setPNext(self, void* pNext) {
+fn ImageViewCreateInfo ImageViewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -826,7 +826,7 @@ fn ShaderModuleCreateInfo shaderModuleCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setPNext(self, void* pNext) {
+/*fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -841,11 +841,11 @@ fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCodeSize(self, usz codeSize)
   return self;
 }
        
-fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setPCode(self, uint[] pCode) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, uint[] pCode) {
   self.codeSize = (uint)pCode.len;
   self.pCode = &pCode[0];
   return self;
-}
+}*/
 
 
 
@@ -858,7 +858,7 @@ fn PipelineCacheCreateInfo pipelineCacheCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setPNext(self, void* pNext) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -873,7 +873,7 @@ fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(self, usz 
   return self;
 }
        
-fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setPInitialData(self, void* pInitialData) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(self, void* pInitialData) {
   self.pInitialData = pInitialData;
   return self;
 }
@@ -889,7 +889,7 @@ fn ComputePipelineCreateInfo computePipelineCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setPNext(self, void* pNext) {
+fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -930,7 +930,7 @@ fn GraphicsPipelineCreateInfo graphicsPipelineCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPNext(self, void* pNext) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -945,53 +945,53 @@ fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStageCount(self, uin
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPStages(self, PipelineShaderStageCreateInfo[] pStages) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStages(self, PipelineShaderStageCreateInfo[] pStages) {
   self.stageCount = (uint)pStages.len;
   self.pStages = &pStages[0];
   return self;
 }
 
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPVertexInputState(self, PipelineVertexInputStateCreateInfo* pVertexInputState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setVertexInputState(self, PipelineVertexInputStateCreateInfo* pVertexInputState) {
   self.pVertexInputState = pVertexInputState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPInputAssemblyState(self, PipelineInputAssemblyStateCreateInfo* pInputAssemblyState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setInputAssemblyState(self, PipelineInputAssemblyStateCreateInfo* pInputAssemblyState) {
   self.pInputAssemblyState = pInputAssemblyState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPTessellationState(self, PipelineTessellationStateCreateInfo* pTessellationState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setTessellationState(self, PipelineTessellationStateCreateInfo* pTessellationState) {
   self.pTessellationState = pTessellationState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPViewportState(self, PipelineViewportStateCreateInfo* pViewportState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setViewportState(self, PipelineViewportStateCreateInfo* pViewportState) {
   self.pViewportState = pViewportState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPRasterizationState(self, PipelineRasterizationStateCreateInfo* pRasterizationState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setRasterizationState(self, PipelineRasterizationStateCreateInfo* pRasterizationState) {
   self.pRasterizationState = pRasterizationState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPMultisampleState(self, PipelineMultisampleStateCreateInfo* pMultisampleState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setMultisampleState(self, PipelineMultisampleStateCreateInfo* pMultisampleState) {
   self.pMultisampleState = pMultisampleState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPDepthStencilState(self, PipelineDepthStencilStateCreateInfo* pDepthStencilState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setDepthStencilState(self, PipelineDepthStencilStateCreateInfo* pDepthStencilState) {
   self.pDepthStencilState = pDepthStencilState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPColorBlendState(self, PipelineColorBlendStateCreateInfo* pColorBlendState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setColorBlendState(self, PipelineColorBlendStateCreateInfo* pColorBlendState) {
   self.pColorBlendState = pColorBlendState;
   return self;
 }
        
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setPDynamicState(self, PipelineDynamicStateCreateInfo* pDynamicState) {
+fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setDynamicState(self, PipelineDynamicStateCreateInfo* pDynamicState) {
   self.pDynamicState = pDynamicState;
   return self;
 }
@@ -1032,7 +1032,7 @@ fn PipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfoBuilder() 
 }
 
 // Skip the .sType value
-fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1057,7 +1057,7 @@ fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttach
   return self;
 }
        
-fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setPAttachments(self, PipelineColorBlendAttachmentState[] pAttachments) {
+fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttachments(self, PipelineColorBlendAttachmentState[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -1079,7 +1079,7 @@ fn PipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfoBuilde
 }
 
 // Skip the .sType value
-fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1145,7 +1145,7 @@ fn PipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1160,7 +1160,7 @@ fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicState
   return self;
 }
        
-fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setPDynamicStates(self, DynamicState[] pDynamicStates) {
+fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicStates(self, DynamicState[] pDynamicStates) {
   self.dynamicStateCount = (uint)pDynamicStates.len;
   self.pDynamicStates = &pDynamicStates[0];
   return self;
@@ -1177,7 +1177,7 @@ fn PipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfoBuil
 }
 
 // Skip the .sType value
-fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1208,7 +1208,7 @@ fn PipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfoBuilder(
 }
 
 // Skip the .sType value
-fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1233,8 +1233,8 @@ fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setMinS
   return self;
 }
        
-fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setPSampleMask(self, SampleMask[] pSampleMask) {
-  self.codeSize = (uint)pSampleMask.len;
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setSampleMask(self, SampleMask[] pSampleMask) {
+  self.minSampleShading = (uint)pSampleMask.len;
   self.pSampleMask = &pSampleMask[0];
   return self;
 }
@@ -1260,7 +1260,7 @@ fn PipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfoBuil
 }
 
 // Skip the .sType value
-fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1331,7 +1331,7 @@ fn PipelineShaderStageCreateInfo pipelineShaderStageCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setPNext(self, void* pNext) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1351,12 +1351,12 @@ fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setMod(self, Shad
   return self;
 }
        
-fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setPName(self, char* pName) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setName(self, char* pName) {
   self.pName = pName;
   return self;
 }
        
-fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setPSpecializationInfo(self, SpecializationInfo* pSpecializationInfo) {
+fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setSpecializationInfo(self, SpecializationInfo* pSpecializationInfo) {
   self.pSpecializationInfo = pSpecializationInfo;
   return self;
 }
@@ -1372,7 +1372,7 @@ fn PipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfoBuilde
 }
 
 // Skip the .sType value
-fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1398,7 +1398,7 @@ fn PipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfoBuilder(
 }
 
 // Skip the .sType value
-fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1413,7 +1413,7 @@ fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVert
   return self;
 }
        
-fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setPVertexBindingDescriptions(self, VertexInputBindingDescription[] pVertexBindingDescriptions) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexBindingDescriptions(self, VertexInputBindingDescription[] pVertexBindingDescriptions) {
   self.vertexBindingDescriptionCount = (uint)pVertexBindingDescriptions.len;
   self.pVertexBindingDescriptions = &pVertexBindingDescriptions[0];
   return self;
@@ -1424,7 +1424,7 @@ fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVert
   return self;
 }
        
-fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setPVertexAttributeDescriptions(self, VertexInputAttributeDescription[] pVertexAttributeDescriptions) {
+fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexAttributeDescriptions(self, VertexInputAttributeDescription[] pVertexAttributeDescriptions) {
   self.vertexAttributeDescriptionCount = (uint)pVertexAttributeDescriptions.len;
   self.pVertexAttributeDescriptions = &pVertexAttributeDescriptions[0];
   return self;
@@ -1441,7 +1441,7 @@ fn PipelineViewportStateCreateInfo pipelineViewportStateCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1456,7 +1456,7 @@ fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewportCo
   return self;
 }
        
-fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setPViewports(self, Viewport[] pViewports) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewports(self, Viewport[] pViewports) {
   self.viewportCount = (uint)pViewports.len;
   self.pViewports = &pViewports[0];
   return self;
@@ -1467,7 +1467,7 @@ fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissorCou
   return self;
 }
        
-fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setPScissors(self, Rect2D[] pScissors) {
+fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissors(self, Rect2D[] pScissors) {
   self.scissorCount = (uint)pScissors.len;
   self.pScissors = &pScissors[0];
   return self;
@@ -1484,7 +1484,7 @@ fn PipelineLayoutCreateInfo pipelineLayoutCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPNext(self, void* pNext) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1499,7 +1499,7 @@ fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayoutCount(self, uin
   return self;
 }
        
-fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
   self.setLayoutCount = (uint)pSetLayouts.len;
   self.pSetLayouts = &pSetLayouts[0];
   return self;
@@ -1510,7 +1510,7 @@ fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRangeCount(s
   return self;
 }
        
-fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPPushConstantRanges(self, PushConstantRange[] pPushConstantRanges) {
+fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRanges(self, PushConstantRange[] pPushConstantRanges) {
   self.pushConstantRangeCount = (uint)pPushConstantRanges.len;
   self.pPushConstantRanges = &pPushConstantRanges[0];
   return self;
@@ -1527,7 +1527,7 @@ fn SamplerCreateInfo samplerCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SamplerCreateInfo SamplerCreateInfo.setPNext(self, void* pNext) {
+fn SamplerCreateInfo SamplerCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1623,7 +1623,7 @@ fn CopyDescriptorSet copyDescriptorSetBuilder() {
 }
 
 // Skip the .sType value
-fn CopyDescriptorSet CopyDescriptorSet.setPNext(self, void* pNext) {
+fn CopyDescriptorSet CopyDescriptorSet.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1674,7 +1674,7 @@ fn DescriptorPoolCreateInfo descriptorPoolCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPNext(self, void* pNext) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1694,7 +1694,7 @@ fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizeCount(self, uint
   return self;
 }
        
-fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPPoolSizes(self, DescriptorPoolSize[] pPoolSizes) {
+fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizes(self, DescriptorPoolSize[] pPoolSizes) {
   self.poolSizeCount = (uint)pPoolSizes.len;
   self.pPoolSizes = &pPoolSizes[0];
   return self;
@@ -1711,7 +1711,7 @@ fn DescriptorSetAllocateInfo descriptorSetAllocateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setPNext(self, void* pNext) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1726,7 +1726,7 @@ fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setDescriptorSetCount(sel
   return self;
 }
        
-fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setPSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
+fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setSetLayouts(self, DescriptorSetLayout[] pSetLayouts) {
   self.descriptorSetCount = (uint)pSetLayouts.len;
   self.pSetLayouts = &pSetLayouts[0];
   return self;
@@ -1743,7 +1743,7 @@ fn DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setPNext(self, void* pNext) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1758,7 +1758,7 @@ fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindingCount(s
   return self;
 }
        
-fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setPBindings(self, DescriptorSetLayoutBinding[] pBindings) {
+fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindings(self, DescriptorSetLayoutBinding[] pBindings) {
   self.bindingCount = (uint)pBindings.len;
   self.pBindings = &pBindings[0];
   return self;
@@ -1775,7 +1775,7 @@ fn WriteDescriptorSet writeDescriptorSetBuilder() {
 }
 
 // Skip the .sType value
-fn WriteDescriptorSet WriteDescriptorSet.setPNext(self, void* pNext) {
+fn WriteDescriptorSet WriteDescriptorSet.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1805,19 +1805,19 @@ fn WriteDescriptorSet WriteDescriptorSet.setDescriptorType(self, DescriptorType 
   return self;
 }
        
-fn WriteDescriptorSet WriteDescriptorSet.setPImageInfo(self, DescriptorImageInfo[] pImageInfo) {
+fn WriteDescriptorSet WriteDescriptorSet.setImageInfo(self, DescriptorImageInfo[] pImageInfo) {
   self.descriptorCount = (uint)pImageInfo.len;
   self.pImageInfo = &pImageInfo[0];
   return self;
 }
 
-fn WriteDescriptorSet WriteDescriptorSet.setPBufferInfo(self, DescriptorBufferInfo[] pBufferInfo) {
+fn WriteDescriptorSet WriteDescriptorSet.setBufferInfo(self, DescriptorBufferInfo[] pBufferInfo) {
   self.descriptorCount = (uint)pBufferInfo.len;
   self.pBufferInfo = &pBufferInfo[0];
   return self;
 }
 
-fn WriteDescriptorSet WriteDescriptorSet.setPTexelBufferView(self, BufferView[] pTexelBufferView) {
+fn WriteDescriptorSet WriteDescriptorSet.setTexelBufferView(self, BufferView[] pTexelBufferView) {
   self.descriptorCount = (uint)pTexelBufferView.len;
   self.pTexelBufferView = &pTexelBufferView[0];
   return self;
@@ -1834,7 +1834,7 @@ fn FramebufferCreateInfo framebufferCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn FramebufferCreateInfo FramebufferCreateInfo.setPNext(self, void* pNext) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1854,7 +1854,7 @@ fn FramebufferCreateInfo FramebufferCreateInfo.setAttachmentCount(self, uint att
   return self;
 }
        
-fn FramebufferCreateInfo FramebufferCreateInfo.setPAttachments(self, ImageView[] pAttachments) {
+fn FramebufferCreateInfo FramebufferCreateInfo.setAttachments(self, ImageView[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -1886,7 +1886,7 @@ fn RenderPassCreateInfo renderPassCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderPassCreateInfo RenderPassCreateInfo.setPNext(self, void* pNext) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1901,7 +1901,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setAttachmentCount(self, uint attac
   return self;
 }
        
-fn RenderPassCreateInfo RenderPassCreateInfo.setPAttachments(self, AttachmentDescription[] pAttachments) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setAttachments(self, AttachmentDescription[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -1912,7 +1912,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setSubpassCount(self, uint subpassC
   return self;
 }
        
-fn RenderPassCreateInfo RenderPassCreateInfo.setPSubpasses(self, SubpassDescription[] pSubpasses) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setSubpasses(self, SubpassDescription[] pSubpasses) {
   self.subpassCount = (uint)pSubpasses.len;
   self.pSubpasses = &pSubpasses[0];
   return self;
@@ -1923,7 +1923,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setDependencyCount(self, uint depen
   return self;
 }
        
-fn RenderPassCreateInfo RenderPassCreateInfo.setPDependencies(self, SubpassDependency[] pDependencies) {
+fn RenderPassCreateInfo RenderPassCreateInfo.setDependencies(self, SubpassDependency[] pDependencies) {
   self.dependencyCount = (uint)pDependencies.len;
   self.pDependencies = &pDependencies[0];
   return self;
@@ -1940,7 +1940,7 @@ fn CommandPoolCreateInfo commandPoolCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn CommandPoolCreateInfo CommandPoolCreateInfo.setPNext(self, void* pNext) {
+fn CommandPoolCreateInfo CommandPoolCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1966,7 +1966,7 @@ fn CommandBufferAllocateInfo commandBufferAllocateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setPNext(self, void* pNext) {
+fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -1997,7 +1997,7 @@ fn CommandBufferBeginInfo commandBufferBeginInfoBuilder() {
 }
 
 // Skip the .sType value
-fn CommandBufferBeginInfo CommandBufferBeginInfo.setPNext(self, void* pNext) {
+fn CommandBufferBeginInfo CommandBufferBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2007,7 +2007,7 @@ fn CommandBufferBeginInfo CommandBufferBeginInfo.setFlags(self, CommandBufferUsa
   return self;
 }
        
-fn CommandBufferBeginInfo CommandBufferBeginInfo.setPInheritanceInfo(self, CommandBufferInheritanceInfo* pInheritanceInfo) {
+fn CommandBufferBeginInfo CommandBufferBeginInfo.setInheritanceInfo(self, CommandBufferInheritanceInfo* pInheritanceInfo) {
   self.pInheritanceInfo = pInheritanceInfo;
   return self;
 }
@@ -2023,7 +2023,7 @@ fn CommandBufferInheritanceInfo commandBufferInheritanceInfoBuilder() {
 }
 
 // Skip the .sType value
-fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setPNext(self, void* pNext) {
+fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2069,7 +2069,7 @@ fn RenderPassBeginInfo renderPassBeginInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderPassBeginInfo RenderPassBeginInfo.setPNext(self, void* pNext) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2094,7 +2094,7 @@ fn RenderPassBeginInfo RenderPassBeginInfo.setClearValueCount(self, uint clearVa
   return self;
 }
        
-fn RenderPassBeginInfo RenderPassBeginInfo.setPClearValues(self, ClearValue[] pClearValues) {
+fn RenderPassBeginInfo RenderPassBeginInfo.setClearValues(self, ClearValue[] pClearValues) {
   self.clearValueCount = (uint)pClearValues.len;
   self.pClearValues = &pClearValues[0];
   return self;
@@ -2111,7 +2111,7 @@ fn PhysicalDeviceSubgroupProperties physicalDeviceSubgroupPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2147,7 +2147,7 @@ fn BindBufferMemoryInfo bindBufferMemoryInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindBufferMemoryInfo BindBufferMemoryInfo.setPNext(self, void* pNext) {
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2178,7 +2178,7 @@ fn BindImageMemoryInfo bindImageMemoryInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindImageMemoryInfo BindImageMemoryInfo.setPNext(self, void* pNext) {
+fn BindImageMemoryInfo BindImageMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2209,7 +2209,7 @@ fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeaturesBuilder(
 }
 
 // Skip the .sType value
-fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setPNext(self, void* pNext) {
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2245,7 +2245,7 @@ fn MemoryDedicatedRequirements memoryDedicatedRequirementsBuilder() {
 }
 
 // Skip the .sType value
-fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setPNext(self, void* pNext) {
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2271,7 +2271,7 @@ fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setPNext(self, void* pNext) {
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2297,7 +2297,7 @@ fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfoBuilder() {
 }
 
 // Skip the .sType value
-fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setPNext(self, void* pNext) {
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2323,7 +2323,7 @@ fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setPNext(self, void* pNext) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2338,7 +2338,7 @@ fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRender
   return self;
 }
        
-fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setPDeviceRenderAreas(self, Rect2D[] pDeviceRenderAreas) {
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRenderAreas(self, Rect2D[] pDeviceRenderAreas) {
   self.deviceRenderAreaCount = (uint)pDeviceRenderAreas.len;
   self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
   return self;
@@ -2355,7 +2355,7 @@ fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfoBuilder() 
 }
 
 // Skip the .sType value
-fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setPNext(self, void* pNext) {
+fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2376,7 +2376,7 @@ fn DeviceGroupSubmitInfo deviceGroupSubmitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPNext(self, void* pNext) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2386,7 +2386,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreCount(self, uint 
   return self;
 }
        
-fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPWaitSemaphoreDeviceIndices(self, uint[] pWaitSemaphoreDeviceIndices) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreDeviceIndices(self, uint[] pWaitSemaphoreDeviceIndices) {
   self.waitSemaphoreCount = (uint)pWaitSemaphoreDeviceIndices.len;
   self.pWaitSemaphoreDeviceIndices = &pWaitSemaphoreDeviceIndices[0];
   return self;
@@ -2397,7 +2397,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferCount(self, uint 
   return self;
 }
        
-fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPCommandBufferDeviceMasks(self, uint[] pCommandBufferDeviceMasks) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferDeviceMasks(self, uint[] pCommandBufferDeviceMasks) {
   self.commandBufferCount = (uint)pCommandBufferDeviceMasks.len;
   self.pCommandBufferDeviceMasks = &pCommandBufferDeviceMasks[0];
   return self;
@@ -2408,7 +2408,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreCount(self, uin
   return self;
 }
        
-fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPSignalSemaphoreDeviceIndices(self, uint[] pSignalSemaphoreDeviceIndices) {
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(self, uint[] pSignalSemaphoreDeviceIndices) {
   self.signalSemaphoreCount = (uint)pSignalSemaphoreDeviceIndices.len;
   self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
   return self;
@@ -2425,7 +2425,7 @@ fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setPNext(self, void* pNext) {
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2451,7 +2451,7 @@ fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setPNext(self, void* pNext) {
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2461,7 +2461,7 @@ fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceInde
   return self;
 }
        
-fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setPDeviceIndices(self, uint[] pDeviceIndices) {
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
   self.deviceIndexCount = (uint)pDeviceIndices.len;
   self.pDeviceIndices = &pDeviceIndices[0];
   return self;
@@ -2478,7 +2478,7 @@ fn BindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPNext(self, void* pNext) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2488,7 +2488,7 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndexC
   return self;
 }
        
-fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPDeviceIndices(self, uint[] pDeviceIndices) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndices(self, uint[] pDeviceIndices) {
   self.deviceIndexCount = (uint)pDeviceIndices.len;
   self.pDeviceIndices = &pDeviceIndices[0];
   return self;
@@ -2499,7 +2499,7 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanc
   return self;
 }
        
-fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPSplitInstanceBindRegions(self, Rect2D[] pSplitInstanceBindRegions) {
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegions(self, Rect2D[] pSplitInstanceBindRegions) {
   self.splitInstanceBindRegionCount = (uint)pSplitInstanceBindRegions.len;
   self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
   return self;
@@ -2516,7 +2516,7 @@ fn PhysicalDeviceGroupProperties physicalDeviceGroupPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2547,7 +2547,7 @@ fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPNext(self, void* pNext) {
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2557,7 +2557,7 @@ fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDeviceCoun
   return self;
 }
        
-fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPPhysicalDevices(self, PhysicalDevice[] pPhysicalDevices) {
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDevices(self, PhysicalDevice[] pPhysicalDevices) {
   self.physicalDeviceCount = (uint)pPhysicalDevices.len;
   self.pPhysicalDevices = &pPhysicalDevices[0];
   return self;
@@ -2574,7 +2574,7 @@ fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2Builder() {
 }
 
 // Skip the .sType value
-fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2595,7 +2595,7 @@ fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2Builder() {
 }
 
 // Skip the .sType value
-fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2616,7 +2616,7 @@ fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2Builder(
 }
 
 // Skip the .sType value
-fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2637,7 +2637,7 @@ fn MemoryRequirements2 memoryRequirements2Builder() {
 }
 
 // Skip the .sType value
-fn MemoryRequirements2 MemoryRequirements2.setPNext(self, void* pNext) {
+fn MemoryRequirements2 MemoryRequirements2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2658,7 +2658,7 @@ fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2Builder() {
 }
 
 // Skip the .sType value
-fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setPNext(self, void* pNext) {
+fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2679,7 +2679,7 @@ fn PhysicalDeviceFeatures2 physicalDeviceFeatures2Builder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setPNext(self, void* pNext) {
+fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2700,7 +2700,7 @@ fn PhysicalDeviceProperties2 physicalDeviceProperties2Builder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setPNext(self, void* pNext) {
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2721,7 +2721,7 @@ fn FormatProperties2 formatProperties2Builder() {
 }
 
 // Skip the .sType value
-fn FormatProperties2 FormatProperties2.setPNext(self, void* pNext) {
+fn FormatProperties2 FormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2742,7 +2742,7 @@ fn ImageFormatProperties2 imageFormatProperties2Builder() {
 }
 
 // Skip the .sType value
-fn ImageFormatProperties2 ImageFormatProperties2.setPNext(self, void* pNext) {
+fn ImageFormatProperties2 ImageFormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2763,7 +2763,7 @@ fn PhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2Builder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setPNext(self, void* pNext) {
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2804,7 +2804,7 @@ fn QueueFamilyProperties2 queueFamilyProperties2Builder() {
 }
 
 // Skip the .sType value
-fn QueueFamilyProperties2 QueueFamilyProperties2.setPNext(self, void* pNext) {
+fn QueueFamilyProperties2 QueueFamilyProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2825,7 +2825,7 @@ fn PhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2Builder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setPNext(self, void* pNext) {
+fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2846,7 +2846,7 @@ fn SparseImageFormatProperties2 sparseImageFormatProperties2Builder() {
 }
 
 // Skip the .sType value
-fn SparseImageFormatProperties2 SparseImageFormatProperties2.setPNext(self, void* pNext) {
+fn SparseImageFormatProperties2 SparseImageFormatProperties2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2867,7 +2867,7 @@ fn PhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2Buil
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setPNext(self, void* pNext) {
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2908,7 +2908,7 @@ fn PhysicalDevicePointClippingProperties physicalDevicePointClippingPropertiesBu
 }
 
 // Skip the .sType value
-fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setPNext(self, void* pNext) {
+fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2929,7 +2929,7 @@ fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCrea
 }
 
 // Skip the .sType value
-fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setPNext(self, void* pNext) {
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2939,7 +2939,7 @@ fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCrea
   return self;
 }
        
-fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setPAspectReferences(self, InputAttachmentAspectReference[] pAspectReferences) {
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setAspectReferences(self, InputAttachmentAspectReference[] pAspectReferences) {
   self.aspectReferenceCount = (uint)pAspectReferences.len;
   self.pAspectReferences = &pAspectReferences[0];
   return self;
@@ -2956,7 +2956,7 @@ fn ImageViewUsageCreateInfo imageViewUsageCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setPNext(self, void* pNext) {
+fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2977,7 +2977,7 @@ fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOri
 }
 
 // Skip the .sType value
-fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setPNext(self, void* pNext) {
+fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -2998,7 +2998,7 @@ fn RenderPassMultiviewCreateInfo renderPassMultiviewCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPNext(self, void* pNext) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3008,7 +3008,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setSubpassCount(s
   return self;
 }
        
-fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPViewMasks(self, uint[] pViewMasks) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewMasks(self, uint[] pViewMasks) {
   self.subpassCount = (uint)pViewMasks.len;
   self.pViewMasks = &pViewMasks[0];
   return self;
@@ -3019,7 +3019,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setDependencyCoun
   return self;
 }
        
-fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPViewOffsets(self, int[] pViewOffsets) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewOffsets(self, int[] pViewOffsets) {
   self.dependencyCount = (uint)pViewOffsets.len;
   self.pViewOffsets = &pViewOffsets[0];
   return self;
@@ -3030,7 +3030,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMas
   return self;
 }
        
-fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPCorrelationMasks(self, uint[] pCorrelationMasks) {
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMasks(self, uint[] pCorrelationMasks) {
   self.correlationMaskCount = (uint)pCorrelationMasks.len;
   self.pCorrelationMasks = &pCorrelationMasks[0];
   return self;
@@ -3047,7 +3047,7 @@ fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeaturesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3078,7 +3078,7 @@ fn PhysicalDeviceMultiviewProperties physicalDeviceMultiviewPropertiesBuilder() 
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3104,7 +3104,7 @@ fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeatures
 }
 
 // Skip the .sType value
-fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3130,7 +3130,7 @@ fn PhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeaturesBu
 }
 
 // Skip the .sType value
-fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3151,7 +3151,7 @@ fn PhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryProperti
 }
 
 // Skip the .sType value
-fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3172,7 +3172,7 @@ fn DeviceQueueInfo2 deviceQueueInfo2Builder() {
 }
 
 // Skip the .sType value
-fn DeviceQueueInfo2 DeviceQueueInfo2.setPNext(self, void* pNext) {
+fn DeviceQueueInfo2 DeviceQueueInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3203,7 +3203,7 @@ fn ProtectedSubmitInfo protectedSubmitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ProtectedSubmitInfo ProtectedSubmitInfo.setPNext(self, void* pNext) {
+fn ProtectedSubmitInfo ProtectedSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3224,7 +3224,7 @@ fn SamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setPNext(self, void* pNext) {
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3280,7 +3280,7 @@ fn SamplerYcbcrConversionInfo samplerYcbcrConversionInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setPNext(self, void* pNext) {
+fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3301,7 +3301,7 @@ fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPNext(self, void* pNext) {
+fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3322,7 +3322,7 @@ fn ImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPNext(self, void* pNext) {
+fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3343,7 +3343,7 @@ fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConver
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3364,7 +3364,7 @@ fn SamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormat
 }
 
 // Skip the .sType value
-fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setPNext(self, void* pNext) {
+fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3385,7 +3385,7 @@ fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfoBuilder(
 }
 
 // Skip the .sType value
-fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPNext(self, void* pNext) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3400,7 +3400,7 @@ fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDesc
   return self;
 }
        
-fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPDescriptorUpdateEntries(self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntries(self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
   self.descriptorUpdateEntryCount = (uint)pDescriptorUpdateEntries.len;
   self.pDescriptorUpdateEntries = &pDescriptorUpdateEntries[0];
   return self;
@@ -3442,7 +3442,7 @@ fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfoBu
 }
 
 // Skip the .sType value
-fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setPNext(self, void* pNext) {
+fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3463,7 +3463,7 @@ fn ExternalImageFormatProperties externalImageFormatPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalImageFormatProperties ExternalImageFormatProperties.setPNext(self, void* pNext) {
+fn ExternalImageFormatProperties ExternalImageFormatProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3484,7 +3484,7 @@ fn PhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setPNext(self, void* pNext) {
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3515,7 +3515,7 @@ fn ExternalBufferProperties externalBufferPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalBufferProperties ExternalBufferProperties.setPNext(self, void* pNext) {
+fn ExternalBufferProperties ExternalBufferProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3536,7 +3536,7 @@ fn PhysicalDeviceIDProperties physicalDeviceIDPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3577,7 +3577,7 @@ fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setPNext(self, void* pNext) {
+fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3598,7 +3598,7 @@ fn ExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setPNext(self, void* pNext) {
+fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3619,7 +3619,7 @@ fn ExportMemoryAllocateInfo exportMemoryAllocateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setPNext(self, void* pNext) {
+fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3640,7 +3640,7 @@ fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setPNext(self, void* pNext) {
+fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3661,7 +3661,7 @@ fn ExternalFenceProperties externalFencePropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalFenceProperties ExternalFenceProperties.setPNext(self, void* pNext) {
+fn ExternalFenceProperties ExternalFenceProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3692,7 +3692,7 @@ fn ExportFenceCreateInfo exportFenceCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ExportFenceCreateInfo ExportFenceCreateInfo.setPNext(self, void* pNext) {
+fn ExportFenceCreateInfo ExportFenceCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3713,7 +3713,7 @@ fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setPNext(self, void* pNext) {
+fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3734,7 +3734,7 @@ fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfoBuilde
 }
 
 // Skip the .sType value
-fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setPNext(self, void* pNext) {
+fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3755,7 +3755,7 @@ fn ExternalSemaphoreProperties externalSemaphorePropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setPNext(self, void* pNext) {
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3786,7 +3786,7 @@ fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3PropertiesBuil
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setPNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3812,7 +3812,7 @@ fn DescriptorSetLayoutSupport descriptorSetLayoutSupportBuilder() {
 }
 
 // Skip the .sType value
-fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setPNext(self, void* pNext) {
+fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3833,7 +3833,7 @@ fn PhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParameters
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3854,7 +3854,7 @@ fn ImageFormatListCreateInfo imageFormatListCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setPNext(self, void* pNext) {
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3864,7 +3864,7 @@ fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormatCount(self, 
   return self;
 }
        
-fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setPViewFormats(self, Format[] pViewFormats) {
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormats(self, Format[] pViewFormats) {
   self.viewFormatCount = (uint)pViewFormats.len;
   self.pViewFormats = &pViewFormats[0];
   return self;
@@ -3881,7 +3881,7 @@ fn RenderPassCreateInfo2 renderPassCreateInfo2Builder() {
 }
 
 // Skip the .sType value
-fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPNext(self, void* pNext) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -3896,7 +3896,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachmentCount(self, uint att
   return self;
 }
        
-fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPAttachments(self, AttachmentDescription2[] pAttachments) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachments(self, AttachmentDescription2[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -3907,7 +3907,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpassCount(self, uint subpas
   return self;
 }
        
-fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPSubpasses(self, SubpassDescription2[] pSubpasses) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpasses(self, SubpassDescription2[] pSubpasses) {
   self.subpassCount = (uint)pSubpasses.len;
   self.pSubpasses = &pSubpasses[0];
   return self;
@@ -3918,7 +3918,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencyCount(self, uint dep
   return self;
 }
        
-fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPDependencies(self, SubpassDependency2[] pDependencies) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencies(self, SubpassDependency2[] pDependencies) {
   self.dependencyCount = (uint)pDependencies.len;
   self.pDependencies = &pDependencies[0];
   return self;
@@ -3929,7 +3929,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMaskCount(self, 
   return self;
 }
        
-fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPCorrelatedViewMasks(self, uint[] pCorrelatedViewMasks) {
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMasks(self, uint[] pCorrelatedViewMasks) {
   self.correlatedViewMaskCount = (uint)pCorrelatedViewMasks.len;
   self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
   return self;
@@ -3946,7 +3946,7 @@ fn AttachmentDescription2 attachmentDescription2Builder() {
 }
 
 // Skip the .sType value
-fn AttachmentDescription2 AttachmentDescription2.setPNext(self, void* pNext) {
+fn AttachmentDescription2 AttachmentDescription2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4007,7 +4007,7 @@ fn AttachmentReference2 attachmentReference2Builder() {
 }
 
 // Skip the .sType value
-fn AttachmentReference2 AttachmentReference2.setPNext(self, void* pNext) {
+fn AttachmentReference2 AttachmentReference2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4038,7 +4038,7 @@ fn SubpassDescription2 subpassDescription2Builder() {
 }
 
 // Skip the .sType value
-fn SubpassDescription2 SubpassDescription2.setPNext(self, void* pNext) {
+fn SubpassDescription2 SubpassDescription2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4063,7 +4063,7 @@ fn SubpassDescription2 SubpassDescription2.setInputAttachmentCount(self, uint in
   return self;
 }
        
-fn SubpassDescription2 SubpassDescription2.setPInputAttachments(self, AttachmentReference2[] pInputAttachments) {
+fn SubpassDescription2 SubpassDescription2.setInputAttachments(self, AttachmentReference2[] pInputAttachments) {
   self.inputAttachmentCount = (uint)pInputAttachments.len;
   self.pInputAttachments = &pInputAttachments[0];
   return self;
@@ -4074,19 +4074,19 @@ fn SubpassDescription2 SubpassDescription2.setColorAttachmentCount(self, uint co
   return self;
 }
        
-fn SubpassDescription2 SubpassDescription2.setPColorAttachments(self, AttachmentReference2[] pColorAttachments) {
+fn SubpassDescription2 SubpassDescription2.setColorAttachments(self, AttachmentReference2[] pColorAttachments) {
   self.colorAttachmentCount = (uint)pColorAttachments.len;
   self.pColorAttachments = &pColorAttachments[0];
   return self;
 }
 
-fn SubpassDescription2 SubpassDescription2.setPResolveAttachments(self, AttachmentReference2[] pResolveAttachments) {
+fn SubpassDescription2 SubpassDescription2.setResolveAttachments(self, AttachmentReference2[] pResolveAttachments) {
   self.colorAttachmentCount = (uint)pResolveAttachments.len;
   self.pResolveAttachments = &pResolveAttachments[0];
   return self;
 }
 
-fn SubpassDescription2 SubpassDescription2.setPDepthStencilAttachment(self, AttachmentReference2* pDepthStencilAttachment) {
+fn SubpassDescription2 SubpassDescription2.setDepthStencilAttachment(self, AttachmentReference2* pDepthStencilAttachment) {
   self.pDepthStencilAttachment = pDepthStencilAttachment;
   return self;
 }
@@ -4096,7 +4096,7 @@ fn SubpassDescription2 SubpassDescription2.setPreserveAttachmentCount(self, uint
   return self;
 }
        
-fn SubpassDescription2 SubpassDescription2.setPPreserveAttachments(self, uint[] pPreserveAttachments) {
+fn SubpassDescription2 SubpassDescription2.setPreserveAttachments(self, uint[] pPreserveAttachments) {
   self.preserveAttachmentCount = (uint)pPreserveAttachments.len;
   self.pPreserveAttachments = &pPreserveAttachments[0];
   return self;
@@ -4113,7 +4113,7 @@ fn SubpassDependency2 subpassDependency2Builder() {
 }
 
 // Skip the .sType value
-fn SubpassDependency2 SubpassDependency2.setPNext(self, void* pNext) {
+fn SubpassDependency2 SubpassDependency2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4169,7 +4169,7 @@ fn SubpassBeginInfo subpassBeginInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SubpassBeginInfo SubpassBeginInfo.setPNext(self, void* pNext) {
+fn SubpassBeginInfo SubpassBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4190,7 +4190,7 @@ fn SubpassEndInfo subpassEndInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SubpassEndInfo SubpassEndInfo.setPNext(self, void* pNext) {
+fn SubpassEndInfo SubpassEndInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4206,7 +4206,7 @@ fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder() 
 }
 
 // Skip the .sType value
-fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setPNext(self, void* pNext) {
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4237,7 +4237,7 @@ fn PhysicalDeviceDriverProperties physicalDeviceDriverPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4273,7 +4273,7 @@ fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64Featur
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4299,7 +4299,7 @@ fn PhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8Featur
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4325,7 +4325,7 @@ fn PhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsPropertiesBu
 }
 
 // Skip the .sType value
-fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4426,7 +4426,7 @@ fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCrea
 }
 
 // Skip the .sType value
-fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setPNext(self, void* pNext) {
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4436,7 +4436,7 @@ fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCrea
   return self;
 }
        
-fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setPBindingFlags(self, DescriptorBindingFlags[] pBindingFlags) {
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingFlags(self, DescriptorBindingFlags[] pBindingFlags) {
   self.bindingCount = (uint)pBindingFlags.len;
   self.pBindingFlags = &pBindingFlags[0];
   return self;
@@ -4453,7 +4453,7 @@ fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeat
 }
 
 // Skip the .sType value
-fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4569,7 +4569,7 @@ fn PhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingPr
 }
 
 // Skip the .sType value
-fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4700,7 +4700,7 @@ fn DescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescrip
 }
 
 // Skip the .sType value
-fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setPNext(self, void* pNext) {
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4710,7 +4710,7 @@ fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescrip
   return self;
 }
        
-fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setPDescriptorCounts(self, uint[] pDescriptorCounts) {
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorCounts(self, uint[] pDescriptorCounts) {
   self.descriptorSetCount = (uint)pDescriptorCounts.len;
   self.pDescriptorCounts = &pDescriptorCounts[0];
   return self;
@@ -4727,7 +4727,7 @@ fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescri
 }
 
 // Skip the .sType value
-fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setPNext(self, void* pNext) {
+fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4748,7 +4748,7 @@ fn SubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolveBu
 }
 
 // Skip the .sType value
-fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setPNext(self, void* pNext) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4763,7 +4763,7 @@ fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.s
   return self;
 }
        
-fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setPDepthStencilResolveAttachment(self, AttachmentReference2* pDepthStencilResolveAttachment) {
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setDepthStencilResolveAttachment(self, AttachmentReference2* pDepthStencilResolveAttachment) {
   self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
   return self;
 }
@@ -4779,7 +4779,7 @@ fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolve
 }
 
 // Skip the .sType value
-fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4815,7 +4815,7 @@ fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeatur
 }
 
 // Skip the .sType value
-fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4836,7 +4836,7 @@ fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setPNext(self, void* pNext) {
+fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4857,7 +4857,7 @@ fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setPNext(self, void* pNext) {
+fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4878,7 +4878,7 @@ fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmax
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4904,7 +4904,7 @@ fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeatur
 }
 
 // Skip the .sType value
-fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4935,7 +4935,7 @@ fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebuffer
 }
 
 // Skip the .sType value
-fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4956,7 +4956,7 @@ fn FramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setPNext(self, void* pNext) {
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -4966,7 +4966,7 @@ fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachme
   return self;
 }
        
-fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setPAttachmentImageInfos(self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfos(self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
   self.attachmentImageInfoCount = (uint)pAttachmentImageInfos.len;
   self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
   return self;
@@ -4983,7 +4983,7 @@ fn FramebufferAttachmentImageInfo framebufferAttachmentImageInfoBuilder() {
 }
 
 // Skip the .sType value
-fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setPNext(self, void* pNext) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5018,7 +5018,7 @@ fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormatCo
   return self;
 }
        
-fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setPViewFormats(self, Format[] pViewFormats) {
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormats(self, Format[] pViewFormats) {
   self.viewFormatCount = (uint)pViewFormats.len;
   self.pViewFormats = &pViewFormats[0];
   return self;
@@ -5035,7 +5035,7 @@ fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setPNext(self, void* pNext) {
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5045,7 +5045,7 @@ fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachmentCoun
   return self;
 }
        
-fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setPAttachments(self, ImageView[] pAttachments) {
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachments(self, ImageView[] pAttachments) {
   self.attachmentCount = (uint)pAttachments.len;
   self.pAttachments = &pAttachments[0];
   return self;
@@ -5062,7 +5062,7 @@ fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBuffer
 }
 
 // Skip the .sType value
-fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5083,7 +5083,7 @@ fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgrou
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5104,7 +5104,7 @@ fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepth
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5125,7 +5125,7 @@ fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayoutBuilder() {
 }
 
 // Skip the .sType value
-fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setPNext(self, void* pNext) {
+fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5146,7 +5146,7 @@ fn AttachmentDescriptionStencilLayout attachmentDescriptionStencilLayoutBuilder(
 }
 
 // Skip the .sType value
-fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setPNext(self, void* pNext) {
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5172,7 +5172,7 @@ fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeaturesBuil
 }
 
 // Skip the .sType value
-fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5193,7 +5193,7 @@ fn PhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeatur
 }
 
 // Skip the .sType value
-fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5214,7 +5214,7 @@ fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphoreProp
 }
 
 // Skip the .sType value
-fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5235,7 +5235,7 @@ fn SemaphoreTypeCreateInfo semaphoreTypeCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setPNext(self, void* pNext) {
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5261,7 +5261,7 @@ fn TimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPNext(self, void* pNext) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5271,7 +5271,7 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValue
   return self;
 }
        
-fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPWaitSemaphoreValues(self, ulong[] pWaitSemaphoreValues) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValues(self, ulong[] pWaitSemaphoreValues) {
   self.waitSemaphoreValueCount = (uint)pWaitSemaphoreValues.len;
   self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
   return self;
@@ -5282,7 +5282,7 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreVal
   return self;
 }
        
-fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPSignalSemaphoreValues(self, ulong[] pSignalSemaphoreValues) {
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValues(self, ulong[] pSignalSemaphoreValues) {
   self.signalSemaphoreValueCount = (uint)pSignalSemaphoreValues.len;
   self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
   return self;
@@ -5299,7 +5299,7 @@ fn SemaphoreWaitInfo semaphoreWaitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SemaphoreWaitInfo SemaphoreWaitInfo.setPNext(self, void* pNext) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5314,13 +5314,13 @@ fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphoreCount(self, uint semaphoreCou
   return self;
 }
        
-fn SemaphoreWaitInfo SemaphoreWaitInfo.setPSemaphores(self, Semaphore[] pSemaphores) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphores(self, Semaphore[] pSemaphores) {
   self.semaphoreCount = (uint)pSemaphores.len;
   self.pSemaphores = &pSemaphores[0];
   return self;
 }
 
-fn SemaphoreWaitInfo SemaphoreWaitInfo.setPValues(self, ulong[] pValues) {
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setValues(self, ulong[] pValues) {
   self.semaphoreCount = (uint)pValues.len;
   self.pValues = &pValues[0];
   return self;
@@ -5337,7 +5337,7 @@ fn SemaphoreSignalInfo semaphoreSignalInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SemaphoreSignalInfo SemaphoreSignalInfo.setPNext(self, void* pNext) {
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5363,7 +5363,7 @@ fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFe
 }
 
 // Skip the .sType value
-fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5394,7 +5394,7 @@ fn BufferDeviceAddressInfo bufferDeviceAddressInfoBuilder() {
 }
 
 // Skip the .sType value
-fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setPNext(self, void* pNext) {
+fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5415,7 +5415,7 @@ fn BufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfoBuil
 }
 
 // Skip the .sType value
-fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setPNext(self, void* pNext) {
+fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5436,7 +5436,7 @@ fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfo
 }
 
 // Skip the .sType value
-fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setPNext(self, void* pNext) {
+fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5457,7 +5457,7 @@ fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfoBuil
 }
 
 // Skip the .sType value
-fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setPNext(self, void* pNext) {
+fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5478,7 +5478,7 @@ fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminate
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5499,7 +5499,7 @@ fn PhysicalDeviceToolProperties physicalDeviceToolPropertiesBuilder() {
 }
 
 // Skip the .sType value
-fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5540,7 +5540,7 @@ fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemo
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5561,7 +5561,7 @@ fn PhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeaturesBuilder() 
 }
 
 // Skip the .sType value
-fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setPNext(self, void* pNext) {
+fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5582,7 +5582,7 @@ fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setPNext(self, void* pNext) {
+fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5603,7 +5603,7 @@ fn PrivateDataSlotCreateInfo privateDataSlotCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setPNext(self, void* pNext) {
+fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5624,7 +5624,7 @@ fn PhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCrea
 }
 
 // Skip the .sType value
-fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setPNext(self, void* pNext) {
+fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5645,7 +5645,7 @@ fn MemoryBarrier2 memoryBarrier2Builder() {
 }
 
 // Skip the .sType value
-fn MemoryBarrier2 MemoryBarrier2.setPNext(self, void* pNext) {
+fn MemoryBarrier2 MemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5681,7 +5681,7 @@ fn BufferMemoryBarrier2 bufferMemoryBarrier2Builder() {
 }
 
 // Skip the .sType value
-fn BufferMemoryBarrier2 BufferMemoryBarrier2.setPNext(self, void* pNext) {
+fn BufferMemoryBarrier2 BufferMemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5742,7 +5742,7 @@ fn ImageMemoryBarrier2 imageMemoryBarrier2Builder() {
 }
 
 // Skip the .sType value
-fn ImageMemoryBarrier2 ImageMemoryBarrier2.setPNext(self, void* pNext) {
+fn ImageMemoryBarrier2 ImageMemoryBarrier2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5808,7 +5808,7 @@ fn DependencyInfo dependencyInfoBuilder() {
 }
 
 // Skip the .sType value
-fn DependencyInfo DependencyInfo.setPNext(self, void* pNext) {
+fn DependencyInfo DependencyInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5823,7 +5823,7 @@ fn DependencyInfo DependencyInfo.setMemoryBarrierCount(self, uint memoryBarrierC
   return self;
 }
        
-fn DependencyInfo DependencyInfo.setPMemoryBarriers(self, MemoryBarrier2[] pMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setMemoryBarriers(self, MemoryBarrier2[] pMemoryBarriers) {
   self.memoryBarrierCount = (uint)pMemoryBarriers.len;
   self.pMemoryBarriers = &pMemoryBarriers[0];
   return self;
@@ -5834,7 +5834,7 @@ fn DependencyInfo DependencyInfo.setBufferMemoryBarrierCount(self, uint bufferMe
   return self;
 }
        
-fn DependencyInfo DependencyInfo.setPBufferMemoryBarriers(self, BufferMemoryBarrier2[] pBufferMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setBufferMemoryBarriers(self, BufferMemoryBarrier2[] pBufferMemoryBarriers) {
   self.bufferMemoryBarrierCount = (uint)pBufferMemoryBarriers.len;
   self.pBufferMemoryBarriers = &pBufferMemoryBarriers[0];
   return self;
@@ -5845,7 +5845,7 @@ fn DependencyInfo DependencyInfo.setImageMemoryBarrierCount(self, uint imageMemo
   return self;
 }
        
-fn DependencyInfo DependencyInfo.setPImageMemoryBarriers(self, ImageMemoryBarrier2[] pImageMemoryBarriers) {
+fn DependencyInfo DependencyInfo.setImageMemoryBarriers(self, ImageMemoryBarrier2[] pImageMemoryBarriers) {
   self.imageMemoryBarrierCount = (uint)pImageMemoryBarriers.len;
   self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
   return self;
@@ -5862,7 +5862,7 @@ fn SubmitInfo2 submitInfo2Builder() {
 }
 
 // Skip the .sType value
-fn SubmitInfo2 SubmitInfo2.setPNext(self, void* pNext) {
+fn SubmitInfo2 SubmitInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5877,7 +5877,7 @@ fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfoCount(self, uint waitSemaphoreInf
   return self;
 }
        
-fn SubmitInfo2 SubmitInfo2.setPWaitSemaphoreInfos(self, SemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
+fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfos(self, SemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
   self.waitSemaphoreInfoCount = (uint)pWaitSemaphoreInfos.len;
   self.pWaitSemaphoreInfos = &pWaitSemaphoreInfos[0];
   return self;
@@ -5888,7 +5888,7 @@ fn SubmitInfo2 SubmitInfo2.setCommandBufferInfoCount(self, uint commandBufferInf
   return self;
 }
        
-fn SubmitInfo2 SubmitInfo2.setPCommandBufferInfos(self, CommandBufferSubmitInfo[] pCommandBufferInfos) {
+fn SubmitInfo2 SubmitInfo2.setCommandBufferInfos(self, CommandBufferSubmitInfo[] pCommandBufferInfos) {
   self.commandBufferInfoCount = (uint)pCommandBufferInfos.len;
   self.pCommandBufferInfos = &pCommandBufferInfos[0];
   return self;
@@ -5899,7 +5899,7 @@ fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfoCount(self, uint signalSemaphor
   return self;
 }
        
-fn SubmitInfo2 SubmitInfo2.setPSignalSemaphoreInfos(self, SemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
+fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfos(self, SemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
   self.signalSemaphoreInfoCount = (uint)pSignalSemaphoreInfos.len;
   self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
   return self;
@@ -5916,7 +5916,7 @@ fn SemaphoreSubmitInfo semaphoreSubmitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setPNext(self, void* pNext) {
+fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5952,7 +5952,7 @@ fn CommandBufferSubmitInfo commandBufferSubmitInfoBuilder() {
 }
 
 // Skip the .sType value
-fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setPNext(self, void* pNext) {
+fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5978,7 +5978,7 @@ fn PhysicalDeviceSynchronization2Features physicalDeviceSynchronization2Features
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setPNext(self, void* pNext) {
+fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -5999,7 +5999,7 @@ fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitial
 }
 
 // Skip the .sType value
-fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6020,7 +6020,7 @@ fn PhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeaturesBu
 }
 
 // Skip the .sType value
-fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6041,7 +6041,7 @@ fn CopyBufferInfo2 copyBufferInfo2Builder() {
 }
 
 // Skip the .sType value
-fn CopyBufferInfo2 CopyBufferInfo2.setPNext(self, void* pNext) {
+fn CopyBufferInfo2 CopyBufferInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6061,7 +6061,7 @@ fn CopyBufferInfo2 CopyBufferInfo2.setRegionCount(self, uint regionCount) {
   return self;
 }
        
-fn CopyBufferInfo2 CopyBufferInfo2.setPRegions(self, BufferCopy2[] pRegions) {
+fn CopyBufferInfo2 CopyBufferInfo2.setRegions(self, BufferCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6078,7 +6078,7 @@ fn CopyImageInfo2 copyImageInfo2Builder() {
 }
 
 // Skip the .sType value
-fn CopyImageInfo2 CopyImageInfo2.setPNext(self, void* pNext) {
+fn CopyImageInfo2 CopyImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6108,7 +6108,7 @@ fn CopyImageInfo2 CopyImageInfo2.setRegionCount(self, uint regionCount) {
   return self;
 }
        
-fn CopyImageInfo2 CopyImageInfo2.setPRegions(self, ImageCopy2[] pRegions) {
+fn CopyImageInfo2 CopyImageInfo2.setRegions(self, ImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6125,7 +6125,7 @@ fn CopyBufferToImageInfo2 copyBufferToImageInfo2Builder() {
 }
 
 // Skip the .sType value
-fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setPNext(self, void* pNext) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6150,7 +6150,7 @@ fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegionCount(self, uint regio
   return self;
 }
        
-fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setPRegions(self, BufferImageCopy2[] pRegions) {
+fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegions(self, BufferImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6167,7 +6167,7 @@ fn CopyImageToBufferInfo2 copyImageToBufferInfo2Builder() {
 }
 
 // Skip the .sType value
-fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setPNext(self, void* pNext) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6192,7 +6192,7 @@ fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegionCount(self, uint regio
   return self;
 }
        
-fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setPRegions(self, BufferImageCopy2[] pRegions) {
+fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegions(self, BufferImageCopy2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6209,7 +6209,7 @@ fn BlitImageInfo2 blitImageInfo2Builder() {
 }
 
 // Skip the .sType value
-fn BlitImageInfo2 BlitImageInfo2.setPNext(self, void* pNext) {
+fn BlitImageInfo2 BlitImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6239,7 +6239,7 @@ fn BlitImageInfo2 BlitImageInfo2.setRegionCount(self, uint regionCount) {
   return self;
 }
        
-fn BlitImageInfo2 BlitImageInfo2.setPRegions(self, ImageBlit2[] pRegions) {
+fn BlitImageInfo2 BlitImageInfo2.setRegions(self, ImageBlit2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6261,7 +6261,7 @@ fn ResolveImageInfo2 resolveImageInfo2Builder() {
 }
 
 // Skip the .sType value
-fn ResolveImageInfo2 ResolveImageInfo2.setPNext(self, void* pNext) {
+fn ResolveImageInfo2 ResolveImageInfo2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6291,7 +6291,7 @@ fn ResolveImageInfo2 ResolveImageInfo2.setRegionCount(self, uint regionCount) {
   return self;
 }
        
-fn ResolveImageInfo2 ResolveImageInfo2.setPRegions(self, ImageResolve2[] pRegions) {
+fn ResolveImageInfo2 ResolveImageInfo2.setRegions(self, ImageResolve2[] pRegions) {
   self.regionCount = (uint)pRegions.len;
   self.pRegions = &pRegions[0];
   return self;
@@ -6308,7 +6308,7 @@ fn BufferCopy2 bufferCopy2Builder() {
 }
 
 // Skip the .sType value
-fn BufferCopy2 BufferCopy2.setPNext(self, void* pNext) {
+fn BufferCopy2 BufferCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6339,7 +6339,7 @@ fn ImageCopy2 imageCopy2Builder() {
 }
 
 // Skip the .sType value
-fn ImageCopy2 ImageCopy2.setPNext(self, void* pNext) {
+fn ImageCopy2 ImageCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6380,7 +6380,7 @@ fn ImageBlit2 imageBlit2Builder() {
 }
 
 // Skip the .sType value
-fn ImageBlit2 ImageBlit2.setPNext(self, void* pNext) {
+fn ImageBlit2 ImageBlit2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6416,7 +6416,7 @@ fn BufferImageCopy2 bufferImageCopy2Builder() {
 }
 
 // Skip the .sType value
-fn BufferImageCopy2 BufferImageCopy2.setPNext(self, void* pNext) {
+fn BufferImageCopy2 BufferImageCopy2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6462,7 +6462,7 @@ fn ImageResolve2 imageResolve2Builder() {
 }
 
 // Skip the .sType value
-fn ImageResolve2 ImageResolve2.setPNext(self, void* pNext) {
+fn ImageResolve2 ImageResolve2.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6503,7 +6503,7 @@ fn PhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFe
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6529,7 +6529,7 @@ fn PhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeControl
 }
 
 // Skip the .sType value
-fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6565,7 +6565,7 @@ fn PipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequired
 }
 
 // Skip the .sType value
-fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setPNext(self, void* pNext) {
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6586,7 +6586,7 @@ fn PhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeat
 }
 
 // Skip the .sType value
-fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6612,7 +6612,7 @@ fn PhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlockPr
 }
 
 // Skip the .sType value
-fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6653,7 +6653,7 @@ fn WriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlockBuil
 }
 
 // Skip the .sType value
-fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setPNext(self, void* pNext) {
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6663,7 +6663,7 @@ fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.set
   return self;
 }
        
-fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setPData(self, void* pData) {
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setData(self, void* pData) {
   self.pData = pData;
   return self;
 }
@@ -6679,7 +6679,7 @@ fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCr
 }
 
 // Skip the .sType value
-fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setPNext(self, void* pNext) {
+fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6700,7 +6700,7 @@ fn PhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompress
 }
 
 // Skip the .sType value
-fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6721,7 +6721,7 @@ fn RenderingInfo renderingInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderingInfo RenderingInfo.setPNext(self, void* pNext) {
+fn RenderingInfo RenderingInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6751,18 +6751,18 @@ fn RenderingInfo RenderingInfo.setColorAttachmentCount(self, uint colorAttachmen
   return self;
 }
        
-fn RenderingInfo RenderingInfo.setPColorAttachments(self, RenderingAttachmentInfo[] pColorAttachments) {
+fn RenderingInfo RenderingInfo.setColorAttachments(self, RenderingAttachmentInfo[] pColorAttachments) {
   self.colorAttachmentCount = (uint)pColorAttachments.len;
   self.pColorAttachments = &pColorAttachments[0];
   return self;
 }
 
-fn RenderingInfo RenderingInfo.setPDepthAttachment(self, RenderingAttachmentInfo* pDepthAttachment) {
+fn RenderingInfo RenderingInfo.setDepthAttachment(self, RenderingAttachmentInfo* pDepthAttachment) {
   self.pDepthAttachment = pDepthAttachment;
   return self;
 }
        
-fn RenderingInfo RenderingInfo.setPStencilAttachment(self, RenderingAttachmentInfo* pStencilAttachment) {
+fn RenderingInfo RenderingInfo.setStencilAttachment(self, RenderingAttachmentInfo* pStencilAttachment) {
   self.pStencilAttachment = pStencilAttachment;
   return self;
 }
@@ -6778,7 +6778,7 @@ fn RenderingAttachmentInfo renderingAttachmentInfoBuilder() {
 }
 
 // Skip the .sType value
-fn RenderingAttachmentInfo RenderingAttachmentInfo.setPNext(self, void* pNext) {
+fn RenderingAttachmentInfo RenderingAttachmentInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6834,7 +6834,7 @@ fn PipelineRenderingCreateInfo pipelineRenderingCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setPNext(self, void* pNext) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6849,7 +6849,7 @@ fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentCou
   return self;
 }
        
-fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setPColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
+fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
   self.colorAttachmentCount = (uint)pColorAttachmentFormats.len;
   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
   return self;
@@ -6876,7 +6876,7 @@ fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatures
 }
 
 // Skip the .sType value
-fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6897,7 +6897,7 @@ fn CommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfoBu
 }
 
 // Skip the .sType value
-fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setPNext(self, void* pNext) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6917,7 +6917,7 @@ fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.s
   return self;
 }
        
-fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setPColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
+fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setColorAttachmentFormats(self, Format[] pColorAttachmentFormats) {
   self.colorAttachmentCount = (uint)pColorAttachmentFormats.len;
   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
   return self;
@@ -6949,7 +6949,7 @@ fn PhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDotP
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -6970,7 +6970,7 @@ fn PhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderIntegerDo
 }
 
 // Skip the .sType value
-fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7136,7 +7136,7 @@ fn PhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignme
 }
 
 // Skip the .sType value
-fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setPNext(self, void* pNext) {
+fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7172,7 +7172,7 @@ fn FormatProperties3 formatProperties3Builder() {
 }
 
 // Skip the .sType value
-fn FormatProperties3 FormatProperties3.setPNext(self, void* pNext) {
+fn FormatProperties3 FormatProperties3.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7203,7 +7203,7 @@ fn PhysicalDeviceMaintenance4Features physicalDeviceMaintenance4FeaturesBuilder(
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setPNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7224,7 +7224,7 @@ fn PhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4PropertiesBuil
 }
 
 // Skip the .sType value
-fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.setPNext(self, void* pNext) {
+fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7245,12 +7245,12 @@ fn DeviceBufferMemoryRequirements deviceBufferMemoryRequirementsBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setPNext(self, void* pNext) {
+fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setPCreateInfo(self, BufferCreateInfo* pCreateInfo) {
+fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setCreateInfo(self, BufferCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
 }
@@ -7266,12 +7266,12 @@ fn DeviceImageMemoryRequirements deviceImageMemoryRequirementsBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setPNext(self, void* pNext) {
+fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setPCreateInfo(self, ImageCreateInfo* pCreateInfo) {
+fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setCreateInfo(self, ImageCreateInfo* pCreateInfo) {
   self.pCreateInfo = pCreateInfo;
   return self;
 }
@@ -7292,7 +7292,7 @@ fn SwapchainCreateInfoKHR swapchainCreateInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setPNext(self, void* pNext) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7347,7 +7347,7 @@ fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndexCount(self, 
   return self;
 }
        
-fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setPQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
+fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndices(self, uint[] pQueueFamilyIndices) {
   self.queueFamilyIndexCount = (uint)pQueueFamilyIndices.len;
   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
   return self;
@@ -7389,7 +7389,7 @@ fn PresentInfoKHR presentInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn PresentInfoKHR PresentInfoKHR.setPNext(self, void* pNext) {
+fn PresentInfoKHR PresentInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7399,7 +7399,7 @@ fn PresentInfoKHR PresentInfoKHR.setWaitSemaphoreCount(self, uint waitSemaphoreC
   return self;
 }
        
-fn PresentInfoKHR PresentInfoKHR.setPWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
+fn PresentInfoKHR PresentInfoKHR.setWaitSemaphores(self, Semaphore[] pWaitSemaphores) {
   self.waitSemaphoreCount = (uint)pWaitSemaphores.len;
   self.pWaitSemaphores = &pWaitSemaphores[0];
   return self;
@@ -7410,19 +7410,19 @@ fn PresentInfoKHR PresentInfoKHR.setSwapchainCount(self, uint swapchainCount) {
   return self;
 }
        
-fn PresentInfoKHR PresentInfoKHR.setPSwapchains(self, SwapchainKHR[] pSwapchains) {
+fn PresentInfoKHR PresentInfoKHR.setSwapchains(self, SwapchainKHR[] pSwapchains) {
   self.swapchainCount = (uint)pSwapchains.len;
   self.pSwapchains = &pSwapchains[0];
   return self;
 }
 
-fn PresentInfoKHR PresentInfoKHR.setPImageIndices(self, uint[] pImageIndices) {
+fn PresentInfoKHR PresentInfoKHR.setImageIndices(self, uint[] pImageIndices) {
   self.swapchainCount = (uint)pImageIndices.len;
   self.pImageIndices = &pImageIndices[0];
   return self;
 }
 
-fn PresentInfoKHR PresentInfoKHR.setPResults(self, Result[] pResults) {
+fn PresentInfoKHR PresentInfoKHR.setResults(self, Result[] pResults) {
   self.swapchainCount = (uint)pResults.len;
   self.pResults = &pResults[0];
   return self;
@@ -7439,7 +7439,7 @@ fn ImageSwapchainCreateInfoKHR imageSwapchainCreateInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setPNext(self, void* pNext) {
+fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7460,7 +7460,7 @@ fn BindImageMemorySwapchainInfoKHR bindImageMemorySwapchainInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setPNext(self, void* pNext) {
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7486,7 +7486,7 @@ fn AcquireNextImageInfoKHR acquireNextImageInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setPNext(self, void* pNext) {
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7527,7 +7527,7 @@ fn DeviceGroupPresentCapabilitiesKHR deviceGroupPresentCapabilitiesKHRBuilder() 
 }
 
 // Skip the .sType value
-fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setPNext(self, void* pNext) {
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7553,7 +7553,7 @@ fn DeviceGroupPresentInfoKHR deviceGroupPresentInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setPNext(self, void* pNext) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7563,7 +7563,7 @@ fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setSwapchainCount(self, u
   return self;
 }
        
-fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setPDeviceMasks(self, uint[] pDeviceMasks) {
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setDeviceMasks(self, uint[] pDeviceMasks) {
   self.swapchainCount = (uint)pDeviceMasks.len;
   self.pDeviceMasks = &pDeviceMasks[0];
   return self;
@@ -7585,7 +7585,7 @@ fn DeviceGroupSwapchainCreateInfoKHR deviceGroupSwapchainCreateInfoKHRBuilder() 
 }
 
 // Skip the .sType value
-fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setPNext(self, void* pNext) {
+fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7606,7 +7606,7 @@ fn DisplayModeCreateInfoKHR displayModeCreateInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setPNext(self, void* pNext) {
+fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7632,7 +7632,7 @@ fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setPNext(self, void* pNext) {
+fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7688,7 +7688,7 @@ fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHRBuilder() {
 }
 
 // Skip the .sType value
-fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setPNext(self, void* pNext) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7698,7 +7698,7 @@ fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setFlags(self, XcbSurfaceCrea
   return self;
 }
        
-fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setConnection(self, void** connection) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setOnnection(self, void** connection) {
   self.connection = connection;
   return self;
 }
@@ -7719,7 +7719,7 @@ fn DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXTBuilder() {
 }
 
 // Skip the .sType value
-fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setPNext(self, void* pNext) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7734,8 +7734,29 @@ fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setPfnCallb
   return self;
 }
        
-fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setPUserData(self, void* pUserData) {
+fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setUserData(self, void* pUserData) {
   self.pUserData = pUserData;
+  return self;
+}
+       
+
+
+fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHRBuilder() {
+  PhysicalDevicePushDescriptorPropertiesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setMaxPushDescriptors(self, uint maxPushDescriptors) {
+  self.maxPushDescriptors = maxPushDescriptors;
   return self;
 }
        
@@ -7750,12 +7771,12 @@ fn DebugUtilsLabelEXT debugUtilsLabelEXTBuilder() {
 }
 
 // Skip the .sType value
-fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setPNext(self, void* pNext) {
+fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
        
-fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setPLabelName(self, char* pLabelName) {
+fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setLabelName(self, char* pLabelName) {
   self.pLabelName = pLabelName;
   return self;
 }
@@ -7776,7 +7797,7 @@ fn DebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXTBuilder(
 }
 
 // Skip the .sType value
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPNext(self, void* pNext) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7786,7 +7807,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setFlag
   return self;
 }
        
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPMessageIdName(self, char* pMessageIdName) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMessageIdName(self, char* pMessageIdName) {
   self.pMessageIdName = pMessageIdName;
   return self;
 }
@@ -7796,7 +7817,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMess
   return self;
 }
        
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPMessage(self, char* pMessage) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setMessage(self, char* pMessage) {
   self.pMessage = pMessage;
   return self;
 }
@@ -7806,7 +7827,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueu
   return self;
 }
        
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPQueueLabels(self, DebugUtilsLabelEXT[] pQueueLabels) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueueLabels(self, DebugUtilsLabelEXT[] pQueueLabels) {
   self.queueLabelCount = (uint)pQueueLabels.len;
   self.pQueueLabels = &pQueueLabels[0];
   return self;
@@ -7817,7 +7838,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdB
   return self;
 }
        
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPCmdBufLabels(self, DebugUtilsLabelEXT[] pCmdBufLabels) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdBufLabels(self, DebugUtilsLabelEXT[] pCmdBufLabels) {
   self.cmdBufLabelCount = (uint)pCmdBufLabels.len;
   self.pCmdBufLabels = &pCmdBufLabels[0];
   return self;
@@ -7828,7 +7849,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObje
   return self;
 }
        
-fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setPObjects(self, DebugUtilsObjectNameInfoEXT[] pObjects) {
+fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObjects(self, DebugUtilsObjectNameInfoEXT[] pObjects) {
   self.objectCount = (uint)pObjects.len;
   self.pObjects = &pObjects[0];
   return self;
@@ -7845,7 +7866,7 @@ fn DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXTBuilder() {
 }
 
 // Skip the .sType value
-fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setPNext(self, void* pNext) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7870,7 +7891,7 @@ fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setPfnUserC
   return self;
 }
        
-fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setPUserData(self, void* pUserData) {
+fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setUserData(self, void* pUserData) {
   self.pUserData = pUserData;
   return self;
 }
@@ -7886,7 +7907,7 @@ fn DebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXTBuilder() {
 }
 
 // Skip the .sType value
-fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setPNext(self, void* pNext) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7901,7 +7922,7 @@ fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectHandle(self,
   return self;
 }
        
-fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setPObjectName(self, char* pObjectName) {
+fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectName(self, char* pObjectName) {
   self.pObjectName = pObjectName;
   return self;
 }
@@ -7917,7 +7938,7 @@ fn DebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXTBuilder() {
 }
 
 // Skip the .sType value
-fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setPNext(self, void* pNext) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -7942,8 +7963,120 @@ fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagSize(self, usz ta
   return self;
 }
        
-fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setPTag(self, void* pTag) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTag(self, void* pTag) {
   self.pTag = pTag;
+  return self;
+}
+       
+
+
+fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHRBuilder() {
+  PhysicalDevicePortabilitySubsetFeaturesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setConstantAlphaColorBlendFactors(self, Bool32 constantAlphaColorBlendFactors) {
+  self.constantAlphaColorBlendFactors = constantAlphaColorBlendFactors;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setEvents(self, Bool32 events) {
+  self.events = events;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatReinterpretation(self, Bool32 imageViewFormatReinterpretation) {
+  self.imageViewFormatReinterpretation = imageViewFormatReinterpretation;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageViewFormatSwizzle(self, Bool32 imageViewFormatSwizzle) {
+  self.imageViewFormatSwizzle = imageViewFormatSwizzle;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setImageView2DOn3DImage(self, Bool32 imageView2DOn3DImage) {
+  self.imageView2DOn3DImage = imageView2DOn3DImage;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setMultisampleArrayImage(self, Bool32 multisampleArrayImage) {
+  self.multisampleArrayImage = multisampleArrayImage;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setMutableComparisonSamplers(self, Bool32 mutableComparisonSamplers) {
+  self.mutableComparisonSamplers = mutableComparisonSamplers;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setPointPolygons(self, Bool32 pointPolygons) {
+  self.pointPolygons = pointPolygons;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setSamplerMipLodBias(self, Bool32 samplerMipLodBias) {
+  self.samplerMipLodBias = samplerMipLodBias;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setSeparateStencilMaskRef(self, Bool32 separateStencilMaskRef) {
+  self.separateStencilMaskRef = separateStencilMaskRef;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setShaderSampleRateInterpolationFunctions(self, Bool32 shaderSampleRateInterpolationFunctions) {
+  self.shaderSampleRateInterpolationFunctions = shaderSampleRateInterpolationFunctions;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationIsolines(self, Bool32 tessellationIsolines) {
+  self.tessellationIsolines = tessellationIsolines;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTessellationPointMode(self, Bool32 tessellationPointMode) {
+  self.tessellationPointMode = tessellationPointMode;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setTriangleFans(self, Bool32 triangleFans) {
+  self.triangleFans = triangleFans;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setVertexAttributeAccessBeyondStride(self, Bool32 vertexAttributeAccessBeyondStride) {
+  self.vertexAttributeAccessBeyondStride = vertexAttributeAccessBeyondStride;
+  return self;
+}
+       
+
+
+fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHRBuilder() {
+  PhysicalDevicePortabilitySubsetPropertiesKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setMinVertexInputBindingStrideAlignment(self, uint minVertexInputBindingStrideAlignment) {
+  self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
   return self;
 }
        
