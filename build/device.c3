@@ -683,3 +683,6 @@ fn uint! Semaphore.getNextImage(self, vk::Device device, vk::SwapchainKHR swapch
     vk::acquireNextImageKHR(device, swapchain, uint.max, self, null, &index)!!;
     return index;
 }
+
+
+macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);

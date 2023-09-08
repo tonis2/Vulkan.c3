@@ -60,8 +60,12 @@ fault VkErrors {
  ERROR_INVALID_EXTERNAL_HANDLE,
  ERROR_FRAGMENTATION,
  ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+ PIPELINE_COMPILE_REQUIRED,
  ERROR_SURFACE_LOST_KHR,
- ERROR_NATIVE_WINDOW_IN_USE_KHR
+ ERROR_NATIVE_WINDOW_IN_USE_KHR,
+ SUBOPTIMAL_KHR,
+ ERROR_OUT_OF_DATE_KHR,
+ ERROR_VALIDATION_FAILED_EXT
 }
  def Instance = distinct inline void*;
 def PhysicalDevice = distinct inline void*;
@@ -90,102 +94,150 @@ def CommandPool = distinct inline void*;
 def CommandBuffer = distinct inline void*;
 def SamplerYcbcrConversion = distinct inline void*;
 def DescriptorUpdateTemplate = distinct inline void*;
+def PrivateDataSlot = distinct inline void*;
 def SurfaceKHR = distinct inline void*;
+def SwapchainKHR = distinct inline void*;
+def DisplayKHR = distinct inline void*;
+def DisplayModeKHR = distinct inline void*;
+def DebugReportCallbackEXT = distinct inline void*;
+def DebugUtilsMessengerEXT = distinct inline void*;
 def Bool32 = uint;
 def DeviceAddress = ulong;
 def DeviceSize = ulong;
 def Flags = uint;
 def SampleMask = uint;
-def FormatFeatureFlags = VkFlags;
-def ImageCreateFlags = VkFlags;
-def ImageUsageFlags = VkFlags;
-def InstanceCreateFlags = VkFlags;
-def MemoryHeapFlags = VkFlags;
-def MemoryPropertyFlags = VkFlags;
-def QueueFlags = VkFlags;
-def SampleCountFlags = VkFlags;
-def DeviceCreateFlags = VkFlags;
-def DeviceQueueCreateFlags = VkFlags;
-def PipelineStageFlags = VkFlags;
-def MemoryMapFlags = VkFlags;
-def ImageAspectFlags = VkFlags;
-def SparseImageFormatFlags = VkFlags;
-def SparseMemoryBindFlags = VkFlags;
-def FenceCreateFlags = VkFlags;
-def SemaphoreCreateFlags = VkFlags;
-def EventCreateFlags = VkFlags;
-def QueryPipelineStatisticFlags = VkFlags;
-def QueryPoolCreateFlags = VkFlags;
-def QueryResultFlags = VkFlags;
-def BufferCreateFlags = VkFlags;
-def BufferUsageFlags = VkFlags;
-def BufferViewCreateFlags = VkFlags;
-def ImageViewCreateFlags = VkFlags;
-def ShaderModuleCreateFlags = VkFlags;
-def PipelineCacheCreateFlags = VkFlags;
-def ColorComponentFlags = VkFlags;
-def CullModeFlags = VkFlags;
-def PipelineColorBlendStateCreateFlags = VkFlags;
-def PipelineCreateFlags = VkFlags;
-def PipelineDepthStencilStateCreateFlags = VkFlags;
-def PipelineDynamicStateCreateFlags = VkFlags;
-def PipelineInputAssemblyStateCreateFlags = VkFlags;
-def PipelineLayoutCreateFlags = VkFlags;
-def PipelineMultisampleStateCreateFlags = VkFlags;
-def PipelineRasterizationStateCreateFlags = VkFlags;
-def PipelineShaderStageCreateFlags = VkFlags;
-def PipelineTessellationStateCreateFlags = VkFlags;
-def PipelineVertexInputStateCreateFlags = VkFlags;
-def PipelineViewportStateCreateFlags = VkFlags;
-def ShaderStageFlags = VkFlags;
-def SamplerCreateFlags = VkFlags;
-def DescriptorPoolCreateFlags = VkFlags;
-def DescriptorPoolResetFlags = VkFlags;
-def DescriptorSetLayoutCreateFlags = VkFlags;
-def AccessFlags = VkFlags;
-def AttachmentDescriptionFlags = VkFlags;
-def DependencyFlags = VkFlags;
-def FramebufferCreateFlags = VkFlags;
-def RenderPassCreateFlags = VkFlags;
-def SubpassDescriptionFlags = VkFlags;
-def CommandPoolCreateFlags = VkFlags;
-def CommandPoolResetFlags = VkFlags;
-def CommandBufferResetFlags = VkFlags;
-def CommandBufferUsageFlags = VkFlags;
-def QueryControlFlags = VkFlags;
-def StencilFaceFlags = VkFlags;
-def SubgroupFeatureFlags = VkFlags;
-def PeerMemoryFeatureFlags = VkFlags;
-def MemoryAllocateFlags = VkFlags;
-def CommandPoolTrimFlags = VkFlags;
-def DescriptorUpdateTemplateCreateFlags = VkFlags;
-def ExternalMemoryHandleTypeFlags = VkFlags;
-def ExternalMemoryFeatureFlags = VkFlags;
-def ExternalFenceHandleTypeFlags = VkFlags;
-def ExternalFenceFeatureFlags = VkFlags;
-def FenceImportFlags = VkFlags;
-def SemaphoreImportFlags = VkFlags;
-def ExternalSemaphoreHandleTypeFlags = VkFlags;
-def ExternalSemaphoreFeatureFlags = VkFlags;
-def DescriptorBindingFlags = VkFlags;
-def ResolveModeFlags = VkFlags;
-def SemaphoreWaitFlags = VkFlags;
-def CompositeAlphaFlagsKHR = VkFlags;
-const uint ATTACHMENT_UNUSED = (~0U);
-const uint FALSE = 0;
-const float LOD_CLAMP_NONE = 1000.0F;
-const uint QUEUE_FAMILY_IGNORED = (~0U);
-const uint REMAINING_ARRAY_LAYERS = (~0U);
-const uint REMAINING_MIP_LEVELS = (~0U);
-const uint SUBPASS_EXTERNAL = (~0U);
-const uint TRUE = 1;
-const ulong WHOLE_SIZE = (~0UL);
-const uint MAX_MEMORY_TYPES = 32;
-const uint MAX_PHYSICAL_DEVICE_NAME_SIZE = 256;
-const uint UUID_SIZE = 16;
-const uint MAX_EXTENSION_NAME_SIZE = 256;
-const uint MAX_DESCRIPTION_SIZE = 256;
-const uint MAX_MEMORY_HEAPS = 16;
+def Flags64 = ulong;
+def FormatFeatureFlags = Flags;
+def ImageCreateFlags = Flags;
+def ImageUsageFlags = Flags;
+def InstanceCreateFlags = Flags;
+def MemoryHeapFlags = Flags;
+def MemoryPropertyFlags = Flags;
+def QueueFlags = Flags;
+def SampleCountFlags = Flags;
+def DeviceCreateFlags = Flags;
+def DeviceQueueCreateFlags = Flags;
+def PipelineStageFlags = Flags;
+def MemoryMapFlags = Flags;
+def ImageAspectFlags = Flags;
+def SparseImageFormatFlags = Flags;
+def SparseMemoryBindFlags = Flags;
+def FenceCreateFlags = Flags;
+def SemaphoreCreateFlags = Flags;
+def EventCreateFlags = Flags;
+def QueryPipelineStatisticFlags = Flags;
+def QueryPoolCreateFlags = Flags;
+def QueryResultFlags = Flags;
+def BufferCreateFlags = Flags;
+def BufferUsageFlags = Flags;
+def BufferViewCreateFlags = Flags;
+def ImageViewCreateFlags = Flags;
+def ShaderModuleCreateFlags = Flags;
+def PipelineCacheCreateFlags = Flags;
+def ColorComponentFlags = Flags;
+def CullModeFlags = Flags;
+def PipelineColorBlendStateCreateFlags = Flags;
+def PipelineCreateFlags = Flags;
+def PipelineDepthStencilStateCreateFlags = Flags;
+def PipelineDynamicStateCreateFlags = Flags;
+def PipelineInputAssemblyStateCreateFlags = Flags;
+def PipelineLayoutCreateFlags = Flags;
+def PipelineMultisampleStateCreateFlags = Flags;
+def PipelineRasterizationStateCreateFlags = Flags;
+def PipelineShaderStageCreateFlags = Flags;
+def PipelineTessellationStateCreateFlags = Flags;
+def PipelineVertexInputStateCreateFlags = Flags;
+def PipelineViewportStateCreateFlags = Flags;
+def ShaderStageFlags = Flags;
+def SamplerCreateFlags = Flags;
+def DescriptorPoolCreateFlags = Flags;
+def DescriptorPoolResetFlags = Flags;
+def DescriptorSetLayoutCreateFlags = Flags;
+def AccessFlags = Flags;
+def AttachmentDescriptionFlags = Flags;
+def DependencyFlags = Flags;
+def FramebufferCreateFlags = Flags;
+def RenderPassCreateFlags = Flags;
+def SubpassDescriptionFlags = Flags;
+def CommandPoolCreateFlags = Flags;
+def CommandPoolResetFlags = Flags;
+def CommandBufferResetFlags = Flags;
+def CommandBufferUsageFlags = Flags;
+def QueryControlFlags = Flags;
+def StencilFaceFlags = Flags;
+def SubgroupFeatureFlags = Flags;
+def PeerMemoryFeatureFlags = Flags;
+def MemoryAllocateFlags = Flags;
+def CommandPoolTrimFlags = Flags;
+def DescriptorUpdateTemplateCreateFlags = Flags;
+def ExternalMemoryHandleTypeFlags = Flags;
+def ExternalMemoryFeatureFlags = Flags;
+def ExternalFenceHandleTypeFlags = Flags;
+def ExternalFenceFeatureFlags = Flags;
+def FenceImportFlags = Flags;
+def SemaphoreImportFlags = Flags;
+def ExternalSemaphoreHandleTypeFlags = Flags;
+def ExternalSemaphoreFeatureFlags = Flags;
+def DescriptorBindingFlags = Flags;
+def ResolveModeFlags = Flags;
+def SemaphoreWaitFlags = Flags;
+def PipelineCreationFeedbackFlags = Flags;
+def ToolPurposeFlags = Flags;
+def PrivateDataSlotCreateFlags = Flags;
+def PipelineStageFlags2 = Flags64;
+def AccessFlags2 = Flags64;
+def SubmitFlags = Flags;
+def RenderingFlags = Flags;
+def FormatFeatureFlags2 = Flags64;
+def CompositeAlphaFlagsKHR = Flags;
+def SwapchainCreateFlagsKHR = Flags;
+def DeviceGroupPresentModeFlagsKHR = Flags;
+def DisplayModeCreateFlagsKHR = Flags;
+def DisplayPlaneAlphaFlagsKHR = Flags;
+def DisplaySurfaceCreateFlagsKHR = Flags;
+def SurfaceTransformFlagsKHR = Flags;
+def XcbSurfaceCreateFlagsKHR = Flags;
+def DebugReportFlagsEXT = Flags;
+def DebugUtilsMessageSeverityFlagsEXT = Flags;
+def DebugUtilsMessageTypeFlagsEXT = Flags;
+def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
+def DebugUtilsMessengerCreateFlagsEXT = Flags;
+const ATTACHMENT_UNUSED = (~0U);
+const FALSE = 0;
+const LOD_CLAMP_NONE = 1000.0F;
+const QUEUE_FAMILY_IGNORED = (~0U);
+const REMAINING_ARRAY_LAYERS = (~0U);
+const REMAINING_MIP_LEVELS = (~0U);
+const SUBPASS_EXTERNAL = (~0U);
+const TRUE = 1;
+const WHOLE_SIZE = (~0UL);
+const MAX_MEMORY_TYPES = 32;
+const MAX_PHYSICAL_DEVICE_NAME_SIZE = 256;
+const UUID_SIZE = 16;
+const MAX_EXTENSION_NAME_SIZE = 256;
+const MAX_DESCRIPTION_SIZE = 256;
+const MAX_MEMORY_HEAPS = 16;
+const MAX_DEVICE_GROUP_SIZE = 32;
+const LUID_SIZE = 8;
+const QUEUE_FAMILY_EXTERNAL = (~1U);
+const MAX_DRIVER_NAME_SIZE = 256;
+const MAX_DRIVER_INFO_SIZE = 256;
+const KHR_SURFACE_SPEC_VERSION = 25;
+const KHR_SURFACE_EXTENSION_NAME = "VK_KHR_surface";
+const KHR_SWAPCHAIN_SPEC_VERSION = 70;
+const KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
+const KHR_DISPLAY_SPEC_VERSION = 23;
+const KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
+const KHR_XCB_SURFACE_SPEC_VERSION = 6;
+const KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
+const EXT_DEBUG_REPORT_SPEC_VERSION = 10;
+const EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
+const EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4;
+const EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME = "VK_EXT_swapchain_colorspace";
+const EXT_DEBUG_UTILS_SPEC_VERSION = 2;
+const EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
+const KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
+const KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
 union ClearColorValue {
   float[4] float32;
   int[4] int32;
@@ -220,8 +272,12 @@ const Result ERROR_OUT_OF_POOL_MEMORY = -1000069000;
 const Result ERROR_INVALID_EXTERNAL_HANDLE = -1000072003;
 const Result ERROR_FRAGMENTATION = -1000161000;
 const Result ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = -1000257000;
+const Result PIPELINE_COMPILE_REQUIRED = 1000297000;
 const Result ERROR_SURFACE_LOST_KHR = -1000000000;
 const Result ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001;
+const Result SUBOPTIMAL_KHR = 1000001003;
+const Result ERROR_OUT_OF_DATE_KHR = -1000001004;
+const Result ERROR_VALIDATION_FAILED_EXT = -1000011001;
 
 def StructureType = distinct inline int;
 const StructureType STRUCTURE_TYPE_APPLICATION_INFO = 0;
@@ -390,6 +446,76 @@ const StructureType STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO = 1000244001;
 const StructureType STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO = 1000257002;
 const StructureType STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO = 1000257003;
 const StructureType STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = 1000257004;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES = 53;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES = 54;
+const StructureType STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO = 1000192000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES = 1000215000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES = 1000245000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES = 1000276000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES = 1000295000;
+const StructureType STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO = 1000295001;
+const StructureType STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO = 1000295002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES = 1000297000;
+const StructureType STRUCTURE_TYPE_MEMORY_BARRIER_2 = 1000314000;
+const StructureType STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2 = 1000314001;
+const StructureType STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2 = 1000314002;
+const StructureType STRUCTURE_TYPE_DEPENDENCY_INFO = 1000314003;
+const StructureType STRUCTURE_TYPE_SUBMIT_INFO_2 = 1000314004;
+const StructureType STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO = 1000314005;
+const StructureType STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO = 1000314006;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES = 1000314007;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES = 1000325000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES = 1000335000;
+const StructureType STRUCTURE_TYPE_COPY_BUFFER_INFO_2 = 1000337000;
+const StructureType STRUCTURE_TYPE_COPY_IMAGE_INFO_2 = 1000337001;
+const StructureType STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2 = 1000337002;
+const StructureType STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2 = 1000337003;
+const StructureType STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 = 1000337004;
+const StructureType STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 = 1000337005;
+const StructureType STRUCTURE_TYPE_BUFFER_COPY_2 = 1000337006;
+const StructureType STRUCTURE_TYPE_IMAGE_COPY_2 = 1000337007;
+const StructureType STRUCTURE_TYPE_IMAGE_BLIT_2 = 1000337008;
+const StructureType STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 = 1000337009;
+const StructureType STRUCTURE_TYPE_IMAGE_RESOLVE_2 = 1000337010;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES = 1000225000;
+const StructureType STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO = 1000225001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES = 1000225002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES = 1000138000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES = 1000138001;
+const StructureType STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK = 1000138002;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO = 1000138003;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES = 1000066000;
+const StructureType STRUCTURE_TYPE_RENDERING_INFO = 1000044000;
+const StructureType STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO = 1000044001;
+const StructureType STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO = 1000044002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES = 1000044003;
+const StructureType STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO = 1000044004;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES = 1000280000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES = 1000280001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES = 1000281001;
+const StructureType STRUCTURE_TYPE_FORMAT_PROPERTIES_3 = 1000360000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES = 1000413000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES = 1000413001;
+const StructureType STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS = 1000413002;
+const StructureType STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS = 1000413003;
+const StructureType STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR = 1000001000;
+const StructureType STRUCTURE_TYPE_PRESENT_INFO_KHR = 1000001001;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR = 1000060007;
+const StructureType STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR = 1000060008;
+const StructureType STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR = 1000060009;
+const StructureType STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR = 1000060010;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR = 1000060011;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000060012;
+const StructureType STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
+const StructureType STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
+const StructureType STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
+const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
+const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = 0;
+const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
+const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
+const StructureType STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
+const StructureType STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT = 1000128003;
+const StructureType STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT = 1000128004;
 
 def PipelineCacheHeaderVersion = distinct inline int;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
@@ -423,7 +549,13 @@ const ObjectType OBJECT_TYPE_FRAMEBUFFER = 24;
 const ObjectType OBJECT_TYPE_COMMAND_POOL = 25;
 const ObjectType OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = 1000156000;
 const ObjectType OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000;
+const ObjectType OBJECT_TYPE_PRIVATE_DATA_SLOT = 1000295000;
 const ObjectType OBJECT_TYPE_SURFACE_KHR = 1000000000;
+const ObjectType OBJECT_TYPE_SWAPCHAIN_KHR = 1000001000;
+const ObjectType OBJECT_TYPE_DISPLAY_KHR = 1000002000;
+const ObjectType OBJECT_TYPE_DISPLAY_MODE_KHR = 1000002001;
+const ObjectType OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = 1000011000;
+const ObjectType OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000;
 
 def VendorId = distinct inline int;
 const VendorId VENDOR_ID_VIV = 0x10001;
@@ -654,6 +786,26 @@ const Format FORMAT_G16_B16R16_2PLANE_420_UNORM = 1000156030;
 const Format FORMAT_G16_B16_R16_3PLANE_422_UNORM = 1000156031;
 const Format FORMAT_G16_B16R16_2PLANE_422_UNORM = 1000156032;
 const Format FORMAT_G16_B16_R16_3PLANE_444_UNORM = 1000156033;
+const Format FORMAT_G8_B8R8_2PLANE_444_UNORM = 1000330000;
+const Format FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16 = 1000330001;
+const Format FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16 = 1000330002;
+const Format FORMAT_G16_B16R16_2PLANE_444_UNORM = 1000330003;
+const Format FORMAT_A4R4G4B4_UNORM_PACK16 = 1000340000;
+const Format FORMAT_A4B4G4R4_UNORM_PACK16 = 1000340001;
+const Format FORMAT_ASTC_4X4_SFLOAT_BLOCK = 1000066000;
+const Format FORMAT_ASTC_5X4_SFLOAT_BLOCK = 1000066001;
+const Format FORMAT_ASTC_5X5_SFLOAT_BLOCK = 1000066002;
+const Format FORMAT_ASTC_6X5_SFLOAT_BLOCK = 1000066003;
+const Format FORMAT_ASTC_6X6_SFLOAT_BLOCK = 1000066004;
+const Format FORMAT_ASTC_8X5_SFLOAT_BLOCK = 1000066005;
+const Format FORMAT_ASTC_8X6_SFLOAT_BLOCK = 1000066006;
+const Format FORMAT_ASTC_8X8_SFLOAT_BLOCK = 1000066007;
+const Format FORMAT_ASTC_10X5_SFLOAT_BLOCK = 1000066008;
+const Format FORMAT_ASTC_10X6_SFLOAT_BLOCK = 1000066009;
+const Format FORMAT_ASTC_10X8_SFLOAT_BLOCK = 1000066010;
+const Format FORMAT_ASTC_10X10_SFLOAT_BLOCK = 1000066011;
+const Format FORMAT_ASTC_12X10_SFLOAT_BLOCK = 1000066012;
+const Format FORMAT_ASTC_12X12_SFLOAT_BLOCK = 1000066013;
 
 def FormatFeatureFlagBits = distinct inline int;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
@@ -714,7 +866,7 @@ const ImageUsageFlagBits IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040;
 const ImageUsageFlagBits IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080;
 
 def InstanceCreateFlagBits = distinct inline int;
-
+const InstanceCreateFlagBits INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR = 0x00000001;
 
 def InternalAllocationType = distinct inline int;
 const InternalAllocationType INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
@@ -779,6 +931,7 @@ const PipelineStageFlagBits PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = 0x00002000;
 const PipelineStageFlagBits PIPELINE_STAGE_HOST_BIT = 0x00004000;
 const PipelineStageFlagBits PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000;
 const PipelineStageFlagBits PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
+const PipelineStageFlagBits PIPELINE_STAGE_NONE = 0;
 
 def ImageAspectFlagBits = distinct inline int;
 const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
@@ -788,6 +941,7 @@ const ImageAspectFlagBits IMAGE_ASPECT_METADATA_BIT = 0x00000008;
 const ImageAspectFlagBits IMAGE_ASPECT_PLANE_0_BIT = 0x00000010;
 const ImageAspectFlagBits IMAGE_ASPECT_PLANE_1_BIT = 0x00000020;
 const ImageAspectFlagBits IMAGE_ASPECT_PLANE_2_BIT = 0x00000040;
+const ImageAspectFlagBits IMAGE_ASPECT_NONE = 0;
 
 def SparseImageFormatFlagBits = distinct inline int;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
@@ -801,7 +955,7 @@ def FenceCreateFlagBits = distinct inline int;
 const FenceCreateFlagBits FENCE_CREATE_SIGNALED_BIT = 0x00000001;
 
 def EventCreateFlagBits = distinct inline int;
-
+const EventCreateFlagBits EVENT_CREATE_DEVICE_ONLY_BIT = 0x00000001;
 
 def QueryPipelineStatisticFlagBits = distinct inline int;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
@@ -866,6 +1020,9 @@ const ImageLayout IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL = 1000241000;
 const ImageLayout IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL = 1000241001;
 const ImageLayout IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL = 1000241002;
 const ImageLayout IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = 1000241003;
+const ImageLayout IMAGE_LAYOUT_READ_ONLY_OPTIMAL = 1000314000;
+const ImageLayout IMAGE_LAYOUT_ATTACHMENT_OPTIMAL = 1000314001;
+const ImageLayout IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002;
 
 def ComponentSwizzle = distinct inline int;
 const ComponentSwizzle COMPONENT_SWIZZLE_IDENTITY = 0;
@@ -948,6 +1105,21 @@ const DynamicState DYNAMIC_STATE_DEPTH_BOUNDS = 5;
 const DynamicState DYNAMIC_STATE_STENCIL_COMPARE_MASK = 6;
 const DynamicState DYNAMIC_STATE_STENCIL_WRITE_MASK = 7;
 const DynamicState DYNAMIC_STATE_STENCIL_REFERENCE = 8;
+const DynamicState DYNAMIC_STATE_CULL_MODE = 1000267000;
+const DynamicState DYNAMIC_STATE_FRONT_FACE = 1000267001;
+const DynamicState DYNAMIC_STATE_PRIMITIVE_TOPOLOGY = 1000267002;
+const DynamicState DYNAMIC_STATE_VIEWPORT_WITH_COUNT = 1000267003;
+const DynamicState DYNAMIC_STATE_SCISSOR_WITH_COUNT = 1000267004;
+const DynamicState DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE = 1000267005;
+const DynamicState DYNAMIC_STATE_DEPTH_TEST_ENABLE = 1000267006;
+const DynamicState DYNAMIC_STATE_DEPTH_WRITE_ENABLE = 1000267007;
+const DynamicState DYNAMIC_STATE_DEPTH_COMPARE_OP = 1000267008;
+const DynamicState DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE = 1000267009;
+const DynamicState DYNAMIC_STATE_STENCIL_TEST_ENABLE = 1000267010;
+const DynamicState DYNAMIC_STATE_STENCIL_OP = 1000267011;
+const DynamicState DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE = 1000377001;
+const DynamicState DYNAMIC_STATE_DEPTH_BIAS_ENABLE = 1000377002;
+const DynamicState DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE = 1000377004;
 
 def FrontFace = distinct inline int;
 const FrontFace FRONT_FACE_COUNTER_CLOCKWISE = 0;
@@ -978,9 +1150,12 @@ const PipelineCreateFlagBits PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
 const PipelineCreateFlagBits PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE = 0;
+const PipelineCreateFlagBits PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = 0x00000100;
+const PipelineCreateFlagBits PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = 0x00000200;
 
 def PipelineShaderStageCreateFlagBits = distinct inline int;
-
+const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT = 0x00000001;
+const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT = 0x00000002;
 
 def PolygonMode = distinct inline int;
 const PolygonMode POLYGON_MODE_FILL = 0;
@@ -1069,6 +1244,7 @@ const DescriptorType DESCRIPTOR_TYPE_STORAGE_BUFFER = 7;
 const DescriptorType DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = 8;
 const DescriptorType DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = 9;
 const DescriptorType DESCRIPTOR_TYPE_INPUT_ATTACHMENT = 10;
+const DescriptorType DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK = 1000138000;
 
 def AccessFlagBits = distinct inline int;
 const AccessFlagBits ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
@@ -1088,6 +1264,7 @@ const AccessFlagBits ACCESS_HOST_READ_BIT = 0x00002000;
 const AccessFlagBits ACCESS_HOST_WRITE_BIT = 0x00004000;
 const AccessFlagBits ACCESS_MEMORY_READ_BIT = 0x00008000;
 const AccessFlagBits ACCESS_MEMORY_WRITE_BIT = 0x00010000;
+const AccessFlagBits ACCESS_NONE = 0;
 
 def AttachmentDescriptionFlagBits = distinct inline int;
 const AttachmentDescriptionFlagBits ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001;
@@ -1100,6 +1277,7 @@ const AttachmentLoadOp ATTACHMENT_LOAD_OP_DONT_CARE = 2;
 def AttachmentStoreOp = distinct inline int;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_STORE = 0;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_DONT_CARE = 1;
+const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE = 1000301000;
 
 def DependencyFlagBits = distinct inline int;
 const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
@@ -1150,7 +1328,6 @@ def StencilFaceFlagBits = distinct inline int;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_BIT = 0x00000001;
 const StencilFaceFlagBits STENCIL_FACE_BACK_BIT = 0x00000002;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
-const StencilFaceFlagBits STENCIL_FRONT_AND_BACK = null;
 
 def SubpassContents = distinct inline int;
 const SubpassContents SUBPASS_CONTENTS_INLINE = 0;
@@ -1241,7 +1418,6 @@ const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = 0x00000008;
-const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT = null;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000010;
 
 def ExternalSemaphoreFeatureFlagBits = distinct inline int;
@@ -1305,6 +1481,105 @@ const SemaphoreType SEMAPHORE_TYPE_TIMELINE = 1;
 def SemaphoreWaitFlagBits = distinct inline int;
 const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
 
+def PipelineCreationFeedbackFlagBits = distinct inline int;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_VALID_BIT = 0x00000001;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = 0x00000002;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = 0x00000004;
+
+def ToolPurposeFlagBits = distinct inline int;
+const ToolPurposeFlagBits TOOL_PURPOSE_VALIDATION_BIT = 0x00000001;
+const ToolPurposeFlagBits TOOL_PURPOSE_PROFILING_BIT = 0x00000002;
+const ToolPurposeFlagBits TOOL_PURPOSE_TRACING_BIT = 0x00000004;
+const ToolPurposeFlagBits TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = 0x00000008;
+const ToolPurposeFlagBits TOOL_PURPOSE_MODIFYING_FEATURES_BIT = 0x00000010;
+
+def PipelineStageFlagBits2 = distinct inline ulong;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_NONE = 0;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = 0x00000001;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = 0x00000002;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_INPUT_BIT = 0x00000004;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_SHADER_BIT = 0x00000008;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT = 0x00000010;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT = 0x00000020;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT = 0x00000040;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT = 0x00000080;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = 0x00000100;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = 0x00000200;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT = 0x00000400;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COMPUTE_SHADER_BIT = 0x00000800;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_TRANSFER_BIT = 0x00001000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT = 0x00002000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_HOST_BIT = 0x00004000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_GRAPHICS_BIT = 0x00008000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_COMMANDS_BIT = 0x00010000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COPY_BIT = 0x100000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESOLVE_BIT = 0x200000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_BLIT_BIT = 0x400000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_CLEAR_BIT = 0x800000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_INDEX_INPUT_BIT = 0x1000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = 0x2000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = 0x4000000000;
+
+def AccessFlagBits2 = distinct inline ulong;
+const AccessFlagBits2 ACCESS_2_NONE = 0;
+const AccessFlagBits2 ACCESS_2_INDIRECT_COMMAND_READ_BIT = 0x00000001;
+const AccessFlagBits2 ACCESS_2_INDEX_READ_BIT = 0x00000002;
+const AccessFlagBits2 ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
+const AccessFlagBits2 ACCESS_2_UNIFORM_READ_BIT = 0x00000008;
+const AccessFlagBits2 ACCESS_2_INPUT_ATTACHMENT_READ_BIT = 0x00000010;
+const AccessFlagBits2 ACCESS_2_SHADER_READ_BIT = 0x00000020;
+const AccessFlagBits2 ACCESS_2_SHADER_WRITE_BIT = 0x00000040;
+const AccessFlagBits2 ACCESS_2_COLOR_ATTACHMENT_READ_BIT = 0x00000080;
+const AccessFlagBits2 ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100;
+const AccessFlagBits2 ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200;
+const AccessFlagBits2 ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400;
+const AccessFlagBits2 ACCESS_2_TRANSFER_READ_BIT = 0x00000800;
+const AccessFlagBits2 ACCESS_2_TRANSFER_WRITE_BIT = 0x00001000;
+const AccessFlagBits2 ACCESS_2_HOST_READ_BIT = 0x00002000;
+const AccessFlagBits2 ACCESS_2_HOST_WRITE_BIT = 0x00004000;
+const AccessFlagBits2 ACCESS_2_MEMORY_READ_BIT = 0x00008000;
+const AccessFlagBits2 ACCESS_2_MEMORY_WRITE_BIT = 0x00010000;
+const AccessFlagBits2 ACCESS_2_SHADER_SAMPLED_READ_BIT = 0x100000000;
+const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_READ_BIT = 0x200000000;
+const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_WRITE_BIT = 0x400000000;
+
+def SubmitFlagBits = distinct inline int;
+const SubmitFlagBits SUBMIT_PROTECTED_BIT = 0x00000001;
+
+def RenderingFlagBits = distinct inline int;
+const RenderingFlagBits RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = 0x00000001;
+const RenderingFlagBits RENDERING_SUSPENDING_BIT = 0x00000002;
+const RenderingFlagBits RENDERING_RESUMING_BIT = 0x00000004;
+
+def FormatFeatureFlagBits2 = distinct inline ulong;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = 0x00000001;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = 0x00000002;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT = 0x00000008;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT = 0x00000010;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = 0x00000020;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = 0x00000040;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = 0x00000080;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = 0x00000100;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000200;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BLIT_SRC_BIT = 0x00000400;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BLIT_DST_BIT = 0x00000800;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT = 0x00002000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_TRANSFER_SRC_BIT = 0x00004000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_TRANSFER_DST_BIT = 0x00008000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_DISJOINT_BIT = 0x00400000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = 0x80000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = 0x100000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = 0x200000000;
+
 def SurfaceTransformFlagBitsKHR = distinct inline int;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = 0x00000002;
@@ -1324,13 +1599,97 @@ const PresentModeKHR PRESENT_MODE_FIFO_RELAXED_KHR = 3;
 
 def ColorSpaceKHR = distinct inline int;
 const ColorSpaceKHR COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
-const ColorSpaceKHR COLORSPACE_SRGB_NONLINEAR_KHR = null;
+const ColorSpaceKHR COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = 1000104001;
+const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = 1000104002;
+const ColorSpaceKHR COLOR_SPACE_DISPLAY_P3_LINEAR_EXT = 1000104003;
+const ColorSpaceKHR COLOR_SPACE_DCI_P3_NONLINEAR_EXT = 1000104004;
+const ColorSpaceKHR COLOR_SPACE_BT709_LINEAR_EXT = 1000104005;
+const ColorSpaceKHR COLOR_SPACE_BT709_NONLINEAR_EXT = 1000104006;
+const ColorSpaceKHR COLOR_SPACE_BT2020_LINEAR_EXT = 1000104007;
+const ColorSpaceKHR COLOR_SPACE_HDR10_ST2084_EXT = 1000104008;
+const ColorSpaceKHR COLOR_SPACE_DOLBYVISION_EXT = 1000104009;
+const ColorSpaceKHR COLOR_SPACE_HDR10_HLG_EXT = 1000104010;
+const ColorSpaceKHR COLOR_SPACE_ADOBERGB_LINEAR_EXT = 1000104011;
+const ColorSpaceKHR COLOR_SPACE_ADOBERGB_NONLINEAR_EXT = 1000104012;
+const ColorSpaceKHR COLOR_SPACE_PASS_THROUGH_EXT = 1000104013;
+const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = 1000104014;
+const ColorSpaceKHR COLOR_SPACE_DCI_P3_LINEAR_EXT = 0;
 
 def CompositeAlphaFlagBitsKHR = distinct inline int;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008;
+
+def SwapchainCreateFlagBitsKHR = distinct inline int;
+const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = 0x00000001;
+const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = 0x00000002;
+
+def DeviceGroupPresentModeFlagBitsKHR = distinct inline int;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008;
+
+def DisplayPlaneAlphaFlagBitsKHR = distinct inline int;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
+
+def DebugReportFlagBitsEXT = distinct inline int;
+const DebugReportFlagBitsEXT DEBUG_REPORT_INFORMATION_BIT_EXT = 0x00000001;
+const DebugReportFlagBitsEXT DEBUG_REPORT_WARNING_BIT_EXT = 0x00000002;
+const DebugReportFlagBitsEXT DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = 0x00000004;
+const DebugReportFlagBitsEXT DEBUG_REPORT_ERROR_BIT_EXT = 0x00000008;
+const DebugReportFlagBitsEXT DEBUG_REPORT_DEBUG_BIT_EXT = 0x00000010;
+
+def DebugReportObjectTypeEXT = distinct inline int;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = 1;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = 2;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = 3;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = 4;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = 5;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = 6;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = 7;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = 8;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = 9;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = 10;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = 11;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = 12;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = 13;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = 14;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = 15;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = 16;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = 17;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = 18;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = 19;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = 20;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = 21;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = 22;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = 23;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = 24;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = 25;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = 26;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = 27;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT = 28;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT = 29;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = 30;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = 33;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = 1000156000;
+const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = 1000085000;
+
+def DebugUtilsMessageSeverityFlagBitsEXT = distinct inline int;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = 0x00000010;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = 0x00000100;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = 0x00001000;
+
+def DebugUtilsMessageTypeFlagBitsEXT = distinct inline int;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = 0x00000001;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = 0x00000002;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
 struct Extent2D {
  uint width;
  uint height;
@@ -1870,7 +2229,6 @@ struct PipelineCacheCreateInfo {
  void* pNext;
  PipelineCacheCreateFlags flags;
  usz initialDataSize;
- usz initialDataSize;
  void* pInitialData;
 }
 struct ComputePipelineCreateInfo {
@@ -1887,7 +2245,6 @@ struct GraphicsPipelineCreateInfo {
  void* pNext;
  PipelineCreateFlags flags;
  uint stageCount;
- PipelineShaderStageCreateInfo* pStages;
  PipelineShaderStageCreateInfo* pStages;
  PipelineVertexInputStateCreateInfo* pVertexInputState;
  PipelineInputAssemblyStateCreateInfo* pInputAssemblyState;
@@ -1984,7 +2341,6 @@ struct PipelineShaderStageCreateInfo {
  PipelineShaderStageCreateFlags flags;
  ShaderStageFlagBits stage;
  ShaderModule mod;
- char* pName;
  char* pName;
  SpecializationInfo* pSpecializationInfo;
 }
@@ -3080,6 +3436,409 @@ struct DeviceMemoryOpaqueCaptureAddressInfo {
  void* pNext;
  DeviceMemory memory;
 }
+struct PipelineCreationFeedback {
+ PipelineCreationFeedbackFlags flags;
+ ulong duration;
+}
+struct PhysicalDeviceShaderTerminateInvocationFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderTerminateInvocation;
+}
+struct PhysicalDeviceToolProperties {
+ StructureType sType;
+ void* pNext;
+ char[MAX_EXTENSION_NAME_SIZE] name;
+ char[MAX_EXTENSION_NAME_SIZE] version;
+ ToolPurposeFlags purposes;
+ char[MAX_DESCRIPTION_SIZE] description;
+ char[MAX_EXTENSION_NAME_SIZE] layer;
+}
+struct PhysicalDeviceShaderDemoteToHelperInvocationFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderDemoteToHelperInvocation;
+}
+struct PhysicalDevicePrivateDataFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 privateData;
+}
+struct DevicePrivateDataCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint privateDataSlotRequestCount;
+}
+struct PrivateDataSlotCreateInfo {
+ StructureType sType;
+ void* pNext;
+ PrivateDataSlotCreateFlags flags;
+}
+struct PhysicalDevicePipelineCreationCacheControlFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 pipelineCreationCacheControl;
+}
+struct MemoryBarrier2 {
+ StructureType sType;
+ void* pNext;
+ PipelineStageFlags2 srcStageMask;
+ AccessFlags2 srcAccessMask;
+ PipelineStageFlags2 dstStageMask;
+ AccessFlags2 dstAccessMask;
+}
+struct BufferMemoryBarrier2 {
+ StructureType sType;
+ void* pNext;
+ PipelineStageFlags2 srcStageMask;
+ AccessFlags2 srcAccessMask;
+ PipelineStageFlags2 dstStageMask;
+ AccessFlags2 dstAccessMask;
+ uint srcQueueFamilyIndex;
+ uint dstQueueFamilyIndex;
+ Buffer buffer;
+ DeviceSize offset;
+ DeviceSize size;
+}
+struct ImageMemoryBarrier2 {
+ StructureType sType;
+ void* pNext;
+ PipelineStageFlags2 srcStageMask;
+ AccessFlags2 srcAccessMask;
+ PipelineStageFlags2 dstStageMask;
+ AccessFlags2 dstAccessMask;
+ ImageLayout oldLayout;
+ ImageLayout newLayout;
+ uint srcQueueFamilyIndex;
+ uint dstQueueFamilyIndex;
+ Image image;
+ ImageSubresourceRange subresourceRange;
+}
+struct DependencyInfo {
+ StructureType sType;
+ void* pNext;
+ DependencyFlags dependencyFlags;
+ uint memoryBarrierCount;
+ MemoryBarrier2* pMemoryBarriers;
+ uint bufferMemoryBarrierCount;
+ BufferMemoryBarrier2* pBufferMemoryBarriers;
+ uint imageMemoryBarrierCount;
+ ImageMemoryBarrier2* pImageMemoryBarriers;
+}
+struct SubmitInfo2 {
+ StructureType sType;
+ void* pNext;
+ SubmitFlags flags;
+ uint waitSemaphoreInfoCount;
+ SemaphoreSubmitInfo* pWaitSemaphoreInfos;
+ uint commandBufferInfoCount;
+ CommandBufferSubmitInfo* pCommandBufferInfos;
+ uint signalSemaphoreInfoCount;
+ SemaphoreSubmitInfo* pSignalSemaphoreInfos;
+}
+struct SemaphoreSubmitInfo {
+ StructureType sType;
+ void* pNext;
+ Semaphore semaphore;
+ ulong value;
+ PipelineStageFlags2 stageMask;
+ uint deviceIndex;
+}
+struct CommandBufferSubmitInfo {
+ StructureType sType;
+ void* pNext;
+ CommandBuffer commandBuffer;
+ uint deviceMask;
+}
+struct PhysicalDeviceSynchronization2Features {
+ StructureType sType;
+ void* pNext;
+ Bool32 synchronization2;
+}
+struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderZeroInitializeWorkgroupMemory;
+}
+struct PhysicalDeviceImageRobustnessFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 robustImageAccess;
+}
+struct CopyBufferInfo2 {
+ StructureType sType;
+ void* pNext;
+ Buffer srcBuffer;
+ Buffer dstBuffer;
+ uint regionCount;
+ BufferCopy2* pRegions;
+}
+struct CopyImageInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image srcImage;
+ ImageLayout srcImageLayout;
+ Image dstImage;
+ ImageLayout dstImageLayout;
+ uint regionCount;
+ ImageCopy2* pRegions;
+}
+struct CopyBufferToImageInfo2 {
+ StructureType sType;
+ void* pNext;
+ Buffer srcBuffer;
+ Image dstImage;
+ ImageLayout dstImageLayout;
+ uint regionCount;
+ BufferImageCopy2* pRegions;
+}
+struct CopyImageToBufferInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image srcImage;
+ ImageLayout srcImageLayout;
+ Buffer dstBuffer;
+ uint regionCount;
+ BufferImageCopy2* pRegions;
+}
+struct BlitImageInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image srcImage;
+ ImageLayout srcImageLayout;
+ Image dstImage;
+ ImageLayout dstImageLayout;
+ uint regionCount;
+ ImageBlit2* pRegions;
+ Filter filter;
+}
+struct ResolveImageInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image srcImage;
+ ImageLayout srcImageLayout;
+ Image dstImage;
+ ImageLayout dstImageLayout;
+ uint regionCount;
+ ImageResolve2* pRegions;
+}
+struct BufferCopy2 {
+ StructureType sType;
+ void* pNext;
+ DeviceSize srcOffset;
+ DeviceSize dstOffset;
+ DeviceSize size;
+}
+struct ImageCopy2 {
+ StructureType sType;
+ void* pNext;
+ ImageSubresourceLayers srcSubresource;
+ Offset3D srcOffset;
+ ImageSubresourceLayers dstSubresource;
+ Offset3D dstOffset;
+ Extent3D extent;
+}
+struct ImageBlit2 {
+ StructureType sType;
+ void* pNext;
+ ImageSubresourceLayers srcSubresource;
+ Offset3D[2] srcOffsets;
+ ImageSubresourceLayers dstSubresource;
+ Offset3D[2] dstOffsets;
+}
+struct BufferImageCopy2 {
+ StructureType sType;
+ void* pNext;
+ DeviceSize bufferOffset;
+ uint bufferRowLength;
+ uint bufferImageHeight;
+ ImageSubresourceLayers imageSubresource;
+ Offset3D imageOffset;
+ Extent3D imageExtent;
+}
+struct ImageResolve2 {
+ StructureType sType;
+ void* pNext;
+ ImageSubresourceLayers srcSubresource;
+ Offset3D srcOffset;
+ ImageSubresourceLayers dstSubresource;
+ Offset3D dstOffset;
+ Extent3D extent;
+}
+struct PhysicalDeviceSubgroupSizeControlFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 subgroupSizeControl;
+ Bool32 computeFullSubgroups;
+}
+struct PhysicalDeviceSubgroupSizeControlProperties {
+ StructureType sType;
+ void* pNext;
+ uint minSubgroupSize;
+ uint maxSubgroupSize;
+ uint maxComputeWorkgroupSubgroups;
+ ShaderStageFlags requiredSubgroupSizeStages;
+}
+struct PipelineShaderStageRequiredSubgroupSizeCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint requiredSubgroupSize;
+}
+struct PhysicalDeviceInlineUniformBlockFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 inlineUniformBlock;
+ Bool32 descriptorBindingInlineUniformBlockUpdateAfterBind;
+}
+struct PhysicalDeviceInlineUniformBlockProperties {
+ StructureType sType;
+ void* pNext;
+ uint maxInlineUniformBlockSize;
+ uint maxPerStageDescriptorInlineUniformBlocks;
+ uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+ uint maxDescriptorSetInlineUniformBlocks;
+ uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+}
+struct WriteDescriptorSetInlineUniformBlock {
+ StructureType sType;
+ void* pNext;
+ uint dataSize;
+ void* pData;
+}
+struct DescriptorPoolInlineUniformBlockCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint maxInlineUniformBlockBindings;
+}
+struct PhysicalDeviceTextureCompressionASTCHDRFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 textureCompressionASTC_HDR;
+}
+struct RenderingInfo {
+ StructureType sType;
+ void* pNext;
+ RenderingFlags flags;
+ Rect2D renderArea;
+ uint layerCount;
+ uint viewMask;
+ uint colorAttachmentCount;
+ RenderingAttachmentInfo* pColorAttachments;
+ RenderingAttachmentInfo* pDepthAttachment;
+ RenderingAttachmentInfo* pStencilAttachment;
+}
+struct RenderingAttachmentInfo {
+ StructureType sType;
+ void* pNext;
+ ImageView imageView;
+ ImageLayout imageLayout;
+ ResolveModeFlagBits resolveMode;
+ ImageView resolveImageView;
+ ImageLayout resolveImageLayout;
+ AttachmentLoadOp loadOp;
+ AttachmentStoreOp storeOp;
+ ClearValue clearValue;
+}
+struct PipelineRenderingCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint viewMask;
+ uint colorAttachmentCount;
+ Format* pColorAttachmentFormats;
+ Format depthAttachmentFormat;
+ Format stencilAttachmentFormat;
+}
+struct PhysicalDeviceDynamicRenderingFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 dynamicRendering;
+}
+struct CommandBufferInheritanceRenderingInfo {
+ StructureType sType;
+ void* pNext;
+ RenderingFlags flags;
+ uint viewMask;
+ uint colorAttachmentCount;
+ Format* pColorAttachmentFormats;
+ Format depthAttachmentFormat;
+ Format stencilAttachmentFormat;
+ SampleCountFlagBits rasterizationSamples;
+}
+struct PhysicalDeviceShaderIntegerDotProductFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderIntegerDotProduct;
+}
+struct PhysicalDeviceShaderIntegerDotProductProperties {
+ StructureType sType;
+ void* pNext;
+ Bool32 integerDotProduct8BitUnsignedAccelerated;
+ Bool32 integerDotProduct8BitSignedAccelerated;
+ Bool32 integerDotProduct8BitMixedSignednessAccelerated;
+ Bool32 integerDotProduct4x8BitPackedUnsignedAccelerated;
+ Bool32 integerDotProduct4x8BitPackedSignedAccelerated;
+ Bool32 integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+ Bool32 integerDotProduct16BitUnsignedAccelerated;
+ Bool32 integerDotProduct16BitSignedAccelerated;
+ Bool32 integerDotProduct16BitMixedSignednessAccelerated;
+ Bool32 integerDotProduct32BitUnsignedAccelerated;
+ Bool32 integerDotProduct32BitSignedAccelerated;
+ Bool32 integerDotProduct32BitMixedSignednessAccelerated;
+ Bool32 integerDotProduct64BitUnsignedAccelerated;
+ Bool32 integerDotProduct64BitSignedAccelerated;
+ Bool32 integerDotProduct64BitMixedSignednessAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+ Bool32 integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+}
+struct PhysicalDeviceTexelBufferAlignmentProperties {
+ StructureType sType;
+ void* pNext;
+ DeviceSize storageTexelBufferOffsetAlignmentBytes;
+ Bool32 storageTexelBufferOffsetSingleTexelAlignment;
+ DeviceSize uniformTexelBufferOffsetAlignmentBytes;
+ Bool32 uniformTexelBufferOffsetSingleTexelAlignment;
+}
+struct FormatProperties3 {
+ StructureType sType;
+ void* pNext;
+ FormatFeatureFlags2 linearTilingFeatures;
+ FormatFeatureFlags2 optimalTilingFeatures;
+ FormatFeatureFlags2 bufferFeatures;
+}
+struct PhysicalDeviceMaintenance4Features {
+ StructureType sType;
+ void* pNext;
+ Bool32 maintenance4;
+}
+struct PhysicalDeviceMaintenance4Properties {
+ StructureType sType;
+ void* pNext;
+ DeviceSize maxBufferSize;
+}
+struct DeviceBufferMemoryRequirements {
+ StructureType sType;
+ void* pNext;
+ BufferCreateInfo* pCreateInfo;
+}
+struct DeviceImageMemoryRequirements {
+ StructureType sType;
+ void* pNext;
+ ImageCreateInfo* pCreateInfo;
+ ImageAspectFlagBits planeAspect;
+}
 struct SurfaceCapabilitiesKHR {
  uint minImageCount;
  uint maxImageCount;
@@ -3095,4 +3854,181 @@ struct SurfaceCapabilitiesKHR {
 struct SurfaceFormatKHR {
  Format format;
  ColorSpaceKHR colorSpace;
+}
+struct SwapchainCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ SwapchainCreateFlagsKHR flags;
+ SurfaceKHR surface;
+ uint minImageCount;
+ Format imageFormat;
+ ColorSpaceKHR imageColorSpace;
+ Extent2D imageExtent;
+ uint imageArrayLayers;
+ ImageUsageFlags imageUsage;
+ SharingMode imageSharingMode;
+ uint queueFamilyIndexCount;
+ uint* pQueueFamilyIndices;
+ SurfaceTransformFlagBitsKHR preTransform;
+ CompositeAlphaFlagBitsKHR compositeAlpha;
+ PresentModeKHR presentMode;
+ Bool32 clipped;
+ SwapchainKHR oldSwapchain;
+}
+struct PresentInfoKHR {
+ StructureType sType;
+ void* pNext;
+ uint waitSemaphoreCount;
+ Semaphore* pWaitSemaphores;
+ uint swapchainCount;
+ SwapchainKHR* pSwapchains;
+ uint* pImageIndices;
+ Result* pResults;
+}
+struct ImageSwapchainCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ SwapchainKHR swapchain;
+}
+struct BindImageMemorySwapchainInfoKHR {
+ StructureType sType;
+ void* pNext;
+ SwapchainKHR swapchain;
+ uint imageIndex;
+}
+struct AcquireNextImageInfoKHR {
+ StructureType sType;
+ void* pNext;
+ SwapchainKHR swapchain;
+ ulong timeout;
+ Semaphore semaphore;
+ Fence fence;
+ uint deviceMask;
+}
+struct DeviceGroupPresentCapabilitiesKHR {
+ StructureType sType;
+ void* pNext;
+ uint[MAX_DEVICE_GROUP_SIZE] presentMask;
+ DeviceGroupPresentModeFlagsKHR modes;
+}
+struct DeviceGroupPresentInfoKHR {
+ StructureType sType;
+ void* pNext;
+ uint swapchainCount;
+ uint* pDeviceMasks;
+ DeviceGroupPresentModeFlagBitsKHR mode;
+}
+struct DeviceGroupSwapchainCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ DeviceGroupPresentModeFlagsKHR modes;
+}
+struct DisplayModeCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ DisplayModeCreateFlagsKHR flags;
+ DisplayModeParametersKHR parameters;
+}
+struct DisplayModeParametersKHR {
+ Extent2D visibleRegion;
+ uint refreshRate;
+}
+struct DisplayModePropertiesKHR {
+ DisplayModeKHR displayMode;
+ DisplayModeParametersKHR parameters;
+}
+struct DisplayPlaneCapabilitiesKHR {
+ DisplayPlaneAlphaFlagsKHR supportedAlpha;
+ Offset2D minSrcPosition;
+ Offset2D maxSrcPosition;
+ Extent2D minSrcExtent;
+ Extent2D maxSrcExtent;
+ Offset2D minDstPosition;
+ Offset2D maxDstPosition;
+ Extent2D minDstExtent;
+ Extent2D maxDstExtent;
+}
+struct DisplayPlanePropertiesKHR {
+ DisplayKHR currentDisplay;
+ uint currentStackIndex;
+}
+struct DisplayPropertiesKHR {
+ DisplayKHR display;
+ char* displayName;
+ Extent2D physicalDimensions;
+ Extent2D physicalResolution;
+ SurfaceTransformFlagsKHR supportedTransforms;
+ Bool32 planeReorderPossible;
+ Bool32 persistentContent;
+}
+struct DisplaySurfaceCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ DisplaySurfaceCreateFlagsKHR flags;
+ DisplayModeKHR displayMode;
+ uint planeIndex;
+ uint planeStackIndex;
+ SurfaceTransformFlagBitsKHR transform;
+ float globalAlpha;
+ DisplayPlaneAlphaFlagBitsKHR alphaMode;
+ Extent2D imageExtent;
+}
+struct XcbSurfaceCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ XcbSurfaceCreateFlagsKHR flags;
+ void** connection;
+ uint window;
+}
+struct DebugReportCallbackCreateInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DebugReportFlagsEXT flags;
+ PFN_vkDebugReportCallbackEXT pfnCallback;
+ void* pUserData;
+}
+struct DebugUtilsLabelEXT {
+ StructureType sType;
+ void* pNext;
+ char* pLabelName;
+ float[4] color;
+}
+struct DebugUtilsMessengerCallbackDataEXT {
+ StructureType sType;
+ void* pNext;
+ DebugUtilsMessengerCallbackDataFlagsEXT flags;
+ char* pMessageIdName;
+ int messageIdNumber;
+ char* pMessage;
+ uint queueLabelCount;
+ DebugUtilsLabelEXT* pQueueLabels;
+ uint cmdBufLabelCount;
+ DebugUtilsLabelEXT* pCmdBufLabels;
+ uint objectCount;
+ DebugUtilsObjectNameInfoEXT* pObjects;
+}
+struct DebugUtilsMessengerCreateInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DebugUtilsMessengerCreateFlagsEXT flags;
+ DebugUtilsMessageSeverityFlagsEXT messageSeverity;
+ DebugUtilsMessageTypeFlagsEXT messageType;
+ PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback;
+ void* pUserData;
+}
+struct DebugUtilsObjectNameInfoEXT {
+ StructureType sType;
+ void* pNext;
+ ObjectType objectType;
+ ulong objectHandle;
+ char* pObjectName;
+}
+struct DebugUtilsObjectTagInfoEXT {
+ StructureType sType;
+ void* pNext;
+ ObjectType objectType;
+ ulong objectHandle;
+ ulong tagName;
+ usz tagSize;
+ void* pTag;
 }
