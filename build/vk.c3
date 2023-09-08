@@ -36,7 +36,34 @@ def Mtlcommandqueueid = void*;
 def Mtldeviceid = void*;
 def Mtlsharedeventid = void*;
 def Mtltextureid = void*;
-def Instance = distinct inline void*;
+fault VkErrors {
+  SUCCESS,
+ NOT_READY,
+ TIMEOUT,
+ EVENT_SET,
+ EVENT_RESET,
+ INCOMPLETE,
+ ERROR_OUT_OF_HOST_MEMORY,
+ ERROR_OUT_OF_DEVICE_MEMORY,
+ ERROR_INITIALIZATION_FAILED,
+ ERROR_DEVICE_LOST,
+ ERROR_MEMORY_MAP_FAILED,
+ ERROR_LAYER_NOT_PRESENT,
+ ERROR_EXTENSION_NOT_PRESENT,
+ ERROR_FEATURE_NOT_PRESENT,
+ ERROR_INCOMPATIBLE_DRIVER,
+ ERROR_TOO_MANY_OBJECTS,
+ ERROR_FORMAT_NOT_SUPPORTED,
+ ERROR_FRAGMENTED_POOL,
+ ERROR_UNKNOWN,
+ ERROR_OUT_OF_POOL_MEMORY,
+ ERROR_INVALID_EXTERNAL_HANDLE,
+ ERROR_FRAGMENTATION,
+ ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+ ERROR_SURFACE_LOST_KHR,
+ ERROR_NATIVE_WINDOW_IN_USE_KHR
+}
+ def Instance = distinct inline void*;
 def PhysicalDevice = distinct inline void*;
 def Device = distinct inline void*;
 def Queue = distinct inline void*;
@@ -61,6 +88,8 @@ def Framebuffer = distinct inline void*;
 def RenderPass = distinct inline void*;
 def CommandPool = distinct inline void*;
 def CommandBuffer = distinct inline void*;
+def SamplerYcbcrConversion = distinct inline void*;
+def DescriptorUpdateTemplate = distinct inline void*;
 def SurfaceKHR = distinct inline void*;
 def Bool32 = uint;
 def DeviceAddress = ulong;
@@ -125,6 +154,22 @@ def CommandBufferResetFlags = VkFlags;
 def CommandBufferUsageFlags = VkFlags;
 def QueryControlFlags = VkFlags;
 def StencilFaceFlags = VkFlags;
+def SubgroupFeatureFlags = VkFlags;
+def PeerMemoryFeatureFlags = VkFlags;
+def MemoryAllocateFlags = VkFlags;
+def CommandPoolTrimFlags = VkFlags;
+def DescriptorUpdateTemplateCreateFlags = VkFlags;
+def ExternalMemoryHandleTypeFlags = VkFlags;
+def ExternalMemoryFeatureFlags = VkFlags;
+def ExternalFenceHandleTypeFlags = VkFlags;
+def ExternalFenceFeatureFlags = VkFlags;
+def FenceImportFlags = VkFlags;
+def SemaphoreImportFlags = VkFlags;
+def ExternalSemaphoreHandleTypeFlags = VkFlags;
+def ExternalSemaphoreFeatureFlags = VkFlags;
+def DescriptorBindingFlags = VkFlags;
+def ResolveModeFlags = VkFlags;
+def SemaphoreWaitFlags = VkFlags;
 def CompositeAlphaFlagsKHR = VkFlags;
 const uint ATTACHMENT_UNUSED = (~0U);
 const uint FALSE = 0;
@@ -141,6 +186,15 @@ const uint UUID_SIZE = 16;
 const uint MAX_EXTENSION_NAME_SIZE = 256;
 const uint MAX_DESCRIPTION_SIZE = 256;
 const uint MAX_MEMORY_HEAPS = 16;
+union ClearColorValue {
+  float[4] float32;
+  int[4] int32;
+  uint[4] uint32;
+}
+union ClearValue {
+  ClearColorValue color;
+  ClearDepthStencilValue depthStencil;
+}
 
 def Result = distinct inline int;
 const Result SUCCESS = 0;
@@ -162,6 +216,12 @@ const Result ERROR_TOO_MANY_OBJECTS = -10;
 const Result ERROR_FORMAT_NOT_SUPPORTED = -11;
 const Result ERROR_FRAGMENTED_POOL = -12;
 const Result ERROR_UNKNOWN = -13;
+const Result ERROR_OUT_OF_POOL_MEMORY = -1000069000;
+const Result ERROR_INVALID_EXTERNAL_HANDLE = -1000072003;
+const Result ERROR_FRAGMENTATION = -1000161000;
+const Result ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = -1000257000;
+const Result ERROR_SURFACE_LOST_KHR = -1000000000;
+const Result ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001;
 
 def StructureType = distinct inline int;
 const StructureType STRUCTURE_TYPE_APPLICATION_INFO = 0;
@@ -213,6 +273,123 @@ const StructureType STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER = 45;
 const StructureType STRUCTURE_TYPE_MEMORY_BARRIER = 46;
 const StructureType STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = 47;
 const StructureType STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = 48;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = 1000094000;
+const StructureType STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = 1000157000;
+const StructureType STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = 1000157001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = 1000083000;
+const StructureType STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS = 1000127000;
+const StructureType STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = 1000127001;
+const StructureType STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = 1000060000;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = 1000060003;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = 1000060004;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO = 1000060005;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO = 1000060006;
+const StructureType STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO = 1000060013;
+const StructureType STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO = 1000060014;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES = 1000070000;
+const StructureType STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO = 1000070001;
+const StructureType STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2 = 1000146000;
+const StructureType STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2 = 1000146001;
+const StructureType STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2 = 1000146002;
+const StructureType STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2 = 1000146003;
+const StructureType STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 = 1000146004;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 = 1000059000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2 = 1000059001;
+const StructureType STRUCTURE_TYPE_FORMAT_PROPERTIES_2 = 1000059002;
+const StructureType STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2 = 1000059003;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2 = 1000059004;
+const StructureType STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2 = 1000059005;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2 = 1000059006;
+const StructureType STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2 = 1000059007;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 = 1000059008;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES = 1000117000;
+const StructureType STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = 1000117001;
+const StructureType STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO = 1000117002;
+const StructureType STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO = 1000117003;
+const StructureType STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = 1000053000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = 1000053001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = 1000053002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = 1000120000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = 0;
+const StructureType STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO = 1000145000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES = 1000145001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES = 1000145002;
+const StructureType STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2 = 1000145003;
+const StructureType STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO = 1000156000;
+const StructureType STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = 1000156001;
+const StructureType STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = 1000156002;
+const StructureType STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = 1000156003;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES = 1000156004;
+const StructureType STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = 1000156005;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO = 1000085000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO = 1000071000;
+const StructureType STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES = 1000071001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO = 1000071002;
+const StructureType STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES = 1000071003;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES = 1000071004;
+const StructureType STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO = 1000072000;
+const StructureType STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO = 1000072001;
+const StructureType STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO = 1000072002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO = 1000112000;
+const StructureType STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES = 1000112001;
+const StructureType STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = 1000113000;
+const StructureType STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO = 1000077000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO = 1000076000;
+const StructureType STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = 1000076001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES = 49;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES = 50;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES = 51;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES = 52;
+const StructureType STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = 1000147000;
+const StructureType STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = 1000109000;
+const StructureType STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = 1000109001;
+const StructureType STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2 = 1000109002;
+const StructureType STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2 = 1000109003;
+const StructureType STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2 = 1000109004;
+const StructureType STRUCTURE_TYPE_SUBPASS_BEGIN_INFO = 1000109005;
+const StructureType STRUCTURE_TYPE_SUBPASS_END_INFO = 1000109006;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES = 1000177000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES = 1000196000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES = 1000180000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES = 1000082000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES = 1000197000;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO = 1000161000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES = 1000161001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES = 1000161002;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO = 1000161003;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT = 1000161004;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES = 1000199000;
+const StructureType STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE = 1000199001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES = 1000221000;
+const StructureType STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO = 1000246000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES = 1000130000;
+const StructureType STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO = 1000130001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES = 1000211000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES = 1000108000;
+const StructureType STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO = 1000108001;
+const StructureType STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO = 1000108002;
+const StructureType STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO = 1000108003;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES = 1000253000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES = 1000175000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES = 1000241000;
+const StructureType STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT = 1000241001;
+const StructureType STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT = 1000241002;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES = 1000261000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES = 1000207000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES = 1000207001;
+const StructureType STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO = 1000207002;
+const StructureType STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO = 1000207003;
+const StructureType STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO = 1000207004;
+const StructureType STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO = 1000207005;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES = 1000257000;
+const StructureType STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO = 1000244001;
+const StructureType STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO = 1000257002;
+const StructureType STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO = 1000257003;
+const StructureType STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = 1000257004;
 
 def PipelineCacheHeaderVersion = distinct inline int;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
@@ -244,6 +421,9 @@ const ObjectType OBJECT_TYPE_DESCRIPTOR_POOL = 22;
 const ObjectType OBJECT_TYPE_DESCRIPTOR_SET = 23;
 const ObjectType OBJECT_TYPE_FRAMEBUFFER = 24;
 const ObjectType OBJECT_TYPE_COMMAND_POOL = 25;
+const ObjectType OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = 1000156000;
+const ObjectType OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000;
+const ObjectType OBJECT_TYPE_SURFACE_KHR = 1000000000;
 
 def VendorId = distinct inline int;
 const VendorId VENDOR_ID_VIV = 0x10001;
@@ -440,6 +620,40 @@ const Format FORMAT_ASTC_12X10_UNORM_BLOCK = 181;
 const Format FORMAT_ASTC_12X10_SRGB_BLOCK = 182;
 const Format FORMAT_ASTC_12X12_UNORM_BLOCK = 183;
 const Format FORMAT_ASTC_12X12_SRGB_BLOCK = 184;
+const Format FORMAT_G8B8G8R8_422_UNORM = 1000156000;
+const Format FORMAT_B8G8R8G8_422_UNORM = 1000156001;
+const Format FORMAT_G8_B8_R8_3PLANE_420_UNORM = 1000156002;
+const Format FORMAT_G8_B8R8_2PLANE_420_UNORM = 1000156003;
+const Format FORMAT_G8_B8_R8_3PLANE_422_UNORM = 1000156004;
+const Format FORMAT_G8_B8R8_2PLANE_422_UNORM = 1000156005;
+const Format FORMAT_G8_B8_R8_3PLANE_444_UNORM = 1000156006;
+const Format FORMAT_R10X6_UNORM_PACK16 = 1000156007;
+const Format FORMAT_R10X6G10X6_UNORM_2PACK16 = 1000156008;
+const Format FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 = 1000156009;
+const Format FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 = 1000156010;
+const Format FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = 1000156011;
+const Format FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = 1000156012;
+const Format FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = 1000156013;
+const Format FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = 1000156014;
+const Format FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = 1000156015;
+const Format FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = 1000156016;
+const Format FORMAT_R12X4_UNORM_PACK16 = 1000156017;
+const Format FORMAT_R12X4G12X4_UNORM_2PACK16 = 1000156018;
+const Format FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 = 1000156019;
+const Format FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = 1000156020;
+const Format FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = 1000156021;
+const Format FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = 1000156022;
+const Format FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = 1000156023;
+const Format FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = 1000156024;
+const Format FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = 1000156025;
+const Format FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = 1000156026;
+const Format FORMAT_G16B16G16R16_422_UNORM = 1000156027;
+const Format FORMAT_B16G16R16G16_422_UNORM = 1000156028;
+const Format FORMAT_G16_B16_R16_3PLANE_420_UNORM = 1000156029;
+const Format FORMAT_G16_B16R16_2PLANE_420_UNORM = 1000156030;
+const Format FORMAT_G16_B16_R16_3PLANE_422_UNORM = 1000156031;
+const Format FORMAT_G16_B16R16_2PLANE_422_UNORM = 1000156032;
+const Format FORMAT_G16_B16_R16_3PLANE_444_UNORM = 1000156033;
 
 def FormatFeatureFlagBits = distinct inline int;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
@@ -455,6 +669,16 @@ const FormatFeatureFlagBits FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x0000
 const FormatFeatureFlagBits FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400;
 const FormatFeatureFlagBits FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const FormatFeatureFlagBits FORMAT_FEATURE_TRANSFER_SRC_BIT = 0x00004000;
+const FormatFeatureFlagBits FORMAT_FEATURE_TRANSFER_DST_BIT = 0x00008000;
+const FormatFeatureFlagBits FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const FormatFeatureFlagBits FORMAT_FEATURE_DISJOINT_BIT = 0x00400000;
+const FormatFeatureFlagBits FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
 
 def ImageCreateFlagBits = distinct inline int;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001;
@@ -462,6 +686,13 @@ const ImageCreateFlagBits IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 const ImageCreateFlagBits IMAGE_CREATE_MUTABLE_FORMAT_BIT = 0x00000008;
 const ImageCreateFlagBits IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 0x00000010;
+const ImageCreateFlagBits IMAGE_CREATE_ALIAS_BIT = 0x00000400;
+const ImageCreateFlagBits IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = 0x00000040;
+const ImageCreateFlagBits IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = 0x00000020;
+const ImageCreateFlagBits IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = 0x00000080;
+const ImageCreateFlagBits IMAGE_CREATE_EXTENDED_USAGE_BIT = 0x00000100;
+const ImageCreateFlagBits IMAGE_CREATE_PROTECTED_BIT = 0x00000800;
+const ImageCreateFlagBits IMAGE_CREATE_DISJOINT_BIT = 0x00000200;
 
 def ImageTiling = distinct inline int;
 const ImageTiling IMAGE_TILING_OPTIMAL = 0;
@@ -490,6 +721,7 @@ const InternalAllocationType INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
 
 def MemoryHeapFlagBits = distinct inline int;
 const MemoryHeapFlagBits MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
+const MemoryHeapFlagBits MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
 
 def MemoryPropertyFlagBits = distinct inline int;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
@@ -497,6 +729,7 @@ const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020;
 
 def PhysicalDeviceType = distinct inline int;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_OTHER = 0;
@@ -510,6 +743,7 @@ const QueueFlagBits QUEUE_GRAPHICS_BIT = 0x00000001;
 const QueueFlagBits QUEUE_COMPUTE_BIT = 0x00000002;
 const QueueFlagBits QUEUE_TRANSFER_BIT = 0x00000004;
 const QueueFlagBits QUEUE_SPARSE_BINDING_BIT = 0x00000008;
+const QueueFlagBits QUEUE_PROTECTED_BIT = 0x00000010;
 
 def SampleCountFlagBits = distinct inline int;
 const SampleCountFlagBits SAMPLE_COUNT_1_BIT = 0x00000001;
@@ -551,6 +785,9 @@ const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const ImageAspectFlagBits IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
 const ImageAspectFlagBits IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
 const ImageAspectFlagBits IMAGE_ASPECT_METADATA_BIT = 0x00000008;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_0_BIT = 0x00000010;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_1_BIT = 0x00000020;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_2_BIT = 0x00000040;
 
 def SparseImageFormatFlagBits = distinct inline int;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
@@ -594,6 +831,8 @@ def BufferCreateFlagBits = distinct inline int;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
+const BufferCreateFlagBits BUFFER_CREATE_PROTECTED_BIT = 0x00000008;
+const BufferCreateFlagBits BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000010;
 
 def BufferUsageFlagBits = distinct inline int;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
@@ -605,6 +844,7 @@ const BufferUsageFlagBits BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020;
 const BufferUsageFlagBits BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
 const BufferUsageFlagBits BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
 const BufferUsageFlagBits BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
+const BufferUsageFlagBits BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000;
 
 def SharingMode = distinct inline int;
 const SharingMode SHARING_MODE_EXCLUSIVE = 0;
@@ -620,6 +860,12 @@ const ImageLayout IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = 5;
 const ImageLayout IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = 6;
 const ImageLayout IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7;
 const ImageLayout IMAGE_LAYOUT_PREINITIALIZED = 8;
+const ImageLayout IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = 1000117000;
+const ImageLayout IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = 1000117001;
+const ImageLayout IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL = 1000241000;
+const ImageLayout IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL = 1000241001;
+const ImageLayout IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL = 1000241002;
+const ImageLayout IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = 1000241003;
 
 def ComponentSwizzle = distinct inline int;
 const ComponentSwizzle COMPONENT_SWIZZLE_IDENTITY = 0;
@@ -729,6 +975,9 @@ def PipelineCreateFlagBits = distinct inline int;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const PipelineCreateFlagBits PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const PipelineCreateFlagBits PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
+const PipelineCreateFlagBits PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008;
+const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
+const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE = 0;
 
 def PipelineShaderStageCreateFlagBits = distinct inline int;
 
@@ -792,6 +1041,7 @@ const SamplerAddressMode SAMPLER_ADDRESS_MODE_REPEAT = 0;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
+const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 
 def SamplerCreateFlagBits = distinct inline int;
 
@@ -802,9 +1052,10 @@ const SamplerMipmapMode SAMPLER_MIPMAP_MODE_LINEAR = 1;
 
 def DescriptorPoolCreateFlagBits = distinct inline int;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = 0x00000002;
 
 def DescriptorSetLayoutCreateFlagBits = distinct inline int;
-
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = 0x00000002;
 
 def DescriptorType = distinct inline int;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLER = 0;
@@ -852,9 +1103,11 @@ const AttachmentStoreOp ATTACHMENT_STORE_OP_DONT_CARE = 1;
 
 def DependencyFlagBits = distinct inline int;
 const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
+const DependencyFlagBits DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
+const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
 
 def FramebufferCreateFlagBits = distinct inline int;
-
+const FramebufferCreateFlagBits FRAMEBUFFER_CREATE_IMAGELESS_BIT = 0x00000001;
 
 def PipelineBindPoint = distinct inline int;
 const PipelineBindPoint PIPELINE_BIND_POINT_GRAPHICS = 0;
@@ -869,6 +1122,7 @@ def SubpassDescriptionFlagBits = distinct inline int;
 def CommandPoolCreateFlagBits = distinct inline int;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
+const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004;
 
 def CommandPoolResetFlagBits = distinct inline int;
 const CommandPoolResetFlagBits COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
@@ -901,6 +1155,155 @@ const StencilFaceFlagBits STENCIL_FRONT_AND_BACK = null;
 def SubpassContents = distinct inline int;
 const SubpassContents SUBPASS_CONTENTS_INLINE = 0;
 const SubpassContents SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = 1;
+
+def SubgroupFeatureFlagBits = distinct inline int;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BASIC_BIT = 0x00000001;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_VOTE_BIT = 0x00000002;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ARITHMETIC_BIT = 0x00000004;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BALLOT_BIT = 0x00000008;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_SHUFFLE_BIT = 0x00000010;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = 0x00000020;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_CLUSTERED_BIT = 0x00000040;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_QUAD_BIT = 0x00000080;
+
+def PeerMemoryFeatureFlagBits = distinct inline int;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_SRC_BIT = 0x00000001;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_DST_BIT = 0x00000002;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = 0x00000004;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_DST_BIT = 0x00000008;
+
+def MemoryAllocateFlagBits = distinct inline int;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = 0x00000002;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000004;
+
+def PointClippingBehavior = distinct inline int;
+const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = 0;
+const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = 1;
+
+def TessellationDomainOrigin = distinct inline int;
+const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = 0;
+const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = 1;
+
+def DeviceQueueCreateFlagBits = distinct inline int;
+
+
+def SamplerYcbcrModelConversion = distinct inline int;
+const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = 0;
+const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = 1;
+const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = 2;
+const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 = 3;
+const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = 4;
+
+def SamplerYcbcrRange = distinct inline int;
+const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_FULL = 0;
+const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_NARROW = 1;
+
+def ChromaLocation = distinct inline int;
+const ChromaLocation CHROMA_LOCATION_COSITED_EVEN = 0;
+const ChromaLocation CHROMA_LOCATION_MIDPOINT = 1;
+
+def DescriptorUpdateTemplateType = distinct inline int;
+const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0;
+
+def ExternalMemoryHandleTypeFlagBits = distinct inline int;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = 0x00000008;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = 0x00000010;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = 0x00000020;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = 0x00000040;
+
+def ExternalMemoryFeatureFlagBits = distinct inline int;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = 0x00000001;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = 0x00000002;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = 0x00000004;
+
+def ExternalFenceHandleTypeFlagBits = distinct inline int;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000008;
+
+def ExternalFenceFeatureFlagBits = distinct inline int;
+const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = 0x00000001;
+const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = 0x00000002;
+
+def FenceImportFlagBits = distinct inline int;
+const FenceImportFlagBits FENCE_IMPORT_TEMPORARY_BIT = 0x00000001;
+
+def SemaphoreImportFlagBits = distinct inline int;
+const SemaphoreImportFlagBits SEMAPHORE_IMPORT_TEMPORARY_BIT = 0x00000001;
+
+def ExternalSemaphoreHandleTypeFlagBits = distinct inline int;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = 0x00000008;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT = null;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000010;
+
+def ExternalSemaphoreFeatureFlagBits = distinct inline int;
+const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001;
+const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002;
+
+def DriverId = distinct inline int;
+const DriverId DRIVER_ID_AMD_PROPRIETARY = 1;
+const DriverId DRIVER_ID_AMD_OPEN_SOURCE = 2;
+const DriverId DRIVER_ID_MESA_RADV = 3;
+const DriverId DRIVER_ID_NVIDIA_PROPRIETARY = 4;
+const DriverId DRIVER_ID_INTEL_PROPRIETARY_WINDOWS = 5;
+const DriverId DRIVER_ID_INTEL_OPEN_SOURCE_MESA = 6;
+const DriverId DRIVER_ID_IMAGINATION_PROPRIETARY = 7;
+const DriverId DRIVER_ID_QUALCOMM_PROPRIETARY = 8;
+const DriverId DRIVER_ID_ARM_PROPRIETARY = 9;
+const DriverId DRIVER_ID_GOOGLE_SWIFTSHADER = 10;
+const DriverId DRIVER_ID_GGP_PROPRIETARY = 11;
+const DriverId DRIVER_ID_BROADCOM_PROPRIETARY = 12;
+const DriverId DRIVER_ID_MESA_LLVMPIPE = 13;
+const DriverId DRIVER_ID_MOLTENVK = 14;
+const DriverId DRIVER_ID_COREAVI_PROPRIETARY = 15;
+const DriverId DRIVER_ID_JUICE_PROPRIETARY = 16;
+const DriverId DRIVER_ID_VERISILICON_PROPRIETARY = 17;
+const DriverId DRIVER_ID_MESA_TURNIP = 18;
+const DriverId DRIVER_ID_MESA_V3DV = 19;
+const DriverId DRIVER_ID_MESA_PANVK = 20;
+const DriverId DRIVER_ID_SAMSUNG_PROPRIETARY = 21;
+const DriverId DRIVER_ID_MESA_VENUS = 22;
+const DriverId DRIVER_ID_MESA_DOZEN = 23;
+const DriverId DRIVER_ID_MESA_NVK = 24;
+const DriverId DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = 25;
+
+def ShaderFloatControlsIndependence = distinct inline int;
+const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = 0;
+const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = 1;
+const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = 2;
+
+def DescriptorBindingFlagBits = distinct inline int;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = 0x00000001;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = 0x00000002;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = 0x00000004;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = 0x00000008;
+
+def ResolveModeFlagBits = distinct inline int;
+const ResolveModeFlagBits RESOLVE_MODE_NONE = 0;
+const ResolveModeFlagBits RESOLVE_MODE_SAMPLE_ZERO_BIT = 0x00000001;
+const ResolveModeFlagBits RESOLVE_MODE_AVERAGE_BIT = 0x00000002;
+const ResolveModeFlagBits RESOLVE_MODE_MIN_BIT = 0x00000004;
+const ResolveModeFlagBits RESOLVE_MODE_MAX_BIT = 0x00000008;
+
+def SamplerReductionMode = distinct inline int;
+const SamplerReductionMode SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = 0;
+const SamplerReductionMode SAMPLER_REDUCTION_MODE_MIN = 1;
+const SamplerReductionMode SAMPLER_REDUCTION_MODE_MAX = 2;
+
+def SemaphoreType = distinct inline int;
+const SemaphoreType SEMAPHORE_TYPE_BINARY = 0;
+const SemaphoreType SEMAPHORE_TYPE_TIMELINE = 1;
+
+def SemaphoreWaitFlagBits = distinct inline int;
+const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
 
 def SurfaceTransformFlagBitsKHR = distinct inline int;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
@@ -1896,6 +2299,786 @@ struct RenderPassBeginInfo {
  Rect2D renderArea;
  uint clearValueCount;
  ClearValue* pClearValues;
+}
+struct PhysicalDeviceSubgroupProperties {
+ StructureType sType;
+ void* pNext;
+ uint subgroupSize;
+ ShaderStageFlags supportedStages;
+ SubgroupFeatureFlags supportedOperations;
+ Bool32 quadOperationsInAllStages;
+}
+struct BindBufferMemoryInfo {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+ DeviceMemory memory;
+ DeviceSize memoryOffset;
+}
+struct BindImageMemoryInfo {
+ StructureType sType;
+ void* pNext;
+ Image image;
+ DeviceMemory memory;
+ DeviceSize memoryOffset;
+}
+struct PhysicalDevice16BitStorageFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 storageBuffer16BitAccess;
+ Bool32 uniformAndStorageBuffer16BitAccess;
+ Bool32 storagePushConstant16;
+ Bool32 storageInputOutput16;
+}
+struct MemoryDedicatedRequirements {
+ StructureType sType;
+ void* pNext;
+ Bool32 prefersDedicatedAllocation;
+ Bool32 requiresDedicatedAllocation;
+}
+struct MemoryDedicatedAllocateInfo {
+ StructureType sType;
+ void* pNext;
+ Image image;
+ Buffer buffer;
+}
+struct MemoryAllocateFlagsInfo {
+ StructureType sType;
+ void* pNext;
+ MemoryAllocateFlags flags;
+ uint deviceMask;
+}
+struct DeviceGroupRenderPassBeginInfo {
+ StructureType sType;
+ void* pNext;
+ uint deviceMask;
+ uint deviceRenderAreaCount;
+ Rect2D* pDeviceRenderAreas;
+}
+struct DeviceGroupCommandBufferBeginInfo {
+ StructureType sType;
+ void* pNext;
+ uint deviceMask;
+}
+struct DeviceGroupSubmitInfo {
+ StructureType sType;
+ void* pNext;
+ uint waitSemaphoreCount;
+ uint* pWaitSemaphoreDeviceIndices;
+ uint commandBufferCount;
+ uint* pCommandBufferDeviceMasks;
+ uint signalSemaphoreCount;
+ uint* pSignalSemaphoreDeviceIndices;
+}
+struct DeviceGroupBindSparseInfo {
+ StructureType sType;
+ void* pNext;
+ uint resourceDeviceIndex;
+ uint memoryDeviceIndex;
+}
+struct BindBufferMemoryDeviceGroupInfo {
+ StructureType sType;
+ void* pNext;
+ uint deviceIndexCount;
+ uint* pDeviceIndices;
+}
+struct BindImageMemoryDeviceGroupInfo {
+ StructureType sType;
+ void* pNext;
+ uint deviceIndexCount;
+ uint* pDeviceIndices;
+ uint splitInstanceBindRegionCount;
+ Rect2D* pSplitInstanceBindRegions;
+}
+struct PhysicalDeviceGroupProperties {
+ StructureType sType;
+ void* pNext;
+ uint physicalDeviceCount;
+ PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices;
+ Bool32 subsetAllocation;
+}
+struct DeviceGroupDeviceCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint physicalDeviceCount;
+ PhysicalDevice* pPhysicalDevices;
+}
+struct BufferMemoryRequirementsInfo2 {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct ImageMemoryRequirementsInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image image;
+}
+struct ImageSparseMemoryRequirementsInfo2 {
+ StructureType sType;
+ void* pNext;
+ Image image;
+}
+struct MemoryRequirements2 {
+ StructureType sType;
+ void* pNext;
+ MemoryRequirements memoryRequirements;
+}
+struct SparseImageMemoryRequirements2 {
+ StructureType sType;
+ void* pNext;
+ SparseImageMemoryRequirements memoryRequirements;
+}
+struct PhysicalDeviceFeatures2 {
+ StructureType sType;
+ void* pNext;
+ PhysicalDeviceFeatures features;
+}
+struct PhysicalDeviceProperties2 {
+ StructureType sType;
+ void* pNext;
+ PhysicalDeviceProperties properties;
+}
+struct FormatProperties2 {
+ StructureType sType;
+ void* pNext;
+ FormatProperties formatProperties;
+}
+struct ImageFormatProperties2 {
+ StructureType sType;
+ void* pNext;
+ ImageFormatProperties imageFormatProperties;
+}
+struct PhysicalDeviceImageFormatInfo2 {
+ StructureType sType;
+ void* pNext;
+ Format format;
+ ImageType type;
+ ImageTiling tiling;
+ ImageUsageFlags usage;
+ ImageCreateFlags flags;
+}
+struct QueueFamilyProperties2 {
+ StructureType sType;
+ void* pNext;
+ QueueFamilyProperties queueFamilyProperties;
+}
+struct PhysicalDeviceMemoryProperties2 {
+ StructureType sType;
+ void* pNext;
+ PhysicalDeviceMemoryProperties memoryProperties;
+}
+struct SparseImageFormatProperties2 {
+ StructureType sType;
+ void* pNext;
+ SparseImageFormatProperties properties;
+}
+struct PhysicalDeviceSparseImageFormatInfo2 {
+ StructureType sType;
+ void* pNext;
+ Format format;
+ ImageType type;
+ SampleCountFlagBits samples;
+ ImageUsageFlags usage;
+ ImageTiling tiling;
+}
+struct PhysicalDevicePointClippingProperties {
+ StructureType sType;
+ void* pNext;
+ PointClippingBehavior pointClippingBehavior;
+}
+struct RenderPassInputAttachmentAspectCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint aspectReferenceCount;
+ InputAttachmentAspectReference* pAspectReferences;
+}
+struct InputAttachmentAspectReference {
+ uint subpass;
+ uint inputAttachmentIndex;
+ ImageAspectFlags aspectMask;
+}
+struct ImageViewUsageCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ImageUsageFlags usage;
+}
+struct PipelineTessellationDomainOriginStateCreateInfo {
+ StructureType sType;
+ void* pNext;
+ TessellationDomainOrigin domainOrigin;
+}
+struct RenderPassMultiviewCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint subpassCount;
+ uint* pViewMasks;
+ uint dependencyCount;
+ int* pViewOffsets;
+ uint correlationMaskCount;
+ uint* pCorrelationMasks;
+}
+struct PhysicalDeviceMultiviewFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 multiview;
+ Bool32 multiviewGeometryShader;
+ Bool32 multiviewTessellationShader;
+}
+struct PhysicalDeviceMultiviewProperties {
+ StructureType sType;
+ void* pNext;
+ uint maxMultiviewViewCount;
+ uint maxMultiviewInstanceIndex;
+}
+struct PhysicalDeviceVariablePointersFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 variablePointersStorageBuffer;
+ Bool32 variablePointers;
+}
+struct PhysicalDeviceProtectedMemoryFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 protectedMemory;
+}
+struct PhysicalDeviceProtectedMemoryProperties {
+ StructureType sType;
+ void* pNext;
+ Bool32 protectedNoFault;
+}
+struct DeviceQueueInfo2 {
+ StructureType sType;
+ void* pNext;
+ DeviceQueueCreateFlags flags;
+ uint queueFamilyIndex;
+ uint queueIndex;
+}
+struct ProtectedSubmitInfo {
+ StructureType sType;
+ void* pNext;
+ Bool32 protectedSubmit;
+}
+struct SamplerYcbcrConversionCreateInfo {
+ StructureType sType;
+ void* pNext;
+ Format format;
+ SamplerYcbcrModelConversion ycbcrModel;
+ SamplerYcbcrRange ycbcrRange;
+ ComponentMapping components;
+ ChromaLocation xChromaOffset;
+ ChromaLocation yChromaOffset;
+ Filter chromaFilter;
+ Bool32 forceExplicitReconstruction;
+}
+struct SamplerYcbcrConversionInfo {
+ StructureType sType;
+ void* pNext;
+ SamplerYcbcrConversion conversion;
+}
+struct BindImagePlaneMemoryInfo {
+ StructureType sType;
+ void* pNext;
+ ImageAspectFlagBits planeAspect;
+}
+struct ImagePlaneMemoryRequirementsInfo {
+ StructureType sType;
+ void* pNext;
+ ImageAspectFlagBits planeAspect;
+}
+struct PhysicalDeviceSamplerYcbcrConversionFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 samplerYcbcrConversion;
+}
+struct SamplerYcbcrConversionImageFormatProperties {
+ StructureType sType;
+ void* pNext;
+ uint combinedImageSamplerDescriptorCount;
+}
+struct DescriptorUpdateTemplateEntry {
+ uint dstBinding;
+ uint dstArrayElement;
+ uint descriptorCount;
+ DescriptorType descriptorType;
+ usz offset;
+ usz stride;
+}
+struct DescriptorUpdateTemplateCreateInfo {
+ StructureType sType;
+ void* pNext;
+ DescriptorUpdateTemplateCreateFlags flags;
+ uint descriptorUpdateEntryCount;
+ DescriptorUpdateTemplateEntry* pDescriptorUpdateEntries;
+ DescriptorUpdateTemplateType templateType;
+ DescriptorSetLayout descriptorSetLayout;
+ PipelineBindPoint pipelineBindPoint;
+ PipelineLayout pipelineLayout;
+ uint set;
+}
+struct ExternalMemoryProperties {
+ ExternalMemoryFeatureFlags externalMemoryFeatures;
+ ExternalMemoryHandleTypeFlags exportFromImportedHandleTypes;
+ ExternalMemoryHandleTypeFlags compatibleHandleTypes;
+}
+struct PhysicalDeviceExternalImageFormatInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryHandleTypeFlagBits handleType;
+}
+struct ExternalImageFormatProperties {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryProperties externalMemoryProperties;
+}
+struct PhysicalDeviceExternalBufferInfo {
+ StructureType sType;
+ void* pNext;
+ BufferCreateFlags flags;
+ BufferUsageFlags usage;
+ ExternalMemoryHandleTypeFlagBits handleType;
+}
+struct ExternalBufferProperties {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryProperties externalMemoryProperties;
+}
+struct PhysicalDeviceIDProperties {
+ StructureType sType;
+ void* pNext;
+ uint[UUID_SIZE] deviceUUID;
+ uint[UUID_SIZE] driverUUID;
+ uint[LUID_SIZE] deviceLUID;
+ uint deviceNodeMask;
+ Bool32 deviceLUIDValid;
+}
+struct ExternalMemoryImageCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryHandleTypeFlags handleTypes;
+}
+struct ExternalMemoryBufferCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryHandleTypeFlags handleTypes;
+}
+struct ExportMemoryAllocateInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalMemoryHandleTypeFlags handleTypes;
+}
+struct PhysicalDeviceExternalFenceInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalFenceHandleTypeFlagBits handleType;
+}
+struct ExternalFenceProperties {
+ StructureType sType;
+ void* pNext;
+ ExternalFenceHandleTypeFlags exportFromImportedHandleTypes;
+ ExternalFenceHandleTypeFlags compatibleHandleTypes;
+ ExternalFenceFeatureFlags externalFenceFeatures;
+}
+struct ExportFenceCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalFenceHandleTypeFlags handleTypes;
+}
+struct ExportSemaphoreCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalSemaphoreHandleTypeFlags handleTypes;
+}
+struct PhysicalDeviceExternalSemaphoreInfo {
+ StructureType sType;
+ void* pNext;
+ ExternalSemaphoreHandleTypeFlagBits handleType;
+}
+struct ExternalSemaphoreProperties {
+ StructureType sType;
+ void* pNext;
+ ExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes;
+ ExternalSemaphoreHandleTypeFlags compatibleHandleTypes;
+ ExternalSemaphoreFeatureFlags externalSemaphoreFeatures;
+}
+struct PhysicalDeviceMaintenance3Properties {
+ StructureType sType;
+ void* pNext;
+ uint maxPerSetDescriptors;
+ DeviceSize maxMemoryAllocationSize;
+}
+struct DescriptorSetLayoutSupport {
+ StructureType sType;
+ void* pNext;
+ Bool32 supported;
+}
+struct PhysicalDeviceShaderDrawParametersFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderDrawParameters;
+}
+struct ImageFormatListCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint viewFormatCount;
+ Format* pViewFormats;
+}
+struct RenderPassCreateInfo2 {
+ StructureType sType;
+ void* pNext;
+ RenderPassCreateFlags flags;
+ uint attachmentCount;
+ AttachmentDescription2* pAttachments;
+ uint subpassCount;
+ SubpassDescription2* pSubpasses;
+ uint dependencyCount;
+ SubpassDependency2* pDependencies;
+ uint correlatedViewMaskCount;
+ uint* pCorrelatedViewMasks;
+}
+struct AttachmentDescription2 {
+ StructureType sType;
+ void* pNext;
+ AttachmentDescriptionFlags flags;
+ Format format;
+ SampleCountFlagBits samples;
+ AttachmentLoadOp loadOp;
+ AttachmentStoreOp storeOp;
+ AttachmentLoadOp stencilLoadOp;
+ AttachmentStoreOp stencilStoreOp;
+ ImageLayout initialLayout;
+ ImageLayout finalLayout;
+}
+struct AttachmentReference2 {
+ StructureType sType;
+ void* pNext;
+ uint attachment;
+ ImageLayout layout;
+ ImageAspectFlags aspectMask;
+}
+struct SubpassDescription2 {
+ StructureType sType;
+ void* pNext;
+ SubpassDescriptionFlags flags;
+ PipelineBindPoint pipelineBindPoint;
+ uint viewMask;
+ uint inputAttachmentCount;
+ AttachmentReference2* pInputAttachments;
+ uint colorAttachmentCount;
+ AttachmentReference2* pColorAttachments;
+ AttachmentReference2* pResolveAttachments;
+ AttachmentReference2* pDepthStencilAttachment;
+ uint preserveAttachmentCount;
+ uint* pPreserveAttachments;
+}
+struct SubpassDependency2 {
+ StructureType sType;
+ void* pNext;
+ uint srcSubpass;
+ uint dstSubpass;
+ PipelineStageFlags srcStageMask;
+ PipelineStageFlags dstStageMask;
+ AccessFlags srcAccessMask;
+ AccessFlags dstAccessMask;
+ DependencyFlags dependencyFlags;
+ int viewOffset;
+}
+struct SubpassBeginInfo {
+ StructureType sType;
+ void* pNext;
+ SubpassContents contents;
+}
+struct SubpassEndInfo {
+ StructureType sType;
+ void* pNext;
+}
+struct PhysicalDevice8BitStorageFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 storageBuffer8BitAccess;
+ Bool32 uniformAndStorageBuffer8BitAccess;
+ Bool32 storagePushConstant8;
+}
+struct ConformanceVersion {
+ uint major;
+ uint minor;
+ uint subminor;
+ uint patch;
+}
+struct PhysicalDeviceDriverProperties {
+ StructureType sType;
+ void* pNext;
+ DriverId driverID;
+ char[MAX_DRIVER_NAME_SIZE] driverName;
+ char[MAX_DRIVER_INFO_SIZE] driverInfo;
+ ConformanceVersion conformanceVersion;
+}
+struct PhysicalDeviceShaderAtomicInt64Features {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderBufferInt64Atomics;
+ Bool32 shaderSharedInt64Atomics;
+}
+struct PhysicalDeviceShaderFloat16Int8Features {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderFloat16;
+ Bool32 shaderInt8;
+}
+struct PhysicalDeviceFloatControlsProperties {
+ StructureType sType;
+ void* pNext;
+ ShaderFloatControlsIndependence denormBehaviorIndependence;
+ ShaderFloatControlsIndependence roundingModeIndependence;
+ Bool32 shaderSignedZeroInfNanPreserveFloat16;
+ Bool32 shaderSignedZeroInfNanPreserveFloat32;
+ Bool32 shaderSignedZeroInfNanPreserveFloat64;
+ Bool32 shaderDenormPreserveFloat16;
+ Bool32 shaderDenormPreserveFloat32;
+ Bool32 shaderDenormPreserveFloat64;
+ Bool32 shaderDenormFlushToZeroFloat16;
+ Bool32 shaderDenormFlushToZeroFloat32;
+ Bool32 shaderDenormFlushToZeroFloat64;
+ Bool32 shaderRoundingModeRTEFloat16;
+ Bool32 shaderRoundingModeRTEFloat32;
+ Bool32 shaderRoundingModeRTEFloat64;
+ Bool32 shaderRoundingModeRTZFloat16;
+ Bool32 shaderRoundingModeRTZFloat32;
+ Bool32 shaderRoundingModeRTZFloat64;
+}
+struct DescriptorSetLayoutBindingFlagsCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint bindingCount;
+ DescriptorBindingFlags* pBindingFlags;
+}
+struct PhysicalDeviceDescriptorIndexingFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderInputAttachmentArrayDynamicIndexing;
+ Bool32 shaderUniformTexelBufferArrayDynamicIndexing;
+ Bool32 shaderStorageTexelBufferArrayDynamicIndexing;
+ Bool32 shaderUniformBufferArrayNonUniformIndexing;
+ Bool32 shaderSampledImageArrayNonUniformIndexing;
+ Bool32 shaderStorageBufferArrayNonUniformIndexing;
+ Bool32 shaderStorageImageArrayNonUniformIndexing;
+ Bool32 shaderInputAttachmentArrayNonUniformIndexing;
+ Bool32 shaderUniformTexelBufferArrayNonUniformIndexing;
+ Bool32 shaderStorageTexelBufferArrayNonUniformIndexing;
+ Bool32 descriptorBindingUniformBufferUpdateAfterBind;
+ Bool32 descriptorBindingSampledImageUpdateAfterBind;
+ Bool32 descriptorBindingStorageImageUpdateAfterBind;
+ Bool32 descriptorBindingStorageBufferUpdateAfterBind;
+ Bool32 descriptorBindingUniformTexelBufferUpdateAfterBind;
+ Bool32 descriptorBindingStorageTexelBufferUpdateAfterBind;
+ Bool32 descriptorBindingUpdateUnusedWhilePending;
+ Bool32 descriptorBindingPartiallyBound;
+ Bool32 descriptorBindingVariableDescriptorCount;
+ Bool32 runtimeDescriptorArray;
+}
+struct PhysicalDeviceDescriptorIndexingProperties {
+ StructureType sType;
+ void* pNext;
+ uint maxUpdateAfterBindDescriptorsInAllPools;
+ Bool32 shaderUniformBufferArrayNonUniformIndexingNative;
+ Bool32 shaderSampledImageArrayNonUniformIndexingNative;
+ Bool32 shaderStorageBufferArrayNonUniformIndexingNative;
+ Bool32 shaderStorageImageArrayNonUniformIndexingNative;
+ Bool32 shaderInputAttachmentArrayNonUniformIndexingNative;
+ Bool32 robustBufferAccessUpdateAfterBind;
+ Bool32 quadDivergentImplicitLod;
+ uint maxPerStageDescriptorUpdateAfterBindSamplers;
+ uint maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+ uint maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+ uint maxPerStageDescriptorUpdateAfterBindSampledImages;
+ uint maxPerStageDescriptorUpdateAfterBindStorageImages;
+ uint maxPerStageDescriptorUpdateAfterBindInputAttachments;
+ uint maxPerStageUpdateAfterBindResources;
+ uint maxDescriptorSetUpdateAfterBindSamplers;
+ uint maxDescriptorSetUpdateAfterBindUniformBuffers;
+ uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+ uint maxDescriptorSetUpdateAfterBindStorageBuffers;
+ uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+ uint maxDescriptorSetUpdateAfterBindSampledImages;
+ uint maxDescriptorSetUpdateAfterBindStorageImages;
+ uint maxDescriptorSetUpdateAfterBindInputAttachments;
+}
+struct DescriptorSetVariableDescriptorCountAllocateInfo {
+ StructureType sType;
+ void* pNext;
+ uint descriptorSetCount;
+ uint* pDescriptorCounts;
+}
+struct DescriptorSetVariableDescriptorCountLayoutSupport {
+ StructureType sType;
+ void* pNext;
+ uint maxVariableDescriptorCount;
+}
+struct SubpassDescriptionDepthStencilResolve {
+ StructureType sType;
+ void* pNext;
+ ResolveModeFlagBits depthResolveMode;
+ ResolveModeFlagBits stencilResolveMode;
+ AttachmentReference2* pDepthStencilResolveAttachment;
+}
+struct PhysicalDeviceDepthStencilResolveProperties {
+ StructureType sType;
+ void* pNext;
+ ResolveModeFlags supportedDepthResolveModes;
+ ResolveModeFlags supportedStencilResolveModes;
+ Bool32 independentResolveNone;
+ Bool32 independentResolve;
+}
+struct PhysicalDeviceScalarBlockLayoutFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 scalarBlockLayout;
+}
+struct ImageStencilUsageCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ImageUsageFlags stencilUsage;
+}
+struct SamplerReductionModeCreateInfo {
+ StructureType sType;
+ void* pNext;
+ SamplerReductionMode reductionMode;
+}
+struct PhysicalDeviceSamplerFilterMinmaxProperties {
+ StructureType sType;
+ void* pNext;
+ Bool32 filterMinmaxSingleComponentFormats;
+ Bool32 filterMinmaxImageComponentMapping;
+}
+struct PhysicalDeviceVulkanMemoryModelFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 vulkanMemoryModel;
+ Bool32 vulkanMemoryModelDeviceScope;
+ Bool32 vulkanMemoryModelAvailabilityVisibilityChains;
+}
+struct PhysicalDeviceImagelessFramebufferFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 imagelessFramebuffer;
+}
+struct FramebufferAttachmentsCreateInfo {
+ StructureType sType;
+ void* pNext;
+ uint attachmentImageInfoCount;
+ FramebufferAttachmentImageInfo* pAttachmentImageInfos;
+}
+struct FramebufferAttachmentImageInfo {
+ StructureType sType;
+ void* pNext;
+ ImageCreateFlags flags;
+ ImageUsageFlags usage;
+ uint width;
+ uint height;
+ uint layerCount;
+ uint viewFormatCount;
+ Format* pViewFormats;
+}
+struct RenderPassAttachmentBeginInfo {
+ StructureType sType;
+ void* pNext;
+ uint attachmentCount;
+ ImageView* pAttachments;
+}
+struct PhysicalDeviceUniformBufferStandardLayoutFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 uniformBufferStandardLayout;
+}
+struct PhysicalDeviceShaderSubgroupExtendedTypesFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 shaderSubgroupExtendedTypes;
+}
+struct PhysicalDeviceSeparateDepthStencilLayoutsFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 separateDepthStencilLayouts;
+}
+struct AttachmentReferenceStencilLayout {
+ StructureType sType;
+ void* pNext;
+ ImageLayout stencilLayout;
+}
+struct AttachmentDescriptionStencilLayout {
+ StructureType sType;
+ void* pNext;
+ ImageLayout stencilInitialLayout;
+ ImageLayout stencilFinalLayout;
+}
+struct PhysicalDeviceHostQueryResetFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 hostQueryReset;
+}
+struct PhysicalDeviceTimelineSemaphoreFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 timelineSemaphore;
+}
+struct PhysicalDeviceTimelineSemaphoreProperties {
+ StructureType sType;
+ void* pNext;
+ ulong maxTimelineSemaphoreValueDifference;
+}
+struct SemaphoreTypeCreateInfo {
+ StructureType sType;
+ void* pNext;
+ SemaphoreType semaphoreType;
+ ulong initialValue;
+}
+struct TimelineSemaphoreSubmitInfo {
+ StructureType sType;
+ void* pNext;
+ uint waitSemaphoreValueCount;
+ ulong* pWaitSemaphoreValues;
+ uint signalSemaphoreValueCount;
+ ulong* pSignalSemaphoreValues;
+}
+struct SemaphoreWaitInfo {
+ StructureType sType;
+ void* pNext;
+ SemaphoreWaitFlags flags;
+ uint semaphoreCount;
+ Semaphore* pSemaphores;
+ ulong* pValues;
+}
+struct SemaphoreSignalInfo {
+ StructureType sType;
+ void* pNext;
+ Semaphore semaphore;
+ ulong value;
+}
+struct PhysicalDeviceBufferDeviceAddressFeatures {
+ StructureType sType;
+ void* pNext;
+ Bool32 bufferDeviceAddress;
+ Bool32 bufferDeviceAddressCaptureReplay;
+ Bool32 bufferDeviceAddressMultiDevice;
+}
+struct BufferDeviceAddressInfo {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct BufferOpaqueCaptureAddressCreateInfo {
+ StructureType sType;
+ void* pNext;
+ ulong opaqueCaptureAddress;
+}
+struct MemoryOpaqueCaptureAddressAllocateInfo {
+ StructureType sType;
+ void* pNext;
+ ulong opaqueCaptureAddress;
+}
+struct DeviceMemoryOpaqueCaptureAddressInfo {
+ StructureType sType;
+ void* pNext;
+ DeviceMemory memory;
 }
 struct SurfaceCapabilitiesKHR {
  uint minImageCount;

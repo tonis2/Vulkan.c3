@@ -2116,3 +2116,3370 @@ fn RenderPassBeginInfo RenderPassBeginInfo.setPClearValues(self, ClearValue[] pC
   return self;
 }
 
+
+
+fn PhysicalDeviceSubgroupProperties physicalDeviceSubgroupPropertiesBuilder() {
+  PhysicalDeviceSubgroupProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSubgroupSize(self, uint subgroupSize) {
+  self.subgroupSize = subgroupSize;
+  return self;
+}
+       
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSupportedStages(self, ShaderStageFlags supportedStages) {
+  self.supportedStages = supportedStages;
+  return self;
+}
+       
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setSupportedOperations(self, SubgroupFeatureFlags supportedOperations) {
+  self.supportedOperations = supportedOperations;
+  return self;
+}
+       
+fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setQuadOperationsInAllStages(self, Bool32 quadOperationsInAllStages) {
+  self.quadOperationsInAllStages = quadOperationsInAllStages;
+  return self;
+}
+       
+
+
+fn BindBufferMemoryInfo bindBufferMemoryInfoBuilder() {
+  BindBufferMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemory(self, DeviceMemory memory) {
+  self.memory = memory;
+  return self;
+}
+       
+fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemoryOffset(self, DeviceSize memoryOffset) {
+  self.memoryOffset = memoryOffset;
+  return self;
+}
+       
+
+
+fn BindImageMemoryInfo bindImageMemoryInfoBuilder() {
+  BindImageMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BindImageMemoryInfo BindImageMemoryInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BindImageMemoryInfo BindImageMemoryInfo.setImage(self, Image image) {
+  self.image = image;
+  return self;
+}
+       
+fn BindImageMemoryInfo BindImageMemoryInfo.setMemory(self, DeviceMemory memory) {
+  self.memory = memory;
+  return self;
+}
+       
+fn BindImageMemoryInfo BindImageMemoryInfo.setMemoryOffset(self, DeviceSize memoryOffset) {
+  self.memoryOffset = memoryOffset;
+  return self;
+}
+       
+
+
+fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeaturesBuilder() {
+  PhysicalDevice16BitStorageFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStorageBuffer16BitAccess(self, Bool32 storageBuffer16BitAccess) {
+  self.storageBuffer16BitAccess = storageBuffer16BitAccess;
+  return self;
+}
+       
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setUniformAndStorageBuffer16BitAccess(self, Bool32 uniformAndStorageBuffer16BitAccess) {
+  self.uniformAndStorageBuffer16BitAccess = uniformAndStorageBuffer16BitAccess;
+  return self;
+}
+       
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStoragePushConstant16(self, Bool32 storagePushConstant16) {
+  self.storagePushConstant16 = storagePushConstant16;
+  return self;
+}
+       
+fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStorageInputOutput16(self, Bool32 storageInputOutput16) {
+  self.storageInputOutput16 = storageInputOutput16;
+  return self;
+}
+       
+
+
+fn MemoryDedicatedRequirements memoryDedicatedRequirementsBuilder() {
+  MemoryDedicatedRequirements defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setPrefersDedicatedAllocation(self, Bool32 prefersDedicatedAllocation) {
+  self.prefersDedicatedAllocation = prefersDedicatedAllocation;
+  return self;
+}
+       
+fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setRequiresDedicatedAllocation(self, Bool32 requiresDedicatedAllocation) {
+  self.requiresDedicatedAllocation = requiresDedicatedAllocation;
+  return self;
+}
+       
+
+
+fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfoBuilder() {
+  MemoryDedicatedAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setImage(self, Image image) {
+  self.image = image;
+  return self;
+}
+       
+fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+
+
+fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfoBuilder() {
+  MemoryAllocateFlagsInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setFlags(self, MemoryAllocateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setDeviceMask(self, uint deviceMask) {
+  self.deviceMask = deviceMask;
+  return self;
+}
+       
+
+
+fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfoBuilder() {
+  DeviceGroupRenderPassBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceMask(self, uint deviceMask) {
+  self.deviceMask = deviceMask;
+  return self;
+}
+       
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRenderAreaCount(self, uint deviceRenderAreaCount) {
+  self.deviceRenderAreaCount = deviceRenderAreaCount;
+  return self;
+}
+       
+fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setPDeviceRenderAreas(self, Rect2D[] pDeviceRenderAreas) {
+  self.deviceRenderAreaCount = (uint)pDeviceRenderAreas.len;
+  self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
+  return self;
+}
+
+
+
+fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfoBuilder() {
+  DeviceGroupCommandBufferBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setDeviceMask(self, uint deviceMask) {
+  self.deviceMask = deviceMask;
+  return self;
+}
+       
+
+
+fn DeviceGroupSubmitInfo deviceGroupSubmitInfoBuilder() {
+  DeviceGroupSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreCount(self, uint waitSemaphoreCount) {
+  self.waitSemaphoreCount = waitSemaphoreCount;
+  return self;
+}
+       
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPWaitSemaphoreDeviceIndices(self, uint[] pWaitSemaphoreDeviceIndices) {
+  self.waitSemaphoreCount = (uint)pWaitSemaphoreDeviceIndices.len;
+  self.pWaitSemaphoreDeviceIndices = &pWaitSemaphoreDeviceIndices[0];
+  return self;
+}
+
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferCount(self, uint commandBufferCount) {
+  self.commandBufferCount = commandBufferCount;
+  return self;
+}
+       
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPCommandBufferDeviceMasks(self, uint[] pCommandBufferDeviceMasks) {
+  self.commandBufferCount = (uint)pCommandBufferDeviceMasks.len;
+  self.pCommandBufferDeviceMasks = &pCommandBufferDeviceMasks[0];
+  return self;
+}
+
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreCount(self, uint signalSemaphoreCount) {
+  self.signalSemaphoreCount = signalSemaphoreCount;
+  return self;
+}
+       
+fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setPSignalSemaphoreDeviceIndices(self, uint[] pSignalSemaphoreDeviceIndices) {
+  self.signalSemaphoreCount = (uint)pSignalSemaphoreDeviceIndices.len;
+  self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
+  return self;
+}
+
+
+
+fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfoBuilder() {
+  DeviceGroupBindSparseInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setResourceDeviceIndex(self, uint resourceDeviceIndex) {
+  self.resourceDeviceIndex = resourceDeviceIndex;
+  return self;
+}
+       
+fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setMemoryDeviceIndex(self, uint memoryDeviceIndex) {
+  self.memoryDeviceIndex = memoryDeviceIndex;
+  return self;
+}
+       
+
+
+fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfoBuilder() {
+  BindBufferMemoryDeviceGroupInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
+  self.deviceIndexCount = deviceIndexCount;
+  return self;
+}
+       
+fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setPDeviceIndices(self, uint[] pDeviceIndices) {
+  self.deviceIndexCount = (uint)pDeviceIndices.len;
+  self.pDeviceIndices = &pDeviceIndices[0];
+  return self;
+}
+
+
+
+fn BindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfoBuilder() {
+  BindImageMemoryDeviceGroupInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndexCount(self, uint deviceIndexCount) {
+  self.deviceIndexCount = deviceIndexCount;
+  return self;
+}
+       
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPDeviceIndices(self, uint[] pDeviceIndices) {
+  self.deviceIndexCount = (uint)pDeviceIndices.len;
+  self.pDeviceIndices = &pDeviceIndices[0];
+  return self;
+}
+
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegionCount(self, uint splitInstanceBindRegionCount) {
+  self.splitInstanceBindRegionCount = splitInstanceBindRegionCount;
+  return self;
+}
+       
+fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setPSplitInstanceBindRegions(self, Rect2D[] pSplitInstanceBindRegions) {
+  self.splitInstanceBindRegionCount = (uint)pSplitInstanceBindRegions.len;
+  self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
+  return self;
+}
+
+
+
+fn PhysicalDeviceGroupProperties physicalDeviceGroupPropertiesBuilder() {
+  PhysicalDeviceGroupProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
+  self.physicalDeviceCount = physicalDeviceCount;
+  return self;
+}
+       
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices) {
+  self.physicalDevices = physicalDevices;
+  return self;
+}
+       
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocation(self, Bool32 subsetAllocation) {
+  self.subsetAllocation = subsetAllocation;
+  return self;
+}
+       
+
+
+fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfoBuilder() {
+  DeviceGroupDeviceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDeviceCount(self, uint physicalDeviceCount) {
+  self.physicalDeviceCount = physicalDeviceCount;
+  return self;
+}
+       
+fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPPhysicalDevices(self, PhysicalDevice[] pPhysicalDevices) {
+  self.physicalDeviceCount = (uint)pPhysicalDevices.len;
+  self.pPhysicalDevices = &pPhysicalDevices[0];
+  return self;
+}
+
+
+
+fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2Builder() {
+  BufferMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+
+
+fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2Builder() {
+  ImageMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setImage(self, Image image) {
+  self.image = image;
+  return self;
+}
+       
+
+
+fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2Builder() {
+  ImageSparseMemoryRequirementsInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setImage(self, Image image) {
+  self.image = image;
+  return self;
+}
+       
+
+
+fn MemoryRequirements2 memoryRequirements2Builder() {
+  MemoryRequirements2 defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MemoryRequirements2 MemoryRequirements2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MemoryRequirements2 MemoryRequirements2.setMemoryRequirements(self, MemoryRequirements memoryRequirements) {
+  self.memoryRequirements = memoryRequirements;
+  return self;
+}
+       
+
+
+fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2Builder() {
+  SparseImageMemoryRequirements2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setMemoryRequirements(self, SparseImageMemoryRequirements memoryRequirements) {
+  self.memoryRequirements = memoryRequirements;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceFeatures2 physicalDeviceFeatures2Builder() {
+  PhysicalDeviceFeatures2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setFeatures(self, PhysicalDeviceFeatures features) {
+  self.features = features;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceProperties2 physicalDeviceProperties2Builder() {
+  PhysicalDeviceProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setProperties(self, PhysicalDeviceProperties properties) {
+  self.properties = properties;
+  return self;
+}
+       
+
+
+fn FormatProperties2 formatProperties2Builder() {
+  FormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn FormatProperties2 FormatProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn FormatProperties2 FormatProperties2.setFormatProperties(self, FormatProperties formatProperties) {
+  self.formatProperties = formatProperties;
+  return self;
+}
+       
+
+
+fn ImageFormatProperties2 imageFormatProperties2Builder() {
+  ImageFormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageFormatProperties2 ImageFormatProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageFormatProperties2 ImageFormatProperties2.setImageFormatProperties(self, ImageFormatProperties imageFormatProperties) {
+  self.imageFormatProperties = imageFormatProperties;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2Builder() {
+  PhysicalDeviceImageFormatInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setFormat(self, Format format) {
+  self.format = format;
+  return self;
+}
+       
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setType(self, ImageType type) {
+  self.type = type;
+  return self;
+}
+       
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setTiling(self, ImageTiling tiling) {
+  self.tiling = tiling;
+  return self;
+}
+       
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setUsage(self, ImageUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setFlags(self, ImageCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+
+
+fn QueueFamilyProperties2 queueFamilyProperties2Builder() {
+  QueueFamilyProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn QueueFamilyProperties2 QueueFamilyProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn QueueFamilyProperties2 QueueFamilyProperties2.setQueueFamilyProperties(self, QueueFamilyProperties queueFamilyProperties) {
+  self.queueFamilyProperties = queueFamilyProperties;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2Builder() {
+  PhysicalDeviceMemoryProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setMemoryProperties(self, PhysicalDeviceMemoryProperties memoryProperties) {
+  self.memoryProperties = memoryProperties;
+  return self;
+}
+       
+
+
+fn SparseImageFormatProperties2 sparseImageFormatProperties2Builder() {
+  SparseImageFormatProperties2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SparseImageFormatProperties2 SparseImageFormatProperties2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SparseImageFormatProperties2 SparseImageFormatProperties2.setProperties(self, SparseImageFormatProperties properties) {
+  self.properties = properties;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2Builder() {
+  PhysicalDeviceSparseImageFormatInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setFormat(self, Format format) {
+  self.format = format;
+  return self;
+}
+       
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setType(self, ImageType type) {
+  self.type = type;
+  return self;
+}
+       
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setSamples(self, SampleCountFlagBits samples) {
+  self.samples = samples;
+  return self;
+}
+       
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setUsage(self, ImageUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setTiling(self, ImageTiling tiling) {
+  self.tiling = tiling;
+  return self;
+}
+       
+
+
+fn PhysicalDevicePointClippingProperties physicalDevicePointClippingPropertiesBuilder() {
+  PhysicalDevicePointClippingProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setPointClippingBehavior(self, PointClippingBehavior pointClippingBehavior) {
+  self.pointClippingBehavior = pointClippingBehavior;
+  return self;
+}
+       
+
+
+fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfoBuilder() {
+  RenderPassInputAttachmentAspectCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setAspectReferenceCount(self, uint aspectReferenceCount) {
+  self.aspectReferenceCount = aspectReferenceCount;
+  return self;
+}
+       
+fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setPAspectReferences(self, InputAttachmentAspectReference[] pAspectReferences) {
+  self.aspectReferenceCount = (uint)pAspectReferences.len;
+  self.pAspectReferences = &pAspectReferences[0];
+  return self;
+}
+
+
+
+fn ImageViewUsageCreateInfo imageViewUsageCreateInfoBuilder() {
+  ImageViewUsageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setUsage(self, ImageUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+
+
+fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfoBuilder() {
+  PipelineTessellationDomainOriginStateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setDomainOrigin(self, TessellationDomainOrigin domainOrigin) {
+  self.domainOrigin = domainOrigin;
+  return self;
+}
+       
+
+
+fn RenderPassMultiviewCreateInfo renderPassMultiviewCreateInfoBuilder() {
+  RenderPassMultiviewCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setSubpassCount(self, uint subpassCount) {
+  self.subpassCount = subpassCount;
+  return self;
+}
+       
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPViewMasks(self, uint[] pViewMasks) {
+  self.subpassCount = (uint)pViewMasks.len;
+  self.pViewMasks = &pViewMasks[0];
+  return self;
+}
+
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setDependencyCount(self, uint dependencyCount) {
+  self.dependencyCount = dependencyCount;
+  return self;
+}
+       
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPViewOffsets(self, int[] pViewOffsets) {
+  self.dependencyCount = (uint)pViewOffsets.len;
+  self.pViewOffsets = &pViewOffsets[0];
+  return self;
+}
+
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMaskCount(self, uint correlationMaskCount) {
+  self.correlationMaskCount = correlationMaskCount;
+  return self;
+}
+       
+fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setPCorrelationMasks(self, uint[] pCorrelationMasks) {
+  self.correlationMaskCount = (uint)pCorrelationMasks.len;
+  self.pCorrelationMasks = &pCorrelationMasks[0];
+  return self;
+}
+
+
+
+fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeaturesBuilder() {
+  PhysicalDeviceMultiviewFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiview(self, Bool32 multiview) {
+  self.multiview = multiview;
+  return self;
+}
+       
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiviewGeometryShader(self, Bool32 multiviewGeometryShader) {
+  self.multiviewGeometryShader = multiviewGeometryShader;
+  return self;
+}
+       
+fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiviewTessellationShader(self, Bool32 multiviewTessellationShader) {
+  self.multiviewTessellationShader = multiviewTessellationShader;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceMultiviewProperties physicalDeviceMultiviewPropertiesBuilder() {
+  PhysicalDeviceMultiviewProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setMaxMultiviewViewCount(self, uint maxMultiviewViewCount) {
+  self.maxMultiviewViewCount = maxMultiviewViewCount;
+  return self;
+}
+       
+fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setMaxMultiviewInstanceIndex(self, uint maxMultiviewInstanceIndex) {
+  self.maxMultiviewInstanceIndex = maxMultiviewInstanceIndex;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeaturesBuilder() {
+  PhysicalDeviceVariablePointersFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setVariablePointersStorageBuffer(self, Bool32 variablePointersStorageBuffer) {
+  self.variablePointersStorageBuffer = variablePointersStorageBuffer;
+  return self;
+}
+       
+fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setVariablePointers(self, Bool32 variablePointers) {
+  self.variablePointers = variablePointers;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeaturesBuilder() {
+  PhysicalDeviceProtectedMemoryFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setProtectedMemory(self, Bool32 protectedMemory) {
+  self.protectedMemory = protectedMemory;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryPropertiesBuilder() {
+  PhysicalDeviceProtectedMemoryProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setProtectedNoFault(self, Bool32 protectedNoFault) {
+  self.protectedNoFault = protectedNoFault;
+  return self;
+}
+       
+
+
+fn DeviceQueueInfo2 deviceQueueInfo2Builder() {
+  DeviceQueueInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceQueueInfo2 DeviceQueueInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceQueueInfo2 DeviceQueueInfo2.setFlags(self, DeviceQueueCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueFamilyIndex(self, uint queueFamilyIndex) {
+  self.queueFamilyIndex = queueFamilyIndex;
+  return self;
+}
+       
+fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueIndex(self, uint queueIndex) {
+  self.queueIndex = queueIndex;
+  return self;
+}
+       
+
+
+fn ProtectedSubmitInfo protectedSubmitInfoBuilder() {
+  ProtectedSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ProtectedSubmitInfo ProtectedSubmitInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ProtectedSubmitInfo ProtectedSubmitInfo.setProtectedSubmit(self, Bool32 protectedSubmit) {
+  self.protectedSubmit = protectedSubmit;
+  return self;
+}
+       
+
+
+fn SamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfoBuilder() {
+  SamplerYcbcrConversionCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setFormat(self, Format format) {
+  self.format = format;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYcbcrModel(self, SamplerYcbcrModelConversion ycbcrModel) {
+  self.ycbcrModel = ycbcrModel;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYcbcrRange(self, SamplerYcbcrRange ycbcrRange) {
+  self.ycbcrRange = ycbcrRange;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setComponents(self, ComponentMapping components) {
+  self.components = components;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setXChromaOffset(self, ChromaLocation xChromaOffset) {
+  self.xChromaOffset = xChromaOffset;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setYChromaOffset(self, ChromaLocation yChromaOffset) {
+  self.yChromaOffset = yChromaOffset;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setChromaFilter(self, Filter chromaFilter) {
+  self.chromaFilter = chromaFilter;
+  return self;
+}
+       
+fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setForceExplicitReconstruction(self, Bool32 forceExplicitReconstruction) {
+  self.forceExplicitReconstruction = forceExplicitReconstruction;
+  return self;
+}
+       
+
+
+fn SamplerYcbcrConversionInfo samplerYcbcrConversionInfoBuilder() {
+  SamplerYcbcrConversionInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setConversion(self, SamplerYcbcrConversion conversion) {
+  self.conversion = conversion;
+  return self;
+}
+       
+
+
+fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfoBuilder() {
+  BindImagePlaneMemoryInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPlaneAspect(self, ImageAspectFlagBits planeAspect) {
+  self.planeAspect = planeAspect;
+  return self;
+}
+       
+
+
+fn ImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfoBuilder() {
+  ImagePlaneMemoryRequirementsInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPlaneAspect(self, ImageAspectFlagBits planeAspect) {
+  self.planeAspect = planeAspect;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeaturesBuilder() {
+  PhysicalDeviceSamplerYcbcrConversionFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setSamplerYcbcrConversion(self, Bool32 samplerYcbcrConversion) {
+  self.samplerYcbcrConversion = samplerYcbcrConversion;
+  return self;
+}
+       
+
+
+fn SamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatPropertiesBuilder() {
+  SamplerYcbcrConversionImageFormatProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setCombinedImageSamplerDescriptorCount(self, uint combinedImageSamplerDescriptorCount) {
+  self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
+  return self;
+}
+       
+
+
+fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfoBuilder() {
+  DescriptorUpdateTemplateCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setFlags(self, DescriptorUpdateTemplateCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntryCount(self, uint descriptorUpdateEntryCount) {
+  self.descriptorUpdateEntryCount = descriptorUpdateEntryCount;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPDescriptorUpdateEntries(self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
+  self.descriptorUpdateEntryCount = (uint)pDescriptorUpdateEntries.len;
+  self.pDescriptorUpdateEntries = &pDescriptorUpdateEntries[0];
+  return self;
+}
+
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setTemplateType(self, DescriptorUpdateTemplateType templateType) {
+  self.templateType = templateType;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorSetLayout(self, DescriptorSetLayout descriptorSetLayout) {
+  self.descriptorSetLayout = descriptorSetLayout;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPipelineBindPoint(self, PipelineBindPoint pipelineBindPoint) {
+  self.pipelineBindPoint = pipelineBindPoint;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setPipelineLayout(self, PipelineLayout pipelineLayout) {
+  self.pipelineLayout = pipelineLayout;
+  return self;
+}
+       
+fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setSet(self, uint set) {
+  self.set = set;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfoBuilder() {
+  PhysicalDeviceExternalImageFormatInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setHandleType(self, ExternalMemoryHandleTypeFlagBits handleType) {
+  self.handleType = handleType;
+  return self;
+}
+       
+
+
+fn ExternalImageFormatProperties externalImageFormatPropertiesBuilder() {
+  ExternalImageFormatProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalImageFormatProperties ExternalImageFormatProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalImageFormatProperties ExternalImageFormatProperties.setExternalMemoryProperties(self, ExternalMemoryProperties externalMemoryProperties) {
+  self.externalMemoryProperties = externalMemoryProperties;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfoBuilder() {
+  PhysicalDeviceExternalBufferInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setFlags(self, BufferCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setUsage(self, BufferUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setHandleType(self, ExternalMemoryHandleTypeFlagBits handleType) {
+  self.handleType = handleType;
+  return self;
+}
+       
+
+
+fn ExternalBufferProperties externalBufferPropertiesBuilder() {
+  ExternalBufferProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalBufferProperties ExternalBufferProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalBufferProperties ExternalBufferProperties.setExternalMemoryProperties(self, ExternalMemoryProperties externalMemoryProperties) {
+  self.externalMemoryProperties = externalMemoryProperties;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceIDProperties physicalDeviceIDPropertiesBuilder() {
+  PhysicalDeviceIDProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceUUID(self, uint[UUID_SIZE] deviceUUID) {
+  self.deviceUUID = deviceUUID;
+  return self;
+}
+       
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDriverUUID(self, uint[UUID_SIZE] driverUUID) {
+  self.driverUUID = driverUUID;
+  return self;
+}
+       
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUID(self, uint[LUID_SIZE] deviceLUID) {
+  self.deviceLUID = deviceLUID;
+  return self;
+}
+       
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceNodeMask(self, uint deviceNodeMask) {
+  self.deviceNodeMask = deviceNodeMask;
+  return self;
+}
+       
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUIDValid(self, Bool32 deviceLUIDValid) {
+  self.deviceLUIDValid = deviceLUIDValid;
+  return self;
+}
+       
+
+
+fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfoBuilder() {
+  ExternalMemoryImageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
+  self.handleTypes = handleTypes;
+  return self;
+}
+       
+
+
+fn ExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfoBuilder() {
+  ExternalMemoryBufferCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
+  self.handleTypes = handleTypes;
+  return self;
+}
+       
+
+
+fn ExportMemoryAllocateInfo exportMemoryAllocateInfoBuilder() {
+  ExportMemoryAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setHandleTypes(self, ExternalMemoryHandleTypeFlags handleTypes) {
+  self.handleTypes = handleTypes;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfoBuilder() {
+  PhysicalDeviceExternalFenceInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setHandleType(self, ExternalFenceHandleTypeFlagBits handleType) {
+  self.handleType = handleType;
+  return self;
+}
+       
+
+
+fn ExternalFenceProperties externalFencePropertiesBuilder() {
+  ExternalFenceProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalFenceProperties ExternalFenceProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalFenceProperties ExternalFenceProperties.setExportFromImportedHandleTypes(self, ExternalFenceHandleTypeFlags exportFromImportedHandleTypes) {
+  self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
+  return self;
+}
+       
+fn ExternalFenceProperties ExternalFenceProperties.setCompatibleHandleTypes(self, ExternalFenceHandleTypeFlags compatibleHandleTypes) {
+  self.compatibleHandleTypes = compatibleHandleTypes;
+  return self;
+}
+       
+fn ExternalFenceProperties ExternalFenceProperties.setExternalFenceFeatures(self, ExternalFenceFeatureFlags externalFenceFeatures) {
+  self.externalFenceFeatures = externalFenceFeatures;
+  return self;
+}
+       
+
+
+fn ExportFenceCreateInfo exportFenceCreateInfoBuilder() {
+  ExportFenceCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExportFenceCreateInfo ExportFenceCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExportFenceCreateInfo ExportFenceCreateInfo.setHandleTypes(self, ExternalFenceHandleTypeFlags handleTypes) {
+  self.handleTypes = handleTypes;
+  return self;
+}
+       
+
+
+fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfoBuilder() {
+  ExportSemaphoreCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setHandleTypes(self, ExternalSemaphoreHandleTypeFlags handleTypes) {
+  self.handleTypes = handleTypes;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfoBuilder() {
+  PhysicalDeviceExternalSemaphoreInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setHandleType(self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+  self.handleType = handleType;
+  return self;
+}
+       
+
+
+fn ExternalSemaphoreProperties externalSemaphorePropertiesBuilder() {
+  ExternalSemaphoreProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExportFromImportedHandleTypes(self, ExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes) {
+  self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
+  return self;
+}
+       
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setCompatibleHandleTypes(self, ExternalSemaphoreHandleTypeFlags compatibleHandleTypes) {
+  self.compatibleHandleTypes = compatibleHandleTypes;
+  return self;
+}
+       
+fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExternalSemaphoreFeatures(self, ExternalSemaphoreFeatureFlags externalSemaphoreFeatures) {
+  self.externalSemaphoreFeatures = externalSemaphoreFeatures;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3PropertiesBuilder() {
+  PhysicalDeviceMaintenance3Properties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setMaxPerSetDescriptors(self, uint maxPerSetDescriptors) {
+  self.maxPerSetDescriptors = maxPerSetDescriptors;
+  return self;
+}
+       
+fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setMaxMemoryAllocationSize(self, DeviceSize maxMemoryAllocationSize) {
+  self.maxMemoryAllocationSize = maxMemoryAllocationSize;
+  return self;
+}
+       
+
+
+fn DescriptorSetLayoutSupport descriptorSetLayoutSupportBuilder() {
+  DescriptorSetLayoutSupport defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setSupported(self, Bool32 supported) {
+  self.supported = supported;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParametersFeaturesBuilder() {
+  PhysicalDeviceShaderDrawParametersFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setShaderDrawParameters(self, Bool32 shaderDrawParameters) {
+  self.shaderDrawParameters = shaderDrawParameters;
+  return self;
+}
+       
+
+
+fn ImageFormatListCreateInfo imageFormatListCreateInfoBuilder() {
+  ImageFormatListCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormatCount(self, uint viewFormatCount) {
+  self.viewFormatCount = viewFormatCount;
+  return self;
+}
+       
+fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setPViewFormats(self, Format[] pViewFormats) {
+  self.viewFormatCount = (uint)pViewFormats.len;
+  self.pViewFormats = &pViewFormats[0];
+  return self;
+}
+
+
+
+fn RenderPassCreateInfo2 renderPassCreateInfo2Builder() {
+  RenderPassCreateInfo2 defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setFlags(self, RenderPassCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachmentCount(self, uint attachmentCount) {
+  self.attachmentCount = attachmentCount;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPAttachments(self, AttachmentDescription2[] pAttachments) {
+  self.attachmentCount = (uint)pAttachments.len;
+  self.pAttachments = &pAttachments[0];
+  return self;
+}
+
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpassCount(self, uint subpassCount) {
+  self.subpassCount = subpassCount;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPSubpasses(self, SubpassDescription2[] pSubpasses) {
+  self.subpassCount = (uint)pSubpasses.len;
+  self.pSubpasses = &pSubpasses[0];
+  return self;
+}
+
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencyCount(self, uint dependencyCount) {
+  self.dependencyCount = dependencyCount;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPDependencies(self, SubpassDependency2[] pDependencies) {
+  self.dependencyCount = (uint)pDependencies.len;
+  self.pDependencies = &pDependencies[0];
+  return self;
+}
+
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMaskCount(self, uint correlatedViewMaskCount) {
+  self.correlatedViewMaskCount = correlatedViewMaskCount;
+  return self;
+}
+       
+fn RenderPassCreateInfo2 RenderPassCreateInfo2.setPCorrelatedViewMasks(self, uint[] pCorrelatedViewMasks) {
+  self.correlatedViewMaskCount = (uint)pCorrelatedViewMasks.len;
+  self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
+  return self;
+}
+
+
+
+fn AttachmentDescription2 attachmentDescription2Builder() {
+  AttachmentDescription2 defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn AttachmentDescription2 AttachmentDescription2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setFlags(self, AttachmentDescriptionFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setFormat(self, Format format) {
+  self.format = format;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setSamples(self, SampleCountFlagBits samples) {
+  self.samples = samples;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setLoadOp(self, AttachmentLoadOp loadOp) {
+  self.loadOp = loadOp;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setStoreOp(self, AttachmentStoreOp storeOp) {
+  self.storeOp = storeOp;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setStencilLoadOp(self, AttachmentLoadOp stencilLoadOp) {
+  self.stencilLoadOp = stencilLoadOp;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setStencilStoreOp(self, AttachmentStoreOp stencilStoreOp) {
+  self.stencilStoreOp = stencilStoreOp;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setInitialLayout(self, ImageLayout initialLayout) {
+  self.initialLayout = initialLayout;
+  return self;
+}
+       
+fn AttachmentDescription2 AttachmentDescription2.setFinalLayout(self, ImageLayout finalLayout) {
+  self.finalLayout = finalLayout;
+  return self;
+}
+       
+
+
+fn AttachmentReference2 attachmentReference2Builder() {
+  AttachmentReference2 defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn AttachmentReference2 AttachmentReference2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn AttachmentReference2 AttachmentReference2.setAttachment(self, uint attachment) {
+  self.attachment = attachment;
+  return self;
+}
+       
+fn AttachmentReference2 AttachmentReference2.setLayout(self, ImageLayout layout) {
+  self.layout = layout;
+  return self;
+}
+       
+fn AttachmentReference2 AttachmentReference2.setAspectMask(self, ImageAspectFlags aspectMask) {
+  self.aspectMask = aspectMask;
+  return self;
+}
+       
+
+
+fn SubpassDescription2 subpassDescription2Builder() {
+  SubpassDescription2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SubpassDescription2 SubpassDescription2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setFlags(self, SubpassDescriptionFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setPipelineBindPoint(self, PipelineBindPoint pipelineBindPoint) {
+  self.pipelineBindPoint = pipelineBindPoint;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setViewMask(self, uint viewMask) {
+  self.viewMask = viewMask;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setInputAttachmentCount(self, uint inputAttachmentCount) {
+  self.inputAttachmentCount = inputAttachmentCount;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setPInputAttachments(self, AttachmentReference2[] pInputAttachments) {
+  self.inputAttachmentCount = (uint)pInputAttachments.len;
+  self.pInputAttachments = &pInputAttachments[0];
+  return self;
+}
+
+fn SubpassDescription2 SubpassDescription2.setColorAttachmentCount(self, uint colorAttachmentCount) {
+  self.colorAttachmentCount = colorAttachmentCount;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setPColorAttachments(self, AttachmentReference2[] pColorAttachments) {
+  self.colorAttachmentCount = (uint)pColorAttachments.len;
+  self.pColorAttachments = &pColorAttachments[0];
+  return self;
+}
+
+fn SubpassDescription2 SubpassDescription2.setPResolveAttachments(self, AttachmentReference2[] pResolveAttachments) {
+  self.colorAttachmentCount = (uint)pResolveAttachments.len;
+  self.pResolveAttachments = &pResolveAttachments[0];
+  return self;
+}
+
+fn SubpassDescription2 SubpassDescription2.setPDepthStencilAttachment(self, AttachmentReference2* pDepthStencilAttachment) {
+  self.pDepthStencilAttachment = pDepthStencilAttachment;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setPreserveAttachmentCount(self, uint preserveAttachmentCount) {
+  self.preserveAttachmentCount = preserveAttachmentCount;
+  return self;
+}
+       
+fn SubpassDescription2 SubpassDescription2.setPPreserveAttachments(self, uint[] pPreserveAttachments) {
+  self.preserveAttachmentCount = (uint)pPreserveAttachments.len;
+  self.pPreserveAttachments = &pPreserveAttachments[0];
+  return self;
+}
+
+
+
+fn SubpassDependency2 subpassDependency2Builder() {
+  SubpassDependency2 defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SubpassDependency2 SubpassDependency2.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setSrcSubpass(self, uint srcSubpass) {
+  self.srcSubpass = srcSubpass;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setDstSubpass(self, uint dstSubpass) {
+  self.dstSubpass = dstSubpass;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setSrcStageMask(self, PipelineStageFlags srcStageMask) {
+  self.srcStageMask = srcStageMask;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setDstStageMask(self, PipelineStageFlags dstStageMask) {
+  self.dstStageMask = dstStageMask;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setSrcAccessMask(self, AccessFlags srcAccessMask) {
+  self.srcAccessMask = srcAccessMask;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setDstAccessMask(self, AccessFlags dstAccessMask) {
+  self.dstAccessMask = dstAccessMask;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setDependencyFlags(self, DependencyFlags dependencyFlags) {
+  self.dependencyFlags = dependencyFlags;
+  return self;
+}
+       
+fn SubpassDependency2 SubpassDependency2.setViewOffset(self, int viewOffset) {
+  self.viewOffset = viewOffset;
+  return self;
+}
+       
+
+
+fn SubpassBeginInfo subpassBeginInfoBuilder() {
+  SubpassBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SubpassBeginInfo SubpassBeginInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SubpassBeginInfo SubpassBeginInfo.setContents(self, SubpassContents contents) {
+  self.contents = contents;
+  return self;
+}
+       
+
+
+fn SubpassEndInfo subpassEndInfoBuilder() {
+  SubpassEndInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_END_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SubpassEndInfo SubpassEndInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+
+
+fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeaturesBuilder() {
+  PhysicalDevice8BitStorageFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStorageBuffer8BitAccess(self, Bool32 storageBuffer8BitAccess) {
+  self.storageBuffer8BitAccess = storageBuffer8BitAccess;
+  return self;
+}
+       
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setUniformAndStorageBuffer8BitAccess(self, Bool32 uniformAndStorageBuffer8BitAccess) {
+  self.uniformAndStorageBuffer8BitAccess = uniformAndStorageBuffer8BitAccess;
+  return self;
+}
+       
+fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStoragePushConstant8(self, Bool32 storagePushConstant8) {
+  self.storagePushConstant8 = storagePushConstant8;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDriverProperties physicalDeviceDriverPropertiesBuilder() {
+  PhysicalDeviceDriverProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverID(self, DriverId driverID) {
+  self.driverID = driverID;
+  return self;
+}
+       
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverName(self, char[MAX_DRIVER_NAME_SIZE] driverName) {
+  self.driverName = driverName;
+  return self;
+}
+       
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setDriverInfo(self, char[MAX_DRIVER_INFO_SIZE] driverInfo) {
+  self.driverInfo = driverInfo;
+  return self;
+}
+       
+fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setConformanceVersion(self, ConformanceVersion conformanceVersion) {
+  self.conformanceVersion = conformanceVersion;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64FeaturesBuilder() {
+  PhysicalDeviceShaderAtomicInt64Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setShaderBufferInt64Atomics(self, Bool32 shaderBufferInt64Atomics) {
+  self.shaderBufferInt64Atomics = shaderBufferInt64Atomics;
+  return self;
+}
+       
+fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setShaderSharedInt64Atomics(self, Bool32 shaderSharedInt64Atomics) {
+  self.shaderSharedInt64Atomics = shaderSharedInt64Atomics;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8FeaturesBuilder() {
+  PhysicalDeviceShaderFloat16Int8Features defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setShaderFloat16(self, Bool32 shaderFloat16) {
+  self.shaderFloat16 = shaderFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setShaderInt8(self, Bool32 shaderInt8) {
+  self.shaderInt8 = shaderInt8;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsPropertiesBuilder() {
+  PhysicalDeviceFloatControlsProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setDenormBehaviorIndependence(self, ShaderFloatControlsIndependence denormBehaviorIndependence) {
+  self.denormBehaviorIndependence = denormBehaviorIndependence;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setRoundingModeIndependence(self, ShaderFloatControlsIndependence roundingModeIndependence) {
+  self.roundingModeIndependence = roundingModeIndependence;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat16(self, Bool32 shaderSignedZeroInfNanPreserveFloat16) {
+  self.shaderSignedZeroInfNanPreserveFloat16 = shaderSignedZeroInfNanPreserveFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat32(self, Bool32 shaderSignedZeroInfNanPreserveFloat32) {
+  self.shaderSignedZeroInfNanPreserveFloat32 = shaderSignedZeroInfNanPreserveFloat32;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderSignedZeroInfNanPreserveFloat64(self, Bool32 shaderSignedZeroInfNanPreserveFloat64) {
+  self.shaderSignedZeroInfNanPreserveFloat64 = shaderSignedZeroInfNanPreserveFloat64;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat16(self, Bool32 shaderDenormPreserveFloat16) {
+  self.shaderDenormPreserveFloat16 = shaderDenormPreserveFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat32(self, Bool32 shaderDenormPreserveFloat32) {
+  self.shaderDenormPreserveFloat32 = shaderDenormPreserveFloat32;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormPreserveFloat64(self, Bool32 shaderDenormPreserveFloat64) {
+  self.shaderDenormPreserveFloat64 = shaderDenormPreserveFloat64;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat16(self, Bool32 shaderDenormFlushToZeroFloat16) {
+  self.shaderDenormFlushToZeroFloat16 = shaderDenormFlushToZeroFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat32(self, Bool32 shaderDenormFlushToZeroFloat32) {
+  self.shaderDenormFlushToZeroFloat32 = shaderDenormFlushToZeroFloat32;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderDenormFlushToZeroFloat64(self, Bool32 shaderDenormFlushToZeroFloat64) {
+  self.shaderDenormFlushToZeroFloat64 = shaderDenormFlushToZeroFloat64;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat16(self, Bool32 shaderRoundingModeRTEFloat16) {
+  self.shaderRoundingModeRTEFloat16 = shaderRoundingModeRTEFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat32(self, Bool32 shaderRoundingModeRTEFloat32) {
+  self.shaderRoundingModeRTEFloat32 = shaderRoundingModeRTEFloat32;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTEFloat64(self, Bool32 shaderRoundingModeRTEFloat64) {
+  self.shaderRoundingModeRTEFloat64 = shaderRoundingModeRTEFloat64;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat16(self, Bool32 shaderRoundingModeRTZFloat16) {
+  self.shaderRoundingModeRTZFloat16 = shaderRoundingModeRTZFloat16;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat32(self, Bool32 shaderRoundingModeRTZFloat32) {
+  self.shaderRoundingModeRTZFloat32 = shaderRoundingModeRTZFloat32;
+  return self;
+}
+       
+fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setShaderRoundingModeRTZFloat64(self, Bool32 shaderRoundingModeRTZFloat64) {
+  self.shaderRoundingModeRTZFloat64 = shaderRoundingModeRTZFloat64;
+  return self;
+}
+       
+
+
+fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfoBuilder() {
+  DescriptorSetLayoutBindingFlagsCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingCount(self, uint bindingCount) {
+  self.bindingCount = bindingCount;
+  return self;
+}
+       
+fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setPBindingFlags(self, DescriptorBindingFlags[] pBindingFlags) {
+  self.bindingCount = (uint)pBindingFlags.len;
+  self.pBindingFlags = &pBindingFlags[0];
+  return self;
+}
+
+
+
+fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeaturesBuilder() {
+  PhysicalDeviceDescriptorIndexingFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayDynamicIndexing(self, Bool32 shaderInputAttachmentArrayDynamicIndexing) {
+  self.shaderInputAttachmentArrayDynamicIndexing = shaderInputAttachmentArrayDynamicIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayDynamicIndexing(self, Bool32 shaderUniformTexelBufferArrayDynamicIndexing) {
+  self.shaderUniformTexelBufferArrayDynamicIndexing = shaderUniformTexelBufferArrayDynamicIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayDynamicIndexing(self, Bool32 shaderStorageTexelBufferArrayDynamicIndexing) {
+  self.shaderStorageTexelBufferArrayDynamicIndexing = shaderStorageTexelBufferArrayDynamicIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformBufferArrayNonUniformIndexing(self, Bool32 shaderUniformBufferArrayNonUniformIndexing) {
+  self.shaderUniformBufferArrayNonUniformIndexing = shaderUniformBufferArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderSampledImageArrayNonUniformIndexing(self, Bool32 shaderSampledImageArrayNonUniformIndexing) {
+  self.shaderSampledImageArrayNonUniformIndexing = shaderSampledImageArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageBufferArrayNonUniformIndexing(self, Bool32 shaderStorageBufferArrayNonUniformIndexing) {
+  self.shaderStorageBufferArrayNonUniformIndexing = shaderStorageBufferArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageImageArrayNonUniformIndexing(self, Bool32 shaderStorageImageArrayNonUniformIndexing) {
+  self.shaderStorageImageArrayNonUniformIndexing = shaderStorageImageArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderInputAttachmentArrayNonUniformIndexing(self, Bool32 shaderInputAttachmentArrayNonUniformIndexing) {
+  self.shaderInputAttachmentArrayNonUniformIndexing = shaderInputAttachmentArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderUniformTexelBufferArrayNonUniformIndexing(self, Bool32 shaderUniformTexelBufferArrayNonUniformIndexing) {
+  self.shaderUniformTexelBufferArrayNonUniformIndexing = shaderUniformTexelBufferArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setShaderStorageTexelBufferArrayNonUniformIndexing(self, Bool32 shaderStorageTexelBufferArrayNonUniformIndexing) {
+  self.shaderStorageTexelBufferArrayNonUniformIndexing = shaderStorageTexelBufferArrayNonUniformIndexing;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformBufferUpdateAfterBind(self, Bool32 descriptorBindingUniformBufferUpdateAfterBind) {
+  self.descriptorBindingUniformBufferUpdateAfterBind = descriptorBindingUniformBufferUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingSampledImageUpdateAfterBind(self, Bool32 descriptorBindingSampledImageUpdateAfterBind) {
+  self.descriptorBindingSampledImageUpdateAfterBind = descriptorBindingSampledImageUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageImageUpdateAfterBind(self, Bool32 descriptorBindingStorageImageUpdateAfterBind) {
+  self.descriptorBindingStorageImageUpdateAfterBind = descriptorBindingStorageImageUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageBufferUpdateAfterBind(self, Bool32 descriptorBindingStorageBufferUpdateAfterBind) {
+  self.descriptorBindingStorageBufferUpdateAfterBind = descriptorBindingStorageBufferUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUniformTexelBufferUpdateAfterBind(self, Bool32 descriptorBindingUniformTexelBufferUpdateAfterBind) {
+  self.descriptorBindingUniformTexelBufferUpdateAfterBind = descriptorBindingUniformTexelBufferUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingStorageTexelBufferUpdateAfterBind(self, Bool32 descriptorBindingStorageTexelBufferUpdateAfterBind) {
+  self.descriptorBindingStorageTexelBufferUpdateAfterBind = descriptorBindingStorageTexelBufferUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingUpdateUnusedWhilePending(self, Bool32 descriptorBindingUpdateUnusedWhilePending) {
+  self.descriptorBindingUpdateUnusedWhilePending = descriptorBindingUpdateUnusedWhilePending;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingPartiallyBound(self, Bool32 descriptorBindingPartiallyBound) {
+  self.descriptorBindingPartiallyBound = descriptorBindingPartiallyBound;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setDescriptorBindingVariableDescriptorCount(self, Bool32 descriptorBindingVariableDescriptorCount) {
+  self.descriptorBindingVariableDescriptorCount = descriptorBindingVariableDescriptorCount;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setRuntimeDescriptorArray(self, Bool32 runtimeDescriptorArray) {
+  self.runtimeDescriptorArray = runtimeDescriptorArray;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingPropertiesBuilder() {
+  PhysicalDeviceDescriptorIndexingProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxUpdateAfterBindDescriptorsInAllPools(self, uint maxUpdateAfterBindDescriptorsInAllPools) {
+  self.maxUpdateAfterBindDescriptorsInAllPools = maxUpdateAfterBindDescriptorsInAllPools;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderUniformBufferArrayNonUniformIndexingNative(self, Bool32 shaderUniformBufferArrayNonUniformIndexingNative) {
+  self.shaderUniformBufferArrayNonUniformIndexingNative = shaderUniformBufferArrayNonUniformIndexingNative;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderSampledImageArrayNonUniformIndexingNative(self, Bool32 shaderSampledImageArrayNonUniformIndexingNative) {
+  self.shaderSampledImageArrayNonUniformIndexingNative = shaderSampledImageArrayNonUniformIndexingNative;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderStorageBufferArrayNonUniformIndexingNative(self, Bool32 shaderStorageBufferArrayNonUniformIndexingNative) {
+  self.shaderStorageBufferArrayNonUniformIndexingNative = shaderStorageBufferArrayNonUniformIndexingNative;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderStorageImageArrayNonUniformIndexingNative(self, Bool32 shaderStorageImageArrayNonUniformIndexingNative) {
+  self.shaderStorageImageArrayNonUniformIndexingNative = shaderStorageImageArrayNonUniformIndexingNative;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setShaderInputAttachmentArrayNonUniformIndexingNative(self, Bool32 shaderInputAttachmentArrayNonUniformIndexingNative) {
+  self.shaderInputAttachmentArrayNonUniformIndexingNative = shaderInputAttachmentArrayNonUniformIndexingNative;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setRobustBufferAccessUpdateAfterBind(self, Bool32 robustBufferAccessUpdateAfterBind) {
+  self.robustBufferAccessUpdateAfterBind = robustBufferAccessUpdateAfterBind;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setQuadDivergentImplicitLod(self, Bool32 quadDivergentImplicitLod) {
+  self.quadDivergentImplicitLod = quadDivergentImplicitLod;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSamplers(self, uint maxPerStageDescriptorUpdateAfterBindSamplers) {
+  self.maxPerStageDescriptorUpdateAfterBindSamplers = maxPerStageDescriptorUpdateAfterBindSamplers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindUniformBuffers(self, uint maxPerStageDescriptorUpdateAfterBindUniformBuffers) {
+  self.maxPerStageDescriptorUpdateAfterBindUniformBuffers = maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageBuffers(self, uint maxPerStageDescriptorUpdateAfterBindStorageBuffers) {
+  self.maxPerStageDescriptorUpdateAfterBindStorageBuffers = maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindSampledImages(self, uint maxPerStageDescriptorUpdateAfterBindSampledImages) {
+  self.maxPerStageDescriptorUpdateAfterBindSampledImages = maxPerStageDescriptorUpdateAfterBindSampledImages;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindStorageImages(self, uint maxPerStageDescriptorUpdateAfterBindStorageImages) {
+  self.maxPerStageDescriptorUpdateAfterBindStorageImages = maxPerStageDescriptorUpdateAfterBindStorageImages;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageDescriptorUpdateAfterBindInputAttachments(self, uint maxPerStageDescriptorUpdateAfterBindInputAttachments) {
+  self.maxPerStageDescriptorUpdateAfterBindInputAttachments = maxPerStageDescriptorUpdateAfterBindInputAttachments;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxPerStageUpdateAfterBindResources(self, uint maxPerStageUpdateAfterBindResources) {
+  self.maxPerStageUpdateAfterBindResources = maxPerStageUpdateAfterBindResources;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSamplers(self, uint maxDescriptorSetUpdateAfterBindSamplers) {
+  self.maxDescriptorSetUpdateAfterBindSamplers = maxDescriptorSetUpdateAfterBindSamplers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffers(self, uint maxDescriptorSetUpdateAfterBindUniformBuffers) {
+  self.maxDescriptorSetUpdateAfterBindUniformBuffers = maxDescriptorSetUpdateAfterBindUniformBuffers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic) {
+  self.maxDescriptorSetUpdateAfterBindUniformBuffersDynamic = maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffers(self, uint maxDescriptorSetUpdateAfterBindStorageBuffers) {
+  self.maxDescriptorSetUpdateAfterBindStorageBuffers = maxDescriptorSetUpdateAfterBindStorageBuffers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic(self, uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic) {
+  self.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic = maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindSampledImages(self, uint maxDescriptorSetUpdateAfterBindSampledImages) {
+  self.maxDescriptorSetUpdateAfterBindSampledImages = maxDescriptorSetUpdateAfterBindSampledImages;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindStorageImages(self, uint maxDescriptorSetUpdateAfterBindStorageImages) {
+  self.maxDescriptorSetUpdateAfterBindStorageImages = maxDescriptorSetUpdateAfterBindStorageImages;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setMaxDescriptorSetUpdateAfterBindInputAttachments(self, uint maxDescriptorSetUpdateAfterBindInputAttachments) {
+  self.maxDescriptorSetUpdateAfterBindInputAttachments = maxDescriptorSetUpdateAfterBindInputAttachments;
+  return self;
+}
+       
+
+
+fn DescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescriptorCountAllocateInfoBuilder() {
+  DescriptorSetVariableDescriptorCountAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorSetCount(self, uint descriptorSetCount) {
+  self.descriptorSetCount = descriptorSetCount;
+  return self;
+}
+       
+fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setPDescriptorCounts(self, uint[] pDescriptorCounts) {
+  self.descriptorSetCount = (uint)pDescriptorCounts.len;
+  self.pDescriptorCounts = &pDescriptorCounts[0];
+  return self;
+}
+
+
+
+fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupportBuilder() {
+  DescriptorSetVariableDescriptorCountLayoutSupport defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setMaxVariableDescriptorCount(self, uint maxVariableDescriptorCount) {
+  self.maxVariableDescriptorCount = maxVariableDescriptorCount;
+  return self;
+}
+       
+
+
+fn SubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolveBuilder() {
+  SubpassDescriptionDepthStencilResolve defaultValue = {
+    .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setDepthResolveMode(self, ResolveModeFlagBits depthResolveMode) {
+  self.depthResolveMode = depthResolveMode;
+  return self;
+}
+       
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setStencilResolveMode(self, ResolveModeFlagBits stencilResolveMode) {
+  self.stencilResolveMode = stencilResolveMode;
+  return self;
+}
+       
+fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setPDepthStencilResolveAttachment(self, AttachmentReference2* pDepthStencilResolveAttachment) {
+  self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolvePropertiesBuilder() {
+  PhysicalDeviceDepthStencilResolveProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setSupportedDepthResolveModes(self, ResolveModeFlags supportedDepthResolveModes) {
+  self.supportedDepthResolveModes = supportedDepthResolveModes;
+  return self;
+}
+       
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setSupportedStencilResolveModes(self, ResolveModeFlags supportedStencilResolveModes) {
+  self.supportedStencilResolveModes = supportedStencilResolveModes;
+  return self;
+}
+       
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setIndependentResolveNone(self, Bool32 independentResolveNone) {
+  self.independentResolveNone = independentResolveNone;
+  return self;
+}
+       
+fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setIndependentResolve(self, Bool32 independentResolve) {
+  self.independentResolve = independentResolve;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeaturesBuilder() {
+  PhysicalDeviceScalarBlockLayoutFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setScalarBlockLayout(self, Bool32 scalarBlockLayout) {
+  self.scalarBlockLayout = scalarBlockLayout;
+  return self;
+}
+       
+
+
+fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfoBuilder() {
+  ImageStencilUsageCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setStencilUsage(self, ImageUsageFlags stencilUsage) {
+  self.stencilUsage = stencilUsage;
+  return self;
+}
+       
+
+
+fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfoBuilder() {
+  SamplerReductionModeCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setReductionMode(self, SamplerReductionMode reductionMode) {
+  self.reductionMode = reductionMode;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxPropertiesBuilder() {
+  PhysicalDeviceSamplerFilterMinmaxProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxSingleComponentFormats(self, Bool32 filterMinmaxSingleComponentFormats) {
+  self.filterMinmaxSingleComponentFormats = filterMinmaxSingleComponentFormats;
+  return self;
+}
+       
+fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxImageComponentMapping(self, Bool32 filterMinmaxImageComponentMapping) {
+  self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeaturesBuilder() {
+  PhysicalDeviceVulkanMemoryModelFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModel(self, Bool32 vulkanMemoryModel) {
+  self.vulkanMemoryModel = vulkanMemoryModel;
+  return self;
+}
+       
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelDeviceScope(self, Bool32 vulkanMemoryModelDeviceScope) {
+  self.vulkanMemoryModelDeviceScope = vulkanMemoryModelDeviceScope;
+  return self;
+}
+       
+fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setVulkanMemoryModelAvailabilityVisibilityChains(self, Bool32 vulkanMemoryModelAvailabilityVisibilityChains) {
+  self.vulkanMemoryModelAvailabilityVisibilityChains = vulkanMemoryModelAvailabilityVisibilityChains;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeaturesBuilder() {
+  PhysicalDeviceImagelessFramebufferFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setImagelessFramebuffer(self, Bool32 imagelessFramebuffer) {
+  self.imagelessFramebuffer = imagelessFramebuffer;
+  return self;
+}
+       
+
+
+fn FramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfoBuilder() {
+  FramebufferAttachmentsCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfoCount(self, uint attachmentImageInfoCount) {
+  self.attachmentImageInfoCount = attachmentImageInfoCount;
+  return self;
+}
+       
+fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setPAttachmentImageInfos(self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
+  self.attachmentImageInfoCount = (uint)pAttachmentImageInfos.len;
+  self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
+  return self;
+}
+
+
+
+fn FramebufferAttachmentImageInfo framebufferAttachmentImageInfoBuilder() {
+  FramebufferAttachmentImageInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setFlags(self, ImageCreateFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setUsage(self, ImageUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setWidth(self, uint width) {
+  self.width = width;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setHeight(self, uint height) {
+  self.height = height;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setLayerCount(self, uint layerCount) {
+  self.layerCount = layerCount;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormatCount(self, uint viewFormatCount) {
+  self.viewFormatCount = viewFormatCount;
+  return self;
+}
+       
+fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setPViewFormats(self, Format[] pViewFormats) {
+  self.viewFormatCount = (uint)pViewFormats.len;
+  self.pViewFormats = &pViewFormats[0];
+  return self;
+}
+
+
+
+fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfoBuilder() {
+  RenderPassAttachmentBeginInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachmentCount(self, uint attachmentCount) {
+  self.attachmentCount = attachmentCount;
+  return self;
+}
+       
+fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setPAttachments(self, ImageView[] pAttachments) {
+  self.attachmentCount = (uint)pAttachments.len;
+  self.pAttachments = &pAttachments[0];
+  return self;
+}
+
+
+
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeaturesBuilder() {
+  PhysicalDeviceUniformBufferStandardLayoutFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setUniformBufferStandardLayout(self, Bool32 uniformBufferStandardLayout) {
+  self.uniformBufferStandardLayout = uniformBufferStandardLayout;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgroupExtendedTypesFeaturesBuilder() {
+  PhysicalDeviceShaderSubgroupExtendedTypesFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setShaderSubgroupExtendedTypes(self, Bool32 shaderSubgroupExtendedTypes) {
+  self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeaturesBuilder() {
+  PhysicalDeviceSeparateDepthStencilLayoutsFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setSeparateDepthStencilLayouts(self, Bool32 separateDepthStencilLayouts) {
+  self.separateDepthStencilLayouts = separateDepthStencilLayouts;
+  return self;
+}
+       
+
+
+fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayoutBuilder() {
+  AttachmentReferenceStencilLayout defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setStencilLayout(self, ImageLayout stencilLayout) {
+  self.stencilLayout = stencilLayout;
+  return self;
+}
+       
+
+
+fn AttachmentDescriptionStencilLayout attachmentDescriptionStencilLayoutBuilder() {
+  AttachmentDescriptionStencilLayout defaultValue = {
+    .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setStencilInitialLayout(self, ImageLayout stencilInitialLayout) {
+  self.stencilInitialLayout = stencilInitialLayout;
+  return self;
+}
+       
+fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setStencilFinalLayout(self, ImageLayout stencilFinalLayout) {
+  self.stencilFinalLayout = stencilFinalLayout;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeaturesBuilder() {
+  PhysicalDeviceHostQueryResetFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setHostQueryReset(self, Bool32 hostQueryReset) {
+  self.hostQueryReset = hostQueryReset;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeaturesBuilder() {
+  PhysicalDeviceTimelineSemaphoreFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setTimelineSemaphore(self, Bool32 timelineSemaphore) {
+  self.timelineSemaphore = timelineSemaphore;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphorePropertiesBuilder() {
+  PhysicalDeviceTimelineSemaphoreProperties defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setMaxTimelineSemaphoreValueDifference(self, ulong maxTimelineSemaphoreValueDifference) {
+  self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
+  return self;
+}
+       
+
+
+fn SemaphoreTypeCreateInfo semaphoreTypeCreateInfoBuilder() {
+  SemaphoreTypeCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setSemaphoreType(self, SemaphoreType semaphoreType) {
+  self.semaphoreType = semaphoreType;
+  return self;
+}
+       
+fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setInitialValue(self, ulong initialValue) {
+  self.initialValue = initialValue;
+  return self;
+}
+       
+
+
+fn TimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfoBuilder() {
+  TimelineSemaphoreSubmitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValueCount(self, uint waitSemaphoreValueCount) {
+  self.waitSemaphoreValueCount = waitSemaphoreValueCount;
+  return self;
+}
+       
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPWaitSemaphoreValues(self, ulong[] pWaitSemaphoreValues) {
+  self.waitSemaphoreValueCount = (uint)pWaitSemaphoreValues.len;
+  self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
+  return self;
+}
+
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValueCount(self, uint signalSemaphoreValueCount) {
+  self.signalSemaphoreValueCount = signalSemaphoreValueCount;
+  return self;
+}
+       
+fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setPSignalSemaphoreValues(self, ulong[] pSignalSemaphoreValues) {
+  self.signalSemaphoreValueCount = (uint)pSignalSemaphoreValues.len;
+  self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
+  return self;
+}
+
+
+
+fn SemaphoreWaitInfo semaphoreWaitInfoBuilder() {
+  SemaphoreWaitInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setFlags(self, SemaphoreWaitFlags flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphoreCount(self, uint semaphoreCount) {
+  self.semaphoreCount = semaphoreCount;
+  return self;
+}
+       
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setPSemaphores(self, Semaphore[] pSemaphores) {
+  self.semaphoreCount = (uint)pSemaphores.len;
+  self.pSemaphores = &pSemaphores[0];
+  return self;
+}
+
+fn SemaphoreWaitInfo SemaphoreWaitInfo.setPValues(self, ulong[] pValues) {
+  self.semaphoreCount = (uint)pValues.len;
+  self.pValues = &pValues[0];
+  return self;
+}
+
+
+
+fn SemaphoreSignalInfo semaphoreSignalInfoBuilder() {
+  SemaphoreSignalInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setSemaphore(self, Semaphore semaphore) {
+  self.semaphore = semaphore;
+  return self;
+}
+       
+fn SemaphoreSignalInfo SemaphoreSignalInfo.setValue(self, ulong value) {
+  self.value = value;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeaturesBuilder() {
+  PhysicalDeviceBufferDeviceAddressFeatures defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddress(self, Bool32 bufferDeviceAddress) {
+  self.bufferDeviceAddress = bufferDeviceAddress;
+  return self;
+}
+       
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressCaptureReplay(self, Bool32 bufferDeviceAddressCaptureReplay) {
+  self.bufferDeviceAddressCaptureReplay = bufferDeviceAddressCaptureReplay;
+  return self;
+}
+       
+fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setBufferDeviceAddressMultiDevice(self, Bool32 bufferDeviceAddressMultiDevice) {
+  self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
+  return self;
+}
+       
+
+
+fn BufferDeviceAddressInfo bufferDeviceAddressInfoBuilder() {
+  BufferDeviceAddressInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+
+
+fn BufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfoBuilder() {
+  BufferOpaqueCaptureAddressCreateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
+  self.opaqueCaptureAddress = opaqueCaptureAddress;
+  return self;
+}
+       
+
+
+fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfoBuilder() {
+  MemoryOpaqueCaptureAddressAllocateInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setOpaqueCaptureAddress(self, ulong opaqueCaptureAddress) {
+  self.opaqueCaptureAddress = opaqueCaptureAddress;
+  return self;
+}
+       
+
+
+fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfoBuilder() {
+  DeviceMemoryOpaqueCaptureAddressInfo defaultValue = {
+    .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setPNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setMemory(self, DeviceMemory memory) {
+  self.memory = memory;
+  return self;
+}
+       
