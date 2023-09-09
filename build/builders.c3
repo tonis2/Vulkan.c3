@@ -826,7 +826,7 @@ fn ShaderModuleCreateInfo shaderModuleCreateInfoBuilder() {
 }
 
 // Skip the .sType value
-/*fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(self, void* pNext) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(self, void* pNext) {
   self.pNext = pNext;
   return self;
 }
@@ -841,12 +841,11 @@ fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCodeSize(self, usz codeSize)
   return self;
 }
        
-fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, uint[] pCode) {
-  self.codeSize = (uint)pCode.len;
-  self.pCode = &pCode[0];
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, uint* pCode) {
+  self.pCode = pCode;
   return self;
-}*/
-
+}
+       
 
 
 fn PipelineCacheCreateInfo pipelineCacheCreateInfoBuilder() {
@@ -1233,12 +1232,11 @@ fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setMinS
   return self;
 }
        
-fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setSampleMask(self, SampleMask[] pSampleMask) {
-  self.minSampleShading = (uint)pSampleMask.len;
-  self.pSampleMask = &pSampleMask[0];
+fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setSampleMask(self, SampleMask* pSampleMask) {
+  self.pSampleMask = pSampleMask;
   return self;
 }
-
+       
 fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setAlphaToCoverageEnable(self, Bool32 alphaToCoverageEnable) {
   self.alphaToCoverageEnable = alphaToCoverageEnable;
   return self;

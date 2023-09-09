@@ -74,7 +74,12 @@ var enabled_extensions = [
   "VK_EXT_debug_report",
   "VK_EXT_debug_utils",
   "VK_EXT_swapchain_colorspace",
-  "VK_KHR_get_physical_device_properties2"
+  "VK_KHR_get_physical_device_properties2",
+/*  "VK_KHR_dynamic_rendering",
+  "VK_KHR_depth_stencil_resolve",
+  "VK_KHR_create_renderpass2",
+  "VK_KHR_maintenance2",
+  "VK_KHR_multiview"*/
 /*  "VK_KHR_dynamic_rendering"*/
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
@@ -498,7 +503,9 @@ class VkValue {
       }
     }
 
-    if (altlen != null) lenValue = "codeSize";
+    if (altlen != null) {
+      lenValue = null;
+    }
     if (replaceNames.containsKey(name)) name = replaceNames[name];
 
     if (typeMap.containsKey(type)) type = typeMap[type];
