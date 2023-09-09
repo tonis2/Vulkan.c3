@@ -75,12 +75,11 @@ var enabled_extensions = [
   "VK_EXT_debug_utils",
   "VK_EXT_swapchain_colorspace",
   "VK_KHR_get_physical_device_properties2",
-/*  "VK_KHR_dynamic_rendering",
   "VK_KHR_depth_stencil_resolve",
   "VK_KHR_create_renderpass2",
   "VK_KHR_maintenance2",
-  "VK_KHR_multiview"*/
-/*  "VK_KHR_dynamic_rendering"*/
+  "VK_KHR_multiview"
+  "VK_KHR_dynamic_rendering"
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
   // "VK_KHR_get_display_properties2",
@@ -146,6 +145,7 @@ void main() {
   List<VkValue> constants = [];
   List<VkType> commands = [];
   List<VkType> extensionCommands = [];
+  List<VkValue> aliases = [];
 
   var features = document.findAllElements("feature").where((element) {
     String? apiName = element.getAttribute("name");
@@ -157,11 +157,11 @@ void main() {
     String? depends = element.getAttribute("depends");
     bool isEnabled = enabled_extensions.contains(extension_name);
     if (depends != null && isEnabled) {
-      var dependencies = depends.split(",").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
+      var dependencies = depends.split("+").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
       if (dependencies.isNotEmpty) {
         print(depends);
         print("extension dependency not met $extension_name");
-        return false;
+        return true;
       }
     }
     return isEnabled;
@@ -267,9 +267,12 @@ void main() {
 
 
           if (nodeType == "command") {
-
              XmlNode? node = document.findParentNode("proto", name)?.parent;
-             if (node == null) node = document.findParentNode("proto", name?.replaceAll("KHR", ""))?.parent;
+             bool hasAlias = false;
+             if (node == null) {
+               hasAlias = true;
+               node = document.findParentNode("proto", name?.replaceAll("KHR", ""))?.parent;
+             };
 
              XmlElement? proto = node?.getElement("proto");
              String? returnType = proto?.getElement("type")?.innerText;
@@ -283,6 +286,9 @@ void main() {
                  node?.childElements.where((element) => element.name.qualified == "param" && element.getAttribute("api") != "vulkansc").map((node) => VkValue.fromXML(node)).toList() ?? [];
 
              if (isExtension) {
+               if (hasAlias) {
+                 aliases.add(VkValue(name: name! + "KHR", defaultValue: name));
+               }
                extensionCommands.add(VkType(name: name ?? "-", values: values, category: "command", successCodes: successCodes, errorCodes: errorCodes, returnType: typeMap[returnType] ?? returnType));
              } else {
                commands.add(VkType(name: name ?? "-", values: values, category: "command", successCodes: successCodes, errorCodes: errorCodes, returnType: typeMap[returnType] ?? returnType));

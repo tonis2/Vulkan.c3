@@ -904,6 +904,10 @@ def PFN_vkGetPhysicalDeviceMemoryProperties2KHR = fn void (PhysicalDevice, Physi
 def PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceSparseImageFormatInfo2*, uint*, SparseImageFormatProperties2*);
 def PFN_vkCmdPushDescriptorSetKHR = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, WriteDescriptorSet*);
 def PFN_vkCmdPushDescriptorSetWithTemplateKHR = fn void (CommandBuffer, DescriptorUpdateTemplate, PipelineLayout, uint, void*);
+def PFN_vkCreateRenderPass2KHR = fn Result (Device, RenderPassCreateInfo2*, AllocationCallbacks*, RenderPass*);
+def PFN_vkCmdBeginRenderPass2KHR = fn void (CommandBuffer, RenderPassBeginInfo*, SubpassBeginInfo*);
+def PFN_vkCmdNextSubpass2KHR = fn void (CommandBuffer, SubpassBeginInfo*, SubpassEndInfo*);
+def PFN_vkCmdEndRenderPass2KHR = fn void (CommandBuffer, SubpassEndInfo*);
 def PFN_vkSetDebugUtilsObjectNameEXT = fn Result (Device, DebugUtilsObjectNameInfoEXT*);
 def PFN_vkSetDebugUtilsObjectTagEXT = fn Result (Device, DebugUtilsObjectTagInfoEXT*);
 def PFN_vkQueueBeginDebugUtilsLabelEXT = fn void (Queue, DebugUtilsLabelEXT*);
@@ -952,6 +956,10 @@ struct VK_extension_bindings {
  PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR;
  PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
  PFN_vkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHR;
+ PFN_vkCreateRenderPass2KHR vkCreateRenderPass2KHR;
+ PFN_vkCmdBeginRenderPass2KHR vkCmdBeginRenderPass2KHR;
+ PFN_vkCmdNextSubpass2KHR vkCmdNextSubpass2KHR;
+ PFN_vkCmdEndRenderPass2KHR vkCmdEndRenderPass2KHR;
  PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
  PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT;
  PFN_vkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXT;
@@ -1001,6 +1009,10 @@ fn void loadExtensions(Instance instance) {
   extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR)getInstanceProcAddr(instance, "vkGetPhysicalDeviceSparseImageFormatProperties2KHR");
   extensions.vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetKHR");
   extensions.vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)getInstanceProcAddr(instance, "vkCmdPushDescriptorSetWithTemplateKHR");
+  extensions.vkCreateRenderPass2KHR = (PFN_vkCreateRenderPass2KHR)getInstanceProcAddr(instance, "vkCreateRenderPass2KHR");
+  extensions.vkCmdBeginRenderPass2KHR = (PFN_vkCmdBeginRenderPass2KHR)getInstanceProcAddr(instance, "vkCmdBeginRenderPass2KHR");
+  extensions.vkCmdNextSubpass2KHR = (PFN_vkCmdNextSubpass2KHR)getInstanceProcAddr(instance, "vkCmdNextSubpass2KHR");
+  extensions.vkCmdEndRenderPass2KHR = (PFN_vkCmdEndRenderPass2KHR)getInstanceProcAddr(instance, "vkCmdEndRenderPass2KHR");
   extensions.vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)getInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
   extensions.vkSetDebugUtilsObjectTagEXT = (PFN_vkSetDebugUtilsObjectTagEXT)getInstanceProcAddr(instance, "vkSetDebugUtilsObjectTagEXT");
   extensions.vkQueueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)getInstanceProcAddr(instance, "vkQueueBeginDebugUtilsLabelEXT");
@@ -1026,6 +1038,9 @@ fn void getPhysicalDeviceMemoryProperties2KHR (PhysicalDevice physicalDevice, Ph
 fn void getPhysicalDeviceSparseImageFormatProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint* pPropertyCount, SparseImageFormatProperties2* pProperties) => extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice,pFormatInfo,pPropertyCount,pProperties);
 fn void cmdPushDescriptorSetKHR (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set, uint descriptorWriteCount, WriteDescriptorSet* pDescriptorWrites) => extensions.vkCmdPushDescriptorSetKHR(commandBuffer,pipelineBindPoint,layout,set,descriptorWriteCount,pDescriptorWrites);
 fn void cmdPushDescriptorSetWithTemplateKHR (CommandBuffer commandBuffer, DescriptorUpdateTemplate descriptorUpdateTemplate, PipelineLayout layout, uint set, void* pData) => extensions.vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer,descriptorUpdateTemplate,layout,set,pData);
+fn void cmdBeginRenderPass2KHR (CommandBuffer commandBuffer, RenderPassBeginInfo* pRenderPassBegin, SubpassBeginInfo* pSubpassBeginInfo) => extensions.vkCmdBeginRenderPass2KHR(commandBuffer,pRenderPassBegin,pSubpassBeginInfo);
+fn void cmdNextSubpass2KHR (CommandBuffer commandBuffer, SubpassBeginInfo* pSubpassBeginInfo, SubpassEndInfo* pSubpassEndInfo) => extensions.vkCmdNextSubpass2KHR(commandBuffer,pSubpassBeginInfo,pSubpassEndInfo);
+fn void cmdEndRenderPass2KHR (CommandBuffer commandBuffer, SubpassEndInfo* pSubpassEndInfo) => extensions.vkCmdEndRenderPass2KHR(commandBuffer,pSubpassEndInfo);
 fn void queueBeginDebugUtilsLabelEXT (Queue queue, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkQueueBeginDebugUtilsLabelEXT(queue,pLabelInfo);
 fn void queueEndDebugUtilsLabelEXT (Queue queue) => extensions.vkQueueEndDebugUtilsLabelEXT(queue);
 fn void queueInsertDebugUtilsLabelEXT (Queue queue, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkQueueInsertDebugUtilsLabelEXT(queue,pLabelInfo);
@@ -1289,6 +1304,16 @@ fn void! getPhysicalDeviceImageFormatProperties2KHR (PhysicalDevice physicalDevi
         return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
     case ERROR_FORMAT_NOT_SUPPORTED: 
         return VkErrors.ERROR_FORMAT_NOT_SUPPORTED?;
+  }
+}
+
+fn void! createRenderPass2KHR (Device device, RenderPassCreateInfo2* pCreateInfo, AllocationCallbacks* pAllocator, RenderPass* pRenderPass) {
+  Result result = extensions.vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
+  switch(result) {
+    case ERROR_OUT_OF_HOST_MEMORY: 
+        return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+    case ERROR_OUT_OF_DEVICE_MEMORY: 
+        return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
 
