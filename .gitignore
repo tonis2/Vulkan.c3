@@ -7,6 +7,9 @@
 *.obj
 *.elf
 
+build/_c3l
+tmp
+
 test
 ./cube
 cube
