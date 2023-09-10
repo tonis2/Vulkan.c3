@@ -7252,7 +7252,7 @@ fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setCreateInfo(s
   self.pCreateInfo = pCreateInfo;
   return self;
 }
-       
+
 
 
 fn DeviceImageMemoryRequirements deviceImageMemoryRequirementsBuilder() {

@@ -67,6 +67,8 @@ fault VkErrors {
  ERROR_OUT_OF_DATE_KHR,
  ERROR_VALIDATION_FAILED_EXT
 }
+ macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
+macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
  def Instance = distinct inline void*;
 def PhysicalDevice = distinct inline void*;
 def Device = distinct inline void*;

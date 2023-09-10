@@ -71,6 +71,8 @@ DebugUtilsMessengerCreateInfoEXT default_debug_info =  {
      .pUserData = null,
 };
 
+
+
 /*
 fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, char[] data) {
   self.codeSize = data.len;

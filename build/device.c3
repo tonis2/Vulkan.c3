@@ -103,12 +103,8 @@ fn PipelineShaderStageCreateInfo ShaderModule.info(self, ShaderStageFlagBits sta
     };
 }
 
-fn SwapChain! DeviceInfo.createSwapchain(self, SwapchainCreateInfoKHR* info = null)
+fn SwapChain! DeviceInfo.createSwapchain(self, SwapchainCreateInfoKHR* info)
 {
-    if (info == null) {
-        info = &&self.default_swapchain_info();
-    }
-
     SwapchainKHR swapchain;
     // Create SwapChainKHR
     createSwapchainKHR(self.device, info, null, &swapchain)!;
@@ -186,70 +182,6 @@ fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, ui
     }
 
     return buffers;
-}
-
-fn SwapchainCreateInfoKHR DeviceInfo.default_swapchain_info(self, SwapchainCreateInfoKHR info = defaultSwapchain)
-{
-    SurfaceFormatKHR surface_format = {|
-        foreach (format : self.surface_formats)
-        {
-            if (format.format == FORMAT_B8G8R8A8_UNORM && format.colorSpace == COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-                return format;
-            }
-        }
-        io::printfn("Did not find required format, returning first one");
-        return self.surface_formats[0];
-    |};
-
-    PresentModeKHR present_mode = {|
-        foreach (present : self.present_modes)
-        {
-            if (present == PRESENT_MODE_MAILBOX_KHR) {
-                return present;
-            }
-        }
-        io::printfn("Did not find required present_mode, returning first one");
-        return self.present_modes[0];
-    |};
-
-    Extent2D extent = {|
-        int width, height; 
-        glfw::getFramebufferSize(self.window, (uint*)&width, (uint*)&height);
-        Extent2D actualExtent = {
-            width,
-            height
-        };
-
-        actualExtent.width = math::clamp(actualExtent.width, self.capabilities.minImageExtent.width, self.capabilities.maxImageExtent.width);
-        actualExtent.height = math::clamp(actualExtent.height, self.capabilities.minImageExtent.height,self.capabilities.maxImageExtent.height);
-        return actualExtent;  
-    |};
-
-    Format image_format = surface_format.format;
-    uint image_count = self.capabilities.minImageCount + 1;
-    if (self.capabilities.maxImageCount > 0 && image_count > self.capabilities.maxImageCount) {
-        image_count = self.capabilities.maxImageCount;
-    }
-
-   SwapchainCreateInfoKHR create_info = {
-        .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-        .pNext = null,
-        .flags = 0,
-        .surface = self.surface,
-        .minImageCount = image_count,
-        .imageFormat = surface_format.format,
-        .imageColorSpace = surface_format.colorSpace,
-        .imageExtent = extent,
-        .imageArrayLayers = 1,
-        .imageUsage = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-        .imageSharingMode = SHARING_MODE_EXCLUSIVE,
-        .preTransform = self.capabilities.currentTransform,
-        .compositeAlpha = COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-        .presentMode = present_mode,
-        .clipped = 0,
-        .oldSwapchain = null,
-    };
-    return create_info;
 }
 
 fn DeviceInfo! requestDevice(AppInfo* info, GLFWwindow window, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info, PhysicalDeviceFeatures device_features = default_device_features)
@@ -381,6 +313,19 @@ fn DeviceInfo! requestDevice(AppInfo* info, GLFWwindow window, DebugUtilsMesseng
         .queue_family = queue_family,
         .capabilities = device_capabilities
     };
+}
+
+fn Extent2D DeviceInfo.getExtent(self) {
+    int width, height;
+    glfw::getFramebufferSize(self.window, (uint*)&width, (uint*)&height);
+    Extent2D actualExtent = {
+     width,
+     height
+    };
+
+     actualExtent.width = math::clamp(actualExtent.width, self.capabilities.minImageExtent.width, self.capabilities.maxImageExtent.width);
+     actualExtent.height = math::clamp(actualExtent.height, self.capabilities.minImageExtent.height,self.capabilities.maxImageExtent.height);
+     return actualExtent;
 }
 
 fn void DeviceInfo.waitIdle(self) {
@@ -697,6 +642,5 @@ fn uint! Semaphore.getNextImage(self, vk::Device device, vk::SwapchainKHR swapch
     vk::acquireNextImageKHR(device, swapchain, uint.max, self, null, &index)!!;
     return index;
 }
-
 
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
