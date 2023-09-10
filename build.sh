@@ -1,4 +1,5 @@
+curl https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml --output ./assets/vk.xml
 dart run main.dart
-cp ./build/vulkan.c3 ./vulkan.c3
-zip ./vulkan.c3l ./vulkan.c3 ./manifest.json
-rm ./vulkan.c3
+cp ./build/*.c3 .
+zip ./vulkan.c3l ./*.c3 ./manifest.json
+rm ./*.c3

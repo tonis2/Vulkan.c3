@@ -1,6 +1,6 @@
 
 { 
-  "provides" : "vk",
+  "provides" : "vulkan",
   "targets" : {
     "macos-x64" : {
       "linked-libs" : ["vulkan", "glfw"]
