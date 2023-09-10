@@ -198,6 +198,7 @@ def DisplaySurfaceCreateFlagsKHR = Flags;
 def SurfaceTransformFlagsKHR = Flags;
 def XcbSurfaceCreateFlagsKHR = Flags;
 def DebugReportFlagsEXT = Flags;
+def RenderingFlagsKHR = void*;
 def DebugUtilsMessageSeverityFlagsEXT = Flags;
 def DebugUtilsMessageTypeFlagsEXT = Flags;
 def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
@@ -233,6 +234,10 @@ const KHR_XCB_SURFACE_SPEC_VERSION = 6;
 const KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
 const EXT_DEBUG_REPORT_SPEC_VERSION = 10;
 const EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
+const KHR_DYNAMIC_RENDERING_SPEC_VERSION = 1;
+const KHR_DYNAMIC_RENDERING_EXTENSION_NAME = "VK_KHR_dynamic_rendering";
+const KHR_MULTIVIEW_SPEC_VERSION = 1;
+const KHR_MULTIVIEW_EXTENSION_NAME = "VK_KHR_multiview";
 const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION = 2;
 const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_physical_device_properties2";
 const KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2;
@@ -526,6 +531,14 @@ const StructureType STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
 const StructureType STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = 0;
+const StructureType STRUCTURE_TYPE_RENDERING_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR = 0;
+const StructureType STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES_KHR = 0;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR = 0;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR = 0;
 const StructureType STRUCTURE_TYPE_FORMAT_PROPERTIES_2_KHR = 0;
@@ -1323,11 +1336,13 @@ def AttachmentStoreOp = distinct inline int;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_STORE = 0;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_DONT_CARE = 1;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE = 1000301000;
+const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE_KHR = 0;
 
 def DependencyFlagBits = distinct inline int;
 const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
 const DependencyFlagBits DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
 const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
+const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT_KHR = 0;
 
 def FramebufferCreateFlagBits = distinct inline int;
 const FramebufferCreateFlagBits FRAMEBUFFER_CREATE_IMAGELESS_BIT = 0x00000001;
@@ -1734,6 +1749,9 @@ const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = 3
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = 33;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = 1000156000;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = 1000085000;
+
+def RenderingFlagBitsKHR = distinct inline int;
+
 
 def PointClippingBehaviorKHR = distinct inline int;
 

@@ -78,8 +78,8 @@ var enabled_extensions = [
   "VK_KHR_depth_stencil_resolve",
   "VK_KHR_create_renderpass2",
   "VK_KHR_maintenance2",
-  "VK_KHR_multiview"
-  "VK_KHR_dynamic_rendering"
+  "VK_KHR_multiview",
+  "VK_KHR_dynamic_rendering",
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
   // "VK_KHR_get_display_properties2",
@@ -157,11 +157,10 @@ void main() {
     String? depends = element.getAttribute("depends");
     bool isEnabled = enabled_extensions.contains(extension_name);
     if (depends != null && isEnabled) {
-      var dependencies = depends.split("+").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
+      var dependencies = depends.split("+").join(",").split(",").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
       if (dependencies.isNotEmpty) {
-        print(depends);
         print("extension dependency not met $extension_name");
-        return true;
+        return false;
       }
     }
     return isEnabled;
