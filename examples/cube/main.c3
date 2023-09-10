@@ -114,7 +114,14 @@ fn void! main()
     }
 
     DeviceInfo device = vk::requestDevice(&appInfo, window)!;
-    SwapChain swapchain = device.createSwapchain()!;
+    SwapchainCreateInfoKHR swapchain_info = device.default_swapchain_info();
+
+    if (env::os_is_darwin()) {
+        swapchain_info.imageExtent.width /= 2;
+        swapchain_info.imageExtent.height /= 2;    
+    }
+
+    SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
 
     BufferInfo vertex_buffer = {
         .size = Vertex.sizeof * vertex_data.len,
@@ -348,7 +355,7 @@ fn void! main()
             &image_memory_start
         );
 
-        vk::cmdBeginRendering(command_buffer, &rendering_info);
+        vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
@@ -359,7 +366,7 @@ fn void! main()
         vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
         vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
         vk::cmdDrawIndexed(command_buffer, index_data.len, 1, 0, 0, 0);
-        vk::cmdEndRendering(command_buffer);
+        vk::cmdEndRenderingKHR(command_buffer);
 
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
