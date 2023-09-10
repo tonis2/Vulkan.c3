@@ -1,5 +1,6 @@
 module vk;
 import std::io;
+import std::math;
 import std::core::env;
 import libc;
 import std::collections::list;
@@ -58,6 +59,7 @@ struct DeviceInfo {
     SurfaceFormatList surface_formats;
     PresentModeList present_modes;
     SurfaceCapabilitiesKHR capabilities;
+    GLFWwindow window;
     bool enable_debug;
 }
 
@@ -210,9 +212,20 @@ fn SwapchainCreateInfoKHR DeviceInfo.default_swapchain_info(self, SwapchainCreat
         return self.present_modes[0];
     |};
 
-    Extent2D extent = self.capabilities.maxImageExtent;
-    Format image_format = surface_format.format;
+    Extent2D extent = {|
+        int width, height; 
+        glfw::getFramebufferSize(self.window, (uint*)&width, (uint*)&height);
+        Extent2D actualExtent = {
+            width,
+            height
+        };
 
+        actualExtent.width = math::clamp(actualExtent.width, self.capabilities.minImageExtent.width, self.capabilities.maxImageExtent.width);
+        actualExtent.height = math::clamp(actualExtent.height, self.capabilities.minImageExtent.height,self.capabilities.maxImageExtent.height);
+        return actualExtent;  
+    |};
+
+    Format image_format = surface_format.format;
     uint image_count = self.capabilities.minImageCount + 1;
     if (self.capabilities.maxImageCount > 0 && image_count > self.capabilities.maxImageCount) {
         image_count = self.capabilities.maxImageCount;
@@ -357,6 +370,7 @@ fn DeviceInfo! requestDevice(AppInfo* info, GLFWwindow window, DebugUtilsMesseng
     return DeviceInfo {
         .instance = instance,
         .surface = surface,
+        .window = window,
         .device = logical_device,
         .physical_device = physical_device,
         .debug_messenger = debug_messenger,
