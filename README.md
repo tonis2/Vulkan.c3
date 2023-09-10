@@ -10,6 +10,13 @@ Install Dart https://dart.dev/get-dart
 
 run `sh assets.sh && dart run main.dart`
 
+
+
+### Features
+* Vulkan API 1.0 - 1.3 bindings
+* C3 error handling for Vulkan commands
+* Auto-generated build pattern for Vulkan struct creation
+
 ### Building examples
 
 Install C3 from https://c3-lang.org/
