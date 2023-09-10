@@ -4,14 +4,6 @@ Vulkan bindings for C3 language
 
 Currently at very early stage, binding api could change.
 
-### Building bindings
-
-Install Dart https://dart.dev/get-dart
-
-run `sh assets.sh && dart run main.dart`
-
-
-
 ### Features
 * Vulkan API 1.0 - 1.3 bindings
 * C3 error handling for Vulkan commands
@@ -37,8 +29,16 @@ export VK_DRIVER_FILES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 
 Then run `c3c run cube` inside the cloned repository
 
+
 ### Roadmap
 
 * Get windows example working
 * Make GLTF loading example
 * Build vulkan xml parser in C3 instead of Dart
+
+
+### Building bindings
+
+Install Dart https://dart.dev/get-dart
+
+run `sh assets.sh && dart run main.dart`
