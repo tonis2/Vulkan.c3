@@ -7,7 +7,8 @@
 *.obj
 *.elf
 
-build/_c3l
+./build/_c3l
+/_c3l/*
 tmp
 
 test
