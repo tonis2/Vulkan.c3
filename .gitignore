@@ -10,6 +10,7 @@
 build/_c3l
 tmp
 
+gltf
 test
 ./cube
 cube
