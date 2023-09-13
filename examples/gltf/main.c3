@@ -17,7 +17,6 @@ struct Vertex {
     Vec2f tex_pos;
 }
 
-
 fn void! main()
 {
     glfw::init();
@@ -82,5 +81,32 @@ fn void! main()
     Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
     defer gltf_data.free();
 
-    io::printfn("meshes %d", gltf_data.meshes.len());
+    gltf_data.meshes[0].allAttributes(&gltf_data);
+
+    SurfaceFormatKHR format = device.surface_formats.contains({.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR})
+        ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
+        : device.surface_formats[0];
+
+    PresentModeKHR present_mode = device.present_modes.contains(vk::PRESENT_MODE_MAILBOX_KHR) ? vk::PRESENT_MODE_MAILBOX_KHR : device.present_modes[0];
+
+    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
+    .setMinImageCount(device.capabilities.minImageCount + 1)
+    .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+    .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+    .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+    .setPresentMode(present_mode)
+    .setPreTransform(device.capabilities.currentTransform)
+    .setImageColorSpace(format.colorSpace)
+    .setImageFormat(format.format)
+    .setSurface(device.surface)
+    .setImageArrayLayers(1)
+    .setImageExtent(device.getExtent());
+
+    if (env::os_is_darwin()) {
+        swapchain_info.imageExtent.width /= 2;
+        swapchain_info.imageExtent.height /= 2;
+    }
+
+    SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
+    defer swapchain.free(device.device);
 }
