@@ -7,6 +7,7 @@ import std::core::mem;
 import std::collections::list;
 import std::encoding::json;
 import std::encoding::base64;
+import std::collections::map;
 
 def PrimitiveList = List(<Object*>);
 def NodeList = List(<Node>);
@@ -21,6 +22,8 @@ def MaterialList = List(<Material>);
 def ImageList = List(<GltfImage>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
+
+def ObjectInternalMap = HashMap(<String, Object*>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -211,6 +214,19 @@ struct GltfBuffer {
     char* data;
     uint size;
     BufferType data_type;
+}
+
+fn void GltfMesh.allAttributes(GltfMesh* self, Gltf* data) {
+    uint offset = 0;
+    uint buffer_size = 0;
+    foreach (primitive: self.primitives) {
+        Object* attributes = primitive.get("attributes")!!;
+        foreach (i, key : attributes.map.key_tlist())
+        {
+           Accessor accessor = data.accessors[attributes.get_int(key)!!];
+           io::printfn("buffer %d", accessor.bufferView);
+        }
+    }
 }
 
 // Parsing JSON to structs
