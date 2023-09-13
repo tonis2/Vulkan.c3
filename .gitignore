@@ -7,8 +7,9 @@
 *.obj
 *.elf
 
-build/_c3l
+
 tmp
+_c3l
 
 gltf
 test
