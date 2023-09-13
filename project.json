@@ -11,6 +11,10 @@
 		"cube": {
 			"type": "executable",
 			"sources-add": ["./examples/cube/main.c3"]
+		},
+		"gltf": {
+			"type": "executable",
+			"sources-add": ["./examples/gltf/main.c3", "./examples/dependencies/gltf.c3"]
 		}
 	},
 	"output": "./build"
