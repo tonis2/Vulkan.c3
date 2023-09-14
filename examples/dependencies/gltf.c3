@@ -200,6 +200,8 @@ struct Accessor {
 struct GltfMesh {
     String name;
     PrimitiveList primitives;
+    usz buffer_offset;
+    usz buffer_size;
 }
 
 struct BufferView {
@@ -214,19 +216,6 @@ struct GltfBuffer {
     char* data;
     uint size;
     BufferType data_type;
-}
-
-fn void GltfMesh.allAttributes(GltfMesh* self, Gltf* data) {
-    uint offset = 0;
-    uint buffer_size = 0;
-    foreach (primitive: self.primitives) {
-        Object* attributes = primitive.get("attributes")!!;
-        foreach (i, key : attributes.map.key_tlist())
-        {
-           Accessor accessor = data.accessors[attributes.get_int(key)!!];
-           io::printfn("buffer %d", accessor.bufferView);
-        }
-    }
 }
 
 // Parsing JSON to structs
@@ -636,16 +625,6 @@ fn Gltf! loadFile(String path) {
         }
     }
 
-
-    // Parse meshes
-    if (try meshes) {
-        foreach (mesh : meshes.array) {
-            GltfMesh data;
-            data.fromJson(mesh);
-            content.meshes.push(data);
-        }
-    }
-
     if (try bufferViews) {
         foreach (bufferView : bufferViews.array) {
             BufferView data;
@@ -671,6 +650,36 @@ fn Gltf! loadFile(String path) {
             else {content.buffers.push(data);}
         }
     }
+
+    // Parse meshes
+    if (try meshes) {
+        foreach (mesh : meshes.array) {
+            GltfMesh data;
+            data.fromJson(mesh);
+
+            uint offset = 0;
+            uint buffer_size = 0;
+
+            // Get mesh total buffer size
+            foreach (index, primitive: data.primitives) {
+                Object* attributes = primitive.get("attributes")!!;
+                foreach (index2, key : attributes.map.key_tlist())
+                {
+                   Accessor accessor = content.accessors[attributes.get_int(key)!!];
+                   BufferView buffer_view = content.bufferViews[accessor.bufferView];
+
+                   if (index == 0 && index2 == 0) {
+                        offset = (usz)buffer_view.offset;
+                   }
+                   buffer_size += (usz)buffer_view.byteLength;
+                }
+            }
+            data.buffer_offset = offset;
+            data.buffer_size = buffer_size;
+            content.meshes.push(data);
+        }
+    }
+
     // Parse cameras
     if (try cameras) {
         foreach (camera : cameras.array) {
