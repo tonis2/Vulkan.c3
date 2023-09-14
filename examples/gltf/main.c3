@@ -81,7 +81,9 @@ fn void! main()
     Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
     defer gltf_data.free();
 
-    gltf_data.meshes[0].allAttributes(&gltf_data);
+    GltfMesh mesh = gltf_data.meshes[0];
+
+    io::printfn("%d %d", mesh.buffer_offset, mesh.buffer_size);
 
     SurfaceFormatKHR format = device.surface_formats.contains({.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR})
         ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
