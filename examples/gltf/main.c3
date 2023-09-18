@@ -26,6 +26,9 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
+    Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
+    defer gltf_data.free();
+
     if (window == null)
     {
         io::printfn("Failed to init glfw window");
@@ -78,9 +81,6 @@ fn void! main()
 
     defer device.free();
 
-    Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
-    defer gltf_data.free();
-
     GltfMesh mesh = gltf_data.meshes[0];
 
     io::printfn("%d %d", mesh.buffer_offset, mesh.buffer_size);
@@ -111,4 +111,17 @@ fn void! main()
 
     SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
     defer swapchain.free(device.device);
+
+    uint frame = 0;
+    while(!glfw::windowShouldClose(window)) {
+        eventHandler.update();
+
+        foreach (node : gltf_data.nodes) {
+            if (node.hasMesh()) {
+                GltfMesh mesh = data.meshes[node.mesh];
+                UniformData uniformData = camera.matrix(node.recompose());
+                // Get vertex and index buffer
+            }
+        }
+    }
 }
