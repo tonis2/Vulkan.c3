@@ -161,9 +161,34 @@ fn void! main()
     SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
     defer swapchain.free(device.device);
 
-    foreach (index, mesh: meshes) {
-        io::printfn("%d %d", mesh.vertices.size, mesh.indices.size);
+    CommandPool command_pool = device.createCommandPool()!;
+    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
+
+    BufferInfo vertex_buffer = BufferInfo {
+        .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        .version = vk::BufferVersion.DEVICE_ONLY
+    };
+
+    BufferInfo index_buffer = BufferInfo {
+        .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
+        .version = vk::BufferVersion.DEVICE_ONLY
+    };
+
+    BufferInfo uniform_buffer = BufferInfo {
+        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        .version = vk::BufferVersion.GLOBAL
     }
+    .upload_data(&&camera.matrix(), UniformData.sizeof)
+    .build(device)!;
+
+    foreach (index, mesh: meshes) {
+        GltfBuffer buffer = gltf_data.buffers[mesh.buffer];
+        vertex_buffer.upload_data(&buffer.data + mesh.vertices.offset, mesh.vertices.size);
+        index_buffer.upload_data(&buffer.data + mesh.indices.offset, mesh.indices.size);
+    }
+
+    vertex_buffer.build(device)!;
+    index_buffer.build(device)!;
 
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
@@ -172,11 +197,29 @@ fn void! main()
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
                 UniformData uniformData = camera.matrix(node.recompose());
-
                 Mesh mesh = meshes[node.mesh];
 
                 // Get vertex and index buffer
             }
         }
     }
+
+    // Release binded stuff
+    device.waitIdle();
+    uniform_buffer.free(device.device);
+    index_buffer.free(device.device);
+    vertex_buffer.free(device.device);
+    command_pool.free(device.device);
+    swapchain.free(device.device);
+
+/*     wait_semaphores.release(device.device);
+     signal_semaphores.release(device.device);
+     frame_fences.release(device.device);
+     vertex_module.free(device.device);
+     frag_module.free(device.device);
+     pipeline.free(device.device);
+     pipeline_layout.free(device.device);
+     descriptor_set_layout.free(device.device);*/
+
+     device.free();
 }
