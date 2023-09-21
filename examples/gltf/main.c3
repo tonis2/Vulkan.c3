@@ -28,11 +28,13 @@ struct Mesh {
     {
         uint offset;
         uint size;
+        uint count;
     }
     struct indices
     {
         uint offset;
         uint size;
+        uint count;
     }
 }
 
@@ -66,6 +68,7 @@ fn void! main()
 
                if (index == 0 && index2 == 0) {
                   data.vertices.offset = (usz)buffer_view.offset;
+                  data.vertices.count = accessor.count;
                   data.buffer = buffer_view.buffer;
                };
                data.vertices.size += (usz)buffer_view.byteLength;
@@ -74,8 +77,10 @@ fn void! main()
             if (try indices) {
                 Accessor accessor = gltf_data.accessors[indices];
                 gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
-
-                if (index == 0) data.indices.offset = (usz)buffer_view.offset;
+                if (index == 0) {
+                    data.indices.offset = (usz)buffer_view.offset;
+                    data.indices.count = (usz)accessor.count;
+                };
                 data.indices.size += (usz)buffer_view.byteLength;
             }
         }
@@ -183,25 +188,283 @@ fn void! main()
 
     foreach (index, mesh: meshes) {
         GltfBuffer buffer = gltf_data.buffers[mesh.buffer];
-        vertex_buffer.upload_data(&buffer.data + mesh.vertices.offset, mesh.vertices.size);
-        index_buffer.upload_data(&buffer.data + mesh.indices.offset, mesh.indices.size);
+        vertex_buffer.upload_data((buffer.data + mesh.vertices.offset), mesh.vertices.size);
+        index_buffer.upload_data((buffer.data + mesh.indices.offset), mesh.indices.size);
     }
 
     vertex_buffer.build(device)!;
     index_buffer.build(device)!;
 
+   // Set-up descriptor info for uniform buffer usage
+    DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
+      {
+          .binding = 0,
+          .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+          .descriptorCount = 1,
+          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+      }
+    });
+
+    DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+    WriteDescriptorSet[] descriptorSets = {
+            vk::writeDescriptorSetBuilder()
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+            .setBufferInfo({
+              {
+                   .buffer = uniform_buffer.buffer,
+                   .offset = 0,
+                   .range = UniformData.sizeof,
+               },
+           })
+    };
+
+    // Required for using push descriptors
+    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
+                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
+    vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
+
+    // Load shaders
+    char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
+    char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
+
+    ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
+    ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
+    PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
+                                                                         .setSetLayouts({ descriptor_set_layout }))!;
+
+    // Create Renderpipeline info
+    GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
+    .setStages({
+        vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
+        frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+    })
+     .setLayout(pipeline_layout)
+     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptions(
+        {
+            {
+             .binding = 0,
+             .stride = Vertex.sizeof,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            }
+        })
+        .setVertexAttributeDescriptions({
+            {
+               .binding = 0,
+               .location = 0,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 0
+            },
+            {
+               .binding = 0,
+               .location = 1,
+               .format = vk::FORMAT_R32G32_SFLOAT,
+               .offset = 4 * float.sizeof
+            },
+            {
+               .binding = 0,
+               .location = 2,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 8 * float.sizeof
+            }
+        })
+    )
+    .setDynamicState(
+       &&vk::pipelineDynamicStateCreateInfoBuilder()
+        .setDynamicStates(
+        {
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
+        })
+    )
+    .setRasterizationState(
+        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
+    )
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+                      .setSampleShadingEnable(vk::FALSE)
+                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+                      .setMinSampleShading(1.0)
+                      .setAlphaToCoverageEnable(vk::FALSE)
+                      .setAlphaToOneEnable(vk::FALSE))
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+                        .setDepthTestEnable(vk::FALSE)
+                        .setDepthWriteEnable(vk::FALSE)
+                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+                    .setLogicOp(vk::LOGIC_OP_COPY)
+                    .setAttachments({
+                       {
+                           .colorWriteMask =
+                               vk::COLOR_COMPONENT_R_BIT |
+                               vk::COLOR_COMPONENT_G_BIT |
+                               vk::COLOR_COMPONENT_B_BIT |
+                               vk::COLOR_COMPONENT_A_BIT,
+                           .blendEnable = vk::TRUE,
+                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .colorBlendOp = vk::BLEND_OP_ADD,
+                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                           .alphaBlendOp = vk::BLEND_OP_ADD,
+                       }}))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
+
+    Pipeline pipeline;
+    vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
+
+    // Create syncronisation stuff
+    SemaphoreList wait_semaphores;
+    SemaphoreList signal_semaphores;
+    FenceList frame_fences;
+
+    for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        wait_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        signal_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
+        frame_fences.push(device.createFence(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT)))!;
+    }
+
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
+        Fence frame_fence = frame_fences[frame];
+        Semaphore wait_semaphore = wait_semaphores[frame];
+        Semaphore signal_semaphore = signal_semaphores[frame];
+
+        frame_fence.waitFor(device.device)!;
+        frame_fence.reset(device.device)!;
+
+        uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
+
+        RenderingInfo rendering_info = vk::renderingInfoBuilder()
+        .setLayerCount(1)
+        .setRenderArea({
+            .offset = Offset2D{ .x = 0, .y = 0 },
+            .extent = swapchain.extent,
+        })
+        .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+            .setImageView(swapchain.image_views[next_image])
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            })
+        });
+
+        CommandBuffer command_buffer = command_buffers[next_image];
+        vk::resetCommandBuffer(command_buffer, 0)!;
+        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
+
+        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
+        .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+        .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
+
+        vk::cmdPipelineBarrier(
+            command_buffer,
+            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_start
+        );
+
+        vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
+        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+
+        // Update camera  rotation on left-mouse click
+        if (eventHandler.left_mouse_click) {
+            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
+            camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+        }
+
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
-                UniformData uniformData = camera.matrix(node.recompose());
+                UniformData cameraMatrix = camera.matrix(node.recompose());
+                mem::copy(uniform_buffer.mapped, &cameraMatrix, uniform_buffer.size);
                 Mesh mesh = meshes[node.mesh];
 
-                // Get vertex and index buffer
+                vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+                vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+                vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+                vk::cmdDrawIndexed(command_buffer, mesh.indices.count, 1, 0, 0, 0);
             }
         }
+
+        vk::cmdEndRenderingKHR(command_buffer);
+        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
+        .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
+        .setImage(swapchain.images[next_image])
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        });
+
+        vk::cmdPipelineBarrier(
+            command_buffer,
+            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            0,
+            0,
+            null,
+            0,
+            null,
+            1,
+            &image_memory_end
+        );
+
+        SubmitInfo submit_info = vk::submitInfoBuilder()
+        .setWaitSemaphores({ wait_semaphore })
+        .setCommandBuffers({ command_buffer })
+        .setSignalSemaphores({ signal_semaphore })
+        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
+
+        vk::endCommandBuffer(command_buffer)!;
+        vk::queueSubmit(device.graphics_queue, 1, &submit_info, frame_fence)!;
+
+        PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
+        .setWaitSemaphores({ signal_semaphore })
+        .setSwapchains({ swapchain.swapchain })
+        .setImageIndices({ next_image });
+
+        vk::queuePresentKHR(device.graphics_queue, &present_info)!;
+        frame = (frame + 1) % 2;
     }
 
     // Release binded stuff
@@ -211,15 +474,16 @@ fn void! main()
     vertex_buffer.free(device.device);
     command_pool.free(device.device);
     swapchain.free(device.device);
+    descriptor_set_layout.free(device.device);
+    vertex_module.free(device.device);
+    frag_module.free(device.device);
+    pipeline.free(device.device);
+    pipeline_layout.free(device.device);
 
 /*     wait_semaphores.release(device.device);
      signal_semaphores.release(device.device);
      frame_fences.release(device.device);
-     vertex_module.free(device.device);
-     frag_module.free(device.device);
-     pipeline.free(device.device);
-     pipeline_layout.free(device.device);
-     descriptor_set_layout.free(device.device);*/
+*/
 
      device.free();
 }
