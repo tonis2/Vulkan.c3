@@ -227,13 +227,13 @@ fn void! main()
                .binding = 0,
                .location = 0,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
+               .offset = Vertex.pos.offsetof
             },
             {
                .binding = 0,
                .location = 1,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 4 * float.sizeof
+               .offset = Vertex.color.offsetof
             }
         })
     )
