@@ -73,7 +73,7 @@ fn void! BufferInfo.copy_to(&self, BufferInfo dst_buffer, DeviceInfo context) {
     });*/
 }
 
-fn BufferInfo BufferInfo.upload_data(self, void* buffer_data, usz size) {
+fn BufferInfo BufferInfo.upload_data(&self, void* buffer_data, usz size) {
    if (self.size == 0) {
        self.pre_buffer = mem::malloc(void*, size);
    } else {
@@ -81,7 +81,7 @@ fn BufferInfo BufferInfo.upload_data(self, void* buffer_data, usz size) {
    }
    mem::copy(self.pre_buffer + self.size, buffer_data, size);
    self.size += size;
-   return self;
+   return *self;
 }
 
 fn BufferInfo! BufferInfo.build(self, DeviceInfo context) {
