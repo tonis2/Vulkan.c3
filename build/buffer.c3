@@ -1,12 +1,21 @@
 module vk;
 import std::io;
 
+enum BufferVersion : int
+{
+  DEVICE_ONLY,
+  GLOBAL,
+}
+
 struct BufferInfo {
+    void* pre_buffer;
     Buffer buffer;
     DeviceMemory memory;
     ulong size;
     void* mapped;
     BufferUsageFlags usage;
+    BufferVersion version;
+    bool is_ready;
 }
 
 fn void BufferInfo.free(&self, Device device)
@@ -36,7 +45,6 @@ fn void! BufferInfo.copy_to(&self, BufferInfo dst_buffer, DeviceInfo context) {
         .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
         .flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
     };
-
     beginCommandBuffer(command_buffer, &beginInfo)!;
 
     BufferCopy copyRegion = {
@@ -65,63 +73,77 @@ fn void! BufferInfo.copy_to(&self, BufferInfo dst_buffer, DeviceInfo context) {
     });*/
 }
 
-fn void! BufferInfo.device_only(&self, void* buffer_data, DeviceInfo context) {
-    BufferCreateInfo staging_info = {
-       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .size = self.size,
-       .usage = BUFFER_USAGE_TRANSFER_SRC_BIT,
-       .sharingMode = SHARING_MODE_EXCLUSIVE,
-       .queueFamilyIndexCount = 0,
-       .pQueueFamilyIndices = null,
-    };
-
-    BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
-    defer staging_buffer.free(context.device);
-
-    vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
-    mem::copy(self.mapped, buffer_data, self.size);
-    vk::unmapMemory(context.device, staging_buffer.memory);
-
-    BufferCreateInfo buffer_info = {
-       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .size = self.size,
-       .usage = BUFFER_USAGE_TRANSFER_DST_BIT | self.usage,
-       .sharingMode = SHARING_MODE_EXCLUSIVE,
-       .queueFamilyIndexCount = 0,
-       .pQueueFamilyIndices = null,
-    };
-
-    BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
-    staging_buffer.copy_to(buffer, context)!;
-    self.buffer = buffer.buffer;
-    self.memory = buffer.memory;
+fn BufferInfo BufferInfo.upload_data(self, void* buffer_data, usz size) {
+   if (self.size == 0) {
+       self.pre_buffer = mem::malloc(void*, size);
+   } else {
+       mem::realloc(self.pre_buffer, self.size + size);
+   }
+   mem::copy(self.pre_buffer + self.size, buffer_data, size);
+   self.size += size;
+   return self;
 }
 
-fn void! BufferInfo.writable(&self, void* buffer_data, DeviceInfo context) {
-    BufferCreateInfo buffer_info = {
-       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .size = self.size,
-       .usage = self.usage,
-       .sharingMode = SHARING_MODE_EXCLUSIVE,
-       .queueFamilyIndexCount = 0,
-       .pQueueFamilyIndices = null,
-    };
+fn BufferInfo! BufferInfo.build(self, DeviceInfo context) {
+   if (self.version == BufferVersion.DEVICE_ONLY) {
+     BufferCreateInfo staging_info = {
+          .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+          .pNext = null,
+          .flags = 0,
+          .size = self.size,
+          .usage = BUFFER_USAGE_TRANSFER_SRC_BIT,
+          .sharingMode = SHARING_MODE_EXCLUSIVE,
+          .queueFamilyIndexCount = 0,
+          .pQueueFamilyIndices = null,
+       };
 
-    BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_HOST_COHERENT_BIT | MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
-    vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
+       BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
+       defer staging_buffer.free(context.device);
 
-    mem::copy(self.mapped, buffer_data, self.size);
+       vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
+       mem::copy(self.mapped, self.pre_buffer, self.size);
+       vk::unmapMemory(context.device, staging_buffer.memory);
 
-    self.buffer = buffer.buffer;
-    self.memory = buffer.memory;
+       BufferCreateInfo buffer_info = {
+          .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+          .pNext = null,
+          .flags = 0,
+          .size = self.size,
+          .usage = BUFFER_USAGE_TRANSFER_DST_BIT | self.usage,
+          .sharingMode = SHARING_MODE_EXCLUSIVE,
+          .queueFamilyIndexCount = 0,
+          .pQueueFamilyIndices = null,
+       };
+
+       BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
+       staging_buffer.copy_to(buffer, context)!;
+       self.buffer = buffer.buffer;
+       self.memory = buffer.memory;
+   }
+
+   if (self.version == BufferVersion.GLOBAL) {
+        BufferCreateInfo buffer_info = {
+           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+           .pNext = null,
+           .flags = 0,
+           .size = self.size,
+           .usage = self.usage,
+           .sharingMode = SHARING_MODE_EXCLUSIVE,
+           .queueFamilyIndexCount = 0,
+           .pQueueFamilyIndices = null,
+        };
+
+        BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_HOST_COHERENT_BIT | MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
+        vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
+        mem::copy(self.mapped, self.pre_buffer, self.size);
+
+        self.buffer = buffer.buffer;
+        self.memory = buffer.memory;
+   }
+
+   mem::free(self.pre_buffer);
+   return self;
 }
-
 
 fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties, DeviceInfo context) {
     Buffer buffer;

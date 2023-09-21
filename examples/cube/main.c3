@@ -141,25 +141,26 @@ fn void! main()
 
     SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
 
-    BufferInfo vertex_buffer = {
-        .size = Vertex.sizeof * vertex_data.len,
+    BufferInfo vertex_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-    };
+        .version = vk::BufferVersion.DEVICE_ONLY
+    }
+    .upload_data(&vertex_data[0], Vertex.sizeof * vertex_data.len)
+    .build(device)!;
 
-    BufferInfo index_buffer = {
-        .size = (index_data.len * float.sizeof),
+    BufferInfo index_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-    };
+        .version = vk::BufferVersion.DEVICE_ONLY
+    }
+    .upload_data(&index_data[0], index_data.len * float.sizeof)
+    .build(device)!;
 
-    BufferInfo uniform_buffer = {
-        .size = UniformData.sizeof,
+    BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-    };
-
-    // Create buffers and attach data
-    vertex_buffer.device_only(&vertex_data[0], device)!;
-    index_buffer.device_only(&index_data[0], device)!;
-    uniform_buffer.writable(&&camera.matrix(), device)!;
+        .version = vk::BufferVersion.GLOBAL
+    }
+    .upload_data(&&camera.matrix(), UniformData.sizeof)
+    .build(device)!;
 
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
