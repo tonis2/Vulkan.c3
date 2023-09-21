@@ -801,20 +801,20 @@ fn BufferView! Gltf.getBufferView(Gltf* data, Object* primitive, String key) {
 
 fn uint Accessor.componentLen(Accessor* self) {
     switch(self.type) {
-                case AccessorType.SCALAR:
-                    return 1;
-                case AccessorType.VEC2:
-                    return 2;
-                case AccessorType.VEC3:
-                    return 3;
-                case AccessorType.VEC4:
-                    return 4;
-                case AccessorType.MAT2:
-                    return 4;
-                case AccessorType .MAT3:
-                    return 9;
-                case AccessorType.MAT4:
-                    return 16;
+        case AccessorType.SCALAR:
+            return 1;
+        case AccessorType.VEC2:
+            return 2;
+        case AccessorType.VEC3:
+            return 3;
+        case AccessorType.VEC4:
+            return 4;
+        case AccessorType.MAT2:
+            return 4;
+        case AccessorType .MAT3:
+            return 9;
+        case AccessorType.MAT4:
+            return 16;
     }
 }
 

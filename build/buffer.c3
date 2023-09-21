@@ -84,7 +84,7 @@ fn BufferInfo BufferInfo.upload_data(&self, void* buffer_data, usz size) {
    return *self;
 }
 
-fn BufferInfo! BufferInfo.build(self, DeviceInfo context) {
+fn BufferInfo! BufferInfo.build(&self, DeviceInfo context) {
    if (self.version == BufferVersion.DEVICE_ONLY) {
      BufferCreateInfo staging_info = {
           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -142,7 +142,7 @@ fn BufferInfo! BufferInfo.build(self, DeviceInfo context) {
    }
 
    mem::free(self.pre_buffer);
-   return self;
+   return *self;
 }
 
 fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties, DeviceInfo context) {
