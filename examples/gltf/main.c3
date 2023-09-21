@@ -255,19 +255,19 @@ fn void! main()
                .binding = 0,
                .location = 0,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
+               .offset = Vertex.pos.offsetof
             },
             {
                .binding = 0,
                .location = 1,
                .format = vk::FORMAT_R32G32_SFLOAT,
-               .offset = 4 * float.sizeof
+               .offset = Vertex.tex_pos.offsetof
             },
             {
                .binding = 0,
                .location = 2,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 8 * float.sizeof
+               .offset = Vertex.normal.offsetof
             }
         })
     )
@@ -416,7 +416,7 @@ fn void! main()
                 Mesh mesh = meshes[node.mesh];
 
                 vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
-                vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+                vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{mesh.vertices.offset});
                 vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
                 vk::cmdDrawIndexed(command_buffer, mesh.indices.count, 1, 0, 0, 0);
             }
