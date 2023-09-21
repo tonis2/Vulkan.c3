@@ -4,6 +4,11 @@ import glfw;
 import camera;
 import std::math;
 import gltf;
+import std::collections::list;
+import std::collections::object;
+
+def BufferList = List(<BufferInfo>);
+def MeshList = List(<Mesh>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -13,9 +18,24 @@ const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
     Vec3f pos;
-    Vec4f color;
     Vec2f tex_pos;
+    Vec3f normal;
 }
+
+struct Mesh {
+    uint buffer;
+    struct vertices
+    {
+        uint offset;
+        uint size;
+    }
+    struct indices
+    {
+        uint offset;
+        uint size;
+    }
+}
+
 
 fn void! main()
 {
@@ -28,6 +48,39 @@ fn void! main()
 
     Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
     defer gltf_data.free();
+
+    MeshList meshes;
+    defer meshes.free();
+
+    // Build mesh list from gltf data, basically only offsets and buffer sizes
+    foreach (mesh : gltf_data.meshes) {
+        Mesh data;
+        foreach (index, primitive: mesh.primitives) {
+            Object* attributes = primitive.get("attributes")!!;
+            uint! indices = primitive.get_int("indices");
+
+            foreach (index2, key : attributes.map.key_tlist())
+            {
+               Accessor accessor = gltf_data.accessors[attributes.get_int(key)!!];
+               gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
+
+               if (index == 0 && index2 == 0) {
+                  data.vertices.offset = (usz)buffer_view.offset;
+                  data.buffer = buffer_view.buffer;
+               };
+               data.vertices.size += (usz)buffer_view.byteLength;
+            }
+
+            if (try indices) {
+                Accessor accessor = gltf_data.accessors[indices];
+                gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
+
+                if (index == 0) data.indices.offset = (usz)buffer_view.offset;
+                data.indices.size += (usz)buffer_view.byteLength;
+            }
+        }
+        meshes.push(data);
+    }
 
     if (window == null)
     {
@@ -81,10 +134,6 @@ fn void! main()
 
     defer device.free();
 
-    GltfMesh mesh = gltf_data.meshes[0];
-
-    io::printfn("%d %d", mesh.buffer_offset, mesh.buffer_size);
-
     SurfaceFormatKHR format = device.surface_formats.contains({.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR})
         ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
         : device.surface_formats[0];
@@ -112,14 +161,20 @@ fn void! main()
     SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
     defer swapchain.free(device.device);
 
+    foreach (index, mesh: meshes) {
+        io::printfn("%d %d", mesh.vertices.size, mesh.indices.size);
+    }
+
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
-                GltfMesh mesh = data.meshes[node.mesh];
                 UniformData uniformData = camera.matrix(node.recompose());
+
+                Mesh mesh = meshes[node.mesh];
+
                 // Get vertex and index buffer
             }
         }

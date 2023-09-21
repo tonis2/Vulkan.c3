@@ -200,8 +200,6 @@ struct Accessor {
 struct GltfMesh {
     String name;
     PrimitiveList primitives;
-    usz buffer_offset;
-    usz buffer_size;
 }
 
 struct BufferView {
@@ -279,6 +277,30 @@ fn void GltfMesh.fromJson(GltfMesh* self, Object* json) {
             self.primitives.push(primitive);
         }
     }
+}
+
+fn void GltfMesh.recompose(GltfMesh* self) {
+    // Get mesh total buffer size
+/*    foreach (index, primitive: data.primitives) {
+        Object* attributes = primitive.get("attributes")!!;
+        uint*! indices = primitive.get_int("indices");
+
+        foreach (index2, key : attributes.map.key_tlist())
+        {
+           Accessor accessor = content.accessors[attributes.get_int(key)!!];
+           BufferView buffer_view = content.bufferViews[accessor.bufferView];
+
+           if (index == 0 && index2 == 0) {
+                offset = (usz)buffer_view.offset;
+           }
+           buffer_size += (usz)buffer_view.byteLength;
+        }
+
+        if (try indices) {
+               Accessor accessor = content.accessors[indices];
+               BufferView buffer_view = content.bufferViews[accessor.bufferView];
+        }
+    }*/
 }
 
 fn void BufferView.fromJson(BufferView* self, Object* json) {
@@ -386,7 +408,6 @@ fn void! GltfBuffer.fromJson(GltfBuffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! data = json.get_string("uri");
     BufferType bufferType;
-
 
     if (catch size, data) {
         io::printf("Buffer has no size or data \n");
@@ -651,35 +672,6 @@ fn Gltf! loadFile(String path) {
         }
     }
 
-    // Parse meshes
-    if (try meshes) {
-        foreach (mesh : meshes.array) {
-            GltfMesh data;
-            data.fromJson(mesh);
-
-            uint offset = 0;
-            uint buffer_size = 0;
-
-            // Get mesh total buffer size
-            foreach (index, primitive: data.primitives) {
-                Object* attributes = primitive.get("attributes")!!;
-                foreach (index2, key : attributes.map.key_tlist())
-                {
-                   Accessor accessor = content.accessors[attributes.get_int(key)!!];
-                   BufferView buffer_view = content.bufferViews[accessor.bufferView];
-
-                   if (index == 0 && index2 == 0) {
-                        offset = (usz)buffer_view.offset;
-                   }
-                   buffer_size += (usz)buffer_view.byteLength;
-                }
-            }
-            data.buffer_offset = offset;
-            data.buffer_size = buffer_size;
-            content.meshes.push(data);
-        }
-    }
-
     // Parse cameras
     if (try cameras) {
         foreach (camera : cameras.array) {
@@ -721,9 +713,17 @@ fn Gltf! loadFile(String path) {
         }
     }
 
+    // Parse meshes
+    if (try meshes) {
+        foreach (mesh : meshes.array) {
+            GltfMesh data;
+            data.fromJson(mesh);
+            content.meshes.push(data);
+        }
+    }
+
     if (catch file.close()) {}
     return content;
-
 }
 
 fn void Gltf.free(Gltf* self) {
