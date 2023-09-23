@@ -47,7 +47,7 @@ Vertex[] vertex_data = {
     Vertex {{-1.0, 1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
 };
 
-uint[] index_data = {
+ushort[] index_data = {
     0,  1,  2,      0,  2,  3,    // front
     4,  5,  6,      4,  6,  7,    // back
     8,  9,  10,     8,  10, 11,   // top
@@ -383,7 +383,7 @@ fn void! main()
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
         vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
-        vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT32);
+        vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
         vk::cmdDrawIndexed(command_buffer, index_data.len, 1, 0, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
 
