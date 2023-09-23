@@ -894,32 +894,31 @@ fn void GltfBuffer.free(GltfBuffer* self) {
     mem::free(self.data);
 }
 
-// fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
-//     BufferView bufferView = self.bufferViews[accessor.bufferView];
-//     Buffer buffer = self.buffers[bufferView.buffer];
-//     char* data = (buffer.data + accessor.offset + bufferView.offset);
+ fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
+    BufferView bufferView = self.bufferViews[accessor.bufferView];
+    GltfBuffer buffer = self.buffers[bufferView.buffer];
+    char* data = (buffer.data + accessor.offset + bufferView.offset);
 
-//     for (uint i = 0; i < bufferView.byteLength; i += accessor.size()) {
-//         if (accessor.data_type == DataType.USHORT) {
-//             ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
-//             io::printf("Parsed value %d \n", value);
-//         }
+    for (uint i = 0; i < bufferView.byteLength; i += accessor.dataSize()) {
+        if (accessor.data_type == DataType.USHORT) {
+            ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
+            io::printf("Parsed USHORT %d \n", value);
+        }
 
-//         if (accessor.data_type == DataType.SHORT) {
-//             short value = bitcast(char[2]{data[i], data[i + 1]}, short);
-//             io::printf("Parsed value %d \n", value);
-//         }
+        if (accessor.data_type == DataType.SHORT) {
+            short value = bitcast(char[2]{data[i], data[i + 1]}, short);
+            io::printf("Parsed SHORT %d \n", value);
+        }
 
-//         if (accessor.data_type == DataType.UINT) {
-//             uint value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, uint);
-//             io::printf("Parsed value %d \n", value);
-//         }
+        if (accessor.data_type == DataType.UINT) {
+            uint value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, uint);
+            io::printf("Parsed UINT %d \n", value);
+        }
 
-//         if (accessor.data_type == DataType.FLOAT) {
-//             float value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, float);
-//             io::printf(" %d ", value);
-//         }
-//     }
-
-//     io::printf(" \n _______ \n%d");
-// }
+        if (accessor.data_type == DataType.FLOAT) {
+            float value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, float);
+            io::printf("Parsed FLOAT %d \n", value);
+        }
+    }
+        io::printf(" \n _______ \n%d");
+}
