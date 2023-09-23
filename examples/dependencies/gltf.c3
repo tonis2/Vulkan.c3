@@ -894,7 +894,7 @@ fn void GltfBuffer.free(GltfBuffer* self) {
     mem::free(self.data);
 }
 
- fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
+fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     GltfBuffer buffer = self.buffers[bufferView.buffer];
     char* data = (buffer.data + accessor.offset + bufferView.offset);

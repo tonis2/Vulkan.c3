@@ -7,7 +7,6 @@ import gltf;
 import std::collections::list;
 import std::collections::object;
 
-def BufferList = List(<BufferInfo>);
 def MeshList = List(<Mesh>);
 
 const WIDTH = 800;
@@ -60,7 +59,7 @@ fn void! main()
         foreach (index, primitive: mesh.primitives) {
             Object* attributes = primitive.get("attributes")!!;
             uint! indices = primitive.get_int("indices");
-
+            Vertex vertex;
             foreach (index2, key : attributes.map.key_tlist())
             {
                Accessor accessor = gltf_data.accessors[attributes.get_int(key)!!];
@@ -231,8 +230,17 @@ fn void! main()
 
     ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
     ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
+
+    // Use push constants, to update each rendered model matrix per frame
     PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
-                                                                         .setSetLayouts({ descriptor_set_layout }))!;
+                                    .setPushConstantRanges({
+                                        {
+                                            .offset = 0,
+                                            .size = Matrix4f.sizeof,
+                                            .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+                                        }
+                                    })
+                                    .setSetLayouts({ descriptor_set_layout }))!;
 
     // Create Renderpipeline info
     GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
@@ -246,7 +254,7 @@ fn void! main()
         {
             {
              .binding = 0,
-             .stride = Vertex.sizeof,
+             .stride = float.sizeof * 3,
              .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
         })
@@ -254,7 +262,7 @@ fn void! main()
             {
                .binding = 0,
                .location = 0,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .format = vk::FORMAT_R32G32B32A32_SFLOAT,
                .offset = Vertex.pos.offsetof
             },
             {
@@ -411,11 +419,12 @@ fn void! main()
 
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
-                UniformData cameraMatrix = camera.matrix(node.recompose());
-                mem::copy(uniform_buffer.mapped, &cameraMatrix, uniform_buffer.size);
                 Mesh mesh = meshes[node.mesh];
+            
+                mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+                vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, Matrix4f.sizeof, &&node.recompose());
 
-                vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+                vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, descriptorSets);
                 vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{mesh.vertices.offset});
                 vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
                 vk::cmdDrawIndexed(command_buffer, mesh.indices.count, 1, 0, 0, 0);
