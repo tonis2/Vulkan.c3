@@ -420,7 +420,7 @@ fn void! main()
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
                 Mesh mesh = meshes[node.mesh];
-            
+
                 mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
                 vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, Matrix4f.sizeof, &&node.recompose());
 
