@@ -4,10 +4,12 @@
 	"authors": [],
 	"version": "0.1.0",
 	"dependency-search-paths": [ "./examples/dependencies" ],
-	"dependencies": ["glfw"],
+	"dependencies": ["glfw", "stb"],
 	"features": ["GLFW_VK"],
 	"linked-libraries": ["vulkan", "glfw"],
 	"sources": [ "./examples/helpers/*", "./build/*"],
+	"c-sources": ["./examples/dependencies/stb.c3l/native/*"],
+	"cflags": "-fPIE",
 	"targets": {
 		"cube": {
 			"type": "executable",
