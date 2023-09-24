@@ -140,21 +140,21 @@ fn void! main()
 
     BufferInfo vertex_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_ONLY
+        .version = vk::BufferVersion.DEVICE_BUFFER
     }
     .upload_data(vertex_data, Vertex.sizeof * vertex_data.len)
     .build(device)!;
 
     BufferInfo index_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_ONLY
+        .version = vk::BufferVersion.DEVICE_BUFFER
     }
     .upload_data(index_data, index_data.len * float.sizeof)
     .build(device)!;
 
     BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::BufferVersion.GLOBAL
+        .version = vk::BufferVersion.GLOBAL_BUFFER
     }
     .upload_data(&&camera.matrix(), UniformData.sizeof)
     .build(device)!;
