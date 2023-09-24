@@ -87,25 +87,6 @@ fn void! main()
         meshes.push(data);
     }
 
-    foreach (image : gltf_data.images) {
-        gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
-        GltfBuffer buffer = gltf_data.buffers[buffer_view.buffer];
-
-        stb::Image image_buffer = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB)!;
-        defer image_buffer.free();
-
-        ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
-        .setImageType(vk::IMAGE_TYPE_2D)
-        .setExtent({.width = image_buffer.width, .height = image_buffer.height, .depth = 1 })
-        .setMipLevels(1)
-        .setArrayLayers(1)
-        .setSamples(vk::SAMPLE_COUNT_1_BIT)
-        .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
-        .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-        .setTiling(vk::IMAGE_TILING_OPTIMAL)
-        .setFormat(vk::FORMAT_R8G8B8A8_SRGB);
-    }
-
     if (window == null)
     {
         io::printfn("Failed to init glfw window");
@@ -153,7 +134,6 @@ fn void! main()
     }
 
     instance.init()!; // Creates real instance
-
     SurfaceKHR surface = glfw::createWindowSurface(instance.instance, window, null)!;
     DeviceInfo device = vk::requestDevice(instance, surface)!; // Creates everything related to GPU device
 
@@ -180,19 +160,19 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
-    BufferInfo vertex_buffer = BufferInfo {
+    BufferInfo vertex_buffer = {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_ONLY
+        .version = vk::BufferVersion.DEVICE_BUFFER
     };
 
-    BufferInfo index_buffer = BufferInfo {
+    BufferInfo index_buffer = {
         .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_ONLY
+        .version = vk::BufferVersion.DEVICE_BUFFER
     };
 
     BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::BufferVersion.GLOBAL
+        .version = vk::BufferVersion.GLOBAL_BUFFER
     }
     .upload_data(&&camera.matrix(), UniformData.sizeof)
     .build(device)!;
@@ -205,6 +185,36 @@ fn void! main()
 
     vertex_buffer.build(device)!;
     index_buffer.build(device)!;
+
+    foreach (image : gltf_data.images) {
+        gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
+        GltfBuffer buffer = gltf_data.buffers[buffer_view.buffer];
+
+        stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB)!;
+        defer image_data.free();
+
+        BufferInfo image_buffer = BufferInfo {
+            .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
+            .version = vk::BufferVersion.GLOBAL_BUFFER
+        }
+        .upload_data(image_data.pixels, (usz)(image_data.width * image_data.height))
+        .build(device)!;
+
+        defer image_buffer.free(device.device);
+
+        ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
+        .setImageType(vk::IMAGE_TYPE_2D)
+        .setExtent({.width = image_data.width, .height = image_data.height, .depth = 1 })
+        .setMipLevels(1)
+        .setArrayLayers(1)
+        .setSamples(vk::SAMPLE_COUNT_1_BIT)
+        .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+        .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+        .setTiling(vk::IMAGE_TILING_OPTIMAL)
+        .setFormat(vk::FORMAT_R8G8B8A8_SRGB);
+
+/*        vk::createImage(device.device, &image_info, null, &textureImage);*/
+    }
 
    // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
