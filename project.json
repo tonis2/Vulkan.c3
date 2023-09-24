@@ -3,6 +3,7 @@
 	"warnings": ["no-unused"],
 	"authors": [],
 	"version": "0.1.0",
+	
 	"dependency-search-paths": [ "./examples/dependencies" ],
 	"dependencies": ["glfw"],
 	"features": ["GLFW_VK"],
