@@ -4,11 +4,10 @@
 	"authors": [],
 	"version": "0.1.0",
 	"dependency-search-paths": [ "./examples/dependencies" ],
-	"dependencies": ["glfw", "stb"],
+	"dependencies": ["glfw"],
 	"features": ["GLFW_VK"],
 	"linked-libraries": ["vulkan", "glfw"],
 	"sources": [ "./examples/helpers/*", "./build/*"],
-	"c-sources": ["./examples/dependencies/stb.c3l/native/*"],
 	"cflags": "-fPIE",
 	"targets": {
 		"cube": {
@@ -17,7 +16,9 @@
 		},
 		"gltf": {
 			"type": "executable",
-			"sources-add": ["./examples/gltf/main.c3", "./examples/dependencies/gltf.c3"]
+			"dependencies-add": ["stb"],
+			"sources-add": ["./examples/gltf/main.c3", "./examples/dependencies/gltf.c3"],
+			"c-sources-add": ["./examples/dependencies/stb.c3l/native/*"]
 		}
 	},
 	"output": "./build"
