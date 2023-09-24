@@ -6,15 +6,11 @@
 *.ko
 *.obj
 *.elf
-
+*.o
 
 tmp
 _c3l
 
-gltf
-test
-./cube
-cube
 
 # Linker output
 *.ilk
@@ -30,7 +26,7 @@ cube
 *.a
 *.la
 *.lo
-
+!*.*
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
