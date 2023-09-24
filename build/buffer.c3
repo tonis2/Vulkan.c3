@@ -5,6 +5,7 @@ enum BufferVersion : int
 {
   DEVICE_ONLY,
   GLOBAL,
+  TEXTURE,
 }
 
 struct BufferInfo {
@@ -22,55 +23,6 @@ fn void BufferInfo.free(&self, Device device)
 {
     destroyBuffer(device, self.buffer, null);
     freeMemory(device, self.memory, null);
-}
-
-fn void! BufferInfo.copy_to(&self, BufferInfo dst_buffer, DeviceInfo context) {
-    CommandPool command_pool;
-    CommandPoolCreateInfo pool_info = {
-        .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-        .pNext = null,
-        .queueFamilyIndex = context.queue_family.graphics,
-    };
-    createCommandPool(context.device, &pool_info, null, &command_pool)!;
-    CommandBufferAllocateInfo alloc_info = {
-        .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-        .pNext = null,
-        .level = COMMAND_BUFFER_LEVEL_PRIMARY,
-        .commandPool = command_pool,
-        .commandBufferCount = 1,
-    };
-    CommandBuffer command_buffer;
-    allocateCommandBuffers(context.device, &alloc_info, &command_buffer)!;
-    CommandBufferBeginInfo beginInfo = {
-        .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-    };
-    beginCommandBuffer(command_buffer, &beginInfo)!;
-
-    BufferCopy copyRegion = {
-        .srcOffset = 0,
-        .dstOffset = 0,
-        .size = self.size
-    };
-    vk::cmdCopyBuffer(command_buffer, self.buffer, dst_buffer.buffer, 1, &copyRegion);
-    endCommandBuffer(command_buffer)!;
-    SubmitInfo submitInfo = {
-        .sType = STRUCTURE_TYPE_SUBMIT_INFO,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &command_buffer
-    };
-    queueSubmit(context.graphics_queue, 1, &submitInfo, null)!;
-    queueWaitIdle(context.graphics_queue)!;
-    freeCommandBuffers(context.device, command_pool, 1, &command_buffer);
-    destroyCommandPool(context.device, command_pool, null);
-/*    context.single_time_buffer(fn (buffer) {
-       VkBufferCopy copyRegion = {
-            .srcOffset = 0,
-            .dstOffset = 0,
-            .size = self.size
-        };
-        vk::cmdCopyBuffer(command_buffer, self.buffer, dst_buffer.buffer, 1, &copyRegion);
-    });*/
 }
 
 fn BufferInfo BufferInfo.upload_data(&self, void* buffer_data, usz size) {
@@ -116,7 +68,16 @@ fn BufferInfo! BufferInfo.build(&self, DeviceInfo context) {
        };
 
        BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
-       staging_buffer.copy_to(buffer, context)!;
+
+       context.@single_time_buffer(;CommandBuffer command_buffer) {
+          BufferCopy copyRegion = {
+               .srcOffset = 0,
+               .dstOffset = 0,
+               .size = self.size
+           };
+           vk::cmdCopyBuffer(command_buffer, staging_buffer.buffer, buffer.buffer, 1, &copyRegion);
+       }!;
+
        self.buffer = buffer.buffer;
        self.memory = buffer.memory;
    }
@@ -182,3 +143,27 @@ fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties,
         .usage = info.usage
     };
 }
+
+
+/*fn BufferInfo! loadTexture(BufferCreateInfo info, MemoryPropertyFlags properties, DeviceInfo context) {
+    BufferCreateInfo staging_info = {
+       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+       .pNext = null,
+       .flags = 0,
+       .size = self.size,
+       .usage = BUFFER_USAGE_TRANSFER_SRC_BIT,
+       .sharingMode = SHARING_MODE_EXCLUSIVE,
+       .queueFamilyIndexCount = 0,
+       .pQueueFamilyIndices = null,
+    };
+
+    BufferInfo staging_buffer = initBuffer(staging_info, BUFFER_USAGE_TRANSFER_SRC_BIT, MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
+    defer staging_buffer.free(context.device);
+
+    return BufferInfo {
+        .buffer = buffer,
+        .memory = memory,
+        .size = info.size,
+        .usage = info.usage
+    };
+}*/

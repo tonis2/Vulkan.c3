@@ -82,7 +82,8 @@ fn void! main()
 
     Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
-    AppInfo appInfo = {
+//"VK_LAYER_LUNARG_api_dump"
+    InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
         .pEngineName = "Super engine",
@@ -93,27 +94,28 @@ fn void! main()
         .instance_flags = env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
     };
 
-    defer appInfo.free();
-
     //"VK_LAYER_LUNARG_api_dump"
-    appInfo.validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    appInfo.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
+    instance.validations.add_array({"VK_LAYER_KHRONOS_validation"});
+    instance.device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
 
     // SETUP extensions
     uint glfwExtensions_count = 0;
     ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
-    for (int i = 0; i < glfwExtensions_count; ++i) appInfo.extensions.push(glfwExtensions[i]);
+    for (int i = 0; i < glfwExtensions_count; ++i) instance.extensions.push(glfwExtensions[i]);
 
     if (ENABLE_VALIDATION_LAYERS) {
-       appInfo.extensions.add_array({"VK_EXT_debug_utils"});
+       instance.extensions.add_array({"VK_EXT_debug_utils"});
     }
 
     if (env::os_is_darwin()) {
-        appInfo.extensions.push("VK_KHR_portability_enumeration");
-        appInfo.device_extensions.push("VK_KHR_portability_subset");
+        instance.extensions.push("VK_KHR_portability_enumeration");
+        instance.device_extensions.push("VK_KHR_portability_subset");
     }
 
-    DeviceInfo device = vk::requestDevice(&appInfo, window)!;
+    instance.init()!; // Creates real instance
+
+    SurfaceKHR surface = glfw::createWindowSurface(instance.instance, window, null)!;
+    DeviceInfo device = vk::requestDevice(instance, surface)!; // Creates everything related to GPU device
 
     SurfaceFormatKHR format = device.surface_formats.contains({.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR})
         ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
@@ -130,14 +132,9 @@ fn void! main()
     .setPreTransform(device.capabilities.currentTransform)
     .setImageColorSpace(format.colorSpace)
     .setImageFormat(format.format)
-    .setSurface(device.surface)
+    .setSurface(surface)
     .setImageArrayLayers(1)
-    .setImageExtent(device.getExtent());
-
-    if (env::os_is_darwin()) {
-        swapchain_info.imageExtent.width /= 2;
-        swapchain_info.imageExtent.height /= 2;
-    }
+    .setImageExtent({.width = WIDTH, .height = HEIGHT });
 
     SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
 
@@ -321,7 +318,7 @@ fn void! main()
         Semaphore wait_semaphore = wait_semaphores[frame];
         Semaphore signal_semaphore = signal_semaphores[frame];
 
-        frame_fence.waitFor(device.device)!;
+        frame_fence.wait(device.device)!;
         frame_fence.reset(device.device)!;
 
         uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
@@ -449,6 +446,10 @@ fn void! main()
         pipeline.free(device.device);
         pipeline_layout.free(device.device);
         descriptor_set_layout.free(device.device);
+
+        surface.free(instance.instance);
+        instance.free();
+
         device.free();
     }
 }
