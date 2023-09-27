@@ -306,7 +306,6 @@ fn void! main()
         })
         .setImage(texture.image);
         vk::createImageView(device.device, &image_view_info, null, &texture.view)!;
-
         textures.push(texture);
     }
 
@@ -315,30 +314,47 @@ fn void! main()
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
-      {
+        {
           .binding = 0,
           .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
           .descriptorCount = 1,
           .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
-      }
+        },
+        {
+            .binding = 1,
+            .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            .descriptorCount = 1,
+            .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
+        },
     });
 
     DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
     WriteDescriptorSet[] descriptorSets = {
-            vk::writeDescriptorSetBuilder()
-            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-            .setBufferInfo({
-              {
-                   .buffer = uniform_buffer.buffer,
-                   .offset = 0,
-                   .range = UniformData.sizeof,
-               },
-           })
+        vk::writeDescriptorSetBuilder()
+        .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+        .setDstBinding(0)
+        .setBufferInfo({
+            {
+               .buffer = uniform_buffer.buffer,
+               .offset = 0,
+               .range = UniformData.sizeof,
+            },
+        }),
+        vk::writeDescriptorSetBuilder()
+        .setDstBinding(1)
+        .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+        .setImageInfo({
+            {
+                .sampler = textures[0].sampler,
+                .imageView = textures[0].view,
+                .imageLayout = textures[0].layout,
+            }
+        })
     };
 
     // Required for using push descriptors
     PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
-                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
+                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(descriptorSets.len));
     vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
 
     // Load shaders
@@ -467,6 +483,13 @@ fn void! main()
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
+        // Update camera  rotation on left-mouse click
+        if (eventHandler.left_mouse_click) {
+            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
+            camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+        }
+        mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+
         Fence frame_fence = frame_fences[frame];
         Semaphore wait_semaphore = wait_semaphores[frame];
         Semaphore signal_semaphore = signal_semaphores[frame];
@@ -527,19 +550,12 @@ fn void! main()
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-
-        // Update camera  rotation on left-mouse click
-        if (eventHandler.left_mouse_click) {
-            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
-            camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
-        }
-        mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
                 Mesh mesh = meshes[node.mesh];
                 vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, Matrix4f.sizeof, &&node.recompose());
-                vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, descriptorSets);
                 vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{mesh.vertices.offset});
                 vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
                 vk::cmdDrawIndexed(command_buffer, mesh.indices.count, 1, 0, 0, 0);
