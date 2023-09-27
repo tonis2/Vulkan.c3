@@ -9,6 +9,7 @@ import std::collections::object;
 import stb;
 
 def MeshList = List(<Mesh>);
+def TextureList = List(<ImageBufferInfo>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -103,7 +104,6 @@ fn void! main()
     eventHandler.init();
     Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
-    //"VK_LAYER_LUNARG_api_dump"
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
@@ -186,21 +186,31 @@ fn void! main()
     vertex_buffer.build(device)!;
     index_buffer.build(device)!;
 
+    TextureList textures;
+    defer {
+        foreach (img : textures) img.free(device.device);
+        textures.free();
+    }
+
+    // Create texture-images from gltf buffer
     foreach (image : gltf_data.images) {
+        Format image_format = vk::FORMAT_R8G8B8A8_SRGB;
+
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         GltfBuffer buffer = gltf_data.buffers[buffer_view.buffer];
 
         stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB)!;
         defer image_data.free();
 
-        BufferInfo image_buffer = BufferInfo {
+        BufferInfo image_staging_buffer = BufferInfo {
             .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
             .version = vk::BufferVersion.GLOBAL_BUFFER
         }
-        .upload_data(image_data.pixels, (usz)(image_data.width * image_data.height))
+        .upload_data(image_data.pixels, (usz)(buffer_view.byteLength))
+        .set_size((usz)image_data.width * image_data.height * 4)
         .build(device)!;
 
-        defer image_buffer.free(device.device);
+        defer image_staging_buffer.free(device.device);
 
         ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
         .setImageType(vk::IMAGE_TYPE_2D)
@@ -211,10 +221,95 @@ fn void! main()
         .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
         .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
         .setTiling(vk::IMAGE_TILING_OPTIMAL)
-        .setFormat(vk::FORMAT_R8G8B8A8_SRGB);
+        .setFormat(image_format);
 
-/*        vk::createImage(device.device, &image_info, null, &textureImage);*/
+        ImageBufferInfo texture = vk::createTexture(image_info, device)!;
+
+        // Create single-time command buffer for copying buffer to image
+        device.@single_time_buffer(;CommandBuffer command_buffer) {
+            vk::ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
+            .setImage(texture.image)
+            .setSubresourceRange({
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+                .levelCount = 1,
+            })
+            .setSrcAccessMask(0)
+            .setDstAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
+            .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+            .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+            vk::cmdPipelineBarrier(
+             command_buffer,
+             vk::PIPELINE_STAGE_HOST_BIT,
+             vk::PIPELINE_STAGE_TRANSFER_BIT,
+             0,
+             0,
+             null,
+             0,
+             null,
+             1,
+             &imageMemoryBarrier
+            );
+
+            BufferImageCopy bufferCopyRegion = {
+                .bufferOffset = 0,
+                .bufferRowLength = 0,
+                .bufferImageHeight = 0,
+                .imageSubresource = {
+                    .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                    .mipLevel = 0,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+                },
+                .imageOffset = {0, 0, 0},
+                .imageExtent = {.width = image_data.width, .height = image_data.height, .depth = 1 }
+            };
+
+            vk::cmdCopyBufferToImage(
+                command_buffer,
+                image_staging_buffer.buffer,
+                texture.image,
+                vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1,
+                &bufferCopyRegion
+            );
+        }!;
+
+        SamplerCreateInfo sampler = vk::samplerCreateInfoBuilder()
+        .setMagFilter(vk::FILTER_LINEAR)
+        .setMinFilter(vk::FILTER_LINEAR)
+        .setMipmapMode(vk::SAMPLER_MIPMAP_MODE_LINEAR)
+        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setMipLodBias(0.0)
+        .setCompareOp(vk::COMPARE_OP_NEVER)
+        .setMinLod(0.0)
+        .setMaxLod(0.0)
+        .setMaxAnisotropy(1.0)
+        .setAnisotropyEnable(vk::FALSE)
+        .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE);
+        vk::createSampler(device.device, &sampler, null, &texture.sampler)!;
+
+        ImageViewCreateInfo image_view_info = vk::imageViewCreateInfoBuilder()
+        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setFormat(image_format)
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+            .levelCount = 1,
+        })
+        .setImage(texture.image);
+        vk::createImageView(device.device, &image_view_info, null, &texture.view)!;
+
+        textures.push(texture);
     }
+
 
    // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -452,6 +547,7 @@ fn void! main()
         }
 
         vk::cmdEndRenderingKHR(command_buffer);
+
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
@@ -509,11 +605,11 @@ fn void! main()
     pipeline.free(device.device);
     pipeline_layout.free(device.device);
 
-     wait_semaphores.release(device.device);
-     signal_semaphores.release(device.device);
-     frame_fences.release(device.device);
+    wait_semaphores.release(device.device);
+    signal_semaphores.release(device.device);
+    frame_fences.release(device.device);
 
-     surface.free(instance.instance);
-     instance.free();
-     device.free();
+    surface.free(instance.instance);
+    instance.free();
+    device.free();
 }
