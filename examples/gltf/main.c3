@@ -102,7 +102,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
+    camera::Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
@@ -178,7 +178,7 @@ fn void! main()
     .build(device)!;
 
     foreach (index, mesh: meshes) {
-        GltfBuffer buffer = gltf_data.buffers[mesh.buffer];
+        gltf::Buffer buffer = gltf_data.buffers[mesh.buffer];
         vertex_buffer.upload_data((buffer.data + mesh.vertices.offset), mesh.vertices.size);
         index_buffer.upload_data((buffer.data + mesh.indices.offset), mesh.indices.size);
     }
@@ -193,21 +193,23 @@ fn void! main()
     }
 
     // Create texture-images from gltf buffer
-    foreach (image : gltf_data.images) {
-        Format image_format = vk::FORMAT_R8G8B8A8_SRGB;
+    foreach (gltf_texture : gltf_data.textures) {
+        Format image_format = vk::FORMAT_B8G8R8A8_UNORM;
+        gltf::Image image = gltf_data.images[gltf_texture.source];
+        gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
 
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
-        GltfBuffer buffer = gltf_data.buffers[buffer_view.buffer];
+        gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
-        stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB)!;
+        stb::Image image_data = stb::loadImage("examples/gltf/assets/c.png", Channel.STBI_RGB_ALPHA)!;
+        //stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
         defer image_data.free();
 
         BufferInfo image_staging_buffer = BufferInfo {
             .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
             .version = vk::BufferVersion.GLOBAL_BUFFER
         }
-        .upload_data(image_data.pixels, (usz)(buffer_view.byteLength))
-        .set_size((usz)image_data.width * image_data.height * 4)
+        .upload_data(&image_data.pixels[0], (usz)image_data.width * image_data.height * 4)
         .build(device)!;
 
         defer image_staging_buffer.free(device.device);
@@ -227,7 +229,7 @@ fn void! main()
 
         // Create single-time command buffer for copying buffer to image
         device.@single_time_buffer(;CommandBuffer command_buffer) {
-            vk::ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
+            ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
             .setImage(texture.image)
             .setSubresourceRange({
                 .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
@@ -243,7 +245,7 @@ fn void! main()
 
             vk::cmdPipelineBarrier(
              command_buffer,
-             vk::PIPELINE_STAGE_HOST_BIT,
+             vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
              vk::PIPELINE_STAGE_TRANSFER_BIT,
              0,
              0,
@@ -276,22 +278,49 @@ fn void! main()
                 1,
                 &bufferCopyRegion
             );
+
+            ImageMemoryBarrier imageMemoryBarrier2 = vk::imageMemoryBarrierBuilder()
+            .setImage(texture.image)
+            .setSubresourceRange({
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+                .levelCount = 1,
+            })
+            .setSrcAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
+            .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
+            .setOldLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+            .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+            vk::cmdPipelineBarrier(
+                 command_buffer,
+                 vk::PIPELINE_STAGE_TRANSFER_BIT,
+                 vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                 0,
+                 0,
+                 null,
+                 0,
+                 null,
+                 1,
+                 &imageMemoryBarrier2
+            );
+            texture.layout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         }!;
 
         SamplerCreateInfo sampler = vk::samplerCreateInfoBuilder()
         .setMagFilter(vk::FILTER_LINEAR)
         .setMinFilter(vk::FILTER_LINEAR)
-        .setMipmapMode(vk::SAMPLER_MIPMAP_MODE_LINEAR)
         .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
         .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
         .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
         .setMipLodBias(0.0)
-        .setCompareOp(vk::COMPARE_OP_NEVER)
         .setMinLod(0.0)
-        .setMaxLod(0.0)
+        .setMaxLod(1.0)
         .setMaxAnisotropy(1.0)
         .setAnisotropyEnable(vk::FALSE)
         .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE);
+
         vk::createSampler(device.device, &sampler, null, &texture.sampler)!;
 
         ImageViewCreateInfo image_view_info = vk::imageViewCreateInfoBuilder()
@@ -426,7 +455,7 @@ fn void! main()
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setCullMode(vk::CULL_MODE_BACK_BIT)
         .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
         .setDepthBiasEnable(vk::FALSE)
     )

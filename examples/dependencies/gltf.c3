@@ -12,14 +12,14 @@ import std::collections::map;
 def PrimitiveList = List(<Object*>);
 def NodeList = List(<Node>);
 def SceneList= List(<Scene>);
-def MeshList = List(<GltfMesh>);
+def MeshList = List(<Mesh>);
 def IndexList = List(<uint>);
-def BufferList = List(<GltfBuffer>);
+def BufferList = List(<Buffer>);
 def BufferViewList = List(<BufferView>);
 def AccessorList = List(<Accessor>);
-def CameraList = List(<GltfCamera>);
+def CameraList = List(<Camera>);
 def MaterialList = List(<Material>);
-def ImageList = List(<GltfImage>);
+def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
 
@@ -160,7 +160,7 @@ struct Texture {
     uint source;
 }
 
-struct GltfImage {
+struct Image {
     String name;
     uint bufferView;
     BufferType mimeType;
@@ -173,7 +173,7 @@ struct Sampler {
     WrapMode wrap_t;
 }
 
-struct GltfCamera {
+struct Camera {
     String name;
     union
     {
@@ -197,7 +197,7 @@ struct Accessor {
     AccessorType type;
 }
 
-struct GltfMesh {
+struct Mesh {
     String name;
     PrimitiveList primitives;
 }
@@ -210,7 +210,7 @@ struct BufferView {
     Targets target;
 }
 
-struct GltfBuffer {
+struct Buffer {
     char* data;
     uint size;
     BufferType data_type;
@@ -267,7 +267,7 @@ fn bool Node.hasCamera(Node* self) {
     return self.mesh != -1;
 }
 
-fn void GltfMesh.fromJson(GltfMesh* self, Object* json) {
+fn void Mesh.fromJson(Mesh* self, Object* json) {
     String! name = json.get_string("name");
     Object*! primitives = json.get("primitives");
 
@@ -279,7 +279,7 @@ fn void GltfMesh.fromJson(GltfMesh* self, Object* json) {
     }
 }
 
-fn void GltfMesh.recompose(GltfMesh* self) {
+fn void Mesh.recompose(Mesh* self) {
     // Get mesh total buffer size
 /*    foreach (index, primitive: data.primitives) {
         Object* attributes = primitive.get("attributes")!!;
@@ -404,7 +404,7 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
     }
 }
 
-fn void! GltfBuffer.fromJson(GltfBuffer* self, Object* json) {
+fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! data = json.get_string("uri");
     BufferType bufferType;
@@ -436,7 +436,7 @@ fn void! GltfBuffer.fromJson(GltfBuffer* self, Object* json) {
     self.data_type = bufferType;
 }
 
-fn void! GltfCamera.fromJson(GltfCamera* self, Object* json) {
+fn void! Camera.fromJson(Camera* self, Object* json) {
     String! cameraType = json.get_string("type");
     String! name = json.get_string("name");
 
@@ -572,7 +572,7 @@ fn void Sampler.fromJson(Sampler* self, Object* json) {
     }
 }
 
-fn void GltfImage.fromJson(GltfImage* self, Object* json) {
+fn void Image.fromJson(Image* self, Object* json) {
     uint! bufferView = json.get_int("bufferView");
     String! name = json.get_string("name");
     String! mimeType = json.get_string("mimeType");
@@ -666,7 +666,7 @@ fn Gltf! loadFile(String path) {
     // Parse buffers
     if (try buffers) {
         foreach (buffer : buffers.array) {
-            GltfBuffer data;
+            Buffer data;
             if (catch err = data.fromJson(buffer)) {}
             else {content.buffers.push(data);}
         }
@@ -675,7 +675,7 @@ fn Gltf! loadFile(String path) {
     // Parse cameras
     if (try cameras) {
         foreach (camera : cameras.array) {
-            GltfCamera data;
+            Camera data;
             if (catch err = data.fromJson(camera)) {}
             else {content.cameras.push(data);}
         }
@@ -691,7 +691,7 @@ fn Gltf! loadFile(String path) {
     // Parse images
     if (try images) {
         foreach (image : images.array) {
-            GltfImage data;
+            Image data;
             data.fromJson(image);
             content.images.push(data);
         }
@@ -716,7 +716,7 @@ fn Gltf! loadFile(String path) {
     // Parse meshes
     if (try meshes) {
         foreach (mesh : meshes.array) {
-            GltfMesh data;
+            Mesh data;
             data.fromJson(mesh);
             content.meshes.push(data);
         }
@@ -890,13 +890,13 @@ fn Matrix4f Node.recompose(Node* self) {
    return scale.mul(translation).mul(rotation);
 }
 
-fn void GltfBuffer.free(GltfBuffer* self) {
+fn void Buffer.free(Buffer* self) {
     mem::free(self.data);
 }
 
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
-    GltfBuffer buffer = self.buffers[bufferView.buffer];
+    Buffer buffer = self.buffers[bufferView.buffer];
     char* data = (buffer.data + accessor.offset + bufferView.offset);
 
     for (uint i = 0; i < bufferView.byteLength; i += accessor.dataSize()) {
