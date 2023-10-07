@@ -183,7 +183,7 @@ fn void! main()
             .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
             .version = vk::BufferVersion.GLOBAL_BUFFER
         }
-        .upload_data(&image_data.pixels[0], (usz)image_data.width * image_data.height * 4)
+        .upload_data(image_data.pixels, (usz)image_data.width * image_data.height * 4)
         .build(device)!;
 
         defer image_staging_buffer.free(device.device);
@@ -500,7 +500,7 @@ fn void! main()
         frame_fence.wait(device.device)!;
         frame_fence.reset(device.device)!;
 
-        uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
+        uint next_image = swapchain.getNextImage(device.device, wait_semaphore);
 
         RenderingInfo rendering_info = vk::renderingInfoBuilder()
         .setLayerCount(1)
