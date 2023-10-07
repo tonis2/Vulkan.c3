@@ -317,7 +317,7 @@ macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
 
 
   handles.forEach((type) {
-    mainOutput.writeAsStringSync("def ${type.name.C3Name} = distinct inline ${type.type};\n",
+    mainOutput.writeAsStringSync("distinct ${type.name.C3Name} = inline ${type.type};\n",
         mode: FileMode.append);
   });
 
@@ -344,7 +344,7 @@ macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
 
   enums.forEach((entry) {
     String code =
-        "\ndef ${entry.name.C3Name} = distinct inline ${entry.bitwidth != null ? "ulong" : "int"};\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
+        "\ndistinct ${entry.name.C3Name} = inline ${entry.bitwidth != null ? "ulong" : "int"};\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
     mainOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 

@@ -1,6 +1,11 @@
 module vk;
 import std::io;
 
+fault BufferError
+{
+    BUFFER_TOO_SMALL,
+}
+
 enum BufferVersion : int
 {
   DEVICE_BUFFER,
@@ -53,11 +58,11 @@ struct BufferInfo {
     void* pre_buffer;
     Buffer buffer;
     DeviceMemory memory;
+    ulong total_size;
     ulong size;
     void* mapped;
     BufferUsageFlags usage;
     BufferVersion version;
-    bool is_ready;
 }
 
 fn void BufferInfo.free(&self, Device device)
@@ -93,19 +98,34 @@ fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, DeviceInf
     return 0;
 }
 
-fn BufferInfo BufferInfo.upload_data(&self, void* buffer_data, usz size) {
-   if (self.size == 0) {
+fn BufferInfo! BufferInfo.upload_data(&self, void* buffer_data, usz size) {
+   if (self.total_size == 0) {
+       self.total_size = size;
        self.pre_buffer = mem::malloc(void*, size);
-   } else {
-       mem::realloc(self.pre_buffer, self.size + size);
+   }
+
+   if (self.total_size < self.size + size) {
+        return BufferError.BUFFER_TOO_SMALL?;
    }
    mem::copy(self.pre_buffer + self.size, buffer_data, size);
    self.size += size;
    return *self;
 }
 
-fn BufferInfo BufferInfo.set_size(&self, usz size) {
-   self.size = size;
+fn BufferInfo BufferInfo.set_size(&self, ulong size) {
+   self.total_size = size;
+   self.pre_buffer = mem::malloc(void*, self.total_size);
+   return *self;
+}
+
+fn BufferInfo BufferInfo.resize(&self, ulong size) {
+    if (self.total_size == 0) {
+        self.total_size = size;
+        self.pre_buffer = mem::malloc(void*, self.total_size);
+    } else {
+        self.total_size = self.total_size + size;
+        mem::realloc(self.pre_buffer, self.total_size + size);
+    }
    return *self;
 }
 

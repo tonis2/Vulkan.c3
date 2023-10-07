@@ -82,8 +82,8 @@ fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug
     // Check for instance extension support
     foreach (i, value : self.extensions)
     {
-        if (!extensions.contains(value.as_str())) {
-            io::printfn("Extension not supported %s", value.as_str());
+        if (!extensions.contains(value.str_view())) {
+            io::printfn("Extension not supported %s", value.str_view());
             return ContextErrors.EXTENSION_NOT_SUPPORTED?;
         }
     }
@@ -94,8 +94,8 @@ fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug
         // Check for validation support
         foreach (i, value : self.validations)
         {
-            if (!validations.contains(value.as_str())) {
-                io::printfn("Validation layer not supported %s", value.as_str());
+            if (!validations.contains(value.str_view())) {
+                io::printfn("Validation layer not supported %s", value.str_view());
                 return ContextErrors.EXTENSION_NOT_SUPPORTED?;
             }
         }
@@ -269,7 +269,7 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
         StringList device_extensions = getDeviceExtensions(device)!;
         defer device_extensions.free();
         foreach (extension_name : instance.device_extensions) {
-            if (!device_extensions.contains(extension_name.as_str())) {
+            if (!device_extensions.contains(extension_name.str_view())) {
                 supports_extensions = false;
             }
         }
@@ -453,7 +453,7 @@ fn StringList! getInstanceExtensions() {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.as_str());
+        extensionList.push(name.str_view());
     };
     return extensionList;
 }
@@ -470,7 +470,7 @@ fn StringList! getDeviceExtensions(PhysicalDevice device) {
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.as_str());
+        extensionList.push(name.str_view());
     };
     return extensionList;
 }
@@ -499,7 +499,7 @@ fn StringList! getValidationLayers() {
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
     for (uint i = 0; i < layerCount; ++i) {
         ZString name = (ZString)&layers[i].layerName;
-        layersList.push(name.as_str());
+        layersList.push(name.str_view());
     };
     return layersList;
 }

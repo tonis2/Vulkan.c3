@@ -10,6 +10,7 @@ import stb;
 
 def MeshList = List(<Mesh>);
 def TextureList = List(<ImageBufferInfo>);
+def VertexData = List(<Vertex>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -18,27 +19,10 @@ const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
-    Vec3f pos;
+    Vec3f position;
     Vec2f tex_pos;
     Vec3f normal;
 }
-
-struct Mesh {
-    uint buffer;
-    struct vertices
-    {
-        uint offset;
-        uint size;
-        uint count;
-    }
-    struct indices
-    {
-        uint offset;
-        uint size;
-        uint count;
-    }
-}
-
 
 fn void! main()
 {
@@ -55,38 +39,8 @@ fn void! main()
     MeshList meshes;
     defer meshes.free();
 
-    // Build mesh list from gltf data, basically only offsets and buffer sizes
-    foreach (mesh : gltf_data.meshes) {
-        Mesh data;
-        foreach (index, primitive: mesh.primitives) {
-            Object* attributes = primitive.get("attributes")!!;
-            uint! indices = primitive.get_int("indices");
-            Vertex vertex;
-            foreach (index2, key : attributes.map.key_tlist())
-            {
-               Accessor accessor = gltf_data.accessors[attributes.get_int(key)!!];
-               gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
-
-               if (index == 0 && index2 == 0) {
-                  data.vertices.offset = (usz)buffer_view.offset;
-                  data.vertices.count = accessor.count;
-                  data.buffer = buffer_view.buffer;
-               };
-               data.vertices.size += (usz)buffer_view.byteLength;
-            }
-
-            if (try indices) {
-                Accessor accessor = gltf_data.accessors[indices];
-                gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
-                if (index == 0) {
-                    data.indices.offset = (usz)buffer_view.offset;
-                    data.indices.count = (usz)accessor.count;
-                };
-                data.indices.size += (usz)buffer_view.byteLength;
-            }
-        }
-        meshes.push(data);
-    }
+    VertexData vertices;
+    defer vertices.free();
 
     if (window == null)
     {
@@ -177,12 +131,33 @@ fn void! main()
     .upload_data(&&camera.matrix(), UniformData.sizeof)
     .build(device)!;
 
-    foreach (index, mesh: meshes) {
-        gltf::Buffer buffer = gltf_data.buffers[mesh.buffer];
-        vertex_buffer.upload_data((buffer.data + mesh.vertices.offset), mesh.vertices.size);
-        index_buffer.upload_data((buffer.data + mesh.indices.offset), mesh.indices.size);
+    foreach (mesh : gltf_data.meshes) {
+        foreach (index, primitive: mesh.primitives) {
+            Object* attributes = primitive.get("attributes")!!;
+            uint! indices = primitive.get_int("indices");
+
+            Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
+            Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
+            Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
+
+            for (uint i = 0; i < pos_accessor.count ; i += 1) {
+                vertices.push(Vertex {
+                    gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
+                    gltf_data.@cast_buffer(tex_accessor, i * tex_accessor.componentSize(), Vec2f),
+                    gltf_data.@cast_buffer(normal_accessor, i * normal_accessor.componentSize(), Vec3f)
+                });
+            }
+
+            if (try indices) {
+                Accessor accessor = gltf_data.accessors[indices];
+                gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
+                gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
+                index_buffer.upload_data((buffer.data + buffer_view.offset), buffer_view.byteLength)!;
+            }
+        }
     }
 
+    vertex_buffer.upload_data(vertices.entries, Vertex.sizeof * vertices.len())!;
     vertex_buffer.build(device)!;
     index_buffer.build(device)!;
 
@@ -201,8 +176,7 @@ fn void! main()
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
-        stb::Image image_data = stb::loadImage("examples/gltf/assets/c.png", Channel.STBI_RGB_ALPHA)!;
-        //stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
+        stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
         defer image_data.free();
 
         BufferInfo image_staging_buffer = BufferInfo {
@@ -416,7 +390,7 @@ fn void! main()
         {
             {
              .binding = 0,
-             .stride = float.sizeof * 3,
+             .stride = Vertex.sizeof,
              .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
         })
@@ -424,8 +398,8 @@ fn void! main()
             {
                .binding = 0,
                .location = 0,
-               .format = vk::FORMAT_R32G32B32A32_SFLOAT,
-               .offset = Vertex.pos.offsetof
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = Vertex.position.offsetof
             },
             {
                .binding = 0,
@@ -461,16 +435,16 @@ fn void! main()
     )
     .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
     .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
-                      .setSampleShadingEnable(vk::FALSE)
-                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
-                      .setMinSampleShading(1.0)
-                      .setAlphaToCoverageEnable(vk::FALSE)
-                      .setAlphaToOneEnable(vk::FALSE))
+                    .setSampleShadingEnable(vk::FALSE)
+                    .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+                    .setMinSampleShading(1.0)
+                    .setAlphaToCoverageEnable(vk::FALSE)
+                    .setAlphaToOneEnable(vk::FALSE))
     .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
-                        .setDepthTestEnable(vk::FALSE)
-                        .setDepthWriteEnable(vk::FALSE)
-                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
-                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+                    .setDepthTestEnable(vk::FALSE)
+                    .setDepthWriteEnable(vk::FALSE)
+                    .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                    .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
     .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
                     .setLogicOp(vk::LOGIC_OP_COPY)
@@ -583,16 +557,27 @@ fn void! main()
 
         foreach (node : gltf_data.nodes) {
             if (node.hasMesh()) {
-                Mesh mesh = meshes[node.mesh];
+                gltf::Mesh mesh = gltf_data.meshes[node.mesh];
                 vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, Matrix4f.sizeof, &&node.recompose());
-                vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{mesh.vertices.offset});
-                vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
-                vk::cmdDrawIndexed(command_buffer, mesh.indices.count, 1, 0, 0, 0);
+
+                foreach (primitive: mesh.primitives) {
+                    uint indices = primitive.get_int("indices")!;
+                    uint position = primitive.get("attributes")!.get_int("POSITION")!;
+
+                    Accessor vertex_accessor = gltf_data.accessors[position];
+                    gltf::BufferView vertex_buffer_view = gltf_data.bufferViews[vertex_accessor.bufferView];
+
+                    Accessor index_accessor = gltf_data.accessors[indices];
+                    gltf::BufferView index_accessor_view = gltf_data.bufferViews[index_accessor.bufferView];
+
+                    vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{vertex_buffer_view.offset});
+                    vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+                    vk::cmdDrawIndexed(command_buffer, index_accessor.count, 1, 0, 0, 0);
+                }
             }
         }
 
         vk::cmdEndRenderingKHR(command_buffer);
-
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)

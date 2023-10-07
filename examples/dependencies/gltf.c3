@@ -202,6 +202,14 @@ struct Mesh {
     PrimitiveList primitives;
 }
 
+struct Primitive {
+    uint vertice;
+    uint indice;
+    uint tex_cord;
+    uint normal;
+    Object* object;
+}
+
 struct BufferView {
     uint buffer;
     uint byteLength;
@@ -374,32 +382,35 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
                 self.data_type = DataType.FLOAT;
         }
 
-        if (try (objectType.s == "SCALAR")) {
-            self.type = AccessorType.SCALAR;
-        }
+        String! object_type = objectType.s;
+        if (try object_type) {
+            if (object_type == "SCALAR") {
+                self.type = AccessorType.SCALAR;
+            }
 
-        if (try (objectType.s == "VEC2")) {
-            self.type = AccessorType.VEC2;
-        }
+            if (object_type == "VEC2") {
+                self.type = AccessorType.VEC2;
+            }
 
-        if (try (objectType.s == "VEC3")) {
-            self.type = AccessorType.VEC3;
-        }
+            if (object_type == "VEC3") {
+                self.type = AccessorType.VEC3;
+            }
 
-        if (try (objectType.s == "VEC4")) {
-            self.type = AccessorType.VEC4;
-        }
+            if (object_type == "VEC4") {
+                self.type = AccessorType.VEC4;
+            }
 
-        if (try (objectType.s == "MAT2")) {
-            self.type = AccessorType.MAT2;
-        }
+            if (object_type == "MAT2") {
+                self.type = AccessorType.MAT2;
+            }
 
-        if (try (objectType.s == "MAT3")) {
-            self.type = AccessorType.MAT3;
-        }
+            if (object_type == "MAT3") {
+                self.type = AccessorType.MAT3;
+            }
 
-        if (try (objectType.s == "MAT4")) {
-            self.type = AccessorType.MAT4;
+            if (object_type == "MAT4") {
+                self.type = AccessorType.MAT4;
+            }
         }
     }
 }
@@ -755,7 +766,6 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
             return node;
         }
     }
-
     return GltfError.KEY_NOT_FOUND?;
 }
 
@@ -780,7 +790,6 @@ fn Accessor! Gltf.getAccessor(Gltf* data, Object* primitive, String key) {
         if (try value) return data.accessors[(uint)value.f];
     } else {
         Object*! attributes = primitive.get("attributes");
-
         if (try attributes) {
             Object*! value = attributes.get(key);
             if (try value) return data.accessors[(uint)value.f];
@@ -842,7 +851,6 @@ fn uint Accessor.dataSize(Accessor* self) {
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(Node* self) {
-
    Matrix4f translation = {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
@@ -894,12 +902,12 @@ fn void Buffer.free(Buffer* self) {
     mem::free(self.data);
 }
 
-fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
+/*fn void! Gltf.get_buffer(Gltf* self, Accessor accessor, uint offset_index) @inline {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
     char* data = (buffer.data + accessor.offset + bufferView.offset);
 
-    for (uint i = 0; i < bufferView.byteLength; i += accessor.dataSize()) {
+    for (int i = 0; i < accessor.componentLen(); ++i) {
         if (accessor.data_type == DataType.USHORT) {
             ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
             io::printf("Parsed USHORT %d \n", value);
@@ -916,8 +924,43 @@ fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
         }
 
         if (accessor.data_type == DataType.FLOAT) {
-            float value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, float);
-            io::printf("Parsed FLOAT %d \n", value);
+            float value = bitcast(*(char[4]*&input, float);
+            io::printf("Parsed FLOAT %f \n", value);
+        }
+    }
+}*/
+
+macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
+    BufferView bufferView = self.bufferViews[accessor.bufferView];
+    Buffer buffer = self.buffers[bufferView.buffer];
+    char* data = (buffer.data + accessor.offset + bufferView.offset + offset);
+    return bitcast(*(char[#type.sizeof]*)&data[0], #type);
+}
+
+fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
+    BufferView bufferView = self.bufferViews[accessor.bufferView];
+    Buffer buffer = self.buffers[bufferView.buffer];
+    char* data = (buffer.data + accessor.offset + bufferView.offset);
+
+    for (uint i = 0; i < accessor.count ; i += 1) {
+        if (accessor.data_type == DataType.USHORT) {
+            ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
+            io::printf("Parsed USHORT %d \n", value);
+        }
+
+        if (accessor.data_type == DataType.SHORT) {
+            short value = bitcast(char[2]{data[i], data[i + 1]}, short);
+            io::printf("Parsed SHORT %d \n", value);
+        }
+
+        if (accessor.data_type == DataType.UINT) {
+            uint value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, uint);
+            io::printf("Parsed UINT %d \n", value);
+        }
+
+        if (accessor.data_type == DataType.FLOAT) {
+            Vec3f vec = bitcast(*(char[Vec3f.sizeof]*)&data[i + accessor.componentSize()], Vec3f);
+            io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
         }
     }
         io::printf(" \n _______ \n%d");
