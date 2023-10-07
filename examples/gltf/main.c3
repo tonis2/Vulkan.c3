@@ -179,15 +179,6 @@ fn void! main()
         stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
         defer image_data.free();
 
-        BufferInfo image_staging_buffer = BufferInfo {
-            .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-            .version = vk::BufferVersion.GLOBAL_BUFFER
-        }
-        .upload_data(image_data.pixels, (usz)image_data.width * image_data.height * 4)
-        .build(device)!;
-
-        defer image_staging_buffer.free(device.device);
-
         ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
         .setImageType(vk::IMAGE_TYPE_2D)
         .setExtent({.width = image_data.width, .height = image_data.height, .depth = 1 })
@@ -199,116 +190,33 @@ fn void! main()
         .setTiling(vk::IMAGE_TILING_OPTIMAL)
         .setFormat(image_format);
 
-        ImageBufferInfo texture = vk::createTexture(image_info, device)!;
+        ImageBufferInfo texture = vk::createTexture(image_info, image_data.pixels, device)!;
 
-        // Create single-time command buffer for copying buffer to image
-        device.@single_time_buffer(;CommandBuffer command_buffer) {
-            ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
-            .setImage(texture.image)
+        texture.createSampler(vk::samplerCreateInfoBuilder()
+            .setMagFilter(vk::FILTER_LINEAR)
+            .setMinFilter(vk::FILTER_LINEAR)
+            .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setMipLodBias(0.0)
+            .setMinLod(0.0)
+            .setMaxLod(1.0)
+            .setMaxAnisotropy(1.0)
+            .setAnisotropyEnable(vk::FALSE)
+            .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE), device.device)!;
+
+        texture.createView(vk::imageViewCreateInfoBuilder()
+            .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+            .setFormat(image_format)
             .setSubresourceRange({
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-                .levelCount = 1,
+               .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+               .baseMipLevel = 0,
+               .baseArrayLayer = 0,
+               .layerCount = 1,
+               .levelCount = 1,
             })
-            .setSrcAccessMask(0)
-            .setDstAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-            .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+            .setImage(texture.image), device.device)!;
 
-            vk::cmdPipelineBarrier(
-             command_buffer,
-             vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-             vk::PIPELINE_STAGE_TRANSFER_BIT,
-             0,
-             0,
-             null,
-             0,
-             null,
-             1,
-             &imageMemoryBarrier
-            );
-
-            BufferImageCopy bufferCopyRegion = {
-                .bufferOffset = 0,
-                .bufferRowLength = 0,
-                .bufferImageHeight = 0,
-                .imageSubresource = {
-                    .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                    .mipLevel = 0,
-                    .baseArrayLayer = 0,
-                    .layerCount = 1,
-                },
-                .imageOffset = {0, 0, 0},
-                .imageExtent = {.width = image_data.width, .height = image_data.height, .depth = 1 }
-            };
-
-            vk::cmdCopyBufferToImage(
-                command_buffer,
-                image_staging_buffer.buffer,
-                texture.image,
-                vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                1,
-                &bufferCopyRegion
-            );
-
-            ImageMemoryBarrier imageMemoryBarrier2 = vk::imageMemoryBarrierBuilder()
-            .setImage(texture.image)
-            .setSubresourceRange({
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-                .levelCount = 1,
-            })
-            .setSrcAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-            .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-            vk::cmdPipelineBarrier(
-                 command_buffer,
-                 vk::PIPELINE_STAGE_TRANSFER_BIT,
-                 vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                 0,
-                 0,
-                 null,
-                 0,
-                 null,
-                 1,
-                 &imageMemoryBarrier2
-            );
-            texture.layout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        }!;
-
-        SamplerCreateInfo sampler = vk::samplerCreateInfoBuilder()
-        .setMagFilter(vk::FILTER_LINEAR)
-        .setMinFilter(vk::FILTER_LINEAR)
-        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-        .setMipLodBias(0.0)
-        .setMinLod(0.0)
-        .setMaxLod(1.0)
-        .setMaxAnisotropy(1.0)
-        .setAnisotropyEnable(vk::FALSE)
-        .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE);
-
-        vk::createSampler(device.device, &sampler, null, &texture.sampler)!;
-
-        ImageViewCreateInfo image_view_info = vk::imageViewCreateInfoBuilder()
-        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-        .setFormat(image_format)
-        .setSubresourceRange({
-            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
-            .levelCount = 1,
-        })
-        .setImage(texture.image);
-        vk::createImageView(device.device, &image_view_info, null, &texture.view)!;
         textures.push(texture);
     }
 

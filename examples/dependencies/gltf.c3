@@ -934,7 +934,7 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
     char* data = (buffer.data + accessor.offset + bufferView.offset + offset);
-    return bitcast(*(char[#type.sizeof]*)&data[0], #type);
+    return bitcast(*(char[#type.sizeof]*)data, #type);
 }
 
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {

@@ -22,28 +22,127 @@ struct ImageBufferInfo {
     vk::ImageLayout layout;
 }
 
-fn ImageBufferInfo! createTexture(ImageCreateInfo image_info, DeviceInfo context)
+fn ImageBufferInfo! createTexture(ImageCreateInfo image_info, char* pixels, DeviceInfo device)
 {
     vk::Image image;
     vk::DeviceMemory memory;
-    vk::createImage(context.device, &image_info, null, &image)!;
+    vk::Sampler sampler;
+    vk::ImageView view;
+    vk::createImage(device.device, &image_info, null, &image)!;
 
     vk::MemoryRequirements mem_reqs;
-    vk::getImageMemoryRequirements(context.device, image, &mem_reqs);
+    vk::getImageMemoryRequirements(device.device, image, &mem_reqs);
 
     MemoryAllocateInfo memory_info = memoryAllocateInfoBuilder()
         .setAllocationSize(mem_reqs.size)
-        .setMemoryTypeIndex(getMemoryType(mem_reqs.memoryTypeBits, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context));
+        .setMemoryTypeIndex(getMemoryType(mem_reqs.memoryTypeBits, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, device));
 
-    vk::allocateMemory(context.device, &memory_info, null, &memory)!;
-    vk::bindImageMemory(context.device, image, memory, 0)!;
+    vk::allocateMemory(device.device, &memory_info, null, &memory)!;
+    vk::bindImageMemory(device.device, image, memory, 0)!;
+
+    BufferInfo image_staging_buffer = BufferInfo {
+        .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
+        .version = vk::BufferVersion.GLOBAL_BUFFER
+    }
+    .upload_data(pixels, (usz)image_info.extent.width * image_info.extent.height * 4)
+    .build(device)!;
+
+    defer image_staging_buffer.free(device.device);
+
+    // Create single-time command buffer for copying buffer to image
+    device.@single_time_buffer(;CommandBuffer command_buffer) {
+        ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
+        .setImage(image)
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+            .levelCount = 1,
+        })
+        .setSrcAccessMask(0)
+        .setDstAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+        .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        vk::cmdPipelineBarrier(
+         command_buffer,
+         vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+         vk::PIPELINE_STAGE_TRANSFER_BIT,
+         0,
+         0,
+         null,
+         0,
+         null,
+         1,
+         &imageMemoryBarrier
+        );
+
+        BufferImageCopy bufferCopyRegion = {
+            .bufferOffset = 0,
+            .bufferRowLength = 0,
+            .bufferImageHeight = 0,
+            .imageSubresource = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .mipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+            .imageOffset = {0, 0, 0},
+            .imageExtent = {.width = image_info.extent.width, .height = image_info.extent.height, .depth = 1 }
+        };
+
+        vk::cmdCopyBufferToImage(
+            command_buffer,
+            image_staging_buffer.buffer,
+            image,
+            vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            1,
+            &bufferCopyRegion
+        );
+
+        ImageMemoryBarrier imageMemoryBarrier2 = vk::imageMemoryBarrierBuilder()
+        .setImage(image)
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+            .levelCount = 1,
+        })
+        .setSrcAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
+        .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
+        .setOldLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+        .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+        vk::cmdPipelineBarrier(
+             command_buffer,
+             vk::PIPELINE_STAGE_TRANSFER_BIT,
+             vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+             0,
+             0,
+             null,
+             0,
+             null,
+             1,
+             &imageMemoryBarrier2
+        );
+    }!;
 
     return ImageBufferInfo {
         .image = image,
         .memory = memory,
-        .mipLevels =  image_info.mipLevels,
-        .layout = image_info.initialLayout
+        .mipLevels = image_info.mipLevels,
+        .layout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
     };
+}
+
+fn void! ImageBufferInfo.createSampler(&self, SamplerCreateInfo sampler_info, Device device) {
+    vk::createSampler(device, &sampler_info, null, &self.sampler)!;
+}
+
+fn void! ImageBufferInfo.createView(&self, ImageViewCreateInfo image_view_info, Device device) {
+    vk::createImageView(device, &image_view_info, null, &self.view)!;
 }
 
 fn void ImageBufferInfo.free(&self, Device device)
