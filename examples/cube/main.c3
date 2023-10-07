@@ -321,7 +321,7 @@ fn void! main()
         frame_fence.wait(device.device)!;
         frame_fence.reset(device.device)!;
 
-        uint next_image = wait_semaphore.getNextImage(device.device, swapchain.swapchain)!;
+        uint next_image = swapchain.getNextImage(device.device, wait_semaphore);
 
         // Start dynamic rendering
         RenderingInfo rendering_info = vk::renderingInfoBuilder()

@@ -624,12 +624,6 @@ fn void! Fence.reset(&self, vk::Device device) {
   vk::resetFences(device, 1, self)!;
 }
 
-fn uint! Semaphore.getNextImage(self, vk::Device device, vk::SwapchainKHR swapchain) {
-    uint index;
-    vk::acquireNextImageKHR(device, swapchain, uint.max, self, null, &index)!!;
-    return index;
-}
-
 fn void SurfaceKHR.free(self, Instance instance) {
     destroySurfaceKHR(instance, self, null);
 }

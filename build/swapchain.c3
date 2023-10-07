@@ -24,6 +24,13 @@ struct SwapChain {
     uint image_count;
 }
 
+fn uint SwapChain.getNextImage(self, Device device, Semaphore wait_semaphore)
+{
+    uint index;
+    vk::acquireNextImageKHR(device, self.swapchain, uint.max, wait_semaphore, null, &index)!!;
+    return index;
+}
+
 fn void SwapChain.free(&self, Device device)
 {
     destroySwapchainKHR(device, self.swapchain, null);
