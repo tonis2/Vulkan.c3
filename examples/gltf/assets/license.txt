@@ -1,0 +1,11 @@
+Model Information:
+* title:	House Draft
+* source:	https://sketchfab.com/3d-models/house-draft-1ad594755ea44127bedaa23654237eea
+* author:	Rixael (https://sketchfab.com/rixael)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "House Draft" (https://sketchfab.com/3d-models/house-draft-1ad594755ea44127bedaa23654237eea) by Rixael (https://sketchfab.com/rixael) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

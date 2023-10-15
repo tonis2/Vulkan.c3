@@ -139,6 +139,7 @@ fn void! main()
             Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
             Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
             Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
+          /*  gltf_data.get_buffer(pos_accessor)!;*/
 
             for (uint i = 0; i < pos_accessor.count ; i += 1) {
                 vertices.push(Vertex {
