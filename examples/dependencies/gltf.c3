@@ -219,7 +219,7 @@ struct BufferView {
 }
 
 struct Buffer {
-    char* data;
+    void* data;
     uint size;
     BufferType data_type;
 }
@@ -285,30 +285,6 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
             self.primitives.push(primitive);
         }
     }
-}
-
-fn void Mesh.recompose(Mesh* self) {
-    // Get mesh total buffer size
-/*    foreach (index, primitive: data.primitives) {
-        Object* attributes = primitive.get("attributes")!!;
-        uint*! indices = primitive.get_int("indices");
-
-        foreach (index2, key : attributes.map.key_tlist())
-        {
-           Accessor accessor = content.accessors[attributes.get_int(key)!!];
-           BufferView buffer_view = content.bufferViews[accessor.bufferView];
-
-           if (index == 0 && index2 == 0) {
-                offset = (usz)buffer_view.offset;
-           }
-           buffer_size += (usz)buffer_view.byteLength;
-        }
-
-        if (try indices) {
-               Accessor accessor = content.accessors[indices];
-               BufferView buffer_view = content.bufferViews[accessor.bufferView];
-        }
-    }*/
 }
 
 fn void BufferView.fromJson(BufferView* self, Object* json) {
@@ -417,32 +393,42 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
 
 fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
-    String! data = json.get_string("uri");
+    String! uri = json.get_string("uri");
     BufferType bufferType;
+    char[] buffer_data;
 
-    if (catch size, data) {
+    if (catch size, uri) {
         io::printf("Buffer has no size or data \n");
         return ParseError.BROKEN_BUFFER?;
     }
 
-    String[] bufferHeader = data.split(",");
-    defer mem::free(bufferHeader);
-    char[] parsedBuffer = mem::malloc(char, size + 2);
-
-    // Parse buffer from base64 to bytes
-    if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
-        Base64Decoder decoder;
-        decoder.init(base64::STD_ALPHABET, -1)!;
-
-        // Decode buffer from base64
-        if (catch err = decoder.decode(bufferHeader[1], parsedBuffer)) {
-            io::printfn("Buffer parsing error: '%s'.", err);
-            return ParseError.BROKEN_BUFFER?;
-        };
-        bufferType = BufferType.STREAM;
+    if (uri.ends_with(".bin")) {
+         io::printfn("buffer is binary %s", uri);
+         File file = file::open("examples/gltf/assets/cubes2.bin", "r")!;
+         defer file.close()!!;
+         buffer_data = mem::malloc(char, file.len()!);
+         if (catch err = file.read_all(buffer_data)) {
+           io::printfn("failed reading file data");
+         }
+         bufferType = BufferType.STREAM;
     }
-
-    self.data = parsedBuffer;
+    else {
+        String[] bufferHeader = uri.split(",");
+        defer mem::free(bufferHeader);
+        buffer_data = mem::malloc(char, size + 2);
+        // Parse buffer from base64 to bytes
+        if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
+            Base64Decoder decoder;
+            decoder.init(base64::STD_ALPHABET, -1)!;
+            // Decode buffer from base64
+            if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
+                io::printfn("Buffer parsing error: '%s'.", err);
+                return ParseError.BROKEN_BUFFER?;
+            };
+            bufferType = BufferType.STREAM;
+        }
+    }
+    self.data = buffer_data;
     self.size = size;
     self.data_type = bufferType;
 }
@@ -678,8 +664,8 @@ fn Gltf! loadFile(String path) {
     if (try buffers) {
         foreach (buffer : buffers.array) {
             Buffer data;
-            if (catch err = data.fromJson(buffer)) {}
-            else {content.buffers.push(data);}
+            data.fromJson(buffer)!;
+            content.buffers.push(data);
         }
     }
 
@@ -937,7 +923,7 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
     return bitcast(*(char[#type.sizeof]*)data, #type);
 }
 
-fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) @inline {
+fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
     char* data = (buffer.data + accessor.offset + bufferView.offset);
