@@ -1,6 +1,6 @@
 import std::collections::object;
 import std::io;
-import std::ascii;
+import std::core::string;
 import std::math::matrix;
 import std::math;
 import std::core::mem;
@@ -35,7 +35,8 @@ enum BufferType {
     IMAGE_PNG,
     IMAGE_BMP,
     IMAGE_GIF,
-    STREAM
+    ENCODED,
+    EXTERNAL
 }
 
 enum AccessorType {
@@ -219,9 +220,10 @@ struct BufferView {
 }
 
 struct Buffer {
-    void* data;
+    char[] data;
     uint size;
-    BufferType data_type;
+    String uri;
+    BufferType type;
 }
 
 // Parsing JSON to structs
@@ -394,44 +396,22 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
 fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
-    BufferType bufferType;
-    char[] buffer_data;
+    BufferType buffer_type;
 
-    if (catch size, uri) {
-        io::printf("Buffer has no size or data \n");
-        return ParseError.BROKEN_BUFFER?;
-    }
-
-    if (uri.ends_with(".bin")) {
-         io::printfn("buffer is binary %s", uri);
-         File file = file::open("examples/gltf/assets/cubes2.bin", "r")!;
-         defer file.close()!!;
-         buffer_data = mem::malloc(char, file.len()!);
-         if (catch err = file.read_all(buffer_data)) {
-           io::printfn("failed reading file data");
-         }
-         bufferType = BufferType.STREAM;
-    }
-    else {
-        String[] bufferHeader = uri.split(",");
-        defer mem::free(bufferHeader);
-        buffer_data = mem::malloc(char, size + 2);
-        // Parse buffer from base64 to bytes
-        if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
-            Base64Decoder decoder;
-            decoder.init(base64::STD_ALPHABET, -1)!;
-            // Decode buffer from base64
-            if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
-                io::printfn("Buffer parsing error: '%s'.", err);
-                return ParseError.BROKEN_BUFFER?;
-            };
-            bufferType = BufferType.STREAM;
+    if (try uri) {
+        if (uri.ends_with(".bin")) {
+            buffer_type = BufferType.EXTERNAL;
         }
+        else {
+            buffer_type = BufferType.ENCODED;
+        }
+        self.uri = uri;
+        self.type = buffer_type;
     }
-    self.data = buffer_data;
-    self.size = size;
-    self.data_type = bufferType;
+    if (try size) self.size = size;
 }
+
+
 
 fn void! Camera.fromJson(Camera* self, Object* json) {
     String! cameraType = json.get_string("type");
@@ -592,20 +572,9 @@ fn void Image.fromJson(Image* self, Object* json) {
 }
 
 
-fn Gltf! loadFile(String path) {
-    File! file = file::open(path, "r");
-    if (catch err = file)
-    {
-        if (err == IoError.FILE_NOT_FOUND) {
-            return ParseError.FILE_NOT_FOUND?;
-        }
-
-        return ParseError.FILE_NOT_READABLE?;
-    }
-
+fn Gltf! parse(Stream* stream) {
     Gltf content;
-    Object*! gltfJson = json::parse(&file);
-
+    Object*! gltfJson = json::parse(stream);
     if (catch err = gltfJson) {
         return ParseError.JSON_PARSE_FAILED?;
     }
@@ -718,8 +687,6 @@ fn Gltf! loadFile(String path) {
             content.meshes.push(data);
         }
     }
-
-    if (catch file.close()) {}
     return content;
 }
 
@@ -888,66 +855,44 @@ fn void Buffer.free(Buffer* self) {
     mem::free(self.data);
 }
 
-/*fn void! Gltf.get_buffer(Gltf* self, Accessor accessor, uint offset_index) @inline {
-    BufferView bufferView = self.bufferViews[accessor.bufferView];
-    Buffer buffer = self.buffers[bufferView.buffer];
-    char* data = (buffer.data + accessor.offset + bufferView.offset);
-
-    for (int i = 0; i < accessor.componentLen(); ++i) {
-        if (accessor.data_type == DataType.USHORT) {
-            ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
-            io::printf("Parsed USHORT %d \n", value);
-        }
-
-        if (accessor.data_type == DataType.SHORT) {
-            short value = bitcast(char[2]{data[i], data[i + 1]}, short);
-            io::printf("Parsed SHORT %d \n", value);
-        }
-
-        if (accessor.data_type == DataType.UINT) {
-            uint value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, uint);
-            io::printf("Parsed UINT %d \n", value);
-        }
-
-        if (accessor.data_type == DataType.FLOAT) {
-            float value = bitcast(*(char[4]*&input, float);
-            io::printf("Parsed FLOAT %f \n", value);
-        }
-    }
-}*/
-
 macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
-    char* data = (buffer.data + accessor.offset + bufferView.offset + offset);
-    return bitcast(*(char[#type.sizeof]*)data, #type);
+    return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
 
+fn char[]! Buffer.from_base64(self) {
+    String[] bufferHeader = self.uri.split(",");
+    defer mem::free(bufferHeader);
+    char[] buffer_data = mem::malloc(char, self.size + 2);
+    // Parse buffer from base64 to bytes
+    if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
+        Base64Decoder decoder;
+        decoder.init(base64::STD_ALPHABET, -1)!;
+        // Decode buffer from base64
+        if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
+            io::printfn("Buffer parsing error: '%s'.", err);
+            return ParseError.BROKEN_BUFFER?;
+        };
+    }
+
+    return buffer_data;
+}
+
+
+/*
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
-    char* data = (buffer.data + accessor.offset + bufferView.offset);
 
     for (uint i = 0; i < accessor.count ; i += 1) {
-        if (accessor.data_type == DataType.USHORT) {
-            ushort value = bitcast(char[2]{data[i], data[i + 1]}, ushort);
-            io::printf("Parsed USHORT %d \n", value);
-        }
-
-        if (accessor.data_type == DataType.SHORT) {
-            short value = bitcast(char[2]{data[i], data[i + 1]}, short);
-            io::printf("Parsed SHORT %d \n", value);
-        }
-
-        if (accessor.data_type == DataType.UINT) {
-            uint value = bitcast(char[4]{data[i], data[i + 1], data[i + 2], data[i + 3]}, uint);
-            io::printf("Parsed UINT %d \n", value);
-        }
+        char[] data = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
 
         if (accessor.data_type == DataType.FLOAT) {
-            Vec3f vec = bitcast(*(char[Vec3f.sizeof]*)&data[i + accessor.componentSize()], Vec3f);
+            Vec3f vec = bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
             io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
         }
     }
         io::printf(" \n _______ \n%d");
 }
+*/
