@@ -33,8 +33,28 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    Gltf gltf_data = gltf::loadFile("examples/gltf/assets/cubes.gltf")!;
+    File file = file::open("examples/gltf/assets/cubes.gltf", "r")!;
+    defer file.close()!!;
+
+    Gltf gltf_data = gltf::parse(&file)!;
     defer gltf_data.free();
+
+    foreach (&buffer: gltf_data.buffers) {
+        if (buffer.type == BufferType.ENCODED) {
+            buffer.data = buffer.from_base64()!;
+        }
+
+        if (buffer.type == BufferType.EXTERNAL) {
+            String path = string::join({"/", buffer.uri}, "examples/gltf/assets/");
+            File buffer_file = file::open(path, "r")!;
+            defer buffer_file.close()!!;
+
+            buffer.data = mem::malloc(char, buffer_file.len()!);
+            if (catch err = buffer_file.read_all(buffer.data)) {
+              io::printfn("failed reading file data");
+            }
+        }
+    }
 
     MeshList meshes;
     defer meshes.free();
@@ -139,7 +159,6 @@ fn void! main()
             Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
             Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
             Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
-          /*  gltf_data.get_buffer(pos_accessor)!;*/
 
             for (uint i = 0; i < pos_accessor.count ; i += 1) {
                 vertices.push(Vertex {
@@ -153,7 +172,7 @@ fn void! main()
                 Accessor accessor = gltf_data.accessors[indices];
                 gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
                 gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
-                index_buffer.upload_data((buffer.data + buffer_view.offset), buffer_view.byteLength)!;
+                index_buffer.upload_data(buffer.data[buffer_view.offset..], buffer_view.byteLength)!;
             }
         }
     }
@@ -177,7 +196,7 @@ fn void! main()
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
-        stb::Image image_data = stb::loadFromBuffer((buffer.data + buffer_view.offset), buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
+        stb::Image image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
         defer image_data.free();
 
         ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
