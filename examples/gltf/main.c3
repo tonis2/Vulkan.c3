@@ -40,19 +40,23 @@ fn void! main()
     defer gltf_data.free();
 
     foreach (&buffer: gltf_data.buffers) {
-        if (buffer.type == BufferType.ENCODED) {
-            buffer.data = buffer.from_base64()!;
-        }
-
-        if (buffer.type == BufferType.EXTERNAL) {
-            String path = string::join({"/", buffer.uri}, "examples/gltf/assets/");
-            File buffer_file = file::open(path, "r")!;
-            defer buffer_file.close()!!;
-
-            buffer.data = mem::malloc(char, buffer_file.len()!);
-            if (catch err = buffer_file.read_all(buffer.data)) {
-              io::printfn("failed reading file data");
+        switch(buffer.type) {
+            case BufferType.ENCODED: {
+                buffer.data = buffer.from_base64()!;
             }
+            case BufferType.EXTERNAL: {
+                String path = string::join({"/", buffer.uri}, "examples/gltf/assets/");
+                File buffer_file = file::open(path, "r")!;
+                defer {
+                    path.free();
+                    buffer_file.close()!!;
+                };
+                buffer.data = mem::malloc(char, buffer_file.len()!);
+                if (catch err = buffer_file.read_all(buffer.data)) {
+                  io::printfn("failed reading buffer data");
+                }
+            }
+            default: {}
         }
     }
 
