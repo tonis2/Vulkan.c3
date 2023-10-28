@@ -30,11 +30,14 @@ enum Targets {
     ELEMENT_ARRAY_BUFFER
 }
 
-enum BufferType {
+enum ImageType {
     IMAGE_JPEG,
     IMAGE_PNG,
     IMAGE_BMP,
     IMAGE_GIF,
+}
+
+enum ResourceType {
     ENCODED,
     EXTERNAL
 }
@@ -164,7 +167,7 @@ struct Texture {
 struct Image {
     String name;
     uint bufferView;
-    BufferType mimeType;
+    ImageType mimeType;
 }
 
 struct Sampler {
@@ -223,7 +226,7 @@ struct Buffer {
     char[] data;
     uint size;
     String uri;
-    BufferType type;
+    ResourceType type;
 }
 
 // Parsing JSON to structs
@@ -396,14 +399,14 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
 fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
-    BufferType buffer_type;
+    ResourceType buffer_type;
 
     if (try uri) {
         if (uri.ends_with(".bin")) {
-            buffer_type = BufferType.EXTERNAL;
+            buffer_type = ResourceType.EXTERNAL;
         }
         else {
-            buffer_type = BufferType.ENCODED;
+            buffer_type = ResourceType.ENCODED;
         }
         self.uri = uri;
         self.type = buffer_type;
@@ -558,15 +561,15 @@ fn void Image.fromJson(Image* self, Object* json) {
     if (try name) self.name = name;
     if (try mimeType) {
         if (mem::equals(mimeType, "image/jpeg")) {
-            self.mimeType = BufferType.IMAGE_JPEG;
+            self.mimeType = ImageType.IMAGE_JPEG;
         }
 
         if (mem::equals(mimeType, "image/png")) {
-            self.mimeType = BufferType.IMAGE_PNG;
+            self.mimeType = ImageType.IMAGE_PNG;
         }
 
         if (mem::equals(mimeType, "image/bmp")) {
-            self.mimeType = BufferType.IMAGE_BMP;
+            self.mimeType = ImageType.IMAGE_BMP;
         }
     }
 }
@@ -880,19 +883,14 @@ fn char[]! Buffer.from_base64(self) {
 }
 
 
-/*
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
 
     for (uint i = 0; i < accessor.count ; i += 1) {
         char[] data = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
-
-        if (accessor.data_type == DataType.FLOAT) {
-            Vec3f vec = bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
-            io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
-        }
+        Vec3f vec =  bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
+        io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
     }
         io::printf(" \n _______ \n%d");
 }
-*/
