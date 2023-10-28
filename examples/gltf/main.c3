@@ -8,9 +8,9 @@ import std::collections::list;
 import std::collections::object;
 import stb;
 
-def MeshList = List(<Mesh>);
 def TextureList = List(<ImageBufferInfo>);
 def VertexData = List(<Vertex>);
+def IndexData = List(<ushort>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -24,6 +24,11 @@ struct Vertex {
     Vec3f normal;
 }
 
+struct PushConstantData {
+   Matrix4f matrix;
+   uint texture;
+}
+
 fn void! main()
 {
     glfw::init();
@@ -33,7 +38,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/cubes.gltf", "r")!;
+    File file = file::open("examples/gltf/assets/boat.gltf", "r")!;
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
@@ -41,30 +46,34 @@ fn void! main()
 
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
-            case BufferType.ENCODED: {
+            case ResourceType.ENCODED: {
                 buffer.data = buffer.from_base64()!;
             }
-            case BufferType.EXTERNAL: {
-                String path = string::join({"/", buffer.uri}, "examples/gltf/assets/");
-                File buffer_file = file::open(path, "r")!;
+            case ResourceType.EXTERNAL: {
+                String path = string::join({"", buffer.uri}, "examples/gltf/assets/");
+                File! buffer_file = file::open(path, "r")!;
+                if (catch err = buffer_file) {
+                    io::printfn("failed loading buffer file %s", err);
+                    return;
+                };
+
                 defer {
                     path.free();
                     buffer_file.close()!!;
                 };
+
                 buffer.data = mem::malloc(char, buffer_file.len()!);
-                if (catch err = buffer_file.read_all(buffer.data)) {
-                  io::printfn("failed reading buffer data");
-                }
+                buffer_file.read_all(buffer.data)!;
             }
             default: {}
         }
     }
 
-    MeshList meshes;
-    defer meshes.free();
-
     VertexData vertices;
     defer vertices.free();
+
+    IndexData indices;
+    defer indices.free();
 
     if (window == null)
     {
@@ -138,6 +147,36 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
 
+    BufferInfo uniform_buffer = BufferInfo {
+        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        .version = vk::BufferVersion.GLOBAL_BUFFER
+    }
+    .build(&&camera.matrix(), UniformData.sizeof, device)!;
+
+    foreach (mesh : gltf_data.meshes) {
+        foreach (index, primitive: mesh.primitives) {
+            Object* attributes = primitive.get("attributes")!!;
+            Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
+            Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
+            Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
+            Accessor index_accessor = gltf_data.accessors[primitive.get_int("indices")!!];
+
+            for (uint i = 0; i < pos_accessor.count ; i += 1) {
+                vertices.push(Vertex {
+                    gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
+                    gltf_data.@cast_buffer(tex_accessor, i * tex_accessor.componentSize(), Vec2f),
+                    gltf_data.@cast_buffer(normal_accessor, i * normal_accessor.componentSize(), Vec3f)
+                });
+            }
+
+            for (uint i = 0; i < index_accessor.count ; i += 1) {
+                gltf::BufferView buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
+                gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
+                indices.push(gltf_data.@cast_buffer(index_accessor, i * index_accessor.componentSize(), ushort));
+            }
+        }
+    }
+
     BufferInfo vertex_buffer = {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
         .version = vk::BufferVersion.DEVICE_BUFFER
@@ -148,48 +187,10 @@ fn void! main()
         .version = vk::BufferVersion.DEVICE_BUFFER
     };
 
-    BufferInfo uniform_buffer = BufferInfo {
-        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::BufferVersion.GLOBAL_BUFFER
-    }
-    .upload_data(&&camera.matrix(), UniformData.sizeof)
-    .build(device)!;
-
-    foreach (mesh : gltf_data.meshes) {
-        foreach (index, primitive: mesh.primitives) {
-            Object* attributes = primitive.get("attributes")!!;
-            uint! indices = primitive.get_int("indices");
-
-            Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
-            Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
-            Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
-
-            for (uint i = 0; i < pos_accessor.count ; i += 1) {
-                vertices.push(Vertex {
-                    gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
-                    gltf_data.@cast_buffer(tex_accessor, i * tex_accessor.componentSize(), Vec2f),
-                    gltf_data.@cast_buffer(normal_accessor, i * normal_accessor.componentSize(), Vec3f)
-                });
-            }
-
-            if (try indices) {
-                Accessor accessor = gltf_data.accessors[indices];
-                gltf::BufferView buffer_view = gltf_data.bufferViews[accessor.bufferView];
-                gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
-                index_buffer.upload_data(buffer.data[buffer_view.offset..], buffer_view.byteLength)!;
-            }
-        }
-    }
-
-    vertex_buffer.upload_data(vertices.entries, Vertex.sizeof * vertices.len())!;
-    vertex_buffer.build(device)!;
-    index_buffer.build(device)!;
+    vertex_buffer.build(vertices.entries, Vertex.sizeof * vertices.len(), device)!;
+    index_buffer.build(indices.entries, ushort.sizeof * indices.len(), device)!;
 
     TextureList textures;
-    defer {
-        foreach (img : textures) img.free(device.device);
-        textures.free();
-    }
 
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
@@ -215,7 +216,6 @@ fn void! main()
         .setFormat(image_format);
 
         ImageBufferInfo texture = vk::createTexture(image_info, image_data.pixels, device)!;
-
         texture.createSampler(vk::samplerCreateInfoBuilder()
             .setMagFilter(vk::FILTER_LINEAR)
             .setMinFilter(vk::FILTER_LINEAR)
@@ -258,12 +258,28 @@ fn void! main()
         {
             .binding = 1,
             .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            .descriptorCount = 1,
+            .descriptorCount = (uint)textures.len(),
             .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
         },
     });
 
     DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+    WriteDescriptorSet textureSet = vk::writeDescriptorSetBuilder()
+        .setDstBinding(1)
+        .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+        .setImageInfo({
+            {
+                .sampler = textures[0].sampler,
+                .imageView = textures[0].view,
+                .imageLayout = textures[0].layout,
+            },
+            {
+                .sampler = textures[1].sampler,
+                .imageView = textures[1].view,
+                .imageLayout = textures[1].layout,
+            }
+        });
+
     WriteDescriptorSet[] descriptorSets = {
         vk::writeDescriptorSetBuilder()
         .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
@@ -275,16 +291,7 @@ fn void! main()
                .range = UniformData.sizeof,
             },
         }),
-        vk::writeDescriptorSetBuilder()
-        .setDstBinding(1)
-        .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-        .setImageInfo({
-            {
-                .sampler = textures[0].sampler,
-                .imageView = textures[0].view,
-                .imageLayout = textures[0].layout,
-            }
-        })
+        textureSet
     };
 
     // Required for using push descriptors
@@ -304,9 +311,9 @@ fn void! main()
                                     .setPushConstantRanges({
                                         {
                                             .offset = 0,
-                                            .size = Matrix4f.sizeof,
+                                            .size = PushConstantData.sizeof,
                                             .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
-                                        }
+                                        },
                                     })
                                     .setSetLayouts({ descriptor_set_layout }))!;
 
@@ -361,9 +368,9 @@ fn void! main()
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_BACK_BIT)
-        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
-        .setDepthBiasEnable(vk::FALSE)
+        .setCullMode(vk::CULL_MODE_NONE)
+        .setFrontFace(vk::FRONT_FACE_CLOCKWISE)
+        .setDepthBiasEnable(vk::TRUE)
     )
     .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
     .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
@@ -488,21 +495,24 @@ fn void! main()
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
         foreach (node : gltf_data.nodes) {
-            if (node.hasMesh()) {
+           if (node.hasMesh()) {
+                Matrix4f matrix = node.recompose();
                 gltf::Mesh mesh = gltf_data.meshes[node.mesh];
-                vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, Matrix4f.sizeof, &&node.recompose());
 
                 foreach (primitive: mesh.primitives) {
-                    uint indices = primitive.get_int("indices")!;
-                    uint position = primitive.get("attributes")!.get_int("POSITION")!;
+                    Accessor index_accessor = gltf_data.accessors[primitive.get_int("indices")!];
+                    gltf::BufferView index_buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
 
-                    Accessor vertex_accessor = gltf_data.accessors[position];
-                    gltf::BufferView vertex_buffer_view = gltf_data.bufferViews[vertex_accessor.bufferView];
+                    Material material = gltf_data.materials[primitive.get_int("material")!];
+                    Texture color_texture = gltf_data.textures[material.pbrMetallicRoughness.baseColorTexture.index];
 
-                    Accessor index_accessor = gltf_data.accessors[indices];
-                    gltf::BufferView index_accessor_view = gltf_data.bufferViews[index_accessor.bufferView];
+                    PushConstantData constant_data = {
+                        .matrix = matrix,
+                        .texture = color_texture.source,
+                    };
 
-                    vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{vertex_buffer_view.offset});
+                    vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
+                    vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
                     vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
                     vk::cmdDrawIndexed(command_buffer, index_accessor.count, 1, 0, 0, 0);
                 }
@@ -556,6 +566,7 @@ fn void! main()
 
     // Release binded stuff
     device.waitIdle();
+    foreach (img : textures) img.free(device.device);
     uniform_buffer.free(device.device);
     index_buffer.free(device.device);
     vertex_buffer.free(device.device);
@@ -570,8 +581,8 @@ fn void! main()
     wait_semaphores.release(device.device);
     signal_semaphores.release(device.device);
     frame_fences.release(device.device);
-
     surface.free(instance.instance);
-    instance.free();
+
     device.free();
+    instance.free();
 }

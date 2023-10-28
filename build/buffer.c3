@@ -1,5 +1,8 @@
 module vk;
 import std::io;
+import std::collections::list;
+def PreBuffer = List(<void*>);
+
 
 fault BufferError
 {
@@ -20,6 +23,15 @@ struct ImageBufferInfo {
 
     uint mipLevels;
     vk::ImageLayout layout;
+}
+
+struct BufferInfo {
+    Buffer buffer;
+    DeviceMemory memory;
+    ulong size;
+    void* mapped;
+    BufferUsageFlags usage;
+    BufferVersion version;
 }
 
 fn ImageBufferInfo! createTexture(ImageCreateInfo image_info, char* pixels, DeviceInfo device)
@@ -44,8 +56,7 @@ fn ImageBufferInfo! createTexture(ImageCreateInfo image_info, char* pixels, Devi
         .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
         .version = vk::BufferVersion.GLOBAL_BUFFER
     }
-    .upload_data(pixels, (usz)image_info.extent.width * image_info.extent.height * 4)
-    .build(device)!;
+    .build(pixels, (usz)image_info.extent.width * image_info.extent.height * 4, device)!;
 
     defer image_staging_buffer.free(device.device);
 
@@ -153,17 +164,6 @@ fn void ImageBufferInfo.free(&self, Device device)
     vk::freeMemory(device, self.memory, null);
 }
 
-struct BufferInfo {
-    void* pre_buffer;
-    Buffer buffer;
-    DeviceMemory memory;
-    ulong total_size;
-    ulong size;
-    void* mapped;
-    BufferUsageFlags usage;
-    BufferVersion version;
-}
-
 fn void BufferInfo.free(&self, Device device)
 {
     destroyBuffer(device, self.buffer, null);
@@ -197,38 +197,9 @@ fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, DeviceInf
     return 0;
 }
 
-fn BufferInfo! BufferInfo.upload_data(&self, void* buffer_data, usz size) {
-   if (self.total_size == 0) {
-       self.total_size = size;
-       self.pre_buffer = mem::malloc(void*, size);
-   }
 
-   if (self.total_size < self.size + size) {
-        return BufferError.BUFFER_TOO_SMALL?;
-   }
-   mem::copy(self.pre_buffer + self.size, buffer_data, size);
-   self.size += size;
-   return *self;
-}
-
-fn BufferInfo BufferInfo.set_size(&self, ulong size) {
-   self.total_size = size;
-   self.pre_buffer = mem::malloc(void*, self.total_size);
-   return *self;
-}
-
-fn BufferInfo BufferInfo.resize(&self, ulong size) {
-    if (self.total_size == 0) {
-        self.total_size = size;
-        self.pre_buffer = mem::malloc(void*, self.total_size);
-    } else {
-        self.total_size = self.total_size + size;
-        mem::realloc(self.pre_buffer, self.total_size + size);
-    }
-   return *self;
-}
-
-fn BufferInfo! BufferInfo.build(&self, DeviceInfo context) {
+fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo context) {
+    self.size = size;
    if (self.version == BufferVersion.DEVICE_BUFFER) {
      BufferCreateInfo staging_info = {
           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -245,7 +216,7 @@ fn BufferInfo! BufferInfo.build(&self, DeviceInfo context) {
        defer staging_buffer.free(context.device);
 
        vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
-       mem::copy(self.mapped, self.pre_buffer, self.size);
+       mem::copy(self.mapped, data, self.size);
        vk::unmapMemory(context.device, staging_buffer.memory);
 
        BufferCreateInfo buffer_info = {
@@ -288,13 +259,12 @@ fn BufferInfo! BufferInfo.build(&self, DeviceInfo context) {
 
         BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_HOST_COHERENT_BIT | MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
         vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
-        mem::copy(self.mapped, self.pre_buffer, self.size);
+        mem::copy(self.mapped, data, self.size);
 
         self.buffer = buffer.buffer;
         self.memory = buffer.memory;
    }
 
-   mem::free(self.pre_buffer);
    return *self;
 }
 
