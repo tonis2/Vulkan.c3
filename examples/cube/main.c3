@@ -142,22 +142,19 @@ fn void! main()
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
         .version = vk::BufferVersion.DEVICE_BUFFER
     }
-    .upload_data(vertex_data, Vertex.sizeof * vertex_data.len)
-    .build(device)!;
+    .build(vertex_data, Vertex.sizeof * vertex_data.len, device)!;
 
     BufferInfo index_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
         .version = vk::BufferVersion.DEVICE_BUFFER
     }
-    .upload_data(index_data, index_data.len * float.sizeof)
-    .build(device)!;
+    .build(index_data, index_data.len * float.sizeof, device)!;
 
     BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
         .version = vk::BufferVersion.GLOBAL_BUFFER
     }
-    .upload_data(&&camera.matrix(), UniformData.sizeof)
-    .build(device)!;
+    .build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
