@@ -72,10 +72,7 @@ fn void! main()
         return;
     }
 
-    defer {
-        glfw::destroyWindow(window);
-        glfw::terminate();
-    }
+    defer glfw::destroyWindow(window);
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();

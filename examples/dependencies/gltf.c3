@@ -9,7 +9,7 @@ import std::encoding::json;
 import std::encoding::base64;
 import std::collections::map;
 
-def PrimitiveList = List(<Object*>);
+def PrimitiveList = List(<Primitive>);
 def NodeList = List(<Node>);
 def SceneList= List(<Scene>);
 def MeshList = List(<Mesh>);
@@ -108,7 +108,6 @@ fault GltfError
 }
 
 struct Gltf {
-    Object* json;
     String name;
     NodeList nodes;
     SceneList scenes;
@@ -207,11 +206,11 @@ struct Mesh {
 }
 
 struct Primitive {
-    uint vertice;
-    uint indice;
+    uint position;
+    uint indices;
     uint tex_cord;
     uint normal;
-    Object* object;
+    uint material;
 }
 
 struct BufferView {
@@ -287,7 +286,22 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
     if (try name) self.name = name;
     if (try primitives) {
         foreach (primitive : primitives.array) {
-            self.primitives.push(primitive);
+            Object* attributes = primitive.get("attributes")!!;
+            Primitive data;
+
+            uint! position = attributes.get_int("POSITION");
+            uint! tex_cord = attributes.get_int("TEXCOORD_0");
+            uint! normal = attributes.get_int("NORMAL");
+            uint! indices = primitive.get_int("indices");
+            uint! material = primitive.get_int("material");
+
+            if (try position) data.position = position;
+            if (try tex_cord) data.tex_cord = tex_cord;
+            if (try normal) data.normal = normal;
+            if (try indices) data.indices = indices;
+            if (try material) data.material = material;
+
+            self.primitives.push(data);
         }
     }
 }
@@ -577,12 +591,35 @@ fn void Image.fromJson(Image* self, Object* json) {
 
 fn Gltf! parse(Stream* stream) {
     Gltf content;
-    Object*! gltfJson = json::parse(stream);
-    if (catch err = gltfJson) {
+    Object*! gltfJson;
+    char[4] magic_bytes;
+    gltfJson = json::parse(stream);
+/*    if (catch err = stream.read(&magic_bytes)) {
+        io::printfn("GLTF parsing error %s", err);
         return ParseError.JSON_PARSE_FAILED?;
     }
 
-    content.json = gltfJson;
+    // if magic bytes == glTF, it means its in glb format
+    if ((magic_bytes == (char[4])"glTF")) {
+        char[16] glb_header;
+        if (catch err = stream.read(&glb_header)) {
+            io::printfn("GLB parsing error %s", err);
+            return ParseError.JSON_PARSE_FAILED?;
+        }
+
+        uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
+        uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
+        uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
+        String content_format = bitcast(glb_header[12..15], String);
+        gltfJson = json::parse(stream);
+    } else {
+        stream.seek(0, Seek.SET)!;
+        gltfJson = json::parse(stream);
+    }*/
+
+    if (catch err = gltfJson) {
+        return ParseError.JSON_PARSE_FAILED?;
+    }
 
     // JSON data
     Object*! scenes = gltfJson.get("scenes");
@@ -690,6 +727,7 @@ fn Gltf! parse(Stream* stream) {
             content.meshes.push(data);
         }
     }
+    gltfJson.free();
     return content;
 }
 
@@ -713,7 +751,6 @@ fn void Gltf.free(Gltf* self) {
     self.materials.free();
     self.textures.free();
     self.samplers.free();
-    self.json.free();
 }
 
 fn Node! Gltf.getNode(Gltf* self, String name) {
@@ -725,13 +762,14 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
     return GltfError.KEY_NOT_FOUND?;
 }
 
-fn uint! Object.getValue(Object* primitive, String key) {
+/*fn uint! Object.getValue(Object* primitive, String key) {
     if (mem::equals(key, "indices") || mem::equals(key, "material")) {
         uint! value = primitive.get_int(key);
         if (try value) return value;
     }
     else {
-        Object*! attributes = primitive.get("attributes");
+        Object*! attributes =
+        .get("attributes");
         if (try attributes) {
             uint! value = attributes.get_int(key);
             if (try value) return value;
@@ -753,9 +791,10 @@ fn Accessor! Gltf.getAccessor(Gltf* data, Object* primitive, String key) {
     }
 
     return GltfError.KEY_NOT_FOUND?;
-}
+}*/
 
 
+/*
 fn BufferView! Gltf.getBufferView(Gltf* data, Object* primitive, String key) {
     Accessor! accessor = data.getAccessor(primitive, key);
     if (catch accessor) {
@@ -763,6 +802,7 @@ fn BufferView! Gltf.getBufferView(Gltf* data, Object* primitive, String key) {
     }
     return data.bufferViews[accessor.bufferView];
 }
+*/
 
 fn uint Accessor.componentLen(Accessor* self) {
     switch(self.type) {

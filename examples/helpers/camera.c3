@@ -76,7 +76,7 @@ fn void Camera.rotate_y(Camera* self, float deg) {
     self.eye_offset();
 }
 
-fn void Camera.scene_offset(Camera* self, Vec3f offset) {
+/*fn void Camera.scene_offset(Camera* self, Vec3f offset) {
     float offset_x = offset.x + math::cos(radians(self.pitch)) * math::sin(radians(self.yaw));
     float offset_z = offset.x + math::cos(radians(self.pitch)) * math::cos(radians(self.yaw));
     self.eye.x -= offset_z;
@@ -86,7 +86,7 @@ fn void Camera.scene_offset(Camera* self, Vec3f offset) {
     self.eye.y -= offset.y;
     self.focus.y -= offset.y;
     self.eye_offset();
-}
+}*/
 
 fn UniformData Camera.matrix(Camera* self, Matrix4f model = MATRIX4F_IDENTITY) {
     Matrix4f perspective = matrix4f_perspective(radians(45.0), self.aspect, self.min_zoom, self.max_zoom);
