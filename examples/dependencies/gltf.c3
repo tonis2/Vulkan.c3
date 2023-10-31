@@ -224,8 +224,8 @@ struct BufferView {
 
 struct Buffer {
     char[] data;
+    char[] uri;
     uint size;
-    String uri;
     ResourceType type;
 }
 
@@ -840,21 +840,21 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
 }
 
 fn char[]! Buffer.from_base64(self) {
-    String[] bufferHeader = self.uri.split(",");
-    defer mem::free(bufferHeader);
-    char[] buffer_data = mem::malloc(char, self.size + 2);
-    // Parse buffer from base64 to bytes
-    if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
-        Base64Decoder decoder;
-        decoder.init(base64::STD_ALPHABET, -1)!;
-        // Decode buffer from base64
-        if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
-            io::printfn("Buffer parsing error: '%s'.", err);
-            return ParseError.BROKEN_BUFFER?;
-        };
-    }
-
-    return buffer_data;
+     String uri_string = (String)self.uri;
+     String[] bufferHeader = uri_string.split(",");
+     defer mem::free(bufferHeader);
+     char[] buffer_data = mem::malloc(char, self.size + 2);
+     // Parse buffer from base64 to bytes
+     if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
+         Base64Decoder decoder;
+         decoder.init(base64::STD_ALPHABET, -1)!;
+         // Decode buffer from base64
+         if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
+             io::printfn("Buffer parsing error: '%s'.", err);
+             return ParseError.BROKEN_BUFFER?;
+         };
+     }
+     return buffer_data;
 }
 
 

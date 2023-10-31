@@ -50,20 +50,22 @@ fn void! main()
                 buffer.data = buffer.from_base64()!;
             }
             case ResourceType.EXTERNAL: {
-              /*  String path = string::join({"", buffer.uri}, "examples/gltf/assets/");
+                String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
-                if (catch err = buffer_file) {
-                    io::printfn("failed loading buffer file %s", err);
-                    return;
-                };
 
                 defer {
                     path.free();
                     buffer_file.close()!!;
                 };
 
-                buffer.data = mem::malloc(char, buffer_file.len()!);
-                buffer_file.read_all(buffer.data)!;*/
+                if (catch err = buffer_file) {
+                    io::printfn("failed loading buffer file %s", err);
+                    return;
+                };
+
+                InStream* stream = (InStream*)&buffer_file;
+                buffer.data = mem::malloc(char, stream.len());
+                stream.read(buffer.data)!;
             }
             default: {}
         }
