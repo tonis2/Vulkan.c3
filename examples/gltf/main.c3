@@ -39,12 +39,12 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/cubes.gltf", "r")!;
+    File file = file::open("examples/gltf/assets/boat.gltf", "r")!;
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
     defer gltf_data.free();
-
+    io::printfn("%d", gltf_data.buffers.len());
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
             case ResourceType.ENCODED: {
@@ -158,7 +158,6 @@ fn void! main()
 
     foreach (mesh : gltf_data.meshes) {
         foreach (index, primitive: mesh.primitives) {
-
             Accessor pos_accessor = gltf_data.accessors[primitive.position];
             Accessor tex_accessor = gltf_data.accessors[primitive.tex_cord];
             Accessor normal_accessor = gltf_data.accessors[primitive.normal];
