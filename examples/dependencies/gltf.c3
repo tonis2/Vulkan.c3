@@ -590,8 +590,33 @@ fn void Image.fromJson(Image* self, Object* json) {
 
 
 fn Gltf! parse(InStream* stream) {
-    Gltf content;
-    Object*! gltfJson = json::parse(stream);
+      Gltf content;
+      Object*! gltfJson;
+      char[4] magic_bytes;
+
+      if (catch err = stream.read(&magic_bytes)) {
+          io::printfn("GLTF parsing error %s", err);
+          return ParseError.JSON_PARSE_FAILED?;
+      }
+
+      // if magic bytes == glTF, it means its in glb format
+      if ((magic_bytes == (char[4])"glTF")) {
+          char[16] glb_header;
+          if (catch err = stream.read(&glb_header)) {
+              io::printfn("GLB parsing error %s", err);
+              return ParseError.JSON_PARSE_FAILED?;
+          }
+
+          uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
+          uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
+          uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
+          String content_format = bitcast(glb_header[12..15], String);
+          gltfJson = json::parse(stream);
+          
+      } else {
+          stream.seek(0, Seek.SET)!;
+          gltfJson = json::parse(stream);
+      }
 
     if (catch err = gltfJson) {
         return ParseError.JSON_PARSE_FAILED?;

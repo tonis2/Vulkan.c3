@@ -5,9 +5,10 @@ import camera;
 import std::math;
 import gltf;
 import std::collections::list;
-import std::collections::object;
 import stb;
 
+
+def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<ImageBufferInfo>);
 def VertexData = List(<Vertex>);
 def IndexData = List(<ushort>);
@@ -38,7 +39,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/boat.gltf", "r")!;
+    File file = file::open("examples/gltf/assets/cubes.gltf", "r")!;
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
@@ -196,7 +197,7 @@ fn void! main()
 
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
-        Format image_format = vk::FORMAT_B8G8R8A8_UNORM;
+        Format image_format = vk::FORMAT_B8G8R8A8_SRGB;
         gltf::Image image = gltf_data.images[gltf_texture.source];
         gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
 
@@ -266,21 +267,24 @@ fn void! main()
     });
 
     DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+
+    // Bind loaded textures to descriptor
+    DescriptorImages descriptor_images;
+
+    foreach (tex: textures) {
+        descriptor_images.push({
+          .sampler = tex.sampler,
+          .imageView = tex.view,
+          .imageLayout = tex.layout,
+        });
+    }
+
+    defer descriptor_images.free();
+
     WriteDescriptorSet textureSet = vk::writeDescriptorSetBuilder()
         .setDstBinding(1)
         .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-        .setImageInfo({
-            {
-                .sampler = textures[0].sampler,
-                .imageView = textures[0].view,
-                .imageLayout = textures[0].layout,
-            },
-            {
-                .sampler = textures[1].sampler,
-                .imageView = textures[1].view,
-                .imageLayout = textures[1].layout,
-            }
-        });
+        .setImageInfo(descriptor_images.to_array());
 
     WriteDescriptorSet[] descriptorSets = {
         vk::writeDescriptorSetBuilder()
