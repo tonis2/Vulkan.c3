@@ -50,7 +50,7 @@ fn void! main()
                 buffer.data = buffer.from_base64()!;
             }
             case ResourceType.EXTERNAL: {
-                String path = string::join({"", buffer.uri}, "examples/gltf/assets/");
+              /*  String path = string::join({"", buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
                 if (catch err = buffer_file) {
                     io::printfn("failed loading buffer file %s", err);
@@ -63,7 +63,7 @@ fn void! main()
                 };
 
                 buffer.data = mem::malloc(char, buffer_file.len()!);
-                buffer_file.read_all(buffer.data)!;
+                buffer_file.read_all(buffer.data)!;*/
             }
             default: {}
         }
@@ -155,11 +155,11 @@ fn void! main()
 
     foreach (mesh : gltf_data.meshes) {
         foreach (index, primitive: mesh.primitives) {
-            Object* attributes = primitive.get("attributes")!!;
-            Accessor pos_accessor = gltf_data.accessors[attributes.get_int("POSITION")!!];
-            Accessor tex_accessor = gltf_data.accessors[attributes.get_int("TEXCOORD_0")!!];
-            Accessor normal_accessor = gltf_data.accessors[attributes.get_int("NORMAL")!!];
-            Accessor index_accessor = gltf_data.accessors[primitive.get_int("indices")!!];
+
+            Accessor pos_accessor = gltf_data.accessors[primitive.position];
+            Accessor tex_accessor = gltf_data.accessors[primitive.tex_cord];
+            Accessor normal_accessor = gltf_data.accessors[primitive.normal];
+            Accessor index_accessor = gltf_data.accessors[primitive.indices];
 
             for (uint i = 0; i < pos_accessor.count ; i += 1) {
                 vertices.push(Vertex {
@@ -500,10 +500,10 @@ fn void! main()
                 gltf::Mesh mesh = gltf_data.meshes[node.mesh];
 
                 foreach (primitive: mesh.primitives) {
-                    Accessor index_accessor = gltf_data.accessors[primitive.get_int("indices")!];
+                    Accessor index_accessor = gltf_data.accessors[primitive.indices];
                     gltf::BufferView index_buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
 
-                    Material material = gltf_data.materials[primitive.get_int("material")!];
+                    Material material = gltf_data.materials[primitive.material];
                     Texture color_texture = gltf_data.textures[material.pbrMetallicRoughness.baseColorTexture.index];
 
                     PushConstantData constant_data = {
