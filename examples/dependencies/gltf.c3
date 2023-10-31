@@ -417,15 +417,8 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
 
     if (try uri && try size) {
         self.size = size;
-        if (uri.ends_with(".bin")) {
-            buffer_type = ResourceType.EXTERNAL;
-        }
-        else {
-            buffer_type = ResourceType.ENCODED;
-        }
-
         self.uri = uri.copy();
-        self.type = buffer_type;
+        self.type = uri.ends_with(".bin") ? ResourceType.EXTERNAL :  ResourceType.ENCODED;
     }
 }
 
@@ -611,8 +604,8 @@ fn Gltf! parse(InStream* stream) {
           uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
           uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
           String content_format = bitcast(glb_header[12..15], String);
+          io::printfn("%d %d %s",total_length, content_length, content_format);
           gltfJson = json::parse(stream);
-          
       } else {
           stream.seek(0, Seek.SET)!;
           gltfJson = json::parse(stream);
@@ -815,8 +808,8 @@ fn Matrix4f Node.recompose(Node* self) {
 
     Matrix4f scale = {
         self.scale.x, 0.0, 0.0, 0.0,
-        0.0,   self.scale.y, 0.0, 0.0,
-        0.0, 0.0,   self.scale.z, 0.0,
+        0.0,self.scale.y, 0.0, 0.0,
+        0.0, 0.0,self.scale.z, 0.0,
         0.0, 0.0, 0.0, 1.0,
     };
 
