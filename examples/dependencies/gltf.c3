@@ -223,8 +223,8 @@ struct BufferView {
 
 struct Buffer {
     char[] data;
+    char[] uri;
     uint size;
-    String uri;
     ResourceType type;
 }
 
@@ -415,20 +415,19 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
     String! uri = json.get_string("uri");
     ResourceType buffer_type;
 
-    if (try uri) {
+    if (try uri && try size) {
+        self.size = size;
         if (uri.ends_with(".bin")) {
             buffer_type = ResourceType.EXTERNAL;
         }
         else {
             buffer_type = ResourceType.ENCODED;
         }
-        self.uri = uri;
+        self.uri = malloc(char, size);
+        mem::copy(self.uri, uri, size);
         self.type = buffer_type;
     }
-    if (try size) self.size = size;
 }
-
-
 
 fn void! Camera.fromJson(Camera* self, Object* json) {
     String! cameraType = json.get_string("type");
@@ -589,7 +588,7 @@ fn void Image.fromJson(Image* self, Object* json) {
 }
 
 
-fn Gltf! parse(Stream* stream) {
+fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson;
     char[4] magic_bytes;
@@ -896,6 +895,7 @@ fn Matrix4f Node.recompose(Node* self) {
 
 fn void Buffer.free(Buffer* self) {
     mem::free(self.data);
+    mem::free(self.uri);
 }
 
 macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
@@ -905,7 +905,8 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
 }
 
 fn char[]! Buffer.from_base64(self) {
-    String[] bufferHeader = self.uri.split(",");
+    String uri_string = (String)self.uri;
+    String[] bufferHeader = uri_string.split(",");
     defer mem::free(bufferHeader);
     char[] buffer_data = mem::malloc(char, self.size + 2);
     // Parse buffer from base64 to bytes
@@ -918,7 +919,6 @@ fn char[]! Buffer.from_base64(self) {
             return ParseError.BROKEN_BUFFER?;
         };
     }
-
     return buffer_data;
 }
 
