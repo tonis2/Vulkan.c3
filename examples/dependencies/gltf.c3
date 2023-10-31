@@ -108,7 +108,6 @@ fault GltfError
 }
 
 struct Gltf {
-    Object* json;
     String name;
     NodeList nodes;
     SceneList scenes;
@@ -416,19 +415,19 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
     String! uri = json.get_string("uri");
     ResourceType buffer_type;
 
-    if (try uri) {
+    if (try uri && try size) {
+        self.size = size;
         if (uri.ends_with(".bin")) {
             buffer_type = ResourceType.EXTERNAL;
         }
         else {
             buffer_type = ResourceType.ENCODED;
         }
-        self.uri = uri;
+
+        self.uri = uri.copy();
         self.type = buffer_type;
     }
-    if (try size) self.size = size;
 }
-
 
 
 fn void! Camera.fromJson(Camera* self, Object* json) {
@@ -593,11 +592,12 @@ fn void Image.fromJson(Image* self, Object* json) {
 fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson = json::parse(stream);
+
     if (catch err = gltfJson) {
         return ParseError.JSON_PARSE_FAILED?;
     }
 
-    content.json = gltfJson;
+    defer gltfJson.free();
 
     // JSON data
     Object*! scenes = gltfJson.get("scenes");
@@ -728,7 +728,6 @@ fn void Gltf.free(Gltf* self) {
     self.materials.free();
     self.textures.free();
     self.samplers.free();
-    self.json.free();
 }
 
 fn Node! Gltf.getNode(Gltf* self, String name) {
