@@ -423,6 +423,7 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
         else {
             buffer_type = ResourceType.ENCODED;
         }
+
         self.uri = malloc(char, size);
         mem::copy(self.uri, uri, size);
         self.type = buffer_type;
@@ -760,48 +761,6 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
     }
     return GltfError.KEY_NOT_FOUND?;
 }
-
-/*fn uint! Object.getValue(Object* primitive, String key) {
-    if (mem::equals(key, "indices") || mem::equals(key, "material")) {
-        uint! value = primitive.get_int(key);
-        if (try value) return value;
-    }
-    else {
-        Object*! attributes =
-        .get("attributes");
-        if (try attributes) {
-            uint! value = attributes.get_int(key);
-            if (try value) return value;
-        }
-    }
-    return GltfError.KEY_NOT_FOUND?;
-}
-
-fn Accessor! Gltf.getAccessor(Gltf* data, Object* primitive, String key) {
-    if (mem::equals(key, "indices")) {
-        Object*! value = primitive.get(key);
-        if (try value) return data.accessors[(uint)value.f];
-    } else {
-        Object*! attributes = primitive.get("attributes");
-        if (try attributes) {
-            Object*! value = attributes.get(key);
-            if (try value) return data.accessors[(uint)value.f];
-        }
-    }
-
-    return GltfError.KEY_NOT_FOUND?;
-}*/
-
-
-/*
-fn BufferView! Gltf.getBufferView(Gltf* data, Object* primitive, String key) {
-    Accessor! accessor = data.getAccessor(primitive, key);
-    if (catch accessor) {
-        return GltfError.KEY_NOT_FOUND?;
-    }
-    return data.bufferViews[accessor.bufferView];
-}
-*/
 
 fn uint Accessor.componentLen(Accessor* self) {
     switch(self.type) {

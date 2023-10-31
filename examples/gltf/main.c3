@@ -38,7 +38,17 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    defer glfw::destroyWindow(window);
+    if (window == null)
+    {
+        io::printfn("Failed to init glfw window");
+        glfw::terminate();
+        return;
+    }
+
+    defer {
+        glfw::destroyWindow(window);
+        glfw::terminate();
+    }
 
     File file = file::open("examples/gltf/assets/cubes.gltf", "r")!;
     defer file.close()!!;
@@ -66,8 +76,6 @@ fn void! main()
                 };
 
                 InStream* stream = (InStream*)&buffer_file;
-
-
                 buffer.data = mem::malloc(char, stream.len());
                 stream.read(buffer.data)!;
             }
@@ -80,18 +88,6 @@ fn void! main()
 
     IndexData indices;
     defer indices.free();
-
-    if (window == null)
-    {
-        io::printfn("Failed to init glfw window");
-        glfw::terminate();
-        return;
-    }
-
-    defer {
-        glfw::destroyWindow(window);
-        glfw::terminate();
-    }
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
@@ -205,7 +201,7 @@ fn void! main()
 
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
-        io::printfn("buffer size %d %d", buffer.data.len, buffer_view.buffer);
+        io::printfn("buffer size %d %d %d", buffer.data.len, buffer_view.byteLength, buffer_view.offset);
 
         stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, Channel.STBI_RGB_ALPHA);
 
