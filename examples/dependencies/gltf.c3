@@ -9,7 +9,7 @@ import std::encoding::json;
 import std::encoding::base64;
 import std::collections::map;
 
-def PrimitiveList = List(<Object*>);
+def PrimitiveList = List(<Primitive>);
 def NodeList = List(<Node>);
 def SceneList= List(<Scene>);
 def MeshList = List(<Mesh>);
@@ -207,11 +207,11 @@ struct Mesh {
 }
 
 struct Primitive {
-    uint vertice;
-    uint indice;
+    uint position;
+    uint indices;
     uint tex_cord;
     uint normal;
-    Object* object;
+    uint material;
 }
 
 struct BufferView {
@@ -287,7 +287,22 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
     if (try name) self.name = name;
     if (try primitives) {
         foreach (primitive : primitives.array) {
-            self.primitives.push(primitive);
+            Object* attributes = primitive.get("attributes")!!;
+            Primitive data;
+
+            uint! position = attributes.get_int("POSITION");
+            uint! tex_cord = attributes.get_int("TEXCOORD_0");
+            uint! normal = attributes.get_int("NORMAL");
+            uint! indices = primitive.get_int("indices");
+            uint! material = primitive.get_int("material");
+
+            if (try position) data.position = position;
+            if (try tex_cord) data.tex_cord = tex_cord;
+            if (try normal) data.normal = normal;
+            if (try indices) data.indices = indices;
+            if (try material) data.material = material;
+
+            self.primitives.push(data);
         }
     }
 }
@@ -575,7 +590,7 @@ fn void Image.fromJson(Image* self, Object* json) {
 }
 
 
-fn Gltf! parse(Stream* stream) {
+fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson = json::parse(stream);
     if (catch err = gltfJson) {
@@ -725,45 +740,6 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
     return GltfError.KEY_NOT_FOUND?;
 }
 
-fn uint! Object.getValue(Object* primitive, String key) {
-    if (mem::equals(key, "indices") || mem::equals(key, "material")) {
-        uint! value = primitive.get_int(key);
-        if (try value) return value;
-    }
-    else {
-        Object*! attributes = primitive.get("attributes");
-        if (try attributes) {
-            uint! value = attributes.get_int(key);
-            if (try value) return value;
-        }
-    }
-    return GltfError.KEY_NOT_FOUND?;
-}
-
-fn Accessor! Gltf.getAccessor(Gltf* data, Object* primitive, String key) {
-    if (mem::equals(key, "indices")) {
-        Object*! value = primitive.get(key);
-        if (try value) return data.accessors[(uint)value.f];
-    } else {
-        Object*! attributes = primitive.get("attributes");
-        if (try attributes) {
-            Object*! value = attributes.get(key);
-            if (try value) return data.accessors[(uint)value.f];
-        }
-    }
-
-    return GltfError.KEY_NOT_FOUND?;
-}
-
-
-fn BufferView! Gltf.getBufferView(Gltf* data, Object* primitive, String key) {
-    Accessor! accessor = data.getAccessor(primitive, key);
-    if (catch accessor) {
-        return GltfError.KEY_NOT_FOUND?;
-    }
-    return data.bufferViews[accessor.bufferView];
-}
-
 fn uint Accessor.componentLen(Accessor* self) {
     switch(self.type) {
         case AccessorType.SCALAR:
@@ -803,7 +779,6 @@ fn uint Accessor.dataSize(Accessor* self) {
             return float.sizeof;
     }
 }
-
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(Node* self) {
