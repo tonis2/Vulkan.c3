@@ -133,6 +133,7 @@ struct Node {
     int mesh;
     int camera;
     Quaternionf rotation;
+    Matrix4f matrix;
     Vec3f scale;
     Vec3f translation;
     Node* parent;
@@ -250,6 +251,7 @@ fn void Node.fromJson(Node* self, Object* json) {
     Object*! rotation = json.get("rotation");
     Object*! scale = json.get("scale");
     Object*! translation = json.get("translation");
+    Object*! matrix = json.get("matrix");
 
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
@@ -270,11 +272,20 @@ fn void Node.fromJson(Node* self, Object* json) {
         float z = (float)translation.get_at(2).f;
         self.translation = {x, y, z};
     }
+
+    if (try matrix) {
+        self.matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+    }
 }
 
 fn bool Node.hasMesh(Node* self) {
     return self.mesh != -1;
 }
+
+macro void! Node.@traverse(self; @body(Node node)) {
+
+}
+
 
 fn bool Node.hasCamera(Node* self) {
     return self.mesh != -1;

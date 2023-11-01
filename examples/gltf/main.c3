@@ -38,7 +38,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/boat.gltf", "r")!;
+    File file = file::open("examples/gltf/assets/duck.gltf", "r")!;
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
@@ -78,6 +78,8 @@ fn void! main()
             default: {}
         }
     }
+
+
 
     VertexData vertices;
     defer vertices.free();
@@ -169,7 +171,6 @@ fn void! main()
             Accessor tex_accessor = gltf_data.accessors[primitive.tex_cord];
             Accessor normal_accessor = gltf_data.accessors[primitive.normal];
             Accessor index_accessor = gltf_data.accessors[primitive.indices];
-
             for (uint i = 0; i < pos_accessor.count ; i += 1) {
                 vertices.push(Vertex {
                     gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
@@ -210,7 +211,13 @@ fn void! main()
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
-        stb::Image image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, Channel.STBI_RGB_ALPHA)!;
+        stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, Channel.STBI_RGB_ALPHA);
+
+        if (catch err = image_data) {
+            io::printfn("Failed loading image from buffer");
+            return;
+        }
+
         defer image_data.free();
 
         ImageCreateInfo image_info = vk::imageCreateInfoBuilder()
@@ -252,7 +259,6 @@ fn void! main()
 
         textures.push(texture);
     }
-
 
    // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -380,9 +386,9 @@ fn void! main()
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_NONE)
-        .setFrontFace(vk::FRONT_FACE_CLOCKWISE)
-        .setDepthBiasEnable(vk::TRUE)
+        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
     )
     .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
     .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
@@ -438,10 +444,10 @@ fn void! main()
         eventHandler.update();
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
+            camera.rotate_x((float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+            uniform_buffer.updateData(&&camera.matrix());
         }
-        mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
 
         Fence frame_fence = frame_fences[frame];
         Semaphore wait_semaphore = wait_semaphores[frame];
