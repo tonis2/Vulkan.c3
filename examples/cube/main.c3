@@ -308,7 +308,7 @@ fn void! main()
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
             camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
-            mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+            uniform_buffer.updateData(&&camera.matrix());
         }
 
         Fence frame_fence = frame_fences[frame];

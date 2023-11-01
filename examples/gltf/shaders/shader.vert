@@ -22,6 +22,7 @@ layout(binding = 0) uniform uniform_matrix
 
 void main() {
     gl_Position = projection * view * model_matrix * vec4(vp, 1.0);
+    gl_Position.y = -gl_Position.y;
     fragTexCoord = tex_cord;
     textureIndex = texture;
 }

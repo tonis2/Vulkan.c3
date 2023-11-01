@@ -286,3 +286,7 @@ fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties,
     };
 }
 
+fn void BufferInfo.updateData(&self, void* data) {
+    mem::copy(self.mapped, data, self.size);
+}
+
