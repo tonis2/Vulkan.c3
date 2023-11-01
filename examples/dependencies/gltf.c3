@@ -419,6 +419,7 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
     if (try size) {
        self.size = size;
     }
+
     if (try uri) {
         self.uri = uri.copy();
         if (uri.ends_with(".bin")) {
@@ -429,8 +430,6 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
         }
     }
 }
-
-
 
 fn void! Camera.fromJson(Camera* self, Object* json) {
     String! cameraType = json.get_string("type");
@@ -595,14 +594,14 @@ fn Gltf! parse(InStream* stream) {
       Gltf content;
       Object*! gltfJson;
       char[4] magic_bytes;
-
       if (catch err = stream.read(&magic_bytes)) {
           io::printfn("GLTF parsing error %s", err);
           return ParseError.JSON_PARSE_FAILED?;
       }
 
+      bool is_glb = (magic_bytes == (char[4])"glTF");
       // if magic bytes == glTF, it means its in glb format
-      if ((magic_bytes == (char[4])"glTF")) {
+      if (is_glb) {
           char[16] glb_header;
           if (catch err = stream.read(&glb_header)) {
               io::printfn("GLB parsing error %s", err);
@@ -613,7 +612,6 @@ fn Gltf! parse(InStream* stream) {
           uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
           uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
           String content_format = bitcast(glb_header[12..15], String);
-          io::printfn("%d %d %s",total_length, content_length, content_format);
           gltfJson = json::parse(stream);
       } else {
           stream.seek(0, Seek.SET)!;
@@ -674,15 +672,6 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
-    // Parse buffers
-    if (try buffers) {
-        foreach (buffer : buffers.array) {
-            Buffer data;
-            data.fromJson(buffer)!;
-            content.buffers.push(data);
-        }
-    }
-
     // Parse cameras
     if (try cameras) {
         foreach (camera : cameras.array) {
@@ -730,6 +719,15 @@ fn Gltf! parse(InStream* stream) {
             Mesh data;
             data.fromJson(mesh);
             content.meshes.push(data);
+        }
+    }
+
+    // Parse buffers
+    if (try buffers) {
+        foreach (buffer : buffers.array) {
+            Buffer data;
+            data.fromJson(buffer)!;
+            content.buffers.push(data);
         }
     }
     return content;
@@ -857,6 +855,7 @@ fn Matrix4f Node.recompose(Node* self) {
 
 fn void Buffer.free(Buffer* self) {
     mem::free(self.data);
+    mem::free(self.uri);
 }
 
 macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
@@ -871,7 +870,7 @@ fn char[]! Buffer.from_base64(self) {
     decoder.init(base64::STD_ALPHABET, -1)!;
         // Decode buffer from base64
         // Offset base64 header
-        if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
+    if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
         io::printfn("Buffer parsing error: '%s'.", err);
         return ParseError.BROKEN_BUFFER?;
     };

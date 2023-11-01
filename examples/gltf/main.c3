@@ -49,6 +49,14 @@ fn void! main()
             case ResourceType.ENCODED_BASE64: {
                 buffer.data = buffer.from_base64()!;
             }
+            case ResourceType.ENCODED_BIN: {
+                // Parse .glb binary data
+                InStream* stream = (InStream*)&file;
+                buffer.data = mem::malloc(char, buffer.size);
+                usz file_size = stream.seek(0, Seek.END)!;
+                stream.seek(file_size - buffer.size, Seek.SET)!;
+                stream.read(buffer.data)!;
+            }
             case ResourceType.EXTERNAL_BIN: {
                 String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
