@@ -38,8 +38,9 @@ enum ImageType {
 }
 
 enum ResourceType {
-    ENCODED,
-    EXTERNAL
+    ENCODED_BIN,
+    ENCODED_BASE64,
+    EXTERNAL_BIN
 }
 
 enum AccessorType {
@@ -413,14 +414,22 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
 fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
-    ResourceType buffer_type;
+    ResourceType buffer_type = ResourceType.ENCODED_BIN;
 
-    if (try uri && try size) {
-        self.size = size;
+    if (try size) {
+       self.size = size;
+    }
+    if (try uri) {
         self.uri = uri.copy();
-        self.type = uri.ends_with(".bin") ? ResourceType.EXTERNAL :  ResourceType.ENCODED;
+        if (uri.ends_with(".bin")) {
+            self.type = ResourceType.EXTERNAL_BIN;
+        }
+        else {
+            self.type = ResourceType.ENCODED_BASE64;
+        }
     }
 }
+
 
 
 fn void! Camera.fromJson(Camera* self, Object* json) {
@@ -857,21 +866,16 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
 }
 
 fn char[]! Buffer.from_base64(self) {
-     String uri_string = (String)self.uri;
-     String[] bufferHeader = uri_string.split(",");
-     defer mem::free(bufferHeader);
-     char[] buffer_data = mem::malloc(char, self.size + 2);
-     // Parse buffer from base64 to bytes
-     if (mem::equals(bufferHeader[0], "data:application/octet-stream;base64")) {
-         Base64Decoder decoder;
-         decoder.init(base64::STD_ALPHABET, -1)!;
-         // Decode buffer from base64
-         if (catch err = decoder.decode(bufferHeader[1], buffer_data)) {
-             io::printfn("Buffer parsing error: '%s'.", err);
-             return ParseError.BROKEN_BUFFER?;
-         };
-     }
-     return buffer_data;
+    char[] buffer_data = mem::malloc(char, self.size + 2);
+    Base64Decoder decoder;
+    decoder.init(base64::STD_ALPHABET, -1)!;
+        // Decode buffer from base64
+        // Offset base64 header
+        if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
+        io::printfn("Buffer parsing error: '%s'.", err);
+        return ParseError.BROKEN_BUFFER?;
+    };
+    return buffer_data;
 }
 
 

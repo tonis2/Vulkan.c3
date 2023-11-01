@@ -7,7 +7,6 @@ import gltf;
 import std::collections::list;
 import stb;
 
-
 def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<ImageBufferInfo>);
 def VertexData = List(<Vertex>);
@@ -44,13 +43,13 @@ fn void! main()
 
     Gltf gltf_data = gltf::parse(&file)!;
     defer gltf_data.free();
-    io::printfn("%d", gltf_data.buffers.len());
+
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
-            case ResourceType.ENCODED: {
+            case ResourceType.ENCODED_BASE64: {
                 buffer.data = buffer.from_base64()!;
             }
-            case ResourceType.EXTERNAL: {
+            case ResourceType.EXTERNAL_BIN: {
                 String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
 
@@ -429,7 +428,6 @@ fn void! main()
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
-
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
