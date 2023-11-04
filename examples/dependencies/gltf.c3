@@ -23,8 +23,6 @@ def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
 
-def ObjectInternalMap = HashMap(<String, Object*>);
-
 enum Targets {
     ARRAY_BUFFER,
     ELEMENT_ARRAY_BUFFER
@@ -136,7 +134,13 @@ struct Node {
     Matrix4f matrix;
     Vec3f scale;
     Vec3f translation;
-    Node* parent;
+    IndexList children;
+}
+
+struct Mesh {
+    String name;
+    PrimitiveList primitives;
+    IndexList children;
 }
 
 struct TextureInfo {
@@ -202,11 +206,6 @@ struct Accessor {
     AccessorType type;
 }
 
-struct Mesh {
-    String name;
-    PrimitiveList primitives;
-}
-
 struct Primitive {
     uint position;
     uint indices;
@@ -233,10 +232,14 @@ struct Buffer {
 // Parsing JSON to structs
 fn void Scene.fromJson(Scene* self, Object* json) {
     String! name = json.get_string("name");
-    Object*! sceneNodes = json.get("nodes");
+    Object*! nodes = json.get("nodes");
+    if (try name) self.name = name.copy();
+    if (try nodes) foreach (node : nodes.array) self.nodes.push((uint)node.f);
+}
 
-    if (try name) self.name = name;
-    if (try sceneNodes) foreach (node : sceneNodes.array) self.nodes.push((uint)node.f);
+fn void Scene.free(Scene* self) {
+    self.nodes.free();
+    self.name.free();
 }
 
 fn void Node.fromJson(Node* self, Object* json) {
@@ -245,17 +248,17 @@ fn void Node.fromJson(Node* self, Object* json) {
     self.rotation = quaternionf_identity();
 
     String! name = json.get_string("name");
-    if (try name) self.name = name;
-
     // Parse node transforms
     Object*! rotation = json.get("rotation");
     Object*! scale = json.get("scale");
     Object*! translation = json.get("translation");
     Object*! matrix = json.get("matrix");
+    Object*! children = json.get("children");
 
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
 
+    if (try name) self.name = name.copy();
     if (try mesh) self.mesh = mesh;
     if (try camera) self.camera = camera;
     if (try rotation) {
@@ -276,16 +279,42 @@ fn void Node.fromJson(Node* self, Object* json) {
     if (try matrix) {
         self.matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
     }
+
+    if (try children) {
+        foreach (node : children.array) self.children.push((uint)node.f);
+    }
 }
 
 fn bool Node.hasMesh(Node* self) {
     return self.mesh != -1;
 }
 
-macro void! Node.@traverse(self; @body(Node node)) {
+macro void Gltf.@traverse_nodes(Gltf self, Node node, Node* parent = null; @callback(Node node, Matrix4f matrix)) {
+    {|
+        Matrix4f matrix = node.recompose();
+        if (parent != null) {
+          matrix = parent.recompose().mul(matrix);
+        }
+        @callback(node, matrix);
+    |};
 
+    /*foreach (uint node_index: node.children) {
+       Matrix4f matrix = node.recompose();
+    }*/
 }
 
+macro void Gltf.@draw_scene(Gltf self, Scene scene; @callback(Node node, Matrix4f matrix)) {
+    foreach (uint node_index : scene.nodes) {
+        self.@traverse_nodes(self.nodes[node_index]; Node result_node, Matrix4f matrix) {
+            @callback(result_node, matrix);
+        };
+    }
+}
+
+fn void Node.free(Node* self) {
+    self.children.free();
+    self.name.free();
+}
 
 fn bool Node.hasCamera(Node* self) {
     return self.mesh != -1;
@@ -295,7 +324,7 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
     String! name = json.get_string("name");
     Object*! primitives = json.get("primitives");
 
-    if (try name) self.name = name;
+    if (try name) self.name = name.copy();
     if (try primitives) {
         foreach (primitive : primitives.array) {
             Object* attributes = primitive.get("attributes")!!;
@@ -312,10 +341,15 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
             if (try normal) data.normal = normal;
             if (try indices) data.indices = indices;
             if (try material) data.material = material;
-
             self.primitives.push(data);
         }
     }
+}
+
+fn void Mesh.free(Mesh* self) {
+    self.children.free();
+    self.primitives.free();
+    self.name.free();
 }
 
 fn void BufferView.fromJson(BufferView* self, Object* json) {
@@ -745,13 +779,10 @@ fn Gltf! parse(InStream* stream) {
 }
 
 fn void Gltf.free(Gltf* self) {
-    foreach (mesh : self.meshes) {
-        mesh.primitives.free();
-    }
-
-    foreach (buffer : self.buffers) {
-        buffer.free();
-    }
+    foreach (mesh : self.meshes) mesh.free();
+    foreach (node : self.nodes) node.free();
+    foreach (buffer : self.buffers) buffer.free();
+    foreach (scene : self.scenes) scene.free();
 
     self.cameras.free();
     self.accessors.free();

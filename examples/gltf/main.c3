@@ -38,7 +38,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/duck.gltf", "r")!;
+    File file = file::open("examples/gltf/assets/duck.glb", "r")!;
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
@@ -204,7 +204,7 @@ fn void! main()
 
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
-        Format image_format = vk::FORMAT_B8G8R8A8_SRGB;
+        Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
         gltf::Image image = gltf_data.images[gltf_texture.source];
         gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
 
@@ -386,7 +386,7 @@ fn void! main()
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_FRONT_BIT)
+        .setCullMode(vk::CULL_MODE_BACK_BIT)
         .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
         .setDepthBiasEnable(vk::FALSE)
     )
@@ -444,20 +444,18 @@ fn void! main()
         eventHandler.update();
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate_x((float)(eventHandler.mouse_x_delta * 0.5));
-            camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
+            camera.rotate_y((float)(eventHandler.mouse_y_delta * 0.5));
             uniform_buffer.updateData(&&camera.matrix());
         }
 
         Fence frame_fence = frame_fences[frame];
         Semaphore wait_semaphore = wait_semaphores[frame];
         Semaphore signal_semaphore = signal_semaphores[frame];
-
         frame_fence.wait(device.device)!;
         frame_fence.reset(device.device)!;
 
         uint next_image = swapchain.getNextImage(device.device, wait_semaphore);
-
         RenderingInfo rendering_info = vk::renderingInfoBuilder()
         .setLayerCount(1)
         .setRenderArea({
@@ -511,11 +509,11 @@ fn void! main()
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
-        foreach (node : gltf_data.nodes) {
-           if (node.hasMesh()) {
-                Matrix4f matrix = node.recompose();
-                gltf::Mesh mesh = gltf_data.meshes[node.mesh];
+        Scene scene = gltf_data.scenes[0];
 
+        gltf_data.@draw_scene(scene; Node node, Matrix4f matrix) {
+          if (node.hasMesh()) {
+                gltf::Mesh mesh = gltf_data.meshes[node.mesh];
                 foreach (primitive: mesh.primitives) {
                     Accessor index_accessor = gltf_data.accessors[primitive.indices];
                     gltf::BufferView index_buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
@@ -534,7 +532,7 @@ fn void! main()
                     vk::cmdDrawIndexed(command_buffer, index_accessor.count, 1, 0, 0, 0);
                 }
             }
-        }
+        };
 
         vk::cmdEndRenderingKHR(command_buffer);
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
