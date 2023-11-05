@@ -29,6 +29,44 @@ struct PushConstantData {
    uint texture;
 }
 
+BufferInfo vertex_buffer = {
+    .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
+    .version = vk::BufferVersion.DEVICE_BUFFER
+};
+
+BufferInfo index_buffer = {
+    .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
+    .version = vk::BufferVersion.DEVICE_BUFFER
+};
+
+fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Node* parent_node = null) {
+    if (node.hasMesh()) {
+        gltf::Mesh mesh = gltf.meshes[node.mesh];
+        foreach (primitive: mesh.primitives) {
+            Accessor index_accessor = gltf.accessors[primitive.indices];
+            gltf::BufferView index_buffer_view = gltf.bufferViews[index_accessor.bufferView];
+
+            Material material = gltf.materials[primitive.material];
+            Texture color_texture = gltf.textures[material.pbrMetallicRoughness.baseColorTexture.index];
+
+            if (parent_node != null) node.matrix = parent_node.matrix.mul(node.matrix);
+
+            PushConstantData constant_data = {
+                .matrix = node.matrix,
+                .texture = color_texture.source,
+            };
+
+            vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
+            vk::cmdBindVertexBuffers(buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+            vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
+        }
+    }
+
+    // Draw child nodes
+    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout, &node);
+}
+
 fn void! main()
 {
     glfw::init();
@@ -38,7 +76,26 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    File file = file::open("examples/gltf/assets/duck.glb", "r")!;
+    if (window == null)
+    {
+        io::printfn("Failed to init glfw window");
+        glfw::terminate();
+        return;
+    }
+
+    defer {
+        glfw::destroyWindow(window);
+        glfw::terminate();
+    }
+
+    File! file = file::open("examples/gltf/assets/duck.glb", "r");
+
+    if (catch err = file) {
+        io::printfn("Failed to load the gltf file");
+        file.close()!!;
+        return;
+    }
+
     defer file.close()!!;
 
     Gltf gltf_data = gltf::parse(&file)!;
@@ -72,14 +129,13 @@ fn void! main()
                 };
 
                 InStream* stream = (InStream*)&buffer_file;
-                buffer.data = mem::malloc(char, stream.len());
+                usz file_size = stream.seek(0, Seek.END)!;
+                buffer.data = mem::malloc(char, file_size);
                 stream.read(buffer.data)!;
             }
             default: {}
         }
     }
-
-
 
     VertexData vertices;
     defer vertices.free();
@@ -87,17 +143,7 @@ fn void! main()
     IndexData indices;
     defer indices.free();
 
-    if (window == null)
-    {
-        io::printfn("Failed to init glfw window");
-        glfw::terminate();
-        return;
-    }
 
-    defer {
-        glfw::destroyWindow(window);
-        glfw::terminate();
-    }
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
@@ -187,15 +233,7 @@ fn void! main()
         }
     }
 
-    BufferInfo vertex_buffer = {
-        .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_BUFFER
-    };
 
-    BufferInfo index_buffer = {
-        .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_BUFFER
-    };
 
     vertex_buffer.build(vertices.entries, Vertex.sizeof * vertices.len(), device)!;
     index_buffer.build(indices.entries, ushort.sizeof * indices.len(), device)!;
@@ -207,7 +245,6 @@ fn void! main()
         Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
         gltf::Image image = gltf_data.images[gltf_texture.source];
         gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
-
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
@@ -442,6 +479,12 @@ fn void! main()
     uint frame = 0;
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
+
+        if (eventHandler.scrolling) {
+           camera.add_zoom((float)eventHandler.scrollY);
+           uniform_buffer.updateData(&&camera.matrix());
+        }
+
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
@@ -510,29 +553,7 @@ fn void! main()
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
         Scene scene = gltf_data.scenes[0];
-
-        gltf_data.@draw_scene(scene; Node node, Matrix4f matrix) {
-          if (node.hasMesh()) {
-                gltf::Mesh mesh = gltf_data.meshes[node.mesh];
-                foreach (primitive: mesh.primitives) {
-                    Accessor index_accessor = gltf_data.accessors[primitive.indices];
-                    gltf::BufferView index_buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
-
-                    Material material = gltf_data.materials[primitive.material];
-                    Texture color_texture = gltf_data.textures[material.pbrMetallicRoughness.baseColorTexture.index];
-
-                    PushConstantData constant_data = {
-                        .matrix = matrix,
-                        .texture = color_texture.source,
-                    };
-
-                    vk::cmdPushConstants(command_buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-                    vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
-                    vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
-                    vk::cmdDrawIndexed(command_buffer, index_accessor.count, 1, 0, 0, 0);
-                }
-            }
-        };
+        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
 
         vk::cmdEndRenderingKHR(command_buffer);
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()

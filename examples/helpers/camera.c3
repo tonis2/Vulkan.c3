@@ -63,7 +63,7 @@ fn void Camera.rotate_x(Camera* self, float deg) {
 }
 
 fn void Camera.rotate_y(Camera* self, float deg) {
-    float max_turn = 69.0;
+    float max_turn = 89.0;
     self.pitch -= deg;
 
     if (self.pitch > max_turn) {
@@ -89,15 +89,8 @@ fn void Camera.scene_offset(Camera* self, Vec3f offset) {
 }
 
 fn UniformData Camera.matrix(Camera* self, Matrix4f model = MATRIX4F_IDENTITY) {
-    Matrix4f perspective = matrix4f_perspective(radians(45.0), self.aspect, self.min_zoom, self.max_zoom);
+    Matrix4f perspective = matrix4f_perspective(radians(50.0), self.aspect, self.min_zoom, self.max_zoom);
     Matrix4f view = vector::matrix4f_look_at(self.eye, self.focus, {0.0, 1.0, 0.0});
- /*   Matrix4f position = {
-            1.0, 0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            self.eye.x, self.eye.y, self.eye.z, 1.0,
-    };*/
-
     return UniformData {
         perspective,
         view,
