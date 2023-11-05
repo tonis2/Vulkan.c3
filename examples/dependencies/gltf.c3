@@ -246,6 +246,8 @@ fn void Node.fromJson(Node* self, Object* json) {
     self.mesh = -1;
     self.camera = -1;
     self.rotation = quaternionf_identity();
+    self.scale = {1, 1, 1};
+    self.translation = {0, 0, 0};
 
     String! name = json.get_string("name");
     // Parse node transforms
@@ -277,7 +279,10 @@ fn void Node.fromJson(Node* self, Object* json) {
     }
 
     if (try matrix) {
-        self.matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+        self.matrix = MATRIX4F_IDENTITY;
+        foreach (index, value: matrix.array) self.matrix.m[index] = (float)value.f;
+    } else {
+        self.matrix = self.recompose();
     }
 
     if (try children) {
@@ -287,28 +292,6 @@ fn void Node.fromJson(Node* self, Object* json) {
 
 fn bool Node.hasMesh(Node* self) {
     return self.mesh != -1;
-}
-
-macro void Gltf.@traverse_nodes(Gltf self, Node node, Node* parent = null; @callback(Node node, Matrix4f matrix)) {
-    {|
-        Matrix4f matrix = node.recompose();
-        if (parent != null) {
-          matrix = parent.recompose().mul(matrix);
-        }
-        @callback(node, matrix);
-    |};
-
-    /*foreach (uint node_index: node.children) {
-       Matrix4f matrix = node.recompose();
-    }*/
-}
-
-macro void Gltf.@draw_scene(Gltf self, Scene scene; @callback(Node node, Matrix4f matrix)) {
-    foreach (uint node_index : scene.nodes) {
-        self.@traverse_nodes(self.nodes[node_index]; Node result_node, Matrix4f matrix) {
-            @callback(result_node, matrix);
-        };
-    }
 }
 
 fn void Node.free(Node* self) {
@@ -892,7 +875,7 @@ fn Matrix4f Node.recompose(Node* self) {
         };
    |};
 
-   return scale.mul(translation).mul(rotation);
+   return translation.mul(rotation).mul(scale);
 }
 
 fn void Buffer.free(Buffer* self) {

@@ -7,7 +7,7 @@
 *.obj
 *.elf
 *.o
-
+boxes.gtlf
 tmp
 _c3l
 
