@@ -627,8 +627,9 @@ fn Gltf! parse(InStream* stream) {
           return ParseError.JSON_PARSE_FAILED?;
       }
 
-      bool is_glb = (magic_bytes == (char[4])"glTF");
       // if magic bytes == glTF, it means its in glb format
+      bool is_glb = (magic_bytes == (char[4])"glTF");
+
       if (is_glb) {
           char[16] glb_header;
           if (catch err = stream.read(&glb_header)) {
@@ -636,11 +637,11 @@ fn Gltf! parse(InStream* stream) {
               return ParseError.JSON_PARSE_FAILED?;
           }
 
-          uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
-          uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
-          uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
-          String content_format = bitcast(glb_header[12..15], String);
-          gltfJson = json::parse(stream);
+        uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
+        uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
+        uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
+        String content_format = bitcast(glb_header[12..15], String);
+        gltfJson = json::parse(stream);
       } else {
           stream.seek(0, Seek.SET)!;
           gltfJson = json::parse(stream);
@@ -893,13 +894,21 @@ fn char[]! Buffer.from_base64(self) {
     char[] buffer_data = mem::malloc(char, self.size + 2);
     Base64Decoder decoder;
     decoder.init(base64::STD_ALPHABET, -1)!;
-        // Decode buffer from base64
-        // Offset base64 header
+    // Decode buffer from base64
+    // Offset base64 header
     if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
         io::printfn("Buffer parsing error: '%s'.", err);
         return ParseError.BROKEN_BUFFER?;
     };
     return buffer_data;
+}
+
+fn char[]! Buffer.from_binary(self, InStream* stream) {
+    char[] data = mem::malloc(char, self.size);
+    usz file_size = stream.seek(0, Seek.END)!;
+    stream.seek(file_size - self.size, Seek.SET)!;
+    stream.read(data)!;
+    return data;
 }
 
 

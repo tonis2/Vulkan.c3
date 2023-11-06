@@ -12,6 +12,8 @@ def QueuePropertiesList = List(<QueueFamilyProperties>);
 def SurfaceFormatList = List(<SurfaceFormatKHR>);
 def PresentModeList = List(<PresentModeKHR>);
 def CommandBufferList = List(<CommandBuffer>);
+def ImageList = List(<vk::Image>);
+def ImageViewList = List(<vk::ImageView>);
 
 fault ContextErrors
 {
@@ -161,52 +163,6 @@ fn PipelineShaderStageCreateInfo ShaderModule.info(self, ShaderStageFlagBits sta
         .mod = self,
         .pName = "main",
         .pSpecializationInfo = spec_info,
-    };
-}
-
-fn SwapChain! DeviceInfo.createSwapchain(self, SwapchainCreateInfoKHR* info)
-{
-    SwapchainKHR swapchain;
-    // Create SwapChainKHR
-    createSwapchainKHR(self.device, info, null, &swapchain)!;
-    // Create SwapChain images
-    getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, null)!;
-    Image* images = malloc(Image, (usz)info.minImageCount);
-    ImageView* image_views = malloc(ImageView, (usz)info.minImageCount);
-    getSwapchainImagesKHR(self.device, swapchain, &info.minImageCount, images)!;
-
-    for (int i = 0; i < info.minImageCount; ++i) {
-        ImageViewCreateInfo image_info = {
-            .sType = vk::STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .image = images[i],
-            .viewType = vk::IMAGE_VIEW_TYPE_2D,
-            .format = info.imageFormat,
-            .components = {
-                .r = vk::COMPONENT_SWIZZLE_IDENTITY,
-                .g = vk::COMPONENT_SWIZZLE_IDENTITY,
-                .b = vk::COMPONENT_SWIZZLE_IDENTITY,
-                .a = vk::COMPONENT_SWIZZLE_IDENTITY,
-            },
-            .subresourceRange = {
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .levelCount = 1,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-            },
-        };
-        createImageView(self.device, &image_info, null, &image_views[i])!;
-    }
-
-    return SwapChain {
-        .swapchain = swapchain,
-        .images = images,
-        .image_views = image_views,
-        .image_format = info.imageFormat,
-        .extent = info.imageExtent,
-        .image_count = info.minImageCount
     };
 }
 
@@ -568,6 +524,34 @@ fn bool debugCallback(
     return false;
 }
 
+fn vk::ImageView! ImageViewCreateInfo.build(&self, Device device) {
+    vk::ImageView view;
+    createImageView(device, self, null, &view)!;
+    return view;
+}
+
+fn vk::SwapchainKHR! SwapchainCreateInfoKHR.build(&self, Device device) {
+    vk::SwapchainKHR swapchain;
+    createSwapchainKHR(device, self, null, &swapchain)!;
+    return swapchain;
+}
+
+fn vk::ImageList! SwapchainKHR.getImages(self, Device device, uint count) {
+    vk::Image* images = malloc(vk::Image, count);
+    vk::getSwapchainImagesKHR(device, self, &count, images)!;
+
+    vk::ImageList list;
+    for (uint i; i<count; i++) list.push(images[i]);
+
+    return list;
+}
+
+fn uint SwapchainKHR.getNextImage(self, Device device, Semaphore wait_semaphore)
+{
+    uint index;
+    vk::acquireNextImageKHR(device, self, uint.max, wait_semaphore, null, &index)!!;
+    return index;
+}
 
 fn void DeviceInfo.free(self)
 {
@@ -580,6 +564,10 @@ fn void DeviceInfo.free(self)
 fn void CommandPool.free(self, Device device)
 {
    destroyCommandPool(device, self, null);
+}
+
+fn void SwapchainKHR.free(self, Device device) {
+    destroySwapchainKHR(device, self, null);
 }
 
 fn void ShaderModule.free(self, Device device)

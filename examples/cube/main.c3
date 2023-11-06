@@ -3,6 +3,7 @@ import vk;
 import glfw;
 import camera;
 import std::math;
+import std::collections::list;
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -124,7 +125,7 @@ fn void! main()
     PresentModeKHR present_mode = device.present_modes.contains(vk::PRESENT_MODE_MAILBOX_KHR) ? vk::PRESENT_MODE_MAILBOX_KHR : device.present_modes[0];
 
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
-    .setMinImageCount(device.capabilities.minImageCount + 1)
+    .setMinImageCount(device.capabilities.minImageCount + 2)
     .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
     .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
     .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
@@ -136,7 +137,37 @@ fn void! main()
     .setImageArrayLayers(1)
     .setImageExtent({.width = WIDTH, .height = HEIGHT });
 
-    SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
+    SwapchainKHR swapchain = swapchain_info.build(device.device)!;
+
+    vk::ImageList swapchain_images = swapchain.getImages(device.device, swapchain_info.minImageCount)!;
+    ImageViewList swapchain_views;
+
+    for (int i = 0; i < swapchain_info.minImageCount; ++i) {
+     ImageView view = vk::imageViewCreateInfoBuilder()
+       .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+       .setFormat(format.format)
+       .setComponents({
+          .r = vk::COMPONENT_SWIZZLE_IDENTITY,
+          .g = vk::COMPONENT_SWIZZLE_IDENTITY,
+          .b = vk::COMPONENT_SWIZZLE_IDENTITY,
+          .a = vk::COMPONENT_SWIZZLE_IDENTITY,
+       })
+       .setSubresourceRange({
+          .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+          .baseMipLevel = 0,
+          .baseArrayLayer = 0,
+          .layerCount = 1,
+          .levelCount = 1,
+       })
+       .setImage(swapchain_images[i])
+       .build(device.device)!;
+       swapchain_views.push(view);
+    }
+
+    defer {
+       swapchain_images.free();
+       swapchain_views.free();
+    }
 
     BufferInfo vertex_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -157,7 +188,7 @@ fn void! main()
     .build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     CommandPool command_pool = device.createCommandPool()!;
-    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
+    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -280,9 +311,9 @@ fn void! main()
                            .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
+                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}));
 
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
@@ -325,11 +356,11 @@ fn void! main()
         .setLayerCount(1)
         .setRenderArea({
             .offset = Offset2D{ .x = 0, .y = 0 },
-            .extent = swapchain.extent,
+            .extent = swapchain_info.imageExtent,
         })
         .setColorAttachments({
             vk::renderingAttachmentInfoBuilder()
-            .setImageView(swapchain.image_views[next_image])
+            .setImageView(swapchain_views[next_image])
             .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
             .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
             .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
@@ -346,7 +377,7 @@ fn void! main()
         .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
         .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setImage(swapchain.images[next_image])
+        .setImage(swapchain_images[next_image])
         .setSubresourceRange({
             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
             .baseMipLevel = 0,
@@ -371,7 +402,7 @@ fn void! main()
         vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
+        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
 
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
@@ -385,7 +416,7 @@ fn void! main()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
         .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        .setImage(swapchain.images[next_image])
+        .setImage(swapchain_images[next_image])
         .setSubresourceRange({
             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
             .baseMipLevel = 0,
@@ -418,7 +449,7 @@ fn void! main()
 
         PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
         .setWaitSemaphores({ signal_semaphore })
-        .setSwapchains({ swapchain.swapchain })
+        .setSwapchains({ swapchain })
         .setImageIndices({ next_image });
 
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;

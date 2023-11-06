@@ -1,7 +1,6 @@
 module vk;
 import std::io;
 import std::collections::list;
-def PreBuffer = List(<void*>);
 
 
 fault BufferError

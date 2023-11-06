@@ -89,7 +89,6 @@ fn void! main()
     }
 
     File! file = file::open("examples/gltf/assets/duck.glb", "r");
-
     if (catch err = file) {
         io::printfn("Failed to load the gltf file");
         file.close()!!;
@@ -107,12 +106,7 @@ fn void! main()
                 buffer.data = buffer.from_base64()!;
             }
             case ResourceType.ENCODED_BIN: {
-                // Parse .glb binary data
-                InStream* stream = (InStream*)&file;
-                buffer.data = mem::malloc(char, buffer.size);
-                usz file_size = stream.seek(0, Seek.END)!;
-                stream.seek(file_size - buffer.size, Seek.SET)!;
-                stream.read(buffer.data)!;
+               buffer.data = buffer.from_binary(&file)!;
             }
             case ResourceType.EXTERNAL_BIN: {
                 String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
@@ -142,8 +136,6 @@ fn void! main()
 
     IndexData indices;
     defer indices.free();
-
-
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
@@ -187,7 +179,7 @@ fn void! main()
         : device.surface_formats[0];
 
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
-    .setMinImageCount(device.capabilities.minImageCount + 1)
+    .setMinImageCount(device.capabilities.minImageCount + 2)
     .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
     .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
     .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
@@ -199,11 +191,40 @@ fn void! main()
     .setImageArrayLayers(1)
     .setImageExtent({ .width = WIDTH, .height = HEIGHT });
 
-    SwapChain swapchain = device.createSwapchain(&swapchain_info)!;
-    defer swapchain.free(device.device);
+    SwapchainKHR swapchain = swapchain_info.build(device.device)!;
+
+    ImageViewList swapchain_views;
+    vk::ImageList swapchain_images = swapchain.getImages(device.device, swapchain_info.minImageCount)!;
+
+    for (int i = 0; i < swapchain_info.minImageCount; ++i) {
+      ImageView view = vk::imageViewCreateInfoBuilder()
+        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setFormat(format.format)
+        .setComponents({
+           .r = vk::COMPONENT_SWIZZLE_IDENTITY,
+           .g = vk::COMPONENT_SWIZZLE_IDENTITY,
+           .b = vk::COMPONENT_SWIZZLE_IDENTITY,
+           .a = vk::COMPONENT_SWIZZLE_IDENTITY,
+        })
+        .setSubresourceRange({
+           .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+           .baseMipLevel = 0,
+           .baseArrayLayer = 0,
+           .layerCount = 1,
+           .levelCount = 1,
+        })
+        .setImage(swapchain_images[i])
+        .build(device.device)!;
+        swapchain_views.push(view);
+    }
+
+    defer {
+        swapchain_images.free();
+        swapchain_views.free();
+    }
 
     CommandPool command_pool = device.createCommandPool()!;
-    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain.image_count)!;
+    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -217,6 +238,7 @@ fn void! main()
             Accessor tex_accessor = gltf_data.accessors[primitive.tex_cord];
             Accessor normal_accessor = gltf_data.accessors[primitive.normal];
             Accessor index_accessor = gltf_data.accessors[primitive.indices];
+
             for (uint i = 0; i < pos_accessor.count ; i += 1) {
                 vertices.push(Vertex {
                     gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
@@ -233,13 +255,10 @@ fn void! main()
         }
     }
 
-
-
     vertex_buffer.build(vertices.entries, Vertex.sizeof * vertices.len(), device)!;
     index_buffer.build(indices.entries, ushort.sizeof * indices.len(), device)!;
 
     TextureList textures;
-
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
         Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
@@ -458,9 +477,9 @@ fn void! main()
                            .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain.extent.width, .height = swapchain.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain.extent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain.image_format}));
+                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}));
 
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
@@ -499,22 +518,33 @@ fn void! main()
         frame_fence.reset(device.device)!;
 
         uint next_image = swapchain.getNextImage(device.device, wait_semaphore);
+
         RenderingInfo rendering_info = vk::renderingInfoBuilder()
-        .setLayerCount(1)
-        .setRenderArea({
-            .offset = Offset2D{ .x = 0, .y = 0 },
-            .extent = swapchain.extent,
-        })
-        .setColorAttachments({
-            vk::renderingAttachmentInfoBuilder()
+          .setLayerCount(1)
+          .setRenderArea({
+              .offset = Offset2D{ .x = 0, .y = 0 },
+              .extent = swapchain_info.imageExtent,
+          })
+          .setColorAttachments({
+              vk::renderingAttachmentInfoBuilder()
+              .setImageView(swapchain_views[next_image])
+              .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+              .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+              .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+              .setClearValue({
+                  .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+              })
+          });
+
+
+   /*     .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
             .setImageView(swapchain.image_views[next_image])
-            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
             .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
             .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
             .setClearValue({
-                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-            })
-        });
+                .depthStencil = { 1.0f, 0 }
+        }));*/
 
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
@@ -524,7 +554,7 @@ fn void! main()
         .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
         .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setImage(swapchain.images[next_image])
+        .setImage(swapchain_images[next_image])
         .setSubresourceRange({
             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
             .baseMipLevel = 0,
@@ -548,7 +578,7 @@ fn void! main()
 
         vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain.extent, .offset = Offset2D{ .x = 0, .y = 0 }});
+        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
@@ -560,7 +590,7 @@ fn void! main()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
         .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        .setImage(swapchain.images[next_image])
+        .setImage(swapchain_images[next_image])
         .setSubresourceRange({
             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
             .baseMipLevel = 0,
@@ -593,7 +623,7 @@ fn void! main()
 
         PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
         .setWaitSemaphores({ signal_semaphore })
-        .setSwapchains({ swapchain.swapchain })
+        .setSwapchains({ swapchain })
         .setImageIndices({ next_image });
 
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
