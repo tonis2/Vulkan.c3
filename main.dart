@@ -54,7 +54,7 @@ var filteredNames = [
   "VkPipelineCreationFeedbackCreateInfo"
 ];
 
-
+var filteredCommands = ["vkGetDescriptorSetLayoutSupport"];
 var filteredComments = [
   "API version macros",
   "Header boilerplate"
@@ -309,12 +309,6 @@ fault VkErrors {
 }
  """, mode: FileMode.append);
 
-  mainOutput.writeAsStringSync(
-      """
-macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
-macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
- """, mode: FileMode.append);
-
 
   handles.forEach((type) {
     mainOutput.writeAsStringSync("distinct ${type.name.C3Name} = inline ${type.type};\n",
@@ -440,6 +434,22 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
     commandsOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
+  // Write easy info to build methods
+  [...commands, ...extensionCommands].where((element) => element.values.length > 2 && element.values[1].type != null && element.values[1].type!.contains("CreateInfo")).forEach((command) {
+    String? returnType = command.values[command.values.length - 1].type?.C3Name.replaceAll("*", "");
+    if (filteredCommands.contains(command.name)) return;
+    bool isKHR = command.name.C3Name.camelCase().contains("KHR");
+    String code =
+"""
+fn vk::$returnType! ${command.values[1].type!.C3Name.replaceAll("*", "")}.${isKHR ? "buildKHR" : "build"}(&self, ${command.values[0].type?.C3Name} device, AllocationCallbacks* allocator = null) {
+  vk::$returnType response;
+  ${command.name.C3Name.camelCase()}(device, self, allocator, &response)!;
+  return response;
+}\n
+""";
+    buildersOutput.writeAsStringSync(code, mode: FileMode.append);
+});
+
 // Extension bindings code
 commandsOutput.writeAsStringSync("""
 ${extensionCommands.map((command) => "def PFN_${command.name} = fn ${command.returnType?.C3Name} (${command.values.map((type) => "${type.type?.C3Name}").join(", ")});").join("\n")}
@@ -463,7 +473,15 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
 """;
   }).join("\n")}
 """, mode: FileMode.append);
+
+mainOutput.writeAsStringSync(
+"""
+macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
+macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
+""", mode: FileMode.append);
 }
+
+
 
 class VkType {
   String name;

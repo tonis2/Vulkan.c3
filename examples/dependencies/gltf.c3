@@ -631,11 +631,11 @@ fn Gltf! parse(InStream* stream) {
       bool is_glb = (magic_bytes == (char[4])"glTF");
 
       if (is_glb) {
-          char[16] glb_header;
-          if (catch err = stream.read(&glb_header)) {
-              io::printfn("GLB parsing error %s", err);
-              return ParseError.JSON_PARSE_FAILED?;
-          }
+        char[16] glb_header;
+        if (catch err = stream.read(&glb_header)) {
+          io::printfn("GLB parsing error %s", err);
+          return ParseError.JSON_PARSE_FAILED?;
+        }
 
         uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
         uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);

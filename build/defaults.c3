@@ -73,13 +73,6 @@ DebugUtilsMessengerCreateInfoEXT default_debug_info =  {
 
 
 
-/*
-fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(self, char[] data) {
-  self.codeSize = data.len;
-  self.pCode = (uint*)&data[0];
-  return self;
-}
-*/
 
 
 

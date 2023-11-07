@@ -67,8 +67,6 @@ fault VkErrors {
  ERROR_OUT_OF_DATE_KHR,
  ERROR_VALIDATION_FAILED_EXT
 }
- macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
-macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
  distinct Instance = inline void*;
 distinct PhysicalDevice = inline void*;
 distinct Device = inline void*;
@@ -4146,3 +4144,5 @@ struct PhysicalDevicePortabilitySubsetPropertiesKHR {
  void* pNext;
  uint minVertexInputBindingStrideAlignment;
 }
+macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
+macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;

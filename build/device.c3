@@ -15,6 +15,8 @@ def CommandBufferList = List(<CommandBuffer>);
 def ImageList = List(<vk::Image>);
 def ImageViewList = List(<vk::ImageView>);
 
+
+
 fault ContextErrors
 {
     FAILED_GETTING_EXTENSIONS,
@@ -110,7 +112,7 @@ fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug
     loadExtensions(self.instance);
 
     if (self.enable_debug) {
-        self.debug_messenger = self.instance.createDebugUtilsMessenger()!;
+        self.debug_messenger = default_debug_info.build(self.instance)!;
     }
 
     return *self;
@@ -126,19 +128,6 @@ struct DeviceInfo {
     SurfaceCapabilitiesKHR capabilities;
 }
 
-fn DescriptorSetLayout! DeviceInfo.createDescriptorSetLayout(self, DescriptorSetLayoutCreateInfo info)
-{
-    DescriptorSetLayout layout;
-    createDescriptorSetLayout(self.device, &info, null, &layout)!;
-    return layout;
-}
-
-fn PipelineLayout! DeviceInfo.createPipelineLayout(self, PipelineLayoutCreateInfo info)
-{
-    PipelineLayout layout;
-    createPipelineLayout(self.device, &info, null, &layout)!;
-    return layout;
-}
 
 fn ShaderModule! DeviceInfo.createShaderModule(self, char[] data)
 {
@@ -377,27 +366,6 @@ macro void! DeviceInfo.@single_time_buffer(self; @body(CommandBuffer buffer))
     destroyCommandPool(self.device, command_pool, null);
 }
 
-fn DebugUtilsMessengerEXT! Instance.createDebugUtilsMessenger(self, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)
-{
-    DebugUtilsMessengerEXT messenger;
-    createDebugUtilsMessengerEXT(self, &debug_info, null, &messenger)!;
-    return messenger;
-}
-
-
-fn Semaphore! DeviceInfo.createSemaphore(&self, SemaphoreCreateInfo info)
-{
-    Semaphore semaphore;
-    vk::createSemaphore(self.device, &info, null, &semaphore)!;
-    return semaphore;
-}
-
-fn Fence! DeviceInfo.createFence(&self, FenceCreateInfo info)
-{
-    Fence fence;
-    vk::createFence(self.device, &info, null, &fence)!;
-    return fence;
-}
 
 fn StringList! getInstanceExtensions() {
     uint extensionCount;
@@ -522,18 +490,6 @@ fn bool debugCallback(
        libc::printf("%s \n", data.pMessage);
     }
     return false;
-}
-
-fn vk::ImageView! ImageViewCreateInfo.build(&self, Device device) {
-    vk::ImageView view;
-    createImageView(device, self, null, &view)!;
-    return view;
-}
-
-fn vk::SwapchainKHR! SwapchainCreateInfoKHR.build(&self, Device device) {
-    vk::SwapchainKHR swapchain;
-    createSwapchainKHR(device, self, null, &swapchain)!;
-    return swapchain;
 }
 
 fn vk::ImageList! SwapchainKHR.getImages(self, Device device, uint count) {
