@@ -137,7 +137,7 @@ fn void! main()
     .setImageArrayLayers(1)
     .setImageExtent({.width = WIDTH, .height = HEIGHT });
 
-    SwapchainKHR swapchain = swapchain_info.build(device.device)!;
+    SwapchainKHR swapchain = swapchain_info.buildKHR(device.device)!;
 
     vk::ImageList swapchain_images = swapchain.getImages(device.device, swapchain_info.minImageCount)!;
     ImageViewList swapchain_views;
@@ -191,18 +191,16 @@ fn void! main()
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Set-up descriptor info for uniform buffer usage
-    DescriptorSetLayoutCreateInfo descriptorLayoutInfo = vk::descriptorSetLayoutCreateInfoBuilder()
-    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-    .setBindings({
-      {
-          .binding = 0,
-          .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-          .descriptorCount = 1,
-          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
-      }
-    });
-
-    DescriptorSetLayout descriptor_set_layout = device.createDescriptorSetLayout(descriptorLayoutInfo)!;
+    DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+        .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+        .setBindings({
+          {
+              .binding = 0,
+              .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+              .descriptorCount = 1,
+              .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+          }
+        }).build(device.device)!;
 
     WriteDescriptorSet[] descriptorSets = {
             vk::writeDescriptorSetBuilder()
@@ -228,8 +226,7 @@ fn void! main()
 
     ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
     ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
-    PipelineLayout pipeline_layout = device.createPipelineLayout(vk::pipelineLayoutCreateInfoBuilder()
-                                                                         .setSetLayouts({ descriptor_set_layout }))!;
+    PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfoBuilder().setSetLayouts({ descriptor_set_layout }).build(device.device)!;
 
     // Create Renderpipeline info
     GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
@@ -325,9 +322,9 @@ fn void! main()
     FenceList frame_fences;
 
     for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        wait_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
-        signal_semaphores.push(device.createSemaphore(vk::semaphoreCreateInfoBuilder()))!;
-        frame_fences.push(device.createFence(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT)))!;
+        wait_semaphores.push(vk::semaphoreCreateInfoBuilder().build(device.device))!;
+        signal_semaphores.push(vk::semaphoreCreateInfoBuilder().build(device.device))!;
+        frame_fences.push(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device.device))!;
     }
 
     // Rendering loop
