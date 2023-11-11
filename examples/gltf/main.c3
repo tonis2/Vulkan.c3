@@ -89,6 +89,7 @@ fn void! main()
     }
 
     File! file = file::open("examples/gltf/assets/duck.glb", "r");
+
     if (catch err = file) {
         io::printfn("Failed to load the gltf file");
         file.close()!!;
@@ -97,7 +98,13 @@ fn void! main()
 
     defer file.close()!!;
 
-    Gltf gltf_data = gltf::parse(&file)!;
+    Gltf! gltf_data = gltf::parse(&file);
+
+    if (catch err = gltf_data) {
+        io::printfn("Failed to parse GLTF data %s", err);
+        return;
+    }
+
     defer gltf_data.free();
 
     foreach (&buffer: gltf_data.buffers) {
@@ -584,6 +591,7 @@ fn void! main()
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
 
         vk::cmdEndRenderingKHR(command_buffer);
+
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
