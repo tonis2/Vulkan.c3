@@ -324,6 +324,7 @@ fn void Mesh.fromJson(Mesh* self, Object* json) {
             if (try normal) data.normal = normal;
             if (try indices) data.indices = indices;
             if (try material) data.material = material;
+
             self.primitives.push(data);
         }
     }
@@ -442,6 +443,7 @@ fn void Accessor.fromJson(Accessor* self, Object* json) {
 fn void! Buffer.fromJson(Buffer* self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
+    String! data = json.get_string("data");
     ResourceType buffer_type = ResourceType.ENCODED_BIN;
 
     if (try size) {
@@ -619,19 +621,21 @@ fn void Image.fromJson(Image* self, Object* json) {
 
 
 fn Gltf! parse(InStream* stream) {
-      Gltf content;
-      Object*! gltfJson;
-      char[4] magic_bytes;
-      if (catch err = stream.read(&magic_bytes)) {
-          io::printfn("GLTF parsing error %s", err);
-          return ParseError.JSON_PARSE_FAILED?;
-      }
+    Gltf content;
+    Object*! gltfJson;
+    char[4] magic_bytes;
 
-      // if magic bytes == glTF, it means its in glb format
-      bool is_glb = (magic_bytes == (char[4])"glTF");
+    if (catch err = stream.read(&magic_bytes)) {
+      io::printfn("GLTF parsing error %s", err);
+      return ParseError.JSON_PARSE_FAILED?;
+    }
 
-      if (is_glb) {
+    // if magic bytes == glTF, it means its in glb format
+    bool is_glb = (magic_bytes == (char[4])"glTF");
+
+    if (is_glb) {
         char[16] glb_header;
+
         if (catch err = stream.read(&glb_header)) {
           io::printfn("GLB parsing error %s", err);
           return ParseError.JSON_PARSE_FAILED?;
@@ -642,10 +646,11 @@ fn Gltf! parse(InStream* stream) {
         uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
         String content_format = bitcast(glb_header[12..15], String);
         gltfJson = json::parse(stream);
-      } else {
-          stream.seek(0, Seek.SET)!;
-          gltfJson = json::parse(stream);
-      }
+
+    } else {
+      stream.seek(0, Seek.SET)!;
+      gltfJson = json::parse(stream);
+    }
 
     if (catch err = gltfJson) {
         return ParseError.JSON_PARSE_FAILED?;
@@ -759,6 +764,7 @@ fn Gltf! parse(InStream* stream) {
             content.buffers.push(data);
         }
     }
+
     return content;
 }
 
