@@ -455,6 +455,7 @@ fn void! Buffer.fromJson(Buffer* self, Object* json) {
         }
         else {
             self.type = ResourceType.ENCODED_BASE64;
+            self.data = self.from_base64()!;
         }
     }
 }
@@ -629,18 +630,19 @@ fn Gltf! parse(InStream* stream) {
       return ParseError.JSON_PARSE_FAILED?;
     }
 
-    uint version = bitcast(*(char[4]*)gltf_header[4..7], uint);
-    uint gltf_size = bitcast(*(char[4]*)gltf_header[8..11], uint);
-
-    if (version != 2) {
-        return ParseError.UNSUPPORTED_GLTF_VERSION?;
-    }
-
     // if magic bytes == glTF, it means its in glb format
     bool is_glb = (gltf_header[0..3] == "glTF");
+
     if (is_glb) {
         char[8] json_header;
         char[8] binary_header;
+
+        uint version = bitcast(*(char[4]*)gltf_header[4..7], uint);
+        uint gltf_size = bitcast(*(char[4]*)gltf_header[8..11], uint);
+
+        if (version != 2) {
+            return ParseError.UNSUPPORTED_GLTF_VERSION?;
+        }
 
         if (catch err = stream.read(&json_header)) {
           return ParseError.JSON_PARSE_FAILED?;
@@ -653,7 +655,7 @@ fn Gltf! parse(InStream* stream) {
           return ParseError.JSON_PARSE_FAILED?;
         }
 
-        if ((String)&json_chunk_type != "JSON") {
+        if (json_chunk_type[0..] != "JSON") {
             return ParseError.UNSUPPORTED_GLTF_VERSION?;
         }
 
@@ -668,7 +670,7 @@ fn Gltf! parse(InStream* stream) {
         uint binary_chunk_length = bitcast(*(char[4]*)binary_header[0..3], uint);
         char[4] binary_chunk_type = binary_header[4..7];
 
-        if ((String)&binary_chunk_type != "BIN\0") {
+        if (binary_chunk_type[0..] != "BIN\0") {
             return ParseError.UNSUPPORTED_GLTF_VERSION?;
         }
 

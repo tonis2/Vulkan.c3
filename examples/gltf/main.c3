@@ -89,7 +89,7 @@ fn void! main()
         glfw::terminate();
     }
 
-    File! file = file::open("examples/gltf/assets/duck.glb", "r");
+    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
 
     if (catch err = file) {
         io::printfn("Failed to load the gltf file");
@@ -102,7 +102,7 @@ fn void! main()
     Gltf! gltf_data = gltf::parse(&file);
 
     if (catch err = gltf_data) {
-        io::printfn("Failed to parse GLTF data %s", err);
+        io::printfn("%s", err);
         return;
     }
 
@@ -110,9 +110,6 @@ fn void! main()
 
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
-            case ResourceType.ENCODED_BASE64: {
-                buffer.data = buffer.from_base64()!;
-            }
             case ResourceType.EXTERNAL_BIN: {
                 String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
@@ -145,8 +142,6 @@ fn void! main()
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
     camera::Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
-
-    io::printfn("cameras %d", gltf_data.cameras.len());
 
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
