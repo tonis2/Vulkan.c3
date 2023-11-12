@@ -298,7 +298,7 @@ fn void Node.free(Node* self) {
 }
 
 fn bool Node.hasCamera(Node* self) {
-    return self.mesh != -1;
+    return self.camera != -1;
 }
 
 fn void Mesh.fromJson(Mesh* self, Object* json) {
@@ -624,8 +624,6 @@ fn Gltf! parse(InStream* stream) {
     char[12] gltf_header;
     char[] binary_buffer;
 
-/*    defer mem::free(binary_buffer);*/
-
     if (catch err = stream.read(&gltf_header)) {
       io::printfn("GLTF parsing error %s", err);
       return ParseError.JSON_PARSE_FAILED?;
@@ -633,8 +631,6 @@ fn Gltf! parse(InStream* stream) {
 
     uint version = bitcast(*(char[4]*)gltf_header[4..7], uint);
     uint gltf_size = bitcast(*(char[4]*)gltf_header[8..11], uint);
-
-    io::printfn("total size %d", gltf_size);
 
     if (version != 2) {
         return ParseError.UNSUPPORTED_GLTF_VERSION?;
@@ -647,14 +643,11 @@ fn Gltf! parse(InStream* stream) {
         char[8] binary_header;
 
         if (catch err = stream.read(&json_header)) {
-          io::printfn("GLTF parsing error %s", err);
           return ParseError.JSON_PARSE_FAILED?;
         }
 
         uint json_chunk_length = bitcast(*(char[4]*)json_header[0..3], uint);
         char[4] json_chunk_type = json_header[4..7];
-
-        io::printfn("json size %s", json_chunk_length);
 
         if (catch err = stream.read(&json_header)) {
           return ParseError.JSON_PARSE_FAILED?;
@@ -669,7 +662,6 @@ fn Gltf! parse(InStream* stream) {
         stream.seek((usz)20 + json_chunk_length, Seek.SET)!;
 
         if (catch err = stream.read(&binary_header)) {
-          io::printfn("GLTF parsing error %s", err);
           return ParseError.JSON_PARSE_FAILED?;
         }
 
