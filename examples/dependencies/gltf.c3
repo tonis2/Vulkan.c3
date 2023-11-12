@@ -1,3 +1,5 @@
+module gltf;
+
 import std::collections::object;
 import std::io;
 import std::core::string;
@@ -95,14 +97,10 @@ fault ParseError
     FILE_NOT_FOUND,
     FILE_NOT_READABLE,
     JSON_PARSE_FAILED,
+    UNSUPPORTED_GLTF_VERSION,
     NO_BUFFER_VIEW,
     NO_BUFFER,
     BROKEN_BUFFER,
-    KEY_NOT_FOUND
-}
-
-fault GltfError
-{
     KEY_NOT_FOUND
 }
 
@@ -623,30 +621,72 @@ fn void Image.fromJson(Image* self, Object* json) {
 fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson;
-    char[4] magic_bytes;
+    char[12] gltf_header;
+    char[] binary_buffer;
 
-    if (catch err = stream.read(&magic_bytes)) {
+/*    defer mem::free(binary_buffer);*/
+
+    if (catch err = stream.read(&gltf_header)) {
       io::printfn("GLTF parsing error %s", err);
       return ParseError.JSON_PARSE_FAILED?;
     }
 
+    uint version = bitcast(*(char[4]*)gltf_header[4..7], uint);
+    uint gltf_size = bitcast(*(char[4]*)gltf_header[8..11], uint);
+
+    io::printfn("total size %d", gltf_size);
+
+    if (version != 2) {
+        return ParseError.UNSUPPORTED_GLTF_VERSION?;
+    }
+
     // if magic bytes == glTF, it means its in glb format
-    bool is_glb = (magic_bytes == (char[4])"glTF");
-
+    bool is_glb = (gltf_header[0..3] == "glTF");
     if (is_glb) {
-        char[16] glb_header;
+        char[8] json_header;
+        char[8] binary_header;
 
-        if (catch err = stream.read(&glb_header)) {
-          io::printfn("GLB parsing error %s", err);
+        if (catch err = stream.read(&json_header)) {
+          io::printfn("GLTF parsing error %s", err);
           return ParseError.JSON_PARSE_FAILED?;
         }
 
-        uint version = bitcast(*(char[4]*)glb_header[0..4], uint);
-        uint total_length = bitcast(*(char[4]*)glb_header[4..8], uint);
-        uint content_length = bitcast(*(char[4]*)glb_header[8..12], uint);
-        String content_format = bitcast(glb_header[12..15], String);
-        gltfJson = json::parse(stream);
+        uint json_chunk_length = bitcast(*(char[4]*)json_header[0..3], uint);
+        char[4] json_chunk_type = json_header[4..7];
 
+        io::printfn("json size %s", json_chunk_length);
+
+        if (catch err = stream.read(&json_header)) {
+          return ParseError.JSON_PARSE_FAILED?;
+        }
+
+        if ((String)&json_chunk_type != "JSON") {
+            return ParseError.UNSUPPORTED_GLTF_VERSION?;
+        }
+
+        stream.seek(20, Seek.SET)!;
+        gltfJson = json::parse(stream);
+        stream.seek((usz)20 + json_chunk_length, Seek.SET)!;
+
+        if (catch err = stream.read(&binary_header)) {
+          io::printfn("GLTF parsing error %s", err);
+          return ParseError.JSON_PARSE_FAILED?;
+        }
+
+        uint binary_chunk_length = bitcast(*(char[4]*)binary_header[0..3], uint);
+        char[4] binary_chunk_type = binary_header[4..7];
+
+        if ((String)&binary_chunk_type != "BIN\0") {
+            return ParseError.UNSUPPORTED_GLTF_VERSION?;
+        }
+
+        // Create binary buffer data
+        stream.seek((usz)gltf_size - binary_chunk_length, Seek.SET)!;
+        binary_buffer = mem::malloc(char, binary_chunk_length);
+
+        if (catch err = stream.read(binary_buffer)) {
+            return ParseError.JSON_PARSE_FAILED?;
+        }
     } else {
       stream.seek(0, Seek.SET)!;
       gltfJson = json::parse(stream);
@@ -763,6 +803,11 @@ fn Gltf! parse(InStream* stream) {
             data.fromJson(buffer)!;
             content.buffers.push(data);
         }
+
+        if (is_glb) {
+            Buffer* buffer = &content.buffers[0];
+            buffer.data = binary_buffer;
+        }
     }
 
     return content;
@@ -793,7 +838,7 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
             return node;
         }
     }
-    return GltfError.KEY_NOT_FOUND?;
+    return ParseError.KEY_NOT_FOUND?;
 }
 
 fn uint Accessor.componentLen(Accessor* self) {
@@ -909,13 +954,13 @@ fn char[]! Buffer.from_base64(self) {
     return buffer_data;
 }
 
-fn char[]! Buffer.from_binary(self, InStream* stream) {
+/*fn char[]! Buffer.from_binary(self, InStream* stream) {
     char[] data = mem::malloc(char, self.size);
     usz file_size = stream.seek(0, Seek.END)!;
     stream.seek(file_size - self.size, Seek.SET)!;
     stream.read(data)!;
     return data;
-}
+}*/
 
 
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
@@ -924,6 +969,7 @@ fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
 
     for (uint i = 0; i < accessor.count ; i += 1) {
         char[] data = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
+        char[] data2 = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
         Vec3f vec =  bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
         io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
     }

@@ -42,6 +42,7 @@ BufferInfo index_buffer = {
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Node* parent_node = null) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
+
         foreach (primitive: mesh.primitives) {
             Accessor index_accessor = gltf.accessors[primitive.indices];
             gltf::BufferView index_buffer_view = gltf.bufferViews[index_accessor.bufferView];
@@ -111,9 +112,6 @@ fn void! main()
         switch(buffer.type) {
             case ResourceType.ENCODED_BASE64: {
                 buffer.data = buffer.from_base64()!;
-            }
-            case ResourceType.ENCODED_BIN: {
-               buffer.data = buffer.from_binary(&file)!;
             }
             case ResourceType.EXTERNAL_BIN: {
                 String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
