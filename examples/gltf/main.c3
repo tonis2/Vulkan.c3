@@ -146,6 +146,8 @@ fn void! main()
     eventHandler.init();
     camera::Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
 
+    io::printfn("cameras %d", gltf_data.cameras.len());
+
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
