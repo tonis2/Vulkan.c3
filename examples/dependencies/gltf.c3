@@ -676,7 +676,7 @@ fn Gltf! parse(InStream* stream) {
 
         // Create binary buffer data
         stream.seek((usz)gltf_size - binary_chunk_length, Seek.SET)!;
-        binary_buffer = mem::malloc(char, binary_chunk_length);
+        binary_buffer = mem::new_array(char, binary_chunk_length);
 
         if (catch err = stream.read(binary_buffer)) {
             return ParseError.JSON_PARSE_FAILED?;
@@ -936,7 +936,7 @@ macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
 }
 
 fn char[]! Buffer.from_base64(self) {
-    char[] buffer_data = mem::malloc(char, self.size + 2);
+    char[] buffer_data = mem::new_array(char, (usz)(self.size + 2));
     Base64Decoder decoder;
     decoder.init(base64::STD_ALPHABET, -1)!;
     // Decode buffer from base64
