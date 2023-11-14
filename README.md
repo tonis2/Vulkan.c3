@@ -11,13 +11,16 @@ Currently at very early stage, binding api could change.
 
 
 
-### Building examples
+### Running examples
 
 Install C3 from https://c3-lang.org/
 
 Download VulkanSDK from https://vulkan.lunarg.com/sdk/home
 
 Make sure enviorment variables are set correctly, depending on the installed location.
+
+Then run `c3c run cube` or `c3c run gltf` inside the cloned repository
+
 
 
 Example enviorment variables on MacOS and MoltenVk
@@ -29,13 +32,12 @@ export VK_ICD_FILENAMES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 export VK_DRIVER_FILES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 ```
 
-Then run `c3c run cube` inside the cloned repository
+
 
 
 ### Roadmap
 
 * Get windows example working
-* Make GLTF loading example
 * Build vulkan xml parser in C3 instead of Dart
 
 
@@ -43,4 +45,4 @@ Then run `c3c run cube` inside the cloned repository
 
 Install Dart https://dart.dev/get-dart
 
-run `sh assets.sh && dart run main.dart`
+run `sh build.sh`
