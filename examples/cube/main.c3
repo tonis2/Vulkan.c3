@@ -315,7 +315,6 @@ fn void! main()
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
 
-
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
     SemaphoreList signal_semaphores;

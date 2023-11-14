@@ -111,7 +111,7 @@ fn void! main()
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
             case ResourceType.EXTERNAL_BIN: {
-                String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
+   /*             String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
                 File! buffer_file = file::open(path, "r")!;
 
                 defer {
@@ -126,8 +126,8 @@ fn void! main()
 
                 InStream* stream = (InStream*)&buffer_file;
                 usz file_size = stream.seek(0, Seek.END)!;
-                buffer.data = mem::malloc(char, file_size);
-                stream.read(buffer.data)!;
+                buffer.data = mem::new_array(char, file_size);
+                stream.read(buffer.data)!;*/
             }
             default: {}
         }
@@ -352,7 +352,7 @@ fn void! main()
     WriteDescriptorSet textureSet = vk::writeDescriptorSetBuilder()
         .setDstBinding(1)
         .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-        .setImageInfo(descriptor_images.to_array());
+        .setImageInfo(descriptor_images.array_view());
 
     WriteDescriptorSet[] descriptorSets = {
         vk::writeDescriptorSetBuilder()

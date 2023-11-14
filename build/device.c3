@@ -77,7 +77,7 @@ fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug
         },
         .flags = self.instance_flags,
         .enabledExtensionCount = (uint)self.extensions.len(),
-        .ppEnabledExtensionNames = (char*)&self.extensions.to_array()[0],
+        .ppEnabledExtensionNames = (char*)self.extensions.entries,
     };
 
     StringList extensions = getInstanceExtensions()!;
@@ -104,7 +104,7 @@ fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug
             }
         }
         createInfo.enabledLayerCount = (uint)self.validations.len();
-        createInfo.ppEnabledLayerNames = (char*)&self.validations.to_array()[0];
+        createInfo.ppEnabledLayerNames = (char*)self.validations.entries;
         createInfo.pNext = &debug_info;
     }
 
@@ -174,7 +174,7 @@ fn CommandPool! DeviceInfo.createCommandPool(self, CommandPoolCreateInfo* info =
 fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
 {
     CommandBufferList buffers;
-    CommandBuffer* command_buffers = malloc(CommandBuffer, count);
+    CommandBuffer* command_buffers = mem::new_array(CommandBuffer, count);
     CommandBufferAllocateInfo command_buffer_info = {
         .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = pool,
@@ -276,7 +276,7 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
         .queueCreateInfoCount = 1,
         .pEnabledFeatures = &device_features,
         .enabledExtensionCount = (uint)instance.device_extensions.len(),
-        .ppEnabledExtensionNames = (char*)&instance.device_extensions.to_array()[0],
+        .ppEnabledExtensionNames = (char*)instance.device_extensions.entries,
         .enabledLayerCount = 0,
         .pNext = null,
         .flags = 0,
@@ -285,7 +285,7 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
      // Deprecated ?
     if (instance.enable_debug) {
         deviceCreateInfo.enabledLayerCount = (uint)instance.validations.len();
-        deviceCreateInfo.ppEnabledLayerNames = (char*)&instance.validations.to_array()[0];
+        deviceCreateInfo.ppEnabledLayerNames = (char*)instance.validations.entries;
     }
 
     if (instance.dynamic_rendering) {
@@ -371,7 +371,7 @@ fn StringList! getInstanceExtensions() {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)!;
-    ExtensionProperties* layers = malloc(ExtensionProperties, extensionCount);
+    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
     defer mem::free(layers);
 
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
@@ -388,7 +388,7 @@ fn StringList! getDeviceExtensions(PhysicalDevice device) {
     StringList extensionList;
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
 
-    ExtensionProperties* layers = malloc(ExtensionProperties, extensionCount);
+    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
     defer mem::free(layers);
 
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
@@ -404,7 +404,7 @@ fn DeviceList! getPhysicalDevices(Instance instance) {
     DeviceList deviceList;
     vk::enumeratePhysicalDevices(instance, &deviceCount, null)!;
 
-    PhysicalDevice* devices = malloc(PhysicalDevice, deviceCount);
+    PhysicalDevice* devices = mem::new_array(PhysicalDevice, deviceCount);
     defer mem::free(devices);
 
     vk::enumeratePhysicalDevices(instance, &deviceCount, devices)!;
@@ -417,7 +417,7 @@ fn StringList! getValidationLayers() {
     StringList layersList;
     vk::enumerateInstanceLayerProperties(&layerCount, null)!;
 
-    LayerProperties* layers = malloc(LayerProperties, layerCount);
+    LayerProperties* layers = mem::new_array(LayerProperties, layerCount);
     defer mem::free(layers);
 
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
@@ -433,7 +433,7 @@ fn QueuePropertiesList! getQueueProperties(PhysicalDevice device) {
     QueuePropertiesList propertiesList;
     getPhysicalDeviceQueueFamilyProperties(device, &queueCount, null);
 
-    QueueFamilyProperties* properties = malloc(QueueFamilyProperties, queueCount);
+    QueueFamilyProperties* properties = mem::new_array(QueueFamilyProperties, queueCount);
     defer mem::free(properties);
     getPhysicalDeviceQueueFamilyProperties(device, &queueCount, properties);
 
@@ -448,7 +448,7 @@ fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surfac
     SurfaceFormatList formatList;
     getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null)!;
 
-    SurfaceFormatKHR* formats = malloc(SurfaceFormatKHR, format_count);
+    SurfaceFormatKHR* formats = mem::new_array(SurfaceFormatKHR, format_count);
     defer mem::free(formats);
     getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, formats)!;
 
@@ -463,7 +463,7 @@ fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR sur
     PresentModeList presentList;
     getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null)!;
 
-    PresentModeKHR* presents = malloc(PresentModeKHR, present_count);
+    PresentModeKHR* presents = mem::new_array(PresentModeKHR, present_count);
     defer mem::free(presents);
     getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, presents)!;
 
@@ -493,7 +493,7 @@ fn bool debugCallback(
 }
 
 fn vk::ImageList! SwapchainKHR.getImages(self, Device device, uint count) {
-    vk::Image* images = malloc(vk::Image, count);
+    vk::Image* images = mem::new_array(vk::Image, count);
     vk::getSwapchainImagesKHR(device, self, &count, images)!;
 
     vk::ImageList list;
