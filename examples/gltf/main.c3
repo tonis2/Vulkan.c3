@@ -250,8 +250,6 @@ fn void! main()
             }
 
             for (uint i = 0; i < index_accessor.count ; i += 1) {
-                gltf::BufferView buffer_view = gltf_data.bufferViews[index_accessor.bufferView];
-                gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
                 indices.push(gltf_data.@cast_buffer(index_accessor, i * index_accessor.componentSize(), ushort));
             }
         }
