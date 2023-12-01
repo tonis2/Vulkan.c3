@@ -16,7 +16,6 @@ def ImageList = List(<vk::Image>);
 def ImageViewList = List(<vk::ImageView>);
 
 
-
 fault ContextErrors
 {
     FAILED_GETTING_EXTENSIONS,
@@ -490,6 +489,12 @@ fn bool debugCallback(
        libc::printf("%s \n", data.pMessage);
     }
     return false;
+}
+
+fn vk::MemoryRequirements Image.getMemoryRequirements(self, Device device) {
+    vk::MemoryRequirements mem_reqs;
+    vk::getImageMemoryRequirements(device, self, &mem_reqs);
+    return mem_reqs;
 }
 
 fn vk::ImageList! SwapchainKHR.getImages(self, Device device, uint count) {
