@@ -273,7 +273,77 @@ fn void! main()
     vertex_buffer.build(vertices.entries, Vertex.sizeof * vertices.len(), device)!;
     index_buffer.build(indices.entries, ushort.sizeof * indices.len(), device)!;
 
+    TextureData depth_texture;
     TextureList textures;
+
+    defer depth_texture.free(device.device);
+
+    vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
+
+    // Create depth texture
+     {|
+         depth_texture.image = vk::imageCreateInfoBuilder()
+             .setImageType(vk::IMAGE_TYPE_2D)
+             .setExtent({.width = WIDTH, .height = HEIGHT, .depth = 1 })
+             .setMipLevels(1)
+             .setArrayLayers(1)
+             .setSamples(vk::SAMPLE_COUNT_1_BIT)
+             .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+             .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+             .setTiling(vk::IMAGE_TILING_OPTIMAL)
+             .setFormat(depth_format)
+             .build(device.device)!!;
+
+         vk::MemoryRequirements mem_reqs = depth_texture.image.getMemoryRequirements(device.device);
+         MemoryAllocateInfo memory_info = vk::memoryAllocateInfoBuilder()
+             .setAllocationSize(mem_reqs.size)
+             .setMemoryTypeIndex(vk::getMemoryType(mem_reqs.memoryTypeBits, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, device));
+         vk::allocateMemory(device.device, &memory_info, null, &depth_texture.memory)!!;
+         vk::bindImageMemory(device.device, depth_texture.image, depth_texture.memory, 0)!!;
+
+         depth_texture.view = vk::imageViewCreateInfoBuilder()
+            .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+            .setFormat(vk::FORMAT_D32_SFLOAT_S8_UINT)
+            .setSubresourceRange({
+               .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
+               .baseMipLevel = 0,
+               .baseArrayLayer = 0,
+               .layerCount = 1,
+               .levelCount = 1,
+            })
+            .setImage(depth_texture.image)
+            .build(device.device)!!;
+
+            device.@single_time_buffer(;CommandBuffer command_buffer) {
+                ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
+                .setImage(depth_texture.image)
+                .setSubresourceRange({
+                   .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT | vk::IMAGE_ASPECT_STENCIL_BIT,
+                   .baseMipLevel = 0,
+                   .baseArrayLayer = 0,
+                   .layerCount = 1,
+                   .levelCount = 1,
+                })
+                .setSrcAccessMask(0)
+                .setDstAccessMask(vk::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
+                .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+                .setNewLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+                vk::cmdPipelineBarrier(
+                    command_buffer,
+                    vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+                    vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+                    0,
+                    0,
+                    null,
+                    0,
+                    null,
+                    1,
+                    &imageMemoryBarrier
+                );
+            }!!;
+     |};
+
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
         Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
@@ -568,8 +638,8 @@ fn void! main()
                     .setAlphaToCoverageEnable(vk::FALSE)
                     .setAlphaToOneEnable(vk::FALSE))
     .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
-                    .setDepthTestEnable(vk::FALSE)
-                    .setDepthWriteEnable(vk::FALSE)
+                    .setDepthTestEnable(vk::TRUE)
+                    .setDepthWriteEnable(vk::TRUE)
                     .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
                     .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
     .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
@@ -593,7 +663,11 @@ fn void! main()
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
                    .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
                    .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}));
+    .setNext(
+        &&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({ swapchain_info.imageFormat })
+        .setDepthAttachmentFormat(depth_format)
+        .setStencilAttachmentFormat(depth_format)
+    );
 
     Pipeline pipeline;
     vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
@@ -648,17 +722,16 @@ fn void! main()
               .setClearValue({
                   .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
               })
-          });
-
-
-   /*     .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
-            .setImageView(swapchain.image_views[next_image])
+          })
+        .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
+            .setImageView(depth_texture.view)
             .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
             .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
             .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
             .setClearValue({
-                .depthStencil = { 1.0f, 0 }
-        }));*/
+              .depthStencil = { 1.0f, 0 }
+        }));
+
 
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
