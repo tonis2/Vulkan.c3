@@ -689,7 +689,7 @@ fn void Animation.fromJson(&self, Object* json) {
         foreach (channel : channels.array) {
             Channel channel_data;
             uint! sampler = json.get_int("sampler");
-            Object*! target = json.get_int("target");
+            Object*! target = json.get("target");
 
             if (try sampler) channel_data.sampler = sampler;
             if (try target) {
@@ -699,10 +699,10 @@ fn void Animation.fromJson(&self, Object* json) {
                 if (try node) channel_data.target.node = node;
                 if (try path) {
                     switch (path) {
-                        case "TRANSLATION": channel_data.path = Property.LINEAR;
-                        case "ROTATION": channel_data.path = Property.STEP;
-                        case "SCALE": channel_data.path = Property.CUBICSPLINE;
-                        case "WEIGHTS": channel_data.path = Property.WEIGHTS;
+                        case "TRANSLATION": channel_data.target.path = Property.TRANSLATION;
+                        case "ROTATION": channel_data.target.path = Property.ROTATION;
+                        case "SCALE": channel_data.target.path = Property.SCALE;
+                        case "WEIGHTS": channel_data.target.path = Property.WEIGHTS;
                     }
                 }
             };
