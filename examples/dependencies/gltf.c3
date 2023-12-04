@@ -24,10 +24,10 @@ def MaterialList = List(<Material>);
 def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
-
 def AnimationSamplers = List(<AnimationSampler>);
 def ChannelList = List(<Channel>);
 def AnimationList = List(<Animation>);
+def SkinList = List(<Skin>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -135,6 +135,7 @@ struct Gltf {
     SamplerList samplers;
     TextureList textures;
     AnimationList animations;
+    SkinList skins;
 }
 
 struct Scene {
@@ -182,6 +183,13 @@ struct Channel {
         uint node;
         Property path;
     }
+}
+
+struct Skin {
+    String name;
+    uint inverseBindMatrices;
+    uint skeleton;
+    IndexList joints;
 }
 
 struct Material {
@@ -248,6 +256,8 @@ struct Primitive {
     uint tex_cord;
     uint normal;
     uint material;
+    uint joints;
+    uint weights;
 }
 
 struct BufferView {
@@ -351,6 +361,8 @@ fn void Mesh.fromJson(&self, Object* json) {
 
             uint! position = attributes.get_int("POSITION");
             uint! tex_cord = attributes.get_int("TEXCOORD_0");
+            uint! joints = attributes.get_int("JOINTS_0");
+            uint! weights = attributes.get_int("WEIGHTS_0");
             uint! normal = attributes.get_int("NORMAL");
             uint! indices = primitive.get_int("indices");
             uint! material = primitive.get_int("material");
@@ -360,6 +372,8 @@ fn void Mesh.fromJson(&self, Object* json) {
             if (try normal) data.normal = normal;
             if (try indices) data.indices = indices;
             if (try material) data.material = material;
+            if (try joints) data.joints = joints;
+            if (try weights) data.weights = weights;
 
             self.primitives.push(data);
         }
@@ -718,6 +732,25 @@ fn void Animation.free(&self) {
     self.name.free();
 }
 
+fn void Skin.fromJson(&self, Object* json) {
+    String! name = json.get_string("name");
+    uint! skeleton = json.get_int("skeleton");
+    uint! inverseBindMatrices = json.get_int("inverseBindMatrices");
+    Object*! joints = json.get("joints");
+
+    if (try name) self.name = name;
+    if (try skeleton) self.skeleton = skeleton;
+    if (try inverseBindMatrices) self.inverseBindMatrices = inverseBindMatrices;
+    if (try joints) {
+        foreach (joint : joints.array) self.joints.push((uint)joint.f);
+    }
+}
+
+fn void Skin.free(&self) {
+    self.joints.free();
+    self.name.free();
+}
+
 fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson;
@@ -804,6 +837,7 @@ fn Gltf! parse(InStream* stream) {
     Object*! samplers = gltfJson.get("samplers");
     Object*! textures = gltfJson.get("textures");
     Object*! animations = gltfJson.get("animations");
+    Object*! skins = gltfJson.get("skins");
 
     // Parse scenes
     if (try scenes) {
@@ -910,6 +944,15 @@ fn Gltf! parse(InStream* stream) {
             Animation data;
             data.fromJson(animation);
             content.animations.push(data);
+        }
+    }
+
+    // Parse skins
+    if (try skins) {
+       foreach (skin : skins.array) {
+            Skin data;
+            data.fromJson(skin);
+            content.skins.push(data);
         }
     }
 
