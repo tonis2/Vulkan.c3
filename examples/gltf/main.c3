@@ -92,36 +92,32 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-    if (window == null)
-    {
-        io::printfn("Failed to init glfw window");
-        glfw::terminate();
-        return;
-    }
-
-    defer {
+   defer {
         glfw::destroyWindow(window);
         glfw::terminate();
     }
 
-    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
-
-    if (catch err = file) {
-        io::printfn("Failed to load the gltf file");
-        file.close()!!;
+    if (window == null)
+    {
+        io::printfn("Failed to init glfw window");
         return;
     }
 
+    File! file = file::open("examples/gltf/assets/duck.glb", "r");
     defer file.close()!!;
 
+    if (catch err = file) {
+        io::printfn("Failed to load the gltf file");
+        return;
+    }
+
     Gltf! gltf_data = gltf::parse(&file);
+    defer gltf_data.free()!!;
 
     if (catch err = gltf_data) {
         io::printfn("%s", err);
         return;
     }
-
-    defer gltf_data.free();
 
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
@@ -350,18 +346,18 @@ fn void! main()
         TextureData texture;
 
         gltf::Image image = gltf_data.images[gltf_texture.source];
-        gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
+       /* gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];*/
+
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
         stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
+        defer image_data.free()!!;
 
         if (catch err = image_data) {
             io::printfn("Failed loading image from buffer");
             return;
         }
-
-        defer image_data.free();
 
         texture.image = vk::imageCreateInfoBuilder()
             .setImageType(vk::IMAGE_TYPE_2D)
