@@ -89,7 +89,7 @@ enum DataType {
     FLOAT,
 }
 
-enum WrapMode  {
+enum WrapMode {
     CLAMP_TO_EDGE,
     MIRRORED_REPEAT,
     REPEAT,
@@ -459,32 +459,14 @@ fn void Accessor.fromJson(&self, Object* json) {
 
         String! object_type = objectType.s;
         if (try object_type) {
-            if (object_type == "SCALAR") {
-                self.type = AccessorType.SCALAR;
-            }
-
-            if (object_type == "VEC2") {
-                self.type = AccessorType.VEC2;
-            }
-
-            if (object_type == "VEC3") {
-                self.type = AccessorType.VEC3;
-            }
-
-            if (object_type == "VEC4") {
-                self.type = AccessorType.VEC4;
-            }
-
-            if (object_type == "MAT2") {
-                self.type = AccessorType.MAT2;
-            }
-
-            if (object_type == "MAT3") {
-                self.type = AccessorType.MAT3;
-            }
-
-            if (object_type == "MAT4") {
-                self.type = AccessorType.MAT4;
+            switch (object_type) {
+                case "SCALAR": self.type = AccessorType.SCALAR;
+                case "VEC2": self.type = AccessorType.VEC2;
+                case "VEC3": self.type = AccessorType.VEC3;
+                case "VEC4": self.type = AccessorType.VEC4;
+                case "MAT2": self.type = AccessorType.MAT2;
+                case "MAT3": self.type = AccessorType.MAT3;
+                case "MAT4": self.type = AccessorType.MAT4;
             }
         }
     }
@@ -656,16 +638,10 @@ fn void Image.fromJson(&self, Object* json) {
     if (try bufferView) self.bufferView = bufferView;
     if (try name) self.name = name;
     if (try mimeType) {
-        if (mem::equals(mimeType, "image/jpeg")) {
-            self.mimeType = ImageType.IMAGE_JPEG;
-        }
-
-        if (mem::equals(mimeType, "image/png")) {
-            self.mimeType = ImageType.IMAGE_PNG;
-        }
-
-        if (mem::equals(mimeType, "image/bmp")) {
-            self.mimeType = ImageType.IMAGE_BMP;
+        switch (mimeType) {
+            case "image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
+            case "image/png": self.mimeType = ImageType.IMAGE_PNG;
+            case "image/bmp": self.mimeType = ImageType.IMAGE_BMP;
         }
     }
 }
