@@ -103,7 +103,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/CesiumMan.glb", "r");
+    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
