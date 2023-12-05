@@ -559,12 +559,10 @@ fn void Material.fromJson(&self, Object* json) {
 
 fn void TextureInfo.fromJson(&self, Object* json) {
     uint! index = json.get_int("index");
-    Object*! texCoord = json.get("texCoord");
+    uint! texCoord = json.get_int("texCoord");
 
     if (try index) self.index = index;
-    if (try texCoord) {
-        self.texCoord = Vec2f{(float)texCoord.get_at(0).f, (float)texCoord.get_at(1).f};
-    }
+    if (try texCoord) self.texCoord = texCoord;
 }
 
 fn void Texture.fromJson(&self, Object* json) {
