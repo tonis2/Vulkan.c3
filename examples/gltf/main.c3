@@ -103,7 +103,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/fantasy_book.glb", "r");
+    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
