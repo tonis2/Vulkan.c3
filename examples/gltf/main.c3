@@ -103,7 +103,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
+    File! file = file::open("examples/gltf/assets/fantasy_book.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -152,7 +152,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new({0.0, 0.0, 0.0}, -10, 800/600);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 50}, .aspect = 800/600);
 
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
@@ -684,14 +684,13 @@ fn void! main()
         eventHandler.update();
 
         if (eventHandler.scrolling) {
-           camera.add_zoom((float)eventHandler.scrollY);
+           camera.zoom((float)eventHandler.scrollY * 1.5);
            uniform_buffer.updateData(&&camera.matrix());
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
-            camera.rotate_y((float)(eventHandler.mouse_y_delta * 0.5));
+            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
             uniform_buffer.updateData(&&camera.matrix());
         }
 
