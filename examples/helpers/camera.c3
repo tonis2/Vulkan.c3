@@ -13,87 +13,40 @@ struct UniformData {
 }
 
 struct Camera {
+    Vec3f target;
     Vec3f eye;
-    Vec3f focus;
-    float zoom;
-    float aspect;
-    float yaw;
-    float pitch;
+    Matrix4f perspective;
+    Matrix4f view;
     float min_zoom;
     float max_zoom;
 }
 
-fn Camera new(Vec3f focus, float zoom, float aspect) {
-    Camera camera = {
-        {0, 0, zoom},
-        focus,
-        zoom,
-        aspect,
-        -90.0,
-        50.0,
-        0.1,
-        1000.0,
-    };
-
-    camera.eye_offset();
-    return camera;
-}
-
-fn void Camera.eye_offset(Camera* self) {
-    float horizontal_distance = self.zoom * math::cos(radians(self.pitch));
-    float vertical_distance = self.zoom * math::sin(radians(self.pitch));
-
-    self.eye = {
-        self.focus.x - horizontal_distance * math::sin(radians(self.yaw)),
-        self.focus.y + vertical_distance,
-        self.focus.z - horizontal_distance * math::cos(radians(self.yaw)),
+fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float aspect = 0.8, float view = 45, float min_zoom = 0.1, float max_zoom = 500) {
+    return Camera {
+        target,
+        eye,
+        matrix4f_perspective(radians(view), aspect, min_zoom, max_zoom),
+        vector::matrix4f_look_at(eye, target, {0.0, 1.0, 0.0}),
+        min_zoom,
+        max_zoom
     };
 }
 
-fn void Camera.add_zoom(Camera* self, float value) {
-    if ((math::abs(self.zoom + value) > self.min_zoom) && (math::abs(self.zoom + value) < self.max_zoom)) {
-        self.zoom += value;
+fn void Camera.rotate(Camera* self, Quaternionf rotation) {
+   self.view = rotation.to_matrixf().mul(self.view);
+}
+
+fn void Camera.zoom(Camera* self, float value) {
+    if ((math::abs(self.eye.z + value) > self.min_zoom) && (math::abs(self.eye.z + value) < self.max_zoom)) {
+        self.eye.z += value;
+        self.view.m32 = self.eye.z;
     }
-    self.eye_offset();
 }
 
-fn void Camera.rotate_x(Camera* self, float deg) {
-    self.yaw += deg;
-    self.eye_offset();
-}
-
-fn void Camera.rotate_y(Camera* self, float deg) {
-    float max_turn = 89.0;
-    self.pitch -= deg;
-
-    if (self.pitch > max_turn) {
-        self.pitch = max_turn;
-    }
-
-    if (self.pitch < -max_turn) {
-        self.pitch = -max_turn;
-    }
-    self.eye_offset();
-}
-
-fn void Camera.scene_offset(Camera* self, Vec3f offset) {
-    float offset_x = offset.x + math::cos(radians(self.pitch)) * math::sin(radians(self.yaw));
-    float offset_z = offset.x + math::cos(radians(self.pitch)) * math::cos(radians(self.yaw));
-    self.eye.x -= offset_z;
-    self.focus.x -= offset_z;
-    self.eye.z += offset_x;
-    self.focus.z += offset_x;
-    self.eye.y -= offset.y;
-    self.focus.y -= offset.y;
-    self.eye_offset();
-}
-
-fn UniformData Camera.matrix(Camera* self, Matrix4f model = MATRIX4F_IDENTITY) {
-    Matrix4f perspective = matrix4f_perspective(radians(50.0), self.aspect, self.min_zoom, self.max_zoom);
-    Matrix4f view = vector::matrix4f_look_at(self.eye, self.focus, {0.0, 1.0, 0.0});
+fn UniformData Camera.matrix(Camera self, Matrix4f model = MATRIX4F_IDENTITY) {
     return UniformData {
-        perspective,
-        view,
+        self.perspective,
+        self.view,
         model
     };
 }
