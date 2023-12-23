@@ -33,14 +33,12 @@ fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float
 }
 
 fn void Camera.rotate(Camera* self, Quaternionf rotation) {
-   self.view = rotation.to_matrixf().mul(self.view);
+    if (self.view.m00 < 0) rotation.i = -rotation.i;
+    self.view = rotation.to_matrixf().mul(self.view);
 }
 
 fn void Camera.zoom(Camera* self, float value) {
-    if ((math::abs(self.eye.z + value) > self.min_zoom) && (math::abs(self.eye.z + value) < self.max_zoom)) {
-        self.eye.z += value;
-        self.view.m32 = self.eye.z;
-    }
+   self.view.m32 += value;
 }
 
 fn UniformData Camera.matrix(Camera self, Matrix4f model = MATRIX4F_IDENTITY) {
