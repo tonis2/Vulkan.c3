@@ -331,10 +331,14 @@ fn void! main()
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        // Update cube rotation on left-mouse click
+        if (eventHandler.scrolling) {
+           camera.zoom((float)eventHandler.scrollY * 1.5);
+           uniform_buffer.updateData(&&camera.matrix());
+        }
+
+        // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate_x(-(float)(eventHandler.mouse_x_delta * 0.5));
-            camera.rotate_y(-(float)(eventHandler.mouse_y_delta * 0.5));
+            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
             uniform_buffer.updateData(&&camera.matrix());
         }
 
