@@ -6,11 +6,12 @@ import std::math;
 import gltf;
 import std::collections::list;
 import stb;
+import std::time;
 
 def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<TextureData>);
-def VertexData = List(<Vertex>);
-def IndexData = List(<ushort>);
+
+def BufferData = List(<char>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -33,12 +34,6 @@ fn void TextureData.free(&self, Device device)
     vk::freeMemory(device, self.memory, null);
 }
 
-struct Vertex {
-    Vec3f position;
-    Vec2f tex_pos;
-    Vec3f normal;
-}
-
 struct PushConstantData {
    Matrix4f matrix;
    uint texture;
@@ -54,13 +49,27 @@ BufferInfo index_buffer = {
     .version = vk::BufferVersion.DEVICE_BUFFER
 };
 
+BufferInfo uniform_buffer = BufferInfo {
+    .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+    .version = vk::BufferVersion.GLOBAL_BUFFER
+};
+
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Node* parent_node = null) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
         foreach (primitive: mesh.primitives) {
             Accessor index_accessor = gltf.accessors[primitive.indices];
-            gltf::BufferView index_buffer_view = gltf.bufferViews[index_accessor.bufferView];
+            gltf::BufferView index_view = gltf.bufferViews[index_accessor.bufferView];
+
+            Accessor pos_accessor = gltf.accessors[primitive.position];
+            gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.bufferView];
+
+            Accessor normal_accessor = gltf.accessors[primitive.normal];
+            gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.bufferView];
+
+            Accessor tex_accessor = gltf.accessors[primitive.tex_cord];
+            gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.bufferView];
 
             Material material = gltf.materials[primitive.material];
             Texture color_texture = gltf.textures[material.pbrMetallicRoughness.baseColorTexture.index];
@@ -73,7 +82,9 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            vk::cmdBindVertexBuffers(buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+
+            // GLTF data buffer is uploaded without stride, so we need to get the data with appropriate offsets
+            vk::cmdBindVertexBuffers(buffer, 0, 3, &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer}, &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset});
             vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
@@ -121,34 +132,10 @@ fn void! main()
 
     foreach (&buffer: gltf_data.buffers) {
         switch(buffer.type) {
-            case ResourceType.EXTERNAL_BIN: {
-   /*             String path = string::join({"", (String)buffer.uri}, "examples/gltf/assets/");
-                File! buffer_file = file::open(path, "r")!;
-
-                defer {
-                    path.free();
-                    buffer_file.close()!!;
-                };
-
-                if (catch err = buffer_file) {
-                    io::printfn("failed loading buffer file %s", err);
-                    return;
-                };
-
-                InStream* stream = (InStream*)&buffer_file;
-                usz file_size = stream.seek(0, Seek.END)!;
-                buffer.data = mem::new_array(char, file_size);
-                stream.read(buffer.data)!;*/
-            }
+            case ResourceType.EXTERNAL_BIN: {}
             default: {}
         }
     }
-
-    VertexData vertices;
-    defer vertices.free();
-
-    IndexData indices;
-    defer indices.free();
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
@@ -239,35 +226,30 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
-    BufferInfo uniform_buffer = BufferInfo {
-        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::BufferVersion.GLOBAL_BUFFER
-    }
-    .build(&&camera.matrix(), UniformData.sizeof, device)!;
+
+    BufferData vertices;
+    defer vertices.free();
+
+    BufferData indices;
+    defer indices.free();
 
     foreach (mesh : gltf_data.meshes) {
         foreach (index, primitive: mesh.primitives) {
             Accessor pos_accessor = gltf_data.accessors[primitive.position];
-            Accessor tex_accessor = gltf_data.accessors[primitive.tex_cord];
-            Accessor normal_accessor = gltf_data.accessors[primitive.normal];
             Accessor index_accessor = gltf_data.accessors[primitive.indices];
 
-            for (uint i = 0; i < pos_accessor.count ; i += 1) {
-                vertices.push(Vertex {
-                    gltf_data.@cast_buffer(pos_accessor, i * pos_accessor.componentSize(), Vec3f),
-                    gltf_data.@cast_buffer(tex_accessor, i * tex_accessor.componentSize(), Vec2f),
-                    gltf_data.@cast_buffer(normal_accessor, i * normal_accessor.componentSize(), Vec3f)
-                });
-            }
+            gltf::BufferView pos_buffer = gltf_data.bufferViews[pos_accessor.bufferView];
+            gltf::BufferView index_buffer = gltf_data.bufferViews[index_accessor.bufferView];
+            gltf::Buffer buffer = gltf_data.buffers[pos_buffer.buffer];
 
-            for (uint i = 0; i < index_accessor.count ; i += 1) {
-                indices.push(gltf_data.@cast_buffer(index_accessor, i * index_accessor.componentSize(), ushort));
-            }
+            vertices.add_array(buffer.data[pos_buffer.offset..index_buffer.offset]);
+            indices.add_array(buffer.data[index_buffer.offset..(index_buffer.offset + index_buffer.byteLength)]);
         }
     }
 
-    vertex_buffer.build(vertices.entries, Vertex.sizeof * vertices.len(), device)!;
-    index_buffer.build(indices.entries, ushort.sizeof * indices.len(), device)!;
+    vertex_buffer.build(vertices.entries, char.sizeof * vertices.len(), device)!;
+    index_buffer.build(indices.entries, char.sizeof * indices.len(), device)!;
+    uniform_buffer.build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     TextureData depth_texture;
     TextureList textures;
@@ -405,16 +387,16 @@ fn void! main()
             .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
             vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            vk::PIPELINE_STAGE_TRANSFER_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &imageMemoryBarrier
+                command_buffer,
+                vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk::PIPELINE_STAGE_TRANSFER_BIT,
+                0,
+                0,
+                null,
+                0,
+                null,
+                1,
+                &imageMemoryBarrier
             );
 
             BufferImageCopy bufferCopyRegion = {
@@ -583,7 +565,17 @@ fn void! main()
         {
             {
              .binding = 0,
-             .stride = Vertex.sizeof,
+             .stride = float.sizeof * 3,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            },
+            {
+             .binding = 1,
+             .stride = float.sizeof * 2,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            },
+            {
+             .binding = 2,
+             .stride = float.sizeof * 3,
              .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
         })
@@ -592,19 +584,19 @@ fn void! main()
                .binding = 0,
                .location = 0,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.position.offsetof
+               .offset = 0
             },
             {
-               .binding = 0,
+               .binding = 1,
                .location = 1,
                .format = vk::FORMAT_R32G32_SFLOAT,
-               .offset = Vertex.tex_pos.offsetof
+               .offset = 0
             },
             {
-               .binding = 0,
+               .binding = 2,
                .location = 2,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.normal.offsetof
+               .offset = 0
             }
         })
     )
@@ -680,6 +672,8 @@ fn void! main()
     }
 
     uint frame = 0;
+  /*  Clock time = clock::now();*/
+
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
