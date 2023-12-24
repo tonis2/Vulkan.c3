@@ -810,6 +810,11 @@ fn void! main()
     // Release binded stuff
     device.waitIdle();
     foreach (img : textures) img.free(device.device);
+    foreach (view : swapchain_views) vk::destroyImageView(device.device, view, null);
+    depth_texture.free(device.device);
+    swapchain_images.free();
+    swapchain_views.free();
+
     uniform_buffer.free(device.device);
     index_buffer.free(device.device);
     vertex_buffer.free(device.device);
