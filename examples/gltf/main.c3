@@ -11,8 +11,6 @@ import std::time;
 def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<TextureData>);
 
-def BufferData = List(<char>);
-
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
@@ -40,12 +38,7 @@ struct PushConstantData {
 }
 
 BufferInfo vertex_buffer = {
-    .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-    .version = vk::BufferVersion.DEVICE_BUFFER
-};
-
-BufferInfo index_buffer = {
-    .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
+    .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
     .version = vk::BufferVersion.DEVICE_BUFFER
 };
 
@@ -85,7 +78,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
 
             // GLTF data buffer is uploaded without stride, so we need to get the data with appropriate offsets
             vk::cmdBindVertexBuffers(buffer, 0, 3, &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer}, &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset});
-            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_view.offset, vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
     }
@@ -226,29 +219,13 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
+    gltf::Primitive lastMeshPrimitive = gltf_data.getSceneLastMesh(0)!.lastPrimitive();
 
-    BufferData vertices;
-    defer vertices.free();
+    Accessor index_accessor = gltf_data.accessors[lastMeshPrimitive.indices];
+    gltf::BufferView index_view = gltf_data.bufferViews[index_accessor.bufferView];
+    gltf::Buffer data_buffer = gltf_data.buffers[index_view.buffer];
 
-    BufferData indices;
-    defer indices.free();
-
-    foreach (mesh : gltf_data.meshes) {
-        foreach (index, primitive: mesh.primitives) {
-            Accessor pos_accessor = gltf_data.accessors[primitive.position];
-            Accessor index_accessor = gltf_data.accessors[primitive.indices];
-
-            gltf::BufferView pos_buffer = gltf_data.bufferViews[pos_accessor.bufferView];
-            gltf::BufferView index_buffer = gltf_data.bufferViews[index_accessor.bufferView];
-            gltf::Buffer buffer = gltf_data.buffers[pos_buffer.buffer];
-
-            vertices.add_array(buffer.data[pos_buffer.offset..index_buffer.offset]);
-            indices.add_array(buffer.data[index_buffer.offset..(index_buffer.offset + index_buffer.byteLength)]);
-        }
-    }
-
-    vertex_buffer.build(vertices.entries, char.sizeof * vertices.len(), device)!;
-    index_buffer.build(indices.entries, char.sizeof * indices.len(), device)!;
+    vertex_buffer.build(data_buffer.data, (usz)(index_view.offset + index_view.byteLength), device)!;
     uniform_buffer.build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     TextureData depth_texture;
@@ -328,7 +305,7 @@ fn void! main()
         TextureData texture;
 
         gltf::Image image = gltf_data.images[gltf_texture.source];
-       /* gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];*/
+        gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
 
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
@@ -672,7 +649,7 @@ fn void! main()
     }
 
     uint frame = 0;
-  /*  Clock time = clock::now();*/
+    Clock time = clock::now();
 
     while(!glfw::windowShouldClose(window)) {
         eventHandler.update();
@@ -816,7 +793,6 @@ fn void! main()
     swapchain_views.free();
 
     uniform_buffer.free(device.device);
-    index_buffer.free(device.device);
     vertex_buffer.free(device.device);
     command_pool.free(device.device);
     swapchain.free(device.device);

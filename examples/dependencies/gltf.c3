@@ -121,6 +121,7 @@ fault ParseError
     KEY_NOT_FOUND
 }
 
+
 struct Gltf {
     String name;
     NodeList nodes;
@@ -156,6 +157,7 @@ struct Node {
 
 struct Mesh {
     String name;
+    usz scene;
     PrimitiveList primitives;
     IndexList children;
 }
@@ -930,6 +932,13 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
+    // Match meshes to scenes
+    foreach (scene_index, scene : content.scenes) {
+         foreach (node : scene.nodes) {
+             content.nodes[node].setMeshScene(scene_index, &content);
+         }
+    }
+
     return content;
 }
 
@@ -1056,10 +1065,35 @@ fn void Buffer.free(Buffer* self) {
     mem::free(self.uri);
 }
 
-macro Gltf.@cast_buffer(Gltf* self, Accessor accessor, uint offset, #type) {
+macro Gltf.@castBuffer(Gltf* self, Accessor accessor, uint offset, #type) {
     BufferView bufferView = self.bufferViews[accessor.bufferView];
     Buffer buffer = self.buffers[bufferView.buffer];
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
+}
+
+fn void Node.setMeshScene(Node self, usz scene_index, Gltf* data) {
+    if (self.hasMesh()) {
+        Mesh mesh = data.meshes[self.mesh];
+        mesh.scene = scene_index;
+    }
+    foreach (node_index : self.children) {
+        Node node = data.nodes[node_index];
+        node.setMeshScene(scene_index, data);
+    }
+}
+
+fn Mesh! Gltf.getSceneLastMesh(Gltf self, usz scene) {
+   foreach (index, mesh : self.meshes) {
+        if (mesh.scene == scene && index == self.meshes.len() - 1) {
+            return mesh;
+        }
+    }
+
+    return ParseError.KEY_NOT_FOUND?;
+}
+
+fn Primitive Mesh.lastPrimitive(Mesh self) {
+   return self.primitives[self.primitives.len() - 1];
 }
 
 fn char[]! Buffer.from_base64(self) {
