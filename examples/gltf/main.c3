@@ -77,7 +77,12 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
 
             // GLTF data buffer is uploaded without stride, so we need to get the data with appropriate offsets
-            vk::cmdBindVertexBuffers(buffer, 0, 3, &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer}, &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset});
+            vk::cmdBindVertexBuffers(
+                buffer,
+                0, 3,
+                &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
+                &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset}
+            );
             vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_view.offset, vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
@@ -132,7 +137,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 50}, .aspect = 800/600);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 100}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
@@ -185,7 +190,6 @@ fn void! main()
     .setImageExtent({ .width = WIDTH, .height = HEIGHT });
 
     SwapchainKHR swapchain = swapchain_info.buildKHR(device.device)!;
-
     ImageViewList swapchain_views;
     vk::ImageList swapchain_images = swapchain.getImages(device.device, swapchain_info.minImageCount)!;
 
@@ -655,13 +659,13 @@ fn void! main()
         eventHandler.update();
 
         if (eventHandler.scrolling) {
-           camera.zoom((float)eventHandler.scrollY * 1.5);
+           camera.zoom((float)eventHandler.scrollY * 5.5);
            uniform_buffer.updateData(&&camera.matrix());
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
+            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, (float)eventHandler.mouse_x_delta * 0.01, 0, 1});
             uniform_buffer.updateData(&&camera.matrix());
         }
 
