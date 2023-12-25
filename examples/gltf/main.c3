@@ -112,7 +112,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
+    File! file = file::open("examples/gltf/assets/truck.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -311,7 +311,7 @@ fn void! main()
         TextureData texture;
 
         gltf::Image image = gltf_data.images[gltf_texture.source];
-        gltf::Sampler gltf_sampler = gltf_data.samplers[gltf_texture.sampler];
+
 
         gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
         gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
@@ -655,7 +655,8 @@ fn void! main()
     }
 
     uint frame = 0;
- /*   Clock time = clock::now();*/
+    Clock time = clock::now();
+
 
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
@@ -789,6 +790,7 @@ fn void! main()
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
+
 
 
     // Release binded stuff
