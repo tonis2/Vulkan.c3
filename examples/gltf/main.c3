@@ -52,19 +52,19 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
         foreach (primitive: mesh.primitives) {
-            Accessor index_accessor = gltf.accessors[primitive.indices];
+            Accessor index_accessor = gltf.accessors[primitive["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.bufferView];
 
-            Accessor pos_accessor = gltf.accessors[primitive.position];
+            Accessor pos_accessor = gltf.accessors[primitive["POSITION"]!!];
             gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.bufferView];
 
-            Accessor normal_accessor = gltf.accessors[primitive.normal];
+            Accessor normal_accessor = gltf.accessors[primitive["NORMAL"]!!];
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.bufferView];
 
-            Accessor tex_accessor = gltf.accessors[primitive.tex_cord];
+            Accessor tex_accessor = gltf.accessors[primitive["TEXCOORD_0"]!!];
             gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.bufferView];
 
-            Material material = gltf.materials[primitive.material];
+            Material material = gltf.materials[primitive["material"]!!];
             Texture color_texture = gltf.textures[material.pbrMetallicRoughness.baseColorTexture.index];
 
             if (parent_node != null) node.matrix = parent_node.matrix.mul(node.matrix);
@@ -137,7 +137,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 100}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 50}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     InstanceInfo instance = InstanceInfo {
         .pApplicationName = "Hello Cube",
@@ -223,20 +223,22 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
-    gltf::Primitive lastMeshPrimitive = gltf_data.getSceneLastMesh(0)!.lastPrimitive();
+/*    foreach(accessor : gltf_data.accessors) {
+        gltf_data.get_buffer(accessor)!;
+    }*/
 
-    Accessor index_accessor = gltf_data.accessors[lastMeshPrimitive.indices];
-    gltf::BufferView index_view = gltf_data.bufferViews[index_accessor.bufferView];
-    gltf::Buffer data_buffer = gltf_data.buffers[index_view.buffer];
+    // I upload all mesh data, vertices, indices, texcords ...etc to a single buffer
+    Accessor last_accessor = gltf_data.accessors[gltf_data.accessors.len() - 1];
+    gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.bufferView];
+    gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
 
-    vertex_buffer.build(data_buffer.data, (usz)(index_view.offset + index_view.byteLength), device)!;
+    vertex_buffer.build(data_buffer.data, (usz)(accessor_view.offset + accessor_view.byteLength), device)!;
     uniform_buffer.build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     TextureData depth_texture;
     TextureList textures;
 
     defer depth_texture.free(device.device);
-
     vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
 
     // Create depth texture
@@ -653,9 +655,9 @@ fn void! main()
     }
 
     uint frame = 0;
-    Clock time = clock::now();
+ /*   Clock time = clock::now();*/
 
-    while(!glfw::windowShouldClose(window)) {
+    while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
         if (eventHandler.scrolling) {
@@ -787,6 +789,7 @@ fn void! main()
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
+
 
     // Release binded stuff
     device.waitIdle();
