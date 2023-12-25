@@ -11,7 +11,6 @@ import std::encoding::json;
 import std::encoding::base64;
 import std::collections::map;
 
-def PrimitiveList = List(<Primitive>);
 def NodeList = List(<Node>);
 def SceneList= List(<Scene>);
 def MeshList = List(<Mesh>);
@@ -28,6 +27,8 @@ def AnimationSamplers = List(<AnimationSampler>);
 def ChannelList = List(<Channel>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
+def PrimitiveMap = HashMap(<String, usz>);
+def PrimitiveList = List(<PrimitiveMap>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -252,16 +253,6 @@ struct Accessor {
     AccessorType type;
 }
 
-struct Primitive {
-    uint position;
-    uint indices;
-    uint tex_cord;
-    uint normal;
-    uint material;
-    uint joints;
-    uint weights;
-}
-
 struct BufferView {
     uint buffer;
     uint byteLength;
@@ -358,32 +349,29 @@ fn void Mesh.fromJson(&self, Object* json) {
     if (try name) self.name = name.copy();
     if (try primitives) {
         foreach (primitive : primitives.array) {
-            Object* attributes = primitive.get("attributes")!!;
-            Primitive data;
+            PrimitiveMap primitive_map;
+            Object*! attributes = primitive.get("attributes");
 
-            uint! position = attributes.get_int("POSITION");
-            uint! tex_cord = attributes.get_int("TEXCOORD_0");
-            uint! joints = attributes.get_int("JOINTS_0");
-            uint! weights = attributes.get_int("WEIGHTS_0");
-            uint! normal = attributes.get_int("NORMAL");
             uint! indices = primitive.get_int("indices");
             uint! material = primitive.get_int("material");
 
-            if (try position) data.position = position;
-            if (try tex_cord) data.tex_cord = tex_cord;
-            if (try normal) data.normal = normal;
-            if (try indices) data.indices = indices;
-            if (try material) data.material = material;
-            if (try joints) data.joints = joints;
-            if (try weights) data.weights = weights;
+            if (try indices) primitive_map["indices"] = indices;
+            if (try material) primitive_map["material"] = material;
 
-            self.primitives.push(data);
+            if (try attributes) {
+                foreach (key : attributes.map.key_tlist()) {
+                    primitive_map[key] = (usz)attributes.map[key]!!.f;
+                }
+            }
+
+            self.primitives.push(primitive_map);
         }
     }
 }
 
 fn void Mesh.free(&self) {
     self.children.free();
+    foreach (primitive : self.primitives) primitive.free();
     self.primitives.free();
     self.name.free();
 }
@@ -393,8 +381,10 @@ fn void BufferView.fromJson(&self, Object* json) {
     uint! byteLength = json.get_int("byteLength");
     uint! offset = json.get_int("byteOffset");
     uint! target = json.get_int("target");
+    uint! stride = json.get_int("byteStride");
 
     if (try buffer) self.buffer = buffer;
+    if (try stride) self.stride = stride;
     if (try byteLength) self.byteLength = byteLength;
     if (try offset) self.offset = offset;
     if (try target) {
@@ -1082,17 +1072,7 @@ fn void Node.setMeshScene(Node self, usz scene_index, Gltf* data) {
     }
 }
 
-fn Mesh! Gltf.getSceneLastMesh(Gltf self, usz scene) {
-   foreach (index, mesh : self.meshes) {
-        if (mesh.scene == scene && index == self.meshes.len() - 1) {
-            return mesh;
-        }
-    }
-
-    return ParseError.KEY_NOT_FOUND?;
-}
-
-fn Primitive Mesh.lastPrimitive(Mesh self) {
+fn PrimitiveMap Mesh.lastPrimitive(Mesh self) {
    return self.primitives[self.primitives.len() - 1];
 }
 
@@ -1124,9 +1104,23 @@ fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
 
     for (uint i = 0; i < accessor.count ; i += 1) {
         char[] data = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
-        char[] data2 = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
-        Vec3f vec =  bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
-        io::printf("Parsed Vec %f %f %f \n", vec.x, vec.y, vec.z);
+
+        switch (accessor.type) {
+           case AccessorType.SCALAR:
+                float value = bitcast(*(char[float.sizeof]*)data, float);
+                io::printfn("Parsed int %f", value);
+           case AccessorType.VEC2:
+                Vec2f vec =  bitcast(*(char[Vec2f.sizeof]*)data, Vec2f);
+                io::printfn("Parsed Vec2 %f %f", vec.x, vec.y);
+           case AccessorType.VEC3:
+                Vec3f vec =  bitcast(*(char[Vec3f.sizeof]*)data, Vec3f);
+                io::printfn("Parsed Vec3 %f %f %f", vec.x, vec.y, vec.z);
+           case AccessorType.VEC4:
+                Vec4f vec =  bitcast(*(char[Vec4f.sizeof]*)data, Vec4f);
+                io::printfn("Parsed Vec4 %f %f %f %f", vec.x, vec.y, vec.z, vec.w);
+           default: {}
+        }
     }
-        io::printf(" \n _______ \n%d");
+
+    io::printf(" \n _______ \n%d");
 }
