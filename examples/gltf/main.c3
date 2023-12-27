@@ -112,7 +112,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/boxes.glb", "r");
+    File! file = file::open("examples/gltf/assets/truck.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -137,10 +137,10 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 50}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     InstanceInfo instance = InstanceInfo {
-        .pApplicationName = "Hello Cube",
+        .pApplicationName = "Hello GLTF",
         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
         .pEngineName = "Super engine",
         .engineVersion = vk::@makeApiVersion(0,1,0,0),
@@ -307,7 +307,8 @@ fn void! main()
 
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
-        // Texture source new
+
+        // Check that texture source, is not already loaded
         if (gltf_texture.source >= textures.len()) {
             Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
             TextureData texture;
@@ -516,9 +517,9 @@ fn void! main()
     };
 
     // Required for using push descriptors
-    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
-                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(descriptorSets.len));
-    vk::getPhysicalDeviceProperties2(device.physical_device, &deviceProps2);
+    vk::getPhysicalDeviceProperties2(device.physical_device, &&vk::physicalDeviceProperties2Builder()
+                                                               .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder()
+                                                               .setMaxPushDescriptors(descriptorSets.len)));
 
     // Load shaders
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
