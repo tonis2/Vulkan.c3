@@ -6,11 +6,13 @@ layout(location = 2) in vec3 normal;
 
 layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out uint textureIndex;
+layout(location = 2) out float[4] outBaseColor;
 
 layout( push_constant ) uniform constants
 {
     mat4 model_matrix;
     uint texture;
+    float[4] baseColor;
 };
 
 layout(binding = 0) uniform uniform_matrix
@@ -23,6 +25,8 @@ layout(binding = 0) uniform uniform_matrix
 void main() {
     gl_Position = projection * view * model_matrix * vec4(vp, 1.0);
     gl_Position.y = -gl_Position.y;
+
     fragTexCoord = tex_cord;
     textureIndex = texture;
+    outBaseColor = baseColor;
 }
