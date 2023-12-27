@@ -30,6 +30,8 @@ def SkinList = List(<Skin>);
 def PrimitiveMap = HashMap(<String, usz>);
 def PrimitiveList = List(<PrimitiveMap>);
 
+def TimeSamples = List(<float>);
+
 enum Targets {
     ARRAY_BUFFER,
     ELEMENT_ARRAY_BUFFER
@@ -175,6 +177,7 @@ struct Animation {
 }
 
 struct AnimationSampler {
+    TimeSamples times;
     uint input;
     uint output;
     Interpolation interpolation;
@@ -218,7 +221,7 @@ struct Texture {
 
 struct Image {
     String name;
-    uint bufferView;
+    uint view;
     ImageType mimeType;
 }
 
@@ -243,8 +246,8 @@ struct Camera {
 }
 
 struct Accessor {
-    uint bufferView;
-    uint offset;
+    uint view;
+    usz offset;
     uint stride;
     uint count;
     bool normalize;
@@ -400,22 +403,23 @@ fn void BufferView.fromJson(&self, Object* json) {
 }
 
 fn void Accessor.fromJson(&self, Object* json) {
-    Object*! dataType = json.get("componentType");
-    Object*! objectType = json.get("type");
-    Object*! bufferView = json.get("bufferView");
-    Object*! count = json.get("count");
-    Object*! offset = json.get("offset");
-    Object*! stride = json.get("stride");
-    Object*! normalize = json.get("normalize");
-    Object*! mode = json.get("mode");
 
-    if (try count) self.count = (uint)count.f;
-    if (try offset) self.offset = (uint)offset.f;
+    uint! bufferView = json.get_int("bufferView");
+    uint! count = json.get_int("count");
+    usz! offset = json.get_int("offset");
+    uint! stride = json.get_int("stride");
+    uint! mode = json.get_int("mode");
+    uint! dataType = json.get_int("componentType");
+    String! objectType = json.get_string("type");
+    Object*! normalize = json.get("normalize");
+
+    if (try count) self.count = count;
+    if (try offset) self.offset = offset;
     if (try normalize) self.normalize = normalize.b;
-    if (try stride) self.stride = (uint)stride.f;
-    if (try bufferView) self.bufferView = (uint)bufferView.f;
+    if (try stride) self.stride = stride;
+    if (try bufferView) self.view = bufferView;
     if (try mode) {
-        switch((uint)mode.f) {
+        switch(mode) {
             case 0:
                 self.mode = Mode.POINTS;
             case 1:
@@ -434,7 +438,7 @@ fn void Accessor.fromJson(&self, Object* json) {
     }
 
     if (try dataType) {
-        switch(dataType.f) {
+        switch(dataType) {
             case 5120:
                 self.data_type = DataType.ICHAR;
             case 5121:
@@ -449,9 +453,8 @@ fn void Accessor.fromJson(&self, Object* json) {
                 self.data_type = DataType.FLOAT;
         }
 
-        String! object_type = objectType.s;
-        if (try object_type) {
-            switch (object_type) {
+        if (try objectType) {
+            switch (objectType) {
                 case "SCALAR": self.type = AccessorType.SCALAR;
                 case "VEC2": self.type = AccessorType.VEC2;
                 case "VEC3": self.type = AccessorType.VEC3;
@@ -625,7 +628,7 @@ fn void Image.fromJson(&self, Object* json) {
     String! name = json.get_string("name");
     String! mimeType = json.get_string("mimeType");
 
-    if (try bufferView) self.bufferView = bufferView;
+    if (try bufferView) self.view = bufferView;
     if (try name) self.name = name;
     if (try mimeType) {
         switch (mimeType) {
@@ -647,9 +650,9 @@ fn void Animation.fromJson(&self, Object* json) {
         foreach (sampler : samplers.array) {
             AnimationSampler animation_sampler;
 
-            uint! input = json.get_int("input");
-            uint! output = json.get_int("output");
-            String! interpolation = json.get_string("interpolation");
+            uint! input = sampler.get_int("input");
+            uint! output = sampler.get_int("output");
+            String! interpolation = sampler.get_string("interpolation");
 
             if (try input) animation_sampler.input = input;
             if (try output) animation_sampler.output = output;
@@ -668,13 +671,13 @@ fn void Animation.fromJson(&self, Object* json) {
     if (try channels) {
         foreach (channel : channels.array) {
             Channel channel_data;
-            uint! sampler = json.get_int("sampler");
-            Object*! target = json.get("target");
+            uint! sampler = channel.get_int("sampler");
+            Object*! target = channel.get("target");
 
             if (try sampler) channel_data.sampler = sampler;
             if (try target) {
-                uint! node = json.get_int("node");
-                String! path = json.get_string("sampler");
+                uint! node = target.get_int("node");
+                String! path = target.get_string("sampler");
 
                 if (try node) channel_data.target.node = node;
                 if (try path) {
@@ -693,6 +696,7 @@ fn void Animation.fromJson(&self, Object* json) {
 }
 
 fn void Animation.free(&self) {
+    foreach (sampler: self.samplers) sampler.times.free();
     self.channels.free();
     self.samplers.free();
     self.name.free();
@@ -954,8 +958,24 @@ fn void Gltf.free(Gltf* self) {
 
 fn Node! Gltf.getNode(Gltf* self, String name) {
     foreach (node : self.nodes) {
-        if (mem::equals(node.name, name)) {
+        if (node.name == name) {
             return node;
+        }
+    }
+    return ParseError.KEY_NOT_FOUND?;
+}
+
+fn Animation! Gltf.getAnimation(Gltf* self, String name) {
+    foreach (animation : self.animations) {
+        if (animation.name == name) {
+            // Parse samplers data from buffer
+            foreach (&sampler: animation.samplers) {
+                Accessor time_accessor = self.accessors[sampler.input];
+                for (uint i; i < time_accessor.count; i++) {
+                    sampler.times.push(self.@castBuffer(time_accessor, i * time_accessor.componentSize(), float));
+                }
+            }
+            return animation;
         }
     }
     return ParseError.KEY_NOT_FOUND?;
@@ -1056,7 +1076,7 @@ fn void Buffer.free(Buffer* self) {
 }
 
 macro Gltf.@castBuffer(Gltf* self, Accessor accessor, uint offset, #type) {
-    BufferView bufferView = self.bufferViews[accessor.bufferView];
+    BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
@@ -1099,11 +1119,11 @@ fn char[]! Buffer.from_base64(self) {
 
 
 fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
-    BufferView bufferView = self.bufferViews[accessor.bufferView];
+    BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
 
     for (uint i = 0; i < accessor.count ; i += 1) {
-        char[] data = buffer.data[(accessor.offset + bufferView.offset + (i * accessor.componentSize()))..];
+        char[] data = buffer.data[(accessor.offset + bufferView.offset + (usz)(i * accessor.componentSize()))..];
 
         switch (accessor.type) {
            case AccessorType.SCALAR:

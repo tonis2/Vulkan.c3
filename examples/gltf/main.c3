@@ -55,16 +55,16 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
 
         foreach (primitive: mesh.primitives) {
             Accessor index_accessor = gltf.accessors[primitive["indices"]!!];
-            gltf::BufferView index_view = gltf.bufferViews[index_accessor.bufferView];
+            gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
 
             Accessor pos_accessor = gltf.accessors[primitive["POSITION"]!!];
-            gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.bufferView];
+            gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.view];
 
             Accessor normal_accessor = gltf.accessors[primitive["NORMAL"]!!];
-            gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.bufferView];
+            gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
             Accessor tex_accessor = gltf.accessors[primitive["TEXCOORD_0"]!!];
-            gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.bufferView];
+            gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
 
             Material material = gltf.materials[primitive["material"]!!];
             Texture color_texture = gltf.textures[material.pbrMetallicRoughness.baseColorTexture.index];
@@ -229,7 +229,7 @@ fn void! main()
 
     // I upload all mesh data, vertices, indices, texcords ...etc to a single buffer
     Accessor last_accessor = gltf_data.accessors[gltf_data.accessors.len() - 1];
-    gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.bufferView];
+    gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.view];
     gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
 
     vertex_buffer.build(data_buffer.data, (usz)(accessor_view.offset + accessor_view.byteLength), device)!;
@@ -315,7 +315,7 @@ fn void! main()
 
             gltf::Image image = gltf_data.images[gltf_texture.source];
 
-            gltf::BufferView buffer_view = gltf_data.bufferViews[image.bufferView];
+            gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
             gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
             stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
@@ -497,8 +497,6 @@ fn void! main()
 
     defer descriptor_images.free();
 
-
-
     WriteDescriptorSet[] descriptorSets = {
         vk::writeDescriptorSetBuilder()
         .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
@@ -659,9 +657,10 @@ fn void! main()
 
     uint frame = 0;
     Clock time = clock::now();
-
+/*    Animation car_animation = gltf_data.getAnimation("Wheels")!!;*/
 
     while (!glfw::windowShouldClose(window)) {
+/*        io::printfn("time stamp %s", time.mark());*/
         eventHandler.update();
 
         if (eventHandler.scrolling) {
