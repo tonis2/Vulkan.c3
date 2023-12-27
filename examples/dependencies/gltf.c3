@@ -287,6 +287,7 @@ fn void Node.fromJson(&self, Object* json) {
     self.rotation = quaternionf_identity();
     self.scale = {1, 1, 1};
     self.translation = {0, 0, 0};
+    self.matrix = MATRIX4F_IDENTITY;
 
     String! name = json.get_string("name");
     // Parse node transforms
@@ -318,7 +319,6 @@ fn void Node.fromJson(&self, Object* json) {
     }
 
     if (try matrix) {
-        self.matrix = MATRIX4F_IDENTITY;
         foreach (index, value: matrix.array) self.matrix.m[index] = (float)value.f;
     } else {
         self.matrix = self.recompose();
