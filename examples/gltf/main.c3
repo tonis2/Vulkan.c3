@@ -10,6 +10,7 @@ import std::time;
 
 def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<TextureData>);
+def Animations = List(<AnimationMixer>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -222,10 +223,6 @@ fn void! main()
 
     CommandPool command_pool = device.createCommandPool()!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
-
-/*    foreach(accessor : gltf_data.accessors) {
-        gltf_data.get_buffer(accessor)!;
-    }*/
 
     // I upload all mesh data, vertices, indices, texcords ...etc to a single buffer
     Accessor last_accessor = gltf_data.accessors[gltf_data.accessors.len() - 1];
@@ -655,12 +652,25 @@ fn void! main()
         frame_fences.push(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device.device))!;
     }
 
+    // Load animations
+    Animations animations;
+    defer {
+        foreach (animation: animations) animation.free();
+        animations.free();
+    }
+
+    foreach (animation: gltf_data.animations) {
+        animations.push(gltf_data.loadAnimation(animation));
+    }
+
+    // Picking gltf scene to render
+    Scene scene = gltf_data.scenes[0];
     uint frame = 0;
     Clock time = clock::now();
-/*    Animation car_animation = gltf_data.getAnimation("Wheels")!!;*/
 
     while (!glfw::windowShouldClose(window)) {
-/*        io::printfn("time stamp %s", time.mark());*/
+        foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
+
         eventHandler.update();
 
         if (eventHandler.scrolling) {
@@ -744,7 +754,6 @@ fn void! main()
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
-        Scene scene = gltf_data.scenes[0];
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
 
         vk::cmdEndRenderingKHR(command_buffer);
@@ -796,7 +805,7 @@ fn void! main()
 
 
     // Release binded stuff
-    device.waitIdle();
+    device.device.waitIdle();
     foreach (img : textures) img.free(device.device);
     foreach (view : swapchain_views) vk::destroyImageView(device.device, view, null);
     depth_texture.free(device.device);

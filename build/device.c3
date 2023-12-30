@@ -321,8 +321,8 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
     return actualExtent;
 }*/
 
-fn void DeviceInfo.waitIdle(self) {
- if (catch err = vk::deviceWaitIdle(self.device)) {
+fn void Device.waitIdle(self) {
+ if (catch err = vk::deviceWaitIdle(self)) {
     io::printfn("failed to wait idle");
  }
 }
@@ -516,7 +516,6 @@ fn uint SwapchainKHR.getNextImage(self, Device device, Semaphore wait_semaphore)
 
 fn void DeviceInfo.free(self)
 {
-    vk::deviceWaitIdle(self.device)!!;
     self.surface_formats.free();
     self.present_modes.free();
     vk::destroyDevice(self.device, null);
