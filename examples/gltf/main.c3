@@ -754,6 +754,7 @@ fn void! main()
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
 
+        // Draw gltf scene nodes
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
 
         vk::cmdEndRenderingKHR(command_buffer);
@@ -801,8 +802,6 @@ fn void! main()
         vk::queuePresentKHR(device.graphics_queue, &present_info)!;
         frame = (frame + 1) % 2;
     }
-
-
 
     // Release binded stuff
     device.device.waitIdle();
