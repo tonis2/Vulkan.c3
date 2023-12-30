@@ -458,8 +458,7 @@ fn void! main()
 
 
     defer {
-        device.waitIdle();
-        // Use release instead of free here, cause this will free buffer and also destroys the vk instace
+        device.device.waitIdle();
         wait_semaphores.release(device.device);
         signal_semaphores.release(device.device);
         frame_fences.release(device.device);
