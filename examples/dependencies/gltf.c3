@@ -1,5 +1,6 @@
 module gltf;
 
+import std::time;
 import std::collections::object;
 import std::io;
 import std::core::string;
@@ -25,12 +26,13 @@ def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
 def AnimationSamplers = List(<AnimationSampler>);
 def ChannelList = List(<Channel>);
+def MixerChannels = List(<MixerChannel>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def PrimitiveMap = HashMap(<String, usz>);
 def PrimitiveList = List(<PrimitiveMap>);
-
-def TimeSamples = List(<float>);
+def FloatList = List(<float>);
+def AnimationValues = List(<AnimationValue>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -112,6 +114,13 @@ enum MagFilter {
     LINEAR,
 }
 
+union AnimationValue
+{
+    Vec3f transform;
+    Vec3f scale;
+    Quaternionf rotation;
+}
+
 fault ParseError
 {
     FILE_NOT_FOUND,
@@ -123,7 +132,6 @@ fault ParseError
     BROKEN_BUFFER,
     KEY_NOT_FOUND
 }
-
 
 struct Gltf {
     String name;
@@ -177,7 +185,6 @@ struct Animation {
 }
 
 struct AnimationSampler {
-    TimeSamples times;
     uint input;
     uint output;
     Interpolation interpolation;
@@ -189,6 +196,20 @@ struct Channel {
         uint node;
         Property path;
     }
+}
+
+struct MixerChannel {
+    inline Channel channel;
+    double time;
+    double max_time;
+    FloatList times;
+    AnimationValues values;
+}
+
+struct AnimationMixer {
+    String name;
+    AnimationSamplers samplers;
+    MixerChannels channels;
 }
 
 struct Skin {
@@ -254,6 +275,8 @@ struct Accessor {
     Mode mode;
     DataType data_type;
     AccessorType type;
+    FloatList min;
+    FloatList max;
 }
 
 struct BufferView {
@@ -299,6 +322,7 @@ fn void Node.fromJson(&self, Object* json) {
     Object*! translation = json.get("translation");
     Object*! matrix = json.get("matrix");
     Object*! children = json.get("children");
+
 
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
@@ -360,7 +384,6 @@ fn void Mesh.fromJson(&self, Object* json) {
 
             if (try indices) primitive_map["indices"] = indices;
             if (try material) primitive_map["material"] = material;
-
             if (try attributes) {
                 foreach (key : attributes.map.key_tlist()) {
                     primitive_map[key] = (usz)attributes.map[key]!!.f;
@@ -391,7 +414,7 @@ fn void BufferView.fromJson(&self, Object* json) {
     if (try byteLength) self.byteLength = byteLength;
     if (try offset) self.offset = offset;
     if (try target) {
-        switch(target) {
+        switch (target) {
             case 34962: {
                 self.target = Targets.ARRAY_BUFFER;
             }
@@ -403,7 +426,6 @@ fn void BufferView.fromJson(&self, Object* json) {
 }
 
 fn void Accessor.fromJson(&self, Object* json) {
-
     uint! bufferView = json.get_int("bufferView");
     uint! count = json.get_int("count");
     usz! offset = json.get_int("offset");
@@ -412,6 +434,8 @@ fn void Accessor.fromJson(&self, Object* json) {
     uint! dataType = json.get_int("componentType");
     String! objectType = json.get_string("type");
     Object*! normalize = json.get("normalize");
+    Object*! min = json.get("min");
+    Object*! max = json.get("max");
 
     if (try count) self.count = count;
     if (try offset) self.offset = offset;
@@ -419,7 +443,7 @@ fn void Accessor.fromJson(&self, Object* json) {
     if (try stride) self.stride = stride;
     if (try bufferView) self.view = bufferView;
     if (try mode) {
-        switch(mode) {
+        switch (mode) {
             case 0:
                 self.mode = Mode.POINTS;
             case 1:
@@ -438,7 +462,7 @@ fn void Accessor.fromJson(&self, Object* json) {
     }
 
     if (try dataType) {
-        switch(dataType) {
+        switch (dataType) {
             case 5120:
                 self.data_type = DataType.ICHAR;
             case 5121:
@@ -464,7 +488,21 @@ fn void Accessor.fromJson(&self, Object* json) {
                 case "MAT4": self.type = AccessorType.MAT4;
             }
         }
+
+        if (try max) {
+            foreach (value : max.array) self.max.push((float)value.f);
+        }
+
+        if (try min) {
+            foreach (value : min.array) self.min.push((float)value.f);
+        }
     }
+}
+
+
+fn void Accessor.free(&self) {
+    self.min.free();
+    self.max.free();
 }
 
 fn void! Buffer.fromJson(&self, Object* json) {
@@ -489,6 +527,11 @@ fn void! Buffer.fromJson(&self, Object* json) {
     }
 }
 
+fn void Buffer.free(&self) {
+    mem::free(self.data);
+    mem::free(self.uri);
+}
+
 fn void! Camera.fromJson(&self, Object* json) {
     String! cameraType = json.get_string("type");
     String! name = json.get_string("name");
@@ -497,7 +540,6 @@ fn void! Camera.fromJson(&self, Object* json) {
     if (try cameraType) {
         if (mem::equals(cameraType, "perspective")) {
             Object*! perspective = json.get("perspective");
-
             if (catch err = perspective) return ParseError.BROKEN_BUFFER?;
 
             float! aspectRatio = (float)perspective.get_float("aspectRatio");
@@ -506,7 +548,6 @@ fn void! Camera.fromJson(&self, Object* json) {
             float! znear = (float)perspective.get_float("znear");
 
             if (catch err = aspectRatio, yfov, zfar, znear) return ParseError.BROKEN_BUFFER?;
-
             self.perspective = {
                 aspectRatio,
                 yfov,
@@ -575,7 +616,7 @@ fn void Sampler.fromJson(&self, Object* json) {
     uint! wrapT = json.get_int("wrapt");
 
     if (try wrapS) {
-        switch(wrapS) {
+        switch (wrapS) {
             case 33071:
                 self.wrap_s = WrapMode.CLAMP_TO_EDGE;
             case 33648:
@@ -586,7 +627,7 @@ fn void Sampler.fromJson(&self, Object* json) {
     }
 
     if (try wrapT) {
-        switch(wrapT) {
+        switch (wrapT) {
             case 33071:
                 self.wrap_t = WrapMode.CLAMP_TO_EDGE;
             case 33648:
@@ -597,7 +638,7 @@ fn void Sampler.fromJson(&self, Object* json) {
     }
 
     if (try magFilter) {
-        switch(magFilter) {
+        switch (magFilter) {
             case 9728:
                 self.magFilter = MagFilter.LINEAR;
             case 9729:
@@ -606,7 +647,7 @@ fn void Sampler.fromJson(&self, Object* json) {
     }
 
     if (try minFilter) {
-        switch(minFilter) {
+        switch (minFilter) {
             case 9728:
                 self.minFilter = MinFilter.NEAREST;
             case 9729:
@@ -677,26 +718,34 @@ fn void Animation.fromJson(&self, Object* json) {
             if (try sampler) channel_data.sampler = sampler;
             if (try target) {
                 uint! node = target.get_int("node");
-                String! path = target.get_string("sampler");
+                String! path = target.get_string("path");
 
                 if (try node) channel_data.target.node = node;
                 if (try path) {
                     switch (path) {
-                        case "TRANSLATION": channel_data.target.path = Property.TRANSLATION;
-                        case "ROTATION": channel_data.target.path = Property.ROTATION;
-                        case "SCALE": channel_data.target.path = Property.SCALE;
-                        case "WEIGHTS": channel_data.target.path = Property.WEIGHTS;
+                        case "translation": channel_data.target.path = Property.TRANSLATION;
+                        case "rotation": channel_data.target.path = Property.ROTATION;
+                        case "scale": channel_data.target.path = Property.SCALE;
+                        case "weights": channel_data.target.path = Property.WEIGHTS;
                     }
                 }
             };
-
             self.channels.push(channel_data);
         }
     }
 }
 
 fn void Animation.free(&self) {
-    foreach (sampler: self.samplers) sampler.times.free();
+    self.channels.free();
+    self.samplers.free();
+    self.name.free();
+}
+
+fn void AnimationMixer.free(&self) {
+    foreach (channel: self.channels) {
+        channel.times.free();
+        channel.values.free();
+    };
     self.channels.free();
     self.samplers.free();
     self.name.free();
@@ -942,7 +991,9 @@ fn void Gltf.free(Gltf* self) {
     foreach (buffer : self.buffers) buffer.free();
     foreach (scene : self.scenes) scene.free();
     foreach (animation : self.animations) animation.free();
+    foreach (accessor : self.accessors) accessor.free();
 
+    self.accessors.free();
     self.cameras.free();
     self.accessors.free();
     self.bufferViews.free();
@@ -965,20 +1016,116 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
     return ParseError.KEY_NOT_FOUND?;
 }
 
-fn Animation! Gltf.getAnimation(Gltf* self, String name) {
-    foreach (animation : self.animations) {
-        if (animation.name == name) {
-            // Parse samplers data from buffer
-            foreach (&sampler: animation.samplers) {
-                Accessor time_accessor = self.accessors[sampler.input];
-                for (uint i; i < time_accessor.count; i++) {
-                    sampler.times.push(self.@castBuffer(time_accessor, i * time_accessor.componentSize(), float));
+fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
+    AnimationMixer mixer = animation.mixer();
+
+    foreach (&channel: mixer.channels) {
+        AnimationSampler sampler = mixer.samplers[channel.sampler];
+        Accessor time_accessor = self.accessors[sampler.input];
+
+        if (time_accessor.max.len() > 0) {
+            channel.max_time = time_accessor.max[0];
+        } else {
+            io::printfn("Animation has no max time");
+        }
+
+        // Parse animation timing values, from buffer
+        for (uint i; i < time_accessor.count; i++) {
+            channel.times.push(self.@castBuffer(time_accessor, i * time_accessor.componentSize(), float));
+        }
+
+        // Parse animation transform values, from buffer
+        Accessor value_accessor = self.accessors[sampler.output];
+
+        for (uint i; i < value_accessor.count; i++) {
+            switch (channel.target.path) {
+                case TRANSLATION: {
+                    channel.values.push(AnimationValue {
+                        .transform = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                    });
                 }
+                case SCALE: {
+                    channel.values.push(AnimationValue {
+                        .transform = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                    });
+                }
+                case ROTATION: {
+                    channel.values.push(AnimationValue {
+                        .rotation = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Quaternionf)
+                    });
+                }
+                case WEIGHTS: {}
             }
-            return animation;
         }
     }
-    return ParseError.KEY_NOT_FOUND?;
+
+    return mixer;
+}
+
+fn AnimationMixer Animation.mixer(self) {
+    AnimationMixer copy = AnimationMixer {
+        .name = self.name.copy(),
+    };
+
+    foreach (value : self.samplers) copy.samplers.push(value);
+    foreach (value : self.channels) {
+        copy.channels.push(
+            MixerChannel {
+               .channel.sampler = value.sampler,
+               .channel.target = value.target
+            }
+        );
+    };
+    return copy;
+}
+
+fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
+   double current_time = time.to_sec();
+
+   foreach (&channel: animation.channels) {
+        AnimationSampler sampler = animation.samplers[channel.sampler];
+        Node* node = &self.nodes[channel.target.node];
+        channel.time += current_time;
+        if (channel.time > channel.max_time) channel.time = 0;
+        usz time_index = 0;
+
+        for (usz i; i < channel.times.len(); i++) {
+            if (channel.time < channel.times[i]) {
+                time_index = i;
+                break;
+            };
+        }
+
+        double prev_time = channel.times[time_index - 1];
+        double next_time = channel.times[time_index];
+
+        AnimationValue prev_value = channel.values[time_index - 1];
+        AnimationValue next_value = channel.values[time_index];
+
+        switch (sampler.interpolation) {
+            case LINEAR: {
+              double interpolation_value = (channel.time - prev_time) / (next_time - prev_time);
+              switch (channel.target.path) {
+                case TRANSLATION: {
+                    node.translation = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                }
+                case ROTATION: {
+                    node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
+                }
+                case SCALE: {
+                    node.scale = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                }
+                case WEIGHTS: {
+
+                }
+              }
+            }
+            case STEP: {}
+            case CUBICSPLINE: {}
+        }
+
+        node.matrix = node.recompose();
+   }
 }
 
 fn uint Accessor.componentLen(Accessor* self) {
@@ -1068,11 +1215,6 @@ fn Matrix4f Node.recompose(Node* self) {
    |};
 
    return translation.mul(rotation).mul(scale);
-}
-
-fn void Buffer.free(Buffer* self) {
-    mem::free(self.data);
-    mem::free(self.uri);
 }
 
 macro Gltf.@castBuffer(Gltf* self, Accessor accessor, uint offset, #type) {
