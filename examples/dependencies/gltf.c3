@@ -156,6 +156,7 @@ struct Scene {
 }
 
 struct Node {
+    Node* parent;
     String name;
     int mesh;
     int camera;
@@ -171,11 +172,6 @@ struct Mesh {
     usz scene;
     PrimitiveList primitives;
     IndexList children;
-}
-
-struct TextureInfo {
-    uint index;
-    Vec2f texCoord;
 }
 
 struct Animation {
@@ -222,17 +218,25 @@ struct Skin {
 struct Material {
     String name;
     bool doubleSided;
-    float[3] emissiveFactor;
+    Vec3f emissiveFactor;
     TextureInfo normalTexture;
     TextureInfo occlusionTexture;
     struct pbrMetallicRoughness {
-        float[4] baseColorFactor;
+        Vec4f baseColorFactor;
         float metallicFactor;
         float roughnessFactor;
         TextureInfo baseColorTexture;
         TextureInfo metallicRoughnessTexture;
         TextureInfo emissiveTexture;
     }
+}
+
+
+struct TextureInfo {
+    int index;
+    int sampler;
+    int source;
+    Vec2f texCoord;
 }
 
 struct Texture {
@@ -323,7 +327,6 @@ fn void Node.fromJson(&self, Object* json) {
     Object*! matrix = json.get("matrix");
     Object*! children = json.get("children");
 
-
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
 
@@ -335,7 +338,7 @@ fn void Node.fromJson(&self, Object* json) {
     }
 
     if (try scale) {
-        self.scale = {(float)scale.get_at(0).f, (float)scale.get_at(1).f, (float)scale.get_at(2).f };
+        self.scale = {(float)scale.get_at(0).f, (float)scale.get_at(1).f, (float)scale.get_at(2).f};
     }
 
     if (try translation) {
@@ -428,7 +431,7 @@ fn void BufferView.fromJson(&self, Object* json) {
 fn void Accessor.fromJson(&self, Object* json) {
     uint! bufferView = json.get_int("bufferView");
     uint! count = json.get_int("count");
-    usz! offset = json.get_int("offset");
+    usz! offset = json.get_int("byteOffset");
     uint! stride = json.get_int("stride");
     uint! mode = json.get_int("mode");
     uint! dataType = json.get_int("componentType");
@@ -578,6 +581,10 @@ fn void Material.fromJson(&self, Object* json) {
         Object*! baseColorFactor = pbrMetallicRoughness.get("baseColorFactor");
         Object*! metallicRoughnessTexture = pbrMetallicRoughness.get("baseColorTexture");
         self.pbrMetallicRoughness.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
+        self.pbrMetallicRoughness.baseColorTexture.index = -1;
+        self.pbrMetallicRoughness.baseColorTexture.source = -1;
+        self.pbrMetallicRoughness.metallicRoughnessTexture.index = -1;
+        self.pbrMetallicRoughness.metallicRoughnessTexture.source = -1;
 
         if (try metallicFactor && try roughnessFactor) {
             self.pbrMetallicRoughness.metallicFactor = (float)metallicFactor;
@@ -585,7 +592,7 @@ fn void Material.fromJson(&self, Object* json) {
         }
 
         if (try baseColorFactor) {
-            self.pbrMetallicRoughness.baseColorFactor = float[4] {(float)baseColorFactor.get_at(0).f, (float)baseColorFactor.get_at(1).f, (float)baseColorFactor.get_at(2).f, (float)baseColorFactor.get_at(3).f};
+            self.pbrMetallicRoughness.baseColorFactor = Vec4f {(float)baseColorFactor.get_at(0).f, (float)baseColorFactor.get_at(1).f, (float)baseColorFactor.get_at(2).f, (float)baseColorFactor.get_at(3).f};
         }
 
         if (try baseColorTexture) self.pbrMetallicRoughness.baseColorTexture.fromJson(baseColorTexture);
@@ -679,7 +686,6 @@ fn void Image.fromJson(&self, Object* json) {
         }
     }
 }
-
 
 fn void Animation.fromJson(&self, Object* json) {
     String! name = json.get_string("name");
@@ -932,6 +938,21 @@ fn Gltf! parse(InStream* stream) {
             data.fromJson(texture);
             content.textures.push(data);
         }
+
+        foreach (&material : content.materials) {
+            TextureInfo baseColor = material.pbrMetallicRoughness.baseColorTexture;
+            TextureInfo roughness = material.pbrMetallicRoughness.metallicRoughnessTexture;
+
+            if (baseColor.index >= 0) {
+                material.pbrMetallicRoughness.baseColorTexture.source = content.textures[material.pbrMetallicRoughness.baseColorTexture.index].source;
+                material.pbrMetallicRoughness.baseColorTexture.sampler = content.textures[material.pbrMetallicRoughness.baseColorTexture.index].sampler;
+            }
+
+            if (roughness.index >= 0) {
+                material.pbrMetallicRoughness.metallicRoughnessTexture.source = content.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].source;
+                material.pbrMetallicRoughness.metallicRoughnessTexture.sampler = content.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].sampler;
+            }
+        }
     }
 
     // Parse meshes
@@ -978,7 +999,7 @@ fn Gltf! parse(InStream* stream) {
     // Match meshes to scenes
     foreach (scene_index, scene : content.scenes) {
          foreach (node : scene.nodes) {
-             content.nodes[node].setMeshScene(scene_index, &content);
+             content.nodes[node].mapValues(scene_index, &content);
          }
     }
 
@@ -1096,6 +1117,8 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             };
         }
 
+        if (channel.times.len() < 2) return;
+
         double prev_time = channel.times[time_index - 1];
         double next_time = channel.times[time_index];
 
@@ -1129,7 +1152,7 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
 }
 
 fn uint Accessor.componentLen(Accessor* self) {
-    switch(self.type) {
+    switch (self.type) {
         case AccessorType.SCALAR:
             return 1;
         case AccessorType.VEC2:
@@ -1152,7 +1175,7 @@ fn uint Accessor.componentSize(Accessor* self) {
 }
 
 fn uint Accessor.dataSize(Accessor* self) {
-    switch(self.data_type) {
+    switch (self.data_type) {
         case DataType.ICHAR:
             return ichar.sizeof;
         case DataType.CHAR:
@@ -1169,7 +1192,7 @@ fn uint Accessor.dataSize(Accessor* self) {
 }
 
 // Returns matrix from node transform, scale, rotation
-fn Matrix4f Node.recompose(Node* self) {
+fn Matrix4f Node.recompose(self) {
    Matrix4f translation = {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
@@ -1217,20 +1240,34 @@ fn Matrix4f Node.recompose(Node* self) {
    return translation.mul(rotation).mul(scale);
 }
 
-macro Gltf.@castBuffer(Gltf* self, Accessor accessor, uint offset, #type) {
+macro Gltf.@castBuffer(&self, Accessor accessor, uint offset, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
 
-fn void Node.setMeshScene(Node self, usz scene_index, Gltf* data) {
+fn Matrix4f Node.globalMatrix(&self) {
+    Matrix4f matrix = self.matrix;
+    Node* node = self;
+
+    while (node.parent != null) {
+        matrix = matrix.mul(node.parent.matrix);
+        node = node.parent;
+    }
+
+    return matrix;
+}
+
+fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
     if (self.hasMesh()) {
         Mesh mesh = data.meshes[self.mesh];
         mesh.scene = scene_index;
     }
+
     foreach (node_index : self.children) {
-        Node node = data.nodes[node_index];
-        node.setMeshScene(scene_index, data);
+        Node* node = &data.nodes[node_index];
+        node.parent = self;
+        node.mapValues(scene_index, data);
     }
 }
 

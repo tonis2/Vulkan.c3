@@ -35,8 +35,8 @@ fn void TextureData.free(&self, Device device)
 
 struct PushConstantData {
    Matrix4f matrix;
-   uint texture;
-   float[4] baseColor;
+   Vec4f baseColor;
+   int texture;
 }
 
 BufferInfo vertex_buffer = {
@@ -49,8 +49,7 @@ BufferInfo uniform_buffer = {
     .version = vk::BufferVersion.GLOBAL_BUFFER
 };
 
-fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Node* parent_node = null) {
-    if (parent_node != null) node.matrix = node.matrix.mul(parent_node.matrix);
+fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
@@ -68,29 +67,31 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
 
             Material material = gltf.materials[primitive["material"]!!];
-            Texture color_texture = gltf.textures[material.pbrMetallicRoughness.baseColorTexture.index];
 
             PushConstantData constant_data = {
-                .matrix = node.matrix,
-                .texture = color_texture.source,
+                .matrix = node.globalMatrix(),
+                .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            // GLTF data buffer is uploaded without stride, so we need to get the data with appropriate offsets
+
+            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
+            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
             vk::cmdBindVertexBuffers(
                 buffer,
                 0, 3,
                 &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
                 &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset}
             );
-            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_view.offset, vk::INDEX_TYPE_UINT16);
+
+            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_accessor.offset + index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
     }
 
     // Draw child nodes
-    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout, &node);
+    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout);
 }
 
 fn void! main()
@@ -140,7 +141,7 @@ fn void! main()
     eventHandler.init();
     camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
-    InstanceInfo instance = InstanceInfo {
+    InstanceInfo instance = {
         .pApplicationName = "Hello GLTF",
         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
         .pEngineName = "Super engine",
@@ -229,7 +230,7 @@ fn void! main()
     gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.view];
     gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
 
-    vertex_buffer.build(data_buffer.data, (usz)(accessor_view.offset + accessor_view.byteLength), device)!;
+    vertex_buffer.build(data_buffer.data, (usz)(last_accessor.offset + accessor_view.offset + accessor_view.byteLength), device)!;
     uniform_buffer.build(&&camera.matrix(), UniformData.sizeof, device)!;
 
     TextureData depth_texture;
@@ -304,14 +305,12 @@ fn void! main()
 
     // Create texture-images from gltf buffer
     foreach (gltf_texture : gltf_data.textures) {
-
         // Check that texture source, is not already loaded
         if (gltf_texture.source >= textures.len()) {
             Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
             TextureData texture;
 
             gltf::Image image = gltf_data.images[gltf_texture.source];
-
             gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
             gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
