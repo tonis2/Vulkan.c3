@@ -434,7 +434,7 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
     commandsOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
-  // Write easy info to build methods
+/*  // Write easy info to build methods
   [...commands, ...extensionCommands].where((element) => element.values.length > 2 && element.values[1].type != null && element.values[1].type!.contains("CreateInfo")).forEach((command) {
     String? returnType = command.values[command.values.length - 1].type?.C3Name.replaceAll("*", "");
     if (filteredCommands.contains(command.name)) return;
@@ -448,7 +448,7 @@ fn vk::$returnType! ${command.values[1].type!.C3Name.replaceAll("*", "")}.${isKH
 }\n
 """;
     buildersOutput.writeAsStringSync(code, mode: FileMode.append);
-});
+});*/
 
 // Extension bindings code
 commandsOutput.writeAsStringSync("""

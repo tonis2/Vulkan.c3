@@ -162,6 +162,7 @@ struct Node {
     int camera;
     Quaternionf rotation;
     Matrix4f matrix;
+    Matrix4f global_matrix;
     Vec3f scale;
     Vec3f translation;
     IndexList children;
@@ -332,6 +333,7 @@ fn void Node.fromJson(&self, Object* json) {
 
     if (try name) self.name = name.copy();
     if (try mesh) self.mesh = mesh;
+    if (try mesh) self.mesh = mesh;
     if (try camera) self.camera = camera;
     if (try rotation) {
         self.rotation = Quaternionf {(float)rotation.get_at(0).f, (float)rotation.get_at(1).f, (float)rotation.get_at(2).f, (float)rotation.get_at(3).f};
@@ -350,8 +352,6 @@ fn void Node.fromJson(&self, Object* json) {
 
     if (try matrix) {
         foreach (index, value: matrix.array) self.matrix.m[index] = (float)value.f;
-    } else {
-        self.matrix = self.recompose();
     }
 
     if (try children) {
@@ -1146,8 +1146,6 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             case STEP: {}
             case CUBICSPLINE: {}
         }
-
-        node.matrix = node.recompose();
    }
 }
 
@@ -1192,7 +1190,7 @@ fn uint Accessor.dataSize(Accessor* self) {
 }
 
 // Returns matrix from node transform, scale, rotation
-fn Matrix4f Node.recompose(self) {
+fn Matrix4f Node.recompose(&self) {
    Matrix4f translation = {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
@@ -1246,19 +1244,8 @@ macro Gltf.@castBuffer(&self, Accessor accessor, uint offset, #type) {
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
 
-fn Matrix4f Node.globalMatrix(&self) {
-    Matrix4f matrix = self.matrix;
-    Node* node = self;
-
-    while (node.parent != null) {
-        matrix = matrix.mul(node.parent.matrix);
-        node = node.parent;
-    }
-
-    return matrix;
-}
-
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
+
     if (self.hasMesh()) {
         Mesh mesh = data.meshes[self.mesh];
         mesh.scene = scene_index;
@@ -1269,6 +1256,20 @@ fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
         node.parent = self;
         node.mapValues(scene_index, data);
     }
+}
+
+
+fn Matrix4f Node.globalMatrix(&self) {
+    Matrix4f return_matrix = self.recompose();
+    Node* node = self;
+
+    while (node.parent != null) {
+        node = node.parent;
+        Matrix4f parent_matrix = node.recompose();
+        return_matrix = return_matrix.mul(parent_matrix);
+    }
+
+    return return_matrix;
 }
 
 fn PrimitiveMap Mesh.lastPrimitive(Mesh self) {
