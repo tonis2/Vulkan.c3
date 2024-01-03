@@ -534,7 +534,7 @@ fn void! main()
         .setSetLayouts({ descriptor_set_layout }).build(device.device)!;
 
     // Create Renderpipeline info
-    GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
+    Pipeline pipeline = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
         vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
         frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
@@ -629,16 +629,13 @@ fn void! main()
                            .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+                       .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+                       .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
     .setNext(
         &&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({ swapchain_info.imageFormat })
         .setDepthAttachmentFormat(depth_format)
         .setStencilAttachmentFormat(depth_format)
-    );
-
-    Pipeline pipeline;
-    vk::createGraphicsPipelines(device.device, null, 1, &pipeline_info, null, &pipeline)!;
+    ).build(device.device)!;
 
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
