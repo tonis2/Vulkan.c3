@@ -192,67 +192,41 @@ fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, ui
 fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, PhysicalDeviceFeatures device_features = default_device_features)
 {
     PhysicalDevice physical_device;
-    SurfaceFormatList surface_formats;
-    PresentModeList present_modes;
     QueueFamily queue_family;
     Queue graphics_queue;
-    Device logical_device;
-    SurfaceCapabilitiesKHR device_capabilities;
     bool physical_device_found = false;
 
-    DeviceList physical_devices = getPhysicalDevices(instance.instance)!;
+    DeviceList physical_devices = instance.instance.getDevices()!;
     defer physical_devices.free();
 
     // Find usable physical device (GPU)
     foreach (i, device : physical_devices)
     {
         QueueFamily queue;
-        bool supports_extensions = true;
-        SurfaceCapabilitiesKHR capabilities;
-        // Check for device extension support
-        StringList device_extensions = getDeviceExtensions(device)!;
-        defer device_extensions.free();
-        foreach (extension_name : instance.device_extensions) {
-            if (!device_extensions.contains(extension_name.str_view())) {
-                supports_extensions = false;
-            }
-        }
 
+        // Check for device extension support
+        bool supports_extensions = device.checkExtensionSupport(instance.device_extensions)!;
         QueuePropertiesList queue_properties = getQueueProperties(device)!;
+
         defer queue_properties.free();
         foreach (o, properties : queue_properties) {
-            uint presentSupport;
-
-            if ((ulong)properties.queueFlags & QUEUE_GRAPHICS_BIT != 0) {
+            if ((usz)properties.queueFlags & QUEUE_GRAPHICS_BIT != 0) {
                 queue.graphics = (uint)o;
             }
-            getPhysicalDeviceSurfaceSupportKHR(device, (uint)o, surface, &presentSupport)!;
 
-            if (presentSupport == vk::TRUE) {
+            if (surface.checkSurfaceSupport(o, device)!) {
                 queue.present = (uint)o;
             }
 
             if (queue.is_ready()) break;
         }
 
-        getPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities)!;
-        SurfaceFormatList surfaceFormats = getSurfaceFormats(device, surface)!;
-        PresentModeList presentModes = getSurfacePresentModes(device, surface)!;
-
-        defer {
-            surfaceFormats.free();
-            presentModes.free();
-        }
-
         // Good physical device found
-        if (queue.is_ready() && supports_extensions && presentModes.len() != 0 && surfaceFormats.len() != 0) {
+        if (queue.is_ready() && supports_extensions) {
             // Device is good
             physical_device = device;
-            surface_formats.add_all(&surfaceFormats);
-            present_modes.add_all(&presentModes);
-            physical_device_found = true;
             queue_family = queue;
-            device_capabilities = capabilities;
+            physical_device_found = true;
         }
     }
 
@@ -261,50 +235,30 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
         return ContextErrors.FAILED_GETTING_DEVICE?;
     }
 
-    float queuePriorities = 1.0;
-    DeviceQueueCreateInfo graphicsInfo = {
-        .sType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-        .queueFamilyIndex = queue_family.graphics,
-        .queueCount = 1,
-        .pQueuePriorities = &queuePriorities
-    };
+    DeviceQueueCreateInfo graphicsInfo = deviceQueueCreateInfoBuilder()
+    .setQueueFamilyIndex(queue_family.graphics)
+    .setQueuePriorities({1.0});
 
-    DeviceCreateInfo deviceCreateInfo = {
-        .sType = STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-        .pQueueCreateInfos = &graphicsInfo,
-        .queueCreateInfoCount = 1,
-        .pEnabledFeatures = &device_features,
-        .enabledExtensionCount = (uint)instance.device_extensions.len(),
-        .ppEnabledExtensionNames = (char*)instance.device_extensions.entries,
-        .enabledLayerCount = 0,
-        .pNext = null,
-        .flags = 0,
-    };
+    Device logical_device = deviceCreateInfoBuilder()
+        .setQueueCreateInfos({graphicsInfo})
+        .setEnabledFeatures(&device_features)
+        .setEnabledExtensionNames(instance.device_extensions.array_view())
+        .setEnabledLayerCount(0)
+        .setNext(&&PhysicalDeviceDynamicRenderingFeatures{
+           .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+           .dynamicRendering = vk::TRUE,
+     }).build(physical_device)!;
 
-     // Deprecated ?
-    if (instance.enable_debug) {
-        deviceCreateInfo.enabledLayerCount = (uint)instance.validations.len();
-        deviceCreateInfo.ppEnabledLayerNames = (char*)instance.validations.entries;
-    }
-
-    if (instance.dynamic_rendering) {
-        deviceCreateInfo.pNext = &&PhysicalDeviceDynamicRenderingFeatures{
-          .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-          .dynamicRendering = vk::TRUE,
-        };
-    }
-
-    vk::createDevice(physical_device, &deviceCreateInfo, null, &logical_device)!;
     vk::getDeviceQueue(logical_device, queue_family.graphics, 0, &graphics_queue);
 
     return DeviceInfo {
         .device = logical_device,
         .physical_device = physical_device,
         .graphics_queue = graphics_queue,
-        .surface_formats = surface_formats,
-        .present_modes = present_modes,
+        .surface_formats = surface.getFormats(physical_device)!,
+        .present_modes = surface.getPresentModes(physical_device)!,
         .queue_family = queue_family,
-        .capabilities = device_capabilities
+        .capabilities = surface.deviceSurfaceCapabilities(physical_device)!
     };
 }
 
@@ -366,6 +320,93 @@ macro void! DeviceInfo.@single_time_buffer(self; @body(CommandBuffer buffer))
 }
 
 
+fn bool! SurfaceKHR.checkSurfaceSupport(self, usz index, PhysicalDevice device) {
+      uint response;
+      getPhysicalDeviceSurfaceSupportKHR(device, (uint)index, self, &response)!;
+      return response > 0;
+}
+
+fn SurfaceFormatList! SurfaceKHR.getFormats(self, PhysicalDevice device) {
+    uint format_count;
+    SurfaceFormatList formatList;
+    getPhysicalDeviceSurfaceFormatsKHR(device, self, &format_count, null)!;
+
+    SurfaceFormatKHR* formats = mem::new_array(SurfaceFormatKHR, format_count);
+    defer mem::free(formats);
+    getPhysicalDeviceSurfaceFormatsKHR(device, self, &format_count, formats)!;
+
+    for (uint i = 0; i < format_count; ++i) {
+      formatList.push(formats[i]);
+    };
+    return formatList;
+}
+
+fn SurfaceCapabilitiesKHR! SurfaceKHR.deviceSurfaceCapabilities(self, PhysicalDevice device) {
+    SurfaceCapabilitiesKHR response;
+    getPhysicalDeviceSurfaceCapabilitiesKHR(device, self, &response)!;
+    return response;
+}
+
+fn PresentModeList! SurfaceKHR.getPresentModes(self, PhysicalDevice device) {
+    uint present_count;
+    PresentModeList presentList;
+    getPhysicalDeviceSurfacePresentModesKHR(device, self, &present_count, null)!;
+
+    PresentModeKHR* presents = mem::new_array(PresentModeKHR, present_count);
+    defer mem::free(presents);
+    getPhysicalDeviceSurfacePresentModesKHR(device, self, &present_count, presents)!;
+
+    for (uint i = 0; i < present_count; ++i) {
+        presentList.push(presents[i]);
+    };
+    return presentList;
+}
+
+fn DeviceList! Instance.getDevices(self) {
+    uint deviceCount;
+    DeviceList deviceList;
+    vk::enumeratePhysicalDevices(self, &deviceCount, null)!;
+
+    PhysicalDevice* devices = mem::new_array(PhysicalDevice, deviceCount);
+    defer mem::free(devices);
+
+    vk::enumeratePhysicalDevices(self, &deviceCount, devices)!;
+    for (uint i = 0; i < deviceCount; ++i) deviceList.push(devices[i]);
+    return deviceList;
+}
+
+fn StringList! PhysicalDevice.getExtensions(self) {
+    uint extensionCount;
+    StringList extensionList;
+    vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, null)!;
+
+    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
+    defer mem::free(layers);
+
+    vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, layers)!;
+    for (uint i = 0; i < extensionCount; ++i) {
+        ZString name = (ZString)&layers[i].extensionName;
+        extensionList.push(name.str_view());
+    };
+    return extensionList;
+}
+
+
+fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
+    bool supports = true;
+    StringList device_extensions = self.getExtensions()!;
+    defer device_extensions.free();
+
+    foreach (extension_name : extensions) {
+        if (!device_extensions.contains(extension_name.str_view())) {
+            supports = false;
+            io::printfn("extension not supported %s", extension_name.str_view());
+        }
+    }
+
+    return supports;
+}
+
 fn StringList! getInstanceExtensions() {
     uint extensionCount;
     StringList extensionList;
@@ -382,7 +423,7 @@ fn StringList! getInstanceExtensions() {
 }
 
 
-fn StringList! getDeviceExtensions(PhysicalDevice device) {
+/*fn StringList! getDeviceExtensions(PhysicalDevice device) {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
@@ -396,9 +437,9 @@ fn StringList! getDeviceExtensions(PhysicalDevice device) {
         extensionList.push(name.str_view());
     };
     return extensionList;
-}
+}*/
 
-fn DeviceList! getPhysicalDevices(Instance instance) {
+/*fn DeviceList! getPhysicalDevices(Instance instance) {
     uint deviceCount;
     DeviceList deviceList;
     vk::enumeratePhysicalDevices(instance, &deviceCount, null)!;
@@ -409,7 +450,7 @@ fn DeviceList! getPhysicalDevices(Instance instance) {
     vk::enumeratePhysicalDevices(instance, &deviceCount, devices)!;
     for (uint i = 0; i < deviceCount; ++i) deviceList.push(devices[i]);
     return deviceList;
-}
+}*/
 
 fn StringList! getValidationLayers() {
     uint layerCount;
@@ -442,7 +483,7 @@ fn QueuePropertiesList! getQueueProperties(PhysicalDevice device) {
     return propertiesList;
 }
 
-fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surface) {
+/*fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surface) {
     uint format_count;
     SurfaceFormatList formatList;
     getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null)!;
@@ -455,9 +496,9 @@ fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surfac
         formatList.push(formats[i]);
     };
     return formatList;
-}
+}*/
 
-fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR surface) {
+/*fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR surface) {
     uint present_count;
     PresentModeList presentList;
     getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null)!;
@@ -470,8 +511,7 @@ fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR sur
         presentList.push(presents[i]);
     };
     return presentList;
-}
-
+}*/
 
 fn bool debugCallback(
     vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

@@ -1,11 +1,5 @@
 module vk;
 
-fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCallbacks* allocator = null) {
-  vk::Device response;
-  createDevice(device, self, allocator, &response)!;
-  return response;
-}
-
 fn vk::Fence! FenceCreateInfo.build(&self, Device device, AllocationCallbacks* allocator = null) {
   vk::Fence response;
   createFence(device, self, allocator, &response)!;
@@ -173,6 +167,18 @@ fn vk::Pipeline! GraphicsPipelineCreateInfo.build(&self, Device device, Pipeline
   createGraphicsPipelines(device, pipelineCache, count, self, allocator, &response)!;
   return response;
 }
+
+fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCallbacks* allocator = null) {
+    vk::Device response;
+    vk::createDevice(device, self, allocator, &response)!;
+    return response;
+}
+
+/*fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCallbacks* allocator = null) {
+  vk::Device response;
+  createDevice(device, self, allocator, &response)!;
+  return response;
+}*/
 
 
 
