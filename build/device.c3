@@ -196,39 +196,29 @@ fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, Physical
     Queue graphics_queue;
     bool physical_device_found = false;
 
-    DeviceList physical_devices = instance.instance.getDevices()!;
-    defer physical_devices.free();
+    @pool() {
+        // Find usable physical device (GPU)
+        foreach (i, device : instance.instance.getDevices()!)
+        {
+            QueueFamily queue;
 
-    // Find usable physical device (GPU)
-    foreach (i, device : physical_devices)
-    {
-        QueueFamily queue;
+            // Check for device extension support
+            bool supports_extensions = device.checkExtensionSupport(instance.device_extensions)!;
+            QueuePropertiesList queue_properties = getQueueProperties(device)!;
 
-        // Check for device extension support
-        bool supports_extensions = device.checkExtensionSupport(instance.device_extensions)!;
-        QueuePropertiesList queue_properties = getQueueProperties(device)!;
+            queue.graphics = queue_properties.find(fn (usz index, Flags flags) => (usz)flags & QUEUE_GRAPHICS_BIT != 0);
+            queue.present = queue_properties.find(fn (usz index, Flags flags) => (usz)flags & QUEUE_GRAPHICS_BIT != 0);
 
-        defer queue_properties.free();
-        foreach (o, properties : queue_properties) {
-            if ((usz)properties.queueFlags & QUEUE_GRAPHICS_BIT != 0) {
-                queue.graphics = (uint)o;
+            // Good physical device found
+            if (queue.is_ready() && supports_extensions) {
+                // Device is good
+                physical_device = device;
+                queue_family = queue;
+                physical_device_found = true;
             }
-
-            if (surface.checkSurfaceSupport(o, device)!) {
-                queue.present = (uint)o;
-            }
-
-            if (queue.is_ready()) break;
         }
+    };
 
-        // Good physical device found
-        if (queue.is_ready() && supports_extensions) {
-            // Device is good
-            physical_device = device;
-            queue_family = queue;
-            physical_device_found = true;
-        }
-    }
 
     if (!physical_device_found) {
         io::printfn("Fitting physical device not found");
@@ -379,7 +369,6 @@ fn StringList! PhysicalDevice.getExtensions(self) {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, null)!;
-
     ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
     defer mem::free(layers);
 
@@ -403,7 +392,6 @@ fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
             io::printfn("extension not supported %s", extension_name.str_view());
         }
     }
-
     return supports;
 }
 
@@ -421,36 +409,6 @@ fn StringList! getInstanceExtensions() {
     };
     return extensionList;
 }
-
-
-/*fn StringList! getDeviceExtensions(PhysicalDevice device) {
-    uint extensionCount;
-    StringList extensionList;
-    vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
-
-    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
-    defer mem::free(layers);
-
-    vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
-    for (uint i = 0; i < extensionCount; ++i) {
-        ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view());
-    };
-    return extensionList;
-}*/
-
-/*fn DeviceList! getPhysicalDevices(Instance instance) {
-    uint deviceCount;
-    DeviceList deviceList;
-    vk::enumeratePhysicalDevices(instance, &deviceCount, null)!;
-
-    PhysicalDevice* devices = mem::new_array(PhysicalDevice, deviceCount);
-    defer mem::free(devices);
-
-    vk::enumeratePhysicalDevices(instance, &deviceCount, devices)!;
-    for (uint i = 0; i < deviceCount; ++i) deviceList.push(devices[i]);
-    return deviceList;
-}*/
 
 fn StringList! getValidationLayers() {
     uint layerCount;
@@ -483,35 +441,28 @@ fn QueuePropertiesList! getQueueProperties(PhysicalDevice device) {
     return propertiesList;
 }
 
-/*fn SurfaceFormatList! getSurfaceFormats(PhysicalDevice device, SurfaceKHR surface) {
-    uint format_count;
-    SurfaceFormatList formatList;
-    getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, null)!;
-
-    SurfaceFormatKHR* formats = mem::new_array(SurfaceFormatKHR, format_count);
-    defer mem::free(formats);
-    getPhysicalDeviceSurfaceFormatsKHR(device, surface, &format_count, formats)!;
-
-    for (uint i = 0; i < format_count; ++i) {
-        formatList.push(formats[i]);
-    };
-    return formatList;
+/*macro QueuePropertiesList.@find(&self; @body(usz index, Flags flags)) {
+    int response = -1;
+    foreach (index, properties : self) {
+        if (@body(index, properties.queueFlags)) {
+            response = (int)index;
+        }
+    }
+    return response;
 }*/
 
-/*fn PresentModeList! getSurfacePresentModes(PhysicalDevice device, SurfaceKHR surface) {
-    uint present_count;
-    PresentModeList presentList;
-    getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, null)!;
+def CompareFN = fn bool (usz index, Flags flags);
+fn int QueuePropertiesList.find(self, CompareFN callback)
+{
+    int response = -1;
+    foreach (index, properties : self) {
+        if (callback(index, properties.queueFlags)) {
+            response = (int)index;
+        }
+    }
+    return response;
+}
 
-    PresentModeKHR* presents = mem::new_array(PresentModeKHR, present_count);
-    defer mem::free(presents);
-    getPhysicalDeviceSurfacePresentModesKHR(device, surface, &present_count, presents)!;
-
-    for (uint i = 0; i < present_count; ++i) {
-        presentList.push(presents[i]);
-    };
-    return presentList;
-}*/
 
 fn bool debugCallback(
     vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
