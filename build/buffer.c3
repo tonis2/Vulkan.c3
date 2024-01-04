@@ -28,23 +28,29 @@ fn void BufferInfo.free(&self, Device device)
     freeMemory(device, self.memory, null);
 }
 
-fn MemoryAllocateInfo Buffer.getMemoryInfo(self, MemoryPropertyFlags properties, DeviceInfo context) {
+fn MemoryAllocateInfo Buffer.getMemoryInfo(self, MemoryPropertyFlags properties, Device device, PhysicalDevice pdevice) {
     PhysicalDeviceMemoryProperties mem_props;
     MemoryRequirements mem_reqs;
-    getBufferMemoryRequirements(context.device, self, &mem_reqs);
-    getPhysicalDeviceMemoryProperties(context.physical_device, &mem_props);
+    getBufferMemoryRequirements(device, self, &mem_reqs);
+    getPhysicalDeviceMemoryProperties(pdevice, &mem_props);
 
-    uint memory_type = getMemoryType(mem_reqs.memoryTypeBits, properties, context);
+    uint memory_type = getMemoryType(mem_reqs.memoryTypeBits, properties, pdevice);
 
     return memoryAllocateInfoBuilder()
     .setAllocationSize(mem_reqs.size)
     .setMemoryTypeIndex(memory_type);
 }
 
+fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
+    DeviceMemory memory;
+    allocateMemory(device, self, null, &memory)!;
+    return memory;
+}
 
-fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, DeviceInfo context) {
+
+fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, PhysicalDevice pdevice) {
     vk::PhysicalDeviceMemoryProperties memProperties;
-    vk::getPhysicalDeviceMemoryProperties(context.physical_device, &memProperties);
+    vk::getPhysicalDeviceMemoryProperties(pdevice, &memProperties);
 
     for (int i = 0; i < memProperties.memoryTypeCount; ++i) {
         if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
@@ -55,10 +61,10 @@ fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, DeviceInf
     return 0;
 }
 
-
-fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo context) {
+fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, Device device, PhysicalDevice pdevice, QueueFamily queue) {
     self.size = size;
-   if (self.version == BufferVersion.DEVICE_BUFFER) {
+
+    if (self.version == BufferVersion.DEVICE_BUFFER) {
      BufferCreateInfo staging_info = {
           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
           .pNext = null,
@@ -70,12 +76,12 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo contex
           .pQueueFamilyIndices = null,
        };
 
-       BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_COHERENT_BIT, context)!;
-       defer staging_buffer.free(context.device);
+       BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_COHERENT_BIT, device, pdevice)!;
+       defer staging_buffer.free(device);
 
-       vk::mapMemory(context.device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
+       vk::mapMemory(device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
        mem::copy(self.mapped, data, self.size);
-       vk::unmapMemory(context.device, staging_buffer.memory);
+       vk::unmapMemory(device, staging_buffer.memory);
 
        BufferCreateInfo buffer_info = {
           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -88,9 +94,9 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo contex
           .pQueueFamilyIndices = null,
        };
 
-       BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_DEVICE_LOCAL_BIT, context)!;
+       BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_DEVICE_LOCAL_BIT, device, pdevice)!;
 
-       context.@single_time_buffer(;CommandBuffer command_buffer) {
+       device.@single_time_buffer(queue; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
                .dstOffset = 0,
@@ -101,7 +107,7 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo contex
 
        self.buffer = buffer.buffer;
        self.memory = buffer.memory;
-   }
+    }
 
    if (self.version == BufferVersion.GLOBAL_BUFFER) {
         BufferCreateInfo buffer_info = {
@@ -115,8 +121,8 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo contex
            .pQueueFamilyIndices = null,
         };
 
-        BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_HOST_COHERENT_BIT | MEMORY_PROPERTY_HOST_VISIBLE_BIT, context)!;
-        vk::mapMemory(context.device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
+        BufferInfo buffer = initBuffer(buffer_info, MEMORY_PROPERTY_HOST_COHERENT_BIT | MEMORY_PROPERTY_HOST_VISIBLE_BIT, device, pdevice)!;
+        vk::mapMemory(device, buffer.memory, 0, buffer_info.size, 0, &self.mapped)!;
         mem::copy(self.mapped, data, self.size);
 
         self.buffer = buffer.buffer;
@@ -126,15 +132,12 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, DeviceInfo contex
    return *self;
 }
 
-fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties, DeviceInfo context) {
+fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties, Device device, PhysicalDevice pdevice) {
     Buffer buffer;
-    DeviceMemory memory;
+    createBuffer(device, &info, null, &buffer)!;
 
-    createBuffer(context.device, &info, null, &buffer)!;
-    MemoryAllocateInfo alloc_info = buffer.getMemoryInfo(properties, context);
-
-    allocateMemory(context.device, &alloc_info, null, &memory)!;
-    bindBufferMemory(context.device, buffer, memory, 0)!;
+    DeviceMemory memory = buffer.getMemoryInfo(properties, device, pdevice).build(device)!;
+    bindBufferMemory(device, buffer, memory, 0)!;
 
     return BufferInfo {
         .buffer = buffer,

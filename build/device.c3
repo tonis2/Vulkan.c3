@@ -2,9 +2,10 @@ module vk;
 import std::io;
 import std::math;
 import std::core::env;
-import libc;
 import std::collections::list;
 
+def FenceList = List(<vk::Fence>);
+def SemaphoreList = List(<vk::Semaphore>);
 def StringList = List(<String>);
 def ZStringList = List(<ZString>);
 def DeviceList = List(<PhysicalDevice>);
@@ -14,7 +15,6 @@ def PresentModeList = List(<PresentModeKHR>);
 def CommandBufferList = List(<CommandBuffer>);
 def ImageList = List(<vk::Image>);
 def ImageViewList = List(<vk::ImageView>);
-
 
 fault ContextErrors
 {
@@ -27,6 +27,9 @@ struct QueueFamily {
     int graphics;
     int present;
     int compute;
+    vk::Queue graphics_handle;
+    vk::Queue present_handle;
+    vk::Queue compute_handle;
 }
 
 fn bool QueueFamily.is_ready(&self)
@@ -34,87 +37,14 @@ fn bool QueueFamily.is_ready(&self)
     return self.graphics >= 0 && self.present >= 0;
 }
 
-struct InstanceInfo {
-    void* pNext;
-    String pApplicationName;
-    uint applicationVersion;
-    String pEngineName;
-    uint engineVersion;
-    uint apiVersion;
-    bool enable_debug;
-    bool dynamic_rendering;
-    ZStringList validations;
-    ZStringList extensions;
-    ZStringList device_extensions;
-    InstanceCreateFlags instance_flags;
-    Instance instance;
-    DebugUtilsMessengerEXT debug_messenger;
+
+fn void Instance.free(self)
+{
+    vk::destroyInstance(self, null);
 }
 
-fn void InstanceInfo.free(&self)
-{
-    self.validations.free();
-    self.extensions.free();
-    self.device_extensions.free();
-    if (self.enable_debug) {
-        vk::destroyDebugUtilsMessengerEXT(self.instance, self.debug_messenger, null);
-    }
-    vk::destroyInstance(self.instance, null);
-}
-
-fn InstanceInfo! InstanceInfo.init(&self, DebugUtilsMessengerCreateInfoEXT debug_info = default_debug_info)
-{
-        Instance instance;
-        InstanceCreateInfo createInfo = {
-        .sType = vk::STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .pApplicationInfo = &&ApplicationInfo {
-            .pApplicationName = self.pApplicationName,
-            .applicationVersion = self.applicationVersion,
-            .pEngineName = self.pEngineName,
-            .engineVersion = self.engineVersion,
-            .apiVersion = self.apiVersion
-        },
-        .flags = self.instance_flags,
-        .enabledExtensionCount = (uint)self.extensions.len(),
-        .ppEnabledExtensionNames = (char*)self.extensions.entries,
-    };
-
-    StringList extensions = getInstanceExtensions()!;
-    defer extensions.free();
-
-    // Check for instance extension support
-    foreach (i, value : self.extensions)
-    {
-        if (!extensions.contains(value.str_view())) {
-            io::printfn("Extension not supported %s", value.str_view());
-            return ContextErrors.EXTENSION_NOT_SUPPORTED?;
-        }
-    }
-
-    if (self.enable_debug) {
-        StringList validations = getValidationLayers()!;
-        defer validations.free();
-        // Check for validation support
-        foreach (i, value : self.validations)
-        {
-            if (!validations.contains(value.str_view())) {
-                io::printfn("Validation layer not supported %s", value.str_view());
-                return ContextErrors.EXTENSION_NOT_SUPPORTED?;
-            }
-        }
-        createInfo.enabledLayerCount = (uint)self.validations.len();
-        createInfo.ppEnabledLayerNames = (char*)self.validations.entries;
-        createInfo.pNext = &debug_info;
-    }
-
-    vk::createInstance(&createInfo, null, &self.instance)!;
-    loadExtensions(self.instance);
-
-    if (self.enable_debug) {
-        self.debug_messenger = default_debug_info.build(self.instance)!;
-    }
-
-    return *self;
+fn void DebugUtilsMessengerEXT.free(self, Instance instance) {
+    vk::destroyDebugUtilsMessengerEXT(instance, self, null);
 }
 
 struct DeviceInfo {
@@ -127,11 +57,10 @@ struct DeviceInfo {
     SurfaceCapabilitiesKHR capabilities;
 }
 
-
-fn ShaderModule! DeviceInfo.createShaderModule(self, char[] data)
+fn ShaderModule! Device.createShaderModule(self, char[] data)
 {
     ShaderModule shader;
-    createShaderModule(self.device, &&ShaderModuleCreateInfo{
+    createShaderModule(self, &&ShaderModuleCreateInfo{
        .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
        .pNext = null,
        .flags = 0,
@@ -154,23 +83,23 @@ fn PipelineShaderStageCreateInfo ShaderModule.info(self, ShaderStageFlagBits sta
     };
 }
 
-fn CommandPool! DeviceInfo.createCommandPool(self, CommandPoolCreateInfo* info = null)
+fn CommandPool! Device.createCommandPool(self, CommandPoolCreateInfo* info = null, uint queue)
 {
     if (info == null) {
         info = &&CommandPoolCreateInfo{
             .sType = vk::STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             .pNext = null,
             .flags = vk::COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-            .queueFamilyIndex = self.queue_family.graphics,
+            .queueFamilyIndex = queue,
         };
     }
 
    CommandPool pool;
-   createCommandPool(self.device, info, null, &pool)!;
+   createCommandPool(self, info, null, &pool)!;
    return pool;
 }
 
-fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
+fn CommandBufferList! Device.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
 {
     CommandBufferList buffers;
     CommandBuffer* command_buffers = mem::new_array(CommandBuffer, count);
@@ -181,7 +110,7 @@ fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, ui
         .commandBufferCount = count,
     };
 
-    allocateCommandBuffers(self.device, &command_buffer_info, command_buffers)!;
+    allocateCommandBuffers(self, &command_buffer_info, command_buffers)!;
     for (int i = 0; i < count; ++i) {
         buffers.push(command_buffers[i]);
     }
@@ -189,67 +118,11 @@ fn CommandBufferList! DeviceInfo.createCommandBuffers(self, CommandPool pool, ui
     return buffers;
 }
 
-fn DeviceInfo! requestDevice(InstanceInfo instance, SurfaceKHR surface, PhysicalDeviceFeatures device_features = default_device_features)
-{
-    PhysicalDevice physical_device;
-    QueueFamily queue_family;
-    Queue graphics_queue;
-    bool physical_device_found = false;
-
-    @pool() {
-        // Find usable physical device (GPU)
-        foreach (i, device : instance.instance.getDevices()!)
-        {
-            QueueFamily queue;
-
-            // Check for device extension support
-            bool supports_extensions = device.checkExtensionSupport(instance.device_extensions)!;
-            QueuePropertiesList queue_properties = getQueueProperties(device)!;
-
-            queue.graphics = queue_properties.find(fn (usz index, Flags flags) => (usz)flags & QUEUE_GRAPHICS_BIT != 0);
-            queue.present = queue_properties.find(fn (usz index, Flags flags) => (usz)flags & QUEUE_GRAPHICS_BIT != 0);
-
-            // Good physical device found
-            if (queue.is_ready() && supports_extensions) {
-                // Device is good
-                physical_device = device;
-                queue_family = queue;
-                physical_device_found = true;
-            }
-        }
-    };
-
-
-    if (!physical_device_found) {
-        io::printfn("Fitting physical device not found");
-        return ContextErrors.FAILED_GETTING_DEVICE?;
-    }
-
-    DeviceQueueCreateInfo graphicsInfo = deviceQueueCreateInfoBuilder()
-    .setQueueFamilyIndex(queue_family.graphics)
-    .setQueuePriorities({1.0});
-
-    Device logical_device = deviceCreateInfoBuilder()
-        .setQueueCreateInfos({graphicsInfo})
-        .setEnabledFeatures(&device_features)
-        .setEnabledExtensionNames(instance.device_extensions.array_view())
-        .setEnabledLayerCount(0)
-        .setNext(&&PhysicalDeviceDynamicRenderingFeatures{
-           .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-           .dynamicRendering = vk::TRUE,
-     }).build(physical_device)!;
-
-    vk::getDeviceQueue(logical_device, queue_family.graphics, 0, &graphics_queue);
-
-    return DeviceInfo {
-        .device = logical_device,
-        .physical_device = physical_device,
-        .graphics_queue = graphics_queue,
-        .surface_formats = surface.getFormats(physical_device)!,
-        .present_modes = surface.getPresentModes(physical_device)!,
-        .queue_family = queue_family,
-        .capabilities = surface.deviceSurfaceCapabilities(physical_device)!
-    };
+macro void! Instance.@requestDevice(self; @callback(PhysicalDevice device)) {
+   @pool() {
+       // Find usable physical device (GPU)
+       foreach ( device : self.getDevices()!) @callback(device);
+   };
 }
 
 /*fn Extent2D DeviceInfo.getExtent(self) {
@@ -271,15 +144,21 @@ fn void Device.waitIdle(self) {
  }
 }
 
-macro void! DeviceInfo.@single_time_buffer(self; @body(CommandBuffer buffer))
+fn vk::Queue Device.getQueue(self, uint index) {
+    Queue response;
+    getDeviceQueue(self, index, 0, &response);
+    return response;
+}
+
+macro void! Device.@single_time_buffer(self, QueueFamily queue; @body(CommandBuffer buffer))
 {
     CommandPool command_pool;
     CommandPoolCreateInfo pool_info = {
         .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = null,
-        .queueFamilyIndex = self.queue_family.graphics,
+        .queueFamilyIndex = queue.graphics,
     };
-    createCommandPool(self.device, &pool_info, null, &command_pool)!;
+    createCommandPool(self, &pool_info, null, &command_pool)!;
     CommandBufferAllocateInfo alloc_info = {
         .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .pNext = null,
@@ -288,7 +167,7 @@ macro void! DeviceInfo.@single_time_buffer(self; @body(CommandBuffer buffer))
         .commandBufferCount = 1,
     };
     CommandBuffer command_buffer;
-    allocateCommandBuffers(self.device, &alloc_info, &command_buffer)!;
+    allocateCommandBuffers(self, &alloc_info, &command_buffer)!;
     CommandBufferBeginInfo beginInfo = {
         .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
         .flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
@@ -303,10 +182,10 @@ macro void! DeviceInfo.@single_time_buffer(self; @body(CommandBuffer buffer))
         .commandBufferCount = 1,
         .pCommandBuffers = &command_buffer
     };
-    queueSubmit(self.graphics_queue, 1, &submitInfo, null)!;
-    queueWaitIdle(self.graphics_queue)!;
-    freeCommandBuffers(self.device, command_pool, 1, &command_buffer);
-    destroyCommandPool(self.device, command_pool, null);
+    queueSubmit(queue.graphics_handle, 1, &submitInfo, null)!;
+    queueWaitIdle(queue.graphics_handle)!;
+    freeCommandBuffers(self, command_pool, 1, &command_buffer);
+    destroyCommandPool(self, command_pool, null);
 }
 
 
@@ -380,7 +259,6 @@ fn StringList! PhysicalDevice.getExtensions(self) {
     return extensionList;
 }
 
-
 fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
     bool supports = true;
     StringList device_extensions = self.getExtensions()!;
@@ -393,6 +271,46 @@ fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
         }
     }
     return supports;
+}
+
+fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
+    uint queueCount;
+    QueuePropertiesList propertiesList;
+    getPhysicalDeviceQueueFamilyProperties(self, &queueCount, null);
+
+    QueueFamilyProperties* properties = mem::new_array(QueueFamilyProperties, queueCount);
+    defer mem::free(properties);
+    getPhysicalDeviceQueueFamilyProperties(self, &queueCount, properties);
+
+    for (uint i = 0; i < queueCount; ++i) {
+        propertiesList.push(properties[i]);
+    };
+    return propertiesList;
+}
+
+fn void! checkExtensionSupport(ZStringList requested_extensions) {
+   StringList extensions = getInstanceExtensions()!;
+   defer extensions.free();
+   foreach (i, value : requested_extensions)
+   {
+       if (!extensions.contains(value.str_view())) {
+           io::printfn("Extension not supported %s", value.str_view());
+           return ContextErrors.EXTENSION_NOT_SUPPORTED?;
+       }
+   }
+}
+
+// Check for validation support
+fn void! checkValidationLayersSupport(ZStringList requested_validations) {
+    StringList validations = getValidationLayers()!;
+    defer validations.free();
+    foreach (value : requested_validations)
+    {
+      if (!validations.contains(value.str_view())) {
+          io::printfn("Validation layer not supported %s", value.str_view());
+          return ContextErrors.EXTENSION_NOT_SUPPORTED?;
+      }
+    }
 }
 
 fn StringList! getInstanceExtensions() {
@@ -426,60 +344,16 @@ fn StringList! getValidationLayers() {
     return layersList;
 }
 
-fn QueuePropertiesList! getQueueProperties(PhysicalDevice device) {
-    uint queueCount;
-    QueuePropertiesList propertiesList;
-    getPhysicalDeviceQueueFamilyProperties(device, &queueCount, null);
-
-    QueueFamilyProperties* properties = mem::new_array(QueueFamilyProperties, queueCount);
-    defer mem::free(properties);
-    getPhysicalDeviceQueueFamilyProperties(device, &queueCount, properties);
-
-    for (uint i = 0; i < queueCount; ++i) {
-        propertiesList.push(properties[i]);
-    };
-    return propertiesList;
-}
-
-/*macro QueuePropertiesList.@find(&self; @body(usz index, Flags flags)) {
-    int response = -1;
-    foreach (index, properties : self) {
-        if (@body(index, properties.queueFlags)) {
-            response = (int)index;
-        }
-    }
-    return response;
-}*/
-
-def CompareFN = fn bool (usz index, Flags flags);
+def CompareFN = fn bool (usz index, QueueFamilyProperties flags);
 fn int QueuePropertiesList.find(self, CompareFN callback)
 {
     int response = -1;
     foreach (index, properties : self) {
-        if (callback(index, properties.queueFlags)) {
+        if (callback(index, properties)) {
             response = (int)index;
         }
     }
     return response;
-}
-
-
-fn bool debugCallback(
-    vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    vk::DebugUtilsMessageTypeFlagsEXT messageType,
-    vk::DebugUtilsMessengerCallbackDataEXT* data,
-    void* userData
-) @private {
-    if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
-    }
-    return false;
 }
 
 fn vk::MemoryRequirements Image.getMemoryRequirements(self, Device device) {
@@ -505,11 +379,9 @@ fn uint SwapchainKHR.getNextImage(self, Device device, Semaphore wait_semaphore)
     return index;
 }
 
-fn void DeviceInfo.free(self)
+fn void Device.free(self)
 {
-    self.surface_formats.free();
-    self.present_modes.free();
-    vk::destroyDevice(self.device, null);
+    vk::destroyDevice(self, null);
 }
 
 fn void CommandPool.free(self, Device device)

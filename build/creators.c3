@@ -174,11 +174,4 @@ fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCa
     return response;
 }
 
-/*fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCallbacks* allocator = null) {
-  vk::Device response;
-  createDevice(device, self, allocator, &response)!;
-  return response;
-}*/
-
-
 

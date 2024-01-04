@@ -1,8 +1,6 @@
 module vk;
 import std::collections::list;
-
-def FenceList = List(<vk::Fence>);
-def SemaphoreList = List(<vk::Semaphore>);
+import libc;
 
 PhysicalDeviceFeatures default_device_features = {
     .robustBufferAccess = 0,
@@ -62,15 +60,23 @@ PhysicalDeviceFeatures default_device_features = {
     .inheritedQueries = 0,
 };
 
-DebugUtilsMessengerCreateInfoEXT default_debug_info =  {
-     .sType = vk::STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-     .flags = 0,
-     .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-     .messageType = vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-     .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback,
-     .pUserData = null,
-};
-
+fn bool debugCallback(
+    vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    vk::DebugUtilsMessageTypeFlagsEXT messageType,
+    vk::DebugUtilsMessengerCallbackDataEXT* data,
+    void* userData
+) {
+    if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    }
+    return false;
+}
 
 
 
