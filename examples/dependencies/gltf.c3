@@ -1014,7 +1014,6 @@ fn void Gltf.free(Gltf* self) {
     foreach (animation : self.animations) animation.free();
     foreach (accessor : self.accessors) accessor.free();
 
-    self.accessors.free();
     self.cameras.free();
     self.accessors.free();
     self.bufferViews.free();
