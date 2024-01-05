@@ -93,7 +93,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera::Camera camera = camera::new(.eye = {0.0, 5.0, 10}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -246,7 +246,7 @@ fn void! main()
 
     BufferInfo vertex_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_BUFFER
+        .version = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT
     }.build(
         .data = vertex_data,
         .size = Vertex.sizeof * vertex_data.len,
@@ -257,7 +257,7 @@ fn void! main()
 
     BufferInfo index_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-        .version = vk::BufferVersion.DEVICE_BUFFER
+        .version = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT
     }.build(
         .data = index_data,
         .size = index_data.len * float.sizeof,
@@ -268,7 +268,7 @@ fn void! main()
 
     BufferInfo uniform_buffer = BufferInfo {
         .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::BufferVersion.GLOBAL_BUFFER
+        .version = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT
     }
     .build(
         .data = &&camera.matrix(),

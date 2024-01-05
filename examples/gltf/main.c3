@@ -41,12 +41,12 @@ struct PushConstantData {
 
 BufferInfo vertex_buffer = {
     .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-    .version = vk::BufferVersion.DEVICE_BUFFER
+    .version = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 };
 
 BufferInfo uniform_buffer = {
     .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-    .version = vk::BufferVersion.GLOBAL_BUFFER
+    .version = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT
 };
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
@@ -227,15 +227,30 @@ fn void! main()
     .setQueueFamilyIndex(queue_family.graphics)
     .setQueuePriorities({ 1.0 });
 
+    // Enable some device features
+    PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+    };
+
+    PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+       .dynamicRendering = vk::TRUE,
+       .pNext = &device_indexing_feature
+    };
+
+    vk::PhysicalDeviceFeatures2 device_features = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+        .pNext = &dynamic_rendering_feature,
+    };
+
+    vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
+
     Device device = vk::deviceCreateInfoBuilder()
         .setQueueCreateInfos({ graphicsInfo })
-        .setEnabledFeatures(&vk::default_device_features)
         .setEnabledExtensionNames(device_extensions.array_view())
         .setEnabledLayerNames(ENABLE_VALIDATION_LAYERS ? validations.array_view() : ZString[]{})
-        .setNext(&&PhysicalDeviceDynamicRenderingFeatures{
-           .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-           .dynamicRendering = vk::TRUE,
-     }).build(physical_device)!;
+        .setNext(&device_features)
+        .build(physical_device)!;
 
     // Add actual queue handles to queue family, easier to keep them is one place
     queue_family.graphics_handle = device.getQueue(queue_family.graphics);
@@ -338,7 +353,7 @@ fn void! main()
          vk::MemoryRequirements mem_reqs = depth_texture.image.getMemoryRequirements(device);
          MemoryAllocateInfo memory_info = vk::memoryAllocateInfoBuilder()
              .setAllocationSize(mem_reqs.size)
-             .setMemoryTypeIndex(vk::getMemoryType(mem_reqs.memoryTypeBits, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, physical_device));
+             .setMemoryTypeIndex(physical_device.getMemoryType(vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mem_reqs.memoryTypeBits));
          vk::allocateMemory(device, &memory_info, null, &depth_texture.memory)!!;
          vk::bindImageMemory(device, depth_texture.image, depth_texture.memory, 0)!!;
 
@@ -420,14 +435,14 @@ fn void! main()
 
             texture.memory = vk::memoryAllocateInfoBuilder()
                 .setAllocationSize(mem_reqs.size)
-                .setMemoryTypeIndex(vk::getMemoryType(mem_reqs.memoryTypeBits, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, physical_device))
+                .setMemoryTypeIndex(physical_device.getMemoryType(vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mem_reqs.memoryTypeBits))
                 .build(device)!;
 
             vk::bindImageMemory(device, texture.image, texture.memory, 0)!;
 
             BufferInfo image_staging_buffer = BufferInfo {
              .usage = vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-             .version = vk::BufferVersion.GLOBAL_BUFFER
+             .version = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT
             }
             .build(
                 .data = image_data.pixels,
