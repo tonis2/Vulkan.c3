@@ -27,8 +27,8 @@ struct TextureData {
 
 fn void TextureData.free(&self, Device device)
 {
-    vk::destroyImageView(device, self.view, null);
-    vk::destroyImage(device, self.image, null);
+    self.view.free(device);
+    self.image.free(device);
     vk::destroySampler(device, self.sampler, null);
     vk::freeMemory(device, self.memory, null);
 }
@@ -166,7 +166,7 @@ fn void! main()
 
     vk::checkExtensionSupport(extensions)!;
 
-    InstanceCreateInfo createInfo = vk::instanceCreateInfoBuilder()
+    InstanceCreateInfo instanceInfo = vk::instanceCreateInfoBuilder()
     .setApplicationInfo(&&ApplicationInfo{
         .pApplicationName = "Hello GLTF",
         .pEngineName = "Super engine",
@@ -185,11 +185,11 @@ fn void! main()
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
         vk::checkValidationLayersSupport(validations)!;
-        createInfo.setEnabledLayerNames(validations.array_view());
-        createInfo.setNext(&debug_info);
+        instanceInfo.enabledLayerCount = (uint)validations.len();
+        instanceInfo.ppEnabledLayerNames = (char*)validations.entries;
     }
 
-    vk::createInstance(&createInfo, null, &instance)!;
+    vk::createInstance(&instanceInfo, null, &instance)!;
     vk::loadExtensions(instance);
 
     if (ENABLE_VALIDATION_LAYERS) {
@@ -225,13 +225,13 @@ fn void! main()
 
     DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
     .setQueueFamilyIndex(queue_family.graphics)
-    .setQueuePriorities({1.0});
+    .setQueuePriorities({ 1.0 });
 
     Device device = vk::deviceCreateInfoBuilder()
-        .setQueueCreateInfos({graphicsInfo})
+        .setQueueCreateInfos({ graphicsInfo })
         .setEnabledFeatures(&vk::default_device_features)
         .setEnabledExtensionNames(device_extensions.array_view())
-        .setEnabledLayerCount(0)
+        .setEnabledLayerNames(ENABLE_VALIDATION_LAYERS ? validations.array_view() : ZString[]{})
         .setNext(&&PhysicalDeviceDynamicRenderingFeatures{
            .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
            .dynamicRendering = vk::TRUE,
@@ -292,11 +292,6 @@ fn void! main()
         swapchain_views.push(view);
     }
 
-    defer {
-        swapchain_images.free();
-        swapchain_views.free();
-    }
-
     CommandPool command_pool = device.createCommandPool(.queue = queue_family.graphics)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
@@ -321,11 +316,9 @@ fn void! main()
         .pdevice = physical_device
     )!;
 
-
     TextureData depth_texture;
     TextureList textures;
 
-    defer depth_texture.free(device);
     vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
 
     // Create depth texture
@@ -893,21 +886,23 @@ fn void! main()
         vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
         frame = (frame + 1) % 2;
     }
-
     // Release binded stuff
     device.waitIdle();
-    foreach (img : textures) img.free(device);
-    foreach (view : swapchain_views) vk::destroyImageView(device, view, null);
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
-    depth_texture.free(device);
+    swapchain.free(device);
+    foreach (view : swapchain_views) view.free(device);
     swapchain_images.free();
     swapchain_views.free();
+
+    depth_texture.free(device);
+    foreach (texture: textures) texture.free(device);
+    textures.free();
 
     uniform_buffer.free(device);
     vertex_buffer.free(device);
     command_pool.free(device);
-    swapchain.free(device);
+
     descriptor_set_layout.free(device);
     vertex_module.free(device);
     frag_module.free(device);

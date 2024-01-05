@@ -398,6 +398,14 @@ fn void ShaderModule.free(self, Device device)
     destroyShaderModule(device, self, null);
 }
 
+fn void ImageView.free(self, Device device) {
+    vk::destroyImageView(device, self, null);
+}
+
+fn void vk::Image.free(self, Device device) {
+    vk::destroyImage(device, self, null);
+}
+
 fn void PipelineLayout.free(self, Device device)
 {
     destroyPipelineLayout(device, self, null);

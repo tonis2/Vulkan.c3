@@ -69,7 +69,7 @@ ZStringList device_extensions;
 
 fn void! main()
 {
-   glfw::init();
+    glfw::init();
     glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
     glfw::windowHint(glfw::GLFW_RESIZABLE, glfw::GLFW_FALSE);
     glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
@@ -115,7 +115,7 @@ fn void! main()
 
     vk::checkExtensionSupport(extensions)!;
 
-    InstanceCreateInfo createInfo = vk::instanceCreateInfoBuilder()
+    InstanceCreateInfo instanceInfo = vk::instanceCreateInfoBuilder()
     .setApplicationInfo(&&ApplicationInfo{
       .pApplicationName = "Hello GLTF",
       .pEngineName = "Super engine",
@@ -134,11 +134,11 @@ fn void! main()
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
       vk::checkValidationLayersSupport(validations)!;
-      createInfo.setEnabledLayerNames(validations.array_view());
-      createInfo.setNext(&debug_info);
+      instanceInfo.enabledLayerCount = (uint)validations.len();
+      instanceInfo.ppEnabledLayerNames = (char*)validations.entries;
     }
 
-    vk::createInstance(&createInfo, null, &instance)!;
+    vk::createInstance(&instanceInfo, null, &instance)!;
     vk::loadExtensions(instance);
 
     if (ENABLE_VALIDATION_LAYERS) {
@@ -239,11 +239,6 @@ fn void! main()
       .setImage(swapchain_images[i])
       .build(device)!;
       swapchain_views.push(view);
-    }
-
-    defer {
-      swapchain_images.free();
-      swapchain_views.free();
     }
 
     CommandPool command_pool = device.createCommandPool(.queue = queue_family.graphics)!;
@@ -551,21 +546,20 @@ fn void! main()
 
 
     device.waitIdle();
-    foreach (view : swapchain_views) vk::destroyImageView(device, view, null);
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
+    swapchain.free(device);
+    foreach (view : swapchain_views) view.free(device);
     swapchain_images.free();
     swapchain_views.free();
-    descriptor_set_layout.free(device);
+
     uniform_buffer.free(device);
     vertex_buffer.free(device);
-    index_buffer.free(device);
     command_pool.free(device);
-    swapchain.free(device);
 
+    descriptor_set_layout.free(device);
     vertex_module.free(device);
     frag_module.free(device);
-
     pipeline.free(device);
     pipeline_layout.free(device);
 
