@@ -162,7 +162,6 @@ struct Node {
     int camera;
     Quaternionf rotation;
     Matrix4f matrix;
-    Matrix4f global_matrix;
     Vec3f scale;
     Vec3f translation;
     IndexList children;
