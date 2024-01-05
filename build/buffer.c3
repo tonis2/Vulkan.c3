@@ -7,19 +7,44 @@ fault BufferError
     BUFFER_TOO_SMALL,
 }
 
-enum BufferVersion : int
-{
-  DEVICE_BUFFER,
-  GLOBAL_BUFFER,
-}
-
 struct BufferInfo {
     Buffer buffer;
     DeviceMemory memory;
     ulong size;
     void* mapped;
     BufferUsageFlags usage;
-    BufferVersion version;
+    MemoryPropertyFlags version;
+    DeviceAddress address;
+}
+
+fn void! BufferInfo.createPointer(&self, usz size, Device device, PhysicalDevice pdevice) {
+    self.size = size;
+    BufferCreateInfo buffer_info = {
+       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+       .pNext = null,
+       .flags = 0,
+       .size = self.size,
+       .usage = self.usage | BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
+       .sharingMode = SHARING_MODE_EXCLUSIVE,
+       .queueFamilyIndexCount = 0,
+       .pQueueFamilyIndices = null
+    };
+
+    createBuffer(device, &buffer_info, null, &self.buffer)!;
+    BufferDeviceAddressInfo address_info = {
+        .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+        .buffer = self.buffer
+    };
+
+    MemoryRequirements mem_reqs = self.buffer.memoryRequirements(device);
+    MemoryAllocateInfo memory_allocate_info = memoryAllocateInfoBuilder()
+                   .setAllocationSize(mem_reqs.size)
+                   .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT })
+                   .setMemoryTypeIndex(pdevice.getMemoryType(self.version, mem_reqs.memoryTypeBits));
+
+    self.memory = memory_allocate_info.build(device)!;
+    bindBufferMemory(device, self.buffer, self.memory, 0)!;
+    self.address = getBufferDeviceAddress(device, &address_info);
 }
 
 fn void BufferInfo.free(&self, Device device)
@@ -28,17 +53,10 @@ fn void BufferInfo.free(&self, Device device)
     freeMemory(device, self.memory, null);
 }
 
-fn MemoryAllocateInfo Buffer.getMemoryInfo(self, MemoryPropertyFlags properties, Device device, PhysicalDevice pdevice) {
-    PhysicalDeviceMemoryProperties mem_props;
+fn MemoryRequirements Buffer.memoryRequirements(self, Device device) {
     MemoryRequirements mem_reqs;
     getBufferMemoryRequirements(device, self, &mem_reqs);
-    getPhysicalDeviceMemoryProperties(pdevice, &mem_props);
-
-    uint memory_type = getMemoryType(mem_reqs.memoryTypeBits, properties, pdevice);
-
-    return memoryAllocateInfoBuilder()
-    .setAllocationSize(mem_reqs.size)
-    .setMemoryTypeIndex(memory_type);
+    return mem_reqs;
 }
 
 fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
@@ -47,24 +65,10 @@ fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
     return memory;
 }
 
-
-fn uint getMemoryType(uint typeFilter, MemoryPropertyFlags properties, PhysicalDevice pdevice) {
-    vk::PhysicalDeviceMemoryProperties memProperties;
-    vk::getPhysicalDeviceMemoryProperties(pdevice, &memProperties);
-
-    for (int i = 0; i < memProperties.memoryTypeCount; ++i) {
-        if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
-        {
-            return i;
-        }
-    }
-    return 0;
-}
-
 fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, Device device, PhysicalDevice pdevice, QueueFamily queue) {
     self.size = size;
 
-    if (self.version == BufferVersion.DEVICE_BUFFER) {
+    if (self.version == MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
      BufferCreateInfo staging_info = {
           .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
           .pNext = null,
@@ -76,7 +80,7 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, Device device, Ph
           .pQueueFamilyIndices = null,
        };
 
-       BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_COHERENT_BIT, device, pdevice)!;
+       BufferInfo staging_buffer = initBuffer(staging_info, MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT, device, pdevice)!;
        defer staging_buffer.free(device);
 
        vk::mapMemory(device, staging_buffer.memory, 0, staging_info.size, 0, &self.mapped)!;
@@ -109,7 +113,7 @@ fn BufferInfo! BufferInfo.build(&self, void* data, ulong size, Device device, Ph
        self.memory = buffer.memory;
     }
 
-   if (self.version == BufferVersion.GLOBAL_BUFFER) {
+   if (self.version == MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
         BufferCreateInfo buffer_info = {
            .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
            .pNext = null,
@@ -136,7 +140,12 @@ fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties,
     Buffer buffer;
     createBuffer(device, &info, null, &buffer)!;
 
-    DeviceMemory memory = buffer.getMemoryInfo(properties, device, pdevice).build(device)!;
+    MemoryRequirements mem_reqs = buffer.memoryRequirements(device);
+    DeviceMemory memory = memoryAllocateInfoBuilder()
+                   .setAllocationSize(mem_reqs.size)
+                   .setMemoryTypeIndex(pdevice.getMemoryType(properties, mem_reqs.memoryTypeBits))
+                   .build(device)!;
+
     bindBufferMemory(device, buffer, memory, 0)!;
 
     return BufferInfo {
@@ -149,5 +158,11 @@ fn BufferInfo! initBuffer(BufferCreateInfo info, MemoryPropertyFlags properties,
 
 fn void BufferInfo.updateData(&self, void* data) {
     mem::copy(self.mapped, data, self.size);
+}
+
+fn void! BufferInfo.addData(&self, void* data, Device device) {
+    vk::mapMemory(device, self.memory, 0, self.size, 0, &self.mapped)!;
+    mem::copy(self.mapped, data, self.size);
+    vk::unmapMemory(device, self.memory);
 }
 

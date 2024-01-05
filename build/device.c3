@@ -273,6 +273,19 @@ fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
     return supports;
 }
 
+fn uint PhysicalDevice.getMemoryType(self, MemoryPropertyFlags properties, uint typeFilter) {
+    vk::PhysicalDeviceMemoryProperties memProperties;
+    vk::getPhysicalDeviceMemoryProperties(self, &memProperties);
+
+    for (int i = 0; i < memProperties.memoryTypeCount; ++i) {
+        if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
 fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
     uint queueCount;
     QueuePropertiesList propertiesList;
