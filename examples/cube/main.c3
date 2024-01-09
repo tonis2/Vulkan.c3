@@ -244,39 +244,69 @@ fn void! main()
     CommandPool command_pool = device.createCommandPool(.queue = queue_family.graphics)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
-    BufferInfo vertex_buffer = BufferInfo {
-        .usage = vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        .version = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-    }.build(
-        .data = vertex_data,
-        .size = Vertex.sizeof * vertex_data.len,
-        .queue = queue_family,
+    // Create allocator of 10MB - DEVICE_ONLY memory
+    Allocation device_allocation = Allocation {
         .device = device,
-        .pdevice = physical_device
-    )!;
+        .pdevice = physical_device,
+        .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        .size = 10_000_000
+    }.build()!;
 
-    BufferInfo index_buffer = BufferInfo {
-        .usage = vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-        .version = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-    }.build(
-        .data = index_data,
-        .size = index_data.len * float.sizeof,
-        .queue = queue_family,
+    // Allocation where data can be changed from CPU
+    Allocation local_allocation = Allocation {
         .device = device,
-        .pdevice = physical_device
-    )!;
+        .pdevice = physical_device,
+        .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+        .size = 5_000_000
+    }.build()!;
 
-    BufferInfo uniform_buffer = BufferInfo {
-        .usage = vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        .version = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT
-    }
-    .build(
-        .data = &&camera.matrix(),
-        .size = UniformData.sizeof,
-        .queue = queue_family,
-        .device = device,
-        .pdevice = physical_device
-    )!;
+   // Create buffers, using only memory of the allocator
+   MemoryBlock vertex_buffer = vk::bufferCreateInfoBuilder()
+               .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+               .setSize(Vertex.sizeof * vertex_data.len)
+               .build(device)!
+               .bind(&device_allocation)!;
+
+    // Copy buffer from staging memory to device_local (GPU only memory)
+    device.@staging_buffer(.size = Vertex.sizeof * vertex_data.len, .data = vertex_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
+        device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+          BufferCopy copyRegion = {
+               .srcOffset = 0,
+               .dstOffset = 0,
+               .size = Vertex.sizeof * vertex_data.len
+           };
+           vk::cmdCopyBuffer(command_buffer, staging_buffer, vertex_buffer.buffer, 1, &copyRegion);
+        }!;
+    }!;
+
+   MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
+               .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+               .setSize(index_data.len * float.sizeof)
+               .build(device)!
+               .bind(&device_allocation)!;
+
+    device.@staging_buffer(.size = index_data.len * float.sizeof, .data = index_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
+        device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+          BufferCopy copyRegion = {
+               .srcOffset = 0,
+               .dstOffset = 0,
+               .size = index_data.len * float.sizeof
+           };
+           vk::cmdCopyBuffer(command_buffer, staging_buffer, index_buffer.buffer, 1, &copyRegion);
+        }!;
+    }!;
+
+   MemoryBlock uniform_buffer = vk::bufferCreateInfoBuilder()
+               .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+               .setSize(UniformData.sizeof)
+               .build(device)!
+               .bind(&local_allocation)!;
+
+    // Add data for uniform buffer
+    uniform_buffer.map(&&camera.matrix(), device)!;
 
     // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -421,13 +451,13 @@ fn void! main()
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 1.5);
-           uniform_buffer.updateData(&&camera.matrix());
+           mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
-            uniform_buffer.updateData(&&camera.matrix());
+            mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
         }
 
         Fence frame_fence = frame_fences[frame];
