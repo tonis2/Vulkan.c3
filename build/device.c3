@@ -150,7 +150,7 @@ fn vk::Queue Device.getQueue(self, uint index) {
     return response;
 }
 
-macro void! Device.@single_time_buffer(self, QueueFamily queue; @body(CommandBuffer buffer))
+macro void! Device.@single_time_command(self, QueueFamily queue; @body(CommandBuffer buffer))
 {
     CommandPool command_pool;
     CommandPoolCreateInfo pool_info = {
@@ -284,6 +284,24 @@ fn uint PhysicalDevice.getMemoryType(self, MemoryPropertyFlags properties, uint 
         }
     }
     return 0;
+}
+
+fn uint PhysicalDevice.getMemoryType2(self, MemoryPropertyFlags properties) {
+    vk::PhysicalDeviceMemoryProperties memProperties;
+    vk::getPhysicalDeviceMemoryProperties(self, &memProperties);
+
+    for (int i = 0; i < memProperties.memoryTypeCount; ++i) {
+        if ((memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
+fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.build(&self, PhysicalDevice device) {
+    vk::getPhysicalDeviceProperties2(device, self);
+    return *self;
 }
 
 fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
