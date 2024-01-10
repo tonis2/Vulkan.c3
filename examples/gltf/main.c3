@@ -44,19 +44,23 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
         foreach (primitive: mesh.primitives) {
-            Accessor index_accessor = gltf.accessors[primitive["indices"]!!];
+            /*foreach (target: primitive.targets) {
+                io::printfn("pos %d", target["POSITION"]!!);
+            }*/
+
+            Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
 
-            Accessor pos_accessor = gltf.accessors[primitive["POSITION"]!!];
+            Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
             gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.view];
 
-            Accessor normal_accessor = gltf.accessors[primitive["NORMAL"]!!];
+            Accessor normal_accessor = gltf.accessors[primitive.attributes["NORMAL"]!!];
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
-            Accessor tex_accessor = gltf.accessors[primitive["TEXCOORD_0"]!!];
+            Accessor tex_accessor = gltf.accessors[primitive.attributes["TEXCOORD_0"]!!];
             gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
 
-            Material material = gltf.materials[primitive["material"]!!];
+            Material material = gltf.materials[primitive.attributes["material"]!!];
 
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
@@ -755,14 +759,16 @@ fn void! main()
         animations.push(gltf_data.loadAnimation(animation));
     }
 
+
+
     // Picking gltf scene to render
     Scene scene = gltf_data.scenes[0];
     uint frame = 0;
     Clock time = clock::now();
 
-    while (!glfw::windowShouldClose(window)) {
-        foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
+    foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
 
+    while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
         if (eventHandler.scrolling) {
