@@ -766,10 +766,11 @@ fn void! main()
     uint frame = 0;
     Clock time = clock::now();
 
-    foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
+
 
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
+        foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);
