@@ -265,8 +265,9 @@ fn void! main()
         ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
         : surface_formats[0];
 
+    uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
-        .setMinImageCount(capabilities.minImageCount + 2)
+        .setMinImageCount(min_images)
         .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
         .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
         .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
