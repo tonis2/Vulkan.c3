@@ -29,9 +29,7 @@ def ChannelList = List(<Channel>);
 def MixerChannels = List(<MixerChannel>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
-def PrimitiveMap = HashMap(<String, usz>);
-def PrimitiveList = List(<PrimitiveMap>);
-def FloatList = List(<float>);
+def AttributeMap = HashMap(<String, usz>);
 def AnimationValues = List(<AnimationValue>);
 
 enum Targets {
@@ -119,6 +117,7 @@ union AnimationValue
     Vec3f transform;
     Vec3f scale;
     Quaternionf rotation;
+    float weight;
 }
 
 fault ParseError
@@ -167,10 +166,16 @@ struct Node {
     IndexList children;
 }
 
+struct Primitive {
+  AttributeMap attributes;
+  List(<AttributeMap>) targets;
+  List(<float>) weights;
+}
+
 struct Mesh {
     String name;
     usz scene;
-    PrimitiveList primitives;
+    List(<Primitive>) primitives;
     IndexList children;
 }
 
@@ -198,7 +203,7 @@ struct MixerChannel {
     inline Channel channel;
     double time;
     double max_time;
-    FloatList times;
+    List(<float>) times;
     AnimationValues values;
 }
 
@@ -279,8 +284,8 @@ struct Accessor {
     Mode mode;
     DataType data_type;
     AccessorType type;
-    FloatList min;
-    FloatList max;
+    List(<float>) min;
+    List(<float>) max;
 }
 
 struct BufferView {
@@ -378,23 +383,50 @@ fn void Mesh.fromJson(&self, Object* json) {
     if (try name) self.name = name.copy();
     if (try primitives) {
         foreach (primitive : primitives.array) {
-            PrimitiveMap primitive_map;
+            Primitive data;
+
             Object*! attributes = primitive.get("attributes");
+            Object*! targets = primitive.get("targets");
+            Object*! weights = primitive.get("weights");
 
             uint! indices = primitive.get_int("indices");
             uint! material = primitive.get_int("material");
+            uint! mode = primitive.get_int("mode");
 
-            if (try indices) primitive_map["indices"] = indices;
-            if (try material) primitive_map["material"] = material;
+            if (try indices) data.attributes["indices"] = indices;
+            if (try material) data.attributes["material"] = material;
+            if (try mode) data.attributes["mode"] = mode;
+
             if (try attributes) {
                 foreach (key : attributes.map.key_tlist()) {
-                    primitive_map[key] = (usz)attributes.map[key]!!.f;
+                    data.attributes[key] = (usz)attributes.map[key]!!.f;
                 }
             }
 
-            self.primitives.push(primitive_map);
+            if (try targets) {
+                foreach (target : targets.array) {
+                    AttributeMap target_attibutes;
+                    foreach (key : target.map.key_tlist()) {
+                        target_attibutes[key] = (usz)target.map[key]!!.f;
+                    }
+                    data.targets.push(target_attibutes);
+                }
+            }
+
+            if (try weights) {
+                foreach (weight : weights.array) data.weights.push((float)weight.f);
+            }
+
+            self.primitives.push(data);
         }
     }
+}
+
+fn void Primitive.free(&self) {
+    self.attributes.free();
+    foreach (target : self.targets) target.free();
+    self.targets.free();
+    self.weights.free();
 }
 
 fn void Mesh.free(&self) {
@@ -1073,7 +1105,11 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
                         .rotation = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Quaternionf)
                     });
                 }
-                case WEIGHTS: {}
+                case WEIGHTS: {
+                    channel.values.push(AnimationValue {
+                        .weight = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), float)
+                    });
+                }
             }
         }
     }
@@ -1115,33 +1151,47 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             };
         }
 
-        if (channel.times.len() < 2) return;
-
-        double prev_time = channel.times[time_index - 1];
-        double next_time = channel.times[time_index];
-
-        AnimationValue prev_value = channel.values[time_index - 1];
-        AnimationValue next_value = channel.values[time_index];
-
-        switch (sampler.interpolation) {
+       switch (sampler.interpolation) {
             case LINEAR: {
-              double interpolation_value = (channel.time - prev_time) / (next_time - prev_time);
-              switch (channel.target.path) {
-                case TRANSLATION: {
-                    node.translation = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
-                }
-                case ROTATION: {
-                    node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
-                }
-                case SCALE: {
-                    node.scale = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
-                }
-                case WEIGHTS: {
+                double prev_time = channel.times[time_index - 1];
+                double next_time = channel.times[time_index];
 
+                AnimationValue prev_value = channel.values[time_index - 1];
+                AnimationValue next_value = channel.values[time_index];
+                double interpolation_value = (channel.time - prev_time) / (next_time - prev_time);
+
+                switch (channel.target.path) {
+                    case TRANSLATION: {
+                        node.translation = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                    }
+                    case ROTATION: {
+                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
+                    }
+                    case SCALE: {
+                        node.scale = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                    }
+                    case WEIGHTS: {
+
+                    }
                 }
-              }
             }
-            case STEP: {}
+            case STEP: {
+                AnimationValue value = channel.values[time_index];
+                switch (channel.target.path) {
+                    case TRANSLATION: {
+                        node.translation = value.transform;
+                    }
+                    case ROTATION: {
+                        node.rotation = value.rotation;
+                    }
+                    case SCALE: {
+                        node.scale = value.scale;
+                    }
+                    case WEIGHTS: {
+
+                    }
+                }
+            }
             case CUBICSPLINE: {}
         }
    }
@@ -1268,10 +1318,6 @@ fn Matrix4f Node.globalMatrix(&self) {
     }
 
     return return_matrix;
-}
-
-fn PrimitiveMap Mesh.lastPrimitive(Mesh self) {
-   return self.primitives[self.primitives.len() - 1];
 }
 
 fn char[]! Buffer.from_base64(self) {
