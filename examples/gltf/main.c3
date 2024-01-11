@@ -34,6 +34,7 @@ struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
+   DeviceAddress vertex_address;
 }
 
 MemoryBlock vertex_buffer;
@@ -65,7 +66,8 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
-                .baseColor = material.pbrMetallicRoughness.baseColorFactor
+                .baseColor = material.pbrMetallicRoughness.baseColorFactor,
+                .vertex_address = vertex_buffer.address
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
