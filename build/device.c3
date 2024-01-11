@@ -150,13 +150,13 @@ fn vk::Queue Device.getQueue(self, uint index) {
     return response;
 }
 
-macro void! Device.@single_time_command(self, QueueFamily queue; @body(CommandBuffer buffer))
+macro void! Device.@single_time_command(self, Queue queue, uint queue_index; @body(CommandBuffer buffer))
 {
     CommandPool command_pool;
     CommandPoolCreateInfo pool_info = {
         .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = null,
-        .queueFamilyIndex = queue.graphics,
+        .queueFamilyIndex = queue_index,
     };
     createCommandPool(self, &pool_info, null, &command_pool)!;
     CommandBufferAllocateInfo alloc_info = {
@@ -182,8 +182,8 @@ macro void! Device.@single_time_command(self, QueueFamily queue; @body(CommandBu
         .commandBufferCount = 1,
         .pCommandBuffers = &command_buffer
     };
-    queueSubmit(queue.graphics_handle, 1, &submitInfo, null)!;
-    queueWaitIdle(queue.graphics_handle)!;
+    queueSubmit(queue, 1, &submitInfo, null)!;
+    queueWaitIdle(queue)!;
     freeCommandBuffers(self, command_pool, 1, &command_buffer);
     destroyCommandPool(self, command_pool, null);
 }

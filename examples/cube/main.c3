@@ -271,7 +271,7 @@ fn void! main()
 
     // Copy buffer from staging memory to device_local (GPU only memory)
     device.@staging_buffer(.size = Vertex.sizeof * vertex_data.len, .data = vertex_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
                .dstOffset = 0,
@@ -289,7 +289,7 @@ fn void! main()
                .bind(&device_allocation)!;
 
     device.@staging_buffer(.size = index_data.len * float.sizeof, .data = index_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
                .dstOffset = 0,

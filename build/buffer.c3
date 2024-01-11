@@ -87,6 +87,7 @@ struct MemoryBlock {
     ulong offset;
     void* mapped;
     bool is_used;
+    ulong address;
 }
 
 macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pdevice; @body(Buffer buffer))
@@ -148,7 +149,7 @@ macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pd
 
     self.memory = memory_allocate_info.build(device)!;
     bindBufferMemory(device, self.buffer, self.memory, 0)!;
-    self.address = getBufferDeviceAddress(device, &address_info);
+
 }*/
 
 fn void MemoryBlock.free(&self, Device device)
@@ -160,6 +161,15 @@ fn void MemoryBlock.free(&self, Device device)
     if (self.type == BufferType.IMAGE) {
         destroyImage(device, self.image, null);
     }
+}
+
+fn void MemoryBlock.getAddress(&self, Device device)
+{
+    BufferDeviceAddressInfo address_info = {
+        .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+        .buffer = self.buffer
+    };
+    self.address = getBufferDeviceAddress(device, &address_info);
 }
 
 fn void! MemoryBlock.map(&self, void* data, Device device)

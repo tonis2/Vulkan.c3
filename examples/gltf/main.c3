@@ -352,7 +352,7 @@ fn void! main()
 
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
                .dstOffset = 0,
@@ -392,7 +392,7 @@ fn void! main()
         .setImage(depth_texture.block.image)
         .build(device)!;
 
-    device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
        ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
        .setImage(depth_texture.block.image)
        .setSubresourceRange({
@@ -456,7 +456,7 @@ fn void! main()
 
             device.@staging_buffer(.size = (usz)image_data.width * image_data.height * 4, .data = image_data.pixels, .pdevice = physical_device; vk::Buffer staging_buffer) {
                 // Create single-time command buffer for copying buffer to image
-                device.@single_time_command(queue_family; CommandBuffer command_buffer) {
+                device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
                     ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
                     .setImage(texture.block.image)
                     .setSubresourceRange({
