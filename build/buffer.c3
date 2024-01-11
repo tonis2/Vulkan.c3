@@ -56,19 +56,30 @@ struct Allocation {
     BlockList blocks;
     ulong used_size;
     uint buffer_count;
+    bool device_address;
     MemoryPropertyFlags properties;
 }
 
 fn Allocation! Allocation.build(&self) {
-  DeviceMemory memory = memoryAllocateInfoBuilder()
-                        .setAllocationSize(self.size)
-                        .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
-                        .build(self.device)!;
+    DeviceMemory memory;
 
-  self.memory = memory;
-  self.used_size = 0;
-  self.buffer_count = 0;
-  return *self;
+    if (self.device_address == true) {
+        memory = memoryAllocateInfoBuilder()
+                .setAllocationSize(self.size)
+                .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT })
+                .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
+                .build(self.device)!;
+    } else {
+       memory = memoryAllocateInfoBuilder()
+                .setAllocationSize(self.size)
+                .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
+                .build(self.device)!;
+    }
+
+    self.memory = memory;
+    self.used_size = 0;
+    self.buffer_count = 0;
+    return *self;
 }
 
 fn void Allocation.free(&self) {
@@ -121,37 +132,6 @@ macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pd
     freeMemory(self, memory, null);
 }
 
-
-/*fn void! BufferInfo.createPointer(&self, usz size, Device device, PhysicalDevice pdevice) {
-    self.size = size;
-    BufferCreateInfo buffer_info = {
-       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .size = self.size,
-       .usage = self.usage | BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
-       .sharingMode = SHARING_MODE_EXCLUSIVE,
-       .queueFamilyIndexCount = 0,
-       .pQueueFamilyIndices = null
-    };
-
-    createBuffer(device, &buffer_info, null, &self.buffer)!;
-    BufferDeviceAddressInfo address_info = {
-        .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
-        .buffer = self.buffer
-    };
-
-    MemoryRequirements mem_reqs = self.buffer.memoryRequirements(device);
-    MemoryAllocateInfo memory_allocate_info = memoryAllocateInfoBuilder()
-                   .setAllocationSize(mem_reqs.size)
-                   .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT })
-                   .setMemoryTypeIndex(pdevice.getMemoryType(self.version, mem_reqs.memoryTypeBits));
-
-    self.memory = memory_allocate_info.build(device)!;
-    bindBufferMemory(device, self.buffer, self.memory, 0)!;
-
-}*/
-
 fn void MemoryBlock.free(&self, Device device)
 {
     if (self.type == BufferType.BUFFER) {
@@ -203,6 +183,9 @@ fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
     allocation.used_size += mem_reqs.size;
     allocation.buffer_count += 1;
     allocation.blocks.push(block);
+
+    if (allocation.device_address) block.getAddress(allocation.device);
+
     return block;
 }
 
