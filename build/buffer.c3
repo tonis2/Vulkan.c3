@@ -98,7 +98,7 @@ struct MemoryBlock {
     ulong offset;
     void* mapped;
     bool is_used;
-    ulong address;
+    DeviceAddress address;
 }
 
 macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pdevice; @body(Buffer buffer))

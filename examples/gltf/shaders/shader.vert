@@ -1,4 +1,11 @@
 #version 450
+#extension GL_EXT_buffer_reference : require
+
+layout(buffer_reference, std430, buffer_reference_align=16) buffer VertexBuffer {
+  vec3 vp;
+  vec2 tex_cord;
+  vec3 normal;
+};
 
 layout(location = 0) in vec3 vp;
 layout(location = 1) in vec2 tex_cord;
@@ -13,6 +20,7 @@ layout( push_constant ) uniform constants
     mat4 model_matrix;
     vec4 baseColor;
     int texture;
+    VertexBuffer vertex_buffer;
 };
 
 layout(binding = 0) uniform uniform_matrix
