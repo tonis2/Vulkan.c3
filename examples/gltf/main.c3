@@ -233,13 +233,17 @@ fn void! main()
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
     };
 
-    PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
-       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-       .dynamicRendering = vk::TRUE,
+   PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
        .pNext = &device_indexing_feature
     };
 
-    vk::PhysicalDeviceFeatures2 device_features = {
+    PhysicalDeviceBufferDeviceAddressFeatures dynamic_rendering_feature = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+       .pNext = &buffer_device_feature
+    };
+
+    PhysicalDeviceFeatures2 device_features = {
         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
         .pNext = &dynamic_rendering_feature,
     };
@@ -317,7 +321,8 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        .size = 50_000_000
+        .size = 50_000_000,
+        .device_address = true
     }.build()!;
 
     // Allocation where data can be changed from CPU
@@ -344,7 +349,7 @@ fn void! main()
 
     usz vertex_buffer_size = (usz)(last_accessor.offset + accessor_view.offset + accessor_view.byteLength);
     vertex_buffer = vk::bufferCreateInfoBuilder()
-                   .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+                   .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                    .setSize(vertex_buffer_size)
                    .build(device)!
