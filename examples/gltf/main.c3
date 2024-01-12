@@ -34,7 +34,9 @@ struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
-   DeviceAddress vertex_address;
+   DeviceAddress position_address;
+   DeviceAddress texture_address;
+   DeviceAddress normal_address;
 }
 
 MemoryBlock vertex_buffer;
@@ -67,19 +69,12 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .vertex_address = vertex_buffer.address
+                .position_address = vertex_buffer.address + pos_view.offset,
+                .texture_address = vertex_buffer.address + tex_view.offset,
+                .normal_address = vertex_buffer.address + normal_view.offset
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
-            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
-            vk::cmdBindVertexBuffers(
-                buffer,
-                0, 3,
-                &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
-                &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset}
-            );
-
             vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_accessor.offset + index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
@@ -106,6 +101,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
+
 
    defer {
         glfw::destroyWindow(window);
@@ -646,46 +642,10 @@ fn void! main()
         vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
         frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
     })
-     .setLayout(pipeline_layout)
-     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
-        .setVertexBindingDescriptions(
-        {
-            {
-             .binding = 0,
-             .stride = float.sizeof * 3,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            },
-            {
-             .binding = 1,
-             .stride = float.sizeof * 2,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            },
-            {
-             .binding = 2,
-             .stride = float.sizeof * 3,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            }
-        })
-        .setVertexAttributeDescriptions({
-            {
-               .binding = 0,
-               .location = 0,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
-            },
-            {
-               .binding = 1,
-               .location = 1,
-               .format = vk::FORMAT_R32G32_SFLOAT,
-               .offset = 0
-            },
-            {
-               .binding = 2,
-               .location = 2,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
-            }
-        })
+    .setLayout(pipeline_layout)
+    .setVertexInputState(
+        &&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexAttributeDescriptionCount(0)
     )
     .setDynamicState(
        &&vk::pipelineDynamicStateCreateInfoBuilder()
@@ -766,14 +726,10 @@ fn void! main()
         animations.push(gltf_data.loadAnimation(animation));
     }
 
-
-
     // Picking gltf scene to render
     Scene scene = gltf_data.scenes[0];
     uint frame = 0;
     Clock time = clock::now();
-
-
 
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
