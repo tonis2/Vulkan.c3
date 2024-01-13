@@ -8,7 +8,6 @@ import std::collections::list;
 import stb;
 import std::time;
 
-def DescriptorImages = List(<DescriptorImageInfo>);
 def TextureList = List(<TextureData>);
 def Animations = List(<AnimationMixer>);
 
@@ -30,17 +29,11 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
-
-struct AddressList {
-    DeviceAddress address;
-    AddressList* next;
-}
-
 struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
-   AddressList addresses;
+   DeviceAddress uniform_buffer;
 }
 
 MemoryBlock vertex_buffer;
@@ -51,10 +44,10 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
         foreach (primitive: mesh.primitives) {
-
-            /*foreach (target: primitive.targets) {
-                io::printfn("pos %d", target["POSITION"]!!);
-            }*/
+            foreach (target: primitive.targets) {
+                Accessor morph_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
+                gltf::BufferView morph_view = gltf.bufferViews[morph_accessor.view];
+            }
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
@@ -65,27 +58,26 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             Accessor normal_accessor = gltf.accessors[primitive.attributes["NORMAL"]!!];
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
-            Accessor tex_accessor = gltf.accessors[primitive.attributes["TEXCOORD_0"]!!];
-            gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
+            // return 0, if mesh has no texture cords
+            usz tex_offset = {|
+                usz! tex_primitive = primitive.attributes["TEXCOORD_0"];
+                if (catch err = tex_primitive) return 0;
+                Accessor tex_accessor = gltf.accessors[tex_primitive];
+                gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
+                return tex_view.offset;
+            |};
 
-            Material material = gltf.materials[primitive.attributes["material"]!!];
-
-            AddressList addresses = {
-                .address = vertex_buffer.address * pos_view.offset,
-                .next = &&AddressList {
-                   .address = vertex_buffer.address * tex_view.offset,
-                   .next = &&AddressList {
-                       .address = vertex_buffer.address * normal_view.offset,
-                       .next = null
-                   }
-                }
-            };
+            Material material = {|
+                usz! material_primitive = primitive.attributes["material"];
+                if (catch err = material_primitive) return gltf::EMPTY_MATERIAL;
+                return gltf.materials[material_primitive];
+            |};
 
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .addresses = addresses
+                .uniform_buffer = uniform_buffer.address
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
@@ -94,7 +86,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 buffer,
                 0, 3,
                 &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
-                &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset}
+                &&vk::DeviceSize[3]{pos_view.offset, tex_offset, normal_view.offset}
             );
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
@@ -132,7 +124,7 @@ fn void! main()
         extensions.free();
         device_extensions.free();
     }
-
+    
     if (window == null)
     {
         io::printfn("Failed to init glfw window");
@@ -273,7 +265,7 @@ fn void! main()
     Device device = vk::deviceCreateInfoBuilder()
         .setQueueCreateInfos({ graphicsInfo })
         .setEnabledExtensionNames(device_extensions.array_view())
-        .setEnabledLayerNames(ENABLE_VALIDATION_LAYERS ? validations.array_view() : ZString[]{})
+        .setEnabledLayerNames(validations.array_view())
         .setNext(&device_features)
         .build(physical_device)!;
 
@@ -350,15 +342,17 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
-        .size = 5_000_000
+        .size = 5_000_000,
+        .device_address = true
     }.build()!;
 
     uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+                    .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(UniformData.sizeof)
                     .build(device)!
-                    .bind(&local_allocation)!;
+                    .bind(&local_allocation)!
+                    .getAddress(device);
 
     uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
@@ -597,21 +591,17 @@ fn void! main()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
         {
-          .binding = 0,
-          .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-          .descriptorCount = 1,
-          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
-        },
-        {
             .binding = 1,
             .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             .descriptorCount = (uint)textures.len(),
             .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
         },
-    }).build(device)!;
+    })
+    .build(device)!;
 
     // Bind loaded textures to descriptor
-    DescriptorImages descriptor_images;
+    List(<DescriptorImageInfo>) descriptor_images;
+    List(<WriteDescriptorSet>) descriptor_sets;
 
     foreach (tex: textures) {
         descriptor_images.push({
@@ -621,23 +611,18 @@ fn void! main()
         });
     }
 
-    defer descriptor_images.free();
+    if (textures.len() > 0) {
+        descriptor_sets.push(
+            vk::writeDescriptorSetBuilder()
+            .setDstBinding(1)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            .setImageInfo(descriptor_images.array_view())
+        );
+    };
 
-    WriteDescriptorSet[] descriptorSets = {
-        vk::writeDescriptorSetBuilder()
-        .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-        .setDstBinding(0)
-        .setBufferInfo({
-            {
-               .buffer = uniform_buffer.buffer,
-               .offset = 0,
-               .range = UniformData.sizeof,
-            },
-        }),
-        vk::writeDescriptorSetBuilder()
-        .setDstBinding(1)
-        .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-        .setImageInfo(descriptor_images.array_view())
+    defer {
+        descriptor_images.free();
+        descriptor_sets.free();
     };
 
     // Load shaders
@@ -791,6 +776,7 @@ fn void! main()
 
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
+
         foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
 
         if (eventHandler.scrolling) {
@@ -872,7 +858,10 @@ fn void! main()
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, descriptorSets.len, descriptorSets);
+
+        if (descriptor_sets.len() > 0) {
+            vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, (uint)descriptor_sets.len(), descriptor_sets.entries);
+        }
 
         // Draw gltf scene nodes
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
@@ -922,6 +911,8 @@ fn void! main()
         vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
         frame = (frame + 1) % 2;
     }
+
+
     // Release binded stuff
     device.waitIdle();
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
