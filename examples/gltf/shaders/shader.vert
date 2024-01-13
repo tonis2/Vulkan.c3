@@ -1,18 +1,23 @@
 #version 450
 #extension GL_EXT_buffer_reference : require
 #extension GL_EXT_scalar_block_layout : require
+#extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 
 layout(buffer_reference, std140, scalar) buffer PositionBuffer {
-  vec3 positions[];
+  vec3 pos;
 };
 
-layout(buffer_reference, std140, scalar) buffer TexCordBuffer {
-  vec2 tex_pos[];
+// forward declaration
+layout(buffer_reference) buffer BufferAddress;
+
+layout(buffer_reference, std430, buffer_reference_align = 16) buffer BufferAddress {
+    uint64_t address;
+    BufferAddress next;
 };
 
-layout(buffer_reference, std140, scalar) buffer NormalBuffer {
-  vec3 normals[];
-};
+layout(location = 0) in vec3 vp;
+layout(location = 1) in vec2 tex_cord;
+layout(location = 2) in vec3 normal;
 
 layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec4 outBaseColor;
@@ -23,9 +28,7 @@ layout( push_constant ) uniform constants
     mat4 model_matrix;
     vec4 baseColor;
     int texture;
-    PositionBuffer position_buffer;
-    TexCordBuffer tex_cord_buffer;
-    NormalBuffer normal_buffer;
+    uint64_t addresses;
 };
 
 layout(binding = 0) uniform uniform_matrix
@@ -36,15 +39,13 @@ layout(binding = 0) uniform uniform_matrix
 };
 
 void main() {
+    BufferAddress address_list = BufferAddress(addresses);
+    PositionBuffer pos = PositionBuffer(address_list.address);
 
-    vec3 pos = PositionBuffer(position_buffer).positions[gl_VertexIndex];
-    vec2 cord = TexCordBuffer(tex_cord_buffer).tex_pos[gl_VertexIndex];
-    vec3 norm = NormalBuffer(normal_buffer).normals[gl_VertexIndex];
-
-    gl_Position = projection * view * model_matrix * vec4(pos, 1.0);
+    gl_Position = projection * view * model_matrix * vec4(vp, 1.0);
     gl_Position.y = -gl_Position.y;
 
-    fragTexCoord = cord;
+    fragTexCoord = tex_cord;
     outBaseColor = baseColor;
     textureIndex = texture;
 }

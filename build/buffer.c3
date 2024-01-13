@@ -57,6 +57,7 @@ struct Allocation {
     ulong used_size;
     uint buffer_count;
     bool device_address;
+    void* mapped;
     MemoryPropertyFlags properties;
 }
 
@@ -79,6 +80,12 @@ fn Allocation! Allocation.build(&self) {
     self.memory = memory;
     self.used_size = 0;
     self.buffer_count = 0;
+
+    // Map data, when not meanth for DEVICE LOCAL memory
+    if (self.properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT != self.properties) {
+        vk::mapMemory(self.device, self.memory, 0, self.size, 0, &self.mapped)!;
+    }
+
     return *self;
 }
 
@@ -143,19 +150,19 @@ fn void MemoryBlock.free(&self, Device device)
     }
 }
 
-fn void MemoryBlock.getAddress(&self, Device device)
+fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
 {
     BufferDeviceAddressInfo address_info = {
         .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
         .buffer = self.buffer
     };
     self.address = getBufferDeviceAddress(device, &address_info);
+    return *self;
 }
 
-fn void! MemoryBlock.map(&self, void* data, Device device)
+fn void MemoryBlock.upload(&self, void* data, ulong size, Device device)
 {
-    vk::mapMemory(device, self.memory, self.offset, self.size, 0, &self.mapped)!;
-    mem::copy(self.mapped, data, self.size);
+    mem::copy(self.mapped + self.offset, data, size);
 }
 
 fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
@@ -177,14 +184,13 @@ fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
         .buffer = self,
         .memory = allocation.memory,
         .size = mem_reqs.size,
+        .mapped = allocation.mapped,
         .type = BufferType.BUFFER,
     };
 
     allocation.used_size += mem_reqs.size;
     allocation.buffer_count += 1;
     allocation.blocks.push(block);
-
-    if (allocation.device_address) block.getAddress(allocation.device);
 
     return block;
 }
