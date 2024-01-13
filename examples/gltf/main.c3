@@ -30,13 +30,17 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
+
+struct AddressList {
+    DeviceAddress address;
+    AddressList* next;
+}
+
 struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
-   DeviceAddress position_address;
-   DeviceAddress texture_address;
-   DeviceAddress normal_address;
+   AddressList addresses;
 }
 
 MemoryBlock vertex_buffer;
@@ -47,6 +51,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
         foreach (primitive: mesh.primitives) {
+
             /*foreach (target: primitive.targets) {
                 io::printfn("pos %d", target["POSITION"]!!);
             }*/
@@ -65,14 +70,32 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
 
             Material material = gltf.materials[primitive.attributes["material"]!!];
 
+            AddressList addresses = {
+                .address = vertex_buffer.address * pos_view.offset,
+                .next = &&AddressList {
+                   .address = vertex_buffer.address * tex_view.offset,
+                   .next = &&AddressList {
+                       .address = vertex_buffer.address * normal_view.offset,
+                       .next = null
+                   }
+                }
+            };
+
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .position_address = vertex_buffer.address + pos_view.offset,
-                .texture_address = vertex_buffer.address + tex_view.offset,
-                .normal_address = vertex_buffer.address + normal_view.offset
+                .addresses = addresses
             };
+
+            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
+            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
+            vk::cmdBindVertexBuffers(
+                buffer,
+                0, 3,
+                &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
+                &&vk::DeviceSize[3]{pos_view.offset, tex_view.offset, normal_view.offset}
+            );
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
             vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_accessor.offset + index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
@@ -102,8 +125,7 @@ fn void! main()
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
     GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
 
-
-   defer {
+    defer {
         glfw::destroyWindow(window);
         glfw::terminate();
         validations.free();
@@ -338,7 +360,7 @@ fn void! main()
                     .build(device)!
                     .bind(&local_allocation)!;
 
-    uniform_buffer.map(&&camera.matrix(), device)!;
+    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
     // I upload all mesh data, vertices, indices, texcords ...etc to a single buffer
     Accessor last_accessor = gltf_data.accessors[gltf_data.accessors.len() - 1];
@@ -351,7 +373,8 @@ fn void! main()
                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                    .setSize(vertex_buffer_size)
                    .build(device)!
-                   .bind(&device_allocation)!;
+                   .bind(&device_allocation)!
+                   .getAddress(device);
 
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -565,7 +588,6 @@ fn void! main()
                            })
                            .setImage(texture.block.image)
                            .build(device)!;
-
             textures.push(texture);
         }
     }
@@ -643,9 +665,45 @@ fn void! main()
         frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
     })
     .setLayout(pipeline_layout)
-    .setVertexInputState(
-        &&vk::pipelineVertexInputStateCreateInfoBuilder()
-        .setVertexAttributeDescriptionCount(0)
+    .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptions(
+        {
+            {
+             .binding = 0,
+             .stride = float.sizeof * 3,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            },
+            {
+             .binding = 1,
+             .stride = float.sizeof * 2,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            },
+            {
+             .binding = 2,
+             .stride = float.sizeof * 3,
+             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+            }
+        })
+        .setVertexAttributeDescriptions({
+            {
+               .binding = 0,
+               .location = 0,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 0
+            },
+            {
+               .binding = 1,
+               .location = 1,
+               .format = vk::FORMAT_R32G32_SFLOAT,
+               .offset = 0
+            },
+            {
+               .binding = 2,
+               .location = 2,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
+               .offset = 0
+            }
+        })
     )
     .setDynamicState(
        &&vk::pipelineDynamicStateCreateInfoBuilder()
@@ -737,13 +795,13 @@ fn void! main()
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);
-           mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, (float)eventHandler.mouse_x_delta * 0.01, 0, 1});
-            mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
         Fence frame_fence = frame_fences[frame];
