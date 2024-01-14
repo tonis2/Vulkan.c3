@@ -14,7 +14,7 @@ def Animations = List(<AnimationMixer>);
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = true;
+const ENABLE_VALIDATION_LAYERS = false;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct TextureData {
@@ -29,11 +29,18 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
+struct MorphData {
+    short stride;
+    uint offset;
+    float weight;
+}
+
 struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
    DeviceAddress uniform_buffer;
+   DeviceAddress vertex_buffer;
 }
 
 MemoryBlock vertex_buffer;
@@ -42,11 +49,15 @@ MemoryBlock uniform_buffer;
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
+        MorphData[2] morph_data;
 
+        foreach (i, weight: mesh.weights) morph_data[i].weight = weight;
         foreach (primitive: mesh.primitives) {
-            foreach (target: primitive.targets) {
-                Accessor morph_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
+            foreach (i, target: primitive.targets) {
+                Accessor morph_accessor = gltf.accessors[target["POSITION"]!!];
                 gltf::BufferView morph_view = gltf.bufferViews[morph_accessor.view];
+                morph_data[i].offset = (uint)morph_view.offset;
+                morph_data[i].stride = (short)morph_accessor.componentSize();
             }
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
@@ -77,7 +88,8 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .uniform_buffer = uniform_buffer.address
+                .uniform_buffer = uniform_buffer.address,
+                .vertex_buffer = vertex_buffer.address
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
