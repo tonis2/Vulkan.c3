@@ -9,7 +9,6 @@ fn float radians(float value) {
 struct UniformData {
     Matrix4f projection;
     Matrix4f view;
-    Matrix4f model;
 }
 
 struct Camera {
@@ -41,13 +40,9 @@ fn void Camera.zoom(Camera* self, float value) {
    self.view.m32 += value;
 }
 
-fn UniformData Camera.matrix(Camera self, Matrix4f model = MATRIX4F_IDENTITY) {
+fn UniformData Camera.matrix(Camera self) {
     return UniformData {
         self.perspective,
         self.view,
-        model
     };
 }
-
-
-const Matrix4f FLIP_VULKAN_PROJECTION = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 0.5f, 1.0f};

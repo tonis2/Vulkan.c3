@@ -9,18 +9,24 @@ import stb;
 import std::time;
 
 def TextureList = List(<TextureData>);
-def Animations = List(<AnimationMixer>);
 
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
+const SCENE_INDEX = 0;
 
 struct TextureData {
     MemoryBlock block;
     vk::Sampler sampler;
     vk::ImageView view;
+}
+
+struct AddressBuffer {
+    DeviceAddress uniform_buffer;
+    DeviceAddress morph_buffer;
+    DeviceAddress vertex_buffer;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -30,35 +36,32 @@ fn void TextureData.free(&self, Device device)
 }
 
 struct MorphData {
-    short stride;
-    uint offset;
-    float weight;
+    usz offset;
+    uint count;
 }
 
 struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
-   DeviceAddress uniform_buffer;
-   DeviceAddress vertex_buffer;
+   MorphData morph;
 }
 
 MemoryBlock vertex_buffer;
 MemoryBlock uniform_buffer;
+MemoryBlock address_buffer;
+
+MemoryBlock morph_buffer;
+MorphMixer morph_mixer;
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
-        MorphData[2] morph_data;
 
-        foreach (i, weight: mesh.weights) morph_data[i].weight = weight;
-        foreach (primitive: mesh.primitives) {
-            foreach (i, target: primitive.targets) {
-                Accessor morph_accessor = gltf.accessors[target["POSITION"]!!];
-                gltf::BufferView morph_view = gltf.bufferViews[morph_accessor.view];
-                morph_data[i].offset = (uint)morph_view.offset;
-                morph_data[i].stride = (short)morph_accessor.componentSize();
-            }
+/*        float[2] weights;
+        foreach (i, weight: mesh.weights) weights[i] = weight;*/
+        foreach (index, primitive: mesh.primitives) {
+           /* MorphEntry morph = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index)!!;*/
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
@@ -88,8 +91,11 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .uniform_buffer = uniform_buffer.address,
-                .vertex_buffer = vertex_buffer.address
+  /*
+                .morph = {
+                    .count = (uint)morph.count,
+                    .offset = morph.offset,
+                }*/
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
@@ -162,6 +168,17 @@ fn void! main()
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
     camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+
+    morph_mixer = gltf_data.createMorphMixer(.scene = SCENE_INDEX)!;
+    defer morph_mixer.free();
+
+    // Load animations
+    Animations animations;
+    defer animations.release();
+
+    foreach (animation: gltf_data.animations) {
+        animations.push(gltf_data.loadAnimation(animation));
+    }
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -358,8 +375,15 @@ fn void! main()
         .device_address = true
     }.build()!;
 
+    address_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(AddressBuffer.sizeof)
+                    .build(device)!
+                    .bind(&local_allocation)!;
+
     uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(UniformData.sizeof)
                     .build(device)!
@@ -382,6 +406,14 @@ fn void! main()
                    .bind(&device_allocation)!
                    .getAddress(device);
 
+/*    morph_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(morph_mixer.size())
+                    .build(device)!
+                    .bind(&device_allocation)!
+                    .getAddress(device);*/
+
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
@@ -394,9 +426,30 @@ fn void! main()
         }!;
     }!;
 
+    // Upload all morph data, for quick access later
+/*    device.@staging_buffer(.size = morph_mixer.size(), .data = morph_mixer.targets.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+          BufferCopy copyRegion = {
+               .srcOffset = 0,
+               .dstOffset = 0,
+               .size = morph_mixer.size()
+           };
+           vk::cmdCopyBuffer(command_buffer, staging_buffer, morph_buffer.buffer, 1, &copyRegion);
+        }!;
+    }!;*/
+
+    AddressBuffer addresses = {
+        .uniform_buffer = uniform_buffer.address,
+/*        .morph_buffer = morph_buffer.address,*/
+        .vertex_buffer = vertex_buffer.address,
+    };
+
+    address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
+
     TextureData depth_texture;
     TextureList textures;
 
+    // Create depth texture
     vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
     vk::Image depth_image = vk::imageCreateInfoBuilder()
         .setImageType(vk::IMAGE_TYPE_2D)
@@ -603,6 +656,12 @@ fn void! main()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
         {
+          .binding = 0,
+          .descriptorType = vk::DESCRIPTOR_TYPE_STORAGE_BUFFER,
+          .descriptorCount = 1,
+          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+        },
+        {
             .binding = 1,
             .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             .descriptorCount = (uint)textures.len(),
@@ -614,6 +673,17 @@ fn void! main()
     // Bind loaded textures to descriptor
     List(<DescriptorImageInfo>) descriptor_images;
     List(<WriteDescriptorSet>) descriptor_sets;
+
+    descriptor_sets.push(
+        vk::writeDescriptorSetBuilder()
+        .setDescriptorType(vk::DESCRIPTOR_TYPE_STORAGE_BUFFER)
+        .setBufferInfo({
+          {
+              .buffer = address_buffer.buffer,
+              .offset = 0,
+              .range = AddressBuffer.sizeof,
+          },
+    }));
 
     foreach (tex: textures) {
         descriptor_images.push({
@@ -770,19 +840,8 @@ fn void! main()
         frame_fences.push(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
     }
 
-    // Load animations
-    Animations animations;
-    defer {
-        foreach (animation: animations) animation.free();
-        animations.free();
-    }
-
-    foreach (animation: gltf_data.animations) {
-        animations.push(gltf_data.loadAnimation(animation));
-    }
-
     // Picking gltf scene to render
-    Scene scene = gltf_data.scenes[0];
+    Scene scene = gltf_data.scenes[SCENE_INDEX];
     uint frame = 0;
     Clock time = clock::now();
 
@@ -834,7 +893,6 @@ fn void! main()
             .setClearValue({
               .depthStencil = { 1.0f, 0 }
         }));
-
 
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
