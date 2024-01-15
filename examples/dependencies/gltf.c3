@@ -23,10 +23,12 @@ def MaterialList = List(<Material>);
 def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
+def Animations = List(<AnimationMixer>);
 
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
+def MorphTargets = List(<MorphInfo>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -135,7 +137,6 @@ struct Gltf {
     TextureList textures;
     AnimationList animations;
     SkinList skins;
-    List(<MorphInfo>) morph_data;
 }
 
 struct Scene {
@@ -156,8 +157,8 @@ struct Node {
 }
 
 struct Primitive {
-  AttributeMap attributes;
-  List(<AttributeMap>) targets;
+    AttributeMap attributes;
+    List(<AttributeMap>) targets;
 }
 
 struct Mesh {
@@ -233,7 +234,6 @@ struct Material {
     }
 }
 
-
 struct TextureInfo {
     int index;
     int sampler;
@@ -304,7 +304,6 @@ struct Buffer {
 struct MorphInfo {
     uint accessor;
     uint offset;
-    uint index;
     uint stride;
 }
 
@@ -1053,7 +1052,6 @@ fn Gltf! parse(InStream* stream) {
     }
 
     // Parse mesh morphing data, into a format that can be uploaded to GPU
-    content.createMorphInfo();
     return content;
 }
 
@@ -1076,7 +1074,6 @@ fn void Gltf.free(Gltf* self) {
     self.materials.free();
     self.textures.free();
     self.samplers.free();
-    self.morph_data.free();
 }
 
 fn Node! Gltf.getNode(Gltf* self, String name) {
@@ -1317,26 +1314,58 @@ macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
 
+struct MorphEntry {
+    usz index;
+    usz offset;
+    usz count;
+}
 
-fn void Gltf.createMorphInfo(&self) {
-    foreach (mesh: self.meshes) {
-        foreach (primitive: mesh.primitives) {
+struct MorphMixer {
+    List(<MorphInfo>) targets;
+    HashMap(<usz, MorphEntry>) indexes;
+}
+
+fn usz MorphMixer.size(self) {
+    return self.targets.len() * MorphInfo.sizeof;
+}
+
+fn void MorphMixer.free(&self) {
+    self.targets.free();
+    self.indexes.free();
+}
+
+fn MorphEntry! MorphMixer.getTarget(&self, usz mesh_index, usz prim_index) {
+    return self.indexes[mesh_index + prim_index];
+}
+
+fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
+    MorphMixer mixer;
+    foreach (mesh_index, mesh: self.meshes) {
+      foreach (prim_index, primitive: mesh.primitives) {
+            usz target_keys_len = 0;
             foreach (target: primitive.targets) {
-                foreach (key : target.key_tlist()) {
-                    Accessor* morph_accessor = &self.accessors[target[key]!!];
-                    gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
-
-                    self.morph_data.push({
-                        .accessor = (uint)target[key]!!,
-                        .offset = morph_view.offset,
-                        .stride = morph_accessor.componentSize()
-                    });
-
-                    morph_accessor.morph_index = (uint)self.morph_data.len();
+                if (mesh.scene == scene) {
+                   foreach (key : target.key_tlist()) {
+                        Accessor morph_accessor = self.accessors[target[key]!!];
+                        gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
+                        mixer.targets.push({
+                            .accessor = (uint)target[key]!!,
+                            .offset = morph_view.offset,
+                            .stride = morph_accessor.componentSize()
+                        });
+                        target_keys_len = target.len();
+                    }
                 }
             }
+
+            mixer.indexes[mesh_index + prim_index] = MorphEntry {
+                .count = primitive.targets.len(),
+                .index = mixer.targets.len() - primitive.targets.len() * target_keys_len,
+                .offset = mixer.size()
+            };
         }
     }
+    return mixer;
 }
 
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
@@ -1414,4 +1443,9 @@ fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
     }
 
     io::printf(" \n _______ \n%d");
+}
+
+fn void Animations.release(self) {
+    foreach (animation: self) animation.free();
+    self.free();
 }
