@@ -17,20 +17,16 @@ layout(buffer_reference, std140, buffer_reference_align = 4) buffer UniformBuffe
 };
 
 layout(buffer_reference, std140, buffer_reference_align = 4) buffer MorphBuffer {
-    uint accessor;
-    uint offset;
-    uint stride;
+    uint target_index;
+    uint buffer_index;
+    uint type;
+    int next_row;
 };
 
-layout(binding = 0, std140, buffer_reference_align = 4) buffer AddressBuffer {
+layout(binding = 0, std140, scalar) buffer AddressBuffer {
    UniformBuffer uniform_buffer;
    VertexBuffer vertex_buffer;
-   MorphBuffer[] morph_buffer;
-};
-
-struct MorphEntry {
-    uint count;
-    uint offset;
+   MorphBuffer morph_buffer;
 };
 
 layout(location = 0) in vec3 vp;
@@ -46,17 +42,31 @@ layout( push_constant ) uniform constants
     mat4 model_matrix;
     vec4 baseColor;
     int texture;
-    MorphEntry morph;
+    int morph_index;
+    float[2] weights;
 } push_data;
+
+
+// Morph types
+// "POSITION" = 0
+// "TANGENT" = 1
+// "NORMAL" = 2
 
 void main() {
     vec3 position = vp;
 
-   // for (uint i = 0; i < 2; i++) {
-   //     MorphData morph = push_data.morph_data[i];
-   //     uint offset = (morph.offset / morph.stride) + gl_VertexIndex;
-   //     position += pos_buffer.data[offset] * morph.weight;
-   //  }
+    if (push_data.morph_index > -1) {
+        MorphBuffer morph_data = morph_buffer[push_data.morph_index];
+        PositionBuffer pos_buffer = PositionBuffer(vertex_buffer);
+
+        // Calculate morph target updates
+        while (morph_data.next_row > -1) {
+            if (morph_data.type == 0) {
+                position += pos_buffer.data[morph_data.buffer_index + gl_VertexIndex] * push_data.weights[morph_data.target_index];
+            }
+            morph_data = morph_buffer[morph_data.next_row];
+        }
+    }
 
     gl_Position = uniform_buffer.projection * uniform_buffer.view * push_data.model_matrix * vec4(position, 1.0);
     gl_Position.y = -gl_Position.y;
