@@ -307,7 +307,7 @@ fn void! main()
                .bind(&local_allocation)!;
 
     // Add data for uniform buffer
-    uniform_buffer.map(&&camera.matrix(), device)!;
+    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
     // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -452,13 +452,13 @@ fn void! main()
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 1.5);
-           mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
             camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
-            mem::copy(uniform_buffer.mapped, &&camera.matrix(), uniform_buffer.size);
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
         Fence frame_fence = frame_fences[frame];
