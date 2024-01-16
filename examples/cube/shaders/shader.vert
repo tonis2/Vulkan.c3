@@ -8,10 +8,10 @@ layout(binding = 0) uniform uniform_matrix
 {
   mat4 projection;
   mat4 view;
-  mat4 model;
 };
 
 void main() {
+    mat4 identity_matrix = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     outColor = v_color;
-    gl_Position = projection * view * model * vec4(vp, 1.0);
+    gl_Position = projection * view * identity_matrix * vec4(vp, 1.0);
 }
