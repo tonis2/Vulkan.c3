@@ -28,7 +28,6 @@ def Animations = List(<AnimationMixer>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
-def MorphTargets = List(<MorphInfo>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -299,12 +298,6 @@ struct Buffer {
     char[] uri;
     uint size;
     ResourceType type;
-}
-
-struct MorphInfo {
-    uint accessor;
-    uint offset;
-    uint stride;
 }
 
 const EMPTY_MATERIAL = Material {
@@ -1314,19 +1307,33 @@ macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
     return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
 }
 
-struct MorphEntry {
-    usz index;
-    usz offset;
-    usz count;
+fn uint String.attributeType(self) {
+    switch (self) {
+        case "POSITION":
+            return 0;
+        case "TANGENT":
+            return 1;
+        case "NORMAL":
+            return 2;
+        default:
+            return 20;
+    }
+}
+
+struct MorphTargets {
+    uint target_index;
+    uint buffer_index;
+    uint type;
+    int next_row;
 }
 
 struct MorphMixer {
-    List(<MorphInfo>) targets;
-    HashMap(<usz, MorphEntry>) indexes;
+    List(<MorphTargets>) targets;
+    HashMap(<usz, usz>) indexes;
 }
 
 fn usz MorphMixer.size(self) {
-    return self.targets.len() * MorphInfo.sizeof;
+    return self.targets.len() * MorphTargets.sizeof;
 }
 
 fn void MorphMixer.free(&self) {
@@ -1334,8 +1341,8 @@ fn void MorphMixer.free(&self) {
     self.indexes.free();
 }
 
-fn MorphEntry! MorphMixer.getTarget(&self, usz mesh_index, usz prim_index) {
-    return self.indexes[mesh_index + prim_index];
+fn int MorphMixer.getTarget(&self, usz mesh_index, usz prim_index) {
+    return (int)self.indexes[mesh_index + prim_index] ?? -1;
 }
 
 fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
@@ -1343,26 +1350,39 @@ fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
     foreach (mesh_index, mesh: self.meshes) {
       foreach (prim_index, primitive: mesh.primitives) {
             usz target_keys_len = 0;
-            foreach (target: primitive.targets) {
+            foreach (target_index, target: primitive.targets) {
+                target_keys_len = target.len();
+
                 if (mesh.scene == scene) {
-                   foreach (key : target.key_tlist()) {
+                   String[] keys = target.key_tlist();
+                   foreach (i, key : keys) {
                         Accessor morph_accessor = self.accessors[target[key]!!];
                         gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
+
+                        // Get buffer index, for next morph target in the array
+                        int next = {|
+                            if (i+1 < keys.len) {
+                                return (uint)mixer.targets.len() + 1;
+                            };
+
+                            if (target_index+1 < primitive.targets.len()) {
+                                return (uint)mixer.targets.len() + 1;
+                            }
+
+                            return -1;
+                        |};
+
                         mixer.targets.push({
-                            .accessor = (uint)target[key]!!,
-                            .offset = morph_view.offset,
-                            .stride = morph_accessor.componentSize()
+                            .target_index = (uint)target_index,
+                            .type = key.attributeType(),
+                            .buffer_index = morph_view.offset / morph_accessor.componentSize(),
+                            .next_row = next
                         });
-                        target_keys_len = target.len();
                     }
                 }
             }
 
-            mixer.indexes[mesh_index + prim_index] = MorphEntry {
-                .count = primitive.targets.len(),
-                .index = mixer.targets.len() - primitive.targets.len() * target_keys_len,
-                .offset = mixer.size()
-            };
+            mixer.indexes[mesh_index + prim_index] = mixer.targets.len() - primitive.targets.len() * target_keys_len;
         }
     }
     return mixer;

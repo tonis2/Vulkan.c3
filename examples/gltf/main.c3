@@ -25,8 +25,8 @@ struct TextureData {
 
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
-    DeviceAddress morph_buffer;
     DeviceAddress vertex_buffer;
+    DeviceAddress morph_buffer;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -36,7 +36,7 @@ fn void TextureData.free(&self, Device device)
 }
 
 struct MorphData {
-    usz offset;
+    uint index;
     uint count;
 }
 
@@ -44,24 +44,26 @@ struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
-   MorphData morph;
+   int morph_index;
+   float[2] weights;
 }
 
 MemoryBlock vertex_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
-
 MemoryBlock morph_buffer;
+
 MorphMixer morph_mixer;
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
-/*        float[2] weights;
-        foreach (i, weight: mesh.weights) weights[i] = weight;*/
+        float[2] weights;
+        foreach (i, weight: mesh.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-           /* MorphEntry morph = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index)!!;*/
+
+           // int morph_index = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index);
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
@@ -91,11 +93,8 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-  /*
-                .morph = {
-                    .count = (uint)morph.count,
-                    .offset = morph.offset,
-                }*/
+                .weights = weights,
+                .morph_index = -1
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
@@ -426,8 +425,8 @@ fn void! main()
         }!;
     }!;
 
-    // Upload all morph data, for quick access later
-/*    device.@staging_buffer(.size = morph_mixer.size(), .data = morph_mixer.targets.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
+/*    // Upload all morph data, for quick access later
+    device.@staging_buffer(.size = morph_mixer.size(), .data = morph_mixer.targets.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
@@ -440,8 +439,8 @@ fn void! main()
 
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
-/*        .morph_buffer = morph_buffer.address,*/
         .vertex_buffer = vertex_buffer.address,
+/*        .morph_buffer = morph_buffer.address,*/
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
