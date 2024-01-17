@@ -153,6 +153,7 @@ struct Node {
     Vec3f scale;
     Vec3f translation;
     List(<uint>) children;
+    List(<float>) weights;
 }
 
 struct Primitive {
@@ -379,6 +380,7 @@ fn bool Node.hasMesh(self) {
 
 fn void Node.free(self) {
     self.children.free();
+    self.weights.free();
     self.name.free();
 }
 
@@ -1098,7 +1100,6 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation transform values, from buffer
         Accessor value_accessor = self.accessors[sampler.output];
-
         for (ulong i; i < value_accessor.count; i++) {
             switch (channel.target.path) {
                 case TRANSLATION: {
@@ -1150,7 +1151,7 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
 
    foreach (&channel: animation.channels) {
         AnimationSampler sampler = animation.samplers[channel.sampler];
-
+        Node* node = &self.nodes[channel.target.node];
         channel.time += current_time;
         if (channel.time > channel.max_time) channel.time = 0;
         usz time_index = 0;
@@ -1163,14 +1164,10 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
         }
 
        if (channel.target.path == WEIGHTS) {
-            Mesh* mesh = &self.meshes[channel.target.node];
-
-            foreach (i, weight: mesh.weights) {
-                mesh.weights[i] = channel.values[time_index * mesh.weights.len() + i] .weight;
+            foreach (i, weight: node.weights) {
+                node.weights[i] = channel.values[time_index * node.weights.len() + i].weight;
             }
        } else {
-            Node* node = &self.nodes[channel.target.node];
-
             double prev_time = channel.times[time_index - 1];
             double next_time = channel.times[time_index];
 
@@ -1322,9 +1319,9 @@ fn uint String.attributeType(self) {
 
 struct MorphTargets {
     uint target_index;
-    uint buffer_index;
     uint type;
     int next_row;
+    uint offset;
 }
 
 struct MorphMixer {
@@ -1375,8 +1372,8 @@ fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
                         mixer.targets.push({
                             .target_index = (uint)target_index,
                             .type = key.attributeType(),
-                            .buffer_index = morph_view.offset / morph_accessor.componentSize(),
-                            .next_row = next
+                            .next_row = next,
+                            .offset = morph_view.offset / 4
                         });
                     }
                 }
@@ -1389,10 +1386,10 @@ fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
 }
 
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
-
     if (self.hasMesh()) {
         Mesh mesh = data.meshes[self.mesh];
         mesh.scene = scene_index;
+        foreach (weight: mesh.weights) self.weights.push(weight);
     }
 
     foreach (node_index : self.children) {
@@ -1401,7 +1398,6 @@ fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
         node.mapValues(scene_index, data);
     }
 }
-
 
 fn Matrix4f Node.globalMatrix(&self) {
     Matrix4f return_matrix = self.recompose();
@@ -1438,7 +1434,7 @@ fn char[]! Buffer.from_base64(self) {
 }*/
 
 
-fn void! Gltf.get_buffer(Gltf* self, Accessor accessor) {
+fn void Gltf.get_buffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
 
