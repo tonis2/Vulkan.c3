@@ -10,8 +10,8 @@ import std::time;
 
 def TextureList = List(<TextureData>);
 
-const WIDTH = 800;
-const HEIGHT = 600;
+const WIDTH = 1200;
+const HEIGHT = 800;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
 const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
@@ -35,17 +35,12 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
-struct MorphData {
-    uint index;
-    uint count;
-}
-
 struct PushConstantData {
    Matrix4f matrix;
    Vec4f baseColor;
    int texture;
    int morph_index;
-   float[2] weights;
+   float[8] weights;
 }
 
 MemoryBlock vertex_buffer;
@@ -59,11 +54,10 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
 
-        float[2] weights;
-        foreach (i, weight: mesh.weights) weights[i] = weight;
+        float[8] weights = {0,0,0,0,0,0,0,0};
+        foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-
-           // int morph_index = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index);
+            int morph_index = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index);
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
@@ -94,7 +88,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .weights = weights,
-                .morph_index = -1
+                .morph_index = morph_index
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
@@ -132,7 +126,7 @@ fn void! main()
     glfw::windowHint(glfw::GLFW_RESIZABLE, glfw::GLFW_FALSE);
     glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
     glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
-    GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
+    GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "GLTF example", null, null);
 
     defer {
         glfw::destroyWindow(window);
@@ -148,7 +142,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/truck.glb", "r");
+    File! file = file::open("examples/gltf/assets/MorphStress.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -405,13 +399,13 @@ fn void! main()
                    .bind(&device_allocation)!
                    .getAddress(device);
 
-/*    morph_buffer = vk::bufferCreateInfoBuilder()
+    morph_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(morph_mixer.size())
                     .build(device)!
                     .bind(&device_allocation)!
-                    .getAddress(device);*/
+                    .getAddress(device);
 
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -425,7 +419,7 @@ fn void! main()
         }!;
     }!;
 
-/*    // Upload all morph data, for quick access later
+    // Upload all morph data, for quick access later
     device.@staging_buffer(.size = morph_mixer.size(), .data = morph_mixer.targets.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
@@ -435,12 +429,12 @@ fn void! main()
            };
            vk::cmdCopyBuffer(command_buffer, staging_buffer, morph_buffer.buffer, 1, &copyRegion);
         }!;
-    }!;*/
+    }!;
 
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
-/*        .morph_buffer = morph_buffer.address,*/
+        .morph_buffer = morph_buffer.address,
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
@@ -847,7 +841,7 @@ fn void! main()
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        foreach (animation: animations) gltf_data.animate(.animation = &animation, .time = time.mark());
+        if (animations.len() > 0) gltf_data.animate(.animation = &animations[2], .time = time.mark());
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);
