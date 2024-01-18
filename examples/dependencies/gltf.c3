@@ -1385,7 +1385,7 @@ struct BufferInfo (Printable) {
 fn usz! BufferInfo.to_format(&self, Formatter* formatter) @dynamic
 {
 	usz n = formatter.print("{ ")!;
-	n += formatter.printf(" %d, %d, %d, %d, %d, %d", self.stride, self.type, self.weight_index, self.next_row, self.offset, self.size)!;
+	n += formatter.printf(" %d, %d, %d, %d, %d, %d", self.stride, self.type, self.weight_index, self.offset, self.size, self.next_row)!;
 	n += formatter.print(" }")!;
 	return n;
 }
