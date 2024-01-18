@@ -272,7 +272,7 @@ fn void! main()
        .pNext = &device_indexing_feature
     };
 
-    PhysicalDeviceBufferDeviceAddressFeatures dynamic_rendering_feature = {
+    PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
        .pNext = &buffer_device_feature
     };
@@ -355,8 +355,8 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
         .size = 50_000_000,
-        .device_address = true
     }.build()!;
 
     // Allocation where data can be changed from CPU
@@ -364,8 +364,8 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
         .size = 5_000_000,
-        .device_address = true
     }.build()!;
 
     address_buffer = vk::bufferCreateInfoBuilder()
