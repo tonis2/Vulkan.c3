@@ -28,6 +28,7 @@ def Animations = List(<AnimationMixer>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
+def BufferMap = List(<BufferInfo>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -282,15 +283,14 @@ struct Accessor {
     Mode mode;
     DataType data_type;
     AccessorType type;
-    uint morph_index;
     List(<float>) min;
     List(<float>) max;
 }
 
 struct BufferView {
     uint buffer;
-    uint byteLength;
-    uint offset;
+    usz byteLength;
+    usz offset;
     uint stride;
     Targets target;
 }
@@ -300,18 +300,6 @@ struct Buffer {
     char[] uri;
     uint size;
     ResourceType type;
-}
-
-struct MorphTargets {
-    uint target_index;
-    uint type;
-    int next_row;
-    uint offset;
-}
-
-struct MorphMixer {
-    List(<MorphTargets>) targets;
-    HashMap(<usz, usz>) indexes;
 }
 
 const EMPTY_MATERIAL = Material {
@@ -597,28 +585,29 @@ fn void Buffer.free(&self) {
     mem::free(self.uri);
 }
 
-fn void! Camera.fromJson(&self, Object* json) {
+fn void Camera.fromJson(&self, Object* json) {
     String! cameraType = json.get_string("type");
     String! name = json.get_string("name");
 
     if (try name) self.name = name;
     if (try cameraType) {
-        if (mem::equals(cameraType, "perspective")) {
+        if (cameraType == "perspective") {
             Object*! perspective = json.get("perspective");
-            if (catch err = perspective) return ParseError.BROKEN_BUFFER?;
+            if (try perspective) {
+                float! aspectRatio = (float)perspective.get_float("aspectRatio");
+                float! yfov = (float)perspective.get_float("yfov");
+                float! zfar = (float)perspective.get_float("zfar");
+                float! znear = (float)perspective.get_float("znear");
 
-            float! aspectRatio = (float)perspective.get_float("aspectRatio");
-            float! yfov = (float)perspective.get_float("yfov");
-            float! zfar = (float)perspective.get_float("zfar");
-            float! znear = (float)perspective.get_float("znear");
-
-            if (catch err = aspectRatio, yfov, zfar, znear) return ParseError.BROKEN_BUFFER?;
-            self.perspective = {
-                aspectRatio,
-                yfov,
-                zfar,
-                znear
-            };
+                if (try aspectRatio && try yfov && try zfar && try znear) {
+                    self.perspective = {
+                        aspectRatio,
+                        yfov,
+                        zfar,
+                        znear
+                    };
+                }
+            }
         }
     }
 }
@@ -965,8 +954,8 @@ fn Gltf! parse(InStream* stream) {
     if (try cameras) {
         foreach (camera : cameras.array) {
             Camera data;
-            if (catch err = data.fromJson(camera)) {}
-            else {content.cameras.push(data);}
+            data.fromJson(camera);
+            content.cameras.push(data);
         }
     }
     // Parse materials
@@ -1336,62 +1325,6 @@ fn uint String.attributeType(self) {
     }
 }
 
-fn usz MorphMixer.size(self) {
-    return self.targets.len() * MorphTargets.sizeof;
-}
-
-fn void MorphMixer.free(&self) {
-    self.targets.free();
-    self.indexes.free();
-}
-
-fn int MorphMixer.getTarget(&self, usz mesh_index, usz prim_index) {
-    return (int)self.indexes[mesh_index + prim_index] ?? -1;
-}
-
-fn MorphMixer! Gltf.createMorphMixer(&self, usz scene) {
-    MorphMixer mixer;
-    foreach (mesh_index, mesh: self.meshes) {
-      foreach (prim_index, primitive: mesh.primitives) {
-            usz target_keys_len = 0;
-            foreach (target_index, target: primitive.targets) {
-                target_keys_len = target.len();
-
-                if (mesh.scene == scene) {
-                   String[] keys = target.key_tlist();
-                   foreach (i, key : keys) {
-                        Accessor morph_accessor = self.accessors[target[key]!!];
-                        gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
-
-                        // Get buffer index, for next morph target in the array
-                        int next = {|
-                            if (i+1 < keys.len) {
-                                return (uint)mixer.targets.len() + 1;
-                            };
-
-                            if (target_index+1 < primitive.targets.len()) {
-                                return (uint)mixer.targets.len() + 1;
-                            }
-
-                            return -1;
-                        |};
-
-                        mixer.targets.push({
-                            .target_index = (uint)target_index,
-                            .type = key.attributeType(),
-                            .next_row = next,
-                            .offset = morph_view.offset / 4
-                        });
-                    }
-                }
-            }
-
-            mixer.indexes[mesh_index + prim_index] = mixer.targets.len() - primitive.targets.len() * target_keys_len;
-        }
-    }
-    return mixer;
-}
-
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
     if (self.hasMesh()) {
         Mesh mesh = data.meshes[self.mesh];
@@ -1440,6 +1373,71 @@ fn char[]! Buffer.from_base64(self) {
     return data;
 }*/
 
+struct BufferInfo (Printable) {
+    uint stride;
+    uint type;
+    uint weight_index;
+    uint offset;
+    uint size;
+    int next_row;
+}
+
+fn usz! BufferInfo.to_format(&self, Formatter* formatter) @dynamic
+{
+	usz n = formatter.print("{ ")!;
+	n += formatter.printf(" %d, %d, %d, %d, %d, %d", self.stride, self.type, self.weight_index, self.next_row, self.offset, self.size)!;
+	n += formatter.print(" }")!;
+	return n;
+}
+
+fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
+    BufferMap buffers;
+
+    foreach (accessor: self.accessors) {
+        BufferView view = self.bufferViews[accessor.view];
+        buffers.push({
+            .offset = (uint)view.offset,
+            .size = accessor.componentLen(),
+            .next_row = -1,
+            .stride = accessor.componentSize()
+        });
+    }
+
+    if (morph_data == true) {
+      foreach (mesh_index, mesh: self.meshes) {
+          foreach (prim_index, primitive: mesh.primitives) {
+                usz target_keys_len = 0;
+                foreach (target_index, target: primitive.targets) {
+                    String[] target_keys = target.key_tlist();
+                    foreach (i, key : target_keys) {
+                        usz accessor_index = target[key]!!;
+                        Accessor morph_accessor = self.accessors[accessor_index];
+                        gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
+
+                        // Get buffer index, for next morph target in the array
+                        int next = {|
+                          if (i + 1 < target_keys.len) {
+                              return (uint)accessor_index + 1;
+                          };
+
+                          if (i == target_keys.len - 1 && target_index != primitive.targets.len()) {
+                            return (uint)accessor_index + 1;
+                          }
+                          return -1;
+                        |};
+
+                        BufferInfo* buffer_info = &buffers[accessor_index];
+                        buffer_info.next_row = next;
+                        buffer_info.weight_index = (uint)target_index;
+                        buffer_info.type = (uint)key.attributeType();
+                    }
+                }
+            }
+        }
+    }
+
+    return buffers;
+}
 
 fn void Gltf.get_buffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.view];

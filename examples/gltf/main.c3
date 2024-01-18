@@ -26,7 +26,7 @@ struct TextureData {
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
-    DeviceAddress morph_buffer;
+    DeviceAddress buffer_map;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -46,9 +46,8 @@ struct PushConstantData {
 MemoryBlock vertex_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
-MemoryBlock morph_buffer;
+MemoryBlock buffermap_buffer;
 
-MorphMixer morph_mixer;
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
@@ -57,7 +56,10 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         float[8] weights = {0,0,0,0,0,0,0,0};
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-            int morph_index = morph_mixer.getTarget(.mesh_index = node.mesh, .prim_index = index);
+            int morph_index = {|
+                if (primitive.targets.len() > 0) return (int)primitive.targets[0]["POSITION"] ?? -1;
+                return -1;
+            |};
 
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
@@ -161,9 +163,6 @@ fn void! main()
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
     camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
-
-    morph_mixer = gltf_data.createMorphMixer(.scene = SCENE_INDEX)!;
-    defer morph_mixer.free();
 
     // Load animations
     Animations animations;
@@ -365,7 +364,7 @@ fn void! main()
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 5_000_000,
+        .size = 10_000_000,
     }.build()!;
 
     address_buffer = vk::bufferCreateInfoBuilder()
@@ -390,6 +389,13 @@ fn void! main()
     gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.view];
     gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
 
+    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
+    defer buffer_map.free();
+
+/*    foreach (buffer: buffer_map) {
+        io::printfn("%s", buffer);
+    }*/
+
     usz vertex_buffer_size = (usz)(last_accessor.offset + accessor_view.offset + accessor_view.byteLength);
     vertex_buffer = vk::bufferCreateInfoBuilder()
                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
@@ -399,13 +405,16 @@ fn void! main()
                    .bind(&device_allocation)!
                    .getAddress(device);
 
-    morph_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(morph_mixer.size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
+    buffermap_buffer = vk::bufferCreateInfoBuilder()
+                       .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                       .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                       .setSize(buffer_map.len() * BufferInfo.sizeof)
+                       .build(device)!
+                       .bind(&local_allocation)!
+                       .getAddress(device);
+
+    // Make a map of vertex_buffer, to easily access different data from GPU
+    buffermap_buffer.upload(buffer_map.entries, buffer_map.len() * BufferInfo.sizeof, device);
 
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -419,22 +428,10 @@ fn void! main()
         }!;
     }!;
 
-    // Upload all morph data, for quick access later
-    device.@staging_buffer(.size = morph_mixer.size(), .data = morph_mixer.targets.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-          BufferCopy copyRegion = {
-               .srcOffset = 0,
-               .dstOffset = 0,
-               .size = morph_mixer.size()
-           };
-           vk::cmdCopyBuffer(command_buffer, staging_buffer, morph_buffer.buffer, 1, &copyRegion);
-        }!;
-    }!;
-
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
-        .morph_buffer = morph_buffer.address,
+        .buffer_map = buffermap_buffer.address
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
@@ -510,7 +507,7 @@ fn void! main()
             gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
             gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
 
-            stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
+            stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], (uint)buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
             defer image_data.free()!!;
 
             if (catch err = image_data) {
@@ -841,7 +838,7 @@ fn void! main()
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        if (animations.len() > 0) gltf_data.animate(.animation = &animations[2], .time = time.mark());
+        if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);

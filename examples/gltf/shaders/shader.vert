@@ -12,17 +12,19 @@ layout(buffer_reference, std140, buffer_reference_align = 4) buffer UniformBuffe
    mat4 view;
 };
 
-layout(buffer_reference, std140, buffer_reference_align = 4) buffer MorphBuffer {
-    uint target_index;
+layout(buffer_reference, std430, buffer_reference_align = 4) buffer BufferMap {
+    uint stride;
     uint type;
-    int next_row;
+    uint weight_index;
     uint offset;
+    uint size;
+    int next_row;
 };
 
 layout(binding = 0, scalar) buffer AddressBuffer {
    UniformBuffer uniform_buffer;
    VertexBuffer vertex_buffer;
-   MorphBuffer morph_buffer;
+   BufferMap buffer_map;
 };
 
 layout(location = 0) in vec3 vp;
@@ -51,16 +53,16 @@ void main() {
     vec3 position = vp;
 
     if (morph_index > -1) {
-        MorphBuffer morph_data = morph_buffer[morph_index];
+        BufferMap morph_data = buffer_map[morph_index];
 
         // Calculate morph target updates
         while (morph_data.next_row > -1) {
             if (morph_data.type == 0) {
-                uint offset = (morph_data.offset + gl_VertexIndex * 3);
+                uint offset = (morph_data.offset / 4 + gl_VertexIndex * 3);
                 vec3 morph_pos = vec3(vertex_buffer.data[offset + 0], vertex_buffer.data[offset + 1], vertex_buffer.data[offset + 2]);
-                position += morph_pos * weights[morph_data.target_index];
+                position += morph_pos * weights[morph_data.weight_index];
             }
-            morph_data = morph_buffer[morph_data.next_row];
+            morph_data = buffer_map[morph_data.next_row];
         }
     }
 
