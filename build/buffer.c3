@@ -56,26 +56,19 @@ struct Allocation {
     BlockList blocks;
     ulong used_size;
     uint buffer_count;
-    bool device_address;
     void* mapped;
     MemoryPropertyFlags properties;
+    MemoryAllocateFlags flags;
 }
 
 fn Allocation! Allocation.build(&self) {
     DeviceMemory memory;
 
-    if (self.device_address == true) {
-        memory = memoryAllocateInfoBuilder()
+    memory = memoryAllocateInfoBuilder()
                 .setAllocationSize(self.size)
-                .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT })
+                .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags })
                 .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
                 .build(self.device)!;
-    } else {
-       memory = memoryAllocateInfoBuilder()
-                .setAllocationSize(self.size)
-                .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
-                .build(self.device)!;
-    }
 
     self.memory = memory;
     self.used_size = 0;

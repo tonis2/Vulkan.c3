@@ -148,6 +148,7 @@ struct Node {
     String name;
     int mesh;
     int camera;
+    int skin;
     Quaternionf rotation;
     Matrix4f matrix;
     Vec3f scale;
@@ -301,6 +302,18 @@ struct Buffer {
     ResourceType type;
 }
 
+struct MorphTargets {
+    uint target_index;
+    uint type;
+    int next_row;
+    uint offset;
+}
+
+struct MorphMixer {
+    List(<MorphTargets>) targets;
+    HashMap(<usz, usz>) indexes;
+}
+
 const EMPTY_MATERIAL = Material {
     .name = "empty",
     .doubleSided = false,
@@ -330,6 +343,7 @@ fn void Scene.free(self) {
 fn void Node.fromJson(&self, Object* json) {
     self.mesh = -1;
     self.camera = -1;
+    self.skin = -1;
     self.rotation = quaternionf_identity();
     self.scale = {1, 1, 1};
     self.translation = {0, 0, 0};
@@ -345,9 +359,10 @@ fn void Node.fromJson(&self, Object* json) {
 
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
+    int! skin = json.get_int("skin");
 
     if (try name) self.name = name.copy();
-    if (try mesh) self.mesh = mesh;
+    if (try skin) self.skin = skin;
     if (try mesh) self.mesh = mesh;
     if (try camera) self.camera = camera;
     if (try rotation) {
@@ -378,14 +393,18 @@ fn bool Node.hasMesh(self) {
     return self.mesh != -1;
 }
 
-fn void Node.free(self) {
-    self.children.free();
-    self.weights.free();
-    self.name.free();
+fn bool Node.hasSkin(self) {
+    return self.skin != -1;
 }
 
 fn bool Node.hasCamera(self) {
     return self.camera != -1;
+}
+
+fn void Node.free(self) {
+    self.children.free();
+    self.weights.free();
+    self.name.free();
 }
 
 fn void Mesh.fromJson(&self, Object* json) {
@@ -1315,18 +1334,6 @@ fn uint String.attributeType(self) {
         default:
             return 20;
     }
-}
-
-struct MorphTargets {
-    uint target_index;
-    uint type;
-    int next_row;
-    uint offset;
-}
-
-struct MorphMixer {
-    List(<MorphTargets>) targets;
-    HashMap(<usz, usz>) indexes;
 }
 
 fn usz MorphMixer.size(self) {
