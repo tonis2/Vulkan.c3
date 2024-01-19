@@ -1306,12 +1306,6 @@ fn Matrix4f Node.recompose(&self) {
    return translation.mul(rotation).mul(scale);
 }
 
-macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
-    BufferView bufferView = self.bufferViews[accessor.view];
-    Buffer buffer = self.buffers[bufferView.buffer];
-    return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
-}
-
 fn uint String.attributeType(self) {
     switch (self) {
         case "POSITION":
@@ -1365,13 +1359,13 @@ fn char[]! Buffer.from_base64(self) {
     return buffer_data;
 }
 
-/*fn char[]! Buffer.from_binary(self, InStream* stream) {
-    char[] data = mem::malloc(char, self.size);
+fn char[]! Buffer.from_binary(self, InStream* stream) {
+    char[] data = mem::new_array(char, self.size);
     usz file_size = stream.seek(0, Seek.END)!;
     stream.seek(file_size - self.size, Seek.SET)!;
     stream.read(data)!;
     return data;
-}*/
+}
 
 struct BufferInfo (Printable) {
     uint stride;
@@ -1405,7 +1399,7 @@ fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
 
     if (morph_data == true) {
       foreach (mesh_index, mesh: self.meshes) {
-          foreach (prim_index, primitive: mesh.primitives) {
+          foreach (primitive: mesh.primitives) {
                 usz target_keys_len = 0;
                 foreach (target_index, target: primitive.targets) {
                     String[] target_keys = target.key_tlist();
@@ -1439,7 +1433,14 @@ fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
     return buffers;
 }
 
-fn void Gltf.get_buffer(Gltf* self, Accessor accessor) {
+
+macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
+    BufferView bufferView = self.bufferViews[accessor.view];
+    Buffer buffer = self.buffers[bufferView.buffer];
+    return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
+}
+
+fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
 
