@@ -193,7 +193,7 @@ struct Channel {
 
 union AnimationValue
 {
-    Vec3f transform;
+    Vec3f translation;
     Vec3f scale;
     Quaternionf rotation;
     float weight;
@@ -1091,7 +1091,7 @@ fn Node! Gltf.getNode(Gltf* self, String name) {
 fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
     AnimationMixer mixer = animation.mixer();
 
-    foreach (&channel: mixer.channels) {
+    foreach (index, &channel: mixer.channels) {
         AnimationSampler sampler = mixer.samplers[channel.sampler];
         Accessor time_accessor = self.accessors[sampler.input];
 
@@ -1108,16 +1108,17 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation transform values, from buffer
         Accessor value_accessor = self.accessors[sampler.output];
+
         for (ulong i; i < value_accessor.count; i++) {
             switch (channel.target.path) {
                 case TRANSLATION: {
                     channel.values.push(AnimationValue {
-                        .transform = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                        .translation = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
                     });
                 }
                 case SCALE: {
                     channel.values.push(AnimationValue {
-                        .transform = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                        .scale = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
                     });
                 }
                 case ROTATION: {
@@ -1157,13 +1158,16 @@ fn AnimationMixer Animation.mixer(self) {
 fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
    double current_time = time.to_sec();
 
-   foreach (&channel: animation.channels) {
+   foreach (index, &channel: animation.channels) {
+        if (channel.times.len() < 3) continue;
+
         AnimationSampler sampler = animation.samplers[channel.sampler];
         Node* node = &self.nodes[channel.target.node];
+
         channel.time += current_time;
         if (channel.time > channel.max_time) channel.time = 0;
-        usz time_index = 0;
 
+        usz time_index = 0;
         for (usz i; i < channel.times.len(); i++) {
             if (channel.time < channel.times[i]) {
                 time_index = i;
@@ -1172,9 +1176,7 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
         }
 
        if (channel.target.path == WEIGHTS) {
-            foreach (i, weight: node.weights) {
-                node.weights[i] = channel.values[time_index * node.weights.len() + i].weight;
-            }
+            foreach (i, weight: node.weights) node.weights[i] = channel.values[time_index * node.weights.len() + i].weight;
        } else {
             double prev_time = channel.times[time_index - 1];
             double next_time = channel.times[time_index];
@@ -1183,32 +1185,32 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             AnimationValue next_value = channel.values[time_index];
             double interpolation_value = (channel.time - prev_time) / (next_time - prev_time);
 
+            //io::printfn("%d %s", index, channel.target.path);
             if (sampler.interpolation == LINEAR) {
                 switch (channel.target.path) {
                     case TRANSLATION: {
-                        node.translation = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                        node.translation = prev_value.translation + interpolation_value * (next_value.translation - prev_value.translation);
                     }
                     case ROTATION: {
                         node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
                     }
                     case SCALE: {
-                        node.scale = prev_value.transform + interpolation_value * (next_value.transform - prev_value.transform);
+                        node.scale = prev_value.scale + interpolation_value * (next_value.scale - prev_value.scale);
                     }
                     default: {}
                 }
             }
 
             if (sampler.interpolation == STEP) {
-                AnimationValue value = channel.values[time_index];
                 switch (channel.target.path) {
                     case TRANSLATION: {
-                        node.translation = value.transform;
+                        node.translation = next_value.translation;
                     }
                     case ROTATION: {
-                        node.rotation = value.rotation;
+                        node.rotation = next_value.rotation;
                     }
                     case SCALE: {
-                        node.scale = value.scale;
+                        node.scale = next_value.scale;
                     }
                     default: {}
                 }
@@ -1302,7 +1304,6 @@ fn Matrix4f Node.recompose(&self) {
             0.0, 0.0, 0.0, 1.0,
         };
    |};
-
    return translation.mul(rotation).mul(scale);
 }
 
