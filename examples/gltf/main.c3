@@ -27,6 +27,7 @@ struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
     DeviceAddress buffer_map;
+    DeviceAddress joint_buffer;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -35,19 +36,22 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
+
 struct PushConstantData {
-   Matrix4f matrix;
-   Vec4f baseColor;
-   int texture;
-   int morph_index;
-   float[8] weights;
+    Matrix4f matrix;
+    Vec4f baseColor;
+    int texture;
+    int morph_index;
+    float[8] weights;
+    int joint_index;
+    int weight_index;
 }
 
 MemoryBlock vertex_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
 MemoryBlock buffermap_buffer;
-
+MemoryBlock joint_buffer;
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
     if (node.hasMesh()) {
@@ -70,6 +74,9 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             Accessor normal_accessor = gltf.accessors[primitive.attributes["NORMAL"]!!];
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
+            int joint_index = (uint)primitive.attributes["JOINTS_0"] ?? -1;
+            int weight_index = (uint)primitive.attributes["WEIGHTS_0"] ?? -1;
+
             // return 0, if mesh has no texture cords
             usz tex_offset = {|
                 usz! tex_primitive = primitive.attributes["TEXCOORD_0"];
@@ -90,7 +97,9 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .weights = weights,
-                .morph_index = morph_index
+                .morph_index = morph_index,
+                .joint_index = joint_index,
+                .weight_index = weight_index,
             };
 
             // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
@@ -144,7 +153,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/MorphStress.glb", "r");
+    File! file = file::open("examples/gltf/assets/truck.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -160,6 +169,20 @@ fn void! main()
         return;
     }
 
+    foreach (&buffer: gltf_data.buffers) {
+        switch (buffer.type) {
+            case EXTERNAL_BIN: {
+                File! data = file::open("examples/gltf/assets/".concat((String)buffer.uri), "r");
+                if (catch err = data) {
+                    io::printfn("asset not found");
+                    return;
+                }
+                buffer.data = buffer.from_binary(&data)!;
+            }
+            default: {}
+        }
+    }
+
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
     camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
@@ -170,6 +193,25 @@ fn void! main()
 
     foreach (animation: gltf_data.animations) {
         animations.push(gltf_data.loadAnimation(animation));
+    }
+
+    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
+    defer buffer_map.free();
+
+    foreach (buffer: buffer_map) {
+        io::printfn("%s", buffer);
+    }
+
+    // Upload skin joint transforms as extra buffer
+    List(<Matrix4f>) joint_data;
+    defer joint_data.free();
+
+    foreach (skin: gltf_data.skins) {
+        foreach (joint: skin.joints) {
+            // Inverse bind * joint global transform
+            Matrix4f join_matrix = gltf_data.nodes[joint].globalMatrix();
+            joint_data.push(join_matrix);
+        }
     }
 
     //"VK_LAYER_LUNARG_api_dump"
@@ -204,9 +246,9 @@ fn void! main()
     .setEnabledExtensionNames(extensions.array_view());
 
     DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXTBuilder()
-               .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
-               .setMessageType(vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
-               .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback);
+        .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+        .setMessageType(vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+        .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback);
 
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
@@ -256,6 +298,7 @@ fn void! main()
              .build(physical_device);
 
     io::printfn("Device found %s type %d ", device_properties.properties.deviceName[0..], device_properties.properties.deviceType);
+    io::printfn("Push constant max size %d bytes", device_properties.properties.limits.maxPushConstantsSize / 4);
 
     DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
     .setQueueFamilyIndex(queue_family.graphics)
@@ -389,13 +432,6 @@ fn void! main()
     gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.view];
     gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
 
-    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
-    defer buffer_map.free();
-
-/*    foreach (buffer: buffer_map) {
-        io::printfn("%s", buffer);
-    }*/
-
     usz vertex_buffer_size = (usz)(last_accessor.offset + accessor_view.offset + accessor_view.byteLength);
     vertex_buffer = vk::bufferCreateInfoBuilder()
                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
@@ -416,6 +452,16 @@ fn void! main()
     // Make a map of vertex_buffer, to easily access different data from GPU
     buffermap_buffer.upload(buffer_map.entries, buffer_map.len() * BufferInfo.sizeof, device);
 
+    joint_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(joint_data.len() * Matrix4f.sizeof)
+                    .build(device)!
+                    .bind(&local_allocation)!
+                    .getAddress(device);
+
+    joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
+
     // Copy buffer from staging to device_local (GPU only memory)
     device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
@@ -431,7 +477,8 @@ fn void! main()
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
-        .buffer_map = buffermap_buffer.address
+        .buffer_map = buffermap_buffer.address,
+        .joint_buffer = joint_buffer.address,
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
@@ -838,7 +885,18 @@ fn void! main()
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
+        foreach (i, animation : animations) {
+            gltf_data.animate(.animation = &animation, .time = time.mark());
+        }
+
+        foreach (skin: gltf_data.skins) {
+            foreach (index, joint: skin.joints) {
+                Matrix4f joint_matrix = gltf_data.nodes[joint].globalMatrix();
+                joint_data.push(joint_matrix);
+            }
+        }
+
+        joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);
