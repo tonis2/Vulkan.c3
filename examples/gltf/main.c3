@@ -75,7 +75,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
             int joint_index = (uint)primitive.attributes["JOINTS_0"] ?? -1;
-            int weight_index = (uint)primitive.attributes["WEIGHTS_0"] ?? -1;
+            int weight_index = (uint)primitive.attributes["WEIGHTS_0"] ?? - 1;
 
             // return 0, if mesh has no texture cords
             usz tex_offset = {|
@@ -207,10 +207,10 @@ fn void! main()
     defer joint_data.free();
 
     foreach (skin: gltf_data.skins) {
-        foreach (joint: skin.joints) {
+        foreach (index, joint: skin.joints) {
             // Inverse bind * joint global transform
-            Matrix4f join_matrix = gltf_data.nodes[joint].globalMatrix();
-            joint_data.push(join_matrix);
+            Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
+            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.componentSize(), Matrix4f)));
         }
     }
 
@@ -823,7 +823,7 @@ fn void! main()
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_BACK_BIT)
+        .setCullMode(vk::CULL_MODE_NONE)
         .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
         .setDepthBiasEnable(vk::FALSE)
     )
@@ -889,14 +889,16 @@ fn void! main()
             gltf_data.animate(.animation = &animation, .time = time.mark());
         }
 
-        foreach (skin: gltf_data.skins) {
-            foreach (index, joint: skin.joints) {
-                Matrix4f joint_matrix = gltf_data.nodes[joint].globalMatrix();
-                joint_data.push(joint_matrix);
+        if (gltf_data.skins.len() > 0) {
+            foreach (skin: gltf_data.skins) {
+                foreach (index, joint: skin.joints) {
+                    Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
+                    joint_data[index] = gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.componentSize(), Matrix4f));
+                }
             }
-        }
 
-        joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
+            joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
+        }
 
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);

@@ -69,10 +69,11 @@ void main() {
     if (joint_index >= 0) {
         vec4 joint_weights = VEC4(buffer_map[weight_index], vertex_buffer.data);
         vec4 joint_indexes = VEC4(buffer_map[joint_index], vertex_buffer.data);
-        skin_matrix = joint_weights[0] * joint_buffer.data[uint(joint_indexes[0])] +
-                      joint_weights[1] * joint_buffer.data[uint(joint_indexes[1])] +
-                      joint_weights[2] * joint_buffer.data[uint(joint_indexes[2])] +
-                      joint_weights[3] * joint_buffer.data[uint(joint_indexes[3])];
+        skin_matrix =
+             joint_weights.x * joint_buffer.data[int(joint_indexes.x)] +
+             joint_weights.y * joint_buffer.data[int(joint_indexes.y)] +
+             joint_weights.z * joint_buffer.data[int(joint_indexes.z)] +
+             joint_weights.w * joint_buffer.data[int(joint_indexes.w)];
     }
 
     if (morph_index > -1) {
@@ -88,7 +89,7 @@ void main() {
         }
     }
 
-    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
+    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix *  skin_matrix  * vec4(position,1.0);
     gl_Position.y = -gl_Position.y;
     fragTexCoord = tex_cord;
     outBaseColor = baseColor;
