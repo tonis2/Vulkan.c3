@@ -23,6 +23,12 @@ struct TextureData {
     vk::ImageView view;
 }
 
+struct Vertex {
+    Vec3f pos;
+    Vec3f normal;
+    Vec2f tex_cord;
+}
+
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
@@ -153,7 +159,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/truck.glb", "r");
+    File! file = file::open("examples/gltf/assets/simple.gltf", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -183,7 +189,60 @@ fn void! main()
         }
     }
 
-    EventHandler eventHandler = { .window = window };
+    List(<Vertex>) vertices;
+    defer vertices.free();
+
+    List(<ushort>) indices;
+    defer indices.free();
+
+    foreach (mesh: gltf_data.meshes) {
+        foreach (primitive: mesh.primitives) {
+            Accessor pos_accessor = gltf_data.accessors[primitive.attributes["POSITION"]!!];
+            gltf::BufferView pos_view = gltf_data.bufferViews[pos_accessor.view];
+
+            Accessor index_accessor = gltf_data.accessors[primitive.attributes["indices"]!!];
+            gltf::BufferView index_view = gltf_data.bufferViews[index_accessor.view];
+
+            for (usz i; i < index_accessor.count; i++) {
+                indices.push(gltf_data.@castBuffer(index_accessor, i * index_accessor.stride(), ushort));
+            }
+
+            for (usz i; i < pos_accessor.count; i++) {
+                Vec2f tex_cord = {|
+                    usz! attribute = primitive.attributes["TEXCOORD_0"];
+                    if (catch err = attribute) return Vec2f {0,0};
+
+                    Accessor accessor = gltf_data.accessors[attribute];
+                    gltf::BufferView view = gltf_data.bufferViews[accessor.view];
+                    return gltf_data.@castBuffer(accessor, i * accessor.stride(), Vec2f);
+                |};
+
+                Vec3f normal = {|
+                    usz! attribute = primitive.attributes["NORMAL"];
+                    if (catch err = attribute) return Vec3f {0,0,0};
+
+                    Accessor accessor = gltf_data.accessors[attribute];
+                    gltf::BufferView view = gltf_data.bufferViews[accessor.view];
+                    return gltf_data.@castBuffer(accessor, i * accessor.stride(), Vec3f);
+                |};
+
+                vertices.push({
+                    .pos = gltf_data.@castBuffer(pos_accessor, i * pos_accessor.stride(), Vec3f),
+                    .normal = normal,
+                    .tex_cord = tex_cord
+                });
+            }
+        }
+    }
+
+    foreach (vertex: vertices) {
+        io::printfn("%s", vertex.pos);
+        io::printfn("%s", vertex.normal);
+        io::printfn("%s", vertex.tex_cord);
+    }
+
+
+ /*   EventHandler eventHandler = { .window = window };
     eventHandler.init();
     camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
@@ -208,7 +267,6 @@ fn void! main()
 
     foreach (skin: gltf_data.skins) {
         foreach (index, joint: skin.joints) {
-
             // Inverse bind * joint global transform
             Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
             joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f)));
@@ -433,16 +491,10 @@ fn void! main()
 
     uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
-    // I upload all mesh data, vertices, indices, texcords ...etc to a single buffer
-    Accessor last_accessor = gltf_data.accessors[gltf_data.accessors.len() - 1];
-    gltf::BufferView accessor_view = gltf_data.bufferViews[last_accessor.view];
-    gltf::Buffer data_buffer = gltf_data.buffers[accessor_view.buffer];
-
-    usz vertex_buffer_size = (usz)(last_accessor.offset + accessor_view.offset + accessor_view.byteLength);
     vertex_buffer = vk::bufferCreateInfoBuilder()
                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                   .setSize(vertex_buffer_size)
+                   .setSize(Vertex.sizeof * vertices.len())
                    .build(device)!
                    .bind(&device_allocation)!
                    .getAddress(device);
@@ -1068,5 +1120,5 @@ fn void! main()
     device_allocation.free();
     local_allocation.free();
     device.free();
-    instance.free();
+    instance.free();*/
 }
