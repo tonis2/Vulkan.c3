@@ -4,6 +4,11 @@
 #extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 #extension GL_EXT_shader_explicit_arithmetic_types_int8 : require
 
+layout(buffer_reference, std140) readonly buffer VertexBuffer {
+  vec3 position;
+  vec3 normal;
+  vec2 tex_cord;
+};
 
 layout(buffer_reference, scalar) readonly buffer FloatBuffer {
   float data[];
@@ -42,14 +47,16 @@ layout(buffer_reference, std430, buffer_reference_align = 4) buffer BufferMap {
 
 layout(binding = 0, scalar) buffer AddressBuffer {
    UniformBuffer uniform_buffer;
-   uint64_t vertex_buffer;
+   VertexBuffer vertex_buffer;
+   uint64_t index_buffer;
    BufferMap buffer_map;
    JointBuffer joint_buffer;
 };
 
 layout(location = 0) in vec3 vp;
-layout(location = 1) in vec2 tex_cord;
-layout(location = 2) in vec3 normal;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 tex_cord;
+
 
 layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec4 outBaseColor;
@@ -75,7 +82,7 @@ void main() {
     vec3 position = vp;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
-    if (joint_index >= 0) {
+    if (joint_index >= 0 && false) {
         vec4 joint_weights2 = VEC4(buffer_map[weight_index], FloatBuffer(vertex_buffer).data);
         uvec4 joint_indexes2 = UVEC4(buffer_map[joint_index], CharBuffer(vertex_buffer).data);
         skin_matrix =
@@ -85,7 +92,7 @@ void main() {
              joint_weights2.w * joint_buffer.data[uint(joint_indexes2.w)];
     }
 
-    if (morph_index > -1) {
+    if (morph_index > -1 && false) {
         BufferMap morph_data = buffer_map[morph_index];
 
         // Calculate morph target updates
@@ -98,9 +105,11 @@ void main() {
         }
     }
 
-    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position,1.0);
+    VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
+
+    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(vertex.position,1.0);
     gl_Position.y = -gl_Position.y;
-    fragTexCoord = tex_cord;
+    fragTexCoord = vertex.tex_cord;
     outBaseColor = baseColor;
     textureIndex = texture;
 }
