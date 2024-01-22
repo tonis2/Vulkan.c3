@@ -41,10 +41,10 @@ struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
     int texture;
-    int morph_index;
     float[8] weights;
-    int joint_index;
-    int weight_index;
+    ichar joint_index;
+    ichar weight_index;
+    ichar morph_index;
 }
 
 MemoryBlock vertex_buffer;
@@ -60,8 +60,8 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         float[8] weights = {0,0,0,0,0,0,0,0};
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-            int morph_index = {|
-                if (primitive.targets.len() > 0) return (int)primitive.targets[0]["POSITION"] ?? -1;
+            ichar morph_index = {|
+                if (primitive.targets.len() > 0) return (ichar)primitive.targets[0]["POSITION"] ?? -1;
                 return -1;
             |};
 
@@ -74,8 +74,8 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             Accessor normal_accessor = gltf.accessors[primitive.attributes["NORMAL"]!!];
             gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
 
-            int joint_index = (uint)primitive.attributes["JOINTS_0"] ?? -1;
-            int weight_index = (uint)primitive.attributes["WEIGHTS_0"] ?? - 1;
+            ichar joint_index = (ichar)primitive.attributes["JOINTS_0"] ?? -1;
+            ichar weight_index = (ichar)primitive.attributes["WEIGHTS_0"] ?? - 1;
 
             // return 0, if mesh has no texture cords
             usz tex_offset = {|
@@ -112,7 +112,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             );
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_accessor.offset + index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
+            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
             vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
         }
     }
@@ -210,8 +210,14 @@ fn void! main()
         foreach (index, joint: skin.joints) {
             // Inverse bind * joint global transform
             Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.componentSize(), Matrix4f)));
+            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f)));
         }
+    }
+
+    Accessor joint_accessor = gltf_data.accessors[2];
+
+    for (usz i; i<joint_accessor.count;i++) {
+        io::printfn("%s", gltf_data.@castBuffer(joint_accessor, i * joint_accessor.stride(), char[4]));
     }
 
     //"VK_LAYER_LUNARG_api_dump"
@@ -305,8 +311,13 @@ fn void! main()
     .setQueuePriorities({ 1.0 });
 
     // Enable some device features
+    PhysicalDevice8BitStorageFeatures device_8bit_storage = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES,
+    };
+
     PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+       .pNext = &device_8bit_storage
     };
 
    PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
@@ -773,19 +784,19 @@ fn void! main()
         .setVertexBindingDescriptions(
         {
             {
-             .binding = 0,
-             .stride = float.sizeof * 3,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+                 .binding = 0,
+                 .stride = float.sizeof * 3,
+                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             },
             {
-             .binding = 1,
-             .stride = float.sizeof * 2,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+                 .binding = 1,
+                 .stride = float.sizeof * 2,
+                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             },
             {
-             .binding = 2,
-             .stride = float.sizeof * 3,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+                 .binding = 2,
+                 .stride = float.sizeof * 3,
+                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             }
         })
         .setVertexAttributeDescriptions({
@@ -798,7 +809,7 @@ fn void! main()
             {
                .binding = 1,
                .location = 1,
-               .format = vk::FORMAT_R32G32_SFLOAT,
+               .format = vk::FORMAT_R32G32B32_SFLOAT,
                .offset = 0
             },
             {
@@ -806,7 +817,7 @@ fn void! main()
                .location = 2,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
                .offset = 0
-            }
+            },
         })
     )
     .setDynamicState(
@@ -893,7 +904,7 @@ fn void! main()
             foreach (skin: gltf_data.skins) {
                 foreach (index, joint: skin.joints) {
                     Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-                    joint_data[index] = gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.componentSize(), Matrix4f));
+                    joint_data[index] = gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f));
                 }
             }
 
