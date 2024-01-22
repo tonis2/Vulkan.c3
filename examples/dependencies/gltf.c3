@@ -277,7 +277,6 @@ struct Camera {
 struct Accessor {
     uint view;
     usz offset;
-    uint stride;
     uint count;
     bool normalize;
     Mode mode;
@@ -291,7 +290,7 @@ struct BufferView {
     uint buffer;
     usz byteLength;
     usz offset;
-    uint stride;
+    uint byteStride;
     Targets target;
 }
 
@@ -463,7 +462,7 @@ fn void BufferView.fromJson(&self, Object* json) {
     uint! stride = json.get_int("byteStride");
 
     if (try buffer) self.buffer = buffer;
-    if (try stride) self.stride = stride;
+    if (try stride) self.byteStride = stride;
     if (try byteLength) self.byteLength = byteLength;
     if (try offset) self.offset = offset;
     if (try target) {
@@ -482,7 +481,6 @@ fn void Accessor.fromJson(&self, Object* json) {
     uint! bufferView = json.get_int("bufferView");
     uint! count = json.get_int("count");
     usz! offset = json.get_int("byteOffset");
-    uint! stride = json.get_int("stride");
     uint! mode = json.get_int("mode");
     uint! dataType = json.get_int("componentType");
     String! objectType = json.get_string("type");
@@ -493,7 +491,6 @@ fn void Accessor.fromJson(&self, Object* json) {
     if (try count) self.count = count;
     if (try offset) self.offset = offset;
     if (try normalize) self.normalize = normalize.b;
-    if (try stride) self.stride = stride;
     if (try bufferView) self.view = bufferView;
     if (try mode) {
         switch (mode) {
@@ -1103,7 +1100,7 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation timing values, from buffer
         for (ulong i; i < time_accessor.count; i++) {
-            channel.times.push(self.@castBuffer(time_accessor, i * time_accessor.componentSize(), float));
+            channel.times.push(self.@castBuffer(time_accessor, i * time_accessor.stride(), float));
         }
 
         // Parse animation transform values, from buffer
@@ -1113,22 +1110,22 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
             switch (channel.target.path) {
                 case TRANSLATION: {
                     channel.values.push(AnimationValue {
-                        .translation = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                        .translation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
                     });
                 }
                 case SCALE: {
                     channel.values.push(AnimationValue {
-                        .scale = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Vec3f)
+                        .scale = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
                     });
                 }
                 case ROTATION: {
                     channel.values.push(AnimationValue {
-                        .rotation = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), Quaternionf)
+                        .rotation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Quaternionf)
                     });
                 }
                 case WEIGHTS: {
                     channel.values.push(AnimationValue {
-                       .weight = self.@castBuffer(value_accessor, i * value_accessor.componentSize(), float)
+                       .weight = self.@castBuffer(value_accessor, i * value_accessor.stride(), float)
                     });
                 }
             }
@@ -1238,7 +1235,7 @@ fn uint Accessor.componentLen(Accessor* self) {
     }
 }
 
-fn uint Accessor.componentSize(Accessor* self) {
+fn uint Accessor.stride(Accessor* self) {
     return self.dataSize() * self.componentLen();
 }
 
@@ -1394,7 +1391,7 @@ fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
             .offset = (uint)view.offset,
             .size = accessor.componentLen(),
             .next_row = -1,
-            .stride = accessor.componentSize()
+            .stride = accessor.stride()
         });
     }
 
@@ -1446,7 +1443,7 @@ fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
     Buffer buffer = self.buffers[bufferView.buffer];
 
     for (uint i = 0; i < accessor.count ; i += 1) {
-        char[] data = buffer.data[(accessor.offset + bufferView.offset + (usz)(i * accessor.componentSize()))..];
+        char[] data = buffer.data[(accessor.offset + bufferView.offset + (usz)(i * accessor.stride()))..];
 
         switch (accessor.type) {
            case AccessorType.SCALAR:
