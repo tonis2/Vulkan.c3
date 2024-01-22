@@ -32,6 +32,7 @@ struct Vertex {
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
+    DeviceAddress index_buffer;
     DeviceAddress buffer_map;
     DeviceAddress joint_buffer;
 }
@@ -41,7 +42,6 @@ fn void TextureData.free(&self, Device device)
     self.view.free(device);
     vk::destroySampler(device, self.sampler, null);
 }
-
 
 struct PushConstantData {
     Matrix4f matrix;
@@ -54,78 +54,11 @@ struct PushConstantData {
 }
 
 MemoryBlock vertex_buffer;
+MemoryBlock index_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
 MemoryBlock buffermap_buffer;
 MemoryBlock joint_buffer;
-
-fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
-    if (node.hasMesh()) {
-        gltf::Mesh mesh = gltf.meshes[node.mesh];
-
-        float[8] weights = {0,0,0,0,0,0,0,0};
-        foreach (i, weight: node.weights) weights[i] = weight;
-        foreach (index, primitive: mesh.primitives) {
-            ichar morph_index = {|
-                if (primitive.targets.len() > 0) return (ichar)primitive.targets[0]["POSITION"] ?? -1;
-                return -1;
-            |};
-
-            Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
-            gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
-
-            Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
-            gltf::BufferView pos_view = gltf.bufferViews[pos_accessor.view];
-
-            Accessor normal_accessor = gltf.accessors[primitive.attributes["NORMAL"]!!];
-            gltf::BufferView normal_view = gltf.bufferViews[normal_accessor.view];
-
-            ichar joint_index = (ichar)primitive.attributes["JOINTS_0"] ?? -1;
-            ichar weight_index = (ichar)primitive.attributes["WEIGHTS_0"] ?? - 1;
-
-            // return 0, if mesh has no texture cords
-            usz tex_offset = {|
-                usz! tex_primitive = primitive.attributes["TEXCOORD_0"];
-                if (catch err = tex_primitive) return 0;
-                Accessor tex_accessor = gltf.accessors[tex_primitive];
-                gltf::BufferView tex_view = gltf.bufferViews[tex_accessor.view];
-                return tex_view.offset;
-            |};
-
-            Material material = {|
-                usz! material_primitive = primitive.attributes["material"];
-                if (catch err = material_primitive) return gltf::EMPTY_MATERIAL;
-                return gltf.materials[material_primitive];
-            |};
-
-            PushConstantData constant_data = {
-                .matrix = node.globalMatrix(),
-                .texture = material.pbrMetallicRoughness.baseColorTexture.source,
-                .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .weights = weights,
-                .morph_index = morph_index,
-                .joint_index = joint_index,
-                .weight_index = weight_index,
-            };
-
-            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
-            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
-            vk::cmdBindVertexBuffers(
-                buffer,
-                0, 3,
-                &&vk::Buffer[3]{vertex_buffer.buffer, vertex_buffer.buffer, vertex_buffer.buffer},
-                &&vk::DeviceSize[3]{pos_view.offset, tex_offset, normal_view.offset}
-            );
-
-            vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            vk::cmdBindIndexBuffer(buffer, vertex_buffer.buffer, index_view.offset, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
-            vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
-        }
-    }
-
-    // Draw child nodes
-    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout);
-}
 
 Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
@@ -159,7 +92,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/simple.gltf", "r");
+    File! file = file::open("examples/gltf/assets/truck.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -186,6 +119,33 @@ fn void! main()
                 buffer.data = buffer.from_binary(&data)!;
             }
             default: {}
+        }
+    }
+
+    EventHandler eventHandler = { .window = window };
+    eventHandler.init();
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+
+    // Load animations
+    Animations animations;
+    defer animations.release();
+
+    foreach (animation: gltf_data.animations) {
+        animations.push(gltf_data.loadAnimation(animation));
+    }
+
+    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
+    defer buffer_map.free();
+
+    // Upload skin joint transforms as extra buffer
+    List(<Matrix4f>) joint_data;
+    defer joint_data.free();
+
+    foreach (skin: gltf_data.skins) {
+        foreach (index, joint: skin.joints) {
+            // Inverse bind * joint global transform
+            Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
+            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f)));
         }
     }
 
@@ -234,44 +194,13 @@ fn void! main()
             }
         }
     }
+/*
+        foreach (vertex: vertices) {
+            io::printfn("%s", vertex.pos);
+            io::printfn("%s", vertex.normal);
+            io::printfn("%s", vertex.tex_cord);
+        }*/
 
-    foreach (vertex: vertices) {
-        io::printfn("%s", vertex.pos);
-        io::printfn("%s", vertex.normal);
-        io::printfn("%s", vertex.tex_cord);
-    }
-
-
- /*   EventHandler eventHandler = { .window = window };
-    eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
-
-    // Load animations
-    Animations animations;
-    defer animations.release();
-
-    foreach (animation: gltf_data.animations) {
-        animations.push(gltf_data.loadAnimation(animation));
-    }
-
-    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
-    defer buffer_map.free();
-
-    foreach (buffer: buffer_map) {
-        io::printfn("%s", buffer);
-    }
-
-    // Upload skin joint transforms as extra buffer
-    List(<Matrix4f>) joint_data;
-    defer joint_data.free();
-
-    foreach (skin: gltf_data.skins) {
-        foreach (index, joint: skin.joints) {
-            // Inverse bind * joint global transform
-            Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f)));
-        }
-    }
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -489,15 +418,21 @@ fn void! main()
                     .bind(&local_allocation)!
                     .getAddress(device);
 
-    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
-
     vertex_buffer = vk::bufferCreateInfoBuilder()
-                   .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                   .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                    .setSize(Vertex.sizeof * vertices.len())
                    .build(device)!
                    .bind(&device_allocation)!
                    .getAddress(device);
+
+    index_buffer = vk::bufferCreateInfoBuilder()
+                      .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                      .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                      .setSize(ushort.sizeof * indices.len())
+                      .build(device)!
+                      .bind(&device_allocation)!
+                      .getAddress(device);
 
     buffermap_buffer = vk::bufferCreateInfoBuilder()
                        .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
@@ -507,9 +442,6 @@ fn void! main()
                        .bind(&local_allocation)!
                        .getAddress(device);
 
-    // Make a map of vertex_buffer, to easily access different data from GPU
-    buffermap_buffer.upload(buffer_map.entries, buffer_map.len() * BufferInfo.sizeof, device);
-
     joint_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
@@ -518,23 +450,40 @@ fn void! main()
                     .bind(&local_allocation)!
                     .getAddress(device);
 
+    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
     joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
 
-    // Copy buffer from staging to device_local (GPU only memory)
-    device.@staging_buffer(.size = vertex_buffer_size, .data = data_buffer.data, .pdevice = physical_device; vk::Buffer staging_buffer) {
+    // Make a map of vertex_buffer, to easily access different data from GPU
+    buffermap_buffer.upload(buffer_map.entries, buffer_map.len() * BufferInfo.sizeof, device);
+
+    // Vertex data upload
+    device.@staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
           BufferCopy copyRegion = {
                .srcOffset = 0,
                .dstOffset = 0,
-               .size = vertex_buffer_size
+               .size = Vertex.sizeof * vertices.len()
            };
            vk::cmdCopyBuffer(command_buffer, staging_buffer, vertex_buffer.buffer, 1, &copyRegion);
+        }!;
+    }!;
+
+   // Index data upload
+   device.@staging_buffer(.size = ushort.sizeof * indices.len(), .data = indices.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+          BufferCopy copyRegion = {
+               .srcOffset = 0,
+               .dstOffset = 0,
+               .size = ushort.sizeof * indices.len()
+           };
+           vk::cmdCopyBuffer(command_buffer, staging_buffer, index_buffer.buffer, 1, &copyRegion);
         }!;
     }!;
 
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
+        .index_buffer = index_buffer.address,
         .buffer_map = buffermap_buffer.address,
         .joint_buffer = joint_buffer.address,
     };
@@ -832,19 +781,9 @@ fn void! main()
         {
             {
                  .binding = 0,
-                 .stride = float.sizeof * 3,
+                 .stride = Vertex.sizeof,
                  .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
             },
-            {
-                 .binding = 1,
-                 .stride = float.sizeof * 2,
-                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            },
-            {
-                 .binding = 2,
-                 .stride = float.sizeof * 3,
-                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            }
         })
         .setVertexAttributeDescriptions({
             {
@@ -854,16 +793,16 @@ fn void! main()
                .offset = 0
             },
             {
-               .binding = 1,
+               .binding = 0,
                .location = 1,
                .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
+               .offset = float.sizeof * 4
             },
             {
-               .binding = 2,
+               .binding = 0,
                .location = 2,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
+               .format = vk::FORMAT_R32G32_SFLOAT,
+               .offset = float.sizeof * 8
             },
         })
     )
@@ -1120,5 +1059,58 @@ fn void! main()
     device_allocation.free();
     local_allocation.free();
     device.free();
-    instance.free();*/
+    instance.free();
+}
+
+fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
+    if (node.hasMesh()) {
+        gltf::Mesh mesh = gltf.meshes[node.mesh];
+
+        float[8] weights = {0,0,0,0,0,0,0,0};
+        foreach (i, weight: node.weights) weights[i] = weight;
+        foreach (index, primitive: mesh.primitives) {
+            ichar morph_index = {|
+                if (primitive.targets.len() > 0) return (ichar)primitive.targets[0]["POSITION"] ?? -1;
+                return -1;
+            |};
+
+            ichar joint_index = (ichar)primitive.attributes["JOINTS_0"] ?? -1;
+            ichar weight_index = (ichar)primitive.attributes["WEIGHTS_0"] ?? - 1;
+
+            Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
+            gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
+
+            Material material = {|
+                usz! material_primitive = primitive.attributes["material"];
+                if (catch err = material_primitive) return gltf::EMPTY_MATERIAL;
+                return gltf.materials[material_primitive];
+            |};
+
+            PushConstantData constant_data = {
+                .matrix = node.globalMatrix(),
+                .texture = material.pbrMetallicRoughness.baseColorTexture.source,
+                .baseColor = material.pbrMetallicRoughness.baseColorFactor,
+                .weights = weights,
+                .morph_index = morph_index,
+                .joint_index = joint_index,
+                .weight_index = weight_index,
+            };
+
+            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
+            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
+            vk::cmdBindVertexBuffers(
+                buffer,
+                0, 1,
+                &&vk::Buffer[1]{vertex_buffer.buffer},
+                &&vk::DeviceSize[1]{0}
+            );
+
+            vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
+            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
+            vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
+        }
+    }
+
+    // Draw child nodes
+    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout);
 }
