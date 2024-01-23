@@ -160,7 +160,8 @@ struct Node {
 
 struct Primitive {
     AttributeMap attributes;
-    usz index_start;
+    usz first_index;
+    usz first_vertex;
     List(<AttributeMap>) targets;
 }
 
@@ -1485,8 +1486,8 @@ fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
 
         switch (accessor.type) {
            case AccessorType.SCALAR:
-                float value = bitcast(*(char[float.sizeof]*)data, float);
-                io::printfn("Parsed int %f", value);
+                ushort value = bitcast(*(char[ushort.sizeof]*)data, ushort);
+                io::printfn("Parsed scalar %d", value);
            case AccessorType.VEC2:
                 Vec2f vec =  bitcast(*(char[Vec2f.sizeof]*)data, Vec2f);
                 io::printfn("Parsed Vec2 %f %f", vec.x, vec.y);
