@@ -53,10 +53,10 @@ layout(binding = 0, scalar) buffer AddressBuffer {
    JointBuffer joint_buffer;
 };
 
+
 layout(location = 0) in vec3 vp;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 tex_cord;
-
 
 layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec4 outBaseColor;
@@ -79,6 +79,7 @@ layout( push_constant ) uniform constants
 // "NORMAL" = 2
 
 void main() {
+    VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
     vec3 position = vp;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
@@ -105,9 +106,7 @@ void main() {
         }
     }
 
-    VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
-
-    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(vertex.position,1.0);
+    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * vec4(vp,1.0);
     gl_Position.y = -gl_Position.y;
     fragTexCoord = vertex.tex_cord;
     outBaseColor = baseColor;

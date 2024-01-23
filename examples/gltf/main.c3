@@ -69,6 +69,9 @@ ZStringList validations;
 ZStringList extensions;
 ZStringList device_extensions;
 
+List(<Vertex>) vertices;
+List(<ushort>) indices;
+
 fn void! main()
 {
     glfw::init();
@@ -149,24 +152,19 @@ fn void! main()
         }
     }
 
-    List(<Vertex>) vertices;
-    defer vertices.free();
-
-    List(<ushort>) indices;
-    defer indices.free();
-
     foreach (mesh: gltf_data.meshes) {
-        foreach (primitive: mesh.primitives) {
+        foreach (&primitive: mesh.primitives) {
             Accessor pos_accessor = gltf_data.accessors[primitive.attributes["POSITION"]!!];
             gltf::BufferView pos_view = gltf_data.bufferViews[pos_accessor.view];
 
             Accessor index_accessor = gltf_data.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf_data.bufferViews[index_accessor.view];
 
+            primitive.first_index = indices.len();
             for (usz i; i < index_accessor.count; i++) {
                 indices.push(gltf_data.@castBuffer(index_accessor, i * index_accessor.stride(), ushort));
             }
-
+            primitive.first_vertex = vertices.len();
             for (usz i; i < pos_accessor.count; i++) {
                 Vec2f tex_cord = {|
                     usz! attribute = primitive.attributes["TEXCOORD_0"];
@@ -194,6 +192,11 @@ fn void! main()
             }
         }
     }
+
+    defer vertices.free();
+    defer indices.free();
+
+    io::printfn("indices len %d", indices.len());
 /*
         foreach (vertex: vertices) {
             io::printfn("%s", vertex.pos);
@@ -556,12 +559,20 @@ fn void! main()
         if (gltf_texture.source >= textures.len()) {
             Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
             TextureData texture;
-
             gltf::Image image = gltf_data.images[gltf_texture.source];
-            gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
-            gltf::Buffer buffer = gltf_data.buffers[buffer_view.buffer];
+            stb::Image! image_data;
 
-            stb::Image! image_data = stb::loadFromBuffer(buffer.data[buffer_view.offset..], (uint)buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
+            switch (image.type) {
+                case ENCODED_BASE64: {
+                    image_data = stb::loadFromBuffer(image.data, image.data.len, stb::Channel.STBI_RGB_ALPHA);
+                };
+                case ENCODED_BIN: {
+                    gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
+                    image_data = stb::loadFromBuffer(gltf_data.buffers[buffer_view.buffer].data[buffer_view.offset..], (uint)buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
+                };
+                case EXTERNAL_BIN: io::printfn("Load image data here");
+            }
+
             defer image_data.free()!!;
 
             if (catch err = image_data) {
@@ -777,35 +788,35 @@ fn void! main()
     })
     .setLayout(pipeline_layout)
     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
-        .setVertexBindingDescriptions(
-        {
-            {
-                 .binding = 0,
-                 .stride = Vertex.sizeof,
-                 .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            },
-        })
-        .setVertexAttributeDescriptions({
-            {
-               .binding = 0,
-               .location = 0,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = 0
-            },
-            {
-               .binding = 0,
-               .location = 1,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = float.sizeof * 4
-            },
-            {
-               .binding = 0,
-               .location = 2,
-               .format = vk::FORMAT_R32G32_SFLOAT,
-               .offset = float.sizeof * 8
-            },
-        })
-    )
+            .setVertexBindingDescriptions(
+               {
+                   {
+                        .binding = 0,
+                        .stride = Vertex.sizeof,
+                        .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+                   },
+               })
+               .setVertexAttributeDescriptions({
+                   {
+                      .binding = 0,
+                      .location = 0,
+                      .format = vk::FORMAT_R32G32B32_SFLOAT,
+                      .offset = Vertex.pos.offsetof
+                   },
+                   {
+                      .binding = 0,
+                      .location = 1,
+                      .format = vk::FORMAT_R32G32B32_SFLOAT,
+                      .offset = Vertex.normal.offsetof
+                   },
+                   {
+                      .binding = 0,
+                      .location = 2,
+                      .format = vk::FORMAT_R32G32_SFLOAT,
+                      .offset = Vertex.tex_cord.offsetof
+                   },
+               })
+           )
     .setDynamicState(
        &&vk::pipelineDynamicStateCreateInfoBuilder()
         .setDynamicStates(
@@ -982,6 +993,13 @@ fn void! main()
             vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, (uint)descriptor_sets.len(), descriptor_sets.entries);
         }
 
+       vk::cmdBindVertexBuffers(
+            command_buffer,
+            0, 1,
+            &&vk::Buffer[1]{vertex_buffer.buffer},
+            &&vk::DeviceSize[1]{0}
+        );
+
         // Draw gltf scene nodes
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
 
@@ -1096,18 +1114,9 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .weight_index = weight_index,
             };
 
-            // GLTF data buffer is uploaded without stride, so we need to bind the data with offsets
-            // Sometimes the offsets are at accessor side, other times at bufferView side, to make sure they arrive, I add both offsets.
-            vk::cmdBindVertexBuffers(
-                buffer,
-                0, 1,
-                &&vk::Buffer[1]{vertex_buffer.buffer},
-                &&vk::DeviceSize[1]{0}
-            );
-
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
-            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, index_accessor.data_type == UINT ? vk::INDEX_TYPE_UINT32 : vk::INDEX_TYPE_UINT16);
-            vk::cmdDrawIndexed(buffer, index_accessor.count, 1, 0, 0, 0);
+            vk::cmdBindIndexBuffer(buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+            vk::cmdDrawIndexed(buffer, index_accessor.count, 1, (uint)primitive.first_index, (uint)primitive.first_vertex, 0);
         }
     }
 
