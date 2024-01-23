@@ -20,10 +20,10 @@ def BufferViewList = List(<BufferView>);
 def AccessorList = List(<Accessor>);
 def CameraList = List(<Camera>);
 def MaterialList = List(<Material>);
-def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
 def Animations = List(<AnimationMixer>);
+def ImageList = List(<Image>);
 
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
@@ -128,11 +128,11 @@ struct Gltf {
     SceneList scenes;
     MeshList meshes;
     BufferList buffers;
+    ImageList images;
     BufferViewList bufferViews;
     AccessorList accessors;
     CameraList cameras;
     MaterialList materials;
-    ImageList images;
     SamplerList samplers;
     TextureList textures;
     AnimationList animations;
@@ -160,6 +160,7 @@ struct Node {
 
 struct Primitive {
     AttributeMap attributes;
+    usz index_start;
     List(<AttributeMap>) targets;
 }
 
@@ -248,12 +249,6 @@ struct Texture {
     uint source;
 }
 
-struct Image {
-    String name;
-    uint view;
-    ImageType mimeType;
-}
-
 struct Sampler {
     MagFilter magFilter;
     MinFilter minFilter;
@@ -298,6 +293,15 @@ struct Buffer {
     char[] data;
     char[] uri;
     uint size;
+    ResourceType type;
+}
+
+struct Image {
+    String name;
+    int view;
+    char[] uri;
+    char[] data;
+    ImageType mimeType;
     ResourceType type;
 }
 
@@ -555,11 +559,58 @@ fn void Accessor.free(&self) {
     self.max.free();
 }
 
+fn bool Image.hasView(self) {
+   if (self.view >= 0) return true;
+   return false;
+}
+
+fn void! Image.fromJson(&self, Object* json) {
+    int! bufferView = json.get_int("bufferView");
+    String! name = json.get_string("name");
+    String! mimeType = json.get_string("mimeType");
+    String! uri = json.get_string("uri");
+    self.type = ResourceType.ENCODED_BIN;
+
+    if (try bufferView) self.view = bufferView;
+    if (try name) self.name = name;
+    if (try mimeType) {
+        switch (mimeType) {
+            case "image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
+            case "image/png": self.mimeType = ImageType.IMAGE_PNG;
+            case "image/bmp": self.mimeType = ImageType.IMAGE_BMP;
+        }
+    }
+
+    if (try uri) {
+        String data_string = (String)uri;
+        usz offset = data_string.index_of_char(';')!;
+        switch (uri[0..offset]) {
+            case "data:image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
+            case "data:image/png": self.mimeType = ImageType.IMAGE_PNG;
+            case "data:image/bmp": self.mimeType = ImageType.IMAGE_BMP;
+        }
+        self.uri = uri.copy();
+        if (uri.ends_with(".bin")) {
+            self.type = ResourceType.EXTERNAL_BIN;
+        }
+        else {
+            self.type = ResourceType.ENCODED_BASE64;
+            self.data = parse_base64(self.uri, uri.len)!;
+        }
+    }
+}
+
+fn void Image.free(&self) {
+    mem::free(self.uri);
+    mem::free(self.data);
+}
+
 fn void! Buffer.fromJson(&self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
     String! data = json.get_string("data");
-    ResourceType buffer_type = ResourceType.ENCODED_BIN;
+    String! name = json.get_string("name");
+    self.type = ResourceType.ENCODED_BIN;
 
     if (try size) {
        self.size = size;
@@ -572,7 +623,7 @@ fn void! Buffer.fromJson(&self, Object* json) {
         }
         else {
             self.type = ResourceType.ENCODED_BASE64;
-            self.data = self.from_base64()!;
+            self.data = parse_base64(self.uri, self.size)!;
         }
     }
 }
@@ -715,22 +766,6 @@ fn void Sampler.fromJson(&self, Object* json) {
                 self.minFilter = MinFilter.NEAREST_MIPMAP_LINEAR;
             case 9987:
                 self.minFilter = MinFilter.LINEAR_MIPMAP_LINEAR;
-        }
-    }
-}
-
-fn void Image.fromJson(&self, Object* json) {
-    uint! bufferView = json.get_int("bufferView");
-    String! name = json.get_string("name");
-    String! mimeType = json.get_string("mimeType");
-
-    if (try bufferView) self.view = bufferView;
-    if (try name) self.name = name;
-    if (try mimeType) {
-        switch (mimeType) {
-            case "image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
-            case "image/png": self.mimeType = ImageType.IMAGE_PNG;
-            case "image/bmp": self.mimeType = ImageType.IMAGE_BMP;
         }
     }
 }
@@ -963,14 +998,6 @@ fn Gltf! parse(InStream* stream) {
             content.materials.push(material);
         }
     }
-    // Parse images
-    if (try images) {
-        foreach (image : images.array) {
-            Image data;
-            data.fromJson(image);
-            content.images.push(data);
-        }
-    }
 
     if (try samplers) {
         foreach (sampler : samplers.array) {
@@ -1023,6 +1050,15 @@ fn Gltf! parse(InStream* stream) {
         if (is_glb) {
             Buffer* buffer = &content.buffers[0];
             buffer.data = binary_buffer;
+        }
+    }
+
+    // Parse images
+    if (try images) {
+        foreach (image : images.array) {
+            Image data;
+            data.fromJson(image)!;
+            content.images.push(data);
         }
     }
 
@@ -1344,13 +1380,15 @@ fn Matrix4f Node.globalMatrix(&self) {
     return return_matrix;
 }
 
-fn char[]! Buffer.from_base64(self) {
-    char[] buffer_data = mem::new_array(char, (usz)(self.size + 2));
+fn char[]! parse_base64(char[] data, usz size) {
+    char[] buffer_data = mem::new_array(char, (usz)(size + 2));
     Base64Decoder decoder;
     decoder.init(base64::STD_ALPHABET, -1)!;
     // Decode buffer from base64
     // Offset base64 header
-    if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
+    String data_string = (String)data;
+    usz offset = data_string.index_of_char(';')! + 8;
+    if (catch err = decoder.decode(data[offset..], buffer_data)) {
         io::printfn("Buffer parsing error: '%s'.", err);
         return ParseError.BROKEN_BUFFER?;
     };
