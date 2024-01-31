@@ -152,6 +152,8 @@ fn void! main()
         }
     }
 
+
+    // Preload vertex data from GLTF
     foreach (mesh: gltf_data.meshes) {
         foreach (&primitive: mesh.primitives) {
             Accessor pos_accessor = gltf_data.accessors[primitive.attributes["POSITION"]!!];
@@ -161,10 +163,12 @@ fn void! main()
             gltf::BufferView index_view = gltf_data.bufferViews[index_accessor.view];
 
             primitive.first_index = indices.len();
-            for (usz i; i < index_accessor.count; i++) {
-                indices.push(gltf_data.@castBuffer(index_accessor, i * index_accessor.stride(), ushort));
-            }
             primitive.first_vertex = vertices.len();
+
+            for (usz i; i < index_accessor.count; i++) {
+                indices.push(gltf_data.@castBuffer(index_accessor, i, ushort));
+            }
+
             for (usz i; i < pos_accessor.count; i++) {
                 Vec2f tex_cord = {|
                     usz! attribute = primitive.attributes["TEXCOORD_0"];
@@ -172,7 +176,7 @@ fn void! main()
 
                     Accessor accessor = gltf_data.accessors[attribute];
                     gltf::BufferView view = gltf_data.bufferViews[accessor.view];
-                    return gltf_data.@castBuffer(accessor, i * accessor.stride(), Vec2f);
+                    return gltf_data.@castBuffer(accessor, i, Vec2f);
                 |};
 
                 Vec3f normal = {|
@@ -181,11 +185,14 @@ fn void! main()
 
                     Accessor accessor = gltf_data.accessors[attribute];
                     gltf::BufferView view = gltf_data.bufferViews[accessor.view];
-                    return gltf_data.@castBuffer(accessor, i * accessor.stride(), Vec3f);
+
+                    return gltf_data.@castBuffer(accessor, i, Vec3f);
                 |};
 
+                Vec3f position = gltf_data.@castBuffer(pos_accessor, i, Vec3f);
+
                 vertices.push({
-                    .pos = gltf_data.@castBuffer(pos_accessor, i * pos_accessor.stride(), Vec3f),
+                    .pos = position,
                     .normal = normal,
                     .tex_cord = tex_cord
                 });
@@ -195,15 +202,6 @@ fn void! main()
 
     defer vertices.free();
     defer indices.free();
-
-    io::printfn("indices len %d", indices.len());
-/*
-        foreach (vertex: vertices) {
-            io::printfn("%s", vertex.pos);
-            io::printfn("%s", vertex.normal);
-            io::printfn("%s", vertex.tex_cord);
-        }*/
-
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -893,9 +891,7 @@ fn void! main()
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        foreach (i, animation : animations) {
-            gltf_data.animate(.animation = &animation, .time = time.mark());
-        }
+        if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
 
         if (gltf_data.skins.len() > 0) {
           foreach (skin: gltf_data.skins) {

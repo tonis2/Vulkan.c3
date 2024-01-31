@@ -1137,7 +1137,7 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation timing values, from buffer
         for (ulong i; i < time_accessor.count; i++) {
-            channel.times.push(self.@castBuffer(time_accessor, i * time_accessor.stride(), float));
+            channel.times.push(self.@castBuffer(time_accessor, i, float));
         }
 
         // Parse animation transform values, from buffer
@@ -1147,22 +1147,22 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
             switch (channel.target.path) {
                 case TRANSLATION: {
                     channel.values.push(AnimationValue {
-                        .translation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
+                        .translation = self.@castBuffer(value_accessor, i, Vec3f)
                     });
                 }
                 case SCALE: {
                     channel.values.push(AnimationValue {
-                        .scale = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
+                        .scale = self.@castBuffer(value_accessor, i, Vec3f)
                     });
                 }
                 case ROTATION: {
                     channel.values.push(AnimationValue {
-                        .rotation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Quaternionf)
+                        .rotation = self.@castBuffer(value_accessor, i, Quaternionf)
                     });
                 }
                 case WEIGHTS: {
                     channel.values.push(AnimationValue {
-                       .weight = self.@castBuffer(value_accessor, i * value_accessor.stride(), float)
+                       .weight = self.@castBuffer(value_accessor, i, float)
                     });
                 }
             }
@@ -1471,10 +1471,11 @@ fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
 }
 
 
-macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
+macro Gltf.@castBuffer(&self, Accessor accessor, usz index, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
-    return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
+    usz buffer_offset = bufferView.byteStride > 0 ? bufferView.byteStride : accessor.stride();
+    return bitcast(*(char[#type.sizeof]*)buffer.data[(accessor.offset + bufferView.offset + (index * buffer_offset))..], #type);
 }
 
 fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
