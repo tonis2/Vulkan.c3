@@ -4,7 +4,7 @@
 #extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 #extension GL_EXT_shader_explicit_arithmetic_types_int8 : require
 
-layout(buffer_reference, std140) readonly buffer VertexBuffer {
+layout(buffer_reference, std430) readonly buffer VertexBuffer {
   vec3 position;
   vec3 normal;
   vec2 tex_cord;
@@ -14,9 +14,8 @@ layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer Joi
   mat4 data[];
 };
 
-layout(buffer_reference, std140) readonly buffer MorphBuffer {
-  vec3 position;
-  vec3 normal;
+layout(buffer_reference, scalar, buffer_reference_align = 4) readonly buffer MorphBuffer {
+    uint first_vertex;
 };
 
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
@@ -40,12 +39,6 @@ layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec4 outBaseColor;
 layout(location = 2) out int textureIndex;
 
-struct MorphInfo {
-    uint first_morph;
-    uint8_t targets;
-    uint8_t count;
-};
-
 layout( push_constant ) uniform constants
 {
     mat4 model_matrix;
@@ -53,8 +46,9 @@ layout( push_constant ) uniform constants
     int8_t texture;
     int8_t joint_index;
     int8_t weight_index;
+    uint8_t morph_index;
+    uint8_t morph_targets;
     float[8] weights;
-    MorphInfo morph_info;
 };
 
 // Morph types
@@ -67,13 +61,14 @@ void main() {
     vec3 position = vp;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
-    for (uint i = 0; i < morph_info.targets; i++) {
-        uint offset =  i * morph_info.count + morph_info.first_morph + gl_VertexIndex;
-        vec3 morph_pos = morph_buffer[offset].position;
+    for (uint i = 0; i < morph_targets; i++) {
+        MorphBuffer morph_info = morph_buffer[morph_index + i];
+        uint offset = morph_info.first_vertex + gl_VertexIndex;
+        vec3 morph_pos = vertex_buffer[offset].position;
         position += morph_pos * weights[i];
     }
 
-    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * vec4(position,1.0);
+    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * vec4(position, 1.0);
     gl_Position.y = -gl_Position.y;
     fragTexCoord = vertex.tex_cord;
     outBaseColor = baseColor;
