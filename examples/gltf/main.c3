@@ -23,11 +23,6 @@ struct TextureData {
     vk::ImageView view;
 }
 
-struct MorphData {
-   Vec3f pos;
-   Vec3f normal;
-}
-
 struct Vertex {
     Vec3f pos;
     Vec3f normal;
@@ -49,19 +44,18 @@ fn void TextureData.free(&self, Device device)
 }
 
 struct MorphInfo {
-    uint first_morph;
-    char targets;
-    char count;
+    uint first_vertex;
 }
 
 struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
     ichar texture;
-    char joint_index;
-    char weight_index;
+    ichar joint_index;
+    ichar weight_index;
+    char morph_index;
+    char morph_targets;
     float[8] weights;
-    MorphInfo morph_info;
 }
 
 MemoryBlock vertex_buffer;
@@ -82,7 +76,7 @@ ZStringList device_extensions;
 
 List(<Vertex>) vertices;
 List(<ushort>) indices;
-List(<MorphData>) morph_data;
+List(<MorphInfo>) morph_data;
 
 fn void! main()
 {
@@ -107,7 +101,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/AnimatedMorphCube.glb", "r");
+    File! file = file::open("examples/gltf/assets/MorphStress.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -204,26 +198,35 @@ fn void! main()
                     .tex_cord = tex_cord
                 });
             }
+        }
 
+        foreach (&primitive: mesh.primitives) {
+            primitive.morph_index = (int)morph_data.len();
             // Load morph data
             foreach (map: primitive.targets) {
                 Accessor position = gltf_data.accessors[map["POSITION"]!!];
                 Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
-                primitive.first_morph = morph_data.len() / position.count - 1;
-                io::printfn("%d", position.count);
+
+                morph_data.push({
+                    .first_vertex = (uint)vertices.len(),
+                });
+
                 for (usz i; i < position.count; i++) {
-                    morph_data.push({
+                    vertices.push({
                         .pos = gltf_data.@castBuffer(position, i, Vec3f),
                         .normal = gltf_data.@castBuffer(normal, i, Vec3f),
+                        .tex_cord = {0,0}
                     });
                 }
             }
         }
     }
 
-    defer morph_data.free();
-    defer vertices.free();
-    defer indices.free();
+    defer {
+        vertices.free();
+        indices.free();
+        morph_data.free();
+    };
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -468,14 +471,14 @@ fn void! main()
     morph_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(morph_data.len() * MorphData.sizeof)
+                    .setSize(morph_data.len() * MorphInfo.sizeof)
                     .build(device)!
                     .bind(&local_allocation)!
                     .getAddress(device);
 
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
     joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
-    morph_buffer.upload(morph_data.entries, morph_data.len() * MorphData.sizeof, device);
+    morph_buffer.upload(morph_data.entries, morph_data.len() * MorphInfo.sizeof, device);
 
     // Vertex data upload
     device.@staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -1122,12 +1125,9 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .joint_index = joint_index,
                 .weight_index = weight_index,
+                .morph_index = (char)primitive.morph_index,
+                .morph_targets = (char)primitive.targets.len(),
                 .weights = weights,
-                .morph_info = {
-                    .first_morph = (uint)primitive.first_morph,
-                    .targets = (char)primitive.targets.len(),
-                    .count = (char)pos_accessor.count
-                },
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
