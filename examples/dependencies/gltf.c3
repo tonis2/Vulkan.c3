@@ -162,6 +162,7 @@ struct Primitive {
     AttributeMap attributes;
     usz first_index;
     usz first_vertex;
+    usz first_morph;
     List(<AttributeMap>) targets;
 }
 

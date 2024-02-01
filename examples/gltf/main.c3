@@ -23,6 +23,11 @@ struct TextureData {
     vk::ImageView view;
 }
 
+struct MorphData {
+   Vec3f pos;
+   Vec3f normal;
+}
+
 struct Vertex {
     Vec3f pos;
     Vec3f normal;
@@ -33,8 +38,8 @@ struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
     DeviceAddress index_buffer;
-    DeviceAddress buffer_map;
     DeviceAddress joint_buffer;
+    DeviceAddress morph_buffer;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -43,22 +48,28 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
+struct MorphInfo {
+    uint first_morph;
+    char targets;
+    char count;
+}
+
 struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
-    int texture;
+    ichar texture;
+    char joint_index;
+    char weight_index;
     float[8] weights;
-    ichar joint_index;
-    ichar weight_index;
-    ichar morph_index;
+    MorphInfo morph_info;
 }
 
 MemoryBlock vertex_buffer;
 MemoryBlock index_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
-MemoryBlock buffermap_buffer;
 MemoryBlock joint_buffer;
+MemoryBlock morph_buffer;
 
 Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
@@ -71,6 +82,7 @@ ZStringList device_extensions;
 
 List(<Vertex>) vertices;
 List(<ushort>) indices;
+List(<MorphData>) morph_data;
 
 fn void! main()
 {
@@ -95,7 +107,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/truck.glb", "r");
+    File! file = file::open("examples/gltf/assets/AnimatedMorphCube.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -137,9 +149,6 @@ fn void! main()
         animations.push(gltf_data.loadAnimation(animation));
     }
 
-    BufferMap buffer_map = gltf_data.getBufferMap(.morph_data = true);
-    defer buffer_map.free();
-
     // Upload skin joint transforms as extra buffer
     List(<Matrix4f>) joint_data;
     defer joint_data.free();
@@ -151,7 +160,6 @@ fn void! main()
             joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index * inverse_bind_matrix.stride(), Matrix4f)));
         }
     }
-
 
     // Preload vertex data from GLTF
     foreach (mesh: gltf_data.meshes) {
@@ -190,16 +198,30 @@ fn void! main()
                 |};
 
                 Vec3f position = gltf_data.@castBuffer(pos_accessor, i, Vec3f);
-
                 vertices.push({
                     .pos = position,
                     .normal = normal,
                     .tex_cord = tex_cord
                 });
             }
+
+            // Load morph data
+            foreach (map: primitive.targets) {
+                Accessor position = gltf_data.accessors[map["POSITION"]!!];
+                Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
+                primitive.first_morph = morph_data.len() / position.count - 1;
+                io::printfn("%d", position.count);
+                for (usz i; i < position.count; i++) {
+                    morph_data.push({
+                        .pos = gltf_data.@castBuffer(position, i, Vec3f),
+                        .normal = gltf_data.@castBuffer(normal, i, Vec3f),
+                    });
+                }
+            }
         }
     }
 
+    defer morph_data.free();
     defer vertices.free();
     defer indices.free();
 
@@ -420,28 +442,20 @@ fn void! main()
                     .getAddress(device);
 
     vertex_buffer = vk::bufferCreateInfoBuilder()
-                   .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                   .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                   .setSize(Vertex.sizeof * vertices.len())
-                   .build(device)!
-                   .bind(&device_allocation)!
-                   .getAddress(device);
+                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(Vertex.sizeof * vertices.len())
+                    .build(device)!
+                    .bind(&device_allocation)!
+                    .getAddress(device);
 
     index_buffer = vk::bufferCreateInfoBuilder()
-                      .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                      .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                      .setSize(ushort.sizeof * indices.len())
-                      .build(device)!
-                      .bind(&device_allocation)!
-                      .getAddress(device);
-
-    buffermap_buffer = vk::bufferCreateInfoBuilder()
-                       .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                       .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                       .setSize(buffer_map.len() * BufferInfo.sizeof)
-                       .build(device)!
-                       .bind(&local_allocation)!
-                       .getAddress(device);
+                    .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(ushort.sizeof * indices.len())
+                    .build(device)!
+                    .bind(&device_allocation)!
+                    .getAddress(device);
 
     joint_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
@@ -451,11 +465,17 @@ fn void! main()
                     .bind(&local_allocation)!
                     .getAddress(device);
 
-    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
-    joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
+    morph_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(morph_data.len() * MorphData.sizeof)
+                    .build(device)!
+                    .bind(&local_allocation)!
+                    .getAddress(device);
 
-    // Make a map of vertex_buffer, to easily access different data from GPU
-    buffermap_buffer.upload(buffer_map.entries, buffer_map.len() * BufferInfo.sizeof, device);
+    uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
+    joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
+    morph_buffer.upload(morph_data.entries, morph_data.len() * MorphData.sizeof, device);
 
     // Vertex data upload
     device.@staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -485,8 +505,8 @@ fn void! main()
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
         .index_buffer = index_buffer.address,
-        .buffer_map = buffermap_buffer.address,
         .joint_buffer = joint_buffer.address,
+        .morph_buffer = morph_buffer.address,
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
@@ -1083,14 +1103,10 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         float[8] weights = {0,0,0,0,0,0,0,0};
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-            ichar morph_index = {|
-                if (primitive.targets.len() > 0) return (ichar)primitive.targets[0]["POSITION"] ?? -1;
-                return -1;
-            |};
-
             ichar joint_index = (ichar)primitive.attributes["JOINTS_0"] ?? -1;
             ichar weight_index = (ichar)primitive.attributes["WEIGHTS_0"] ?? - 1;
 
+            Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
 
@@ -1102,12 +1118,16 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
 
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
-                .texture = material.pbrMetallicRoughness.baseColorTexture.source,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .weights = weights,
-                .morph_index = morph_index,
+                .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .joint_index = joint_index,
                 .weight_index = weight_index,
+                .weights = weights,
+                .morph_info = {
+                    .first_morph = (uint)primitive.first_morph,
+                    .targets = (char)primitive.targets.len(),
+                    .count = (char)pos_accessor.count
+                },
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
