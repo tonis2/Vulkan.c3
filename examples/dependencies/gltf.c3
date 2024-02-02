@@ -162,7 +162,7 @@ struct Primitive {
     AttributeMap attributes;
     usz first_index;
     usz first_vertex;
-    int morph_index;
+    usz first_morph;
     List(<AttributeMap>) targets;
 }
 
@@ -413,7 +413,6 @@ fn void Mesh.fromJson(&self, Object* json) {
     if (try primitives) {
         foreach (primitive : primitives.array) {
             Primitive data;
-            data.morph_index = -1;
             Object*! attributes = primitive.get("attributes");
             Object*! targets = primitive.get("targets");
 

@@ -44,29 +44,21 @@ layout( push_constant ) uniform constants
     mat4 model_matrix;
     vec4 baseColor;
     uint first_vertex;
+    uint first_morph;
     int8_t texture;
     int8_t joint_index;
     int8_t weight_index;
-    int8_t morph_offset;
     uint8_t morph_targets;
     float[8] weights;
 };
-
-// Morph types
-// "POSITION" = 0
-// "TANGENT" = 1
-// "NORMAL" = 2
 
 void main() {
     VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
     vec3 position = vertex.position;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
-    for (uint i = 0; i < morph_targets; i++) {
-
-        // 1696 + 1504 * i
-        // morph_buffer.data[morph_index]
-        uint offset = 1696 + 1504 * i + gl_VertexIndex;
+    for (uint i = 0; i <= morph_targets; i++) {
+        uint offset = morph_buffer.data[first_morph + i] + gl_VertexIndex;
         vec3 new_pos = vertex_buffer[offset].position;
         vec3 morph_pos = new_pos;
         position += morph_pos * weights[i];

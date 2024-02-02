@@ -47,10 +47,10 @@ struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
     uint first_vertex;
+    uint first_morph;
     ichar texture;
     ichar joint_index;
     ichar weight_index;
-    char morph_index;
     char morph_targets;
     float[8] weights;
 }
@@ -197,20 +197,29 @@ fn void! main()
             }
         }
 
-        foreach (&primitive: mesh.primitives) {
-            primitive.morph_index = (int)morph_data.len();
-            // Load morph data
-            foreach (uint prim_index, map: primitive.targets) {
+
+        foreach (prim_index, &primitive: mesh.primitives) {
+            primitive.first_morph = morph_data.len();
+
+            foreach (uint target_index, map: primitive.targets) {
                 Accessor position = gltf_data.accessors[map["POSITION"]!!];
                 Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
-                io::printfn("%d %d %d", position.count * prim_index, position.count, (uint)vertices.len());
-                morph_data.push((uint)vertices.len() + position.count * prim_index);
+
+                if (prim_index > 0) {
+                   uint previous_count = {|
+                        gltf::Primitive last_prim = mesh.primitives[prim_index - 1];
+                        return gltf_data.accessors[last_prim.targets[0]["POSITION"]!!].count;
+                   |};
+                   morph_data.push((uint)vertices.len() - previous_count);
+                } else {
+                   morph_data.push((uint)vertices.len());
+                }
 
                 for (usz i; i < position.count; i++) {
                     vertices.push({
-                        .pos = gltf_data.@castBuffer(position, i, Vec3f),
-                        .normal = gltf_data.@castBuffer(normal, i, Vec3f),
-                        .tex_cord = {0,0}
+                       .pos = gltf_data.@castBuffer(position, i, Vec3f),
+                       .normal = gltf_data.@castBuffer(normal, i, Vec3f),
+                       .tex_cord = {0,0}
                     });
                 }
             }
@@ -1118,10 +1127,10 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .first_vertex = (uint)primitive.first_vertex,
+                .first_morph = (uint)primitive.first_morph,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .joint_index = joint_index,
                 .weight_index = weight_index,
-                .morph_index = (char)primitive.morph_index,
                 .morph_targets = (char)primitive.targets.len(),
                 .weights = weights,
             };
