@@ -28,7 +28,6 @@ def ImageList = List(<Image>);
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
-def BufferMap = List(<BufferInfo>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -560,11 +559,6 @@ fn void Accessor.free(&self) {
     self.max.free();
 }
 
-fn bool Image.hasView(self) {
-   if (self.view >= 0) return true;
-   return false;
-}
-
 fn void! Image.fromJson(&self, Object* json) {
     int! bufferView = json.get_int("bufferView");
     String! name = json.get_string("name");
@@ -599,6 +593,10 @@ fn void! Image.fromJson(&self, Object* json) {
             self.data = parse_base64(self.uri, uri.len)!;
         }
     }
+}
+
+fn bool Image.hasView(self) {
+   return self.view > 0;
 }
 
 fn void Image.free(&self) {
@@ -1420,56 +1418,6 @@ fn usz! BufferInfo.to_format(&self, Formatter* formatter) @dynamic
 	n += formatter.print(" }")!;
 	return n;
 }
-
-fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
-    BufferMap buffers;
-
-    foreach (accessor: self.accessors) {
-        BufferView view = self.bufferViews[accessor.view];
-        buffers.push({
-            .offset = (uint)view.offset,
-            .size = accessor.componentLen(),
-            .next_row = -1,
-            .stride = accessor.stride()
-        });
-    }
-
-    if (morph_data == true) {
-      foreach (mesh_index, mesh: self.meshes) {
-          foreach (primitive: mesh.primitives) {
-                usz target_keys_len = 0;
-                foreach (target_index, target: primitive.targets) {
-                    String[] target_keys = target.key_tlist();
-                    foreach (i, key : target_keys) {
-                        usz accessor_index = target[key]!!;
-                        Accessor morph_accessor = self.accessors[accessor_index];
-                        gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
-
-                        // Get buffer index, for next morph target in the array
-                        int next = {|
-                          if (i + 1 < target_keys.len) {
-                              return (uint)accessor_index + 1;
-                          };
-
-                          if (i == target_keys.len - 1 && target_index != primitive.targets.len()) {
-                            return (uint)accessor_index + 1;
-                          }
-                          return -1;
-                        |};
-
-                        BufferInfo* buffer_info = &buffers[accessor_index];
-                        buffer_info.next_row = next;
-                        buffer_info.weight_index = (uint)target_index;
-                        buffer_info.type = (uint)key.attributeType();
-                    }
-                }
-            }
-        }
-    }
-
-    return buffers;
-}
-
 
 macro Gltf.@castBuffer(&self, Accessor accessor, usz index, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
