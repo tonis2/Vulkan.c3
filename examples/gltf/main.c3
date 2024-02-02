@@ -43,13 +43,10 @@ fn void TextureData.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
-struct MorphInfo {
-    uint first_vertex;
-}
-
 struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
+    uint first_vertex;
     ichar texture;
     ichar joint_index;
     ichar weight_index;
@@ -76,7 +73,7 @@ ZStringList device_extensions;
 
 List(<Vertex>) vertices;
 List(<ushort>) indices;
-List(<MorphInfo>) morph_data;
+List(<uint>) morph_data;
 
 fn void! main()
 {
@@ -203,13 +200,11 @@ fn void! main()
         foreach (&primitive: mesh.primitives) {
             primitive.morph_index = (int)morph_data.len();
             // Load morph data
-            foreach (map: primitive.targets) {
+            foreach (uint prim_index, map: primitive.targets) {
                 Accessor position = gltf_data.accessors[map["POSITION"]!!];
                 Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
-
-                morph_data.push({
-                    .first_vertex = (uint)vertices.len(),
-                });
+                io::printfn("%d %d %d", position.count * prim_index, position.count, (uint)vertices.len());
+                morph_data.push((uint)vertices.len() + position.count * prim_index);
 
                 for (usz i; i < position.count; i++) {
                     vertices.push({
@@ -471,14 +466,14 @@ fn void! main()
     morph_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(morph_data.len() * MorphInfo.sizeof)
+                    .setSize(morph_data.len() * uint.sizeof)
                     .build(device)!
                     .bind(&local_allocation)!
                     .getAddress(device);
 
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
     joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
-    morph_buffer.upload(morph_data.entries, morph_data.len() * MorphInfo.sizeof, device);
+    morph_buffer.upload(morph_data.entries, morph_data.len() * uint.sizeof, device);
 
     // Vertex data upload
     device.@staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device; vk::Buffer staging_buffer) {
@@ -1122,6 +1117,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             PushConstantData constant_data = {
                 .matrix = node.globalMatrix(),
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
+                .first_vertex = (uint)primitive.first_vertex,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .joint_index = joint_index,
                 .weight_index = weight_index,
