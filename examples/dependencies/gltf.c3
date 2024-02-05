@@ -159,9 +159,6 @@ struct Node {
 
 struct Primitive {
     AttributeMap attributes;
-    usz first_index;
-    usz first_vertex;
-    usz first_morph;
     List(<AttributeMap>) targets;
 }
 
@@ -1402,27 +1399,11 @@ fn char[]! Buffer.from_binary(self, InStream* stream) {
     return data;
 }
 
-struct BufferInfo (Printable) {
-    uint stride;
-    uint type;
-    uint weight_index;
-    uint offset;
-    uint size;
-    int next_row;
-}
-
-fn usz! BufferInfo.to_format(&self, Formatter* formatter) @dynamic
-{
-	usz n = formatter.print("{ ")!;
-	n += formatter.printf(" %d, %d, %d, %d, %d, %d", self.stride, self.type, self.weight_index, self.offset, self.size, self.next_row)!;
-	n += formatter.print(" }")!;
-	return n;
-}
-
 macro Gltf.@castBuffer(&self, Accessor accessor, usz index, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
     usz buffer_offset = bufferView.byteStride > 0 ? bufferView.byteStride : accessor.stride();
+
     return bitcast(*(char[#type.sizeof]*)buffer.data[(accessor.offset + bufferView.offset + (index * buffer_offset))..], #type);
 }
 

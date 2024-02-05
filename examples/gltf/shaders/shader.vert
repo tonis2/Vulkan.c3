@@ -14,6 +14,11 @@ layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer Joi
   mat4 data[];
 };
 
+layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer SkinBuffer {
+  uint8_t[4] pos;
+  float[4] weight;
+};
+
 layout(buffer_reference, scalar, buffer_reference_align = 4) readonly buffer MorphBuffer {
     uint data[];
 };
@@ -26,8 +31,8 @@ layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer Uni
 layout(binding = 0, scalar) buffer AddressBuffer {
    UniformBuffer uniform_buffer;
    VertexBuffer vertex_buffer;
-   uint64_t index_buffer;
    JointBuffer joint_buffer;
+   SkinBuffer skin_buffer;
    MorphBuffer morph_buffer;
 };
 
@@ -43,13 +48,37 @@ layout( push_constant ) uniform constants
 {
     mat4 model_matrix;
     vec4 baseColor;
-    uint first_vertex;
     uint first_morph;
+    int skin_index;
     int8_t texture;
-    int8_t joint_index;
-    int8_t weight_index;
-    uint8_t morph_targets;
-    float[8] weights;
+    uint8_t morph_count;
+    float[8] morph_weights;
+};
+
+vec4 skin_indexes[10] = {
+    vec4( 0, 0, 0, 0 ),
+    vec4( 0, 0, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+    vec4( 0, 1, 0, 0 ),
+};
+
+vec4 weights[10] = {
+    vec4( 1.00,  0.00,  0.0, 0.0 ),
+    vec4( 1.00,  0.00,  0.0, 0.0 ),
+    vec4( 0.75,  0.25,  0.0, 0.0 ),
+    vec4( 0.75,  0.25,  0.0, 0.0 ),
+    vec4( 0.50,  0.50,  0.0, 0.0 ),
+    vec4( 0.50,  0.50,  0.0, 0.0 ),
+    vec4( 0.25,  0.75,  0.0, 0.0 ),
+    vec4( 0.25,  0.75,  0.0, 0.0 ),
+    vec4( 0.00,  1.00,  0.0, 0.0 ),
+    vec4( 0.00,  1.00,  0.0, 0.0 ),
 };
 
 void main() {
@@ -57,14 +86,24 @@ void main() {
     vec3 position = vertex.position;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
-    for (uint i = 0; i <= morph_targets; i++) {
+    for (uint i = 0; i <= morph_count; i++) {
         uint offset = morph_buffer.data[first_morph + i] + gl_VertexIndex;
-        vec3 new_pos = vertex_buffer[offset].position;
-        vec3 morph_pos = new_pos;
-        position += morph_pos * weights[i];
+        position += vertex_buffer[offset].position * morph_weights[i];
     }
 
-    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * vec4(position, 1.0);
+    if (skin_index >= 0) {
+        //SkinBuffer skin_data = skin_buffer[skin_index + gl_VertexIndex];
+        vec4 skin_data = skin_indexes[skin_index + gl_VertexIndex];
+        vec4 weights_data = skin_indexes[skin_index + gl_VertexIndex];
+
+        skin_matrix =
+             weights_data[0] * joint_buffer.data[uint(skin_data[0])] +
+             weights_data[1] * joint_buffer.data[uint(skin_data[1])] +
+             weights_data[2] * joint_buffer.data[uint(skin_data[2])] +
+             weights_data[3] * joint_buffer.data[uint(skin_data[3])];
+    }
+
+    gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
     gl_Position.y = -gl_Position.y;
     fragTexCoord = vertex.tex_cord;
     outBaseColor = baseColor;
