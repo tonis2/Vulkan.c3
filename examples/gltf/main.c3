@@ -27,18 +27,14 @@ struct Vertex {
     Vec3f pos;
     Vec3f normal;
     Vec2f tex_cord;
-}
-
-struct SkinData {
-    char[4] pos;
-    float[4] weight;
+    Vec4f skin_pos;
+    Vec4f skin_weight;
 }
 
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
     DeviceAddress joint_buffer;
-    DeviceAddress skin_buffer;
     DeviceAddress morph_buffer;
 }
 
@@ -52,7 +48,6 @@ struct PushConstantData {
     Matrix4f matrix;
     Vec4f baseColor;
     uint morph_index;
-    int skin_index;
     ichar texture;
     char morph_count;
     float[8] morph_weights;
@@ -63,7 +58,6 @@ MemoryBlock index_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
 MemoryBlock morph_buffer;
-MemoryBlock skin_buffer;
 MemoryBlock joint_buffer;
 
 Instance instance;
@@ -79,7 +73,6 @@ List(<Vertex>) vertices;
 List(<ushort>) indices;
 List(<uint>) morph_data;
 List(<Matrix4f>) joint_data;
-List(<SkinData>) skin_data;
 
 fn void! main()
 {
@@ -183,26 +176,32 @@ fn void! main()
                     return gltf_data.@castBuffer(accessor, i, Vec3f);
                 |};
 
+                Vec4f skin_pos = {|
+                    usz! attribute = primitive.attributes["JOINTS_0"];
+                    if (catch err = attribute) return Vec4f {0,0,0,0};
+
+                    Accessor accessor = gltf_data.accessors[attribute];
+                    char[4] char_array = gltf_data.@castBuffer(accessor, i, char[4]);
+                    return Vec4f{char_array[0], char_array[1], char_array[2], char_array[3]};
+                |};
+
+                Vec4f skin_weight = {|
+                    usz! attribute = primitive.attributes["WEIGHTS_0"];
+                    if (catch err = attribute) return Vec4f {0,0,0,0};
+
+                    Accessor accessor = gltf_data.accessors[attribute];
+                    return gltf_data.@castBuffer(accessor, i, Vec4f);
+                |};
+
                 Vec3f position = gltf_data.@castBuffer(pos_accessor, i, Vec3f);
+
                 vertices.push({
                     .pos = position,
                     .normal = normal,
-                    .tex_cord = tex_cord
+                    .tex_cord = tex_cord,
+                    .skin_pos = skin_pos,
+                    .skin_weight = skin_weight
                 });
-            }
-
-            // Check if primitive has joints data
-            if (try primitive.attributes["JOINTS_0"]) {
-                Accessor skin_accessor = gltf_data.accessors[primitive.attributes["JOINTS_0"]!!];
-                Accessor weight_accessor = gltf_data.accessors[primitive.attributes["WEIGHTS_0"]!!];
-                primitive.attributes["skin_index"] = skin_data.len();
-
-                for (usz i; i < skin_accessor.count; i++) {
-                    skin_data.push({
-                        .pos = gltf_data.@castBuffer(skin_accessor, i, char[4]),
-                        .weight = gltf_data.@castBuffer(weight_accessor, i, float[4]),
-                    });
-                }
             }
         }
 
@@ -240,7 +239,6 @@ fn void! main()
         indices.free();
         morph_data.free();
         joint_data.free();
-        skin_data.free();
     };
 
     //"VK_LAYER_LUNARG_api_dump"
@@ -491,18 +489,9 @@ fn void! main()
                     .bind(&local_allocation)!
                     .getAddress(device);
 
-   skin_buffer = vk::bufferCreateInfoBuilder()
-                   .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                   .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                   .setSize(skin_data.len() * SkinData.sizeof)
-                   .build(device)!
-                   .bind(&local_allocation)!
-                   .getAddress(device);
-
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
     joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
     morph_buffer.upload(morph_data.entries, morph_data.len() * uint.sizeof, device);
-    skin_buffer.upload(skin_data.entries, skin_data.len() * SkinData.sizeof, device);
 
     // Create stage buffers and then copy the data to GPU only buffers
     MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device)!;
@@ -530,7 +519,6 @@ fn void! main()
         .vertex_buffer = vertex_buffer.address,
         .joint_buffer = joint_buffer.address,
         .morph_buffer = morph_buffer.address,
-        .skin_buffer = skin_buffer.address
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
@@ -840,24 +828,36 @@ fn void! main()
                    },
                })
                .setVertexAttributeDescriptions({
-                   {
-                      .binding = 0,
-                      .location = 0,
-                      .format = vk::FORMAT_R32G32B32_SFLOAT,
-                      .offset = Vertex.pos.offsetof
-                   },
-                   {
-                      .binding = 0,
-                      .location = 1,
-                      .format = vk::FORMAT_R32G32B32_SFLOAT,
-                      .offset = Vertex.normal.offsetof
-                   },
-                   {
-                      .binding = 0,
-                      .location = 2,
-                      .format = vk::FORMAT_R32G32_SFLOAT,
-                      .offset = Vertex.tex_cord.offsetof
-                   },
+                    {
+                        .binding = 0,
+                        .location = 0,
+                        .format = vk::FORMAT_R32G32B32_SFLOAT,
+                        .offset = Vertex.pos.offsetof
+                    },
+                    {
+                        .binding = 0,
+                        .location = 1,
+                        .format = vk::FORMAT_R32G32B32_SFLOAT,
+                        .offset = Vertex.normal.offsetof
+                    },
+                    {
+                        .binding = 0,
+                        .location = 2,
+                        .format = vk::FORMAT_R32G32_SFLOAT,
+                        .offset = Vertex.tex_cord.offsetof
+                    },
+                    {
+                        .binding = 0,
+                        .location = 3,
+                        .format = vk::FORMAT_R32G32B32A32_SFLOAT,
+                        .offset = Vertex.skin_pos.offsetof
+                    },
+                    {
+                        .binding = 0,
+                        .location = 4,
+                        .format = vk::FORMAT_R32G32B32A32_SFLOAT,
+                        .offset = Vertex.skin_weight.offsetof
+                    },
                })
            )
     .setDynamicState(
@@ -943,12 +943,21 @@ fn void! main()
               foreach (index, joint: skin.joints) {
                   Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
                   Matrix4f inverse_matrix = gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f);
-                  Node joint_node = gltf_data.nodes[joint];
-                  joint_data[index] = joint_node.globalMatrix().mul(inverse_matrix);
+   /*                 Matrix4f[2] inverse_matrix = {
+                        {1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1,},
+                        {1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1,}
+                    };*/
+                  joint_data[index] = gltf_data.nodes[joint].globalMatrix().mul(inverse_matrix);
               }
           }
 
-          joint_buffer.upload(joint_data.entries, joint_buffer.size, device);
+          joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
         }
 
         if (eventHandler.scrolling) {
@@ -1142,7 +1151,6 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix(),
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
-                .skin_index = (int)primitive.attributes["skin_index"] ?? -1,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .morph_count = (char)primitive.targets.len(),
                 .morph_weights = weights,

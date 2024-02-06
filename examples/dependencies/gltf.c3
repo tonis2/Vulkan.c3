@@ -1336,19 +1336,6 @@ fn Matrix4f Node.recompose(&self) {
    return translation.mul(rotation).mul(scale);
 }
 
-fn uint String.attributeType(self) {
-    switch (self) {
-        case "POSITION":
-            return 0;
-        case "TANGENT":
-            return 1;
-        case "NORMAL":
-            return 2;
-        default:
-            return 20;
-    }
-}
-
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
     if (self.hasMesh()) {
         Mesh mesh = data.meshes[self.mesh];
