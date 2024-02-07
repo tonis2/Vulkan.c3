@@ -12,7 +12,7 @@ layout(buffer_reference, std140) readonly buffer VertexBuffer {
   vec4 skin_weight;
 };
 
-layout(buffer_reference, std430) readonly buffer JointBuffer {
+layout(buffer_reference, std140, buffer_reference_align = 16) readonly buffer JointBuffer {
   mat4 matrix;
 };
 
@@ -20,7 +20,7 @@ layout(buffer_reference, scalar, buffer_reference_align = 4) readonly buffer Mor
     uint data[];
 };
 
-layout(buffer_reference, std430, buffer_reference_align = 4) readonly buffer UniformBuffer {
+layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
    mat4 projection;
    mat4 view;
 };
@@ -48,13 +48,14 @@ layout( push_constant ) uniform constants
     vec4 baseColor;
     uint morph_index;
     int8_t texture;
+    int8_t has_skin;
     uint8_t morph_count;
     float[8] morph_weights;
 };
 
 void main() {
     VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
-    vec3 position = vertex.position;
+    vec3 position = vp;
     mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
     for (uint i = 0; i <= morph_count; i++) {
@@ -62,11 +63,13 @@ void main() {
         position += vertex_buffer[offset].position * morph_weights[i];
     }
 
-    skin_matrix =
-         skin_weight[0] * joint_buffer[uint(skin_pos[0])].matrix +
-         skin_weight[1] * joint_buffer[uint(skin_pos[1])].matrix +
-         skin_weight[2] * joint_buffer[uint(skin_pos[2])].matrix +
-         skin_weight[3] * joint_buffer[uint(skin_pos[3])].matrix;
+    if (has_skin >= 0) {
+        skin_matrix =
+             skin_weight[0] * joint_buffer[uint(skin_pos[0])].matrix +
+             skin_weight[1] * joint_buffer[uint(skin_pos[1])].matrix +
+             skin_weight[2] * joint_buffer[uint(skin_pos[2])].matrix +
+             skin_weight[3] * joint_buffer[uint(skin_pos[3])].matrix;
+    }
 
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
     gl_Position.y = -gl_Position.y;
