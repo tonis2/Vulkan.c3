@@ -49,6 +49,7 @@ struct PushConstantData {
     Vec4f baseColor;
     uint morph_index;
     ichar texture;
+    ichar has_skin;
     char morph_count;
     float[8] morph_weights;
 }
@@ -129,7 +130,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 2000);
 
     // Load animations
     Animations animations;
@@ -179,10 +180,19 @@ fn void! main()
                 Vec4f skin_pos = {|
                     usz! attribute = primitive.attributes["JOINTS_0"];
                     if (catch err = attribute) return Vec4f {0,0,0,0};
-
                     Accessor accessor = gltf_data.accessors[attribute];
-                    char[4] char_array = gltf_data.@castBuffer(accessor, i, char[4]);
-                    return Vec4f{char_array[0], char_array[1], char_array[2], char_array[3]};
+
+                    if (accessor.data_type == DataType.USHORT) {
+                        short[4] array = gltf_data.@castBuffer(accessor, i, short[4]);
+                        return Vec4f{array[0], array[1], array[2], array[3]};
+                    };
+
+                    if (accessor.data_type == DataType.CHAR) {
+                        char[4] array = gltf_data.@castBuffer(accessor, i, char[4]);
+                        return Vec4f{array[0], array[1], array[2], array[3]};
+                    };
+
+                    return Vec4f {0,0,0,0};
                 |};
 
                 Vec4f skin_weight = {|
@@ -941,19 +951,10 @@ fn void! main()
         if (gltf_data.skins.len() > 0) {
           foreach (skin: gltf_data.skins) {
               foreach (index, joint: skin.joints) {
-                  Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-                  Matrix4f inverse_matrix = gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f);
-   /*                 Matrix4f[2] inverse_matrix = {
-                        {1, 0, 0, 0,
-                        0, 1, 0, 0,
-                        0, 0, 1, 0,
-                        0, 0, 0, 1,},
-                        {1, 0, 0, 0,
-                        0, 1, 0, 0,
-                        0, 0, 1, 0,
-                        0, 0, 0, 1,}
-                    };*/
-                  joint_data[index] = gltf_data.nodes[joint].globalMatrix().mul(inverse_matrix);
+                    Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
+                    Matrix4f inverse_matrix = gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f);
+                    Node joint_node = gltf_data.nodes[joint];
+                    joint_data[index] = joint_node.globalMatrix().mul(inverse_matrix);
               }
           }
 
@@ -1137,7 +1138,6 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
         float[8] weights = {0,0,0,0,0,0,0,0};
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
-            Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             gltf::BufferView index_view = gltf.bufferViews[index_accessor.view];
 
@@ -1152,6 +1152,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
+                .has_skin = (ichar)primitive.attributes["JOINTS_0"] ?? -1,
                 .morph_count = (char)primitive.targets.len(),
                 .morph_weights = weights,
             };
