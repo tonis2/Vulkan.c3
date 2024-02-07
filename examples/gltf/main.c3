@@ -947,14 +947,13 @@ fn void! main()
         eventHandler.update();
 
         if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
-
         if (gltf_data.skins.len() > 0) {
           foreach (skin: gltf_data.skins) {
               foreach (index, joint: skin.joints) {
                     Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
                     Matrix4f inverse_matrix = gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f);
                     Node joint_node = gltf_data.nodes[joint];
-                    joint_data[index] = joint_node.globalMatrix().mul(inverse_matrix);
+                    joint_data[index] = inverse_matrix.mul(joint_node.globalMatrix()).transpose();
               }
           }
 

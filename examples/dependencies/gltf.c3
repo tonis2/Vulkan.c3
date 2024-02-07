@@ -1221,7 +1221,7 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
                         node.translation = prev_value.translation + interpolation_value * (next_value.translation - prev_value.translation);
                     }
                     case ROTATION: {
-                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
+                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value).normalize();
                     }
                     case SCALE: {
                         node.scale = prev_value.scale + interpolation_value * (next_value.scale - prev_value.scale);
@@ -1304,7 +1304,8 @@ fn Matrix4f Node.recompose(&self) {
         0.0, 0.0, 0.0, 1.0,
     };
 
-   Matrix4f rotation = {|
+
+    Matrix4f rotation = {|
         float x = self.rotation.i;
         float y = self.rotation.j;
         float z = self.rotation.k;
