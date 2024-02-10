@@ -151,6 +151,7 @@ struct Node {
     int skin;
     Quaternionf rotation;
     Matrix4f matrix;
+    Matrix4f inverse_bind;
     Vec3f scale;
     Vec3f translation;
     List(<uint>) children;
@@ -214,9 +215,10 @@ struct AnimationMixer {
 
 struct Skin {
     String name;
-    uint inverseBindMatrices;
+    uint inverseBindAccessor;
     uint skeleton;
     List(<uint>) joints;
+    List(<Matrix4f>) inverseBindMatrices;
 }
 
 struct Material {
@@ -376,6 +378,8 @@ fn void Node.fromJson(&self, Object* json) {
     if (try children) {
         foreach (node : children.array) self.children.push((uint)node.f);
     }
+
+    self.inverse_bind = self.globalMatrix().inverse()!!;
 }
 
 fn bool Node.hasMesh(self) {
@@ -844,7 +848,7 @@ fn void Skin.fromJson(&self, Object* json) {
 
     if (try name) self.name = name;
     if (try skeleton) self.skeleton = skeleton;
-    if (try inverseBindMatrices) self.inverseBindMatrices = inverseBindMatrices;
+    if (try inverseBindMatrices) self.inverseBindAccessor = inverseBindMatrices;
     if (try joints) {
         foreach (joint : joints.array) self.joints.push((uint)joint.f);
     }
@@ -852,6 +856,7 @@ fn void Skin.fromJson(&self, Object* json) {
 
 fn void Skin.free(&self) {
     self.joints.free();
+    self.inverseBindMatrices.free();
     self.name.free();
 }
 
@@ -1035,6 +1040,8 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
+
+
     // Parse buffers
     if (try buffers) {
         foreach (buffer : buffers.array) {
@@ -1083,7 +1090,6 @@ fn Gltf! parse(InStream* stream) {
          }
     }
 
-    // Parse mesh morphing data, into a format that can be uploaded to GPU
     return content;
 }
 
@@ -1218,13 +1224,13 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             if (sampler.interpolation == LINEAR) {
                 switch (channel.target.path) {
                     case TRANSLATION: {
-                        node.translation = prev_value.translation + interpolation_value * (next_value.translation - prev_value.translation);
+                        node.translation = prev_value.translation.lerp(next_value.translation, (float)interpolation_value);
                     }
                     case ROTATION: {
                         node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value).normalize();
                     }
                     case SCALE: {
-                        node.scale = prev_value.scale + interpolation_value * (next_value.scale - prev_value.scale);
+                        node.scale = prev_value.scale.lerp(next_value.scale, (float)interpolation_value);
                     }
                     default: {}
                 }
@@ -1260,7 +1266,7 @@ fn uint Accessor.componentLen(Accessor* self) {
             return 4;
         case AccessorType.MAT2:
             return 4;
-        case AccessorType .MAT3:
+        case AccessorType.MAT3:
             return 9;
         case AccessorType.MAT4:
             return 16;
@@ -1304,33 +1310,39 @@ fn Matrix4f Node.recompose(&self) {
         0.0, 0.0, 0.0, 1.0,
     };
 
-
     Matrix4f rotation = {|
         float x = self.rotation.i;
         float y = self.rotation.j;
         float z = self.rotation.k;
         float w = self.rotation.l;
 
-        float x2 = x + x;
-        float y2 = y + y;
-        float z2 = z + z;
+        float x2 = x * x;
+        float xy = x * y;
+        float xz = x * z;
+        float xw = x * w;
+        float y2 = y * y;
+        float yz = y * z;
+        float yw = y * w;
+        float z2 = z * z;
+        float zw = z * w;
+        float w2 = w * w;
 
-        float xx2 = x2 * x;
-        float xy2 = x2 * y;
-        float xz2 = x2 * z;
+        float m00 = x2 - y2 - z2 + w2;
+        float m01 = (float)2.0 * (xy - zw);
+        float m02 = (float)2.0 * (xz + yw);
 
-        float yy2 = y2 * y;
-        float yz2 = y2 * z;
-        float zz2 = z2 * z;
+        float m10 = (float)2.0 * (xy + zw);
+        float m11 = -x2 + y2 - z2 + w2;
+        float m12 = (float)2.0 * (yz - xw);
 
-        float sy2 = y2 * w;
-        float sz2 = z2 * w;
-        float sx2 = x2 * w;
+        float m20 = (float)2.0 * (xz - yw);
+        float m21 = (float)2.0 * (yz + xw);
+        float m22 = -x2 - y2 + z2 + w2;
 
         return {
-            1.0 - yy2 - zz2, xy2 + sz2, xz2 - sy2, 0.0,
-            xy2 - sz2, 1.0 - xx2 - zz2, yz2 + sx2, 0.0,
-            xz2 + sy2, yz2 - sx2, 1.0 - xx2 - yy2, 0.0,
+            m00, m01, m02, 0.0,
+            m10, m11, m12, 0.0,
+            m20, m21, m22, 0.0,
             0.0, 0.0, 0.0, 1.0,
         };
    |};
@@ -1356,9 +1368,8 @@ fn Matrix4f Node.globalMatrix(&self) {
     Node* node = self;
 
     while (node.parent != null) {
+        return_matrix = return_matrix.mul(node.parent.recompose());
         node = node.parent;
-        Matrix4f parent_matrix = node.recompose();
-        return_matrix = return_matrix.mul(parent_matrix);
     }
 
     return return_matrix;
@@ -1390,9 +1401,10 @@ fn char[]! Buffer.from_binary(self, InStream* stream) {
 macro Gltf.@castBuffer(&self, Accessor accessor, usz index, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
-    usz buffer_offset = bufferView.byteStride > 0 ? bufferView.byteStride : accessor.stride();
+    usz index_offset = bufferView.byteStride > 0 ? bufferView.byteStride : accessor.stride();
+    usz start_offset = accessor.offset + bufferView.offset;
 
-    return bitcast(*(char[#type.sizeof]*)buffer.data[(accessor.offset + bufferView.offset + (index * buffer_offset))..], #type);
+    return bitcast(*(char[#type.sizeof]*)buffer.data[(start_offset + (index * index_offset))..], #type);
 }
 
 fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {

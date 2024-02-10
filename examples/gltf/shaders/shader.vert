@@ -12,7 +12,7 @@ layout(buffer_reference, std140) readonly buffer VertexBuffer {
   vec4 skin_weight;
 };
 
-layout(buffer_reference, std140, buffer_reference_align = 16) readonly buffer JointBuffer {
+layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer JointBuffer {
   mat4 matrix;
 };
 
@@ -28,7 +28,6 @@ layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer Uni
 layout(binding = 0, scalar) buffer AddressBuffer {
    UniformBuffer uniform_buffer;
    VertexBuffer vertex_buffer;
-   JointBuffer joint_buffer;
    MorphBuffer morph_buffer;
 };
 
@@ -45,6 +44,7 @@ layout(location = 2) out int textureIndex;
 layout( push_constant ) uniform constants
 {
     mat4 model_matrix;
+    JointBuffer joint_buffer;
     vec4 baseColor;
     uint morph_index;
     int8_t texture;
@@ -72,7 +72,6 @@ void main() {
     }
 
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
-    gl_Position.y = -gl_Position.y;
     fragTexCoord = vertex.tex_cord;
     outBaseColor = baseColor;
     textureIndex = texture;

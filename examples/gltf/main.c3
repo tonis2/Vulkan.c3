@@ -34,7 +34,6 @@ struct Vertex {
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
-    DeviceAddress joint_buffer;
     DeviceAddress morph_buffer;
 }
 
@@ -46,6 +45,7 @@ fn void TextureData.free(&self, Device device)
 
 struct PushConstantData {
     Matrix4f matrix;
+    DeviceAddress joint_buffer;
     Vec4f baseColor;
     uint morph_index;
     ichar texture;
@@ -130,7 +130,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 2000);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.001, .max_zoom = 1000);
 
     // Load animations
     Animations animations;
@@ -140,11 +140,14 @@ fn void! main()
         animations.push(gltf_data.loadAnimation(animation));
     }
 
-    foreach (skin: gltf_data.skins) {
-        foreach (index, joint: skin.joints) {
-            // Inverse bind * joint global transform
-            Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-            joint_data.push(gltf_data.nodes[joint].globalMatrix().mul(gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f)));
+
+    foreach (&skin: gltf_data.skins) {
+        Accessor skin_accessor = gltf_data.accessors[skin.inverseBindAccessor];
+        // Load inverse bind matrices
+        for (uint i; i < skin_accessor.count; i++) {
+             Matrix4f matrix = gltf_data.@castBuffer(skin_accessor, i, Matrix4f);
+             skin.inverseBindMatrices.push(matrix);
+             joint_data.push(matrix);
         }
     }
 
@@ -440,7 +443,7 @@ fn void! main()
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 50_000_000,
+        .size = 500_000_000,
     }.build()!;
 
     // Allocation where data can be changed from CPU
@@ -449,7 +452,7 @@ fn void! main()
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 10_000_000,
+        .size = 20_000_000,
     }.build()!;
 
     address_buffer = vk::bufferCreateInfoBuilder()
@@ -500,7 +503,6 @@ fn void! main()
                     .getAddress(device);
 
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
-    joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
     morph_buffer.upload(morph_data.entries, morph_data.len() * uint.sizeof, device);
 
     // Create stage buffers and then copy the data to GPU only buffers
@@ -527,7 +529,6 @@ fn void! main()
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
-        .joint_buffer = joint_buffer.address,
         .morph_buffer = morph_buffer.address,
     };
 
@@ -919,7 +920,7 @@ fn void! main()
                            .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-       .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+       .setViewports({{ .x = 0.0, .y = (float)swapchain_info.imageExtent.height, .width = swapchain_info.imageExtent.width, .height = -(float)swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
        .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
     .setNext(
         &&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({ swapchain_info.imageFormat })
@@ -947,19 +948,6 @@ fn void! main()
         eventHandler.update();
 
         if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
-        if (gltf_data.skins.len() > 0) {
-          foreach (skin: gltf_data.skins) {
-              foreach (index, joint: skin.joints) {
-                    Accessor inverse_bind_matrix = gltf_data.accessors[skin.inverseBindMatrices];
-                    Matrix4f inverse_matrix = gltf_data.@castBuffer(inverse_bind_matrix, index, Matrix4f);
-                    Node joint_node = gltf_data.nodes[joint];
-                    joint_data[index] = inverse_matrix.mul(joint_node.globalMatrix()).transpose();
-              }
-          }
-
-          joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
-        }
-
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5.5);
            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
@@ -1035,7 +1023,7 @@ fn void! main()
         );
 
         vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
-        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
@@ -1051,7 +1039,7 @@ fn void! main()
         );
 
         // Draw gltf scene nodes
-        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout);
+        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout, device);
 
         vk::cmdEndRenderingKHR(command_buffer);
 
@@ -1130,11 +1118,21 @@ fn void! main()
     instance.free();
 }
 
-fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout) {
+fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
+    if (node.hasSkin()) {
+        Skin skin = gltf.skins[node.skin];
+        foreach (joint_index, joint: skin.joints) {
+           Node joint_node = gltf.nodes[joint];
+           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index]);
+        }
+        joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
+    }
+
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
-
         float[8] weights = {0,0,0,0,0,0,0,0};
+        Matrix4f mesh_world_matrix = node.globalMatrix();
+
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
@@ -1147,11 +1145,12 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             |};
 
             PushConstantData constant_data = {
-                .matrix = node.globalMatrix(),
+                .matrix = mesh_world_matrix,
+                .joint_buffer = joint_buffer.address,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
-                .has_skin = (ichar)primitive.attributes["JOINTS_0"] ?? -1,
+                .has_skin = (ichar)node.skin,
                 .morph_count = (char)primitive.targets.len(),
                 .morph_weights = weights,
             };
@@ -1163,5 +1162,5 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     }
 
     // Draw child nodes
-    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout);
+    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout, device);
 }
