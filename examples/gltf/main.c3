@@ -1119,11 +1119,16 @@ fn void! main()
 }
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
+    Matrix4f mesh_world_matrix = node.globalMatrix();
+
     if (node.hasSkin()) {
         Skin skin = gltf.skins[node.skin];
         foreach (joint_index, joint: skin.joints) {
-           Node joint_node = gltf.nodes[joint];
-           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index]);
+            joint_data[joint_index] = gltf.nodes[joint].globalMatrix();
+         /*  joint_data[joint_index].m[12] = 0;
+           joint_data[joint_index].m[13] = 1;*/
+/*           io::printfn("%s", joint_data[joint_index].m);*/
+           //joint_data[joint_index].m[13] = -joint_data[joint_index].m[13];
         }
         joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
     }
@@ -1131,7 +1136,6 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
         float[8] weights = {0,0,0,0,0,0,0,0};
-        Matrix4f mesh_world_matrix = node.globalMatrix();
 
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
