@@ -98,7 +98,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/simple.gltf", "r");
+    File! file = file::open("examples/gltf/assets/truck.glb", "r");
     defer file.close()!!;
 
     if (catch err = file) {
@@ -130,7 +130,7 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.001, .max_zoom = 1000);
+    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     // Load animations
     Animations animations;
@@ -955,7 +955,7 @@ fn void! main()
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, (float)eventHandler.mouse_x_delta * 0.01, 0, 1});
+            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * -0.01, (float)eventHandler.mouse_x_delta * -0.01, 0, 1});
             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
@@ -1124,10 +1124,11 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     if (node.hasSkin()) {
         Skin skin = gltf.skins[node.skin];
         foreach (joint_index, joint: skin.joints) {
-            joint_data[joint_index] = gltf.nodes[joint].globalMatrix();
-         /*  joint_data[joint_index].m[12] = 0;
-           joint_data[joint_index].m[13] = 1;*/
-/*           io::printfn("%s", joint_data[joint_index].m);*/
+           joint_data[joint_index] = gltf.nodes[joint].globalMatrix().mul(skin.inverseBindMatrices[joint_index]);
+           joint_data[joint_index] = joint_data[joint_index].transpose();
+        /*   joint_data[joint_index].m[12] = -joint_data[joint_index].m[12];
+           joint_data[joint_index].m[13] = -joint_data[joint_index].m[13];
+           io::printfn("%s", joint_data[joint_index].m);*/
            //joint_data[joint_index].m[13] = -joint_data[joint_index].m[13];
         }
         joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
@@ -1149,7 +1150,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             |};
 
             PushConstantData constant_data = {
-                .matrix = mesh_world_matrix,
+                .matrix = mesh_world_matrix.transpose(),
                 .joint_buffer = joint_buffer.address,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
