@@ -1290,13 +1290,6 @@ fn uint Accessor.dataSize(Accessor* self) {
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(&self) {
-    Matrix4f translation = {
-        1, 0.0, 0.0, self.translation.x,
-        0.0, 1, 0.0, self.translation.y,
-        0.0, 0.0, 1, self.translation.z,
-        0.0, 0.0, 0.0, 1.0,
-    };
-
     Matrix4f scale = {
         self.scale.x, 0.0, 0.0, 0.0,
         0.0,self.scale.y, 0.0, 0.0,
@@ -1304,39 +1297,33 @@ fn Matrix4f Node.recompose(&self) {
         0.0, 0.0, 0.0, 1.0,
     };
 
-    Matrix4f matrix = {|
-        Matrix4f result = MATRIX4F_IDENTITY;
+    float x = self.rotation.i;
+    float y = self.rotation.j;
+    float z = self.rotation.k;
+    float w = self.rotation.l;
 
-        float x = self.rotation.i;
-        float y = self.rotation.j;
-        float z = self.rotation.k;
-        float w = self.rotation.l;
+    float x2 = x + x;
+    float y2 = y + y;
+    float z2 = z + z;
 
-      	float sqw = w * w;
-      	float sqx = x * x;
-      	float sqy = y * y;
-      	float sqz = z * z;
+    float xx2 = x2 * x;
+    float xy2 = x2 * y;
+    float xz2 = x2 * z;
 
-      	result.m00 = (float)(1 - 2 * sqy - 2 * sqz) * (float)self.scale.x;
-      	result.m01 = (float)(2 * x * y - 2 * z * w);
-      	result.m02 = (float)(2 * x * z + 2 * y * w);
-      	result.m10 = (float)(2 * x * y + 2 * z * w);
-      	result.m11 = (float)(1 - 2 * sqx - 2 * sqz) * (float)self.scale.y;
-      	result.m12 = (float)(2 * x * z - 2 * x * w);
-      	result.m20 = (float)(2 * x * z - 2 * y * w);
-      	result.m21 = (float)(2 * y * z + 2 * x * w);
-      	result.m22 = (float)(1 - 2 * sqx - 2 * sqy) * (float)self.scale.z;
+    float yy2 = y2 * y;
+    float yz2 = y2 * z;
+    float zz2 = z2 * z;
 
-      	// Translation
-      	result.m03 = (float)self.translation.x;
-      	result.m13 = (float)self.translation.y;
-      	result.m23 = (float)self.translation.z;
-      	result.m33 = 1.0f;
+    float sy2 = y2 * w;
+    float sz2 = z2 * w;
+    float sx2 = x2 * w;
 
-      	return result;
-   |};
-
-   return translation.mul(scale);
+    return Matrix4f {
+        (float)1.0 - yy2 - zz2 * self.scale.x, xy2 - sz2, xz2 + sy2, self.translation.x,
+        xy2 + sz2, (float)1.0 - xx2 - zz2, yz2 - sx2 * self.scale.y, self.translation.y,
+        xz2 - sy2, yz2 + sx2, (float)1.0 - xx2 - yy2 * self.scale.z, self.translation.z,
+        0.0, 0.0, 0.0, 1.0,
+    };
 }
 
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
@@ -1358,7 +1345,7 @@ fn Matrix4f Node.globalMatrix(&self) {
     Node* node = self;
 
     while (node.parent != null) {
-        global_matrix = global_matrix.mul(node.parent.recompose());
+        global_matrix = node.parent.recompose().mul(global_matrix);
         node = node.parent;
     }
 

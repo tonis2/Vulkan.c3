@@ -1119,7 +1119,7 @@ fn void! main()
 }
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
-    Matrix4f mesh_world_matrix = node.globalMatrix();
+
 
     if (node.hasSkin()) {
         Skin skin = gltf.skins[node.skin];
@@ -1137,6 +1137,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     if (node.hasMesh()) {
         gltf::Mesh mesh = gltf.meshes[node.mesh];
         float[8] weights = {0,0,0,0,0,0,0,0};
+        Matrix4f node_world_matrix = node.globalMatrix();
 
         foreach (i, weight: node.weights) weights[i] = weight;
         foreach (index, primitive: mesh.primitives) {
@@ -1150,7 +1151,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             |};
 
             PushConstantData constant_data = {
-                .matrix = mesh_world_matrix.transpose(),
+                .matrix = node_world_matrix.transpose(),
                 .joint_buffer = joint_buffer.address,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
