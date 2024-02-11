@@ -955,7 +955,7 @@ fn void! main()
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * -0.01, (float)eventHandler.mouse_x_delta * -0.01, 0, 1});
+            camera.rotate((float)eventHandler.mouse_x_delta * 0.01, (float)eventHandler.mouse_y_delta * 0.01);
             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
