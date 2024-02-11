@@ -1290,38 +1290,31 @@ fn uint Accessor.dataSize(Accessor* self) {
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(&self) {
-    Matrix4f scale = {
-        self.scale.x, 0.0, 0.0, 0.0,
-        0.0,self.scale.y, 0.0, 0.0,
-        0.0, 0.0,self.scale.z, 0.0,
-        0.0, 0.0, 0.0, 1.0,
-    };
-
     float x = self.rotation.i;
     float y = self.rotation.j;
     float z = self.rotation.k;
     float w = self.rotation.l;
 
-    float x2 = x + x;
-    float y2 = y + y;
-    float z2 = z + z;
+    float xx = x + x;
+    float yy = y + y;
+    float zz = z + z;
 
-    float xx2 = x2 * x;
-    float xy2 = x2 * y;
-    float xz2 = x2 * z;
+    float xxx = xx * x;
+    float xxy = xx * y;
+    float xxz = xx * z;
 
-    float yy2 = y2 * y;
-    float yz2 = y2 * z;
-    float zz2 = z2 * z;
+    float yyy = yy * y;
+    float yyz = yy * z;
+    float zzz = zz * z;
 
-    float sy2 = y2 * w;
-    float sz2 = z2 * w;
-    float sx2 = x2 * w;
+    float yyw = yy * w;
+    float zzw = zz * w;
+    float xxw = xx * w;
 
     return Matrix4f {
-        (float)1.0 - yy2 - zz2 * self.scale.x, xy2 - sz2, xz2 + sy2, self.translation.x,
-        xy2 + sz2, (float)1.0 - xx2 - zz2, yz2 - sx2 * self.scale.y, self.translation.y,
-        xz2 - sy2, yz2 + sx2, (float)1.0 - xx2 - yy2 * self.scale.z, self.translation.z,
+        (float)1.0 - yyy - zzz * self.scale.x, xxy - zzw, xxz + yyw, self.translation.x,
+        xxy + zzw, (float)1.0 - xxx - zzz, yyz - xxw * self.scale.y, self.translation.y,
+        xxz - yyw, yyz + zzw, (float)1.0 - xxx - yyy * self.scale.z, self.translation.z,
         0.0, 0.0, 0.0, 1.0,
     };
 }
