@@ -20,15 +20,14 @@ def BufferViewList = List(<BufferView>);
 def AccessorList = List(<Accessor>);
 def CameraList = List(<Camera>);
 def MaterialList = List(<Material>);
-def ImageList = List(<Image>);
 def SamplerList = List(<Sampler>);
 def TextureList = List(<Texture>);
 def Animations = List(<AnimationMixer>);
+def ImageList = List(<Image>);
 
 def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
-def BufferMap = List(<BufferInfo>);
 
 enum Targets {
     ARRAY_BUFFER,
@@ -48,7 +47,7 @@ enum Interpolation {
     CUBICSPLINE,
 }
 
-enum Property {
+enum AnimationProperty {
     TRANSLATION,
     ROTATION,
     SCALE,
@@ -128,11 +127,11 @@ struct Gltf {
     SceneList scenes;
     MeshList meshes;
     BufferList buffers;
+    ImageList images;
     BufferViewList bufferViews;
     AccessorList accessors;
     CameraList cameras;
     MaterialList materials;
-    ImageList images;
     SamplerList samplers;
     TextureList textures;
     AnimationList animations;
@@ -187,7 +186,7 @@ struct Channel {
     uint sampler;
     struct target {
         uint node;
-        Property path;
+        AnimationProperty path;
     }
 }
 
@@ -215,9 +214,10 @@ struct AnimationMixer {
 
 struct Skin {
     String name;
-    uint inverseBindMatrices;
+    uint inverseBindAccessor;
     uint skeleton;
     List(<uint>) joints;
+    List(<Matrix4f>) inverseBindMatrices;
 }
 
 struct Material {
@@ -246,12 +246,6 @@ struct TextureInfo {
 struct Texture {
     uint sampler;
     uint source;
-}
-
-struct Image {
-    String name;
-    uint view;
-    ImageType mimeType;
 }
 
 struct Sampler {
@@ -298,6 +292,15 @@ struct Buffer {
     char[] data;
     char[] uri;
     uint size;
+    ResourceType type;
+}
+
+struct Image {
+    String name;
+    int view;
+    char[] uri;
+    char[] data;
+    ImageType mimeType;
     ResourceType type;
 }
 
@@ -407,7 +410,6 @@ fn void Mesh.fromJson(&self, Object* json) {
     if (try primitives) {
         foreach (primitive : primitives.array) {
             Primitive data;
-
             Object*! attributes = primitive.get("attributes");
             Object*! targets = primitive.get("targets");
 
@@ -555,11 +557,57 @@ fn void Accessor.free(&self) {
     self.max.free();
 }
 
+fn void! Image.fromJson(&self, Object* json) {
+    int! bufferView = json.get_int("bufferView");
+    String! name = json.get_string("name");
+    String! mimeType = json.get_string("mimeType");
+    String! uri = json.get_string("uri");
+    self.type = ResourceType.ENCODED_BIN;
+
+    if (try bufferView) self.view = bufferView;
+    if (try name) self.name = name;
+    if (try mimeType) {
+        switch (mimeType) {
+            case "image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
+            case "image/png": self.mimeType = ImageType.IMAGE_PNG;
+            case "image/bmp": self.mimeType = ImageType.IMAGE_BMP;
+        }
+    }
+
+    if (try uri) {
+        String data_string = (String)uri;
+        usz offset = data_string.index_of_char(';')!;
+        switch (uri[0..offset]) {
+            case "data:image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
+            case "data:image/png": self.mimeType = ImageType.IMAGE_PNG;
+            case "data:image/bmp": self.mimeType = ImageType.IMAGE_BMP;
+        }
+        self.uri = uri.copy();
+        if (uri.ends_with(".bin")) {
+            self.type = ResourceType.EXTERNAL_BIN;
+        }
+        else {
+            self.type = ResourceType.ENCODED_BASE64;
+            self.data = parse_base64(self.uri, uri.len)!;
+        }
+    }
+}
+
+fn bool Image.hasView(self) {
+   return self.view > 0;
+}
+
+fn void Image.free(&self) {
+    mem::free(self.uri);
+    mem::free(self.data);
+}
+
 fn void! Buffer.fromJson(&self, Object* json) {
     uint! size = json.get_int("byteLength");
     String! uri = json.get_string("uri");
     String! data = json.get_string("data");
-    ResourceType buffer_type = ResourceType.ENCODED_BIN;
+    String! name = json.get_string("name");
+    self.type = ResourceType.ENCODED_BIN;
 
     if (try size) {
        self.size = size;
@@ -572,7 +620,7 @@ fn void! Buffer.fromJson(&self, Object* json) {
         }
         else {
             self.type = ResourceType.ENCODED_BASE64;
-            self.data = self.from_base64()!;
+            self.data = parse_base64(self.uri, self.size)!;
         }
     }
 }
@@ -719,22 +767,6 @@ fn void Sampler.fromJson(&self, Object* json) {
     }
 }
 
-fn void Image.fromJson(&self, Object* json) {
-    uint! bufferView = json.get_int("bufferView");
-    String! name = json.get_string("name");
-    String! mimeType = json.get_string("mimeType");
-
-    if (try bufferView) self.view = bufferView;
-    if (try name) self.name = name;
-    if (try mimeType) {
-        switch (mimeType) {
-            case "image/jpeg": self.mimeType = ImageType.IMAGE_JPEG;
-            case "image/png": self.mimeType = ImageType.IMAGE_PNG;
-            case "image/bmp": self.mimeType = ImageType.IMAGE_BMP;
-        }
-    }
-}
-
 fn void Animation.fromJson(&self, Object* json) {
     String! name = json.get_string("name");
     Object*! channels = json.get("channels");
@@ -777,10 +809,10 @@ fn void Animation.fromJson(&self, Object* json) {
                 if (try node) channel_data.target.node = node;
                 if (try path) {
                     switch (path) {
-                        case "translation": channel_data.target.path = Property.TRANSLATION;
-                        case "rotation": channel_data.target.path = Property.ROTATION;
-                        case "scale": channel_data.target.path = Property.SCALE;
-                        case "weights": channel_data.target.path = Property.WEIGHTS;
+                        case "translation": channel_data.target.path = AnimationProperty.TRANSLATION;
+                        case "rotation": channel_data.target.path = AnimationProperty.ROTATION;
+                        case "scale": channel_data.target.path = AnimationProperty.SCALE;
+                        case "weights": channel_data.target.path = AnimationProperty.WEIGHTS;
                     }
                 }
             };
@@ -813,7 +845,7 @@ fn void Skin.fromJson(&self, Object* json) {
 
     if (try name) self.name = name;
     if (try skeleton) self.skeleton = skeleton;
-    if (try inverseBindMatrices) self.inverseBindMatrices = inverseBindMatrices;
+    if (try inverseBindMatrices) self.inverseBindAccessor = inverseBindMatrices;
     if (try joints) {
         foreach (joint : joints.array) self.joints.push((uint)joint.f);
     }
@@ -821,6 +853,7 @@ fn void Skin.fromJson(&self, Object* json) {
 
 fn void Skin.free(&self) {
     self.joints.free();
+    self.inverseBindMatrices.free();
     self.name.free();
 }
 
@@ -963,14 +996,6 @@ fn Gltf! parse(InStream* stream) {
             content.materials.push(material);
         }
     }
-    // Parse images
-    if (try images) {
-        foreach (image : images.array) {
-            Image data;
-            data.fromJson(image);
-            content.images.push(data);
-        }
-    }
 
     if (try samplers) {
         foreach (sampler : samplers.array) {
@@ -1012,6 +1037,8 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
+
+
     // Parse buffers
     if (try buffers) {
         foreach (buffer : buffers.array) {
@@ -1023,6 +1050,15 @@ fn Gltf! parse(InStream* stream) {
         if (is_glb) {
             Buffer* buffer = &content.buffers[0];
             buffer.data = binary_buffer;
+        }
+    }
+
+    // Parse images
+    if (try images) {
+        foreach (image : images.array) {
+            Image data;
+            data.fromJson(image)!;
+            content.images.push(data);
         }
     }
 
@@ -1051,7 +1087,6 @@ fn Gltf! parse(InStream* stream) {
          }
     }
 
-    // Parse mesh morphing data, into a format that can be uploaded to GPU
     return content;
 }
 
@@ -1100,32 +1135,31 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation timing values, from buffer
         for (ulong i; i < time_accessor.count; i++) {
-            channel.times.push(self.@castBuffer(time_accessor, i * time_accessor.stride(), float));
+            channel.times.push(self.@castBuffer(time_accessor, i, float));
         }
 
         // Parse animation transform values, from buffer
         Accessor value_accessor = self.accessors[sampler.output];
-
         for (ulong i; i < value_accessor.count; i++) {
             switch (channel.target.path) {
                 case TRANSLATION: {
                     channel.values.push(AnimationValue {
-                        .translation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
+                        .translation = self.@castBuffer(value_accessor, i, Vec3f)
                     });
                 }
                 case SCALE: {
                     channel.values.push(AnimationValue {
-                        .scale = self.@castBuffer(value_accessor, i * value_accessor.stride(), Vec3f)
+                        .scale = self.@castBuffer(value_accessor, i, Vec3f)
                     });
                 }
                 case ROTATION: {
                     channel.values.push(AnimationValue {
-                        .rotation = self.@castBuffer(value_accessor, i * value_accessor.stride(), Quaternionf)
+                        .rotation = self.@castBuffer(value_accessor, i, Quaternionf)
                     });
                 }
                 case WEIGHTS: {
                     channel.values.push(AnimationValue {
-                       .weight = self.@castBuffer(value_accessor, i * value_accessor.stride(), float)
+                       .weight = self.@castBuffer(value_accessor, i, float)
                     });
                 }
             }
@@ -1154,13 +1188,8 @@ fn AnimationMixer Animation.mixer(self) {
 
 fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
    double current_time = time.to_sec();
-
    foreach (index, &channel: animation.channels) {
-        if (channel.times.len() < 3) continue;
-
         AnimationSampler sampler = animation.samplers[channel.sampler];
-        Node* node = &self.nodes[channel.target.node];
-
         channel.time += current_time;
         if (channel.time > channel.max_time) channel.time = 0;
 
@@ -1171,6 +1200,9 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
                 break;
             };
         }
+
+       // Animation target node
+       Node* node = &self.nodes[channel.target.node];
 
        if (channel.target.path == WEIGHTS) {
             foreach (i, weight: node.weights) node.weights[i] = channel.values[time_index * node.weights.len() + i].weight;
@@ -1186,13 +1218,13 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
             if (sampler.interpolation == LINEAR) {
                 switch (channel.target.path) {
                     case TRANSLATION: {
-                        node.translation = prev_value.translation + interpolation_value * (next_value.translation - prev_value.translation);
+                        node.translation = prev_value.translation.lerp(next_value.translation, (float)interpolation_value);
                     }
                     case ROTATION: {
-                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
+                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value).normalize();
                     }
                     case SCALE: {
-                        node.scale = prev_value.scale + interpolation_value * (next_value.scale - prev_value.scale);
+                        node.scale = prev_value.scale.lerp(next_value.scale, (float)interpolation_value);
                     }
                     default: {}
                 }
@@ -1228,7 +1260,7 @@ fn uint Accessor.componentLen(Accessor* self) {
             return 4;
         case AccessorType.MAT2:
             return 4;
-        case AccessorType .MAT3:
+        case AccessorType.MAT3:
             return 9;
         case AccessorType.MAT4:
             return 16;
@@ -1258,63 +1290,33 @@ fn uint Accessor.dataSize(Accessor* self) {
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(&self) {
-   Matrix4f translation = {
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        self.translation.x, self.translation.y, self.translation.z, 1.0,
-   };
+    float x = self.rotation.i;
+    float y = self.rotation.j;
+    float z = self.rotation.k;
+    float w = self.rotation.l;
 
-    Matrix4f scale = {
-        self.scale.x, 0.0, 0.0, 0.0,
-        0.0,self.scale.y, 0.0, 0.0,
-        0.0, 0.0,self.scale.z, 0.0,
+    float xx = x + x;
+    float yy = y + y;
+    float zz = z + z;
+
+    float xxx = xx * x;
+    float xxy = xx * y;
+    float xxz = xx * z;
+
+    float yyy = yy * y;
+    float yyz = yy * z;
+    float zzz = zz * z;
+
+    float yyw = yy * w;
+    float zzw = zz * w;
+    float xxw = xx * w;
+
+    return Matrix4f {
+        (float)1.0 - yyy - zzz * self.scale.x, xxy - zzw, xxz + yyw, self.translation.x,
+        xxy + zzw, (float)1.0 - xxx - zzz, yyz - xxw * self.scale.y, self.translation.y,
+        xxz - yyw, yyz + zzw, (float)1.0 - xxx - yyy * self.scale.z, self.translation.z,
         0.0, 0.0, 0.0, 1.0,
     };
-
-   Matrix4f rotation = {|
-        float x = self.rotation.i;
-        float y = self.rotation.j;
-        float z = self.rotation.k;
-        float w = self.rotation.l;
-
-        float x2 = x + x;
-        float y2 = y + y;
-        float z2 = z + z;
-
-        float xx2 = x2 * x;
-        float xy2 = x2 * y;
-        float xz2 = x2 * z;
-
-        float yy2 = y2 * y;
-        float yz2 = y2 * z;
-        float zz2 = z2 * z;
-
-        float sy2 = y2 * w;
-        float sz2 = z2 * w;
-        float sx2 = x2 * w;
-
-        return {
-            1.0 - yy2 - zz2, xy2 + sz2, xz2 - sy2, 0.0,
-            xy2 - sz2, 1.0 - xx2 - zz2, yz2 + sx2, 0.0,
-            xz2 + sy2, yz2 - sx2, 1.0 - xx2 - yy2, 0.0,
-            0.0, 0.0, 0.0, 1.0,
-        };
-   |};
-   return translation.mul(rotation).mul(scale);
-}
-
-fn uint String.attributeType(self) {
-    switch (self) {
-        case "POSITION":
-            return 0;
-        case "TANGENT":
-            return 1;
-        case "NORMAL":
-            return 2;
-        default:
-            return 20;
-    }
 }
 
 fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
@@ -1332,25 +1334,26 @@ fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
 }
 
 fn Matrix4f Node.globalMatrix(&self) {
-    Matrix4f return_matrix = self.recompose();
+    Matrix4f global_matrix = self.recompose();
     Node* node = self;
 
     while (node.parent != null) {
+        global_matrix = node.parent.recompose().mul(global_matrix);
         node = node.parent;
-        Matrix4f parent_matrix = node.recompose();
-        return_matrix = return_matrix.mul(parent_matrix);
     }
 
-    return return_matrix;
+    return global_matrix;
 }
 
-fn char[]! Buffer.from_base64(self) {
-    char[] buffer_data = mem::new_array(char, (usz)(self.size + 2));
+fn char[]! parse_base64(char[] data, usz size) {
+    char[] buffer_data = mem::new_array(char, (usz)(size + 2));
     Base64Decoder decoder;
     decoder.init(base64::STD_ALPHABET, -1)!;
     // Decode buffer from base64
     // Offset base64 header
-    if (catch err = decoder.decode(self.uri[37..], buffer_data)) {
+    String data_string = (String)data;
+    usz offset = data_string.index_of_char(';')! + 8;
+    if (catch err = decoder.decode(data[offset..], buffer_data)) {
         io::printfn("Buffer parsing error: '%s'.", err);
         return ParseError.BROKEN_BUFFER?;
     };
@@ -1365,77 +1368,13 @@ fn char[]! Buffer.from_binary(self, InStream* stream) {
     return data;
 }
 
-struct BufferInfo (Printable) {
-    uint stride;
-    uint type;
-    uint weight_index;
-    uint offset;
-    uint size;
-    int next_row;
-}
-
-fn usz! BufferInfo.to_format(&self, Formatter* formatter) @dynamic
-{
-	usz n = formatter.print("{ ")!;
-	n += formatter.printf(" %d, %d, %d, %d, %d, %d", self.stride, self.type, self.weight_index, self.offset, self.size, self.next_row)!;
-	n += formatter.print(" }")!;
-	return n;
-}
-
-fn BufferMap Gltf.getBufferMap(self, bool morph_data = false) {
-    BufferMap buffers;
-
-    foreach (accessor: self.accessors) {
-        BufferView view = self.bufferViews[accessor.view];
-        buffers.push({
-            .offset = (uint)view.offset,
-            .size = accessor.componentLen(),
-            .next_row = -1,
-            .stride = accessor.stride()
-        });
-    }
-
-    if (morph_data == true) {
-      foreach (mesh_index, mesh: self.meshes) {
-          foreach (primitive: mesh.primitives) {
-                usz target_keys_len = 0;
-                foreach (target_index, target: primitive.targets) {
-                    String[] target_keys = target.key_tlist();
-                    foreach (i, key : target_keys) {
-                        usz accessor_index = target[key]!!;
-                        Accessor morph_accessor = self.accessors[accessor_index];
-                        gltf::BufferView morph_view = self.bufferViews[morph_accessor.view];
-
-                        // Get buffer index, for next morph target in the array
-                        int next = {|
-                          if (i + 1 < target_keys.len) {
-                              return (uint)accessor_index + 1;
-                          };
-
-                          if (i == target_keys.len - 1 && target_index != primitive.targets.len()) {
-                            return (uint)accessor_index + 1;
-                          }
-                          return -1;
-                        |};
-
-                        BufferInfo* buffer_info = &buffers[accessor_index];
-                        buffer_info.next_row = next;
-                        buffer_info.weight_index = (uint)target_index;
-                        buffer_info.type = (uint)key.attributeType();
-                    }
-                }
-            }
-        }
-    }
-
-    return buffers;
-}
-
-
-macro Gltf.@castBuffer(&self, Accessor accessor, usz offset, #type) {
+macro Gltf.@castBuffer(&self, Accessor accessor, usz index, #type) {
     BufferView bufferView = self.bufferViews[accessor.view];
     Buffer buffer = self.buffers[bufferView.buffer];
-    return bitcast(*(char[#type.sizeof]*)buffer.data[accessor.offset + bufferView.offset + offset..], #type);
+    usz index_offset = bufferView.byteStride > 0 ? bufferView.byteStride : accessor.stride();
+    usz start_offset = accessor.offset + bufferView.offset;
+
+    return bitcast(*(char[#type.sizeof]*)buffer.data[(start_offset + (index * index_offset))..], #type);
 }
 
 fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
@@ -1447,8 +1386,8 @@ fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
 
         switch (accessor.type) {
            case AccessorType.SCALAR:
-                float value = bitcast(*(char[float.sizeof]*)data, float);
-                io::printfn("Parsed int %f", value);
+                ushort value = bitcast(*(char[ushort.sizeof]*)data, ushort);
+                io::printfn("Parsed scalar %d", value);
            case AccessorType.VEC2:
                 Vec2f vec =  bitcast(*(char[Vec2f.sizeof]*)data, Vec2f);
                 io::printfn("Parsed Vec2 %f %f", vec.x, vec.y);

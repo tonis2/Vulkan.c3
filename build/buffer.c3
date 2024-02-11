@@ -101,7 +101,7 @@ struct MemoryBlock {
     DeviceAddress address;
 }
 
-macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pdevice; @body(Buffer buffer))
+fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice pdevice)
 {
     Buffer staging_buffer = BufferCreateInfo {
       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -126,10 +126,10 @@ macro void! Device.@staging_buffer(self, usz size, void* data, PhysicalDevice pd
     mem::copy(mapped, data, size);
     vk::unmapMemory(self, memory);
 
-    @body(staging_buffer);
-
-    destroyBuffer(self, staging_buffer, null);
-    freeMemory(self, memory, null);
+    return MemoryBlock {
+        .buffer = staging_buffer,
+        .memory = memory,
+    };
 }
 
 fn void MemoryBlock.free(&self, Device device)
@@ -141,6 +141,8 @@ fn void MemoryBlock.free(&self, Device device)
     if (self.type == BufferType.IMAGE) {
         destroyImage(device, self.image, null);
     }
+
+    freeMemory(device, self.memory, null);
 }
 
 fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
