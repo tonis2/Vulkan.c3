@@ -24,25 +24,52 @@ fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float
     return Camera {
         target,
         eye,
-        matrix4f_perspective(radians(view), aspect, min_zoom, max_zoom),
-        vector::matrix4f_look_at(eye, target, {0.0, 1.0, 0.0}),
+        perspective(radians(view), aspect, min_zoom, max_zoom),
+        matrix_look_at(eye, target, {0.0, 1.0, 0.0}),
         min_zoom,
         max_zoom
     };
 }
 
-fn void Camera.rotate(Camera* self, Quaternionf rotation) {
-    if (self.view.m00 < 0) rotation.i = -rotation.i;
-    self.view = rotation.to_matrixf().mul(self.view);
+fn void Camera.rotate(Camera* self, float rotation_x, float rotation_y) {
+    self.view = self.view.rotate_x(rotation_x);
+    self.view = self.view.rotate_y(rotation_y);
 }
 
 fn void Camera.zoom(Camera* self, float value) {
-   self.view.m32 += value;
+   self.view = self.view.translate(Vec3f{0,0, value});
 }
 
 fn UniformData Camera.matrix(Camera self) {
     return UniformData {
-        self.perspective,
-        self.view,
+        self.perspective.transpose(),
+        self.view.transpose(),
     };
+}
+
+fn Matrix4f matrix_look_at(Vec3f eye, Vec3f target, Vec3f up)
+{
+	Vec3f vz = (eye - target).normalize();
+	Vec3f vx = up.cross(vz).normalize();
+	Vec3f vy = vz.cross(vx);
+
+	return Matrix4f {
+		vx[0], vx[1], vx[2], - vx.dot(eye),
+		vy[0], vy[1], vy[2], - vy.dot(eye),
+		vz[0], vz[1], vz[2], - vz.dot(eye),
+		0.0, 0.0, 0.0, 1
+	};
+}
+
+fn Matrix4f perspective(float fov, float aspect_ratio, float near, float far)
+{
+	float f = (float)math::tan(math::PI * 0.5 - 0.5 * fov);
+	float rangeInv = (float)1.0 / (near - far);
+
+	return {
+		f / aspect_ratio, 0, 0, 0,
+		0, f, 0, 0,
+		0, 0, (near + far) * rangeInv,  near * far * rangeInv * 2,
+		0, 0, -1, 0,
+	};
 }
