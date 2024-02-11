@@ -31,12 +31,13 @@ fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float
     };
 }
 
-fn void Camera.rotate(Camera* self, Quaternionf rotation) {
-    self.view = self.view.mul(rotation.to_matrixf().transpose());
+fn void Camera.rotate(Camera* self, float rotation_x, float rotation_y) {
+    self.view = self.view.rotate_x(rotation_x);
+    self.view = self.view.rotate_y(rotation_y);
 }
 
 fn void Camera.zoom(Camera* self, float value) {
-   self.view.m32 += value;
+   self.view = self.view.translate(Vec3f{0,0, value});
 }
 
 fn UniformData Camera.matrix(Camera self) {
