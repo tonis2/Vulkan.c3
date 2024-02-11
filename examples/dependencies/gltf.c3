@@ -1345,27 +1345,6 @@ fn Matrix4f Node.globalMatrix(&self) {
     return global_matrix;
 }
 
-fn Matrix4f Node.globalMatrixInverse(&self) {
-    List(<Matrix4f>) joint_matrixes;
-
-    Node* parent = self.parent;
-    while (parent != null) {
-        joint_matrixes.push(parent.recompose());
-        parent = parent.parent;
-    }
-
-    joint_matrixes.reverse();
-
-    Matrix4f global_matrix = MATRIX4F_IDENTITY;
-
-    foreach (mat: joint_matrixes) {
-        global_matrix.mul(mat);
-    };
-
-    global_matrix = global_matrix.mul(self.recompose());
-    return global_matrix;
-}
-
 fn char[]! parse_base64(char[] data, usz size) {
     char[] buffer_data = mem::new_array(char, (usz)(size + 2));
     Base64Decoder decoder;
