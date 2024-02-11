@@ -751,8 +751,8 @@ fn void! main()
     };
 
     // Load shaders
-    char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
-    char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
+    char[*] vertex_shader_data = $embed("shaders/shader_vert.spv");
+    char[*] fragment_shader_data = $embed("shaders/shader_frag.spv");
 
     ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
     ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
