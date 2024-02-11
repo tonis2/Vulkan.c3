@@ -47,7 +47,7 @@ enum Interpolation {
     CUBICSPLINE,
 }
 
-enum Property {
+enum AnimationProperty {
     TRANSLATION,
     ROTATION,
     SCALE,
@@ -151,7 +151,6 @@ struct Node {
     int skin;
     Quaternionf rotation;
     Matrix4f matrix;
-    Matrix4f inverse_bind;
     Vec3f scale;
     Vec3f translation;
     List(<uint>) children;
@@ -187,7 +186,7 @@ struct Channel {
     uint sampler;
     struct target {
         uint node;
-        Property path;
+        AnimationProperty path;
     }
 }
 
@@ -378,8 +377,6 @@ fn void Node.fromJson(&self, Object* json) {
     if (try children) {
         foreach (node : children.array) self.children.push((uint)node.f);
     }
-
-    self.inverse_bind = self.globalMatrix().inverse()!!;
 }
 
 fn bool Node.hasMesh(self) {
@@ -812,10 +809,10 @@ fn void Animation.fromJson(&self, Object* json) {
                 if (try node) channel_data.target.node = node;
                 if (try path) {
                     switch (path) {
-                        case "translation": channel_data.target.path = Property.TRANSLATION;
-                        case "rotation": channel_data.target.path = Property.ROTATION;
-                        case "scale": channel_data.target.path = Property.SCALE;
-                        case "weights": channel_data.target.path = Property.WEIGHTS;
+                        case "translation": channel_data.target.path = AnimationProperty.TRANSLATION;
+                        case "rotation": channel_data.target.path = AnimationProperty.ROTATION;
+                        case "scale": channel_data.target.path = AnimationProperty.SCALE;
+                        case "weights": channel_data.target.path = AnimationProperty.WEIGHTS;
                     }
                 }
             };
@@ -1143,7 +1140,6 @@ fn AnimationMixer Gltf.loadAnimation(self, Animation animation) {
 
         // Parse animation transform values, from buffer
         Accessor value_accessor = self.accessors[sampler.output];
-
         for (ulong i; i < value_accessor.count; i++) {
             switch (channel.target.path) {
                 case TRANSLATION: {
@@ -1192,13 +1188,8 @@ fn AnimationMixer Animation.mixer(self) {
 
 fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
    double current_time = time.to_sec();
-
    foreach (index, &channel: animation.channels) {
-        if (channel.times.len() < 3) continue;
-
         AnimationSampler sampler = animation.samplers[channel.sampler];
-        Node* node = &self.nodes[channel.target.node];
-
         channel.time += current_time;
         if (channel.time > channel.max_time) channel.time = 0;
 
@@ -1209,6 +1200,9 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
                 break;
             };
         }
+
+       // Animation target node
+       Node* node = &self.nodes[channel.target.node];
 
        if (channel.target.path == WEIGHTS) {
             foreach (i, weight: node.weights) node.weights[i] = channel.values[time_index * node.weights.len() + i].weight;
@@ -1364,15 +1358,33 @@ fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
 }
 
 fn Matrix4f Node.globalMatrix(&self) {
-    Matrix4f return_matrix = self.recompose();
+    Matrix4f global_matrix = self.recompose();
     Node* node = self;
 
     while (node.parent != null) {
-        return_matrix = return_matrix.mul(node.parent.recompose());
+        global_matrix = global_matrix.mul(node.parent.recompose());
         node = node.parent;
     }
 
-    return return_matrix;
+    return global_matrix;
+}
+
+fn Matrix4f Node.globalMatrixInverse(&self) {
+    List(<Matrix4f>) joint_matrixes;
+
+    Node* parent = self.parent;
+    while (parent != null) {
+        joint_matrixes.push(parent.recompose());
+        parent = parent.parent;
+    }
+
+    joint_matrixes.reverse();
+
+    Matrix4f global_matrix = MATRIX4F_IDENTITY;
+    foreach (mat: joint_matrixes) global_matrix.mul(mat);
+    global_matrix = global_matrix.mul(self.recompose());
+
+    return global_matrix;
 }
 
 fn char[]! parse_base64(char[] data, usz size) {

@@ -56,7 +56,7 @@ layout( push_constant ) uniform constants
 void main() {
     VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
     vec3 position = vp;
-    mat4 skin_matrix = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+    mat4 skin_matrix = mat4(0);
 
     for (uint i = 0; i <= morph_count; i++) {
         uint offset = morph_buffer.data[morph_index + i] + gl_VertexIndex;
