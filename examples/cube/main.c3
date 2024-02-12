@@ -16,7 +16,7 @@ struct Vertex {
     Vec4f color;
 }
 
-Vertex[] vertex_data = {
+Vertex[] vertices = {
     Vertex {{-1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
     Vertex {{1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
     Vertex {{1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
@@ -48,7 +48,7 @@ Vertex[] vertex_data = {
     Vertex {{-1.0, 1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
 };
 
-ushort[] index_data = {
+ushort[] indices = {
     0,  1,  2,      0,  2,  3,    // front
     4,  5,  6,      4,  6,  7,    // back
     8,  9,  10,     8,  10, 11,   // top
@@ -249,7 +249,6 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
         .size = 10_000_000
     }.build()!;
 
@@ -258,47 +257,44 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
-        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
         .size = 5_000_000
     }.build()!;
 
-   // Create buffers, using only memory of the allocator
-   MemoryBlock vertex_buffer = vk::bufferCreateInfoBuilder()
+    // Create buffers, using only memory of the allocator
+    MemoryBlock vertex_buffer = vk::bufferCreateInfoBuilder()
                .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-               .setSize(Vertex.sizeof * vertex_data.len)
+               .setSize(Vertex.sizeof * vertices.len)
                .build(device)!
                .bind(&device_allocation)!;
 
-    // Copy buffer from staging memory to device_local (GPU only memory)
-    device.@staging_buffer(.size = Vertex.sizeof * vertex_data.len, .data = vertex_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-          BufferCopy copyRegion = {
-               .srcOffset = 0,
-               .dstOffset = 0,
-               .size = Vertex.sizeof * vertex_data.len
-           };
-           vk::cmdCopyBuffer(command_buffer, staging_buffer, vertex_buffer.buffer, 1, &copyRegion);
-        }!;
+    MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
+                .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                .setSize(indices.len * float.sizeof)
+                .build(device)!
+                .bind(&device_allocation)!;
+
+    // Create stage buffers and then copy the data to GPU only buffers
+    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len, .data = vertices, .pdevice = physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(.size = ushort.sizeof * indices.len, .data = indices, .pdevice = physical_device)!;
+
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+         vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
+             .srcOffset = 0,
+             .dstOffset = 0,
+             .size = ushort.sizeof * indices.len
+         });
+
+         vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = Vertex.sizeof * vertices.len
+         });
     }!;
 
-   MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
-               .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
-               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-               .setSize(index_data.len * float.sizeof)
-               .build(device)!
-               .bind(&device_allocation)!;
-
-    device.@staging_buffer(.size = index_data.len * float.sizeof, .data = index_data, .pdevice = physical_device; vk::Buffer staging_buffer) {
-        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-          BufferCopy copyRegion = {
-               .srcOffset = 0,
-               .dstOffset = 0,
-               .size = index_data.len * float.sizeof
-           };
-           vk::cmdCopyBuffer(command_buffer, staging_buffer, index_buffer.buffer, 1, &copyRegion);
-        }!;
-    }!;
+    index_stage_buffer.free(device);
+    vertex_stage_buffer.free(device);
 
    MemoryBlock uniform_buffer = vk::bufferCreateInfoBuilder()
                .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
@@ -452,13 +448,13 @@ fn void! main()
         eventHandler.update();
 
         if (eventHandler.scrolling) {
-           camera.zoom((float)eventHandler.scrollY * 1.5);
-           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
+            camera.zoom((float)eventHandler.scrollY * 5);
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate(Quaternionf {(float)eventHandler.mouse_y_delta * 0.01, 0, (float)eventHandler.mouse_x_delta * 0.01, 1});
+            camera.rotate((float)eventHandler.mouse_x_delta, (float)eventHandler.mouse_y_delta);
             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
@@ -529,7 +525,7 @@ fn void! main()
 
         vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
         vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
-        vk::cmdDrawIndexed(command_buffer, index_data.len, 1, 0, 0, 0);
+        vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
 
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
