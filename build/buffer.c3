@@ -83,7 +83,7 @@ fn Allocation! Allocation.build(&self) {
 }
 
 fn void Allocation.free(&self) {
-    foreach (block_info: self.blocks) block_info.free(self.device);
+    foreach (block_info: self.blocks) block_info.free(self.device, false);
     freeMemory(self.device, self.memory, null);
     self.blocks.free();
 }
@@ -132,7 +132,7 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
     };
 }
 
-fn void MemoryBlock.free(&self, Device device)
+fn void MemoryBlock.free(&self, Device device, bool free_mem = true)
 {
     if (self.type == BufferType.BUFFER) {
         destroyBuffer(device, self.buffer, null);
@@ -142,7 +142,7 @@ fn void MemoryBlock.free(&self, Device device)
         destroyImage(device, self.image, null);
     }
 
-    freeMemory(device, self.memory, null);
+    if (free_mem) freeMemory(device, self.memory, null);
 }
 
 fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
