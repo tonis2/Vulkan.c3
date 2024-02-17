@@ -58,8 +58,8 @@ void main() {
     vec3 position = vp;
     mat4 skin_matrix = mat4(1);
 
-    for (uint i = 0; i <= morph_count; i++) {
-        uint offset = morph_buffer.data[morph_index + i] + gl_VertexIndex;
+    for (uint i = 0; i < morph_count; i++) {
+        uint offset = (morph_index * i) + gl_VertexIndex;
         position += vertex_buffer[offset].position * morph_weights[i];
     }
 

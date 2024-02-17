@@ -98,15 +98,7 @@ fn void! main()
         return;
     }
 
-    File! file = file::open("examples/gltf/assets/CesiumMan.gltf", "r");
-    defer file.close()!!;
-
-    if (catch err = file) {
-        io::printfn("Failed to load the gltf file");
-        return;
-    }
-
-    Gltf! gltf_data = gltf::parse(&file);
+    Gltf! gltf_data = gltf::loadFile("examples/gltf/assets/CesiumMan.gltf");
     defer gltf_data.free()!!;
 
     if (catch err = gltf_data) {
@@ -140,12 +132,11 @@ fn void! main()
         animations.push(gltf_data.loadAnimation(animation));
     }
 
-
     foreach (&skin: gltf_data.skins) {
         Accessor skin_accessor = gltf_data.accessors[skin.inverseBindAccessor];
         // Load inverse bind matrices
         for (uint i; i < skin_accessor.count; i++) {
-             Matrix4f matrix = gltf_data.@castBuffer(skin_accessor, i, Matrix4f);
+             Matrix4f matrix = gltf_data.@castBuffer(skin_accessor, i, Matrix4f).transpose();
              skin.inverseBindMatrices.push(matrix);
              joint_data.push(matrix);
         }
@@ -207,7 +198,6 @@ fn void! main()
                 |};
 
                 Vec3f position = gltf_data.@castBuffer(pos_accessor, i, Vec3f);
-
                 vertices.push({
                     .pos = position,
                     .normal = normal,
@@ -216,31 +206,17 @@ fn void! main()
                     .skin_weight = skin_weight
                 });
             }
-        }
 
-        // Here, I'm making morph targets offset list, has some odd offsets for each next primitive set
-        foreach (prim_index, &primitive: mesh.primitives) {
-            primitive.attributes["morph_index"] = morph_data.len();
-
+            if (primitive.targets.len() > 0) primitive.attributes["morph_index"] = vertices.len();
+            // Add morph data
             foreach (uint target_index, map: primitive.targets) {
                 Accessor position = gltf_data.accessors[map["POSITION"]!!];
                 Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
-
-                if (prim_index > 0) {
-                   uint previous_count = {|
-                        gltf::Primitive last_prim = mesh.primitives[prim_index - 1];
-                        return gltf_data.accessors[last_prim.targets[0]["POSITION"]!!].count;
-                   |};
-                   morph_data.push((uint)vertices.len() - previous_count);
-                } else {
-                   morph_data.push((uint)vertices.len());
-                }
 
                 for (usz i; i < position.count; i++) {
                     vertices.push({
                        .pos = gltf_data.@castBuffer(position, i, Vec3f),
                        .normal = gltf_data.@castBuffer(normal, i, Vec3f),
-                       .tex_cord = {0,0}
                     });
                 }
             }
@@ -438,7 +414,7 @@ fn void! main()
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Create allocator of 50MB - DEVICE_ONLY memory
-    Allocation device_allocation = Allocation {
+    vk::Allocation device_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -447,7 +423,7 @@ fn void! main()
     }.build()!;
 
     // Allocation where data can be changed from CPU
-    Allocation local_allocation = Allocation {
+    vk::Allocation local_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
@@ -1119,13 +1095,12 @@ fn void! main()
 }
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
-    Matrix4f node_world_matrix = node.globalMatrix();
 
     if (node.hasSkin()) {
         Skin skin = gltf.skins[node.skin];
         foreach (joint_index, joint: skin.joints) {
            Node joint_node = gltf.nodes[joint];
-           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index].transpose());
+           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index]);
            joint_data[joint_index] = joint_data[joint_index].transpose();
         }
         joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
@@ -1147,7 +1122,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
             |};
 
             PushConstantData constant_data = {
-                .matrix = node_world_matrix.transpose(),
+                .matrix = node.globalMatrix().transpose(),
                 .joint_buffer = joint_buffer.address,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
                 .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
