@@ -1312,7 +1312,7 @@ fn Matrix4f Node.recompose(&self) {
     return Matrix4f {
         1 - 2*y*y - 2*z*z * self.scale.x, 2*x*y - 2*z*w, 2*x*z + 2*y*w, self.translation.x,
         2*x*y + 2*z*w, 1 - 2*x*x - 2*z*z * self.scale.y, 2*y*z - 2*x*w, self.translation.y,
-        2*x*z - 2*y*w, 2*z*z + 2*x*w , 1 - 2*x*x - 2*y*y * self.scale.z, self.translation.z,
+        2*x*z - 2*y*w, 2*y*z + 2*x*w , 1 - 2*x*x - 2*y*y * self.scale.z, self.translation.z,
         0.0, 0.0, 0.0, 1.0,
     };
 }
