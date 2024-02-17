@@ -857,6 +857,18 @@ fn void Skin.free(&self) {
     self.name.free();
 }
 
+fn Gltf! loadFile(String path) {
+    File! file = file::open(path, "r");
+    defer file.close()!!;
+
+    if (catch err = file) {
+        io::printfn("Failed to find the gltf file");
+        return ParseError.FILE_NOT_FOUND?;
+    }
+
+    return parse(&file);
+}
+
 fn Gltf! parse(InStream* stream) {
     Gltf content;
     Object*! gltfJson;
@@ -1188,6 +1200,7 @@ fn AnimationMixer Animation.mixer(self) {
 
 fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
    double current_time = time.to_sec();
+
    foreach (index, &channel: animation.channels) {
         AnimationSampler sampler = animation.samplers[channel.sampler];
         channel.time += current_time;
@@ -1221,7 +1234,7 @@ fn void Gltf.animate(&self, AnimationMixer* animation, NanoDuration time) {
                         node.translation = prev_value.translation.lerp(next_value.translation, (float)interpolation_value);
                     }
                     case ROTATION: {
-                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value).normalize();
+                        node.rotation = prev_value.rotation.slerp(next_value.rotation, (float)interpolation_value);
                     }
                     case SCALE: {
                         node.scale = prev_value.scale.lerp(next_value.scale, (float)interpolation_value);
@@ -1290,31 +1303,16 @@ fn uint Accessor.dataSize(Accessor* self) {
 
 // Returns matrix from node transform, scale, rotation
 fn Matrix4f Node.recompose(&self) {
-    float x = self.rotation.i;
-    float y = self.rotation.j;
-    float z = self.rotation.k;
-    float w = self.rotation.l;
-
-    float xx = x + x;
-    float yy = y + y;
-    float zz = z + z;
-
-    float xxx = xx * x;
-    float xxy = xx * y;
-    float xxz = xx * z;
-
-    float yyy = yy * y;
-    float yyz = yy * z;
-    float zzz = zz * z;
-
-    float yyw = yy * w;
-    float zzw = zz * w;
-    float xxw = xx * w;
+    Quaternionf rotation = self.rotation.normalize();
+    float x = rotation.i;
+    float y = rotation.j;
+    float z = rotation.k;
+    float w = rotation.l;
 
     return Matrix4f {
-        (float)1.0 - yyy - zzz * self.scale.x, xxy - zzw, xxz + yyw, self.translation.x,
-        xxy + zzw, (float)1.0 - xxx - zzz, yyz - xxw * self.scale.y, self.translation.y,
-        xxz - yyw, yyz + zzw, (float)1.0 - xxx - yyy * self.scale.z, self.translation.z,
+        1 - 2*y*y - 2*z*z * self.scale.x, 2*x*y - 2*z*w, 2*x*z + 2*y*w, self.translation.x,
+        2*x*y + 2*z*w, 1 - 2*x*x - 2*z*z * self.scale.y, 2*y*z - 2*x*w, self.translation.y,
+        2*x*z - 2*y*w, 2*z*z + 2*x*w , 1 - 2*x*x - 2*y*y * self.scale.z, self.translation.z,
         0.0, 0.0, 0.0, 1.0,
     };
 }
