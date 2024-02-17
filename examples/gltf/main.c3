@@ -8,8 +8,6 @@ import std::collections::list;
 import stb;
 import std::time;
 
-def TextureList = List(<TextureData>);
-
 const WIDTH = 1200;
 const HEIGHT = 800;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
@@ -58,7 +56,6 @@ MemoryBlock vertex_buffer;
 MemoryBlock index_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
-MemoryBlock morph_buffer;
 MemoryBlock joint_buffer;
 
 Instance instance;
@@ -72,8 +69,8 @@ ZStringList device_extensions;
 
 List(<Vertex>) vertices;
 List(<ushort>) indices;
-List(<uint>) morph_data;
 List(<Matrix4f>) joint_data;
+
 
 fn void! main()
 {
@@ -226,7 +223,6 @@ fn void! main()
     defer {
         vertices.free();
         indices.free();
-        morph_data.free();
         joint_data.free();
     };
 
@@ -470,16 +466,7 @@ fn void! main()
                     .bind(&local_allocation)!
                     .getAddress(device);
 
-    morph_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(morph_data.len() * uint.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
-
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
-    morph_buffer.upload(morph_data.entries, morph_data.len() * uint.sizeof, device);
 
     // Create stage buffers and then copy the data to GPU only buffers
     MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device)!;
@@ -505,13 +492,12 @@ fn void! main()
     AddressBuffer addresses = {
         .uniform_buffer = uniform_buffer.address,
         .vertex_buffer = vertex_buffer.address,
-        .morph_buffer = morph_buffer.address,
     };
 
     address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
 
     TextureData depth_texture;
-    TextureList textures;
+    List(<TextureData>) textures;
 
     // Create depth texture
     vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
