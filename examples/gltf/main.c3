@@ -32,7 +32,6 @@ struct Vertex {
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
-    DeviceAddress morph_buffer;
 }
 
 fn void TextureData.free(&self, Device device)
@@ -45,10 +44,12 @@ struct PushConstantData {
     Matrix4f matrix;
     DeviceAddress joint_buffer;
     Vec4f baseColor;
-    uint morph_index;
     ichar texture;
     ichar has_skin;
-    char morph_count;
+
+    uint morph_count;
+    uint morph_start;
+    uint morph_offset;
     float[8] morph_weights;
 }
 
@@ -70,7 +71,6 @@ ZStringList device_extensions;
 List(<Vertex>) vertices;
 List(<ushort>) indices;
 List(<Matrix4f>) joint_data;
-
 
 fn void! main()
 {
@@ -141,7 +141,9 @@ fn void! main()
 
     // Preload vertex data from GLTF
     foreach (mesh: gltf_data.meshes) {
-        foreach (&primitive: mesh.primitives) {
+        uint morph_adjustment = 0;
+
+        foreach (prim_index, &primitive: mesh.primitives) {
             Accessor pos_accessor = gltf_data.accessors[primitive.attributes["POSITION"]!!];
             Accessor index_accessor = gltf_data.accessors[primitive.attributes["indices"]!!];
             primitive.attributes["first_index"] = indices.len();
@@ -204,11 +206,16 @@ fn void! main()
                 });
             }
 
-            if (primitive.targets.len() > 0) primitive.attributes["morph_index"] = vertices.len();
+            if (primitive.targets.len() > 0) {
+                primitive.attributes["morph_start"] = vertices.len() - morph_adjustment;
+                primitive.attributes["morph_offset"] = pos_accessor.count;
+                morph_adjustment += pos_accessor.count;
+            };
+
             // Add morph data
-            foreach (uint target_index, map: primitive.targets) {
-                Accessor position = gltf_data.accessors[map["POSITION"]!!];
-                Accessor normal = gltf_data.accessors[map["NORMAL"]!!];
+            foreach (targets: primitive.targets) {
+                Accessor position = gltf_data.accessors[targets["POSITION"]!!];
+                Accessor normal = gltf_data.accessors[targets["NORMAL"]!!];
 
                 for (usz i; i < position.count; i++) {
                     vertices.push({
@@ -445,7 +452,7 @@ fn void! main()
     vertex_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(Vertex.sizeof * vertices.len())
+                    .setSize(vertices.byte_size())
                     .build(device)!
                     .bind(&device_allocation)!
                     .getAddress(device);
@@ -453,7 +460,7 @@ fn void! main()
     index_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(ushort.sizeof * indices.len())
+                    .setSize(indices.byte_size())
                     .build(device)!
                     .bind(&device_allocation)!
                     .getAddress(device);
@@ -461,7 +468,7 @@ fn void! main()
     joint_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(joint_data.len() * Matrix4f.sizeof)
+                    .setSize(joint_data.byte_size())
                     .build(device)!
                     .bind(&local_allocation)!
                     .getAddress(device);
@@ -469,20 +476,20 @@ fn void! main()
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
 
     // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len(), .data = vertices.entries, .pdevice = physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(.size = ushort.sizeof * indices.len(), .data = indices.entries, .pdevice = physical_device)!;
+    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(.size = indices.byte_size(), .data = indices.entries, .pdevice = physical_device)!;
 
     device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
         vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
             .srcOffset = 0,
             .dstOffset = 0,
-            .size = ushort.sizeof * indices.len()
+            .size = indices.byte_size()
         });
 
         vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
            .srcOffset = 0,
            .dstOffset = 0,
-           .size = Vertex.sizeof * vertices.len()
+           .size = vertices.byte_size()
         });
     }!;
 
@@ -917,7 +924,7 @@ fn void! main()
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate((float)eventHandler.mouse_x_delta, (float)eventHandler.mouse_y_delta);
+            camera.rotate((float)eventHandler.mouse_y_delta, (float)eventHandler.mouse_x_delta);
             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
@@ -1035,7 +1042,7 @@ fn void! main()
         .setWaitSemaphores({ wait_semaphore })
         .setCommandBuffers({ command_buffer })
         .setSignalSemaphores({ signal_semaphore })
-        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
+        .setWaitDstStageMask({ vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT });
 
         vk::endCommandBuffer(command_buffer)!;
         vk::queueSubmit(queue_family.graphics_handle, 1, &submit_info, frame_fence)!;
@@ -1082,14 +1089,14 @@ fn void! main()
 
 fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
 
+    // If node has skin animation attached, upload joint buffer matrices
     if (node.hasSkin()) {
         Skin skin = gltf.skins[node.skin];
         foreach (joint_index, joint: skin.joints) {
            Node joint_node = gltf.nodes[joint];
-           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index]);
-           joint_data[joint_index] = joint_data[joint_index].transpose();
+           joint_data[joint_index] = joint_node.globalMatrix().mul(skin.inverseBindMatrices[joint_index]).transpose();
         }
-        joint_buffer.upload(joint_data.entries, joint_data.len() * Matrix4f.sizeof, device);
+        joint_buffer.upload(joint_data.entries, joint_data.byte_size(), device);
     }
 
     if (node.hasMesh()) {
@@ -1111,10 +1118,12 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .matrix = node.globalMatrix().transpose(),
                 .joint_buffer = joint_buffer.address,
                 .baseColor = material.pbrMetallicRoughness.baseColorFactor,
-                .morph_index = (uint)primitive.attributes["morph_index"] ?? 0,
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .has_skin = (ichar)node.skin,
-                .morph_count = (char)primitive.targets.len(),
+
+                .morph_count = (uint)primitive.targets.len(),
+                .morph_start = (uint)primitive.attributes["morph_start"] ?? 0,
+                .morph_offset = (uint)primitive.attributes["morph_offset"] ?? 0,
                 .morph_weights = weights,
             };
 

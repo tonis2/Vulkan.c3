@@ -41,10 +41,12 @@ layout( push_constant ) uniform constants
     mat4 model_matrix;
     JointBuffer joint_buffer;
     vec4 baseColor;
-    uint morph_index;
     int8_t texture;
     int8_t has_skin;
-    uint8_t morph_count;
+
+    uint morph_count;
+    uint morph_start;
+    uint morph_offset;
     float[8] morph_weights;
 };
 
@@ -54,7 +56,9 @@ void main() {
     mat4 skin_matrix = mat4(1);
 
     for (uint i = 0; i < morph_count; i++) {
-        uint offset = (morph_index * i) + gl_VertexIndex;
+        //morph_start + (i * morph_offset)
+        // 1720
+        uint offset = morph_start + (i * morph_offset) + gl_VertexIndex;
         position += vertex_buffer[offset].position * morph_weights[i];
     }
 
