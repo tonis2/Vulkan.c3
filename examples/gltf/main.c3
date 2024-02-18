@@ -238,9 +238,9 @@ fn void! main()
     device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
 
    // SETUP extensions
-    uint glfwExtensions_count = 0;
-    ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
-    for (int i = 0; i < glfwExtensions_count; ++i) extensions.push(glfwExtensions[i]);
+    ZStringList glfw_extensions = glfw::getRequiredExtensions();
+    extensions.add_all(&glfw_extensions);
+    glfw_extensions.free();
 
     if (ENABLE_VALIDATION_LAYERS) {
        extensions.add_array({"VK_EXT_debug_utils"});
