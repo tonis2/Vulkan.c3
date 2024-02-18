@@ -47,7 +47,7 @@ struct PushConstantData {
     ichar texture;
     ichar has_skin;
 
-    uint morph_count;
+    char morph_count;
     uint morph_start;
     uint morph_offset;
     float[8] morph_weights;
@@ -799,47 +799,7 @@ fn void! main()
     })
     .setLayout(pipeline_layout)
     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
-            .setVertexBindingDescriptions(
-               {
-                   {
-                        .binding = 0,
-                        .stride = Vertex.sizeof,
-                        .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-                   },
-               })
-               .setVertexAttributeDescriptions({
-                    {
-                        .binding = 0,
-                        .location = 0,
-                        .format = vk::FORMAT_R32G32B32_SFLOAT,
-                        .offset = Vertex.pos.offsetof
-                    },
-                    {
-                        .binding = 0,
-                        .location = 1,
-                        .format = vk::FORMAT_R32G32B32_SFLOAT,
-                        .offset = Vertex.normal.offsetof
-                    },
-                    {
-                        .binding = 0,
-                        .location = 2,
-                        .format = vk::FORMAT_R32G32_SFLOAT,
-                        .offset = Vertex.tex_cord.offsetof
-                    },
-                    {
-                        .binding = 0,
-                        .location = 3,
-                        .format = vk::FORMAT_R32G32B32A32_SFLOAT,
-                        .offset = Vertex.skin_pos.offsetof
-                    },
-                    {
-                        .binding = 0,
-                        .location = 4,
-                        .format = vk::FORMAT_R32G32B32A32_SFLOAT,
-                        .offset = Vertex.skin_weight.offsetof
-                    },
-               })
-           )
+       .setVertexBindingDescriptionCount(0))
     .setDynamicState(
        &&vk::pipelineDynamicStateCreateInfoBuilder()
         .setDynamicStates(
@@ -924,7 +884,7 @@ fn void! main()
 
         // Update camera  rotation on left-mouse click
         if (eventHandler.left_mouse_click) {
-            camera.rotate((float)eventHandler.mouse_y_delta, (float)eventHandler.mouse_x_delta);
+            camera.rotate((float)eventHandler.mouse_x_delta, (float)eventHandler.mouse_y_delta);
             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
         }
 
@@ -999,13 +959,6 @@ fn void! main()
         if (descriptor_sets.len() > 0) {
             vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, (uint)descriptor_sets.len(), descriptor_sets.entries);
         }
-
-       vk::cmdBindVertexBuffers(
-            command_buffer,
-            0, 1,
-            &&vk::Buffer[1]{vertex_buffer.buffer},
-            &&vk::DeviceSize[1]{0}
-        );
 
         // Draw gltf scene nodes
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout, device);
@@ -1121,7 +1074,7 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
                 .texture = (ichar)material.pbrMetallicRoughness.baseColorTexture.source,
                 .has_skin = (ichar)node.skin,
 
-                .morph_count = (uint)primitive.targets.len(),
+                .morph_count = (char)primitive.targets.len(),
                 .morph_start = (uint)primitive.attributes["morph_start"] ?? 0,
                 .morph_offset = (uint)primitive.attributes["morph_offset"] ?? 0,
                 .morph_weights = weights,
