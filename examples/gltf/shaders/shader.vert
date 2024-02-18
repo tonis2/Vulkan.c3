@@ -26,12 +26,6 @@ layout(binding = 0, scalar) buffer AddressBuffer {
    VertexBuffer vertex_buffer;
 };
 
-layout(location = 0) in vec3 vp;
-layout(location = 1) in vec3 normal;
-layout(location = 2) in vec2 tex_cord;
-layout(location = 3) in vec4 skin_pos;
-layout(location = 4) in vec4 skin_weight;
-
 layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec4 outBaseColor;
 layout(location = 2) out int textureIndex;
@@ -44,7 +38,7 @@ layout( push_constant ) uniform constants
     int8_t texture;
     int8_t has_skin;
 
-    uint morph_count;
+    uint8_t morph_count;
     uint morph_start;
     uint morph_offset;
     float[8] morph_weights;
@@ -52,7 +46,7 @@ layout( push_constant ) uniform constants
 
 void main() {
     VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
-    vec3 position = vp;
+    vec3 position = vertex.position;
     mat4 skin_matrix = mat4(1);
 
     for (uint i = 0; i < morph_count; i++) {
@@ -64,10 +58,10 @@ void main() {
 
     if (has_skin >= 0) {
         skin_matrix =
-             skin_weight[0] * joint_buffer[uint(skin_pos[0])].matrix +
-             skin_weight[1] * joint_buffer[uint(skin_pos[1])].matrix +
-             skin_weight[2] * joint_buffer[uint(skin_pos[2])].matrix +
-             skin_weight[3] * joint_buffer[uint(skin_pos[3])].matrix;
+             vertex.skin_weight[0] * joint_buffer[uint(vertex.skin_pos[0])].matrix +
+             vertex.skin_weight[1] * joint_buffer[uint(vertex.skin_pos[1])].matrix +
+             vertex.skin_weight[2] * joint_buffer[uint(vertex.skin_pos[2])].matrix +
+             vertex.skin_weight[3] * joint_buffer[uint(vertex.skin_pos[3])].matrix;
     }
 
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
