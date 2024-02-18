@@ -50,8 +50,6 @@ void main() {
     mat4 skin_matrix = mat4(1);
 
     for (uint i = 0; i < morph_count; i++) {
-        //morph_start + (i * morph_offset)
-        // 1720
         uint offset = morph_start + (i * morph_offset) + gl_VertexIndex;
         position += vertex_buffer[offset].position * morph_weights[i];
     }
