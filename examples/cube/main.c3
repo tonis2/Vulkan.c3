@@ -245,7 +245,7 @@ fn void! main()
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Create allocator of 10MB - DEVICE_ONLY memory
-    Allocation device_allocation = Allocation {
+    vk::Allocation device_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -253,7 +253,7 @@ fn void! main()
     }.build()!;
 
     // Allocation where data can be changed from CPU
-    Allocation local_allocation = Allocation {
+    vk::Allocation local_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
