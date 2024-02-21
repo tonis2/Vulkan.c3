@@ -12,22 +12,11 @@ import std::encoding::json;
 import std::encoding::base64;
 import std::collections::map;
 
-def NodeList = List(<Node>);
-def SceneList= List(<Scene>);
-def MeshList = List(<Mesh>);
-def BufferList = List(<Buffer>);
-def BufferViewList = List(<BufferView>);
-def AccessorList = List(<Accessor>);
-def CameraList = List(<Camera>);
-def MaterialList = List(<Material>);
-def SamplerList = List(<Sampler>);
-def TextureList = List(<Texture>);
 def Animations = List(<AnimationMixer>);
-def ImageList = List(<Image>);
-
-def AnimationList = List(<Animation>);
 def SkinList = List(<Skin>);
 def AttributeMap = HashMap(<String, usz>);
+
+const PUNCTUAL_LIGHT_EXTENSION = "KHR_lights_punctual";
 
 enum Targets {
     ARRAY_BUFFER,
@@ -52,6 +41,12 @@ enum AnimationProperty {
     ROTATION,
     SCALE,
     WEIGHTS
+}
+
+enum LightType {
+    DIRECTIONAL,
+    POINT,
+    SPOT,
 }
 
 enum ResourceType {
@@ -123,18 +118,20 @@ fault ParseError
 
 struct Gltf {
     String name;
-    NodeList nodes;
-    SceneList scenes;
-    MeshList meshes;
-    BufferList buffers;
-    ImageList images;
-    BufferViewList bufferViews;
-    AccessorList accessors;
-    CameraList cameras;
-    MaterialList materials;
-    SamplerList samplers;
-    TextureList textures;
-    AnimationList animations;
+    List(<Node>) nodes;
+    List(<Scene>) scenes;
+    List(<Mesh>) meshes;
+    List(<Buffer>) buffers;
+    List(<BufferView>) bufferViews;
+    List(<Image>) images;
+    List(<Accessor>) accessors;
+    List(<Camera>) cameras;
+    List(<Material>) materials;
+    List(<Sampler>) samplers;
+    List(<Texture>) textures;
+    List(<Animation>) animations;
+    List(<Light>) lights;
+    List(<String>) extensions;
     SkinList skins;
 }
 
@@ -149,6 +146,7 @@ struct Node {
     int mesh;
     int camera;
     int skin;
+    int light;
     Quaternionf rotation;
     Matrix4f matrix;
     Vec3f scale;
@@ -224,8 +222,10 @@ struct Material {
     String name;
     bool doubleSided;
     Vec3f emissiveFactor;
+    float emissiveStrength;
     TextureInfo normalTexture;
     TextureInfo occlusionTexture;
+
     struct pbrMetallicRoughness {
         Vec4f baseColorFactor;
         float metallicFactor;
@@ -304,6 +304,18 @@ struct Image {
     ResourceType type;
 }
 
+struct Light {
+    String name;
+    Vec3f color;
+    float intensity;
+    float range;
+    LightType type;
+    struct spot {
+        float inner_cone_angle;
+        float outer_cone_angle;
+    }
+}
+
 const EMPTY_MATERIAL = Material {
     .name = "empty",
     .doubleSided = false,
@@ -334,9 +346,10 @@ fn void Node.fromJson(&self, Object* json) {
     self.mesh = -1;
     self.camera = -1;
     self.skin = -1;
+    self.light = -1;
     self.rotation = {0,0,0,1};
-    self.scale = {1, 1, 1};
-    self.translation = {0, 0, 0};
+    self.scale = {1,1,1};
+    self.translation = {0,0,0};
     self.matrix = MATRIX4F_IDENTITY;
 
     String! name = json.get_string("name");
@@ -350,6 +363,8 @@ fn void Node.fromJson(&self, Object* json) {
     int! mesh = json.get_int("mesh");
     int! camera = json.get_int("camera");
     int! skin = json.get_int("skin");
+
+    Object*! light = json.getExtension(PUNCTUAL_LIGHT_EXTENSION);
 
     if (try name) self.name = name.copy();
     if (try skin) self.skin = skin;
@@ -376,6 +391,10 @@ fn void Node.fromJson(&self, Object* json) {
 
     if (try children) {
         foreach (node : children.array) self.children.push((uint)node.f);
+    }
+
+    if (try light) {
+        self.light = light.get_int("light")!!;
     }
 }
 
@@ -857,6 +876,38 @@ fn void Skin.free(&self) {
     self.name.free();
 }
 
+fn void Light.fromJson(&self, Object* json) {
+    String! name = json.get_string("name");
+    String! type = json.get_string("type");
+    float! intensity = (float)json.get_float("intensity");
+    float! range = (float)json.get_float("range");
+    Object*! color = json.get("color");
+    Object*! spot = json.get("spot");
+
+    self.color = {1.0, 1.0, 1.0};
+
+    if (try name) self.name = name.copy();
+    if (try color) self.color = {(float)color.get_at(0).f, (float)color.get_at(1).f, (float)color.get_at(2).f};
+    if (try intensity) self.intensity = intensity;
+    if (try range) self.range = range;
+    if (try type) {
+        switch (type) {
+            case "directional": self.type = LightType.DIRECTIONAL;
+            case "point": self.type = LightType.POINT;
+            case "spot": self.type = LightType.SPOT;
+        }
+    };
+
+    if (try spot && self.type == LightType.SPOT) {
+        self.spot.inner_cone_angle = (float)spot.get_float("innerConeAngle") ?? 0.0;
+        self.spot.outer_cone_angle = (float)spot.get_float("outerConeAngle") ?? math::PI / 4.0;
+    }
+}
+
+fn void Light.free(&self) {
+    self.name.free();
+}
+
 fn Gltf! loadFile(String path) {
     File! file = file::open(path, "r");
     defer file.close()!!;
@@ -956,6 +1007,19 @@ fn Gltf! parse(InStream* stream) {
     Object*! textures = gltfJson.get("textures");
     Object*! animations = gltfJson.get("animations");
     Object*! skins = gltfJson.get("skins");
+    Object*! extensions = gltfJson.get("extensions");
+    Object*! extensionsUsed = gltfJson.get("extensionsUsed");
+
+
+    // Parse extensions used
+    if (try extensionsUsed) {
+        foreach (value : extensionsUsed.array) {
+            switch (value.s) {
+                case PUNCTUAL_LIGHT_EXTENSION : content.extensions.push(PUNCTUAL_LIGHT_EXTENSION);
+                default: {}
+            }
+        }
+    }
 
     // Parse scenes
     if (try scenes) {
@@ -1049,8 +1113,6 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
-
-
     // Parse buffers
     if (try buffers) {
         foreach (buffer : buffers.array) {
@@ -1099,6 +1161,20 @@ fn Gltf! parse(InStream* stream) {
          }
     }
 
+    // Parse extensions
+    if (try extensions) {
+        Object*! lights = gltfJson.getExtension(PUNCTUAL_LIGHT_EXTENSION);
+
+        // Parse light extension
+        if (try lights) {
+            foreach (light: lights.map["lights"]!!.array) {
+              Light data;
+              data.fromJson(light);
+              content.lights.push(data);
+            }
+        }
+    }
+
     return content;
 }
 
@@ -1109,6 +1185,7 @@ fn void Gltf.free(Gltf* self) {
     foreach (scene : self.scenes) scene.free();
     foreach (animation : self.animations) animation.free();
     foreach (accessor : self.accessors) accessor.free();
+    foreach (light : self.lights) light.free();
 
     self.cameras.free();
     self.accessors.free();
@@ -1121,6 +1198,8 @@ fn void Gltf.free(Gltf* self) {
     self.materials.free();
     self.textures.free();
     self.samplers.free();
+    self.lights.free();
+    self.extensions.free();
 }
 
 fn Node! Gltf.getNode(Gltf* self, String name) {
@@ -1405,4 +1484,8 @@ fn void Gltf.debugBuffer(Gltf* self, Accessor accessor) {
 fn void Animations.release(self) {
     foreach (animation: self) animation.free();
     self.free();
+}
+
+fn Object*! Object.getExtension(self, String extension) {
+   return self.map["extensions"]!.map[extension];
 }
