@@ -2523,12 +2523,15 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevice
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
 }
-       
-fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices) {
-  self.physicalDevices = physicalDevices;
-  return self;
-}
-       
+
+
+// TODO: Fix this      
+// fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE][] physicalDevices) {
+//   self.physicalDeviceCount = (uint)physicalDevices.len;
+//   self.physicalDevices = &physicalDevices[0];
+//   return self;
+// }
+
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocation(self, Bool32 subsetAllocation) {
   self.subsetAllocation = subsetAllocation;
   return self;

@@ -988,6 +988,9 @@ const PipelineStageFlagBits PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000;
 const PipelineStageFlagBits PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
 const PipelineStageFlagBits PIPELINE_STAGE_NONE = 0;
 
+distinct MemoryMapFlagBits = inline int;
+
+
 distinct ImageAspectFlagBits = inline int;
 const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const ImageAspectFlagBits IMAGE_ASPECT_DEPTH_BIT = 0x00000002;

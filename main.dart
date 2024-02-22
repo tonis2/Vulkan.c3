@@ -55,10 +55,7 @@ var filteredNames = [
 ];
 
 var filteredCommands = ["vkGetDescriptorSetLayoutSupport"];
-var filteredComments = [
-  "API version macros",
-  "Header boilerplate"
-];
+var filteredComments = ["API version macros", "Header boilerplate"];
 
 //"VK_VERSION_1_1", "VK_VERSION_1_2", "VK_VERSION_1_3"
 var versions = ["VK_VERSION_1_0", "VK_VERSION_1_1", "VK_VERSION_1_2", "VK_VERSION_1_3"];
@@ -108,10 +105,7 @@ var typeMap = {
   ...platformTypes
 };
 
-
-
 void main() {
-
   var mainOutput = File('./build/vk.c3');
   var buildersOutput = File('./build/builders.c3');
   var commandsOutput = File('./build/commands.c3');
@@ -129,9 +123,7 @@ void main() {
 
   mainOutput.writeAsStringSync("// Platform types \n", mode: FileMode.append);
   mainOutput.writeAsStringSync(
-      platformTypes.entries
-          .map((value) => "def ${value.key.formatTypeName()} = ${value.value};")
-          .join("\n"),
+      platformTypes.entries.map((value) => "def ${value.key.formatTypeName()} = ${value.value};").join("\n"),
       mode: FileMode.append);
   mainOutput.writeAsStringSync("\n", mode: FileMode.append);
 
@@ -157,7 +149,12 @@ void main() {
     String? depends = element.getAttribute("depends");
     bool isEnabled = enabled_extensions.contains(extension_name);
     if (depends != null && isEnabled) {
-      var dependencies = depends.split("+").join(",").split(",").map((element) => versions.contains(element) || enabled_extensions.contains(element)).where((element) => !element);
+      var dependencies = depends
+          .split("+")
+          .join(",")
+          .split(",")
+          .map((element) => versions.contains(element) || enabled_extensions.contains(element))
+          .where((element) => !element);
       if (dependencies.isNotEmpty) {
         print("extension dependency not met $extension_name");
         return false;
@@ -171,168 +168,204 @@ void main() {
     String? feature_comment = feature.getAttribute("comment");
     bool isExtension = feature.name.qualified == "extension";
 
-    feature.findAllElements("require")
-         .where((requirement) => !filteredComments.contains(requirement.getAttribute("comment")))
-    .where((requirement) {
+    feature
+        .findAllElements("require")
+        .where((requirement) => !filteredComments.contains(requirement.getAttribute("comment")))
+        .where((requirement) {
       String? dependency = requirement.getAttribute("depends");
       if (dependency != null) {
         return versions.contains(dependency) || enabled_extensions.contains(dependency);
-      }
-      else {
+      } else {
         return true;
       }
-    })
-        .forEach((requirement) {
+    }).forEach((requirement) {
       String? requirement_comment = requirement.getAttribute("comment");
 
-      requirement.childElements.where((child) => !filteredNames.contains(child.getAttribute("name")) && child.getAttribute("api") != "vulkansc" ).forEach((child) {
-          String nodeType = child.name.qualified;
-          String? name = child.getAttribute("name");
-          String? extension = child.getAttribute("extends");
+      requirement.childElements
+          .where(
+              (child) => !filteredNames.contains(child.getAttribute("name")) && child.getAttribute("api") != "vulkansc")
+          .forEach((child) {
+        String nodeType = child.name.qualified;
+        String? name = child.getAttribute("name");
+        String? extension = child.getAttribute("extends");
 
-          if (nodeType == "enum") {
-            XmlElement? node = document.findParentNode(nodeType, name);
+        if (nodeType == "enum") {
+          XmlElement? node = document.findParentNode(nodeType, name);
 
-            // Extends previous enum
-            if (extension != null) {
-              String? offset = node?.getAttribute("offset");
-              String? bit_pos = node?.getAttribute("bitpos");
-              String? value = node?.getAttribute("value");
-              VkType? parent_node = enums.where((element) => element.name == extension).firstOrNull;
+          // Extends previous enum
+          if (extension != null) {
+            String? offset = node?.getAttribute("offset");
+            String? bit_pos = node?.getAttribute("bitpos");
+            String? value = node?.getAttribute("value");
+            VkType? parent_node = enums.where((element) => element.name == extension).firstOrNull;
 
-              if (bit_pos != null) {
-                parent_node?.values.add(VkValue(
-                    name: name ?? "-",
-                    defaultValue: bit_pos.to_bitvalue()));
-              }
-              else if (offset != null) {
-                String? extension_nr = node?.getAttribute("extnumber");
-                String? direction = node?.getAttribute("dir");
-                parent_node?.values.add(VkValue(name: name ?? "-", defaultValue: extension_nr != null ? extension_nr.ext_num_enum(offset , direction) : feature_number?.ext_num_enum(offset , direction)));
-              }
-              else {
-                parent_node?.values.add(VkValue(name: name ?? "-", defaultValue: value ?? "0"));
-              }
+            if (bit_pos != null) {
+              parent_node?.values.add(VkValue(name: name ?? "-", defaultValue: bit_pos.to_bitvalue()));
+            } else if (offset != null) {
+              String? extension_nr = node?.getAttribute("extnumber");
+              String? direction = node?.getAttribute("dir");
+              parent_node?.values.add(VkValue(
+                  name: name ?? "-",
+                  defaultValue: extension_nr != null
+                      ? extension_nr.ext_num_enum(offset, direction)
+                      : feature_number?.ext_num_enum(offset, direction)));
             } else {
-              constants.add(VkValue(name: name ?? "-" , type: node?.getAttribute("type"), defaultValue: node?.getAttribute("value")));
+              parent_node?.values.add(VkValue(name: name ?? "-", defaultValue: value ?? "0"));
             }
+          } else {
+            constants.add(VkValue(
+                name: name ?? "-", type: node?.getAttribute("type"), defaultValue: node?.getAttribute("value")));
           }
+        }
 
-          if (nodeType == "type") {
-            XmlElement? node = document.findParentNode(nodeType, name, hasCategory: true);
-            String? node_category = node?.getAttribute("category");
-            String? type = node?.getElement("type")?.innerText;
+        if (nodeType == "type") {
+          XmlElement? node = document.findParentNode(nodeType, name, hasCategory: true);
+          String? node_category = node?.getAttribute("category");
+          String? type = node?.getElement("type")?.innerText;
 
-            switch(node_category) {
-              case "handle": {
+          switch (node_category) {
+            case "handle":
+              {
                 handles.add(VkValue(name: name ?? "-", type: "void*"));
               }
-              case "basetype":{
+            case "basetype":
+              {
                 basetypes.add(VkValue(name: name ?? "-", type: typeMap[type] ?? "void*"));
               }
-              case "bitmask": {
+            case "bitmask":
+              {
                 bitmasks.add(VkValue(name: name ?? "-", type: type ?? "void*"));
               }
-              case "enum": {
+            case "enum":
+              {
                 XmlElement? enum_parent = document.findParentNode("enums", name);
-                var values = enum_parent?.findAllElements("enum")
+                var values = enum_parent
+                    ?.findAllElements("enum")
                     .where((element) => element.getAttribute("alias") == null)
                     .map((entry) {
-                      var default_value = entry.getAttribute("value");
-                      var bit_pos = entry.getAttribute("bitpos");
-                      return VkValue(name: entry.getAttribute("name") ?? "-", defaultValue: bit_pos != null ? bit_pos.to_bitvalue() : default_value);
-                    }).toList();
-                enums.add(VkType(name: name ?? "-" , category: nodeType, values: values ?? [], bitwidth: enum_parent?.getAttribute("bitwidth")));
+                  var default_value = entry.getAttribute("value");
+                  var bit_pos = entry.getAttribute("bitpos");
+                  return VkValue(
+                      name: entry.getAttribute("name") ?? "-",
+                      defaultValue: bit_pos != null ? bit_pos.to_bitvalue() : default_value);
+                }).toList();
+                enums.add(VkType(
+                    name: name ?? "-",
+                    category: nodeType,
+                    values: values ?? [],
+                    bitwidth: enum_parent?.getAttribute("bitwidth")));
               }
-              case "union": {
+            case "union":
+              {
                 XmlElement? node = document.findParentNode("type", name, hasCategory: true);
                 List<VkValue> values =
                     node?.findAllElements('member').map((node) => VkValue.fromXML(node)).toList() ?? [];
                 unions.add(VkType(name: name ?? "-", values: values, category: "union"));
               }
-              case "struct": {
-                List<VkValue> values =
-                node?.findAllElements('member').where((element) => element.getAttribute("api") != "vulkansc").map((node) => VkValue.fromXML(node)).toList() ?? [];
+            case "struct":
+              {
+                List<VkValue> values = node
+                        ?.findAllElements('member')
+                        .where((element) => element.getAttribute("api") != "vulkansc")
+                        .map((node) => VkValue.fromXML(node))
+                        .toList() ??
+                    [];
                 structs.add(VkType(name: name ?? "-", values: values, category: "struct"));
               }
-              case "funcpointer": {
+            case "funcpointer":
+              {
                 XmlElement? node = document.findParentNode("type", name, hasCategory: true);
                 String? returnType = node?.innerText.split(" ")[1];
-                var values = node?.findAllElements('type').map((element) => VkValue(type: typeMap[element.innerText] ?? element.innerText.replaceAll("void", "void*"), name: "-")).toList();
-                pointers.add(VkType(category: "fnPointer", values: values ?? [], name: name ?? "-", returnType: typeMap[returnType] ?? returnType));
+                var values = node
+                    ?.findAllElements('type')
+                    .map((element) => VkValue(
+                        type: typeMap[element.innerText] ?? element.innerText.replaceAll("void", "void*"), name: "-"))
+                    .toList();
+                pointers.add(VkType(
+                    category: "fnPointer",
+                    values: values ?? [],
+                    name: name ?? "-",
+                    returnType: typeMap[returnType] ?? returnType));
               }
+          }
+        }
+
+        if (nodeType == "command") {
+          XmlNode? node = document.findParentNode("proto", name)?.parent;
+          bool hasAlias = false;
+          if (node == null) {
+            hasAlias = true;
+            node = document.findParentNode("proto", name?.replaceAll("KHR", ""))?.parent;
+          }
+          ;
+
+          XmlElement? proto = node?.getElement("proto");
+          String? returnType = proto?.getElement("type")?.innerText;
+
+          List<String> successCodes = node?.getAttribute("successcodes")?.split(",").toList() ?? [];
+          List<String> errorCodes = node?.getAttribute("errorcodes")?.split(",").toList() ?? [];
+
+          List<VkValue> values = node?.childElements
+                  .where((element) => element.name.qualified == "param" && element.getAttribute("api") != "vulkansc")
+                  .map((node) => VkValue.fromXML(node))
+                  .toList() ??
+              [];
+
+          if (isExtension) {
+            if (hasAlias) {
+              aliases.add(VkValue(name: name! + "KHR", defaultValue: name));
             }
+            extensionCommands.add(VkType(
+                name: name ?? "-",
+                values: values,
+                category: "command",
+                successCodes: successCodes,
+                errorCodes: errorCodes,
+                returnType: typeMap[returnType] ?? returnType));
+          } else {
+            commands.add(VkType(
+                name: name ?? "-",
+                values: values,
+                category: "command",
+                successCodes: successCodes,
+                errorCodes: errorCodes,
+                returnType: typeMap[returnType] ?? returnType));
           }
-
-
-          if (nodeType == "command") {
-             XmlNode? node = document.findParentNode("proto", name)?.parent;
-             bool hasAlias = false;
-             if (node == null) {
-               hasAlias = true;
-               node = document.findParentNode("proto", name?.replaceAll("KHR", ""))?.parent;
-             };
-
-             XmlElement? proto = node?.getElement("proto");
-             String? returnType = proto?.getElement("type")?.innerText;
-
-             List<String> successCodes =
-                 node?.getAttribute("successcodes")?.split(",").toList() ?? [];
-             List<String> errorCodes =
-                 node?.getAttribute("errorcodes")?.split(",").toList() ?? [];
-
-             List<VkValue> values =
-                 node?.childElements.where((element) => element.name.qualified == "param" && element.getAttribute("api") != "vulkansc").map((node) => VkValue.fromXML(node)).toList() ?? [];
-
-             if (isExtension) {
-               if (hasAlias) {
-                 aliases.add(VkValue(name: name! + "KHR", defaultValue: name));
-               }
-               extensionCommands.add(VkType(name: name ?? "-", values: values, category: "command", successCodes: successCodes, errorCodes: errorCodes, returnType: typeMap[returnType] ?? returnType));
-             } else {
-               commands.add(VkType(name: name ?? "-", values: values, category: "command", successCodes: successCodes, errorCodes: errorCodes, returnType: typeMap[returnType] ?? returnType));
-             }
-          }
+        }
       });
     });
   });
-
 
   // Write all VKResults as C3 error
   VkType vulkan_results = enums.firstWhere((element) => element.name == "VkResult");
   List<String> error_names = vulkan_results.values.map((entry) => entry.name).toList();
 
-  mainOutput.writeAsStringSync(
-      """
+  mainOutput.writeAsStringSync("""
 fault VkErrors {
   ${vulkan_results.values.map((value) => value.name.substring(3)).join(",\n ")}
 }
  """, mode: FileMode.append);
 
-
   handles.forEach((type) {
-    mainOutput.writeAsStringSync("distinct ${type.name.C3Name} = inline ${type.type};\n",
-        mode: FileMode.append);
+    mainOutput.writeAsStringSync("distinct ${type.name.C3Name} = inline ${type.type};\n", mode: FileMode.append);
   });
 
   basetypes.forEach((element) {
-    mainOutput.writeAsStringSync("def ${element.name.C3Name} = ${element.type?.C3Name};\n",
-        mode: FileMode.append);
+    mainOutput.writeAsStringSync("def ${element.name.C3Name} = ${element.type?.C3Name};\n", mode: FileMode.append);
   });
 
   bitmasks.forEach((element) {
-    mainOutput.writeAsStringSync("def ${element.name.C3Name} = ${element.type?.C3Name};\n",
-        mode: FileMode.append);
+    mainOutput.writeAsStringSync("def ${element.name.C3Name} = ${element.type?.C3Name};\n", mode: FileMode.append);
   });
 
   constants.forEach((value) {
-    mainOutput.writeAsStringSync(
-        "const ${value.name.substring(3)} = ${value.defaultValue?.replaceAll("ULL", "UL")};\n",
+    mainOutput.writeAsStringSync("const ${value.name.substring(3)} = ${value.defaultValue?.replaceAll("ULL", "UL")};\n",
         mode: FileMode.append);
   });
 
   unions.forEach((element) {
-    String code = "union ${element.name.C3Name} {\n  ${element.values.map((value) => "${value.type?.C3Name} ${value.name.camelCase()};").join("\n  ")}\n}\n";
+    String code =
+        "union ${element.name.C3Name} {\n  ${element.values.map((value) => "${value.type?.C3Name} ${value.name.camelCase()};").join("\n  ")}\n}\n";
     mainOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
@@ -343,14 +376,17 @@ fault VkErrors {
   });
 
   structs.where((element) => element.values.length != 0).forEach((type) {
-    String code = "struct ${type.name.C3Name} {\n ${type.values.map((value) =>"${value.type?.C3Name} ${value.name.camelCase()};").join("\n ")}\n}\n";
+    String code =
+        "struct ${type.name.C3Name} {\n ${type.values.map((value) => "${value.type?.C3Name} ${value.name.camelCase()};").join("\n ")}\n}\n";
     mainOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
   // Struct builders
-  structs.where((element) => element.values.length != 0 && element.values[0].defaultValue != null && !filteredNames.contains(element.name)).forEach((type) {
-    buildersOutput.writeAsStringSync(
-        """\n
+  structs
+      .where((element) =>
+          element.values.length != 0 && element.values[0].defaultValue != null && !filteredNames.contains(element.name))
+      .forEach((type) {
+    buildersOutput.writeAsStringSync("""\n
 fn ${type.name.C3Name} ${type.name.C3Name.camelCase()}Builder() {
   ${type.name.C3Name} defaultValue = {
     .sType = ${type.values[0].defaultValue?.substring(3)},
@@ -361,44 +397,44 @@ fn ${type.name.C3Name} ${type.name.C3Name.camelCase()}Builder() {
 
 // Skip the .sType value
 ${type.values.skip(1).map((element) {
-  bool isArrayValue = element.lenValue != null && element.lenValue![0] != "null-terminated";
-  String fnName = element.name.capitalizeName();
+      bool isArrayValue = element.lenValue != null && element.lenValue![0] != "null-terminated";
+      String fnName = element.name.capitalizeName();
 
-  if (element.isPointer) {
-    fnName = element.name.substring(1).capitalizeName();
-  }
+      if (element.isPointer) {
+        fnName = element.name.substring(1).capitalizeName();
+      }
 
-  if (element.isDoublePointer) {
-    fnName = element.name.substring(2).capitalizeName();
-  }
+      if (element.isDoublePointer) {
+        fnName = element.name.substring(2).capitalizeName();
+      }
 
-  if (element.type == "char*" && isArrayValue) {
-    return """
+      if (element.type == "char*" && isArrayValue) {
+        return """
 fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ZString[] ${element.name}) {
   self.${element.lenValue![0]} = (uint)${element.name}.len;
   self.${element.name} = (char*)&${element.name}[0];
   return self;
 }
 """;
-}
+      }
 
-if (isArrayValue && (element.type != "void*")) {
-  return """
+      if (isArrayValue && (element.type != "void*")) {
+        return """
 fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type?.C3Name.replaceAll("*", "")}[] ${element.name}) {
   self.${element.lenValue?[0]} = (uint)${element.name}.len;
   self.${element.name} = &${element.name}[0];
   return self;
 }
 """;
-          }
+      }
 
-          return """
+      return """
 fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type?.C3Name} ${element.name}) {
   self.${element.name} = ${element.name};
   return self;
 }
        """;
-        }).join("\n")}
+    }).join("\n")}
 """, mode: FileMode.append);
   });
 
@@ -422,8 +458,7 @@ fn ${type.name.C3Name} ${type.name.C3Name}.set${fnName}(self, ${element.type?.C3
 
 // Write commands with C3 error handling
   commands.where((element) => element.errorCodes.isNotEmpty).forEach((command) {
-    String code =
-    """
+    String code = """
 fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name.camelCase()}").join(", ")}) {
   Result result = ${command.name.camelCase()}(${command.values.map((type) => "${type.name.camelCase()}").join(", ")});
   switch(result) {
@@ -451,7 +486,7 @@ fn vk::$returnType! ${command.values[1].type!.C3Name.replaceAll("*", "")}.${isKH
 });*/
 
 // Extension bindings code
-commandsOutput.writeAsStringSync("""
+  commandsOutput.writeAsStringSync("""
 ${extensionCommands.map((command) => "def PFN_${command.name} = fn ${command.returnType?.C3Name} (${command.values.map((type) => "${type.type?.C3Name}").join(", ")});").join("\n")}
 
 struct VK_extension_bindings {
@@ -462,7 +497,7 @@ fn void loadExtensions(Instance instance) {
   ${extensionCommands.map((command) => "extensions.${command.name.camelCase()} = (PFN_${command.name})getInstanceProcAddr(instance, \"${command.name}\");").join("\n  ")}
 }
 ${extensionCommands.where((entry) => entry.errorCodes.isEmpty).map((command) => "fn ${command.returnType?.C3Name} ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name.camelCase()}").join(", ")}) => extensions.${command.name.camelCase()}(${command.values.map((type) => type.name.camelCase()).join(",")});").join("\n")}
-${extensionCommands.where((entry) => entry.errorCodes.isNotEmpty).map((command)  {
+${extensionCommands.where((entry) => entry.errorCodes.isNotEmpty).map((command) {
     return """
 fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${type.type?.C3Name} ${type.name.camelCase()}").join(", ")}) {
   Result result = extensions.${command.name.camelCase()}(${command.values.map((type) => "${type.name.camelCase()}").join(", ")});
@@ -474,14 +509,11 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
   }).join("\n")}
 """, mode: FileMode.append);
 
-mainOutput.writeAsStringSync(
-"""
+  mainOutput.writeAsStringSync("""
 macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
 macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
 """, mode: FileMode.append);
 }
-
-
 
 class VkType {
   String name;
@@ -493,7 +525,15 @@ class VkType {
   List<String> errorCodes = [];
   List<VkValue> values;
 
-  VkType({ this.name = "-", required this.category, required this.values, this.comment, this.successCodes = const [], this.errorCodes = const [], this.bitwidth, this.returnType});
+  VkType(
+      {this.name = "-",
+      required this.category,
+      required this.values,
+      this.comment,
+      this.successCodes = const [],
+      this.errorCodes = const [],
+      this.bitwidth,
+      this.returnType});
 }
 
 class VkValue {
@@ -506,8 +546,15 @@ class VkValue {
   String? defaultValue;
   List<String>? lenValue;
 
-  VkValue({required this.name, this.type, this.bitpos, this.isPointer = false, this.isDoublePointer = false, this.api, this.defaultValue, this.lenValue});
-
+  VkValue(
+      {required this.name,
+      this.type,
+      this.bitpos,
+      this.isPointer = false,
+      this.isDoublePointer = false,
+      this.api,
+      this.defaultValue,
+      this.lenValue});
 
   static VkValue fromXML(XmlNode node) {
     String? name = node.getElement("name")?.innerText;
@@ -541,7 +588,12 @@ class VkValue {
     if (len != null) type = "$type[${len}]";
     if (isPointer) type = "$type*";
 
-    return VkValue(name: name ?? "-", type: type ?? "-", lenValue: lenValue?.split(",").toList(), defaultValue: default_value, isPointer: isPointer, isDoublePointer: isDoublePointer);
+    return VkValue(
+        name: name ?? "-",
+        type: type ?? "-",
+        lenValue: lenValue?.split(",").toList(),
+        defaultValue: default_value,
+        isPointer: isPointer,
+        isDoublePointer: isDoublePointer);
   }
 }
-
