@@ -219,28 +219,24 @@ struct Skin {
 }
 
 struct Material {
-    String name;
     bool doubleSided;
-    Vec3f emissiveFactor;
     float emissiveStrength;
+    float metallicFactor;
+    float roughnessFactor;
+    Vec4f emissiveFactor;
+    Vec4f baseColorFactor;
     TextureInfo normalTexture;
     TextureInfo occlusionTexture;
-
-    struct pbrMetallicRoughness {
-        Vec4f baseColorFactor;
-        float metallicFactor;
-        float roughnessFactor;
-        TextureInfo baseColorTexture;
-        TextureInfo metallicRoughnessTexture;
-        TextureInfo emissiveTexture;
-    }
+    TextureInfo emissiveTexture;
+    TextureInfo baseColorTexture;
+    TextureInfo metallicRoughnessTexture;
 }
 
 struct TextureInfo {
     int index;
     int sampler;
     int source;
-    Vec2f texCoord;
+    uint texCoord;
 }
 
 struct Texture {
@@ -315,19 +311,6 @@ struct Light {
         float outer_cone_angle;
     }
 }
-
-const EMPTY_MATERIAL = Material {
-    .name = "empty",
-    .doubleSided = false,
-    .pbrMetallicRoughness = {
-        .baseColorFactor = {1.0, 1.0, 1.0, 1.0},
-        .baseColorTexture = {
-            .source = -1,
-            .sampler = -1,
-            .texCoord = {0, 0}
-        }
-    }
-};
 
 // Parsing JSON to structs
 fn void Scene.fromJson(&self, Object* json) {
@@ -677,41 +660,44 @@ fn void Camera.fromJson(&self, Object* json) {
 }
 
 fn void Material.fromJson(&self, Object* json) {
-    String! name = json.get_string("name");
     bool! doubleSided = json.get_bool("doubleSided");
     Object*! pbrMetallicRoughness = json.get("pbrMetallicRoughness");
-    Object*! occlusionTexture = pbrMetallicRoughness.get("baseColorTexture");
-    Object*! normalTexture = pbrMetallicRoughness.get("baseColorTexture");
+    Object*! occlusionTexture = json.get("occlusionTexture");
+    Object*! normalTexture = json.get("normalTexture");
+    Object*! emissiveTexture = json.get("emissiveTexture");
+    Object*! emissiveFactor = json.get("emissiveFactor");
 
-    if (try name) self.name = name;
     if (try doubleSided) self.doubleSided = doubleSided;
-
     if (try occlusionTexture) self.occlusionTexture.fromJson(occlusionTexture);
     if (try normalTexture) self.normalTexture.fromJson(normalTexture);
+    if (try emissiveTexture) self.emissiveTexture.fromJson(emissiveTexture);
+    if (try emissiveFactor) {
+        self.emissiveFactor = {(float)emissiveFactor.get_at(0).f, (float)emissiveFactor.get_at(1).f, (float)emissiveFactor.get_at(2).f, 0.0};
+    }
 
     if (try pbrMetallicRoughness) {
         double! metallicFactor = pbrMetallicRoughness.get_float("metallicFactor");
         double! roughnessFactor = pbrMetallicRoughness.get_float("roughnessFactor");
+
         Object*! baseColorTexture = pbrMetallicRoughness.get("baseColorTexture");
         Object*! baseColorFactor = pbrMetallicRoughness.get("baseColorFactor");
         Object*! metallicRoughnessTexture = pbrMetallicRoughness.get("baseColorTexture");
-        self.pbrMetallicRoughness.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
-        self.pbrMetallicRoughness.baseColorTexture.index = -1;
-        self.pbrMetallicRoughness.baseColorTexture.source = -1;
-        self.pbrMetallicRoughness.metallicRoughnessTexture.index = -1;
-        self.pbrMetallicRoughness.metallicRoughnessTexture.source = -1;
+
+        self.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
+        self.baseColorTexture = {-1, -1, -1, 0};
+        self.metallicRoughnessTexture =  {-1, -1, -1, 0};
 
         if (try metallicFactor && try roughnessFactor) {
-            self.pbrMetallicRoughness.metallicFactor = (float)metallicFactor;
-            self.pbrMetallicRoughness.roughnessFactor = (float)roughnessFactor;
+            self.metallicFactor = (float)metallicFactor;
+            self.roughnessFactor = (float)roughnessFactor;
         }
 
         if (try baseColorFactor) {
-            self.pbrMetallicRoughness.baseColorFactor = Vec4f {(float)baseColorFactor.get_at(0).f, (float)baseColorFactor.get_at(1).f, (float)baseColorFactor.get_at(2).f, (float)baseColorFactor.get_at(3).f};
+            self.baseColorFactor = Vec4f {(float)baseColorFactor.get_at(0).f, (float)baseColorFactor.get_at(1).f, (float)baseColorFactor.get_at(2).f, (float)baseColorFactor.get_at(3).f};
         }
 
-        if (try baseColorTexture) self.pbrMetallicRoughness.baseColorTexture.fromJson(baseColorTexture);
-        if (try metallicRoughnessTexture) self.pbrMetallicRoughness.metallicRoughnessTexture.fromJson(metallicRoughnessTexture);
+        if (try baseColorTexture) self.baseColorTexture.fromJson(baseColorTexture);
+        if (try metallicRoughnessTexture) self.metallicRoughnessTexture.fromJson(metallicRoughnessTexture);
     }
 }
 
@@ -1064,14 +1050,6 @@ fn Gltf! parse(InStream* stream) {
             content.cameras.push(data);
         }
     }
-    // Parse materials
-    if (try materials) {
-        foreach (material_json : materials.array) {
-            Material material;
-            material.fromJson(material_json);
-            content.materials.push(material);
-        }
-    }
 
     if (try samplers) {
         foreach (sampler : samplers.array) {
@@ -1087,20 +1065,32 @@ fn Gltf! parse(InStream* stream) {
             data.fromJson(texture);
             content.textures.push(data);
         }
+    }
 
-        foreach (&material : content.materials) {
-            TextureInfo baseColor = material.pbrMetallicRoughness.baseColorTexture;
-            TextureInfo roughness = material.pbrMetallicRoughness.metallicRoughnessTexture;
+
+        // Parse materials
+    if (try materials) {
+        foreach (json : materials.array) {
+            Material material;
+            material.fromJson(json);
+   
+
+            TextureInfo baseColor = material.baseColorTexture;
+            TextureInfo roughness = material.metallicRoughnessTexture;
 
             if (baseColor.index >= 0) {
-                material.pbrMetallicRoughness.baseColorTexture.source = content.textures[material.pbrMetallicRoughness.baseColorTexture.index].source;
-                material.pbrMetallicRoughness.baseColorTexture.sampler = content.textures[material.pbrMetallicRoughness.baseColorTexture.index].sampler;
+                Texture texture = content.textures[material.baseColorTexture.index];
+                material.baseColorTexture.source = texture.source;
+                material.baseColorTexture.sampler = texture.sampler;
             }
 
             if (roughness.index >= 0) {
-                material.pbrMetallicRoughness.metallicRoughnessTexture.source = content.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].source;
-                material.pbrMetallicRoughness.metallicRoughnessTexture.sampler = content.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].sampler;
+                Texture texture = content.textures[material.metallicRoughnessTexture.index];
+                material.metallicRoughnessTexture.source = texture.source;
+                material.metallicRoughnessTexture.sampler = texture.sampler;
             }
+
+            content.materials.push(material);
         }
     }
 
@@ -1381,7 +1371,7 @@ fn uint Accessor.dataSize(Accessor* self) {
 }
 
 // Returns matrix from node transform, scale, rotation
-fn Matrix4f Node.recompose(&self) {
+fn Matrix4f Node.localMatrix(&self) {
     Quaternionf rotation = self.rotation.normalize();
     float x = rotation.i;
     float y = rotation.j;
@@ -1411,11 +1401,11 @@ fn void Node.mapValues(&self, usz scene_index, Gltf* data) @private {
 }
 
 fn Matrix4f Node.globalMatrix(&self) {
-    Matrix4f global_matrix = self.recompose();
+    Matrix4f global_matrix = self.localMatrix();
     Node* node = self;
 
     while (node.parent != null) {
-        global_matrix = node.parent.recompose().mul(global_matrix);
+        global_matrix = node.parent.localMatrix().mul(global_matrix);
         node = node.parent;
     }
 
