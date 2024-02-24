@@ -16,6 +16,7 @@ layout(buffer_reference, std140) readonly buffer VertexBuffer {
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
    mat4 projection;
    mat4 view;
+   vec3 camera_pos;
 };
 
 struct Texture {

@@ -301,7 +301,6 @@ struct Image {
 }
 
 struct Light {
-    String name;
     Vec3f color;
     float intensity;
     float range;
@@ -672,7 +671,7 @@ fn void Material.fromJson(&self, Object* json) {
     if (try normalTexture) self.normalTexture.fromJson(normalTexture);
     if (try emissiveTexture) self.emissiveTexture.fromJson(emissiveTexture);
     if (try emissiveFactor) {
-        self.emissiveFactor = {(float)emissiveFactor.get_at(0).f, (float)emissiveFactor.get_at(1).f, (float)emissiveFactor.get_at(2).f, 0.0};
+        self.emissiveFactor = {(float)emissiveFactor.get_at(0).f, (float)emissiveFactor.get_at(1).f, (float)emissiveFactor.get_at(2).f, 1.0};
     }
 
     if (try pbrMetallicRoughness) {
@@ -872,7 +871,7 @@ fn void Light.fromJson(&self, Object* json) {
 
     self.color = {1.0, 1.0, 1.0};
 
-    if (try name) self.name = name.copy();
+    // if (try name) self.name = name.copy();
     if (try color) self.color = {(float)color.get_at(0).f, (float)color.get_at(1).f, (float)color.get_at(2).f};
     if (try intensity) self.intensity = intensity;
     if (try range) self.range = range;
@@ -888,10 +887,6 @@ fn void Light.fromJson(&self, Object* json) {
         self.spot.inner_cone_angle = (float)spot.get_float("innerConeAngle") ?? 0.0;
         self.spot.outer_cone_angle = (float)spot.get_float("outerConeAngle") ?? math::PI / 4.0;
     }
-}
-
-fn void Light.free(&self) {
-    self.name.free();
 }
 
 fn Gltf! loadFile(String path) {
@@ -1175,7 +1170,6 @@ fn void Gltf.free(Gltf* self) {
     foreach (scene : self.scenes) scene.free();
     foreach (animation : self.animations) animation.free();
     foreach (accessor : self.accessors) accessor.free();
-    foreach (light : self.lights) light.free();
 
     self.cameras.free();
     self.accessors.free();
