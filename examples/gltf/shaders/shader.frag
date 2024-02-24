@@ -4,15 +4,15 @@
 #extension GL_GOOGLE_include_directive : require
 #extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 #extension GL_EXT_buffer_reference2 : require
+
 #include "types.glsl"
 
 layout(binding = 1) uniform sampler2D texSampler[];
 
-layout(location = 0) in Material material_buffer;
-layout(location = 1) in flat int material_index;
-layout(location = 2) in vec2 fragTexCoord;
-layout(location = 3) in vec3 normal;
-layout(location = 4) in mat3 tangent;
+layout(location = 0) in flat int material_index;
+layout(location = 1) in vec2 fragTexCoord;
+layout(location = 2) in vec3 normal;
+layout(location = 3) in mat3 tangent;
 
 layout(location = 0) out vec4 outColor;
 

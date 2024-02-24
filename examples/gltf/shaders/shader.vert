@@ -7,29 +7,6 @@
 
 #include "types.glsl"
 
-layout(buffer_reference, std140) readonly buffer VertexBuffer {
-  vec3 position;
-  vec3 normal;
-  vec2 tex_cord;
-  vec4 tangent;
-  vec4 skin_pos;
-  vec4 skin_weight;
-};
-
-layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer JointBuffer {
-  mat4 matrix;
-};
-
-layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
-   mat4 projection;
-   mat4 view;
-};
-
-layout(binding = 0, scalar) buffer AddressBuffer {
-   UniformBuffer uniform_buffer;
-   VertexBuffer vertex_buffer;
-   Material material_buffer;
-};
 
 layout( push_constant ) uniform constants
 {
@@ -46,12 +23,10 @@ layout( push_constant ) uniform constants
 
 
 // Shader out values
-layout(location = 0) out Material m_buffer;
-layout(location = 1) out int m_index;
-
-layout(location = 2) out vec2 fragTexCoord;
-layout(location = 3) out vec3 normal;
-layout(location = 4) out mat3 tangent;
+layout(location = 0) out int m_index;
+layout(location = 1) out vec2 fragTexCoord;
+layout(location = 2) out vec3 normal;
+layout(location = 3) out mat3 tangent;
 
 
 void main() {
@@ -86,7 +61,6 @@ void main() {
     fragTexCoord = vertex.tex_cord;
     normal = normalize(mat3(normalMatrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
     tangent = mat3(tangent_w, bitangent_w, normal_w);
-    m_buffer = material_buffer;
     m_index = material_index;
     
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(position, 1.0);
