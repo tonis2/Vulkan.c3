@@ -9,6 +9,7 @@ fn float radians(float value) {
 struct UniformData {
     Matrix4f projection;
     Matrix4f view;
+    Vec3f eye;
 }
 
 struct Camera {
@@ -58,6 +59,7 @@ fn UniformData Camera.matrix(Camera self) {
     return UniformData {
         self.perspective.transpose(),
         self.view.transpose(),
+        self.eye,
     };
 }
 
