@@ -741,7 +741,7 @@ fn void! main()
           .binding = 0,
           .descriptorType = vk::DESCRIPTOR_TYPE_STORAGE_BUFFER,
           .descriptorCount = 1,
-          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT | vk::SHADER_STAGE_FRAGMENT_BIT
         },
         {
             .binding = 1,
