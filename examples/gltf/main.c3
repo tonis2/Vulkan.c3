@@ -24,19 +24,6 @@ struct Vertex {
     Vec4f skin_weight;
 }
 
-/*struct TextureData {
-    MemoryBlock block;
-    vk::Sampler sampler;
-    vk::ImageView view;
-    DescriptorImageInfo descriptor_info;
-}*/
-
-fn void DescriptorImageInfo.free(&self, Device device)
-{
-    self.imageView.free(device);
-    vk::destroySampler(device, self.sampler, null);
-}
-
 struct AddressBuffer {
     DeviceAddress uniform_buffer;
     DeviceAddress vertex_buffer;
@@ -102,7 +89,7 @@ fn void! main()
         return;
     }
 
-    Gltf! gltf_data = gltf::loadFile("examples/gltf/assets/CesiumMan.gltf");
+    Gltf! gltf_data = gltf::loadFile("examples/gltf/assets/boxes.glb");
     defer gltf_data.free()!!;
 
     if (catch err = gltf_data) {
@@ -925,20 +912,31 @@ fn void! main()
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
                     .setLogicOp(vk::LOGIC_OP_COPY)
                     .setAttachments({
-                       {
-                           .colorWriteMask =
-                               vk::COLOR_COMPONENT_R_BIT |
-                               vk::COLOR_COMPONENT_G_BIT |
-                               vk::COLOR_COMPONENT_B_BIT |
-                               vk::COLOR_COMPONENT_A_BIT,
-                           .blendEnable = vk::TRUE,
-                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .colorBlendOp = vk::BLEND_OP_ADD,
-                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .alphaBlendOp = vk::BLEND_OP_ADD,
-                       },
+                            { .colorWriteMask =
+                                vk::COLOR_COMPONENT_R_BIT |
+                                vk::COLOR_COMPONENT_G_BIT |
+                                vk::COLOR_COMPONENT_B_BIT |
+                                vk::COLOR_COMPONENT_A_BIT,
+                                .blendEnable = vk::TRUE,
+                                .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+                                .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                                .colorBlendOp = vk::BLEND_OP_ADD,
+                                .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+                                .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                                .alphaBlendOp = vk::BLEND_OP_ADD,
+                            },
+                            { .colorWriteMask =
+                                vk::COLOR_COMPONENT_R_BIT |
+                                vk::COLOR_COMPONENT_G_BIT |
+                                vk::COLOR_COMPONENT_B_BIT |
+                                vk::COLOR_COMPONENT_A_BIT,
+                            },
+                            { .colorWriteMask =
+                                 vk::COLOR_COMPONENT_R_BIT |
+                                 vk::COLOR_COMPONENT_G_BIT |
+                                 vk::COLOR_COMPONENT_B_BIT |
+                                 vk::COLOR_COMPONENT_A_BIT,
+                            },
                        }))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
        .setViewports({{ .x = 0.0, .y = (float)swapchain_info.imageExtent.height, .width = swapchain_info.imageExtent.width, .height = -(float)swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
@@ -947,7 +945,6 @@ fn void! main()
         &&vk::pipelineRenderingCreateInfoBuilder()
         .setColorAttachmentFormats({
             swapchain_info.imageFormat,
-            vk::FORMAT_R8G8B8A8_UNORM,
             vk::FORMAT_R8G8B8A8_UNORM,
             vk::FORMAT_R8G8B8A8_UNORM
          })
@@ -1000,15 +997,31 @@ fn void! main()
               .offset = Offset2D{ .x = 0, .y = 0 },
               .extent = swapchain_info.imageExtent,
           })
-          .setColorAttachments({
-              vk::renderingAttachmentInfoBuilder()
-              .setImageView(swapchain_views[next_image])
-              .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-              .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-              .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-              .setClearValue({
+            .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(swapchain_views[next_image])
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
                   .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-              })
+            }),
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(gbuffer_textures[0].imageView)
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            }),
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(gbuffer_textures[1].imageView)
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            })
           })
         .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
             .setImageView(depth_texture.imageView)

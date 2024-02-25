@@ -21,14 +21,12 @@ layout( push_constant ) uniform constants
     float[8] morph_weights;
 };
 
-
 // Shader out values
 layout(location = 0) out int m_index;
 layout(location = 1) out vec2 fragTexCoord;
-layout(location = 2) out vec3 normal;
-layout(location = 3) out vec3 position;
-layout(location = 4) out vec3 camera_pos;
-layout(location = 5) out mat3 tangent;
+layout(location = 2) out vec3 out_normal;
+layout(location = 3) out vec3 out_position;
+layout(location = 4) out mat3 out_tangent;
 
 void main() {
     VertexBuffer vertex = vertex_buffer[gl_VertexIndex];
@@ -57,12 +55,11 @@ void main() {
     vec3 bitangent_w = cross(normal_w, tangent_w) * t.w;
 
     // Out going parameters
-    fragTexCoord = vertex.tex_cord;
-    normal = normalize(mat3(skin_matrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
-    tangent = mat3(tangent_w, bitangent_w, normal_w);
     m_index = material_index;
-    position = vec3(model_matrix * vec4(v_position, 1.0));
-    camera_pos = uniform_buffer.camera_pos;
+    out_normal = normalize(mat3(skin_matrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
+    out_tangent = mat3(tangent_w, bitangent_w, normal_w);
+    out_position = vec3(model_matrix * vec4(v_position, 1.0));
+    fragTexCoord = vertex.tex_cord;
     
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(v_position, 1.0);
 }

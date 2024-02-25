@@ -478,4 +478,10 @@ fn void SurfaceKHR.free(self, Instance instance) {
     destroySurfaceKHR(instance, self, null);
 }
 
+fn void DescriptorImageInfo.free(&self, Device device)
+{
+    self.imageView.free(device);
+    vk::destroySampler(device, self.sampler, null);
+}
+
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);

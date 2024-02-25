@@ -13,12 +13,14 @@ layout(binding = 1) uniform sampler2D materialSamplers[];
 layout(binding = 2) uniform sampler2D gbufferSamplers[];
 
 layout(location = 0) in flat int material_index;
-layout(location = 1) in vec2 fragTexCoord;
+layout(location = 1) in vec2 tex_cord;
 layout(location = 2) in vec3 v_normal;
 layout(location = 3) in vec3 position;
-layout(location = 4) in vec3 camera_pos;
-layout(location = 5) in mat3 tangent;
+layout(location = 4) in mat3 tangent;
+
 layout(location = 0) out vec4 outColor;
+layout(location = 1) out vec4 outNormal;
+layout(location = 2) out vec4 outPosition;
 
 
 vec3 linearToSrgb(vec3 color) {
@@ -37,7 +39,7 @@ float microfacetDistribution(float alphaRoughness, float NdotH) {
 vec4 getBaseColor(Material material) {
     Texture value = material.baseColorTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], fragTexCoord) * material.baseColorFactor;
+        return texture(materialSamplers[value.source], tex_cord) * material.baseColorFactor;
     }
 
     return material.baseColorFactor;
@@ -46,7 +48,7 @@ vec4 getBaseColor(Material material) {
 vec2 getRoughnessMetallic(Material material) {
     Texture value = material.metallicRoughnessTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], fragTexCoord).gb;
+        return texture(materialSamplers[value.source], tex_cord).gb;
     }
     return vec2(1.0, 1.0);
 }
@@ -54,7 +56,7 @@ vec2 getRoughnessMetallic(Material material) {
 vec4 getEmissive(Material material) {
     Texture value = material.emissiveTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], fragTexCoord) * material.emissiveFactor;
+        return texture(materialSamplers[value.source], tex_cord) * material.emissiveFactor;
     }
     return vec4(0.0);
 }
@@ -62,7 +64,7 @@ vec4 getEmissive(Material material) {
 float getOcclusion(Material material) {
     Texture value = material.occlusionTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], fragTexCoord).r;
+        return texture(materialSamplers[value.source], tex_cord).r;
     }
     return 1.0;
 }
@@ -70,7 +72,7 @@ float getOcclusion(Material material) {
 vec3 getNormal(Material material) {
     Texture value = material.normalTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], fragTexCoord).rgb;
+        return texture(materialSamplers[value.source], tex_cord).rgb;
     }
     return normalize(tangent * (2.0 * v_normal - 1.0));
 }
@@ -83,21 +85,21 @@ const float AMBIENT_STRENGTH = 0.1;
 
 
 vec3 calculateLight(Material material) {   
-    vec4 baseColor = getBaseColor(material);
-    vec3 normal = getNormal(material);
+    // vec4 baseColor = getBaseColor(material);
+    // vec3 normal = getNormal(material);
 
-    vec3 lightDir = normalize(LIGHT_DIR - position);
-    float diff = max(dot(normal, lightDir), 0.0);
+    // vec3 lightDir = normalize(LIGHT_DIR - position);
+    // float diff = max(dot(normal, lightDir), 0.0);
 
-    vec3 diffuse = diff * LIGHT_COLOR;
-    vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 viewDir = normalize(camera_pos - position);
+    // vec3 diffuse = diff * LIGHT_COLOR;
+    // vec3 reflectDir = reflect(-lightDir, normal);
+    // vec3 viewDir = normalize(camera_pos - position);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * LIGHT_COLOR;  
-    vec3 ambient = AMBIENT_STRENGTH * LIGHT_COLOR;
+    // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    // vec3 specular = specularStrength * spec * LIGHT_COLOR;  
+    // vec3 ambient = AMBIENT_STRENGTH * LIGHT_COLOR;
 
-    return (ambient + diffuse + specular) * baseColor.rgb;
+    // return (ambient + diffuse + specular) * baseColor.rgb;
 
     // vec3 f0 = vec3(0.04);
     // vec3 normal = getNormal(material);
@@ -137,7 +139,7 @@ vec3 calculateLight(Material material) {
     //     return LIGHT_INTENSITY * LIGHT_COLOR * NdotL * (diffuseContrib + specContrib);
     // }
 
-    // return vec3(0.0);
+    return vec3(0.0);
 }
 
 
@@ -152,7 +154,9 @@ void main() {
         // color += getEmissive(material).rgb;
         // color = clamp(color, 0.0, 1.0);
         // color = mix(color, color * getOcclusion(material), 1.0);
-        vec4 baseColor = getBaseColor(material);
-        outColor = baseColor;
+
+        outColor = getBaseColor(material);
+        outNormal = vec4(getNormal(material), 1.0);
+        outPosition = vec4(position, 1.0);
     }
 }
