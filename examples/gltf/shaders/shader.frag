@@ -9,7 +9,9 @@
 
 #include "types.glsl"
 
-layout(binding = 1) uniform sampler2D texSampler[];
+layout(binding = 1) uniform sampler2D materialSamplers[];
+layout(binding = 2) uniform sampler2D gbufferSamplers[];
+
 layout(location = 0) in flat int material_index;
 layout(location = 1) in vec2 fragTexCoord;
 layout(location = 2) in vec3 v_normal;
@@ -35,7 +37,7 @@ float microfacetDistribution(float alphaRoughness, float NdotH) {
 vec4 getBaseColor(Material material) {
     Texture value = material.baseColorTexture;
     if (value.source >= 0) {
-        return texture(texSampler[value.source], fragTexCoord) * material.baseColorFactor;
+        return texture(materialSamplers[value.source], fragTexCoord) * material.baseColorFactor;
     }
 
     return material.baseColorFactor;
@@ -44,7 +46,7 @@ vec4 getBaseColor(Material material) {
 vec2 getRoughnessMetallic(Material material) {
     Texture value = material.metallicRoughnessTexture;
     if (value.source >= 0) {
-        return texture(texSampler[value.source], fragTexCoord).gb;
+        return texture(materialSamplers[value.source], fragTexCoord).gb;
     }
     return vec2(1.0, 1.0);
 }
@@ -52,7 +54,7 @@ vec2 getRoughnessMetallic(Material material) {
 vec4 getEmissive(Material material) {
     Texture value = material.emissiveTexture;
     if (value.source >= 0) {
-        return texture(texSampler[value.source], fragTexCoord) * material.emissiveFactor;
+        return texture(materialSamplers[value.source], fragTexCoord) * material.emissiveFactor;
     }
     return vec4(0.0);
 }
@@ -60,7 +62,7 @@ vec4 getEmissive(Material material) {
 float getOcclusion(Material material) {
     Texture value = material.occlusionTexture;
     if (value.source >= 0) {
-        return texture(texSampler[value.source], fragTexCoord).r;
+        return texture(materialSamplers[value.source], fragTexCoord).r;
     }
     return 1.0;
 }
@@ -68,7 +70,7 @@ float getOcclusion(Material material) {
 vec3 getNormal(Material material) {
     Texture value = material.normalTexture;
     if (value.source >= 0) {
-        return texture(texSampler[value.source], fragTexCoord).rgb;
+        return texture(materialSamplers[value.source], fragTexCoord).rgb;
     }
     return normalize(tangent * (2.0 * v_normal - 1.0));
 }
@@ -76,6 +78,7 @@ vec3 getNormal(Material material) {
 const float specularStrength = 0.5;
 const float LIGHT_INTENSITY = 1.0;
 const vec3 LIGHT_COLOR = vec3(1.0);
+const vec3 LIGHT_DIR = vec3(0.0,0.0,-1.0);
 const float AMBIENT_STRENGTH = 0.1;
 
 
@@ -83,7 +86,7 @@ vec3 calculateLight(Material material) {
     vec4 baseColor = getBaseColor(material);
     vec3 normal = getNormal(material);
 
-    vec3 lightDir = normalize(camera_pos - position);
+    vec3 lightDir = normalize(LIGHT_DIR - position);
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 diffuse = diff * LIGHT_COLOR;
@@ -145,11 +148,11 @@ void main() {
     if (material_index >= 0) {
         material = material_buffer[material_index];
 
-        vec3 color = calculateLight(material);
+        //vec3 color = calculateLight(material);
         // color += getEmissive(material).rgb;
         // color = clamp(color, 0.0, 1.0);
         // color = mix(color, color * getOcclusion(material), 1.0);
-
-        outColor = vec4(color, 1.0);
+        vec4 baseColor = getBaseColor(material);
+        outColor = baseColor;
     }
 }
