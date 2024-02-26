@@ -10,7 +10,6 @@
 #include "types.glsl"
 
 layout(binding = 1) uniform sampler2D materialSamplers[];
-layout(binding = 2) uniform sampler2D gbufferSamplers[];
 
 layout(location = 0) in flat int material_index;
 layout(location = 1) in vec2 tex_cord;
