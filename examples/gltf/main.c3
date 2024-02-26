@@ -805,15 +805,270 @@ fn void! main()
         material_textures.push(texture);
     }
 
-    PipelineInfo gbuffer_pipeline = gbufferPipeline(device,
-                                                    .extent = swapchain_info.imageExtent, 
-                                                    .address_buffer = address_buffer, 
-                                                    .material_textures = material_textures)!;
+      RenderingInfo g_rendering_info = vk::renderingInfoBuilder()
+        .setLayerCount(1)
+        .setRenderArea({
+            .offset = Offset2D{ .x = 0, .y = 0 },
+            .extent = swapchain_info.imageExtent,
+        })
+        .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(gbuffer_textures[1].imageView)
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            }),
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(gbuffer_textures[2].imageView)
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            }),
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(gbuffer_textures[3].imageView)
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+            })
+        })
+    .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[0].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+            .depthStencil = { 1.0f, 0 }
+    }));
 
-    // PipelineInfo forward_pipeline = forwardPipeline(device,
-    //                                                 .extent = swapchain_info.imageExtent, 
-    //                                                 .gbuffer_textures = gbuffer_textures)!;                                                
-    
+    // Bind loaded textures to descriptor
+    List(<WriteDescriptorSet>) g_descriptor_sets;
+
+    g_descriptor_sets.init_wrapping_array({
+        vk::writeDescriptorSetBuilder()
+        .setDescriptorType(vk::DESCRIPTOR_TYPE_STORAGE_BUFFER)
+        .setBufferInfo({
+          {
+              .buffer = address_buffer.buffer,
+              .offset = 0,
+              .range = AddressBuffer.sizeof,
+          },
+        }),
+        vk::writeDescriptorSetBuilder()
+            .setDstBinding(1)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            .setImageInfo(material_textures.array_view()),
+    });
+
+    DescriptorSetLayout g_descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
+    {
+        .binding = 0,
+        .descriptorType = vk::DESCRIPTOR_TYPE_STORAGE_BUFFER,
+        .descriptorCount = 1,
+        .stageFlags = vk::SHADER_STAGE_VERTEX_BIT | vk::SHADER_STAGE_FRAGMENT_BIT
+    },
+    {
+        .binding = 1,
+        .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = (uint)material_textures.len(),
+        .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
+    },
+    })
+    .build(device)!;
+
+    PipelineLayout g_pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+        .setPushConstantRanges({
+            {
+                .offset = 0,
+                .size = PushConstantData.sizeof,
+                .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+            },
+        })
+        .setSetLayouts({ g_descriptor_set_layout }).build(device)!;
+
+    char[*] g_vertex_shader_data = $embed("shaders/gbuffer_vert.spv");
+    char[*] g_fragment_shader_data = $embed("shaders/gbuffer_frag.spv");
+
+    ShaderModule g_vertex_module = device.createShaderModule(&g_vertex_shader_data)!;
+    ShaderModule g_frag_module = device.createShaderModule(&g_fragment_shader_data)!;    
+
+    vk::PipelineColorBlendAttachmentState color_write_mask = { 
+        .colorWriteMask =
+            vk::COLOR_COMPONENT_R_BIT |
+            vk::COLOR_COMPONENT_G_BIT |
+            vk::COLOR_COMPONENT_B_BIT |
+            vk::COLOR_COMPONENT_A_BIT,
+        .blendEnable = vk::TRUE,
+        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .colorBlendOp = vk::BLEND_OP_ADD,
+        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .alphaBlendOp = vk::BLEND_OP_ADD,
+    };
+
+    Pipeline g_pipeline = vk::graphicsPipelineCreateInfoBuilder()
+    .setStages({
+        g_vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
+        g_frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+    })
+    .setLayout(g_pipeline_layout)
+    .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptionCount(0))
+    .setDynamicState(
+        &&vk::pipelineDynamicStateCreateInfoBuilder()
+        .setDynamicStates(
+        {
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
+        })
+    )
+    .setRasterizationState(
+        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(vk::CULL_MODE_NONE)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
+    )
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+                    .setSampleShadingEnable(vk::FALSE)
+                    .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+                    .setMinSampleShading(1.0)
+                    .setAlphaToCoverageEnable(vk::FALSE)
+                    .setAlphaToOneEnable(vk::FALSE))
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+                    .setDepthTestEnable(vk::TRUE)
+                    .setDepthWriteEnable(vk::TRUE)
+                    .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                    .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+                    .setLogicOp(vk::LOGIC_OP_COPY)
+                    .setAttachments({
+                            color_write_mask,
+                            color_write_mask,
+                            color_write_mask,
+                        }))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+        .setViewports({{ .x = 0.0, .y = swapchain_info.imageExtent.height, .width = swapchain_info.imageExtent.width, .height = -(float)swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+        .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+    .setNext(
+        &&vk::pipelineRenderingCreateInfoBuilder()
+        .setColorAttachmentFormats({
+                vk::FORMAT_R8G8B8A8_UNORM,
+                vk::FORMAT_R8G8B8A8_UNORM,
+                vk::FORMAT_R8G8B8A8_UNORM,
+            })
+        .setDepthAttachmentFormat(vk::FORMAT_D32_SFLOAT_S8_UINT)
+        .setStencilAttachmentFormat(vk::FORMAT_D32_SFLOAT_S8_UINT)
+    ).build(device)!;
+
+    // Forward pipeline
+    List(<WriteDescriptorSet>) f_descriptor_sets;
+    f_descriptor_sets.init_wrapping_array({
+        vk::writeDescriptorSetBuilder()
+            .setDstBinding(0)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            .setImageInfo(gbuffer_textures.array_view()),
+    });
+
+    DescriptorSetLayout f_descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
+    {
+        .binding = 0,
+        .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = (uint)gbuffer_textures.len(),
+        .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
+    },
+    })
+    .build(device)!;
+
+    PipelineLayout f_pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+        .setSetLayouts({ f_descriptor_set_layout }).build(device)!;
+
+    char[*] f_vertex_shader_data = $embed("shaders/forward_vert.spv");
+    char[*] f_fragment_shader_data = $embed("shaders/forward_frag.spv");
+
+    ShaderModule f_vertex_module = device.createShaderModule(&f_vertex_shader_data)!;
+    ShaderModule f_frag_module = device.createShaderModule(&f_fragment_shader_data)!;    
+
+    Pipeline f_pipeline = vk::graphicsPipelineCreateInfoBuilder()
+    .setStages({
+        f_vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
+        f_frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+    })
+    .setLayout(f_pipeline_layout)
+    .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptionCount(0))
+    .setDynamicState(
+        &&vk::pipelineDynamicStateCreateInfoBuilder()
+        .setDynamicStates(
+        {
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
+        })
+    )
+    .setRasterizationState(
+        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(vk::CULL_MODE_NONE)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
+    )
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+                    .setSampleShadingEnable(vk::FALSE)
+                    .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+                    .setMinSampleShading(1.0)
+                    .setAlphaToCoverageEnable(vk::FALSE)
+                    .setAlphaToOneEnable(vk::FALSE))
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+                    .setDepthTestEnable(vk::TRUE)
+                    .setDepthWriteEnable(vk::TRUE)
+                    .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+                    .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+                    .setLogicOp(vk::LOGIC_OP_COPY)
+                    .setAttachments({
+                            { .colorWriteMask =
+                                vk::COLOR_COMPONENT_R_BIT |
+                                vk::COLOR_COMPONENT_G_BIT |
+                                vk::COLOR_COMPONENT_B_BIT |
+                                vk::COLOR_COMPONENT_A_BIT,
+                                .blendEnable = vk::TRUE,
+                                .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+                                .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                                .colorBlendOp = vk::BLEND_OP_ADD,
+                                .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+                                .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                                .alphaBlendOp = vk::BLEND_OP_ADD,
+                            },
+                        }))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+        .setViewports({{ .x = 0.0, .y = swapchain_info.imageExtent.height, .width = swapchain_info.imageExtent.width, .height = -(float)swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+        .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+    .setNext(
+        &&vk::pipelineRenderingCreateInfoBuilder()
+        .setColorAttachmentFormats({ vk::FORMAT_B8G8R8A8_UNORM })
+    ).build(device)!;
+
+
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
     SemaphoreList signal_semaphores;
@@ -885,12 +1140,14 @@ fn void! main()
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
-        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline);
+       
 
         // Draw Gbuffer textures
-        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline_layout, 0, (uint)gbuffer_pipeline.descriptor_sets.len(), gbuffer_pipeline.descriptor_sets.entries);
-        vk::cmdBeginRenderingKHR(command_buffer, &gbuffer_pipeline.rendering_info);
-        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, gbuffer_pipeline.pipeline_layout, device);
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, g_pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, g_pipeline_layout, 0, (uint)g_descriptor_sets.len(), g_descriptor_sets.entries);
+        vk::cmdBeginRenderingKHR(command_buffer, &g_rendering_info);
+
+        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, g_pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
 
         // RenderingInfo forward_rendering_info = vk::renderingInfoBuilder()
@@ -911,6 +1168,7 @@ fn void! main()
         //   });
 
         // // Draw forward render
+        // vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
         // vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
         // vk::cmdBeginRenderingKHR(command_buffer, &forward_rendering_info);
         // vk::cmdDrawIndexed(command_buffer, 6, 1, 0, 0, 0);
@@ -978,7 +1236,7 @@ fn void! main()
         gbuffer_textures.free();
 
         command_pool.free(device);
-        gbuffer_pipeline.free(device);
+        // gbuffer_pipeline.free(device);
         //forward_pipeline.free(device);
 
         wait_semaphores.release(device);
