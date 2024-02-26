@@ -527,13 +527,26 @@ fn void! main()
         .setMipLevels(1)
         .setArrayLayers(1)
         .setSamples(vk::SAMPLE_COUNT_1_BIT)
-        .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+        .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
         .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
         .setTiling(vk::IMAGE_TILING_OPTIMAL)
         .setFormat(depth_format)
         .build(device)!;
 
     depth_image.bind(&device_allocation)!;
+    depth_texture.sampler = vk::samplerCreateInfoBuilder()
+        .setMagFilter(vk::FILTER_LINEAR)
+        .setMinFilter(vk::FILTER_LINEAR)
+        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setMipLodBias(0.0)
+        .setMinLod(0.0)
+        .setMaxLod(1.0)
+        .setMaxAnisotropy(1.0)
+        .setAnisotropyEnable(vk::FALSE)
+        .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+        .build(device)!;
     depth_texture.imageView = vk::imageViewCreateInfoBuilder()
         .setViewType(vk::IMAGE_VIEW_TYPE_2D)
         .setFormat(depth_format)
@@ -581,7 +594,7 @@ fn void! main()
     // Create GBuffer textures
     for (usz i; i < 3; i++) {
         DescriptorImageInfo texture;
-        vk::Format texture_format = vk::FORMAT_R8G8B8A8_UNORM;
+        vk::Format texture_format = vk::FORMAT_B8G8R8A8_UNORM;
         vk::Image image = vk::imageCreateInfoBuilder()
             .setImageType(vk::IMAGE_TYPE_2D)
             .setExtent({.width = WIDTH, .height = HEIGHT, .depth = 1 })
@@ -899,7 +912,7 @@ fn void! main()
     ShaderModule g_vertex_module = device.createShaderModule(&g_vertex_shader_data)!;
     ShaderModule g_frag_module = device.createShaderModule(&g_fragment_shader_data)!;    
 
-    vk::PipelineColorBlendAttachmentState color_write_mask = { 
+    vk::PipelineColorBlendAttachmentState color_write_mask = {
         .colorWriteMask =
             vk::COLOR_COMPONENT_R_BIT |
             vk::COLOR_COMPONENT_G_BIT |
@@ -1150,29 +1163,29 @@ fn void! main()
         foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, g_pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
 
-        // RenderingInfo forward_rendering_info = vk::renderingInfoBuilder()
-        //     .setLayerCount(1)
-        //     .setRenderArea({
-        //         .offset = Offset2D{ .x = 0, .y = 0 },
-        //         .extent = swapchain_info.imageExtent,
-        //     })
-        //     .setColorAttachments({
-        //         vk::renderingAttachmentInfoBuilder()
-        //             .setImageView(swapchain_views[next_image])
-        //             .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        //             .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        //             .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        //             .setClearValue({
-        //                 .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-        //             }),
-        //   });
+        RenderingInfo f_rendering_info = vk::renderingInfoBuilder()
+            .setLayerCount(1)
+            .setRenderArea({
+                .offset = Offset2D{ .x = 0, .y = 0 },
+                .extent = swapchain_info.imageExtent,
+            })
+            .setColorAttachments({
+                vk::renderingAttachmentInfoBuilder()
+                    .setImageView(swapchain_views[next_image])
+                    .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                    .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                    .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                    .setClearValue({
+                        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+                    }),
+          });
 
-        // // Draw forward render
-        // vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
-        // vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
-        // vk::cmdBeginRenderingKHR(command_buffer, &forward_rendering_info);
-        // vk::cmdDrawIndexed(command_buffer, 6, 1, 0, 0, 0);
-        // vk::cmdEndRenderingKHR(command_buffer);
+        // Draw forward render
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, f_pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, f_pipeline_layout, 0, (uint)f_descriptor_sets.len(), f_descriptor_sets.entries);
+        vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
+        vk::cmdDrawIndexed(command_buffer, 6, 1, 0, 0, 0);
+        vk::cmdEndRenderingKHR(command_buffer);
 
         ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
