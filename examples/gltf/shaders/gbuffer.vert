@@ -59,6 +59,7 @@ void main() {
     out_normal = normalize(mat3(skin_matrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
     out_tangent = mat3(tangent_w, bitangent_w, normal_w);
     out_position = vec3(model_matrix * vec4(v_position, 1.0));
+    
     fragTexCoord = vertex.tex_cord;
     
     gl_Position = uniform_buffer.projection * uniform_buffer.view * model_matrix * skin_matrix * vec4(v_position, 1.0);
