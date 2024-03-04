@@ -124,7 +124,7 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
     void* mapped;
     vk::mapMemory(self, memory, 0, size, 0, &mapped)!;
     mem::copy(mapped, data, size);
-    vk::unmapMemory(self, memory);
+    // vk::unmapMemory(self, memory);
 
     return MemoryBlock {
         .buffer = staging_buffer,
@@ -165,7 +165,7 @@ fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
     MemoryRequirements mem_reqs = self.memoryRequirements(allocation.device);
 
     if (allocation.size - allocation.used_size < mem_reqs.size) {
-       io::printfn("Allocation has no room");
+       io::printfn("Allocation has no enough free memory");
        return BufferError.ALLOCATION_HAS_NO_ROOM?;
     }
 
@@ -195,7 +195,7 @@ fn MemoryBlock! vk::Image.bind(self, Allocation* allocation)
     vk::MemoryRequirements mem_reqs = self.getMemoryRequirements(allocation.device);
 
     if (allocation.size - allocation.used_size < mem_reqs.size) {
-       io::printfn("Allocation has no room");
+       io::printfn("Allocation has no enough free memory");
        return BufferError.ALLOCATION_HAS_NO_ROOM?;
     }
 
