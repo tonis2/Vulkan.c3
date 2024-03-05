@@ -134,14 +134,8 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
 
 fn void MemoryBlock.free(&self, Device device, bool free_mem = true)
 {
-    if (self.type == BufferType.BUFFER) {
-        destroyBuffer(device, self.buffer, null);
-    }
-
-    if (self.type == BufferType.IMAGE) {
-        destroyImage(device, self.image, null);
-    }
-
+    destroyBuffer(device, self.buffer, null);
+    destroyImage(device, self.image, null);
     if (free_mem) freeMemory(device, self.memory, null);
 }
 

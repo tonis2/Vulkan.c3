@@ -85,6 +85,8 @@ Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
 
 Gltf gltf;
+camera::Camera camera;
+Animations animations;
 
 vk::Format[4] gbuffer_formats = {
     vk::FORMAT_B8G8R8A8_UNORM,
@@ -119,7 +121,6 @@ fn void! main()
     }
 
     gltf = gltf::loadFile("examples/gltf/assets/boxes.glb")!;
-
     defer gltf.free();
 
     foreach (&buffer: gltf.buffers) {
@@ -138,11 +139,9 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     // Load animations
-    Animations animations;
-    defer animations.release();
 
     foreach (animation: gltf.animations) {
         animations.push(gltf.loadAnimation(animation));
@@ -253,12 +252,6 @@ fn void! main()
             }
         }
     }
-
-    defer {
-        vertices.free();
-        indices.free();
-        joint_data.free();
-    };
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -466,85 +459,7 @@ fn void! main()
         .size = 20_000_000,
     }.build()!;
 
-    address_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(AddressBuffer.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!;
-
-    uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(UniformData.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
-
-    vertex_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(vertices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
-
-    index_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(indices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
-
-    joint_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(joint_data.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
-
-    material_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(gltf.materials.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);         
-
-    uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
-    material_buffer.upload(gltf.materials.entries, gltf.materials.byte_size(), device);
-    
-    // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(.size = indices.byte_size(), .data = indices.entries, .pdevice = physical_device)!;
-
-    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-        vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
-            .srcOffset = 0,
-            .dstOffset = 0,
-            .size = indices.byte_size()
-        });
-
-        vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
-           .srcOffset = 0,
-           .dstOffset = 0,
-           .size = vertices.byte_size()
-        });
-    }!;
-
-    index_stage_buffer.free(device);
-    vertex_stage_buffer.free(device);
-
-    AddressBuffer addresses = {
-        .uniform_buffer = uniform_buffer.address,
-        .vertex_buffer = vertex_buffer.address,
-        .material_buffer = material_buffer.address
-    };
-
-    address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
-
+    loadBuffers()!;
     loadTextures()!;
     createPipelines()!;
 
@@ -710,6 +625,11 @@ fn void! main()
     device.waitIdle();
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
+    vertices.free();
+    indices.free();
+    joint_data.free();
+    animations.release();
+
     swapchain.free(device);
     foreach (view : swapchain_views) view.free(device);
     swapchain_images.free();
@@ -722,15 +642,18 @@ fn void! main()
     gbuffer_textures.free();
     gbuffer_images.free();
     command_pool.free(device);
-    // gbuffer_pipeline.free(device);
-    //forward_pipeline.free(device);
+    
+    gbuffer_pipeline.free(device);
+    forward_pipeline.free(device);
+    
+    device_allocation.free();
+    local_allocation.free();
 
     wait_semaphores.release(device);
     signal_semaphores.release(device);
     frame_fences.release(device);
     surface.free(instance);
-    device_allocation.free();
-    local_allocation.free();
+
     device.free();
     instance.free();
 }
@@ -871,6 +794,11 @@ fn void! createPipelines() {
     ShaderModule g_vertex_module = device.createShaderModule(&g_vertex_shader_data)!;
     ShaderModule g_frag_module = device.createShaderModule(&g_fragment_shader_data)!;
 
+    defer {
+        g_vertex_module.free(device);
+        g_frag_module.free(device);
+    }
+
     vk::PipelineColorBlendAttachmentState color_write_mask = {
         .colorWriteMask =
             vk::COLOR_COMPONENT_R_BIT |
@@ -974,6 +902,11 @@ fn void! createPipelines() {
 
     ShaderModule f_vertex_module = device.createShaderModule(&f_vertex_shader_data)!;
     ShaderModule f_frag_module = device.createShaderModule(&f_fragment_shader_data)!;
+
+    defer {
+        f_vertex_module.free(device);
+        f_frag_module.free(device);
+    }
 
     forward_pipeline.pipeline = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
@@ -1230,6 +1163,7 @@ fn void! loadTextures() {
             texture_image.bind(&device_allocation)!;
 
         MemoryBlock stage_image = device.staging_buffer(.size = (usz)image_data.width * image_data.height * 4, .data = image_data.pixels, .pdevice = physical_device)!;
+        defer stage_image.free(device);
 
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
             ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
@@ -1310,8 +1244,6 @@ fn void! loadTextures() {
             );
         }!;
 
-        stage_image.free(device);
-
         texture.sampler = vk::samplerCreateInfoBuilder()
                             .setMagFilter(vk::FILTER_LINEAR)
                             .setMinFilter(vk::FILTER_LINEAR)
@@ -1343,4 +1275,96 @@ fn void! loadTextures() {
         material_textures.push(texture);
     }
 
+}
+
+
+
+fn void! loadBuffers() {
+
+
+    address_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(AddressBuffer.sizeof)
+                    .build(device)!
+                    .bind(&local_allocation)!;
+
+    uniform_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(UniformData.sizeof)
+                    .build(device)!
+                    .bind(&local_allocation)!
+                    .getAddress(device);
+
+    vertex_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(vertices.byte_size())
+                    .build(device)!
+                    .bind(&device_allocation)!
+                    .getAddress(device);
+
+    index_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(indices.byte_size())
+                    .build(device)!
+                    .bind(&device_allocation)!
+                    .getAddress(device);
+
+    joint_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(joint_data.byte_size())
+                    .build(device)!
+                    .bind(&local_allocation)!
+                    .getAddress(device);
+
+    material_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(gltf.materials.byte_size())
+                    .build(device)!
+                    .bind(&local_allocation)!
+                    .getAddress(device);         
+
+    uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
+    material_buffer.upload(gltf.materials.entries, gltf.materials.byte_size(), device);
+
+    // Create stage buffers and then copy the data to GPU only buffers
+    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(.size = indices.byte_size(), .data = indices.entries, .pdevice = physical_device)!;
+
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+        vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = indices.byte_size()
+        });
+
+        vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = vertices.byte_size()
+        });
+    }!;
+
+    index_stage_buffer.free(device);
+    vertex_stage_buffer.free(device);
+
+    AddressBuffer addresses = {
+        .uniform_buffer = uniform_buffer.address,
+        .vertex_buffer = vertex_buffer.address,
+        .material_buffer = material_buffer.address
+    };
+
+    address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
+}
+
+fn void PipelineInfo.free(self, Device device) {
+    self.descriptor_sets.free();
+    self.pipeline.free(device);
+    self.pipeline_layout.free(device);
+    self.descriptor_layout.free(device);
 }
