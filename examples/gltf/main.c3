@@ -120,7 +120,7 @@ fn void! main()
         return;
     }
 
-    gltf = gltf::loadFile("examples/gltf/assets/boxes.glb")!;
+    gltf = gltf::loadFile("examples/gltf/assets/duck.glb")!;
     defer gltf.free();
 
     foreach (&buffer: gltf.buffers) {
@@ -508,10 +508,10 @@ fn void! main()
 
         vk::ImageMemoryBarrier2 gbufferPipelineBarrier = {
           .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-          .srcStageMask = vk::PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
-          .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-          .srcAccessMask = vk::ACCESS_2_MEMORY_READ_BIT,
-          .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+          .srcStageMask = vk::PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+          .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+          .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+          .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
           .image = gbuffer_images[0],
           .subresourceRange = {
               .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
@@ -523,10 +523,10 @@ fn void! main()
 
         vk::ImageMemoryBarrier2 forwardBarrier = {
         .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-        .srcStageMask = vk::PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
-        .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .srcAccessMask = vk::ACCESS_2_MEMORY_WRITE_BIT,
-        .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+        .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
         .image = swapchain_images[next_image],
         .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
         .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
@@ -540,10 +540,10 @@ fn void! main()
 
         vk::ImageMemoryBarrier2 renderBarrier = {
         .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-
-        .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .srcAccessMask = vk::ACCESS_2_MEMORY_WRITE_BIT,
-        .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+        .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
         .image = swapchain_images[next_image],
         .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
         .newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
@@ -556,7 +556,7 @@ fn void! main()
         }};
 
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
-        .setImageMemoryBarriers({ gbufferPipelineBarrier, forwardBarrier, renderBarrier }));
+        .setImageMemoryBarriers({ gbufferPipelineBarrier }));
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
@@ -568,6 +568,9 @@ fn void! main()
 
         foreach (node: scene.nodes) drawNode(gltf.nodes[node], command_buffer, gbuffer_pipeline.pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ forwardBarrier }));
 
         RenderingInfo f_rendering_info = vk::renderingInfoBuilder()
             .setLayerCount(1)
@@ -593,6 +596,9 @@ fn void! main()
         vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
         vk::cmdDraw(command_buffer, 3, 1, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ renderBarrier }));
 
         SubmitInfo submit_info = vk::submitInfoBuilder()
         .setWaitSemaphores({ wait_semaphore })
