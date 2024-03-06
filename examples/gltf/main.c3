@@ -506,15 +506,57 @@ fn void! main()
         vk::resetCommandBuffer(command_buffer, 0)!;
         vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
 
-        vk::MemoryBarrier2 gbufferPipelineBarrier = {
-          .sType = vk::STRUCTURE_TYPE_MEMORY_BARRIER_2,
-          .srcStageMask = vk::PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
-          .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+        vk::ImageMemoryBarrier2 gbufferPipelineBarrier = {
+          .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+          .srcStageMask = vk::PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+          .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+          .srcAccessMask = vk::ACCESS_2_MEMORY_READ_BIT,
+          .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+          .image = gbuffer_images[0],
+          .subresourceRange = {
+              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+              .baseMipLevel = 0,
+              .levelCount = 1,
+              .baseArrayLayer = 0,
+              .layerCount = 1,
+          }};
 
-          .srcAccessMask = vk::ACCESS_2_SHADER_WRITE_BIT,
-          .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT };
+        vk::ImageMemoryBarrier2 forwardBarrier = {
+        .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+        .srcStageMask = vk::PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+        .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask = vk::ACCESS_2_MEMORY_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .image = swapchain_images[next_image],
+        .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+        .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        .subresourceRange = {
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        }};
 
-        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder().setMemoryBarriers({ gbufferPipelineBarrier }));
+        vk::ImageMemoryBarrier2 renderBarrier = {
+        .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+
+        .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask = vk::ACCESS_2_MEMORY_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT | vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .image = swapchain_images[next_image],
+        .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        .newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
+        .subresourceRange = {
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        }};
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ gbufferPipelineBarrier, forwardBarrier, renderBarrier }));
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
@@ -526,32 +568,6 @@ fn void! main()
 
         foreach (node: scene.nodes) drawNode(gltf.nodes[node], command_buffer, gbuffer_pipeline.pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
-
-        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
-            .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-            .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-            .setImage(swapchain_images[next_image])
-            .setSubresourceRange({
-              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-              .baseMipLevel = 0,
-              .levelCount = 1,
-              .baseArrayLayer = 0,
-              .layerCount = 1,
-        });
-
-        vk::cmdPipelineBarrier(
-          command_buffer,
-          vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-          vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-          0,
-          0,
-          null,
-          0,
-          null,
-          1,
-          &image_memory_start
-        );
 
         RenderingInfo f_rendering_info = vk::renderingInfoBuilder()
             .setLayerCount(1)
@@ -577,30 +593,6 @@ fn void! main()
         vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
         vk::cmdDraw(command_buffer, 3, 1, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
-
-        vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &&vk::imageMemoryBarrierBuilder()
-              .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-              .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-              .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
-              .setImage(swapchain_images[next_image])
-              .setSubresourceRange({
-                  .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                  .baseMipLevel = 0,
-                  .levelCount = 1,
-                  .baseArrayLayer = 0,
-                  .layerCount = 1,
-            })
-        );
 
         SubmitInfo submit_info = vk::submitInfoBuilder()
         .setWaitSemaphores({ wait_semaphore })
@@ -805,13 +797,6 @@ fn void! createPipelines() {
             vk::COLOR_COMPONENT_G_BIT |
             vk::COLOR_COMPONENT_B_BIT |
             vk::COLOR_COMPONENT_A_BIT,
-        .blendEnable = vk::TRUE,
-        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-        .colorBlendOp = vk::BLEND_OP_ADD,
-        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-        .alphaBlendOp = vk::BLEND_OP_ADD,
     };
 
     gbuffer_pipeline.pipeline = vk::graphicsPipelineCreateInfoBuilder()
@@ -856,10 +841,10 @@ fn void! createPipelines() {
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
                     .setLogicOp(vk::LOGIC_OP_COPY)
                     .setAttachments({
-                            color_write_mask,
-                            color_write_mask,
-                            color_write_mask,
-                        }))
+                        color_write_mask,
+                        color_write_mask,
+                        color_write_mask,
+                    }))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
         .setViewports({{ .x = 0.0, .y = 0.0, .width = 0.0, .height = 0.0, .minDepth = 0.0, .maxDepth = 1.0 }})
         .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = extent }}))
@@ -1081,6 +1066,7 @@ fn void! loadTextures() {
         .setAnisotropyEnable(vk::FALSE)
         .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
         .build(device)!;
+        
     depth_texture.imageView = vk::imageViewCreateInfoBuilder()
         .setViewType(vk::IMAGE_VIEW_TYPE_2D)
         .setFormat(gbuffer_formats[3])
@@ -1165,33 +1151,45 @@ fn void! loadTextures() {
         MemoryBlock stage_image = device.staging_buffer(.size = (usz)image_data.width * image_data.height * 4, .data = image_data.pixels, .pdevice = physical_device)!;
         defer stage_image.free(device);
 
-        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-            ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
-                .setImage(texture_image)
-                .setSubresourceRange({
+        vk::ImageMemoryBarrier2 transfer_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .srcAccessMask = 0,
+            .dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .image = texture_image,
+            .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+            .newLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .subresourceRange = {
                 .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
                 .baseMipLevel = 0,
+                .levelCount = 1,
                 .baseArrayLayer = 0,
                 .layerCount = 1,
-                .levelCount = 1,
-            })
-            .setSrcAccessMask(0)
-            .setDstAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-            .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        }};
 
-            vk::cmdPipelineBarrier(
-                    command_buffer,
-                    vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                    vk::PIPELINE_STAGE_TRANSFER_BIT,
-                    0,
-                    0,
-                    null,
-                    0,
-                    null,
-                    1,
-                    &imageMemoryBarrier
-            );
+        vk::ImageMemoryBarrier2 finalize_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            .srcAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+            .image = texture_image,
+            .oldLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+           
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ transfer_barrier }));
 
             BufferImageCopy bufferCopyRegion = {
                 .bufferOffset = 0,
@@ -1216,32 +1214,8 @@ fn void! loadTextures() {
                 &bufferCopyRegion
             );
 
-            ImageMemoryBarrier imageMemoryBarrier2 = vk::imageMemoryBarrierBuilder()
-                .setImage(texture_image)
-                .setSubresourceRange({
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-                .levelCount = 1,
-            })
-            .setSrcAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-            .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-            vk::cmdPipelineBarrier(
-                    command_buffer,
-                    vk::PIPELINE_STAGE_TRANSFER_BIT,
-                    vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                    0,
-                    0,
-                    null,
-                    0,
-                    null,
-                    1,
-                    &imageMemoryBarrier2
-            );
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ finalize_barrier }));
         }!;
 
         texture.sampler = vk::samplerCreateInfoBuilder()
@@ -1277,11 +1251,7 @@ fn void! loadTextures() {
 
 }
 
-
-
 fn void! loadBuffers() {
-
-
     address_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
