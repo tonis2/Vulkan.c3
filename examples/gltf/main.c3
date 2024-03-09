@@ -45,6 +45,10 @@ struct PushConstantData {
     float[8] morph_weights;
 }
 
+struct ForwardConstantData {
+    DeviceAddress lights;
+}
+
 struct PipelineInfo {
     List(<WriteDescriptorSet>) descriptor_sets;
     DescriptorSetLayout descriptor_layout;
@@ -62,6 +66,7 @@ MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
 MemoryBlock joint_buffer;
 MemoryBlock material_buffer;
+MemoryBlock lights_buffer;
 
 ZStringList validations;
 ZStringList extensions;
@@ -120,7 +125,7 @@ fn void! main()
         return;
     }
 
-    gltf = gltf::loadFile("examples/gltf/assets/duck.glb")!;
+    gltf = gltf::loadFile("examples/gltf/assets/truck.glb")!;
     defer gltf.free();
 
     foreach (&buffer: gltf.buffers) {
@@ -330,15 +335,25 @@ fn void! main()
         return;
     }
 
+    PhysicalDevicePushDescriptorPropertiesKHR pushDescriptorProperties = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
+        .maxPushDescriptors = 1,
+        .pNext = null
+    };
+
+    PhysicalDeviceDescriptorBufferPropertiesEXT descriptorBufferProperties = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+        .pNext = &pushDescriptorProperties,
+    };
+
     // Get device properties and add push descriptors extension
     PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2Builder()
-             .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder()
-             .setMaxPushDescriptors(1))
+             .setNext(&descriptorBufferProperties)
              .build(physical_device);
 
     io::printfn("Device found %s type %d ", device_properties.properties.deviceName[0..], device_properties.properties.deviceType);
     io::printfn("Push constant max size %d bytes", device_properties.properties.limits.maxPushConstantsSize / 4);
-
+    io::printfn("Descriptor buffer alignment %d", descriptorBufferProperties.descriptorBufferOffsetAlignment);
     DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
     .setQueueFamilyIndex(queue_family.graphics)
     .setQueuePriorities({ 1.0 });
@@ -594,6 +609,12 @@ fn void! main()
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
         vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
+
+        ForwardConstantData constant_data = {
+            .lights = lights_buffer.address,
+        };
+
+        vk::cmdPushConstants(command_buffer, forward_pipeline.pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, ForwardConstantData.sizeof, &constant_data);
         vk::cmdDraw(command_buffer, 3, 1, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
 
@@ -886,6 +907,13 @@ fn void! createPipelines() {
     .build(device)!;
 
     forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+        .setPushConstantRanges({
+            {
+                .offset = 0,
+                .size = ForwardConstantData.sizeof,
+                .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+            },
+        })
         .setSetLayouts({ forward_pipeline.descriptor_layout }).build(device)!;
 
     char[*] f_vertex_shader_data = $embed("shaders/forward_vert.spv");
@@ -1262,51 +1290,47 @@ fn void! loadBuffers() {
                     .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(AddressBuffer.sizeof)
-                    .build(device)!
                     .bind(&local_allocation)!;
 
     uniform_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(UniformData.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
+                    .bind(&local_allocation)!;
 
     vertex_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(vertices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
+                    .bind(&device_allocation)!;
 
     index_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(indices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
+                    .bind(&device_allocation)!;
 
     joint_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(joint_data.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
+                    .bind(&local_allocation)!;
 
     material_buffer = vk::bufferCreateInfoBuilder()
                     .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(gltf.materials.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);         
+                    .bind(&local_allocation)!;
+
+    lights_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(gltf.lights.byte_size())
+                    .bind(&local_allocation)!;
 
     uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
     material_buffer.upload(gltf.materials.entries, gltf.materials.byte_size(), device);
+    lights_buffer.upload(gltf.lights.entries, gltf.lights.byte_size(), device);
 
     // Create stage buffers and then copy the data to GPU only buffers
     MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;

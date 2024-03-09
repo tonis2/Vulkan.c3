@@ -256,6 +256,8 @@ const KHR_PORTABILITY_SUBSET_SPEC_VERSION = 1;
 const KHR_PORTABILITY_SUBSET_EXTENSION_NAME = "VK_KHR_portability_subset";
 const KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = 1;
 const KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve";
+const EXT_DESCRIPTOR_BUFFER_SPEC_VERSION = 1;
+const EXT_DESCRIPTOR_BUFFER_EXTENSION_NAME = "VK_EXT_descriptor_buffer";
 const KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
 const KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
 union ClearColorValue {
@@ -266,6 +268,18 @@ union ClearColorValue {
 union ClearValue {
   ClearColorValue color;
   ClearDepthStencilValue depthStencil;
+}
+union DescriptorDataEXT {
+  Sampler* pSampler;
+  DescriptorImageInfo* pCombinedImageSampler;
+  DescriptorImageInfo* pInputAttachmentImage;
+  DescriptorImageInfo* pSampledImage;
+  DescriptorImageInfo* pStorageImage;
+  DescriptorAddressInfoEXT* pUniformTexelBuffer;
+  DescriptorAddressInfoEXT* pStorageTexelBuffer;
+  DescriptorAddressInfoEXT* pUniformBuffer;
+  DescriptorAddressInfoEXT* pStorageBuffer;
+  DeviceAddress accelerationStructure;
 }
 
 distinct Result = inline int;
@@ -569,6 +583,18 @@ const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_K
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR = 1000163001;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR = 0;
 const StructureType STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT = 1000316000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT = 1000316001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT = 1000316002;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT = 1000316003;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT = 1000316004;
+const StructureType STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316005;
+const StructureType STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316006;
+const StructureType STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316007;
+const StructureType STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316008;
+const StructureType STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT = 1000316010;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT = 1000316011;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT = 1000316012;
 
 distinct PipelineCacheHeaderVersion = inline int;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
@@ -900,6 +926,7 @@ const ImageCreateFlagBits IMAGE_CREATE_PROTECTED_BIT = 0x00000800;
 const ImageCreateFlagBits IMAGE_CREATE_DISJOINT_BIT = 0x00000200;
 const ImageCreateFlagBits IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = 0;
 const ImageCreateFlagBits IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR = 0;
+const ImageCreateFlagBits IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00010000;
 
 distinct ImageTiling = inline int;
 const ImageTiling IMAGE_TILING_OPTIMAL = 0;
@@ -1045,6 +1072,7 @@ const BufferCreateFlagBits BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 const BufferCreateFlagBits BUFFER_CREATE_PROTECTED_BIT = 0x00000008;
 const BufferCreateFlagBits BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000010;
+const BufferCreateFlagBits BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000020;
 
 distinct BufferUsageFlagBits = inline int;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
@@ -1057,6 +1085,9 @@ const BufferUsageFlagBits BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
 const BufferUsageFlagBits BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
 const BufferUsageFlagBits BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
 const BufferUsageFlagBits BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000;
+const BufferUsageFlagBits BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = 0x00200000;
+const BufferUsageFlagBits BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00400000;
+const BufferUsageFlagBits BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = 0x04000000;
 
 distinct SharingMode = inline int;
 const SharingMode SHARING_MODE_EXCLUSIVE = 0;
@@ -1094,7 +1125,7 @@ const ComponentSwizzle COMPONENT_SWIZZLE_B = 5;
 const ComponentSwizzle COMPONENT_SWIZZLE_A = 6;
 
 distinct ImageViewCreateFlagBits = inline int;
-
+const ImageViewCreateFlagBits IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000004;
 
 distinct ImageViewType = inline int;
 const ImageViewType IMAGE_VIEW_TYPE_1D = 0;
@@ -1212,6 +1243,7 @@ const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE = 0;
 const PipelineCreateFlagBits PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = 0x00000100;
 const PipelineCreateFlagBits PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = 0x00000200;
+const PipelineCreateFlagBits PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = 0x20000000;
 
 distinct PipelineShaderStageCreateFlagBits = inline int;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT = 0x00000001;
@@ -1279,7 +1311,7 @@ const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 
 distinct SamplerCreateFlagBits = inline int;
-
+const SamplerCreateFlagBits SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000008;
 
 distinct SamplerMipmapMode = inline int;
 const SamplerMipmapMode SAMPLER_MIPMAP_MODE_NEAREST = 0;
@@ -1292,6 +1324,8 @@ const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT 
 distinct DescriptorSetLayoutCreateFlagBits = inline int;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = 0x00000002;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = 0x00000001;
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00000010;
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT = 0x00000020;
 
 distinct DescriptorType = inline int;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLER = 0;
@@ -1616,6 +1650,7 @@ const AccessFlagBits2 ACCESS_2_MEMORY_WRITE_BIT = 0x00010000;
 const AccessFlagBits2 ACCESS_2_SHADER_SAMPLED_READ_BIT = 0x100000000;
 const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_READ_BIT = 0x200000000;
 const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_WRITE_BIT = 0x400000000;
+const AccessFlagBits2 ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT = 0x20000000000;
 
 distinct SubmitFlagBits = inline int;
 const SubmitFlagBits SUBMIT_PROTECTED_BIT = 0x00000001;
@@ -4146,6 +4181,105 @@ struct PhysicalDevicePortabilitySubsetPropertiesKHR {
  StructureType sType;
  void* pNext;
  uint minVertexInputBindingStrideAlignment;
+}
+struct PhysicalDeviceDescriptorBufferPropertiesEXT {
+ StructureType sType;
+ void* pNext;
+ Bool32 combinedImageSamplerDescriptorSingleArray;
+ Bool32 bufferlessPushDescriptors;
+ Bool32 allowSamplerImageViewPostSubmitCreation;
+ DeviceSize descriptorBufferOffsetAlignment;
+ uint maxDescriptorBufferBindings;
+ uint maxResourceDescriptorBufferBindings;
+ uint maxSamplerDescriptorBufferBindings;
+ uint maxEmbeddedImmutableSamplerBindings;
+ uint maxEmbeddedImmutableSamplers;
+ usz bufferCaptureReplayDescriptorDataSize;
+ usz imageCaptureReplayDescriptorDataSize;
+ usz imageViewCaptureReplayDescriptorDataSize;
+ usz samplerCaptureReplayDescriptorDataSize;
+ usz accelerationStructureCaptureReplayDescriptorDataSize;
+ usz samplerDescriptorSize;
+ usz combinedImageSamplerDescriptorSize;
+ usz sampledImageDescriptorSize;
+ usz storageImageDescriptorSize;
+ usz uniformTexelBufferDescriptorSize;
+ usz robustUniformTexelBufferDescriptorSize;
+ usz storageTexelBufferDescriptorSize;
+ usz robustStorageTexelBufferDescriptorSize;
+ usz uniformBufferDescriptorSize;
+ usz robustUniformBufferDescriptorSize;
+ usz storageBufferDescriptorSize;
+ usz robustStorageBufferDescriptorSize;
+ usz inputAttachmentDescriptorSize;
+ usz accelerationStructureDescriptorSize;
+ DeviceSize maxSamplerDescriptorBufferRange;
+ DeviceSize maxResourceDescriptorBufferRange;
+ DeviceSize samplerDescriptorBufferAddressSpaceSize;
+ DeviceSize resourceDescriptorBufferAddressSpaceSize;
+ DeviceSize descriptorBufferAddressSpaceSize;
+}
+struct PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT {
+ StructureType sType;
+ void* pNext;
+ usz combinedImageSamplerDensityMapDescriptorSize;
+}
+struct PhysicalDeviceDescriptorBufferFeaturesEXT {
+ StructureType sType;
+ void* pNext;
+ Bool32 descriptorBuffer;
+ Bool32 descriptorBufferCaptureReplay;
+ Bool32 descriptorBufferImageLayoutIgnored;
+ Bool32 descriptorBufferPushDescriptors;
+}
+struct DescriptorAddressInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DeviceAddress address;
+ DeviceSize range;
+ Format format;
+}
+struct DescriptorBufferBindingInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DeviceAddress address;
+ BufferUsageFlags usage;
+}
+struct DescriptorBufferBindingPushDescriptorBufferHandleEXT {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct DescriptorGetInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DescriptorType type;
+ DescriptorDataEXT data;
+}
+struct BufferCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct ImageCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Image image;
+}
+struct ImageViewCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ ImageView imageView;
+}
+struct SamplerCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Sampler sampler;
+}
+struct OpaqueCaptureDescriptorDataCreateInfoEXT {
+ StructureType sType;
+ void* pNext;
+ void* opaqueCaptureDescriptorData;
 }
 macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
 macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;

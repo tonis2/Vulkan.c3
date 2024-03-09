@@ -154,9 +154,10 @@ fn void MemoryBlock.upload(&self, void* data, ulong size, Device device)
     mem::copy(self.mapped + self.offset, data, size);
 }
 
-fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
+fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
 {
-    MemoryRequirements mem_reqs = self.memoryRequirements(allocation.device);
+    vk::Buffer buffer = self.build(allocation.device)!;
+    MemoryRequirements mem_reqs = buffer.memoryRequirements(allocation.device);
 
     if (allocation.size - allocation.used_size < mem_reqs.size) {
        io::printfn("Allocation has no enough free memory");
@@ -164,13 +165,13 @@ fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
     }
 
     usz offset = roundUp(allocation.used_size, mem_reqs.alignment);
-    bindBufferMemory(allocation.device, self, allocation.memory, offset)!;
+    bindBufferMemory(allocation.device, buffer, allocation.memory, offset)!;
 
     MemoryBlock block = {
         .is_used = true,
         .offset = offset,
         .id = allocation.buffer_count - 1,
-        .buffer = self,
+        .buffer = buffer,
         .memory = allocation.memory,
         .size = mem_reqs.size,
         .mapped = allocation.mapped,
@@ -180,6 +181,14 @@ fn MemoryBlock! vk::Buffer.bind(self, Allocation* allocation)
     allocation.used_size += mem_reqs.size;
     allocation.buffer_count += 1;
     allocation.blocks.push(block);
+
+    if (self.usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+        BufferDeviceAddressInfo address_info = {
+          .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+          .buffer = buffer
+        };
+        block.address = getBufferDeviceAddress(allocation.device, &address_info);
+    }
 
     return block;
 }

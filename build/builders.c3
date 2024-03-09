@@ -2523,14 +2523,12 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevice
   self.physicalDeviceCount = physicalDeviceCount;
   return self;
 }
-
-
-// TODO: Fix this      
-// fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE][] physicalDevices) {
-//   self.physicalDeviceCount = (uint)physicalDevices.len;
-//   self.physicalDevices = &physicalDevices[0];
-//   return self;
-// }
+       
+/*fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE][] physicalDevices) {
+  self.physicalDeviceCount = (uint)physicalDevices.len;
+  self.physicalDevices = &physicalDevices[0];
+  return self;
+}*/
 
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocation(self, Bool32 subsetAllocation) {
   self.subsetAllocation = subsetAllocation;
@@ -8078,6 +8076,453 @@ fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetP
        
 fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setMinVertexInputBindingStrideAlignment(self, uint minVertexInputBindingStrideAlignment) {
   self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDescriptorBufferPropertiesEXT physicalDeviceDescriptorBufferPropertiesEXTBuilder() {
+  PhysicalDeviceDescriptorBufferPropertiesEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setCombinedImageSamplerDescriptorSingleArray(self, Bool32 combinedImageSamplerDescriptorSingleArray) {
+  self.combinedImageSamplerDescriptorSingleArray = combinedImageSamplerDescriptorSingleArray;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setBufferlessPushDescriptors(self, Bool32 bufferlessPushDescriptors) {
+  self.bufferlessPushDescriptors = bufferlessPushDescriptors;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAllowSamplerImageViewPostSubmitCreation(self, Bool32 allowSamplerImageViewPostSubmitCreation) {
+  self.allowSamplerImageViewPostSubmitCreation = allowSamplerImageViewPostSubmitCreation;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setDescriptorBufferOffsetAlignment(self, DeviceSize descriptorBufferOffsetAlignment) {
+  self.descriptorBufferOffsetAlignment = descriptorBufferOffsetAlignment;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxDescriptorBufferBindings(self, uint maxDescriptorBufferBindings) {
+  self.maxDescriptorBufferBindings = maxDescriptorBufferBindings;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxResourceDescriptorBufferBindings(self, uint maxResourceDescriptorBufferBindings) {
+  self.maxResourceDescriptorBufferBindings = maxResourceDescriptorBufferBindings;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxSamplerDescriptorBufferBindings(self, uint maxSamplerDescriptorBufferBindings) {
+  self.maxSamplerDescriptorBufferBindings = maxSamplerDescriptorBufferBindings;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxEmbeddedImmutableSamplerBindings(self, uint maxEmbeddedImmutableSamplerBindings) {
+  self.maxEmbeddedImmutableSamplerBindings = maxEmbeddedImmutableSamplerBindings;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxEmbeddedImmutableSamplers(self, uint maxEmbeddedImmutableSamplers) {
+  self.maxEmbeddedImmutableSamplers = maxEmbeddedImmutableSamplers;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setBufferCaptureReplayDescriptorDataSize(self, usz bufferCaptureReplayDescriptorDataSize) {
+  self.bufferCaptureReplayDescriptorDataSize = bufferCaptureReplayDescriptorDataSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageCaptureReplayDescriptorDataSize(self, usz imageCaptureReplayDescriptorDataSize) {
+  self.imageCaptureReplayDescriptorDataSize = imageCaptureReplayDescriptorDataSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageViewCaptureReplayDescriptorDataSize(self, usz imageViewCaptureReplayDescriptorDataSize) {
+  self.imageViewCaptureReplayDescriptorDataSize = imageViewCaptureReplayDescriptorDataSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerCaptureReplayDescriptorDataSize(self, usz samplerCaptureReplayDescriptorDataSize) {
+  self.samplerCaptureReplayDescriptorDataSize = samplerCaptureReplayDescriptorDataSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureCaptureReplayDescriptorDataSize(self, usz accelerationStructureCaptureReplayDescriptorDataSize) {
+  self.accelerationStructureCaptureReplayDescriptorDataSize = accelerationStructureCaptureReplayDescriptorDataSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerDescriptorSize(self, usz samplerDescriptorSize) {
+  self.samplerDescriptorSize = samplerDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setCombinedImageSamplerDescriptorSize(self, usz combinedImageSamplerDescriptorSize) {
+  self.combinedImageSamplerDescriptorSize = combinedImageSamplerDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSampledImageDescriptorSize(self, usz sampledImageDescriptorSize) {
+  self.sampledImageDescriptorSize = sampledImageDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageImageDescriptorSize(self, usz storageImageDescriptorSize) {
+  self.storageImageDescriptorSize = storageImageDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformTexelBufferDescriptorSize(self, usz uniformTexelBufferDescriptorSize) {
+  self.uniformTexelBufferDescriptorSize = uniformTexelBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformTexelBufferDescriptorSize(self, usz robustUniformTexelBufferDescriptorSize) {
+  self.robustUniformTexelBufferDescriptorSize = robustUniformTexelBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageTexelBufferDescriptorSize(self, usz storageTexelBufferDescriptorSize) {
+  self.storageTexelBufferDescriptorSize = storageTexelBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageTexelBufferDescriptorSize(self, usz robustStorageTexelBufferDescriptorSize) {
+  self.robustStorageTexelBufferDescriptorSize = robustStorageTexelBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformBufferDescriptorSize(self, usz uniformBufferDescriptorSize) {
+  self.uniformBufferDescriptorSize = uniformBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformBufferDescriptorSize(self, usz robustUniformBufferDescriptorSize) {
+  self.robustUniformBufferDescriptorSize = robustUniformBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageBufferDescriptorSize(self, usz storageBufferDescriptorSize) {
+  self.storageBufferDescriptorSize = storageBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageBufferDescriptorSize(self, usz robustStorageBufferDescriptorSize) {
+  self.robustStorageBufferDescriptorSize = robustStorageBufferDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setInputAttachmentDescriptorSize(self, usz inputAttachmentDescriptorSize) {
+  self.inputAttachmentDescriptorSize = inputAttachmentDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureDescriptorSize(self, usz accelerationStructureDescriptorSize) {
+  self.accelerationStructureDescriptorSize = accelerationStructureDescriptorSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxSamplerDescriptorBufferRange(self, DeviceSize maxSamplerDescriptorBufferRange) {
+  self.maxSamplerDescriptorBufferRange = maxSamplerDescriptorBufferRange;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setMaxResourceDescriptorBufferRange(self, DeviceSize maxResourceDescriptorBufferRange) {
+  self.maxResourceDescriptorBufferRange = maxResourceDescriptorBufferRange;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerDescriptorBufferAddressSpaceSize(self, DeviceSize samplerDescriptorBufferAddressSpaceSize) {
+  self.samplerDescriptorBufferAddressSpaceSize = samplerDescriptorBufferAddressSpaceSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setResourceDescriptorBufferAddressSpaceSize(self, DeviceSize resourceDescriptorBufferAddressSpaceSize) {
+  self.resourceDescriptorBufferAddressSpaceSize = resourceDescriptorBufferAddressSpaceSize;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setDescriptorBufferAddressSpaceSize(self, DeviceSize descriptorBufferAddressSpaceSize) {
+  self.descriptorBufferAddressSpaceSize = descriptorBufferAddressSpaceSize;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT physicalDeviceDescriptorBufferDensityMapPropertiesEXTBuilder() {
+  PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT.setCombinedImageSamplerDensityMapDescriptorSize(self, usz combinedImageSamplerDensityMapDescriptorSize) {
+  self.combinedImageSamplerDensityMapDescriptorSize = combinedImageSamplerDensityMapDescriptorSize;
+  return self;
+}
+       
+
+
+fn PhysicalDeviceDescriptorBufferFeaturesEXT physicalDeviceDescriptorBufferFeaturesEXTBuilder() {
+  PhysicalDeviceDescriptorBufferFeaturesEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setDescriptorBuffer(self, Bool32 descriptorBuffer) {
+  self.descriptorBuffer = descriptorBuffer;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setDescriptorBufferCaptureReplay(self, Bool32 descriptorBufferCaptureReplay) {
+  self.descriptorBufferCaptureReplay = descriptorBufferCaptureReplay;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setDescriptorBufferImageLayoutIgnored(self, Bool32 descriptorBufferImageLayoutIgnored) {
+  self.descriptorBufferImageLayoutIgnored = descriptorBufferImageLayoutIgnored;
+  return self;
+}
+       
+fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setDescriptorBufferPushDescriptors(self, Bool32 descriptorBufferPushDescriptors) {
+  self.descriptorBufferPushDescriptors = descriptorBufferPushDescriptors;
+  return self;
+}
+       
+
+
+fn DescriptorAddressInfoEXT descriptorAddressInfoEXTBuilder() {
+  DescriptorAddressInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setAddress(self, DeviceAddress address) {
+  self.address = address;
+  return self;
+}
+       
+fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setRange(self, DeviceSize range) {
+  self.range = range;
+  return self;
+}
+       
+fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setFormat(self, Format format) {
+  self.format = format;
+  return self;
+}
+       
+
+
+fn DescriptorBufferBindingInfoEXT descriptorBufferBindingInfoEXTBuilder() {
+  DescriptorBufferBindingInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorBufferBindingInfoEXT DescriptorBufferBindingInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorBufferBindingInfoEXT DescriptorBufferBindingInfoEXT.setAddress(self, DeviceAddress address) {
+  self.address = address;
+  return self;
+}
+       
+fn DescriptorBufferBindingInfoEXT DescriptorBufferBindingInfoEXT.setUsage(self, BufferUsageFlags usage) {
+  self.usage = usage;
+  return self;
+}
+       
+
+
+fn DescriptorBufferBindingPushDescriptorBufferHandleEXT descriptorBufferBindingPushDescriptorBufferHandleEXTBuilder() {
+  DescriptorBufferBindingPushDescriptorBufferHandleEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorBufferBindingPushDescriptorBufferHandleEXT DescriptorBufferBindingPushDescriptorBufferHandleEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorBufferBindingPushDescriptorBufferHandleEXT DescriptorBufferBindingPushDescriptorBufferHandleEXT.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+
+
+fn DescriptorGetInfoEXT descriptorGetInfoEXTBuilder() {
+  DescriptorGetInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn DescriptorGetInfoEXT DescriptorGetInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn DescriptorGetInfoEXT DescriptorGetInfoEXT.setType(self, DescriptorType type) {
+  self.type = type;
+  return self;
+}
+       
+fn DescriptorGetInfoEXT DescriptorGetInfoEXT.setData(self, DescriptorDataEXT data) {
+  self.data = data;
+  return self;
+}
+       
+
+
+fn BufferCaptureDescriptorDataInfoEXT bufferCaptureDescriptorDataInfoEXTBuilder() {
+  BufferCaptureDescriptorDataInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn BufferCaptureDescriptorDataInfoEXT BufferCaptureDescriptorDataInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn BufferCaptureDescriptorDataInfoEXT BufferCaptureDescriptorDataInfoEXT.setBuffer(self, Buffer buffer) {
+  self.buffer = buffer;
+  return self;
+}
+       
+
+
+fn ImageCaptureDescriptorDataInfoEXT imageCaptureDescriptorDataInfoEXTBuilder() {
+  ImageCaptureDescriptorDataInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageCaptureDescriptorDataInfoEXT ImageCaptureDescriptorDataInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageCaptureDescriptorDataInfoEXT ImageCaptureDescriptorDataInfoEXT.setImage(self, Image image) {
+  self.image = image;
+  return self;
+}
+       
+
+
+fn ImageViewCaptureDescriptorDataInfoEXT imageViewCaptureDescriptorDataInfoEXTBuilder() {
+  ImageViewCaptureDescriptorDataInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn ImageViewCaptureDescriptorDataInfoEXT ImageViewCaptureDescriptorDataInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn ImageViewCaptureDescriptorDataInfoEXT ImageViewCaptureDescriptorDataInfoEXT.setImageView(self, ImageView imageView) {
+  self.imageView = imageView;
+  return self;
+}
+       
+
+
+fn SamplerCaptureDescriptorDataInfoEXT samplerCaptureDescriptorDataInfoEXTBuilder() {
+  SamplerCaptureDescriptorDataInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setSampler(self, Sampler sampler) {
+  self.sampler = sampler;
+  return self;
+}
+       
+
+
+fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXTBuilder() {
+  OpaqueCaptureDescriptorDataCreateInfoEXT defaultValue = {
+    .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInfoEXT.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInfoEXT.setPaqueCaptureDescriptorData(self, void* opaqueCaptureDescriptorData) {
+  self.opaqueCaptureDescriptorData = opaqueCaptureDescriptorData;
   return self;
 }
        
