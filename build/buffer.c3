@@ -41,7 +41,7 @@ fn Allocation! MemoryPool.createBuffer(&self, BufferCreateInfo buffer_info, Memo
 */
 
 
-fn usz roundUp(usz value, usz factor)  => value + factor - 1 - (value + factor - 1) % factor;
+fn usz alignUp(usz value, usz factor)  => value + factor - 1 - (value + factor - 1) % factor;
 
 enum BufferType {
     IMAGE,
@@ -59,6 +59,7 @@ struct Allocation {
     void* mapped;
     MemoryPropertyFlags properties;
     MemoryAllocateFlags flags;
+    uint memory_type;
 }
 
 fn Allocation! Allocation.build(&self) {
@@ -70,11 +71,12 @@ fn Allocation! Allocation.build(&self) {
                 .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
                 .build(self.device)!;
 
+    self.memory_type = self.pdevice.getMemoryType2(self.properties);
     self.memory = memory;
     self.used_size = 0;
     self.buffer_count = 0;
 
-    // Map data, when not meanth for DEVICE LOCAL memory
+    // Map data, when not meant for DEVICE LOCAL memory
     if (self.properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT != self.properties) {
         vk::mapMemory(self.device, self.memory, 0, self.size, 0, &self.mapped)!;
     }
@@ -158,13 +160,24 @@ fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
 {
     vk::Buffer buffer = self.build(allocation.device)!;
     MemoryRequirements mem_reqs = buffer.memoryRequirements(allocation.device);
+    uint memory_type = allocation.pdevice.getMemoryType(allocation.properties, mem_reqs.memoryTypeBits);
+
+    if (self.usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
+        MemoryRequirements desc_mem_reqs = self.descriptorMemoryRequirements(allocation.pdevice);
+        mem_reqs.size = desc_mem_reqs.size;
+        mem_reqs.alignment = desc_mem_reqs.alignment;
+    }
+
+    if (memory_type != allocation.memory_type) {
+        io::printfn("Allocation memory type is %d, but buffer requires %d", allocation.memory_type, memory_type);
+    }
 
     if (allocation.size - allocation.used_size < mem_reqs.size) {
        io::printfn("Allocation has no enough free memory");
        return BufferError.ALLOCATION_HAS_NO_ROOM?;
     }
 
-    usz offset = roundUp(allocation.used_size, mem_reqs.alignment);
+    usz offset = alignUp(allocation.used_size, mem_reqs.alignment);
     bindBufferMemory(allocation.device, buffer, allocation.memory, offset)!;
 
     MemoryBlock block = {
@@ -202,7 +215,7 @@ fn MemoryBlock! vk::Image.bind(self, Allocation* allocation)
        return BufferError.ALLOCATION_HAS_NO_ROOM?;
     }
 
-    usz offset = roundUp(allocation.used_size, mem_reqs.alignment);
+    usz offset = alignUp(allocation.used_size, mem_reqs.alignment);
     bindImageMemory(allocation.device, self, allocation.memory, offset)!;
 
     MemoryBlock block = {
@@ -226,6 +239,21 @@ fn MemoryRequirements Buffer.memoryRequirements(self, Device device) {
     MemoryRequirements mem_reqs;
     getBufferMemoryRequirements(device, self, &mem_reqs);
     return mem_reqs;
+}
+
+fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, PhysicalDevice device) {
+    PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+    };
+
+    PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2Builder()
+      .setNext(&descriptorProperties)
+      .build(device);
+
+    return MemoryRequirements  {
+        .size = alignUp(self.size, descriptorProperties.descriptorBufferOffsetAlignment),
+        .alignment = descriptorProperties.descriptorBufferOffsetAlignment
+    };
 }
 
 fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {

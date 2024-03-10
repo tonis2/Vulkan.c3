@@ -290,7 +290,7 @@ fn uint PhysicalDevice.getMemoryType2(self, MemoryPropertyFlags properties) {
     vk::PhysicalDeviceMemoryProperties memProperties;
     vk::getPhysicalDeviceMemoryProperties(self, &memProperties);
 
-    for (int i = 0; i < memProperties.memoryTypeCount; ++i) {
+    for (uint i = 0; i < memProperties.memoryTypeCount; ++i) {
         if ((memProperties.memoryTypes[i].propertyFlags & properties) == properties)
         {
             return i;
@@ -385,6 +385,12 @@ fn int QueuePropertiesList.find(self, CompareFN callback)
         }
     }
     return response;
+}
+
+fn vk::DeviceSize DescriptorSetLayout.getSize(self, Device device) {
+    DeviceSize size;
+    getDescriptorSetLayoutSizeEXT(device, self, &size);
+    return size;
 }
 
 fn vk::MemoryRequirements Image.getMemoryRequirements(self, Device device) {

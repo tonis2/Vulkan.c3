@@ -370,12 +370,19 @@ fn void! main()
 
    PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
-       .pNext = &device_indexing_feature
+       .pNext = &device_indexing_feature,
+       .bufferDeviceAddress = vk::TRUE,
+    };
+
+    PhysicalDeviceDescriptorBufferFeaturesEXT descriptor_buffer_feature = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT,
+        .pNext = &buffer_device_feature,
+        .descriptorBuffer = vk::TRUE,
     };
 
     PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-       .pNext = &buffer_device_feature
+       .pNext = &descriptor_buffer_feature
     };
 
     PhysicalDeviceSynchronization2Features syncronisation2_feature = {
@@ -1293,7 +1300,7 @@ fn void! loadBuffers() {
                     .bind(&local_allocation)!;
 
     uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | vk::BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT | vk::BUFFER_USAGE_VERTEX_BUFFER_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(UniformData.sizeof)
                     .bind(&local_allocation)!;
