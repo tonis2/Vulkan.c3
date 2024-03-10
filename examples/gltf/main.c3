@@ -152,6 +152,8 @@ fn void! main()
         animations.push(gltf.loadAnimation(animation));
     }
 
+
+
     foreach (&skin: gltf.skins) {
         Accessor skin_accessor = gltf.accessors[skin.inverseBindAccessor];
         // Load inverse bind matrices
@@ -353,7 +355,7 @@ fn void! main()
 
     io::printfn("Device found %s type %d ", device_properties.properties.deviceName[0..], device_properties.properties.deviceType);
     io::printfn("Push constant max size %d bytes", device_properties.properties.limits.maxPushConstantsSize / 4);
-    io::printfn("Descriptor buffer alignment %d", descriptorBufferProperties.descriptorBufferOffsetAlignment);
+
     DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
     .setQueueFamilyIndex(queue_family.graphics)
     .setQueuePriorities({ 1.0 });
@@ -374,15 +376,15 @@ fn void! main()
        .bufferDeviceAddress = vk::TRUE,
     };
 
-    PhysicalDeviceDescriptorBufferFeaturesEXT descriptor_buffer_feature = {
+/*    PhysicalDeviceDescriptorBufferFeaturesEXT descriptor_buffer_feature = {
         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT,
         .pNext = &buffer_device_feature,
         .descriptorBuffer = vk::TRUE,
-    };
+    };*/
 
     PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-       .pNext = &descriptor_buffer_feature
+       .pNext = &buffer_device_feature
     };
 
     PhysicalDeviceSynchronization2Features syncronisation2_feature = {
@@ -913,6 +915,9 @@ fn void! createPipelines() {
     })
     .build(device)!;
 
+
+/*    io::printfn("%d", size);*/
+
     forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
         .setPushConstantRanges({
             {
@@ -1300,7 +1305,7 @@ fn void! loadBuffers() {
                     .bind(&local_allocation)!;
 
     uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | vk::BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT | vk::BUFFER_USAGE_VERTEX_BUFFER_BIT)
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(UniformData.sizeof)
                     .bind(&local_allocation)!;
