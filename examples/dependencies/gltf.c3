@@ -305,10 +305,8 @@ struct Light {
     float intensity;
     float range;
     LightType type;
-    struct spot {
-        float inner_cone_angle;
-        float outer_cone_angle;
-    }
+    float inner_cone_angle;
+    float outer_cone_angle;
 }
 
 // Parsing JSON to structs
@@ -884,8 +882,8 @@ fn void Light.fromJson(&self, Object* json) {
     };
 
     if (try spot && self.type == LightType.SPOT) {
-        self.spot.inner_cone_angle = (float)spot.get_float("innerConeAngle") ?? 0.0;
-        self.spot.outer_cone_angle = (float)spot.get_float("outerConeAngle") ?? math::PI / 4.0;
+        self.inner_cone_angle = (float)spot.get_float("innerConeAngle") ?? 0.0;
+        self.outer_cone_angle = (float)spot.get_float("outerConeAngle") ?? math::PI / 4.0;
     }
 }
 

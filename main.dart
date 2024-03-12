@@ -373,8 +373,14 @@ fault VkErrors {
   });
 
   enums.forEach((entry) {
+    String enumType = entry.bitwidth != null ? "ulong" : "uint";
+
+    if (entry.name.C3Name == "Result") {
+      enumType = "int";
+    }
+
     String code =
-        "\ndistinct ${entry.name.C3Name} = inline ${entry.bitwidth != null ? "ulong" : "int"};\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
+        "\ndistinct ${entry.name.C3Name} = inline $enumType;\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
     mainOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
