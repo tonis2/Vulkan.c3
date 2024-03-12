@@ -1,5 +1,12 @@
 #extension GL_EXT_scalar_block_layout : require
 
+struct Texture {
+    int index;
+    int samp;
+    int source;
+    uint texCoord;
+};
+
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer JointBuffer {
   mat4 matrix;
 };
@@ -13,17 +20,15 @@ layout(buffer_reference, std140) readonly buffer VertexBuffer {
   vec4 skin_weight;
 };
 
+layout (buffer_reference, std140, buffer_reference_align = 4) readonly buffer LightBuffer {
+    vec3 color;
+
+};
+
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
    mat4 projection;
    mat4 view;
    vec3 camera_pos;
-};
-
-struct Texture {
-    int index;
-    int samp;
-    int source;
-    uint texCoord;
 };
 
 layout (buffer_reference, scalar) readonly buffer Material {

@@ -50,12 +50,14 @@ struct ForwardConstantData {
 }
 
 struct PipelineInfo {
-    List(<WriteDescriptorSet>) descriptor_sets;
     DescriptorSetLayout descriptor_layout;
     Pipeline pipeline;
     PipelineLayout pipeline_layout;
     RenderingInfo render_info;
 }
+
+List(<WriteDescriptorSet>) f_descriptor_sets;
+List(<WriteDescriptorSet>) g_descriptor_sets;
 
 vk::Allocation device_allocation;
 vk::Allocation local_allocation;
@@ -125,7 +127,7 @@ fn void! main()
         return;
     }
 
-    gltf = gltf::loadFile("examples/gltf/assets/truck.glb")!;
+    gltf = gltf::loadFile("examples/gltf/assets/scene_test.glb")!;
     defer gltf.free();
 
     foreach (&buffer: gltf.buffers) {
@@ -151,8 +153,6 @@ fn void! main()
     foreach (animation: gltf.animations) {
         animations.push(gltf.loadAnimation(animation));
     }
-
-
 
     foreach (&skin: gltf.skins) {
         Accessor skin_accessor = gltf.accessors[skin.inverseBindAccessor];
@@ -531,13 +531,15 @@ fn void! main()
         vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
 
         vk::ImageMemoryBarrier2 gbufferPipelineBarrier = {
-          .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-          .srcStageMask = vk::PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
-          .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
-          .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
-          .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
-          .image = gbuffer_images[0],
-          .subresourceRange = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
+            .image = gbuffer_images[0],
+    /*        .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,*/
+            .subresourceRange = {
               .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
               .baseMipLevel = 0,
               .levelCount = 1,
@@ -579,22 +581,16 @@ fn void! main()
             .layerCount = 1,
         }};
 
-        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
-        .setImageMemoryBarriers({ gbufferPipelineBarrier }));
-
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
 
         // Draw Gbuffer textures
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline);
-        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline_layout, 0, (uint)gbuffer_pipeline.descriptor_sets.len(), gbuffer_pipeline.descriptor_sets.entries);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline_layout, 0, (uint)g_descriptor_sets.len(), g_descriptor_sets.entries);
         vk::cmdBeginRenderingKHR(command_buffer, &gbuffer_pipeline.render_info);
 
         foreach (node: scene.nodes) drawNode(gltf.nodes[node], command_buffer, gbuffer_pipeline.pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
-
-        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
-        .setImageMemoryBarriers({ forwardBarrier }));
 
         RenderingInfo f_rendering_info = vk::renderingInfoBuilder()
             .setLayerCount(1)
@@ -613,10 +609,14 @@ fn void! main()
                     }),
         });
 
+        // Wait for GBUFFER to be finished rendering
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ gbufferPipelineBarrier, forwardBarrier }));
+
         // Draw forward render
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = 0.0 });
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
-        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)f_descriptor_sets.len(), f_descriptor_sets.entries);
         vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
 
         ForwardConstantData constant_data = {
@@ -681,7 +681,8 @@ fn void! main()
     signal_semaphores.release(device);
     frame_fences.release(device);
     surface.free(instance);
-
+    f_descriptor_sets.free();
+    g_descriptor_sets.free();
     device.free();
     instance.free();
 }
@@ -772,7 +773,7 @@ fn void! createPipelines() {
             .depthStencil = { 1.0f, 0 }
     }));
 
-    gbuffer_pipeline.descriptor_sets.init_wrapping_array({
+    g_descriptor_sets.init_wrapping_array({
         vk::writeDescriptorSetBuilder()
             .setDescriptorType(vk::DESCRIPTOR_TYPE_STORAGE_BUFFER)
             .setBufferInfo({
@@ -896,12 +897,10 @@ fn void! createPipelines() {
     ).build(device)!;
 
     // Forward pipeline
-    forward_pipeline.descriptor_sets.init_wrapping_array({
-        vk::writeDescriptorSetBuilder()
-            .setDstBinding(0)
-            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-            .setImageInfo(gbuffer_textures.array_view()),
-    });
+    f_descriptor_sets.push(vk::writeDescriptorSetBuilder()
+                           .setDstBinding(0)
+                           .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                           .setImageInfo(gbuffer_textures.array_view()));
 
     forward_pipeline.descriptor_layout = vk::descriptorSetLayoutCreateInfoBuilder()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
@@ -914,9 +913,6 @@ fn void! createPipelines() {
     },
     })
     .build(device)!;
-
-
-/*    io::printfn("%d", size);*/
 
     forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
         .setPushConstantRanges({
@@ -1052,33 +1048,27 @@ fn void! loadTextures() {
                 .build(device)!;
 
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-           ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
-           .setImage(image)
-           .setSubresourceRange({
-              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-              .baseMipLevel = 0,
-              .baseArrayLayer = 0,
-              .layerCount = 1,
-              .levelCount = 1,
-           })
-           .setSrcAccessMask(0)
-           .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
-           .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-           .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-           vk::cmdPipelineBarrier(
-               command_buffer,
-               vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-               vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-               0,
-               0,
-               null,
-               0,
-               null,
-               1,
-               &imageMemoryBarrier
-           );
+            vk::ImageMemoryBarrier2 finalize_barrier = {
+               .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+               .srcStageMask = vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+               .dstStageMask = vk::PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+               .srcAccessMask = 0,
+               .dstAccessMask = vk::ACCESS_2_SHADER_WRITE_BIT,
+               .image = image,
+               .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+               .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+               .subresourceRange = {
+                   .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                   .baseMipLevel = 0,
+                   .levelCount = 1,
+                   .baseArrayLayer = 0,
+                   .layerCount = 1,
+               }
+            };
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ finalize_barrier }));
         }!;
+
         gbuffer_images.push(image);
         gbuffer_textures.push(texture);
     }
@@ -1140,6 +1130,7 @@ fn void! loadTextures() {
        .setDstAccessMask(vk::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
        .setNewLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
+
 
        vk::cmdPipelineBarrier(
            command_buffer,
@@ -1375,7 +1366,7 @@ fn void! loadBuffers() {
 }
 
 fn void PipelineInfo.free(self, Device device) {
-    self.descriptor_sets.free();
+
     self.pipeline.free(device);
     self.pipeline_layout.free(device);
     self.descriptor_layout.free(device);
