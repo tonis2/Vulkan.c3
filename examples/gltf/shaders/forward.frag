@@ -1,12 +1,21 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
 #extension GL_EXT_nonuniform_qualifier : require
-#extension GL_GOOGLE_include_directive : require
+#extension GL_EXT_scalar_block_layout : require
 
 layout(binding = 0) uniform sampler2D gbufferSamplers[];
+
+layout(binding = 1) uniform Lights {
+   vec3 color;
+   float intensity;
+   float range;
+   uint type;
+   float inner_cone_angle;
+   float outer_cone_angle;
+};
+
 layout(location = 0) in vec2 tex_cord;
 layout(location = 0) out vec4 outFragcolor;
-
 
 void main() 
 {

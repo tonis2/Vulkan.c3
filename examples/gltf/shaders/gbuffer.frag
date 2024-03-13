@@ -21,7 +21,6 @@ layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outNormal;
 layout(location = 2) out vec4 outPosition;
 
-
 vec3 linearToSrgb(vec3 color) {
     return pow(color, vec3(1.0 / 2.2));
 }

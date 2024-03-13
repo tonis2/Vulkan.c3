@@ -43,7 +43,7 @@ enum AnimationProperty {
     WEIGHTS
 }
 
-enum LightType {
+enum LightType: uint {
     DIRECTIONAL,
     POINT,
     SPOT,
