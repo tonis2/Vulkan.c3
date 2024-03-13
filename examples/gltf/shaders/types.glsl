@@ -20,11 +20,6 @@ layout(buffer_reference, std140) readonly buffer VertexBuffer {
   vec4 skin_weight;
 };
 
-layout (buffer_reference, std140, buffer_reference_align = 4) readonly buffer LightBuffer {
-    vec3 color;
-
-};
-
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer UniformBuffer {
    mat4 projection;
    mat4 view;
@@ -50,7 +45,3 @@ layout(binding = 0, scalar) buffer AddressBuffer {
    VertexBuffer vertex_buffer;
    Material material_buffer;
 };
-
-
-
-

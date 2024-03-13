@@ -7,7 +7,6 @@
 
 #include "types.glsl"
 
-
 layout( push_constant ) uniform constants
 {
     mat4 model_matrix;
