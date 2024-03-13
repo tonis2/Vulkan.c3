@@ -390,6 +390,10 @@ fn bool Node.hasCamera(self) {
     return self.camera != -1;
 }
 
+fn bool Node.hasLight(self) {
+    return self.light != -1;
+}
+
 fn void Node.free(self) {
     self.children.free();
     self.weights.free();
@@ -1000,6 +1004,20 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
+
+    if (try extensions) {
+        Object*! lights = gltfJson.getExtension(PUNCTUAL_LIGHT_EXTENSION);
+
+        // Parse light extension
+        if (try lights) {
+            foreach (light: lights.map["lights"]!!.array) {
+              Light data;
+              data.fromJson(light);
+              content.lights.push(data);
+            }
+        }
+    }
+
     // Parse scenes
     if (try scenes) {
         foreach (scene : scenes.array) {
@@ -1015,6 +1033,14 @@ fn Gltf! parse(InStream* stream) {
            Node data;
            data.fromJson(node);
            content.nodes.push(data);
+
+       /*    if (data.hasLight()) {
+                io::printfn("light pos %s", data.translation);
+                Light light = content.lights[data.light];
+                if (light.type == LightType.DIRECTIONAL) {
+                    data.translation = {0,0,-1};
+                }
+           }*/
         }
     }
 
@@ -1060,8 +1086,7 @@ fn Gltf! parse(InStream* stream) {
         }
     }
 
-
-        // Parse materials
+    // Parse materials
     if (try materials) {
         foreach (json : materials.array) {
             Material material;
@@ -1142,20 +1167,6 @@ fn Gltf! parse(InStream* stream) {
          foreach (node : scene.nodes) {
              content.nodes[node].mapValues(scene_index, &content);
          }
-    }
-
-    // Parse extensions
-    if (try extensions) {
-        Object*! lights = gltfJson.getExtension(PUNCTUAL_LIGHT_EXTENSION);
-
-        // Parse light extension
-        if (try lights) {
-            foreach (light: lights.map["lights"]!!.array) {
-              Light data;
-              data.fromJson(light);
-              content.lights.push(data);
-            }
-        }
     }
 
     return content;
