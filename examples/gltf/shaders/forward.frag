@@ -6,6 +6,7 @@
 layout(binding = 0) uniform sampler2D gbufferSamplers[];
 
 layout(binding = 1) uniform Lights {
+   vec3 position;
    vec3 color;
    float intensity;
    float range;

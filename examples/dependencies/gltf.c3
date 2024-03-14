@@ -301,12 +301,14 @@ struct Image {
 }
 
 struct Light {
+    Vec3f position;
     Vec3f color;
     float intensity;
     float range;
     LightType type;
     float inner_cone_angle;
     float outer_cone_angle;
+    uint node;
 }
 
 // Parsing JSON to structs
@@ -1029,18 +1031,19 @@ fn Gltf! parse(InStream* stream) {
 
     // Parse nodes
     if (try nodes) {
-        foreach (node : nodes.array) {
+        foreach (uint i, node : nodes.array) {
            Node data;
            data.fromJson(node);
            content.nodes.push(data);
 
-       /*    if (data.hasLight()) {
-                io::printfn("light pos %s", data.translation);
-                Light light = content.lights[data.light];
-                if (light.type == LightType.DIRECTIONAL) {
+           if (data.hasLight()) {
+                Light* light = &content.lights[data.light];
+                light.node = i;
+                light.position = data.translation;
+                /*if (light.type == LightType.DIRECTIONAL) {
                     data.translation = {0,0,-1};
-                }
-           }*/
+                }*/
+           }
         }
     }
 
