@@ -45,9 +45,10 @@ struct PushConstantData {
     float[8] morph_weights;
 }
 
-/*struct ForwardConstantData {
+struct ForwardConstantData {
     DeviceAddress lights;
-}*/
+    uint count;
+}
 
 struct PipelineInfo {
     DescriptorSetLayout descriptor_layout;
@@ -656,16 +657,6 @@ fn void! main()
             .setDstBinding(0)
             .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
             .setImageInfo(gbuffer_textures.array_view()),
-        vk::writeDescriptorSetBuilder()
-            .setDstBinding(1)
-            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-            .setBufferInfo({
-            {
-                .buffer = lights_buffer.buffer,
-                .offset = 0,
-                .range = gltf.lights.byte_size(),
-            }
-        }),
    });
 
     forward_pipeline.descriptor_layout = vk::descriptorSetLayoutCreateInfoBuilder()
@@ -677,16 +668,17 @@ fn void! main()
             .descriptorCount = (uint)gbuffer_textures.len(),
             .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
         },
-        {
-            .binding = 1,
-            .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            .descriptorCount = (uint)gltf.lights.len(),
-            .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
-        }
     })
     .build(device)!;
 
     forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+        .setPushConstantRanges({
+            {
+                .offset = 0,
+                .size = ForwardConstantData.sizeof,
+                .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT,
+            },
+        })
         .setSetLayouts({ forward_pipeline.descriptor_layout }).build(device)!;
 
     forward_pipeline.vertex = device.createShaderModule(&f_vertex_shader_data)!;
@@ -928,6 +920,13 @@ fn void! main()
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
         vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
+        
+        ForwardConstantData constant_data = {
+           .lights = lights_buffer.address,
+           .count = (uint)gltf.lights.len()
+        };
+
+        vk::cmdPushConstants(command_buffer, forward_pipeline.pipeline_layout, vk::SHADER_STAGE_FRAGMENT_BIT, 0, ForwardConstantData.sizeof, &constant_data);
 
         vk::cmdDraw(command_buffer, 3, 1, 0, 0);
         vk::cmdEndRenderingKHR(command_buffer);
@@ -1359,7 +1358,7 @@ fn void! loadBuffers() {
                     .bind(&local_allocation)!;
 
     lights_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
                     .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                     .setSize(gltf.lights.byte_size())
                     .bind(&local_allocation)!;
