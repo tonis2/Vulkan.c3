@@ -256,6 +256,8 @@ const KHR_PORTABILITY_SUBSET_SPEC_VERSION = 1;
 const KHR_PORTABILITY_SUBSET_EXTENSION_NAME = "VK_KHR_portability_subset";
 const KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = 1;
 const KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve";
+const EXT_DESCRIPTOR_BUFFER_SPEC_VERSION = 1;
+const EXT_DESCRIPTOR_BUFFER_EXTENSION_NAME = "VK_EXT_descriptor_buffer";
 const KHR_PORTABILITY_ENUMERATION_SPEC_VERSION = 1;
 const KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME = "VK_KHR_portability_enumeration";
 union ClearColorValue {
@@ -266,6 +268,18 @@ union ClearColorValue {
 union ClearValue {
   ClearColorValue color;
   ClearDepthStencilValue depthStencil;
+}
+union DescriptorDataEXT {
+  Sampler* pSampler;
+  DescriptorImageInfo* pCombinedImageSampler;
+  DescriptorImageInfo* pInputAttachmentImage;
+  DescriptorImageInfo* pSampledImage;
+  DescriptorImageInfo* pStorageImage;
+  DescriptorAddressInfoEXT* pUniformTexelBuffer;
+  DescriptorAddressInfoEXT* pStorageTexelBuffer;
+  DescriptorAddressInfoEXT* pUniformBuffer;
+  DescriptorAddressInfoEXT* pStorageBuffer;
+  DeviceAddress accelerationStructure;
 }
 
 distinct Result = inline int;
@@ -299,7 +313,7 @@ const Result SUBOPTIMAL_KHR = 1000001003;
 const Result ERROR_OUT_OF_DATE_KHR = -1000001004;
 const Result ERROR_VALIDATION_FAILED_EXT = -1000011001;
 
-distinct StructureType = inline int;
+distinct StructureType = inline uint;
 const StructureType STRUCTURE_TYPE_APPLICATION_INFO = 0;
 const StructureType STRUCTURE_TYPE_INSTANCE_CREATE_INFO = 1;
 const StructureType STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO = 2;
@@ -569,11 +583,23 @@ const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_K
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR = 1000163001;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR = 0;
 const StructureType STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR = 0;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT = 1000316000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT = 1000316001;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT = 1000316002;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT = 1000316003;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT = 1000316004;
+const StructureType STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316005;
+const StructureType STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316006;
+const StructureType STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316007;
+const StructureType STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = 1000316008;
+const StructureType STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT = 1000316010;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT = 1000316011;
+const StructureType STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT = 1000316012;
 
-distinct PipelineCacheHeaderVersion = inline int;
+distinct PipelineCacheHeaderVersion = inline uint;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
 
-distinct ObjectType = inline int;
+distinct ObjectType = inline uint;
 const ObjectType OBJECT_TYPE_UNKNOWN = 0;
 const ObjectType OBJECT_TYPE_INSTANCE = 1;
 const ObjectType OBJECT_TYPE_PHYSICAL_DEVICE = 2;
@@ -610,7 +636,7 @@ const ObjectType OBJECT_TYPE_DISPLAY_MODE_KHR = 1000002001;
 const ObjectType OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = 1000011000;
 const ObjectType OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000;
 
-distinct VendorId = inline int;
+distinct VendorId = inline uint;
 const VendorId VENDOR_ID_VIV = 0x10001;
 const VendorId VENDOR_ID_VSI = 0x10002;
 const VendorId VENDOR_ID_KAZAN = 0x10003;
@@ -619,7 +645,7 @@ const VendorId VENDOR_ID_MESA = 0x10005;
 const VendorId VENDOR_ID_POCL = 0x10006;
 const VendorId VENDOR_ID_MOBILEYE = 0x10007;
 
-distinct Format = inline int;
+distinct Format = inline uint;
 const Format FORMAT_UNDEFINED = 0;
 const Format FORMAT_R4G4_UNORM_PACK8 = 1;
 const Format FORMAT_R4G4B4A4_UNORM_PACK16 = 2;
@@ -860,7 +886,7 @@ const Format FORMAT_ASTC_10X10_SFLOAT_BLOCK = 1000066011;
 const Format FORMAT_ASTC_12X10_SFLOAT_BLOCK = 1000066012;
 const Format FORMAT_ASTC_12X12_SFLOAT_BLOCK = 1000066013;
 
-distinct FormatFeatureFlagBits = inline int;
+distinct FormatFeatureFlagBits = inline uint;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
 const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_BIT = 0x00000002;
 const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
@@ -885,7 +911,7 @@ const FormatFeatureFlagBits FORMAT_FEATURE_DISJOINT_BIT = 0x00400000;
 const FormatFeatureFlagBits FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
 
-distinct ImageCreateFlagBits = inline int;
+distinct ImageCreateFlagBits = inline uint;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
@@ -900,17 +926,18 @@ const ImageCreateFlagBits IMAGE_CREATE_PROTECTED_BIT = 0x00000800;
 const ImageCreateFlagBits IMAGE_CREATE_DISJOINT_BIT = 0x00000200;
 const ImageCreateFlagBits IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = 0;
 const ImageCreateFlagBits IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR = 0;
+const ImageCreateFlagBits IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00010000;
 
-distinct ImageTiling = inline int;
+distinct ImageTiling = inline uint;
 const ImageTiling IMAGE_TILING_OPTIMAL = 0;
 const ImageTiling IMAGE_TILING_LINEAR = 1;
 
-distinct ImageType = inline int;
+distinct ImageType = inline uint;
 const ImageType IMAGE_TYPE_1D = 0;
 const ImageType IMAGE_TYPE_2D = 1;
 const ImageType IMAGE_TYPE_3D = 2;
 
-distinct ImageUsageFlagBits = inline int;
+distinct ImageUsageFlagBits = inline uint;
 const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const ImageUsageFlagBits IMAGE_USAGE_SAMPLED_BIT = 0x00000004;
@@ -920,17 +947,17 @@ const ImageUsageFlagBits IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000020;
 const ImageUsageFlagBits IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040;
 const ImageUsageFlagBits IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080;
 
-distinct InstanceCreateFlagBits = inline int;
+distinct InstanceCreateFlagBits = inline uint;
 const InstanceCreateFlagBits INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR = 0x00000001;
 
-distinct InternalAllocationType = inline int;
+distinct InternalAllocationType = inline uint;
 const InternalAllocationType INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
 
-distinct MemoryHeapFlagBits = inline int;
+distinct MemoryHeapFlagBits = inline uint;
 const MemoryHeapFlagBits MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
 const MemoryHeapFlagBits MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
 
-distinct MemoryPropertyFlagBits = inline int;
+distinct MemoryPropertyFlagBits = inline uint;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
@@ -938,21 +965,21 @@ const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020;
 
-distinct PhysicalDeviceType = inline int;
+distinct PhysicalDeviceType = inline uint;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_OTHER = 0;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = 2;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = 3;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_CPU = 4;
 
-distinct QueueFlagBits = inline int;
+distinct QueueFlagBits = inline uint;
 const QueueFlagBits QUEUE_GRAPHICS_BIT = 0x00000001;
 const QueueFlagBits QUEUE_COMPUTE_BIT = 0x00000002;
 const QueueFlagBits QUEUE_TRANSFER_BIT = 0x00000004;
 const QueueFlagBits QUEUE_SPARSE_BINDING_BIT = 0x00000008;
 const QueueFlagBits QUEUE_PROTECTED_BIT = 0x00000010;
 
-distinct SampleCountFlagBits = inline int;
+distinct SampleCountFlagBits = inline uint;
 const SampleCountFlagBits SAMPLE_COUNT_1_BIT = 0x00000001;
 const SampleCountFlagBits SAMPLE_COUNT_2_BIT = 0x00000002;
 const SampleCountFlagBits SAMPLE_COUNT_4_BIT = 0x00000004;
@@ -961,14 +988,14 @@ const SampleCountFlagBits SAMPLE_COUNT_16_BIT = 0x00000010;
 const SampleCountFlagBits SAMPLE_COUNT_32_BIT = 0x00000020;
 const SampleCountFlagBits SAMPLE_COUNT_64_BIT = 0x00000040;
 
-distinct SystemAllocationScope = inline int;
+distinct SystemAllocationScope = inline uint;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_COMMAND = 0;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_OBJECT = 1;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_CACHE = 2;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_DEVICE = 3;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_INSTANCE = 4;
 
-distinct PipelineStageFlagBits = inline int;
+distinct PipelineStageFlagBits = inline uint;
 const PipelineStageFlagBits PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001;
 const PipelineStageFlagBits PIPELINE_STAGE_DRAW_INDIRECT_BIT = 0x00000002;
 const PipelineStageFlagBits PIPELINE_STAGE_VERTEX_INPUT_BIT = 0x00000004;
@@ -988,10 +1015,10 @@ const PipelineStageFlagBits PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000;
 const PipelineStageFlagBits PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
 const PipelineStageFlagBits PIPELINE_STAGE_NONE = 0;
 
-distinct MemoryMapFlagBits = inline int;
+distinct MemoryMapFlagBits = inline uint;
 
 
-distinct ImageAspectFlagBits = inline int;
+distinct ImageAspectFlagBits = inline uint;
 const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const ImageAspectFlagBits IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
 const ImageAspectFlagBits IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
@@ -1001,21 +1028,21 @@ const ImageAspectFlagBits IMAGE_ASPECT_PLANE_1_BIT = 0x00000020;
 const ImageAspectFlagBits IMAGE_ASPECT_PLANE_2_BIT = 0x00000040;
 const ImageAspectFlagBits IMAGE_ASPECT_NONE = 0;
 
-distinct SparseImageFormatFlagBits = inline int;
+distinct SparseImageFormatFlagBits = inline uint;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = 0x00000002;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = 0x00000004;
 
-distinct SparseMemoryBindFlagBits = inline int;
+distinct SparseMemoryBindFlagBits = inline uint;
 const SparseMemoryBindFlagBits SPARSE_MEMORY_BIND_METADATA_BIT = 0x00000001;
 
-distinct FenceCreateFlagBits = inline int;
+distinct FenceCreateFlagBits = inline uint;
 const FenceCreateFlagBits FENCE_CREATE_SIGNALED_BIT = 0x00000001;
 
-distinct EventCreateFlagBits = inline int;
+distinct EventCreateFlagBits = inline uint;
 const EventCreateFlagBits EVENT_CREATE_DEVICE_ONLY_BIT = 0x00000001;
 
-distinct QueryPipelineStatisticFlagBits = inline int;
+distinct QueryPipelineStatisticFlagBits = inline uint;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = 0x00000002;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = 0x00000004;
@@ -1028,25 +1055,26 @@ const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTR
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = 0x00000200;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = 0x00000400;
 
-distinct QueryResultFlagBits = inline int;
+distinct QueryResultFlagBits = inline uint;
 const QueryResultFlagBits QUERY_RESULT_64_BIT = 0x00000001;
 const QueryResultFlagBits QUERY_RESULT_WAIT_BIT = 0x00000002;
 const QueryResultFlagBits QUERY_RESULT_WITH_AVAILABILITY_BIT = 0x00000004;
 const QueryResultFlagBits QUERY_RESULT_PARTIAL_BIT = 0x00000008;
 
-distinct QueryType = inline int;
+distinct QueryType = inline uint;
 const QueryType QUERY_TYPE_OCCLUSION = 0;
 const QueryType QUERY_TYPE_PIPELINE_STATISTICS = 1;
 const QueryType QUERY_TYPE_TIMESTAMP = 2;
 
-distinct BufferCreateFlagBits = inline int;
+distinct BufferCreateFlagBits = inline uint;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 const BufferCreateFlagBits BUFFER_CREATE_PROTECTED_BIT = 0x00000008;
 const BufferCreateFlagBits BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000010;
+const BufferCreateFlagBits BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000020;
 
-distinct BufferUsageFlagBits = inline int;
+distinct BufferUsageFlagBits = inline uint;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const BufferUsageFlagBits BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004;
@@ -1057,12 +1085,15 @@ const BufferUsageFlagBits BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
 const BufferUsageFlagBits BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
 const BufferUsageFlagBits BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
 const BufferUsageFlagBits BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000;
+const BufferUsageFlagBits BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = 0x00200000;
+const BufferUsageFlagBits BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00400000;
+const BufferUsageFlagBits BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = 0x04000000;
 
-distinct SharingMode = inline int;
+distinct SharingMode = inline uint;
 const SharingMode SHARING_MODE_EXCLUSIVE = 0;
 const SharingMode SHARING_MODE_CONCURRENT = 1;
 
-distinct ImageLayout = inline int;
+distinct ImageLayout = inline uint;
 const ImageLayout IMAGE_LAYOUT_UNDEFINED = 0;
 const ImageLayout IMAGE_LAYOUT_GENERAL = 1;
 const ImageLayout IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = 2;
@@ -1084,7 +1115,7 @@ const ImageLayout IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002;
 const ImageLayout IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR = 0;
 const ImageLayout IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR = 0;
 
-distinct ComponentSwizzle = inline int;
+distinct ComponentSwizzle = inline uint;
 const ComponentSwizzle COMPONENT_SWIZZLE_IDENTITY = 0;
 const ComponentSwizzle COMPONENT_SWIZZLE_ZERO = 1;
 const ComponentSwizzle COMPONENT_SWIZZLE_ONE = 2;
@@ -1093,10 +1124,10 @@ const ComponentSwizzle COMPONENT_SWIZZLE_G = 4;
 const ComponentSwizzle COMPONENT_SWIZZLE_B = 5;
 const ComponentSwizzle COMPONENT_SWIZZLE_A = 6;
 
-distinct ImageViewCreateFlagBits = inline int;
+distinct ImageViewCreateFlagBits = inline uint;
+const ImageViewCreateFlagBits IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000004;
 
-
-distinct ImageViewType = inline int;
+distinct ImageViewType = inline uint;
 const ImageViewType IMAGE_VIEW_TYPE_1D = 0;
 const ImageViewType IMAGE_VIEW_TYPE_2D = 1;
 const ImageViewType IMAGE_VIEW_TYPE_3D = 2;
@@ -1105,7 +1136,7 @@ const ImageViewType IMAGE_VIEW_TYPE_1D_ARRAY = 4;
 const ImageViewType IMAGE_VIEW_TYPE_2D_ARRAY = 5;
 const ImageViewType IMAGE_VIEW_TYPE_CUBE_ARRAY = 6;
 
-distinct BlendFactor = inline int;
+distinct BlendFactor = inline uint;
 const BlendFactor BLEND_FACTOR_ZERO = 0;
 const BlendFactor BLEND_FACTOR_ONE = 1;
 const BlendFactor BLEND_FACTOR_SRC_COLOR = 2;
@@ -1126,20 +1157,20 @@ const BlendFactor BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = 16;
 const BlendFactor BLEND_FACTOR_SRC1_ALPHA = 17;
 const BlendFactor BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = 18;
 
-distinct BlendOp = inline int;
+distinct BlendOp = inline uint;
 const BlendOp BLEND_OP_ADD = 0;
 const BlendOp BLEND_OP_SUBTRACT = 1;
 const BlendOp BLEND_OP_REVERSE_SUBTRACT = 2;
 const BlendOp BLEND_OP_MIN = 3;
 const BlendOp BLEND_OP_MAX = 4;
 
-distinct ColorComponentFlagBits = inline int;
+distinct ColorComponentFlagBits = inline uint;
 const ColorComponentFlagBits COLOR_COMPONENT_R_BIT = 0x00000001;
 const ColorComponentFlagBits COLOR_COMPONENT_G_BIT = 0x00000002;
 const ColorComponentFlagBits COLOR_COMPONENT_B_BIT = 0x00000004;
 const ColorComponentFlagBits COLOR_COMPONENT_A_BIT = 0x00000008;
 
-distinct CompareOp = inline int;
+distinct CompareOp = inline uint;
 const CompareOp COMPARE_OP_NEVER = 0;
 const CompareOp COMPARE_OP_LESS = 1;
 const CompareOp COMPARE_OP_EQUAL = 2;
@@ -1149,13 +1180,13 @@ const CompareOp COMPARE_OP_NOT_EQUAL = 5;
 const CompareOp COMPARE_OP_GREATER_OR_EQUAL = 6;
 const CompareOp COMPARE_OP_ALWAYS = 7;
 
-distinct CullModeFlagBits = inline int;
+distinct CullModeFlagBits = inline uint;
 const CullModeFlagBits CULL_MODE_NONE = 0;
 const CullModeFlagBits CULL_MODE_FRONT_BIT = 0x00000001;
 const CullModeFlagBits CULL_MODE_BACK_BIT = 0x00000002;
 const CullModeFlagBits CULL_MODE_FRONT_AND_BACK = 0x00000003;
 
-distinct DynamicState = inline int;
+distinct DynamicState = inline uint;
 const DynamicState DYNAMIC_STATE_VIEWPORT = 0;
 const DynamicState DYNAMIC_STATE_SCISSOR = 1;
 const DynamicState DYNAMIC_STATE_LINE_WIDTH = 2;
@@ -1181,11 +1212,11 @@ const DynamicState DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE = 1000377001;
 const DynamicState DYNAMIC_STATE_DEPTH_BIAS_ENABLE = 1000377002;
 const DynamicState DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE = 1000377004;
 
-distinct FrontFace = inline int;
+distinct FrontFace = inline uint;
 const FrontFace FRONT_FACE_COUNTER_CLOCKWISE = 0;
 const FrontFace FRONT_FACE_CLOCKWISE = 1;
 
-distinct LogicOp = inline int;
+distinct LogicOp = inline uint;
 const LogicOp LOGIC_OP_CLEAR = 0;
 const LogicOp LOGIC_OP_AND = 1;
 const LogicOp LOGIC_OP_AND_REVERSE = 2;
@@ -1203,7 +1234,7 @@ const LogicOp LOGIC_OP_OR_INVERTED = 13;
 const LogicOp LOGIC_OP_NAND = 14;
 const LogicOp LOGIC_OP_SET = 15;
 
-distinct PipelineCreateFlagBits = inline int;
+distinct PipelineCreateFlagBits = inline uint;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const PipelineCreateFlagBits PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const PipelineCreateFlagBits PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
@@ -1212,17 +1243,18 @@ const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE = 0;
 const PipelineCreateFlagBits PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = 0x00000100;
 const PipelineCreateFlagBits PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = 0x00000200;
+const PipelineCreateFlagBits PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = 0x20000000;
 
-distinct PipelineShaderStageCreateFlagBits = inline int;
+distinct PipelineShaderStageCreateFlagBits = inline uint;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT = 0x00000001;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT = 0x00000002;
 
-distinct PolygonMode = inline int;
+distinct PolygonMode = inline uint;
 const PolygonMode POLYGON_MODE_FILL = 0;
 const PolygonMode POLYGON_MODE_LINE = 1;
 const PolygonMode POLYGON_MODE_POINT = 2;
 
-distinct PrimitiveTopology = inline int;
+distinct PrimitiveTopology = inline uint;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_POINT_LIST = 0;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_LINE_LIST = 1;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_LINE_STRIP = 2;
@@ -1235,7 +1267,7 @@ const PrimitiveTopology PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = 8;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = 9;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_PATCH_LIST = 10;
 
-distinct ShaderStageFlagBits = inline int;
+distinct ShaderStageFlagBits = inline uint;
 const ShaderStageFlagBits SHADER_STAGE_VERTEX_BIT = 0x00000001;
 const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002;
 const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004;
@@ -1245,7 +1277,7 @@ const ShaderStageFlagBits SHADER_STAGE_COMPUTE_BIT = 0x00000020;
 const ShaderStageFlagBits SHADER_STAGE_ALL_GRAPHICS = 0x0000001F;
 const ShaderStageFlagBits SHADER_STAGE_ALL = 0x7FFFFFFF;
 
-distinct StencilOp = inline int;
+distinct StencilOp = inline uint;
 const StencilOp STENCIL_OP_KEEP = 0;
 const StencilOp STENCIL_OP_ZERO = 1;
 const StencilOp STENCIL_OP_REPLACE = 2;
@@ -1255,11 +1287,11 @@ const StencilOp STENCIL_OP_INVERT = 5;
 const StencilOp STENCIL_OP_INCREMENT_AND_WRAP = 6;
 const StencilOp STENCIL_OP_DECREMENT_AND_WRAP = 7;
 
-distinct VertexInputRate = inline int;
+distinct VertexInputRate = inline uint;
 const VertexInputRate VERTEX_INPUT_RATE_VERTEX = 0;
 const VertexInputRate VERTEX_INPUT_RATE_INSTANCE = 1;
 
-distinct BorderColor = inline int;
+distinct BorderColor = inline uint;
 const BorderColor BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = 0;
 const BorderColor BORDER_COLOR_INT_TRANSPARENT_BLACK = 1;
 const BorderColor BORDER_COLOR_FLOAT_OPAQUE_BLACK = 2;
@@ -1267,33 +1299,35 @@ const BorderColor BORDER_COLOR_INT_OPAQUE_BLACK = 3;
 const BorderColor BORDER_COLOR_FLOAT_OPAQUE_WHITE = 4;
 const BorderColor BORDER_COLOR_INT_OPAQUE_WHITE = 5;
 
-distinct Filter = inline int;
+distinct Filter = inline uint;
 const Filter FILTER_NEAREST = 0;
 const Filter FILTER_LINEAR = 1;
 
-distinct SamplerAddressMode = inline int;
+distinct SamplerAddressMode = inline uint;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_REPEAT = 0;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 
-distinct SamplerCreateFlagBits = inline int;
+distinct SamplerCreateFlagBits = inline uint;
+const SamplerCreateFlagBits SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000008;
 
-
-distinct SamplerMipmapMode = inline int;
+distinct SamplerMipmapMode = inline uint;
 const SamplerMipmapMode SAMPLER_MIPMAP_MODE_NEAREST = 0;
 const SamplerMipmapMode SAMPLER_MIPMAP_MODE_LINEAR = 1;
 
-distinct DescriptorPoolCreateFlagBits = inline int;
+distinct DescriptorPoolCreateFlagBits = inline uint;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = 0x00000002;
 
-distinct DescriptorSetLayoutCreateFlagBits = inline int;
+distinct DescriptorSetLayoutCreateFlagBits = inline uint;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = 0x00000002;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = 0x00000001;
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00000010;
+const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT = 0x00000020;
 
-distinct DescriptorType = inline int;
+distinct DescriptorType = inline uint;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLER = 0;
 const DescriptorType DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = 1;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2;
@@ -1307,7 +1341,7 @@ const DescriptorType DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = 9;
 const DescriptorType DESCRIPTOR_TYPE_INPUT_ATTACHMENT = 10;
 const DescriptorType DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK = 1000138000;
 
-distinct AccessFlagBits = inline int;
+distinct AccessFlagBits = inline uint;
 const AccessFlagBits ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
 const AccessFlagBits ACCESS_INDEX_READ_BIT = 0x00000002;
 const AccessFlagBits ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
@@ -1327,76 +1361,76 @@ const AccessFlagBits ACCESS_MEMORY_READ_BIT = 0x00008000;
 const AccessFlagBits ACCESS_MEMORY_WRITE_BIT = 0x00010000;
 const AccessFlagBits ACCESS_NONE = 0;
 
-distinct AttachmentDescriptionFlagBits = inline int;
+distinct AttachmentDescriptionFlagBits = inline uint;
 const AttachmentDescriptionFlagBits ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001;
 
-distinct AttachmentLoadOp = inline int;
+distinct AttachmentLoadOp = inline uint;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_LOAD = 0;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_CLEAR = 1;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_DONT_CARE = 2;
 
-distinct AttachmentStoreOp = inline int;
+distinct AttachmentStoreOp = inline uint;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_STORE = 0;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_DONT_CARE = 1;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE = 1000301000;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE_KHR = 0;
 
-distinct DependencyFlagBits = inline int;
+distinct DependencyFlagBits = inline uint;
 const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
 const DependencyFlagBits DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
 const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
 const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT_KHR = 0;
 
-distinct FramebufferCreateFlagBits = inline int;
+distinct FramebufferCreateFlagBits = inline uint;
 const FramebufferCreateFlagBits FRAMEBUFFER_CREATE_IMAGELESS_BIT = 0x00000001;
 
-distinct PipelineBindPoint = inline int;
+distinct PipelineBindPoint = inline uint;
 const PipelineBindPoint PIPELINE_BIND_POINT_GRAPHICS = 0;
 const PipelineBindPoint PIPELINE_BIND_POINT_COMPUTE = 1;
 
-distinct RenderPassCreateFlagBits = inline int;
+distinct RenderPassCreateFlagBits = inline uint;
 
 
-distinct SubpassDescriptionFlagBits = inline int;
+distinct SubpassDescriptionFlagBits = inline uint;
 
 
-distinct CommandPoolCreateFlagBits = inline int;
+distinct CommandPoolCreateFlagBits = inline uint;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004;
 
-distinct CommandPoolResetFlagBits = inline int;
+distinct CommandPoolResetFlagBits = inline uint;
 const CommandPoolResetFlagBits COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 
-distinct CommandBufferLevel = inline int;
+distinct CommandBufferLevel = inline uint;
 const CommandBufferLevel COMMAND_BUFFER_LEVEL_PRIMARY = 0;
 const CommandBufferLevel COMMAND_BUFFER_LEVEL_SECONDARY = 1;
 
-distinct CommandBufferResetFlagBits = inline int;
+distinct CommandBufferResetFlagBits = inline uint;
 const CommandBufferResetFlagBits COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 
-distinct CommandBufferUsageFlagBits = inline int;
+distinct CommandBufferUsageFlagBits = inline uint;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004;
 
-distinct QueryControlFlagBits = inline int;
+distinct QueryControlFlagBits = inline uint;
 const QueryControlFlagBits QUERY_CONTROL_PRECISE_BIT = 0x00000001;
 
-distinct IndexType = inline int;
+distinct IndexType = inline uint;
 const IndexType INDEX_TYPE_UINT16 = 0;
 const IndexType INDEX_TYPE_UINT32 = 1;
 
-distinct StencilFaceFlagBits = inline int;
+distinct StencilFaceFlagBits = inline uint;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_BIT = 0x00000001;
 const StencilFaceFlagBits STENCIL_FACE_BACK_BIT = 0x00000002;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
 
-distinct SubpassContents = inline int;
+distinct SubpassContents = inline uint;
 const SubpassContents SUBPASS_CONTENTS_INLINE = 0;
 const SubpassContents SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = 1;
 
-distinct SubgroupFeatureFlagBits = inline int;
+distinct SubgroupFeatureFlagBits = inline uint;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BASIC_BIT = 0x00000001;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_VOTE_BIT = 0x00000002;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ARITHMETIC_BIT = 0x00000004;
@@ -1406,52 +1440,52 @@ const SubgroupFeatureFlagBits SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = 0x00000020
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_CLUSTERED_BIT = 0x00000040;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_QUAD_BIT = 0x00000080;
 
-distinct PeerMemoryFeatureFlagBits = inline int;
+distinct PeerMemoryFeatureFlagBits = inline uint;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_SRC_BIT = 0x00000001;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_DST_BIT = 0x00000002;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = 0x00000004;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_DST_BIT = 0x00000008;
 
-distinct MemoryAllocateFlagBits = inline int;
+distinct MemoryAllocateFlagBits = inline uint;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = 0x00000002;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000004;
 
-distinct PointClippingBehavior = inline int;
+distinct PointClippingBehavior = inline uint;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = 0;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = 1;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR = 0;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR = 0;
 
-distinct TessellationDomainOrigin = inline int;
+distinct TessellationDomainOrigin = inline uint;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = 0;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = 1;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR = 0;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR = 0;
 
-distinct DeviceQueueCreateFlagBits = inline int;
+distinct DeviceQueueCreateFlagBits = inline uint;
 
 
-distinct SamplerYcbcrModelConversion = inline int;
+distinct SamplerYcbcrModelConversion = inline uint;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = 0;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = 1;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = 2;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 = 3;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = 4;
 
-distinct SamplerYcbcrRange = inline int;
+distinct SamplerYcbcrRange = inline uint;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_FULL = 0;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_NARROW = 1;
 
-distinct ChromaLocation = inline int;
+distinct ChromaLocation = inline uint;
 const ChromaLocation CHROMA_LOCATION_COSITED_EVEN = 0;
 const ChromaLocation CHROMA_LOCATION_MIDPOINT = 1;
 
-distinct DescriptorUpdateTemplateType = inline int;
+distinct DescriptorUpdateTemplateType = inline uint;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = 1;
 
-distinct ExternalMemoryHandleTypeFlagBits = inline int;
+distinct ExternalMemoryHandleTypeFlagBits = inline uint;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
@@ -1460,39 +1494,39 @@ const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = 0x00000020;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = 0x00000040;
 
-distinct ExternalMemoryFeatureFlagBits = inline int;
+distinct ExternalMemoryFeatureFlagBits = inline uint;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = 0x00000001;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = 0x00000002;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = 0x00000004;
 
-distinct ExternalFenceHandleTypeFlagBits = inline int;
+distinct ExternalFenceHandleTypeFlagBits = inline uint;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000008;
 
-distinct ExternalFenceFeatureFlagBits = inline int;
+distinct ExternalFenceFeatureFlagBits = inline uint;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = 0x00000001;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = 0x00000002;
 
-distinct FenceImportFlagBits = inline int;
+distinct FenceImportFlagBits = inline uint;
 const FenceImportFlagBits FENCE_IMPORT_TEMPORARY_BIT = 0x00000001;
 
-distinct SemaphoreImportFlagBits = inline int;
+distinct SemaphoreImportFlagBits = inline uint;
 const SemaphoreImportFlagBits SEMAPHORE_IMPORT_TEMPORARY_BIT = 0x00000001;
 
-distinct ExternalSemaphoreHandleTypeFlagBits = inline int;
+distinct ExternalSemaphoreHandleTypeFlagBits = inline uint;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = 0x00000008;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000010;
 
-distinct ExternalSemaphoreFeatureFlagBits = inline int;
+distinct ExternalSemaphoreFeatureFlagBits = inline uint;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002;
 
-distinct DriverId = inline int;
+distinct DriverId = inline uint;
 const DriverId DRIVER_ID_AMD_PROPRIETARY = 1;
 const DriverId DRIVER_ID_AMD_OPEN_SOURCE = 2;
 const DriverId DRIVER_ID_MESA_RADV = 3;
@@ -1520,18 +1554,18 @@ const DriverId DRIVER_ID_MESA_NVK = 24;
 const DriverId DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = 25;
 const DriverId DRIVER_ID_MESA_AGXV = 26;
 
-distinct ShaderFloatControlsIndependence = inline int;
+distinct ShaderFloatControlsIndependence = inline uint;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = 0;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = 1;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = 2;
 
-distinct DescriptorBindingFlagBits = inline int;
+distinct DescriptorBindingFlagBits = inline uint;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = 0x00000001;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = 0x00000002;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = 0x00000004;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = 0x00000008;
 
-distinct ResolveModeFlagBits = inline int;
+distinct ResolveModeFlagBits = inline uint;
 const ResolveModeFlagBits RESOLVE_MODE_NONE = 0;
 const ResolveModeFlagBits RESOLVE_MODE_SAMPLE_ZERO_BIT = 0x00000001;
 const ResolveModeFlagBits RESOLVE_MODE_AVERAGE_BIT = 0x00000002;
@@ -1543,24 +1577,24 @@ const ResolveModeFlagBits RESOLVE_MODE_AVERAGE_BIT_KHR = 0;
 const ResolveModeFlagBits RESOLVE_MODE_MIN_BIT_KHR = 0;
 const ResolveModeFlagBits RESOLVE_MODE_MAX_BIT_KHR = 0;
 
-distinct SamplerReductionMode = inline int;
+distinct SamplerReductionMode = inline uint;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = 0;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_MIN = 1;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_MAX = 2;
 
-distinct SemaphoreType = inline int;
+distinct SemaphoreType = inline uint;
 const SemaphoreType SEMAPHORE_TYPE_BINARY = 0;
 const SemaphoreType SEMAPHORE_TYPE_TIMELINE = 1;
 
-distinct SemaphoreWaitFlagBits = inline int;
+distinct SemaphoreWaitFlagBits = inline uint;
 const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
 
-distinct PipelineCreationFeedbackFlagBits = inline int;
+distinct PipelineCreationFeedbackFlagBits = inline uint;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_VALID_BIT = 0x00000001;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = 0x00000002;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = 0x00000004;
 
-distinct ToolPurposeFlagBits = inline int;
+distinct ToolPurposeFlagBits = inline uint;
 const ToolPurposeFlagBits TOOL_PURPOSE_VALIDATION_BIT = 0x00000001;
 const ToolPurposeFlagBits TOOL_PURPOSE_PROFILING_BIT = 0x00000002;
 const ToolPurposeFlagBits TOOL_PURPOSE_TRACING_BIT = 0x00000004;
@@ -1616,11 +1650,12 @@ const AccessFlagBits2 ACCESS_2_MEMORY_WRITE_BIT = 0x00010000;
 const AccessFlagBits2 ACCESS_2_SHADER_SAMPLED_READ_BIT = 0x100000000;
 const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_READ_BIT = 0x200000000;
 const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_WRITE_BIT = 0x400000000;
+const AccessFlagBits2 ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT = 0x20000000000;
 
-distinct SubmitFlagBits = inline int;
+distinct SubmitFlagBits = inline uint;
 const SubmitFlagBits SUBMIT_PROTECTED_BIT = 0x00000001;
 
-distinct RenderingFlagBits = inline int;
+distinct RenderingFlagBits = inline uint;
 const RenderingFlagBits RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = 0x00000001;
 const RenderingFlagBits RENDERING_SUSPENDING_BIT = 0x00000002;
 const RenderingFlagBits RENDERING_RESUMING_BIT = 0x00000004;
@@ -1654,7 +1689,7 @@ const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = 
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = 0x100000000;
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = 0x200000000;
 
-distinct SurfaceTransformFlagBitsKHR = inline int;
+distinct SurfaceTransformFlagBitsKHR = inline uint;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = 0x00000002;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = 0x00000004;
@@ -1665,13 +1700,13 @@ const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100;
 
-distinct PresentModeKHR = inline int;
+distinct PresentModeKHR = inline uint;
 const PresentModeKHR PRESENT_MODE_IMMEDIATE_KHR = 0;
 const PresentModeKHR PRESENT_MODE_MAILBOX_KHR = 1;
 const PresentModeKHR PRESENT_MODE_FIFO_KHR = 2;
 const PresentModeKHR PRESENT_MODE_FIFO_RELAXED_KHR = 3;
 
-distinct ColorSpaceKHR = inline int;
+distinct ColorSpaceKHR = inline uint;
 const ColorSpaceKHR COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
 const ColorSpaceKHR COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = 1000104001;
 const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = 1000104002;
@@ -1689,36 +1724,36 @@ const ColorSpaceKHR COLOR_SPACE_PASS_THROUGH_EXT = 1000104013;
 const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = 1000104014;
 const ColorSpaceKHR COLOR_SPACE_DCI_P3_LINEAR_EXT = 0;
 
-distinct CompositeAlphaFlagBitsKHR = inline int;
+distinct CompositeAlphaFlagBitsKHR = inline uint;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008;
 
-distinct SwapchainCreateFlagBitsKHR = inline int;
+distinct SwapchainCreateFlagBitsKHR = inline uint;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = 0x00000001;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = 0x00000002;
 
-distinct DeviceGroupPresentModeFlagBitsKHR = inline int;
+distinct DeviceGroupPresentModeFlagBitsKHR = inline uint;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008;
 
-distinct DisplayPlaneAlphaFlagBitsKHR = inline int;
+distinct DisplayPlaneAlphaFlagBitsKHR = inline uint;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
 
-distinct DebugReportFlagBitsEXT = inline int;
+distinct DebugReportFlagBitsEXT = inline uint;
 const DebugReportFlagBitsEXT DEBUG_REPORT_INFORMATION_BIT_EXT = 0x00000001;
 const DebugReportFlagBitsEXT DEBUG_REPORT_WARNING_BIT_EXT = 0x00000002;
 const DebugReportFlagBitsEXT DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = 0x00000004;
 const DebugReportFlagBitsEXT DEBUG_REPORT_ERROR_BIT_EXT = 0x00000008;
 const DebugReportFlagBitsEXT DEBUG_REPORT_DEBUG_BIT_EXT = 0x00000010;
 
-distinct DebugReportObjectTypeEXT = inline int;
+distinct DebugReportObjectTypeEXT = inline uint;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = 1;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = 2;
@@ -1754,27 +1789,27 @@ const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = 1000156000;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = 1000085000;
 
-distinct RenderingFlagBitsKHR = inline int;
+distinct RenderingFlagBitsKHR = inline uint;
 
 
-distinct PointClippingBehaviorKHR = inline int;
+distinct PointClippingBehaviorKHR = inline uint;
 
 
-distinct TessellationDomainOriginKHR = inline int;
+distinct TessellationDomainOriginKHR = inline uint;
 
 
-distinct DebugUtilsMessageSeverityFlagBitsEXT = inline int;
+distinct DebugUtilsMessageSeverityFlagBitsEXT = inline uint;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = 0x00000010;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = 0x00000100;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = 0x00001000;
 
-distinct DebugUtilsMessageTypeFlagBitsEXT = inline int;
+distinct DebugUtilsMessageTypeFlagBitsEXT = inline uint;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = 0x00000001;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = 0x00000002;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
 
-distinct ResolveModeFlagBitsKHR = inline int;
+distinct ResolveModeFlagBitsKHR = inline uint;
 
 struct Extent2D {
  uint width;
@@ -4146,6 +4181,105 @@ struct PhysicalDevicePortabilitySubsetPropertiesKHR {
  StructureType sType;
  void* pNext;
  uint minVertexInputBindingStrideAlignment;
+}
+struct PhysicalDeviceDescriptorBufferPropertiesEXT {
+ StructureType sType;
+ void* pNext;
+ Bool32 combinedImageSamplerDescriptorSingleArray;
+ Bool32 bufferlessPushDescriptors;
+ Bool32 allowSamplerImageViewPostSubmitCreation;
+ DeviceSize descriptorBufferOffsetAlignment;
+ uint maxDescriptorBufferBindings;
+ uint maxResourceDescriptorBufferBindings;
+ uint maxSamplerDescriptorBufferBindings;
+ uint maxEmbeddedImmutableSamplerBindings;
+ uint maxEmbeddedImmutableSamplers;
+ usz bufferCaptureReplayDescriptorDataSize;
+ usz imageCaptureReplayDescriptorDataSize;
+ usz imageViewCaptureReplayDescriptorDataSize;
+ usz samplerCaptureReplayDescriptorDataSize;
+ usz accelerationStructureCaptureReplayDescriptorDataSize;
+ usz samplerDescriptorSize;
+ usz combinedImageSamplerDescriptorSize;
+ usz sampledImageDescriptorSize;
+ usz storageImageDescriptorSize;
+ usz uniformTexelBufferDescriptorSize;
+ usz robustUniformTexelBufferDescriptorSize;
+ usz storageTexelBufferDescriptorSize;
+ usz robustStorageTexelBufferDescriptorSize;
+ usz uniformBufferDescriptorSize;
+ usz robustUniformBufferDescriptorSize;
+ usz storageBufferDescriptorSize;
+ usz robustStorageBufferDescriptorSize;
+ usz inputAttachmentDescriptorSize;
+ usz accelerationStructureDescriptorSize;
+ DeviceSize maxSamplerDescriptorBufferRange;
+ DeviceSize maxResourceDescriptorBufferRange;
+ DeviceSize samplerDescriptorBufferAddressSpaceSize;
+ DeviceSize resourceDescriptorBufferAddressSpaceSize;
+ DeviceSize descriptorBufferAddressSpaceSize;
+}
+struct PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT {
+ StructureType sType;
+ void* pNext;
+ usz combinedImageSamplerDensityMapDescriptorSize;
+}
+struct PhysicalDeviceDescriptorBufferFeaturesEXT {
+ StructureType sType;
+ void* pNext;
+ Bool32 descriptorBuffer;
+ Bool32 descriptorBufferCaptureReplay;
+ Bool32 descriptorBufferImageLayoutIgnored;
+ Bool32 descriptorBufferPushDescriptors;
+}
+struct DescriptorAddressInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DeviceAddress address;
+ DeviceSize range;
+ Format format;
+}
+struct DescriptorBufferBindingInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DeviceAddress address;
+ BufferUsageFlags usage;
+}
+struct DescriptorBufferBindingPushDescriptorBufferHandleEXT {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct DescriptorGetInfoEXT {
+ StructureType sType;
+ void* pNext;
+ DescriptorType type;
+ DescriptorDataEXT data;
+}
+struct BufferCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Buffer buffer;
+}
+struct ImageCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Image image;
+}
+struct ImageViewCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ ImageView imageView;
+}
+struct SamplerCaptureDescriptorDataInfoEXT {
+ StructureType sType;
+ void* pNext;
+ Sampler sampler;
+}
+struct OpaqueCaptureDescriptorDataCreateInfoEXT {
+ StructureType sType;
+ void* pNext;
+ void* opaqueCaptureDescriptorData;
 }
 macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
 macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;

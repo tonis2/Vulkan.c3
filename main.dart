@@ -77,6 +77,8 @@ var enabled_extensions = [
   "VK_KHR_maintenance2",
   "VK_KHR_multiview",
   "VK_KHR_dynamic_rendering",
+  "VK_EXT_descriptor_buffer"
+/*  "VK_KHR_acceleration_structure"*/
   //"VK_EXT_debug_marker",
   // "VK_KHR_depth_stencil_resolve",
   // "VK_KHR_get_display_properties2",
@@ -148,18 +150,19 @@ void main() {
     String? extension_name = element.getAttribute("name");
     String? depends = element.getAttribute("depends");
     bool isEnabled = enabled_extensions.contains(extension_name);
-    if (depends != null && isEnabled) {
+/*    if (depends != null && isEnabled) {
       var dependencies = depends
           .split("+")
           .join(",")
           .split(",")
-          .map((element) => versions.contains(element) || enabled_extensions.contains(element))
-          .where((element) => !element);
-      if (dependencies.isNotEmpty) {
+          .map((element) => versions.contains(element) || enabled_extensions.contains(element));
+
+      if (dependencies.where((element) => !element).isNotEmpty) {
         print("extension dependency not met $extension_name");
+        print(dependencies);
         return false;
       }
-    }
+    }*/
     return isEnabled;
   });
 
@@ -370,8 +373,14 @@ fault VkErrors {
   });
 
   enums.forEach((entry) {
+    String enumType = entry.bitwidth != null ? "ulong" : "uint";
+
+    if (entry.name.C3Name == "Result") {
+      enumType = "int";
+    }
+
     String code =
-        "\ndistinct ${entry.name.C3Name} = inline ${entry.bitwidth != null ? "ulong" : "int"};\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
+        "\ndistinct ${entry.name.C3Name} = inline $enumType;\n${entry.values.map((value) => "const ${entry.name.C3Name} ${value.name.C3Name.toUpperCase().substring(1)} = ${value.defaultValue};").join("\n")}\n";
     mainOutput.writeAsStringSync(code, mode: FileMode.append);
   });
 
