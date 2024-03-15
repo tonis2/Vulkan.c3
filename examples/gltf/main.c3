@@ -1,3 +1,5 @@
+module renderer;
+
 import std::io;
 import vk;
 import glfw;
@@ -10,10 +12,11 @@ import std::time;
 
 const WIDTH = 1200;
 const HEIGHT = 800;
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
 const SCENE_INDEX = 0;
 
+def TextureList = List(<DescriptorImageInfo>);
 
 struct Vertex {
     Vec3f pos;
@@ -22,18 +25,6 @@ struct Vertex {
     Vec4f tangent;
     Vec4f skin_pos;
     Vec4f skin_weight;
-}
-
-struct TextureData {
-    MemoryBlock block;
-    vk::Sampler sampler;
-    vk::ImageView view;
-}
-
-fn void TextureData.free(&self, Device device)
-{
-    self.view.free(device);
-    vk::destroySampler(device, self.sampler, null);
 }
 
 struct AddressBuffer {
@@ -54,17 +45,37 @@ struct PushConstantData {
     float[8] morph_weights;
 }
 
+struct ForwardConstantData {
+    DeviceAddress lights;
+    uint count;
+}
+
+struct PipelineInfo {
+    DescriptorSetLayout descriptor_layout;
+    Pipeline pipeline;
+    PipelineLayout pipeline_layout;
+    RenderingInfo render_info;
+    ShaderModule vertex;
+    ShaderModule fragment;
+    List(<WriteDescriptorSet>) descriptor_sets;
+}
+
+char[*] g_vertex_shader_data = $embed("shaders/gbuffer_vert.spv");
+char[*] g_fragment_shader_data = $embed("shaders/gbuffer_frag.spv");
+
+char[*] f_vertex_shader_data = $embed("shaders/forward_vert.spv");
+char[*] f_fragment_shader_data = $embed("shaders/forward_frag.spv");
+
+vk::Allocation device_allocation;
+vk::Allocation local_allocation;
+
 MemoryBlock vertex_buffer;
 MemoryBlock index_buffer;
 MemoryBlock uniform_buffer;
 MemoryBlock address_buffer;
 MemoryBlock joint_buffer;
 MemoryBlock material_buffer;
-
-Instance instance;
-DebugUtilsMessengerEXT debug_messenger;
-PhysicalDevice physical_device;
-QueueFamily queue_family;
+MemoryBlock lights_buffer;
 
 ZStringList validations;
 ZStringList extensions;
@@ -73,6 +84,32 @@ ZStringList device_extensions;
 List(<Vertex>) vertices;
 List(<ushort>) indices;
 List(<Matrix4f>) joint_data;
+
+TextureList material_textures;
+TextureList gbuffer_textures;
+ImageList gbuffer_images;
+
+PipelineInfo gbuffer_pipeline;
+PipelineInfo forward_pipeline;
+
+vk::Device device;
+PhysicalDevice physical_device;
+QueueFamily queue_family;
+Instance instance;
+DebugUtilsMessengerEXT debug_messenger;
+
+Gltf gltf;
+camera::Camera camera;
+Animations animations;
+
+vk::Format[4] gbuffer_formats = {
+    vk::FORMAT_B8G8R8A8_UNORM,
+    vk::FORMAT_R16G16B16A16_SFLOAT,
+    vk::FORMAT_R16G16B16A16_SFLOAT,
+    vk::FORMAT_D32_SFLOAT_S8_UINT
+};
+
+Extent2D extent = { WIDTH, HEIGHT };
 
 fn void! main()
 {
@@ -97,15 +134,10 @@ fn void! main()
         return;
     }
 
-    Gltf! gltf_data = gltf::loadFile("examples/gltf/assets/CesiumMan.gltf");
-    defer gltf_data.free()!!;
+    gltf = gltf::loadFile("examples/gltf/assets/scene_test.glb")!;
+    defer gltf.free();
 
-    if (catch err = gltf_data) {
-        io::printfn("%s", err);
-        return;
-    }
-
-    foreach (&buffer: gltf_data.buffers) {
+    foreach (&buffer: gltf.buffers) {
         switch (buffer.type) {
             case EXTERNAL_BIN: {
                 File! data = file::open("examples/gltf/assets/".concat((String)buffer.uri), "r");
@@ -121,38 +153,36 @@ fn void! main()
 
     EventHandler eventHandler = { .window = window };
     eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    camera = camera::new(.eye = {0.0, 0.0, 20}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
     // Load animations
-    Animations animations;
-    defer animations.release();
 
-    foreach (animation: gltf_data.animations) {
-        animations.push(gltf_data.loadAnimation(animation));
+    foreach (animation: gltf.animations) {
+        animations.push(gltf.loadAnimation(animation));
     }
 
-    foreach (&skin: gltf_data.skins) {
-        Accessor skin_accessor = gltf_data.accessors[skin.inverseBindAccessor];
+    foreach (&skin: gltf.skins) {
+        Accessor skin_accessor = gltf.accessors[skin.inverseBindAccessor];
         // Load inverse bind matrices
         for (uint i; i < skin_accessor.count; i++) {
-             Matrix4f matrix = gltf_data.@castBuffer(skin_accessor, i, Matrix4f).transpose();
+             Matrix4f matrix = gltf.@castBuffer(skin_accessor, i, Matrix4f).transpose();
              skin.inverseBindMatrices.push(matrix);
              joint_data.push(matrix);
         }
     }
 
     // Preload vertex data from GLTF
-    foreach (mesh: gltf_data.meshes) {
+    foreach (mesh: gltf.meshes) {
         uint morph_adjustment = 0;
 
         foreach (prim_index, &primitive: mesh.primitives) {
-            Accessor pos_accessor = gltf_data.accessors[primitive.attributes["POSITION"]!!];
-            Accessor index_accessor = gltf_data.accessors[primitive.attributes["indices"]!!];
+            Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
+            Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
             primitive.attributes["first_index"] = indices.len();
             primitive.attributes["first_vertex"] = vertices.len();
 
             for (usz i; i < index_accessor.count; i++) {
-                indices.push(gltf_data.@castBuffer(index_accessor, i, ushort));
+                indices.push(gltf.@castBuffer(index_accessor, i, ushort));
             }
 
             for (usz i; i < pos_accessor.count; i++) {
@@ -160,37 +190,37 @@ fn void! main()
                     usz! attribute = primitive.attributes["TEXCOORD_0"];
                     if (catch err = attribute) return Vec2f {0,0};
 
-                    Accessor accessor = gltf_data.accessors[attribute];
-                    return gltf_data.@castBuffer(accessor, i, Vec2f);
+                    Accessor accessor = gltf.accessors[attribute];
+                    return gltf.@castBuffer(accessor, i, Vec2f);
                 |};
 
                 Vec3f normal = {|
                     usz! attribute = primitive.attributes["NORMAL"];
                     if (catch err = attribute) return Vec3f {0,0,0};
 
-                    Accessor accessor = gltf_data.accessors[attribute];
-                    return gltf_data.@castBuffer(accessor, i, Vec3f);
+                    Accessor accessor = gltf.accessors[attribute];
+                    return gltf.@castBuffer(accessor, i, Vec3f);
                 |};
 
                 Vec4f tangent = {|
                     usz! attribute = primitive.attributes["TANGENT"];
                     if (catch err = attribute) return Vec4f {0,0,0,0};
-                    Accessor accessor = gltf_data.accessors[attribute];
-                    return gltf_data.@castBuffer(accessor, i, Vec4f);
+                    Accessor accessor = gltf.accessors[attribute];
+                    return gltf.@castBuffer(accessor, i, Vec4f);
                 |};
 
                 Vec4f skin_pos = {|
                     usz! attribute = primitive.attributes["JOINTS_0"];
                     if (catch err = attribute) return Vec4f {0,0,0,0};
-                    Accessor accessor = gltf_data.accessors[attribute];
+                    Accessor accessor = gltf.accessors[attribute];
 
                     if (accessor.data_type == DataType.USHORT) {
-                        short[4] array = gltf_data.@castBuffer(accessor, i, short[4]);
+                        short[4] array = gltf.@castBuffer(accessor, i, short[4]);
                         return Vec4f{array[0], array[1], array[2], array[3]};
                     };
 
                     if (accessor.data_type == DataType.CHAR) {
-                        char[4] array = gltf_data.@castBuffer(accessor, i, char[4]);
+                        char[4] array = gltf.@castBuffer(accessor, i, char[4]);
                         return Vec4f{array[0], array[1], array[2], array[3]};
                     };
 
@@ -201,11 +231,11 @@ fn void! main()
                     usz! attribute = primitive.attributes["WEIGHTS_0"];
                     if (catch err = attribute) return Vec4f {0,0,0,0};
 
-                    Accessor accessor = gltf_data.accessors[attribute];
-                    return gltf_data.@castBuffer(accessor, i, Vec4f);
+                    Accessor accessor = gltf.accessors[attribute];
+                    return gltf.@castBuffer(accessor, i, Vec4f);
                 |};
 
-                Vec3f position = gltf_data.@castBuffer(pos_accessor, i, Vec3f);
+                Vec3f position = gltf.@castBuffer(pos_accessor, i, Vec3f);
                 vertices.push({
                     .pos = position,
                     .normal = normal,
@@ -224,24 +254,18 @@ fn void! main()
 
             // Add morph data
             foreach (targets: primitive.targets) {
-                Accessor position = gltf_data.accessors[targets["POSITION"]!!];
-                Accessor normal = gltf_data.accessors[targets["NORMAL"]!!];
+                Accessor position = gltf.accessors[targets["POSITION"]!!];
+                Accessor normal = gltf.accessors[targets["NORMAL"]!!];
 
                 for (usz i; i < position.count; i++) {
                     vertices.push({
-                       .pos = gltf_data.@castBuffer(position, i, Vec3f),
-                       .normal = gltf_data.@castBuffer(normal, i, Vec3f),
+                       .pos = gltf.@castBuffer(position, i, Vec3f),
+                       .normal = gltf.@castBuffer(normal, i, Vec3f),
                     });
                 }
             }
         }
     }
-
-    defer {
-        vertices.free();
-        indices.free();
-        joint_data.free();
-    };
 
     //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
@@ -320,10 +344,20 @@ fn void! main()
         return;
     }
 
+    PhysicalDevicePushDescriptorPropertiesKHR pushDescriptorProperties = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR,
+        .maxPushDescriptors = 1,
+        .pNext = null
+    };
+
+    PhysicalDeviceDescriptorBufferPropertiesEXT descriptorBufferProperties = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+        .pNext = &pushDescriptorProperties,
+    };
+
     // Get device properties and add push descriptors extension
     PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2Builder()
-             .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder()
-             .setMaxPushDescriptors(1))
+             .setNext(&descriptorBufferProperties)
              .build(physical_device);
 
     io::printfn("Device found %s type %d ", device_properties.properties.deviceName[0..], device_properties.properties.deviceType);
@@ -345,22 +379,34 @@ fn void! main()
 
    PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
-       .pNext = &device_indexing_feature
+       .pNext = &device_indexing_feature,
+       .bufferDeviceAddress = vk::TRUE,
     };
+
+/*    PhysicalDeviceDescriptorBufferFeaturesEXT descriptor_buffer_feature = {
+        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT,
+        .pNext = &buffer_device_feature,
+        .descriptorBuffer = vk::TRUE,
+    };*/
 
     PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
        .pNext = &buffer_device_feature
     };
 
+    PhysicalDeviceSynchronization2Features syncronisation2_feature = {
+       .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
+       .pNext = &dynamic_rendering_feature
+    };
+
     PhysicalDeviceFeatures2 device_features = {
         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-        .pNext = &dynamic_rendering_feature,
+        .pNext = &syncronisation2_feature,
     };
 
     vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
 
-    Device device = vk::deviceCreateInfoBuilder()
+    device = vk::deviceCreateInfoBuilder()
         .setQueueCreateInfos({ graphicsInfo })
         .setEnabledExtensionNames(device_extensions.array_view())
         .setEnabledLayerNames(validations.array_view())
@@ -427,7 +473,7 @@ fn void! main()
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Create allocator of 50MB - DEVICE_ONLY memory
-    vk::Allocation device_allocation = vk::Allocation {
+    device_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -436,7 +482,7 @@ fn void! main()
     }.build()!;
 
     // Allocation where data can be changed from CPU
-    vk::Allocation local_allocation = vk::Allocation {
+    local_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
@@ -444,380 +490,210 @@ fn void! main()
         .size = 20_000_000,
     }.build()!;
 
-    address_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(AddressBuffer.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!;
+    loadBuffers()!;
+    loadTextures()!;
 
-    uniform_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(UniformData.sizeof)
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
-
-    vertex_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(vertices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
-
-    index_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(indices.byte_size())
-                    .build(device)!
-                    .bind(&device_allocation)!
-                    .getAddress(device);
-
-    joint_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(joint_data.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);
-
-    material_buffer = vk::bufferCreateInfoBuilder()
-                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
-                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                    .setSize(gltf_data.materials.byte_size())
-                    .build(device)!
-                    .bind(&local_allocation)!
-                    .getAddress(device);         
-
-    uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
-    material_buffer.upload(gltf_data.materials.entries, gltf_data.materials.byte_size(), device);
-    
-    // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(.size = indices.byte_size(), .data = indices.entries, .pdevice = physical_device)!;
-
-    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-        vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
-            .srcOffset = 0,
-            .dstOffset = 0,
-            .size = indices.byte_size()
-        });
-
-        vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
-           .srcOffset = 0,
-           .dstOffset = 0,
-           .size = vertices.byte_size()
-        });
-    }!;
-
-    index_stage_buffer.free(device);
-    vertex_stage_buffer.free(device);
-
-    AddressBuffer addresses = {
-        .uniform_buffer = uniform_buffer.address,
-        .vertex_buffer = vertex_buffer.address,
-        .material_buffer = material_buffer.address
-    };
-
-    address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
-
-    TextureData depth_texture;
-    List(<TextureData>) textures;
-
-    // Create depth texture
-    vk::Format depth_format = vk::FORMAT_D32_SFLOAT_S8_UINT;
-    vk::Image depth_image = vk::imageCreateInfoBuilder()
-        .setImageType(vk::IMAGE_TYPE_2D)
-        .setExtent({.width = WIDTH, .height = HEIGHT, .depth = 1 })
-        .setMipLevels(1)
-        .setArrayLayers(1)
-        .setSamples(vk::SAMPLE_COUNT_1_BIT)
-        .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
-        .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-        .setTiling(vk::IMAGE_TILING_OPTIMAL)
-        .setFormat(depth_format)
-        .build(device)!;
-
-    depth_texture.block = depth_image.bind(&device_allocation)!;
-    depth_texture.view = vk::imageViewCreateInfoBuilder()
-        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-        .setFormat(vk::FORMAT_D32_SFLOAT_S8_UINT)
-        .setSubresourceRange({
-          .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
-          .baseMipLevel = 0,
-          .baseArrayLayer = 0,
-          .layerCount = 1,
-          .levelCount = 1,
+    gbuffer_pipeline.render_info = vk::renderingInfoBuilder()
+    .setLayerCount(1)
+    .setRenderArea({
+        .offset = Offset2D{ .x = 0, .y = 0 },
+        .extent = extent,
+    })
+    .setColorAttachments({
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[0].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[1].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[2].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
         })
-        .setImage(depth_texture.block.image)
-        .build(device)!;
+    })
+    .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[3].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+            .depthStencil = { 1.0f, 0 }
+    }));
 
-    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-       ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
-       .setImage(depth_texture.block.image)
-       .setSubresourceRange({
-          .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT | vk::IMAGE_ASPECT_STENCIL_BIT,
-          .baseMipLevel = 0,
-          .baseArrayLayer = 0,
-          .layerCount = 1,
-          .levelCount = 1,
-       })
-       .setSrcAccessMask(0)
-       .setDstAccessMask(vk::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
-       .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-       .setNewLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    gbuffer_pipeline.descriptor_sets.init_wrapping_array({
+        vk::writeDescriptorSetBuilder()
+            .setDstBinding(0)
+           .setDescriptorType(vk::DESCRIPTOR_TYPE_STORAGE_BUFFER)
+           .setBufferInfo({
+            {
+                .buffer = address_buffer.buffer,
+                .offset = 0,
+                .range = AddressBuffer.sizeof,
+            }
+        }),
+        vk::writeDescriptorSetBuilder()
+            .setDstBinding(1)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            .setImageInfo(material_textures.array_view())
+    });
 
-       vk::cmdPipelineBarrier(
-           command_buffer,
-           vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-           vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-           0,
-           0,
-           null,
-           0,
-           null,
-           1,
-           &imageMemoryBarrier
-       );
-    }!;
-
-    // Create texture-images from gltf buffer
-    foreach (image : gltf_data.images) {
-        Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
-        TextureData texture;
-        stb::Image! image_data;
-
-        switch (image.type) {
-            case ENCODED_BASE64: {
-                image_data = stb::loadFromBuffer(image.data, image.data.len, stb::Channel.STBI_RGB_ALPHA);
-            };
-            case ENCODED_BIN: {
-                gltf::BufferView buffer_view = gltf_data.bufferViews[image.view];
-                image_data = stb::loadFromBuffer(gltf_data.buffers[buffer_view.buffer].data[buffer_view.offset..], (uint)buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
-            };
-            case EXTERNAL_BIN: io::printfn("Load image data here");
-        }
-
-        defer image_data.free()!!;
-
-        if (catch err = image_data) {
-            io::printfn("Failed loading image from buffer");
-            return;
-        }
-
-        vk::Image texture_image = vk::imageCreateInfoBuilder()
-            .setImageType(vk::IMAGE_TYPE_2D)
-            .setExtent({.width = image_data.width, .height = image_data.height, .depth = 1 })
-            .setMipLevels(1)
-            .setArrayLayers(1)
-            .setSamples(vk::SAMPLE_COUNT_1_BIT)
-            .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
-            .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-            .setTiling(vk::IMAGE_TILING_OPTIMAL)
-            .setFormat(image_format)
-            .build(device)!;
-
-        texture.block = texture_image.bind(&device_allocation)!;
-
-        MemoryBlock stage_image = device.staging_buffer(.size = (usz)image_data.width * image_data.height * 4, .data = image_data.pixels, .pdevice = physical_device)!;
-
-        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
-            ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
-                .setImage(texture.block.image)
-                .setSubresourceRange({
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-                .levelCount = 1,
-            })
-            .setSrcAccessMask(0)
-            .setDstAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-            .setNewLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-            vk::cmdPipelineBarrier(
-                    command_buffer,
-                    vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                    vk::PIPELINE_STAGE_TRANSFER_BIT,
-                    0,
-                    0,
-                    null,
-                    0,
-                    null,
-                    1,
-                    &imageMemoryBarrier
-            );
-
-            BufferImageCopy bufferCopyRegion = {
-                .bufferOffset = 0,
-                .bufferRowLength = 0,
-                .bufferImageHeight = 0,
-                .imageSubresource = {
-                    .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                    .mipLevel = 0,
-                    .baseArrayLayer = 0,
-                    .layerCount = 1,
-                },
-                .imageOffset = {0, 0, 0},
-                .imageExtent = {.width = image_data.width, .height = image_data.height, .depth = 1 }
-            };
-
-            vk::cmdCopyBufferToImage(
-                command_buffer,
-                stage_image.buffer,
-                texture.block.image,
-                vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                1,
-                &bufferCopyRegion
-            );
-
-            ImageMemoryBarrier imageMemoryBarrier2 = vk::imageMemoryBarrierBuilder()
-                .setImage(texture.block.image)
-                .setSubresourceRange({
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
-                .levelCount = 1,
-            })
-            .setSrcAccessMask(vk::ACCESS_TRANSFER_WRITE_BIT)
-            .setDstAccessMask(vk::ACCESS_SHADER_READ_BIT)
-            .setOldLayout(vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-            .setNewLayout(vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-            vk::cmdPipelineBarrier(
-                    command_buffer,
-                    vk::PIPELINE_STAGE_TRANSFER_BIT,
-                    vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                    0,
-                    0,
-                    null,
-                    0,
-                    null,
-                    1,
-                    &imageMemoryBarrier2
-            );
-        }!;
-
-        stage_image.free(device);
-
-        texture.sampler = vk::samplerCreateInfoBuilder()
-                            .setMagFilter(vk::FILTER_LINEAR)
-                            .setMinFilter(vk::FILTER_LINEAR)
-                            .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setMipLodBias(0.0)
-                            .setMinLod(0.0)
-                            .setMaxLod(1.0)
-                            .setMaxAnisotropy(1.0)
-                            .setAnisotropyEnable(vk::FALSE)
-                            .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-                            .build(device)!;
-
-        texture.view = vk::imageViewCreateInfoBuilder()
-                        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-                        .setFormat(image_format)
-                        .setSubresourceRange({
-                            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                            .baseMipLevel = 0,
-                            .baseArrayLayer = 0,
-                            .layerCount = 1,
-                            .levelCount = 1,
-                        })
-                        .setImage(texture.block.image)
-                        .build(device)!;
-        textures.push(texture);
-    }
-
-   // Set-up descriptor info for uniform buffer usage
-    DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+    gbuffer_pipeline.descriptor_layout = vk::descriptorSetLayoutCreateInfoBuilder()
     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
     .setBindings({
         {
-          .binding = 0,
-          .descriptorType = vk::DESCRIPTOR_TYPE_STORAGE_BUFFER,
-          .descriptorCount = 1,
-          .stageFlags = vk::SHADER_STAGE_VERTEX_BIT | vk::SHADER_STAGE_FRAGMENT_BIT
+            .binding = 0,
+            .descriptorType = vk::DESCRIPTOR_TYPE_STORAGE_BUFFER,
+            .descriptorCount = 1,
+            .stageFlags = vk::SHADER_STAGE_VERTEX_BIT | vk::SHADER_STAGE_FRAGMENT_BIT
         },
         {
             .binding = 1,
             .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            .descriptorCount = (uint)textures.len(),
+            .descriptorCount = (uint)material_textures.len(),
+            .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
+        },
+
+    })
+    .build(device)!;
+
+    gbuffer_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+    .setPushConstantRanges({
+        {
+            .offset = 0,
+            .size = PushConstantData.sizeof,
+            .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+        },
+    })
+    .setSetLayouts({ gbuffer_pipeline.descriptor_layout }).build(device)!;
+
+    gbuffer_pipeline.vertex = device.createShaderModule(&g_vertex_shader_data)!;
+    gbuffer_pipeline.fragment = device.createShaderModule(&g_fragment_shader_data)!;
+
+    vk::PipelineColorBlendAttachmentState color_write_mask = {
+        .colorWriteMask =
+            vk::COLOR_COMPONENT_R_BIT |
+            vk::COLOR_COMPONENT_G_BIT |
+            vk::COLOR_COMPONENT_B_BIT |
+            vk::COLOR_COMPONENT_A_BIT,
+    };
+
+    gbuffer_pipeline.pipeline = vk::graphicsPipelineCreateInfoBuilder()
+    .setStages({
+        gbuffer_pipeline.vertex.info(vk::SHADER_STAGE_VERTEX_BIT),
+        gbuffer_pipeline.fragment.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+    })
+    .setLayout(gbuffer_pipeline.pipeline_layout)
+    .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+        .setVertexBindingDescriptionCount(0))
+    .setDynamicState(
+        &&vk::pipelineDynamicStateCreateInfoBuilder()
+        .setDynamicStates({
+            vk::DYNAMIC_STATE_VIEWPORT,
+            vk::DYNAMIC_STATE_LINE_WIDTH,
+        })
+    )
+    .setRasterizationState(
+        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        .setDepthClampEnable(vk::FALSE)
+        .setRasterizerDiscardEnable(vk::FALSE)
+        .setPolygonMode(vk::POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(vk::CULL_MODE_NONE)
+        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(vk::FALSE)
+    )
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+        .setSampleShadingEnable(vk::FALSE)
+        .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+        .setMinSampleShading(1.0)
+        .setAlphaToCoverageEnable(vk::FALSE)
+        .setAlphaToOneEnable(vk::FALSE))
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+        .setDepthTestEnable(vk::TRUE)
+        .setDepthWriteEnable(vk::TRUE)
+        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+        .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+        .setLogicOp(vk::LOGIC_OP_COPY)
+        .setAttachments({
+            color_write_mask,
+            color_write_mask,
+            color_write_mask,
+        }))
+    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+        .setViewports({{ .x = 0.0, .y = 0.0, .width = 0.0, .height = 0.0, .minDepth = 0.0, .maxDepth = 1.0 }})
+        .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = extent }}))
+    .setNext(
+        &&vk::pipelineRenderingCreateInfoBuilder()
+        .setColorAttachmentFormats({
+                gbuffer_formats[0],
+                gbuffer_formats[1],
+                gbuffer_formats[2],
+            })
+        .setDepthAttachmentFormat(gbuffer_formats[3])
+        .setStencilAttachmentFormat(gbuffer_formats[3])
+    ).build(device)!;
+
+    // Forward pipeline
+
+   forward_pipeline.descriptor_sets.init_wrapping_array({
+        vk::writeDescriptorSetBuilder()
+            .setDstBinding(0)
+            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            .setImageInfo(gbuffer_textures.array_view()),
+   });
+
+    forward_pipeline.descriptor_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    .setBindings({
+        {
+            .binding = 0,
+            .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            .descriptorCount = (uint)gbuffer_textures.len(),
             .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
         },
     })
     .build(device)!;
 
-    // Bind loaded textures to descriptor
-    List(<DescriptorImageInfo>) descriptor_images;
-    List(<WriteDescriptorSet>) descriptor_sets;
-
-    descriptor_sets.push(
-        vk::writeDescriptorSetBuilder()
-        .setDescriptorType(vk::DESCRIPTOR_TYPE_STORAGE_BUFFER)
-        .setBufferInfo({
-          {
-              .buffer = address_buffer.buffer,
-              .offset = 0,
-              .range = AddressBuffer.sizeof,
-          },
-    }));
-
-    foreach (tex: textures) {
-        descriptor_images.push({
-          .sampler = tex.sampler,
-          .imageView = tex.view,
-          .imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        });
-    }
-
-    if (textures.len() > 0) {
-        descriptor_sets.push(
-            vk::writeDescriptorSetBuilder()
-            .setDstBinding(1)
-            .setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-            .setImageInfo(descriptor_images.array_view())
-        );
-    };
-
-    defer {
-        descriptor_images.free();
-        descriptor_sets.free();
-    };
-
-    // Load shaders
-    char[*] vertex_shader_data = $embed("shaders/shader_vert.spv");
-    char[*] fragment_shader_data = $embed("shaders/shader_frag.spv");
-
-    ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
-    ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
-
-    // Use push constants, to update each rendered model matrix per frame
-    PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
+    forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
         .setPushConstantRanges({
             {
                 .offset = 0,
-                .size = PushConstantData.sizeof,
-                .stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+                .size = ForwardConstantData.sizeof,
+                .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT,
             },
         })
-        .setSetLayouts({ descriptor_set_layout }).build(device)!;
+        .setSetLayouts({ forward_pipeline.descriptor_layout }).build(device)!;
 
-    // Create Renderpipeline info
-    Pipeline pipeline = vk::graphicsPipelineCreateInfoBuilder()
+    forward_pipeline.vertex = device.createShaderModule(&f_vertex_shader_data)!;
+    forward_pipeline.fragment = device.createShaderModule(&f_fragment_shader_data)!;
+
+    forward_pipeline.pipeline = vk::graphicsPipelineCreateInfoBuilder()
     .setStages({
-        vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
-        frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
+        forward_pipeline.vertex.info(vk::SHADER_STAGE_VERTEX_BIT),
+        forward_pipeline.fragment.info(vk::SHADER_STAGE_FRAGMENT_BIT)
     })
-    .setLayout(pipeline_layout)
+    .setLayout(forward_pipeline.pipeline_layout)
     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
-       .setVertexBindingDescriptionCount(0))
+                         .setVertexBindingDescriptionCount(0))
     .setDynamicState(
-       &&vk::pipelineDynamicStateCreateInfoBuilder()
+        &&vk::pipelineDynamicStateCreateInfoBuilder()
         .setDynamicStates(
         {
             vk::DYNAMIC_STATE_VIEWPORT,
@@ -847,31 +723,71 @@ fn void! main()
                     .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
                     .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
     .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
-                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
-                    .setLogicOp(vk::LOGIC_OP_COPY)
-                    .setAttachments({
-                       {
-                           .colorWriteMask =
-                               vk::COLOR_COMPONENT_R_BIT |
-                               vk::COLOR_COMPONENT_G_BIT |
-                               vk::COLOR_COMPONENT_B_BIT |
-                               vk::COLOR_COMPONENT_A_BIT,
-                           .blendEnable = vk::TRUE,
-                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .colorBlendOp = vk::BLEND_OP_ADD,
-                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .alphaBlendOp = vk::BLEND_OP_ADD,
-                       }}))
+    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+    .setLogicOp(vk::LOGIC_OP_COPY)
+    .setAttachments({
+    { .colorWriteMask =
+        vk::COLOR_COMPONENT_R_BIT |
+        vk::COLOR_COMPONENT_G_BIT |
+        vk::COLOR_COMPONENT_B_BIT |
+        vk::COLOR_COMPONENT_A_BIT,
+        .blendEnable = vk::TRUE,
+        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .colorBlendOp = vk::BLEND_OP_ADD,
+        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .alphaBlendOp = vk::BLEND_OP_ADD,
+    },
+    }))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
-       .setViewports({{ .x = 0.0, .y = (float)swapchain_info.imageExtent.height, .width = swapchain_info.imageExtent.width, .height = -(float)swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-       .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+        .setViewports({{ .x = 0.0, .y = 0, .width = 0, .height = 0, .minDepth = 0.0, .maxDepth = 1.0 }})
+        .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = extent }}))
     .setNext(
-        &&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({ swapchain_info.imageFormat })
-        .setDepthAttachmentFormat(depth_format)
-        .setStencilAttachmentFormat(depth_format)
+        &&vk::pipelineRenderingCreateInfoBuilder()
+        .setColorAttachmentFormats({ vk::FORMAT_B8G8R8A8_UNORM })
     ).build(device)!;
+    gbuffer_pipeline.render_info = vk::renderingInfoBuilder()
+        .setLayerCount(1)
+        .setRenderArea({
+        .offset = Offset2D{ .x = 0, .y = 0 },
+        .extent = extent,
+    })
+    .setColorAttachments({
+    vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[0].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+    }),
+    vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[1].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+    }),
+    vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[2].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+    })
+    })
+    .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
+        .setImageView(gbuffer_textures[3].imageView)
+        .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+        .setClearValue({
+        .depthStencil = { 1.0f, 0 }
+    }));
+
 
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
@@ -885,14 +801,14 @@ fn void! main()
     }
 
     // Picking gltf scene to render
-    Scene scene = gltf_data.scenes[SCENE_INDEX];
+    Scene scene = gltf.scenes[SCENE_INDEX];
     uint frame = 0;
     Clock time = clock::now();
 
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
-        if (animations.len() > 0) gltf_data.animate(.animation = &animations[0], .time = time.mark());
+        if (animations.len() > 0) gltf.animate(.animation = &animations[0], .time = time.mark());
         if (eventHandler.scrolling) {
            camera.zoom((float)eventHandler.scrollY * 5);
            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
@@ -912,100 +828,111 @@ fn void! main()
 
         uint next_image = swapchain.getNextImage(device, wait_semaphore);
 
-        RenderingInfo rendering_info = vk::renderingInfoBuilder()
-          .setLayerCount(1)
-          .setRenderArea({
-              .offset = Offset2D{ .x = 0, .y = 0 },
-              .extent = swapchain_info.imageExtent,
-          })
-          .setColorAttachments({
-              vk::renderingAttachmentInfoBuilder()
-              .setImageView(swapchain_views[next_image])
-              .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-              .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-              .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-              .setClearValue({
-                  .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-              })
-          })
-        .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
-            .setImageView(depth_texture.view)
-            .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-            .setClearValue({
-              .depthStencil = { 1.0f, 0 }
-        }));
-
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
         vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
 
-        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
-        .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-        .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setImage(swapchain_images[next_image])
-        .setSubresourceRange({
+        vk::ImageMemoryBarrier2 gbufferPipelineBarrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
+            .image = gbuffer_images[0],
+    /*        .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,*/
+            .subresourceRange = {
+              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+              .baseMipLevel = 0,
+              .levelCount = 1,
+              .baseArrayLayer = 0,
+              .layerCount = 1,
+          }};
+
+        vk::ImageMemoryBarrier2 forwardBarrier = {
+        .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+        .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+        .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+        .image = swapchain_images[next_image],
+        .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+        .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        .subresourceRange = {
             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
             .baseMipLevel = 0,
             .levelCount = 1,
             .baseArrayLayer = 0,
             .layerCount = 1,
-        });
+        }};
 
-        vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &image_memory_start
-        );
+        vk::ImageMemoryBarrier2 renderBarrier = {
+        .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+        .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+        .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+        .image = swapchain_images[next_image],
+        .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        .newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
+        .subresourceRange = {
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+        }};
 
-        vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
-        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-        if (descriptor_sets.len() > 0) {
-            vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, (uint)descriptor_sets.len(), descriptor_sets.entries);
-        }
+        // Draw Gbuffer textures
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, gbuffer_pipeline.pipeline_layout, 0, (uint)gbuffer_pipeline.descriptor_sets.len(), gbuffer_pipeline.descriptor_sets.entries);
+        vk::cmdBeginRenderingKHR(command_buffer, &gbuffer_pipeline.render_info);
 
-        // Draw gltf scene nodes
-        foreach (node: scene.nodes) drawNode(gltf_data.nodes[node], gltf_data, command_buffer, pipeline_layout, device);
-
+        foreach (node: scene.nodes) drawNode(gltf.nodes[node], command_buffer, gbuffer_pipeline.pipeline_layout, device);
         vk::cmdEndRenderingKHR(command_buffer);
 
-        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
-        .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-        .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        .setImage(swapchain_images[next_image])
-        .setSubresourceRange({
-            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .levelCount = 1,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
+        RenderingInfo f_rendering_info = vk::renderingInfoBuilder()
+            .setLayerCount(1)
+            .setRenderArea({
+                .offset = { .x = 0, .y = 0 },
+                .extent = extent,
+            })
+            .setColorAttachments({
+            vk::renderingAttachmentInfoBuilder()
+                .setImageView(swapchain_views[next_image])
+                .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+                .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+                .setClearValue({
+                    .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+                }),
         });
 
-        vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &image_memory_end
-        );
+        // Wait for GBUFFER to be finished rendering
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ gbufferPipelineBarrier, forwardBarrier }));
+
+        // Draw forward render
+        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = 0.0 });
+        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline);
+        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, forward_pipeline.pipeline_layout, 0, (uint)forward_pipeline.descriptor_sets.len(), forward_pipeline.descriptor_sets.entries);
+        vk::cmdBeginRenderingKHR(command_buffer, &f_rendering_info);
+        
+        ForwardConstantData constant_data = {
+           .lights = lights_buffer.address,
+           .count = (uint)gltf.lights.len()
+        };
+
+        vk::cmdPushConstants(command_buffer, forward_pipeline.pipeline_layout, vk::SHADER_STAGE_FRAGMENT_BIT, 0, ForwardConstantData.sizeof, &constant_data);
+
+        vk::cmdDraw(command_buffer, 3, 1, 0, 0);
+        vk::cmdEndRenderingKHR(command_buffer);
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ renderBarrier }));
 
         SubmitInfo submit_info = vk::submitInfoBuilder()
         .setWaitSemaphores({ wait_semaphore })
@@ -1030,33 +957,39 @@ fn void! main()
     device.waitIdle();
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
+    vertices.free();
+    indices.free();
+    joint_data.free();
+    animations.release();
+
     swapchain.free(device);
     foreach (view : swapchain_views) view.free(device);
     swapchain_images.free();
     swapchain_views.free();
 
-    depth_texture.free(device);
-    foreach (texture: textures) texture.free(device);
-    textures.free();
+    foreach (texture: material_textures) texture.free(device);
+    material_textures.free();
 
+    foreach (texture: gbuffer_textures) texture.free(device);
+    gbuffer_textures.free();
+    gbuffer_images.free();
     command_pool.free(device);
-    descriptor_set_layout.free(device);
-    vertex_module.free(device);
-    frag_module.free(device);
-    pipeline.free(device);
-    pipeline_layout.free(device);
+    
+    gbuffer_pipeline.free(device);
+    forward_pipeline.free(device);
+    
+    device_allocation.free();
+    local_allocation.free();
 
     wait_semaphores.release(device);
     signal_semaphores.release(device);
     frame_fences.release(device);
     surface.free(instance);
-    device_allocation.free();
-    local_allocation.free();
     device.free();
     instance.free();
 }
 
-fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
+fn void drawNode(Node node, CommandBuffer buffer, PipelineLayout pipeline_layout, Device device) {
 
     // If node has skin animation attached, upload joint buffer matrices
     if (node.hasSkin()) {
@@ -1096,5 +1029,379 @@ fn void drawNode(Node node, Gltf gltf, CommandBuffer buffer, PipelineLayout pipe
     }
 
     // Draw child nodes
-    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], gltf, buffer, pipeline_layout, device);
+    foreach (child_index: node.children) drawNode(gltf.nodes[child_index], buffer, pipeline_layout, device);
+}
+
+
+fn void! loadTextures() {
+    // Create GBuffer textures
+    for (usz i; i < 3; i++) {
+        vk::Format image_format = gbuffer_formats[i];
+        DescriptorImageInfo texture;
+        texture.imageLayout = vk::IMAGE_LAYOUT_GENERAL;
+
+        vk::Image image = vk::imageCreateInfoBuilder()
+            .setImageType(vk::IMAGE_TYPE_2D)
+            .setExtent({.width = WIDTH, .height = HEIGHT, .depth = 1 })
+            .setMipLevels(1)
+            .setArrayLayers(1)
+            .setSamples(vk::SAMPLE_COUNT_1_BIT)
+            .setUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+            .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+            .setTiling(vk::IMAGE_TILING_OPTIMAL)
+            .setFormat(image_format)
+            .build(device)!;
+             image.bind(&device_allocation)!;
+
+        texture.imageView = vk::imageViewCreateInfoBuilder()
+            .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+            .setFormat(image_format)
+            .setSubresourceRange({
+              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+              .baseMipLevel = 0,
+              .baseArrayLayer = 0,
+              .layerCount = 1,
+              .levelCount = 1,
+            })
+            .setImage(image)
+            .build(device)!;
+
+        texture.sampler = vk::samplerCreateInfoBuilder()
+                .setMagFilter(vk::FILTER_LINEAR)
+                .setMinFilter(vk::FILTER_LINEAR)
+                .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                .setMipLodBias(0.0)
+                .setMinLod(0.0)
+                .setMaxLod(1.0)
+                .setMaxAnisotropy(1.0)
+                .setAnisotropyEnable(vk::FALSE)
+                .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+                .build(device)!;
+
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+            vk::ImageMemoryBarrier2 finalize_barrier = {
+               .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+               .srcStageMask = vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+               .dstStageMask = vk::PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+               .srcAccessMask = 0,
+               .dstAccessMask = vk::ACCESS_2_SHADER_WRITE_BIT,
+               .image = image,
+               .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+               .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+               .subresourceRange = {
+                   .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                   .baseMipLevel = 0,
+                   .levelCount = 1,
+                   .baseArrayLayer = 0,
+                   .layerCount = 1,
+               }
+            };
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ finalize_barrier }));
+        }!;
+
+        gbuffer_images.push(image);
+        gbuffer_textures.push(texture);
+    }
+
+    DescriptorImageInfo depth_texture;
+    depth_texture.imageLayout = vk::IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+
+    vk::Image depth_image = vk::imageCreateInfoBuilder()
+    .setImageType(vk::IMAGE_TYPE_2D)
+    .setExtent({.width = WIDTH, .height = HEIGHT, .depth = 1 })
+    .setMipLevels(1)
+    .setArrayLayers(1)
+    .setSamples(vk::SAMPLE_COUNT_1_BIT)
+    .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+    .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+    .setTiling(vk::IMAGE_TILING_OPTIMAL)
+    .setFormat(gbuffer_formats[3])
+    .build(device)!;
+
+    depth_image.bind(&device_allocation)!;
+    depth_texture.sampler = vk::samplerCreateInfoBuilder()
+        .setMagFilter(vk::FILTER_LINEAR)
+        .setMinFilter(vk::FILTER_LINEAR)
+        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setMipLodBias(0.0)
+        .setMinLod(0.0)
+        .setMaxLod(1.0)
+        .setMaxAnisotropy(1.0)
+        .setAnisotropyEnable(vk::FALSE)
+        .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+        .build(device)!;
+        
+    depth_texture.imageView = vk::imageViewCreateInfoBuilder()
+        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setFormat(gbuffer_formats[3])
+        .setSubresourceRange({
+          .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
+          .baseMipLevel = 0,
+          .baseArrayLayer = 0,
+          .layerCount = 1,
+          .levelCount = 1,
+        })
+        .setImage(depth_image)
+        .build(device)!;
+
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+       ImageMemoryBarrier imageMemoryBarrier = vk::imageMemoryBarrierBuilder()
+       .setImage(depth_image)
+       .setSubresourceRange({
+          .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT | vk::IMAGE_ASPECT_STENCIL_BIT,
+          .baseMipLevel = 0,
+          .baseArrayLayer = 0,
+          .layerCount = 1,
+          .levelCount = 1,
+       })
+       .setSrcAccessMask(0)
+       .setDstAccessMask(vk::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
+       .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+       .setNewLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
+
+       vk::cmdPipelineBarrier(
+           command_buffer,
+           vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+           vk::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+           0,
+           0,
+           null,
+           0,
+           null,
+           1,
+           &imageMemoryBarrier
+       );
+    }!;
+
+    gbuffer_textures.push(depth_texture);
+
+    // Create texture-images from gltf buffer
+    foreach (image : gltf.images) {
+        Format image_format = vk::FORMAT_R8G8B8A8_UNORM;
+        DescriptorImageInfo texture;
+        stb::Image! image_data;
+
+        switch (image.type) {
+            case ENCODED_BASE64: {
+                image_data = stb::loadFromBuffer(image.data, image.data.len, stb::Channel.STBI_RGB_ALPHA);
+            };
+            case ENCODED_BIN: {
+                gltf::BufferView buffer_view = gltf.bufferViews[image.view];
+                image_data = stb::loadFromBuffer(gltf.buffers[buffer_view.buffer].data[buffer_view.offset..], (uint)buffer_view.byteLength, stb::Channel.STBI_RGB_ALPHA);
+            };
+            case EXTERNAL_BIN: io::printfn("Load image data here");
+        }
+
+        defer image_data.free()!!;
+
+        if (catch err = image_data) {
+            io::printfn("Failed loading image from buffer");
+            return;
+        }
+
+        vk::Image texture_image = vk::imageCreateInfoBuilder()
+            .setImageType(vk::IMAGE_TYPE_2D)
+            .setExtent({.width = image_data.width, .height = image_data.height, .depth = 1 })
+            .setMipLevels(1)
+            .setArrayLayers(1)
+            .setSamples(vk::SAMPLE_COUNT_1_BIT)
+            .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+            .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+            .setTiling(vk::IMAGE_TILING_OPTIMAL)
+            .setFormat(image_format)
+            .build(device)!;
+            texture_image.bind(&device_allocation)!;
+
+        MemoryBlock stage_image = device.staging_buffer(.size = (usz)image_data.width * image_data.height * 4, .data = image_data.pixels, .pdevice = physical_device)!;
+        defer stage_image.free(device);
+
+        vk::ImageMemoryBarrier2 transfer_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .srcAccessMask = 0,
+            .dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .image = texture_image,
+            .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+            .newLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+        }};
+
+        vk::ImageMemoryBarrier2 finalize_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            .srcAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+            .image = texture_image,
+            .oldLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
+        device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+           
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ transfer_barrier }));
+
+            BufferImageCopy bufferCopyRegion = {
+                .bufferOffset = 0,
+                .bufferRowLength = 0,
+                .bufferImageHeight = 0,
+                .imageSubresource = {
+                    .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                    .mipLevel = 0,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+                },
+                .imageOffset = {0, 0, 0},
+                .imageExtent = {.width = image_data.width, .height = image_data.height, .depth = 1 }
+            };
+
+            vk::cmdCopyBufferToImage(
+                command_buffer,
+                stage_image.buffer,
+                texture_image,
+                vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1,
+                &bufferCopyRegion
+            );
+
+            vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+            .setImageMemoryBarriers({ finalize_barrier }));
+        }!;
+
+        texture.sampler = vk::samplerCreateInfoBuilder()
+                            .setMagFilter(vk::FILTER_LINEAR)
+                            .setMinFilter(vk::FILTER_LINEAR)
+                            .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                            .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                            .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+                            .setMipLodBias(0.0)
+                            .setMinLod(0.0)
+                            .setMaxLod(1.0)
+                            .setMaxAnisotropy(1.0)
+                            .setAnisotropyEnable(vk::FALSE)
+                            .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+                            .build(device)!;
+
+        texture.imageView = vk::imageViewCreateInfoBuilder()
+                        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+                        .setFormat(image_format)
+                        .setSubresourceRange({
+                            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                            .baseMipLevel = 0,
+                            .baseArrayLayer = 0,
+                            .layerCount = 1,
+                            .levelCount = 1,
+                        })
+                        .setImage(texture_image)
+                        .build(device)!;
+
+        texture.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        material_textures.push(texture);
+    }
+
+}
+
+fn void! loadBuffers() {
+    address_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_STORAGE_BUFFER_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(AddressBuffer.sizeof)
+                    .bind(&local_allocation)!;
+
+    uniform_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(UniformData.sizeof)
+                    .bind(&local_allocation)!;
+
+    vertex_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(vertices.byte_size())
+                    .bind(&device_allocation)!;
+
+    index_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT | vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT )
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(indices.byte_size())
+                    .bind(&device_allocation)!;
+
+    joint_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(joint_data.byte_size())
+                    .bind(&local_allocation)!;
+
+    material_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(gltf.materials.byte_size())
+                    .bind(&local_allocation)!;
+
+    lights_buffer = vk::bufferCreateInfoBuilder()
+                    .setUsage(vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT)
+                    .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                    .setSize(gltf.lights.byte_size())
+                    .bind(&local_allocation)!;
+
+    uniform_buffer.upload(&&camera.matrix(), UniformData.sizeof, device);
+    material_buffer.upload(gltf.materials.entries, gltf.materials.byte_size(), device);
+    lights_buffer.upload(gltf.lights.entries, gltf.lights.byte_size(), device);
+
+    // Create stage buffers and then copy the data to GPU only buffers
+    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = vertices.byte_size(), .data = vertices.entries, .pdevice = physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(.size = indices.byte_size(), .data = indices.entries, .pdevice = physical_device)!;
+
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+        vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = indices.byte_size()
+        });
+
+        vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = vertices.byte_size()
+        });
+    }!;
+
+    index_stage_buffer.free(device);
+    vertex_stage_buffer.free(device);
+
+    AddressBuffer addresses = {
+        .uniform_buffer = uniform_buffer.address,
+        .vertex_buffer = vertex_buffer.address,
+        .material_buffer = material_buffer.address,
+    };
+
+    address_buffer.upload(&addresses, AddressBuffer.sizeof, device);
+}
+
+fn void PipelineInfo.free(self, Device device) {
+    self.pipeline.free(device);
+    self.pipeline_layout.free(device);
+    self.descriptor_layout.free(device);
+    self.descriptor_sets.free();
+    self.vertex.free(device);
+    self.fragment.free(device);
 }
