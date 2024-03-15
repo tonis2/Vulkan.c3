@@ -303,9 +303,9 @@ struct Image {
 struct Light {
     Vec3f position;
     Vec3f color;
+    LightType type;
     float intensity;
     float range;
-    LightType type;
     float inner_cone_angle;
     float outer_cone_angle;
     uint node;
@@ -1038,11 +1038,8 @@ fn Gltf! parse(InStream* stream) {
 
            if (data.hasLight()) {
                 Light* light = &content.lights[data.light];
-                light.node = i;
+                // light.node = i;
                 light.position = data.translation;
-                /*if (light.type == LightType.DIRECTIONAL) {
-                    data.translation = {0,0,-1};
-                }*/
            }
         }
     }
