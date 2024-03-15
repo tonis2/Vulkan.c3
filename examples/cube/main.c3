@@ -265,14 +265,12 @@ fn void! main()
                .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                .setSize(Vertex.sizeof * vertices.len)
-               .build(device)!
                .bind(&device_allocation)!;
 
     MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
                 .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                 .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                 .setSize(indices.len * float.sizeof)
-                .build(device)!
                 .bind(&device_allocation)!;
 
     // Create stage buffers and then copy the data to GPU only buffers
@@ -300,7 +298,6 @@ fn void! main()
                .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                .setSize(UniformData.sizeof)
-               .build(device)!
                .bind(&local_allocation)!;
 
     // Add data for uniform buffer
