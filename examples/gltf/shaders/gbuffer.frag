@@ -15,7 +15,6 @@ layout(location = 0) in flat int material_index;
 layout(location = 1) in vec2 tex_cord;
 layout(location = 2) in vec3 v_normal;
 layout(location = 3) in vec3 position;
-layout(location = 4) in mat3 tangent;
 
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outNormal;
@@ -72,7 +71,7 @@ vec3 getNormal(Material material) {
     if (value.source >= 0) {
         return texture(materialSamplers[value.source], tex_cord).rgb;
     }
-    return normalize(tangent * (2.0 * v_normal - 1.0));
+    return vec3(1);
 }
 
 const float specularStrength = 0.5;
