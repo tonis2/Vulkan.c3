@@ -670,6 +670,14 @@ fn void Material.fromJson(&self, Object* json) {
     Object*! emissiveTexture = json.get("emissiveTexture");
     Object*! emissiveFactor = json.get("emissiveFactor");
 
+    self.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
+    self.emissiveFactor = {1.0, 1.0, 1.0, 1.0};
+    self.baseColorTexture = {-1, -1, -1, 0};
+    self.metallicRoughnessTexture =  {-1, -1, -1, 0};
+    self.roughnessFactor = 0;
+    self.metallicFactor = 0;
+    self.emissiveStrength = 1.0;
+
     if (try doubleSided) self.doubleSided = doubleSided;
     if (try occlusionTexture) self.occlusionTexture.fromJson(occlusionTexture);
     if (try normalTexture) self.normalTexture.fromJson(normalTexture);
@@ -685,10 +693,6 @@ fn void Material.fromJson(&self, Object* json) {
         Object*! baseColorTexture = pbrMetallicRoughness.get("baseColorTexture");
         Object*! baseColorFactor = pbrMetallicRoughness.get("baseColorFactor");
         Object*! metallicRoughnessTexture = pbrMetallicRoughness.get("baseColorTexture");
-
-        self.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
-        self.baseColorTexture = {-1, -1, -1, 0};
-        self.metallicRoughnessTexture =  {-1, -1, -1, 0};
 
         if (try metallicFactor && try roughnessFactor) {
             self.metallicFactor = (float)metallicFactor;

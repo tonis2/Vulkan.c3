@@ -102,8 +102,9 @@ Gltf gltf;
 camera::Camera camera;
 Animations animations;
 
-vk::Format[4] gbuffer_formats = {
+vk::Format[5] gbuffer_formats = {
     vk::FORMAT_B8G8R8A8_UNORM,
+    vk::FORMAT_R16G16B16A16_SFLOAT,
     vk::FORMAT_R16G16B16A16_SFLOAT,
     vk::FORMAT_R16G16B16A16_SFLOAT,
     vk::FORMAT_D32_SFLOAT_S8_UINT
@@ -134,7 +135,7 @@ fn void! main()
         return;
     }
 
-    gltf = gltf::loadFile("examples/gltf/assets/scene_test.glb")!;
+    gltf = gltf::loadFile("examples/gltf/assets/helmet.glb")!;
     defer gltf.free();
 
     foreach (&buffer: gltf.buffers) {
@@ -523,10 +524,18 @@ fn void! main()
             .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
             .setClearValue({
                 .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[3].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
         })
     })
     .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[3].imageView)
+        .setImageView(gbuffer_textures[4].imageView)
         .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
         .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
         .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
@@ -635,6 +644,7 @@ fn void! main()
             color_write_mask,
             color_write_mask,
             color_write_mask,
+            color_write_mask,
         }))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
         .setViewports({{ .x = 0.0, .y = 0.0, .width = 0.0, .height = 0.0, .minDepth = 0.0, .maxDepth = 1.0 }})
@@ -645,9 +655,10 @@ fn void! main()
                 gbuffer_formats[0],
                 gbuffer_formats[1],
                 gbuffer_formats[2],
+                gbuffer_formats[3],
             })
-        .setDepthAttachmentFormat(gbuffer_formats[3])
-        .setStencilAttachmentFormat(gbuffer_formats[3])
+        .setDepthAttachmentFormat(gbuffer_formats[4])
+        .setStencilAttachmentFormat(gbuffer_formats[4])
     ).build(device)!;
 
     // Forward pipeline
@@ -754,33 +765,41 @@ fn void! main()
         .extent = extent,
     })
     .setColorAttachments({
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[0].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    }),
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[1].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    }),
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[2].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    })
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[0].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[1].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[2].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[3].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        })
     })
     .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[3].imageView)
+        .setImageView(gbuffer_textures[4].imageView)
         .setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
         .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
         .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
@@ -1035,7 +1054,7 @@ fn void drawNode(Node node, CommandBuffer buffer, PipelineLayout pipeline_layout
 
 fn void! loadTextures() {
     // Create GBuffer textures
-    for (usz i; i < 3; i++) {
+    for (usz i; i < 4; i++) {
         vk::Format image_format = gbuffer_formats[i];
         DescriptorImageInfo texture;
         texture.imageLayout = vk::IMAGE_LAYOUT_GENERAL;
@@ -1107,6 +1126,7 @@ fn void! loadTextures() {
     }
 
     DescriptorImageInfo depth_texture;
+    Format depth_format = gbuffer_formats[4];
     depth_texture.imageLayout = vk::IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
     vk::Image depth_image = vk::imageCreateInfoBuilder()
@@ -1118,7 +1138,7 @@ fn void! loadTextures() {
     .setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
     .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
     .setTiling(vk::IMAGE_TILING_OPTIMAL)
-    .setFormat(gbuffer_formats[3])
+    .setFormat(depth_format)
     .build(device)!;
 
     depth_image.bind(&device_allocation)!;
@@ -1138,7 +1158,7 @@ fn void! loadTextures() {
         
     depth_texture.imageView = vk::imageViewCreateInfoBuilder()
         .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-        .setFormat(gbuffer_formats[3])
+        .setFormat(depth_format)
         .setSubresourceRange({
           .aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
           .baseMipLevel = 0,

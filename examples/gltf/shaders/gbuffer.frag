@@ -5,8 +5,6 @@
 #extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 #extension GL_EXT_buffer_reference2 : require
 
-#define M_PI 3.141592653589793
-
 #include "types.glsl"
 
 layout(binding = 1) uniform sampler2D materialSamplers[];
@@ -19,18 +17,14 @@ layout(location = 3) in vec3 in_position;
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outNormal;
 layout(location = 2) out vec4 outPosition;
+layout(location = 3) out vec4 outEmissiveMetallic;
 
 vec3 linearToSrgb(vec3 color) {
     return pow(color, vec3(1.0 / 2.2));
 }
 
-vec4 srgbToLinear(vec4 srgbIn) {
+vec4 sRGB_to_Linear(vec4 srgbIn) {
     return vec4(pow(srgbIn.xyz, vec3(2.2)), srgbIn.w);
-}
-
-float microfacetDistribution(float alphaRoughness, float NdotH) {
-    float f = (NdotH * alphaRoughness - NdotH) * NdotH + 1.0;
-    return alphaRoughness / (M_PI * f * f);
 }
 
 vec4 getBaseColor(Material material) {
@@ -43,6 +37,7 @@ vec4 getBaseColor(Material material) {
 }
 
 vec2 getRoughnessMetallic(Material material) {
+    // First value is metallic-ness, second is roughness
     Texture value = material.metallicRoughnessTexture;
     if (value.source >= 0) {
         return texture(materialSamplers[value.source], tex_cord).gb;
@@ -50,12 +45,12 @@ vec2 getRoughnessMetallic(Material material) {
     return vec2(1.0, 1.0);
 }
 
-vec4 getEmissive(Material material) {
+vec3 getEmissive(Material material) {
     Texture value = material.emissiveTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], tex_cord) * material.emissiveFactor;
+        return material.emissiveFactor.rgb * texture(materialSamplers[value.source], tex_cord).rgb * material.emissiveStrength;
     }
-    return vec4(0.0);
+    return vec3(0.0);
 }
 
 float getOcclusion(Material material) {
@@ -69,6 +64,7 @@ float getOcclusion(Material material) {
 vec3 getNormal(Material material) {
     Texture value = material.normalTexture;
     if (value.source >= 0) {
+        // return texture(materialSamplers[value.source], tex_cord).rgb;
         vec3 tangentNormal = texture(materialSamplers[value.source], tex_cord).rgb * 2.0 - 1.0;
         vec3 q1 = dFdx(in_position);
         vec3 q2 = dFdy(in_position);
@@ -91,9 +87,12 @@ void main() {
 
     if (material_index >= 0) {
         material = material_buffer[material_index];
+        vec3 emissive = getEmissive(material);
+        vec2 metallic_roughness = getRoughnessMetallic(material);
 
         outColor = getBaseColor(material);
         outNormal = vec4(getNormal(material), 1.0);
-        outPosition = vec4(in_position, 1.0);
+        outPosition = vec4(in_position, metallic_roughness.g);
+        outEmissiveMetallic = vec4(emissive, metallic_roughness.r);
     }
 }
