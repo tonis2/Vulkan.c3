@@ -13,8 +13,8 @@ layout(binding = 1) uniform sampler2D materialSamplers[];
 
 layout(location = 0) in flat int material_index;
 layout(location = 1) in vec2 tex_cord;
-layout(location = 2) in vec3 v_normal;
-layout(location = 3) in vec3 position;
+layout(location = 2) in vec3 in_normal;
+layout(location = 3) in vec3 in_position;
 
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outNormal;
@@ -69,76 +69,21 @@ float getOcclusion(Material material) {
 vec3 getNormal(Material material) {
     Texture value = material.normalTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], tex_cord).rgb;
+        vec3 tangentNormal = texture(materialSamplers[value.source], tex_cord).rgb * 2.0 - 1.0;
+        vec3 q1 = dFdx(in_position);
+        vec3 q2 = dFdy(in_position);
+        vec2 st1 = dFdx(tex_cord);
+        vec2 st2 = dFdy(tex_cord);
+
+        vec3 N = normalize(in_normal);
+        vec3 T = normalize(q1 * st2.t - q2 * st1.t);
+        vec3 B = -normalize(cross(N, T));
+        mat3 TBN = mat3(T, B, N);
+
+        return normalize(TBN * tangentNormal);
     }
-    return vec3(1);
+    return in_normal;
 }
-
-const float specularStrength = 0.5;
-const float LIGHT_INTENSITY = 1.0;
-const vec3 LIGHT_COLOR = vec3(1.0);
-const vec3 LIGHT_DIR = vec3(0.0,0.0,-1.0);
-const float AMBIENT_STRENGTH = 0.1;
-
-
-vec3 calculateLight(Material material) {   
-    // vec4 baseColor = getBaseColor(material);
-    // vec3 normal = getNormal(material);
-
-    // vec3 lightDir = normalize(LIGHT_DIR - position);
-    // float diff = max(dot(normal, lightDir), 0.0);
-
-    // vec3 diffuse = diff * LIGHT_COLOR;
-    // vec3 reflectDir = reflect(-lightDir, normal);
-    // vec3 viewDir = normalize(camera_pos - position);
-
-    // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    // vec3 specular = specularStrength * spec * LIGHT_COLOR;  
-    // vec3 ambient = AMBIENT_STRENGTH * LIGHT_COLOR;
-
-    // return (ambient + diffuse + specular) * baseColor.rgb;
-
-    // vec3 f0 = vec3(0.04);
-    // vec3 normal = getNormal(material);
-
-    // vec2 mrSample = getRoughnessMetallic(material);
-    // float perceptualRoughness = mrSample.r * material.roughnessFactor;
-    // float metallic = mrSample.g * material.metallicFactor;
-
-    // vec4 baseColor = getBaseColor(material);
-    // vec3 diffuseColor = baseColor.rgb * (vec3(1.0) - f0) * (1.0 - metallic);
-    // vec3 specularColor = mix(f0, baseColor.rgb, metallic);
-
-    // float reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
-    // vec3 reflectance0 = specularColor.rgb;
-    // vec3 reflectance90 = vec3(clamp(reflectance * 50.0, 0.0, 1.0));
-    // float alphaRoughness = pow(perceptualRoughness, 4);
-
-    // vec3 pointToLight = -LIGHT_DIRECTION;
-
-    // vec3 view = normalize(camera_pos - position);
-    // vec3 n = normalize(normal);           // Outward direction of surface point
-    // vec3 v = normalize(view);             // Direction from surface point to view
-    // vec3 l = normalize(pointToLight);     // Direction from surface point to light
-    // vec3 h = normalize(l + v);            // Direction of the vector between l and v
-
-    // float NdotL = clamp(dot(n, l), 0.0, 1.0);
-    // float NdotH = clamp(dot(n, h), 0.0, 1.0);
-    // float VdotH = clamp(dot(v, h), 0.0, 1.0);
-    // float NdotV = clamp(dot(n, v), 0.0, 1.0);
-
-    // if (NdotL > 0.0 || NdotV > 0.0) {
-    //     vec3 F = reflectance0 + (reflectance90 - reflectance0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0);
-    //     float D = microfacetDistribution(alphaRoughness, NdotH);
-    //     vec3 diffuseContrib = (1.0 - F) * (diffuseColor / M_PI);
-    //     vec3 specContrib = F * D;
-
-    //     return LIGHT_INTENSITY * LIGHT_COLOR * NdotL * (diffuseContrib + specContrib);
-    // }
-
-    return vec3(0.0);
-}
-
 
 void main() {
     Material material;
@@ -147,13 +92,8 @@ void main() {
     if (material_index >= 0) {
         material = material_buffer[material_index];
 
-        //vec3 color = calculateLight(material);
-        // color += getEmissive(material).rgb;
-        // color = clamp(color, 0.0, 1.0);
-        // color = mix(color, color * getOcclusion(material), 1.0);
-
         outColor = getBaseColor(material);
         outNormal = vec4(getNormal(material), 1.0);
-        outPosition = vec4(position, 1.0);
+        outPosition = vec4(in_position, 1.0);
     }
 }
