@@ -118,33 +118,32 @@ vec3 DirectRadiance(vec3 P, vec3 N, vec3 V, Material m, vec3 F0, Light light)
 {
   // Direction to light in viewspace
   vec3 L = normalize(light.position.xyz - P);
-
-  // Half-Vector between light and eye in viewspace
   vec3 H = normalize(L + V);
-  float HdV = max(0.001, dot(H, V));
 
-  float NDF = DistributionGGX(N, H, m.roughness);
-  float G = GeometrySmith(N, V, L, m.roughness);
-  vec3 F = FresnelSchlick(F0, HdV);
-  vec3 kD = (vec3(1.0, 1.0, 1.0) - F) * (1.0 - m.metalness);
+// cos(angle) between surface normal and light
+  float diffuseCoefficient = max(dot(normalize(N), normalize(L)), 0.0);
 
-  float NdotL = max(dot(N, L), 0.0);
-  float denominator = max(4.0 * max(dot(N, V), 0.0) * NdotL, 0.001);
+  // cos(angle) between surface half vector and eye
+  float HdV = max(dot(normalize(H), normalize(V)), 0.0);
 
-  vec3 numerator = NDF * G * F;
-  vec3 specular = numerator / denominator;
+  // // Cook Torrence Terms
+  // vec3 F = FresnelSchlick(F0, HdV);
+  // vec3 kD =  vec3(1.0) - F;
 
-  // Point/Directional light attenuation
-  // float A = mix(1.0f, 1.0 / (1.0 + 0.1 * dot(light.position - P, light.position - P)), light.range);
+  // // BRDF
+  // vec3 specBrdf = CookTorrenceSpecularBRDF(F, N, V, H, L, m.roughness);
+  // vec3 diffuseBrdf = kD * (m.albedo / PI) * (1.0 - m.metalness); // Lambert diffuse
 
+  // // Point/Directional light attenuation
+  // float A = mix(1.0f, 1.0 / (1.0 + 0.1 * dot(light.position - P, light.position.xyz - P)), light.range);
 
-  // float diffuseCoefficient = max(dot(normalize(N), normalize(L)), 0.0);
-  //vec3 diffuse = NdL * light.color.rgb * m.albedo;
+  // // // L
+  // vec3 radiance = A * light.color * 5;
+  // vec3 phong = PhongSpecular(V, L, N, vec3(1), m.roughness);
 
-  // L
-  vec3 radiance = light.color * 5;
+  vec3 diffuse = diffuseCoefficient * light.color.rgb * m.albedo;
 
-  return (kD * m.albedo / vec3(PI, PI, PI) + specular) * radiance * NdotL;
+  return diffuse;
 }
 
 // PBR IBL from Env map

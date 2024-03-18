@@ -64,9 +64,8 @@ float getOcclusion(Material material) {
 vec3 getNormal(Material material) {
     Texture value = material.normalTexture;
     if (value.source >= 0) {
-        // return texture(materialSamplers[value.source], tex_cord).rgb;
-        vec3 tangentNormal = texture(materialSamplers[value.source], tex_cord).rgb * 2.0 ;
-
+        vec3 tangentNormal = texture(materialSamplers[value.source], tex_cord).rgb * 2.0 - 1;
+        
         vec3 q1 = dFdx(in_position);
         vec3 q2 = dFdy(in_position);
         vec2 st1 = dFdx(tex_cord);
@@ -79,7 +78,7 @@ vec3 getNormal(Material material) {
 
         return normalize(TBN * tangentNormal);
     }
-    return in_normal;
+    return normalize(in_normal);
 }
 
 void main() {

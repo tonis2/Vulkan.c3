@@ -42,7 +42,7 @@ void main()
         emissive,
         roughness,
         metallic,
-        1
+        0
     );
 
     // Direction to eye in viewspace
