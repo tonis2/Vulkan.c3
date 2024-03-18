@@ -48,7 +48,7 @@ void main() {
 
     // Out going parameters
     m_index = material_index;
-    out_normal = normalize(mat3(skin_matrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
+    out_normal = normalize(transpose(inverse(mat3(model_matrix * skin_matrix))) * vertex.normal);
     out_position = vec3(model_matrix * vec4(v_position, 1.0));
     
     fragTexCoord = vertex.tex_cord;

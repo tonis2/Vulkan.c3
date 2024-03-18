@@ -671,15 +671,15 @@ fn void! main()
    });
 
     forward_pipeline.descriptor_layout = vk::descriptorSetLayoutCreateInfoBuilder()
-    .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-    .setBindings({
+        .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+        .setBindings({
         {
             .binding = 0,
             .descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             .descriptorCount = (uint)gbuffer_textures.len(),
             .stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT
         },
-    })
+        })
     .build(device)!;
 
     forward_pipeline.pipeline_layout = vk::pipelineLayoutCreateInfoBuilder()
@@ -737,19 +737,19 @@ fn void! main()
     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
     .setLogicOp(vk::LOGIC_OP_COPY)
     .setAttachments({
-    { .colorWriteMask =
-        vk::COLOR_COMPONENT_R_BIT |
-        vk::COLOR_COMPONENT_G_BIT |
-        vk::COLOR_COMPONENT_B_BIT |
-        vk::COLOR_COMPONENT_A_BIT,
-        .blendEnable = vk::TRUE,
-        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-        .colorBlendOp = vk::BLEND_OP_ADD,
-        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-        .alphaBlendOp = vk::BLEND_OP_ADD,
-    },
+        { .colorWriteMask =
+            vk::COLOR_COMPONENT_R_BIT |
+            vk::COLOR_COMPONENT_G_BIT |
+            vk::COLOR_COMPONENT_B_BIT |
+            vk::COLOR_COMPONENT_A_BIT,
+            .blendEnable = vk::TRUE,
+            .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+            .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+            .colorBlendOp = vk::BLEND_OP_ADD,
+            .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+            .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+            .alphaBlendOp = vk::BLEND_OP_ADD,
+        },
     }))
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
         .setViewports({{ .x = 0.0, .y = 0, .width = 0, .height = 0, .minDepth = 0.0, .maxDepth = 1.0 }})

@@ -1,10 +1,8 @@
 #extension GL_EXT_scalar_block_layout : require
 
 struct Texture {
-    int index;
     int samp;
     int source;
-    uint texCoord;
 };
 
 layout(buffer_reference, std140, buffer_reference_align = 4) readonly buffer JointBuffer {
