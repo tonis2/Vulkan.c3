@@ -66,6 +66,7 @@ char[*] g_fragment_shader_data = $embed("shaders/gbuffer_frag.spv");
 char[*] f_vertex_shader_data = $embed("shaders/forward_vert.spv");
 char[*] f_fragment_shader_data = $embed("shaders/forward_frag.spv");
 
+
 vk::Allocation device_allocation;
 vk::Allocation local_allocation;
 
@@ -134,6 +135,7 @@ fn void! main()
         io::printfn("Failed to init glfw window");
         return;
     }
+
 
     gltf = gltf::loadFile("examples/gltf/assets/helmet.glb")!;
     defer gltf.free();
@@ -1275,6 +1277,35 @@ fn void! loadTextures() {
             }
         };
 
+        texture.sampler = vk::samplerCreateInfoBuilder()
+            .setMagFilter(vk::FILTER_LINEAR)
+            .setMinFilter(vk::FILTER_LINEAR)
+            .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+            .setMipLodBias(0.0)
+            .setMinLod(0.0)
+            .setMaxLod(1.0)
+            .setMaxAnisotropy(1.0)
+            .setAnisotropyEnable(vk::FALSE)
+            .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+            .build(device)!;
+
+        texture.imageView = vk::imageViewCreateInfoBuilder()
+            .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+            .setFormat(image_format)
+            .setSubresourceRange({
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+                .levelCount = 1,
+            })
+            .setImage(texture_image)
+            .build(device)!;
+
+        texture.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
         device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
            
             vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
@@ -1307,37 +1338,125 @@ fn void! loadTextures() {
             .setImageMemoryBarriers({ finalize_barrier }));
         }!;
 
-        texture.sampler = vk::samplerCreateInfoBuilder()
-                            .setMagFilter(vk::FILTER_LINEAR)
-                            .setMinFilter(vk::FILTER_LINEAR)
-                            .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-                            .setMipLodBias(0.0)
-                            .setMinLod(0.0)
-                            .setMaxLod(1.0)
-                            .setMaxAnisotropy(1.0)
-                            .setAnisotropyEnable(vk::FALSE)
-                            .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-                            .build(device)!;
-
-        texture.imageView = vk::imageViewCreateInfoBuilder()
-                        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-                        .setFormat(image_format)
-                        .setSubresourceRange({
-                            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                            .baseMipLevel = 0,
-                            .baseArrayLayer = 0,
-                            .layerCount = 1,
-                            .levelCount = 1,
-                        })
-                        .setImage(texture_image)
-                        .build(device)!;
-
-        texture.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         material_textures.push(texture);
     }
 
+    stb::Image cube_map_image = stb::loadImagef("examples/gltf/hdr/workshop.hdr", stb::Channel.STBI_RGB_ALPHA)!;
+    defer cube_map_image.free();
+
+    DescriptorImageInfo cube_texture;
+    vk::Format cube_format = vk::FORMAT_R8G8B8A8_UNORM;
+    cube_texture.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    vk::Image cube_image = vk::imageCreateInfoBuilder()
+            .setImageType(vk::IMAGE_TYPE_2D)
+            .setExtent({.width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 })
+            .setMipLevels(1)
+            .setArrayLayers(1)
+            .setSamples(vk::SAMPLE_COUNT_1_BIT)
+            .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+            .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+            .setTiling(vk::IMAGE_TILING_OPTIMAL)
+            .setFormat(cube_format)
+            .build(device)!;
+    cube_image.bind(&device_allocation)!;
+
+    cube_texture.sampler = vk::samplerCreateInfoBuilder()
+        .setMagFilter(vk::FILTER_LINEAR)
+        .setMinFilter(vk::FILTER_LINEAR)
+        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setMipLodBias(0.0)
+        .setMinLod(0.0)
+        .setMaxLod(1.0)
+        .setMaxAnisotropy(1.0)
+        .setAnisotropyEnable(vk::FALSE)
+        .setBorderColor(vk::BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+        .build(device)!;
+
+    cube_texture.imageView = vk::imageViewCreateInfoBuilder()
+        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setFormat(cube_format)
+        .setSubresourceRange({
+        .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel = 0,
+        .baseArrayLayer = 0,
+        .layerCount = 1,
+        .levelCount = 1,
+    })
+    .setImage(cube_image)
+    .build(device)!;
+
+    MemoryBlock stage_image = device.staging_buffer(.size = (usz)cube_map_image.width * cube_map_image.height * 4, .data = cube_map_image.pixels, .pdevice = physical_device)!;
+    defer stage_image.free(device);
+
+    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+        vk::ImageMemoryBarrier2 transfer_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .srcAccessMask = 0,
+            .dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .image = cube_image,
+            .oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+            .newLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+        }};
+
+        vk::ImageMemoryBarrier2 finalize_barrier = {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_TRANSFER_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            .srcAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+            .image = cube_image,
+            .oldLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ transfer_barrier }));
+
+        BufferImageCopy bufferCopyRegion = {
+            .bufferOffset = 0,
+            .bufferRowLength = 0,
+            .bufferImageHeight = 0,
+            .imageSubresource = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .mipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            },
+            .imageOffset = {0, 0, 0},
+            .imageExtent = {.width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 }
+        };
+
+        vk::cmdCopyBufferToImage(
+            command_buffer,
+            stage_image.buffer,
+            cube_image,
+            vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            1,
+            &bufferCopyRegion
+        );
+
+        vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
+        .setImageMemoryBarriers({ finalize_barrier }));
+    }!;
+    gbuffer_textures.push(cube_texture);
 }
 
 fn void! loadBuffers() {

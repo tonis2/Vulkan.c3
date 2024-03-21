@@ -10,6 +10,7 @@ enum Channel : int
   STBI_RGB_ALPHA
 }
 
+extern fn char* stbi_loadf(char*, uint*, uint*, uint*, uint) @extern("stbi_load");
 extern fn char* stbi_load(char*, uint*, uint*, uint*, uint) @extern("stbi_load");
 extern fn char* stbi_load_from_memory(char* buffer, uint size, uint* x, uint* y, uint* channels_in_file, uint desired_channels) @extern("stbi_load_from_memory");
 extern fn void* stbi_image_free(char*) @extern("stbi_image_free");
@@ -39,6 +40,18 @@ fn void Image.free(Image* self) {
 fn Image! loadImage(char* file_path, Channel channel) {
   Image data;
   data.pixels = stbi_load(file_path, &data.width, &data.height, &data.channels, (uint)channel);
+
+  if (data.pixels == null) {
+     libc::printf("Image loading failed \n");
+     return FileError.FILE_NOT_FOUND?;
+  }
+
+  return data;
+}
+
+fn Image! loadImagef(char* file_path, Channel channel) {
+  Image data;
+  data.pixels = stbi_loadf(file_path, &data.width, &data.height, &data.channels, (uint)channel);
 
   if (data.pixels == null) {
      libc::printf("Image loading failed \n");
