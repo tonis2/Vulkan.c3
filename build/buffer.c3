@@ -261,3 +261,12 @@ fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
     allocateMemory(device, self, null, &memory)!;
     return memory;
 }
+
+
+fn SubresourceLayout vk::Image.getLayout(self, Device device, ImageSubresource* subs) {
+    SubresourceLayout response;
+    getImageSubresourceLayout(device, self, subs, &response);
+    return response;
+}
+
+

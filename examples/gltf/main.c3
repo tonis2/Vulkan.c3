@@ -1341,8 +1341,10 @@ fn void! loadTextures() {
         material_textures.push(texture);
     }
 
-    stb::Image cube_map_image = stb::loadImagef("examples/gltf/hdr/workshop.hdr", stb::Channel.STBI_RGB_ALPHA)!;
+
+    stb::Image cube_map_image = stb::loadImagef("examples/gltf/images/cube_map.png", stb::Channel.STBI_RGB_ALPHA)!;
     defer cube_map_image.free();
+    uint cube_map_width = cube_map_image.width / 6;
 
     DescriptorImageInfo cube_texture;
     vk::Format cube_format = vk::FORMAT_R8G8B8A8_UNORM;
@@ -1352,21 +1354,22 @@ fn void! loadTextures() {
             .setImageType(vk::IMAGE_TYPE_2D)
             .setExtent({.width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 })
             .setMipLevels(1)
-            .setArrayLayers(1)
+            .setArrayLayers(6)
             .setSamples(vk::SAMPLE_COUNT_1_BIT)
             .setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
             .setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
             .setTiling(vk::IMAGE_TILING_OPTIMAL)
             .setFormat(cube_format)
             .build(device)!;
+
     cube_image.bind(&device_allocation)!;
 
     cube_texture.sampler = vk::samplerCreateInfoBuilder()
         .setMagFilter(vk::FILTER_LINEAR)
         .setMinFilter(vk::FILTER_LINEAR)
-        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_REPEAT)
-        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_REPEAT)
+        .setAddressModeU(vk::SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+        .setAddressModeV(vk::SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+        .setAddressModeW(vk::SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
         .setMipLodBias(0.0)
         .setMinLod(0.0)
         .setMaxLod(1.0)
@@ -1376,7 +1379,7 @@ fn void! loadTextures() {
         .build(device)!;
 
     cube_texture.imageView = vk::imageViewCreateInfoBuilder()
-        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setViewType(vk::IMAGE_TYPE_2D)
         .setFormat(cube_format)
         .setSubresourceRange({
         .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
@@ -1430,18 +1433,21 @@ fn void! loadTextures() {
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
         .setImageMemoryBarriers({ transfer_barrier }));
 
-        BufferImageCopy bufferCopyRegion = {
-            .bufferOffset = 0,
-            .bufferRowLength = 0,
-            .bufferImageHeight = 0,
-            .imageSubresource = {
-                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-                .mipLevel = 0,
-                .baseArrayLayer = 0,
-                .layerCount = 1,
+        // for (uint i; i < 6; i++) {
+        BufferImageCopy[1] bufferCopyRegion = {
+            {
+                .bufferOffset = 0,
+                .bufferRowLength = 0,
+                .bufferImageHeight = 0,
+                .imageSubresource = {
+                    .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                    .mipLevel = 0,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+                },
+                .imageOffset = {0, 0, 0},
+                .imageExtent = { .width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 }
             },
-            .imageOffset = {0, 0, 0},
-            .imageExtent = {.width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 }
         };
 
         vk::cmdCopyBufferToImage(
@@ -1453,8 +1459,45 @@ fn void! loadTextures() {
             &bufferCopyRegion
         );
 
+        // ImageBlit[1] image_blits = {
+        //     ImageBlit {
+        //         .srcSubresource = {
+        //             .mipLevel = 0,
+        //             .baseArrayLayer = 0,
+        //             .layerCount = 1,
+        //             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+        //         },
+        //         .srcOffsets = {
+        //             { 0, 0, 0 },
+        //             { 0, 0, 1 }
+        //         },
+        //         .dstSubresource = {
+        //             .mipLevel = 0,
+        //             .baseArrayLayer = 1,
+        //             .layerCount = 1,
+        //             .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+        //         },
+        //         .dstOffsets = {
+        //             { 0, 0, 0 },
+        //             { 0, 0, 1 }
+        //         },
+        //     }
+        // };
+
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
         .setImageMemoryBarriers({ finalize_barrier }));
+
+        // vk::cmdBlitImage(
+        //     command_buffer,
+        //     cube_image,
+        //     vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        //     cube_image,
+        //     vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        //     image_blits.len,
+        //     &image_blits,
+        //     1
+        // );
+
     }!;
     gbuffer_textures.push(cube_texture);
 }
