@@ -1352,7 +1352,7 @@ fn void! loadTextures() {
 
     vk::Image cube_image = vk::imageCreateInfoBuilder()
             .setImageType(vk::IMAGE_TYPE_2D)
-            .setExtent({.width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 })
+            .setExtent({.width = cube_map_width, .height = cube_map_width, .depth = 1 })
             .setMipLevels(1)
             .setArrayLayers(6)
             .setSamples(vk::SAMPLE_COUNT_1_BIT)
@@ -1433,30 +1433,30 @@ fn void! loadTextures() {
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
         .setImageMemoryBarriers({ transfer_barrier }));
 
-        // for (uint i; i < 6; i++) {
-        BufferImageCopy[1] bufferCopyRegion = {
-            {
-                .bufferOffset = 0,
+        BufferImageCopy[6] bufferCopyRegions;
+        for (uint i; i < bufferCopyRegions.len; i++) {
+            bufferCopyRegions[i] = BufferImageCopy {
+                .bufferOffset = (usz)cube_map_width * 4 * i,
                 .bufferRowLength = 0,
                 .bufferImageHeight = 0,
                 .imageSubresource = {
                     .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
                     .mipLevel = 0,
-                    .baseArrayLayer = 0,
+                    .baseArrayLayer = i,
                     .layerCount = 1,
                 },
-                .imageOffset = {0, 0, 0},
+                .imageOffset = { 0, 0, 0},
                 .imageExtent = { .width = cube_map_image.width, .height = cube_map_image.height, .depth = 1 }
-            },
-        };
+            };
+        }
 
         vk::cmdCopyBufferToImage(
             command_buffer,
             stage_image.buffer,
             cube_image,
             vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            1,
-            &bufferCopyRegion
+            bufferCopyRegions.len,
+            &bufferCopyRegions
         );
 
         // ImageBlit[1] image_blits = {
