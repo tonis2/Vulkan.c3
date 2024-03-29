@@ -1342,7 +1342,7 @@ fn void! loadTextures() {
     }
 
 
-    stb::Image cube_map_image = stb::loadImagef("examples/gltf/images/cube_map.png", stb::Channel.STBI_RGB_ALPHA)!;
+    stb::Image cube_map_image = stb::loadImage("examples/gltf/images/cube_map.png", stb::Channel.STBI_RGB_ALPHA)!;
     defer cube_map_image.free();
     uint cube_map_width = cube_map_image.width / 6;
 
