@@ -12,7 +12,7 @@ import std::time;
 
 const WIDTH = 1200;
 const HEIGHT = 800;
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
 const SCENE_INDEX = 0;
 
@@ -752,30 +752,30 @@ fn void! main()
         .extent = extent,
     })
     .setColorAttachments({
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[0].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    }),
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[1].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    }),
-    vk::renderingAttachmentInfoBuilder()
-        .setImageView(gbuffer_textures[2].imageView)
-        .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-        .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-        .setClearValue({
-        .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-    })
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[0].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[1].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        }),
+        vk::renderingAttachmentInfoBuilder()
+            .setImageView(gbuffer_textures[2].imageView)
+            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+            .setClearValue({
+            .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+        })
     })
     .setDepthAttachment(&&vk::renderingAttachmentInfoBuilder()
         .setImageView(gbuffer_textures[3].imageView)
@@ -803,6 +803,48 @@ fn void! main()
     uint frame = 0;
     Clock time = clock::now();
 
+    vk::ImageMemoryBarrier2[3] gbufferDrawBarriers;
+    vk::ImageMemoryBarrier2[3] gbufferRenderBarriers;
+
+    for (usz i; i < 3; i++) {
+        gbufferDrawBarriers[i] = vk::ImageMemoryBarrier2 {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
+            .image = gbuffer_images[i],
+            .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+        }};
+    }
+
+    for (usz i; i < 3; i++) {
+        gbufferRenderBarriers[i] = vk::ImageMemoryBarrier2 {
+            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+            .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+            .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
+            .image = gbuffer_images[i],
+            .oldLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            .newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .subresourceRange = {
+                .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .levelCount = 1,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+        }};
+    }
+     
+
     while (!glfw::windowShouldClose(window)) {
         eventHandler.update();
 
@@ -829,23 +871,6 @@ fn void! main()
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
         vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
-
-        vk::ImageMemoryBarrier2 gbufferPipelineBarrier = {
-            .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-            .srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-            .dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-            .srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
-            .dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
-            .image = gbuffer_images[0],
-    /*        .oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-            .newLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,*/
-            .subresourceRange = {
-              .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-              .baseMipLevel = 0,
-              .levelCount = 1,
-              .baseArrayLayer = 0,
-              .layerCount = 1,
-          }};
 
         vk::ImageMemoryBarrier2 forwardBarrier = {
         .sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
@@ -880,6 +905,7 @@ fn void! main()
             .baseArrayLayer = 0,
             .layerCount = 1,
         }};
+        
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = -HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = HEIGHT });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
@@ -911,7 +937,12 @@ fn void! main()
 
         // Wait for GBUFFER to be finished rendering
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
-        .setImageMemoryBarriers({ gbufferPipelineBarrier, forwardBarrier }));
+        .setImageMemoryBarriers({ gbufferDrawBarriers[0], gbufferDrawBarriers[1], gbufferDrawBarriers[2], forwardBarrier }));
+
+        for (usz i; i < 3; i++) {
+            DescriptorImageInfo* image = &gbuffer_textures[i];
+            image.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        }
 
         // Draw forward render
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0, .y = 0.0 });
@@ -930,7 +961,12 @@ fn void! main()
         vk::cmdEndRenderingKHR(command_buffer);
 
         vk::cmdPipelineBarrier2(command_buffer, &&vk::dependencyInfoBuilder()
-        .setImageMemoryBarriers({ renderBarrier }));
+        .setImageMemoryBarriers({ gbufferRenderBarriers[0], gbufferRenderBarriers[1], gbufferRenderBarriers[2], renderBarrier }));
+
+        for (usz i; i < 3; i++) {
+            DescriptorImageInfo* image = &gbuffer_textures[i];
+            image.imageLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        }
 
         SubmitInfo submit_info = vk::submitInfoBuilder()
         .setWaitSemaphores({ wait_semaphore })
@@ -1036,7 +1072,7 @@ fn void! loadTextures() {
     for (usz i; i < 3; i++) {
         vk::Format image_format = gbuffer_formats[i];
         DescriptorImageInfo texture;
-        texture.imageLayout = vk::IMAGE_LAYOUT_GENERAL;
+        texture.imageLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         vk::Image image = vk::imageCreateInfoBuilder()
             .setImageType(vk::IMAGE_TYPE_2D)
@@ -1315,7 +1351,6 @@ fn void! loadTextures() {
         texture.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         material_textures.push(texture);
     }
-
 }
 
 fn void! loadBuffers() {
