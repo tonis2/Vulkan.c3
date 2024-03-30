@@ -225,23 +225,16 @@ struct Material {
     float roughnessFactor;
     Vec4f emissiveFactor;
     Vec4f baseColorFactor;
-    TextureInfo normalTexture;
-    TextureInfo occlusionTexture;
-    TextureInfo emissiveTexture;
-    TextureInfo baseColorTexture;
-    TextureInfo metallicRoughnessTexture;
-}
-
-struct TextureInfo {
-    int index;
-    int sampler;
-    int source;
-    uint texCoord;
+    Texture normalTexture;
+    Texture occlusionTexture;
+    Texture emissiveTexture;
+    Texture baseColorTexture;
+    Texture metallicRoughnessTexture;
 }
 
 struct Texture {
-    uint sampler;
-    uint source;
+    int sampler;
+    int source;
 }
 
 struct Sampler {
@@ -662,7 +655,7 @@ fn void Camera.fromJson(&self, Object* json) {
     }
 }
 
-fn void Material.fromJson(&self, Object* json) {
+fn void! Material.fromJson(&self, Object* json, Gltf data) {
     bool! doubleSided = json.get_bool("doubleSided");
     Object*! pbrMetallicRoughness = json.get("pbrMetallicRoughness");
     Object*! occlusionTexture = json.get("occlusionTexture");
@@ -670,10 +663,20 @@ fn void Material.fromJson(&self, Object* json) {
     Object*! emissiveTexture = json.get("emissiveTexture");
     Object*! emissiveFactor = json.get("emissiveFactor");
 
+    self.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
+    self.emissiveFactor = {1.0, 1.0, 1.0, 1.0};
+
+    self.baseColorTexture = {-1, -1};
+    self.metallicRoughnessTexture = {-1, -1};
+    self.occlusionTexture = {-1, -1};
+    self.emissiveTexture =  {-1, -1};
+    self.normalTexture =  {-1, -1};
+
+    self.roughnessFactor = 0;
+    self.metallicFactor = 0;
+    self.emissiveStrength = 1.0;
+
     if (try doubleSided) self.doubleSided = doubleSided;
-    if (try occlusionTexture) self.occlusionTexture.fromJson(occlusionTexture);
-    if (try normalTexture) self.normalTexture.fromJson(normalTexture);
-    if (try emissiveTexture) self.emissiveTexture.fromJson(emissiveTexture);
     if (try emissiveFactor) {
         self.emissiveFactor = {(float)emissiveFactor.get_at(0).f, (float)emissiveFactor.get_at(1).f, (float)emissiveFactor.get_at(2).f, 1.0};
     }
@@ -684,11 +687,7 @@ fn void Material.fromJson(&self, Object* json) {
 
         Object*! baseColorTexture = pbrMetallicRoughness.get("baseColorTexture");
         Object*! baseColorFactor = pbrMetallicRoughness.get("baseColorFactor");
-        Object*! metallicRoughnessTexture = pbrMetallicRoughness.get("baseColorTexture");
-
-        self.baseColorFactor = {1.0, 1.0, 1.0, 1.0};
-        self.baseColorTexture = {-1, -1, -1, 0};
-        self.metallicRoughnessTexture =  {-1, -1, -1, 0};
+        Object*! metallicRoughnessTexture = pbrMetallicRoughness.get("metallicRoughnessTexture");
 
         if (try metallicFactor && try roughnessFactor) {
             self.metallicFactor = (float)metallicFactor;
@@ -699,17 +698,13 @@ fn void Material.fromJson(&self, Object* json) {
             self.baseColorFactor = Vec4f {(float)baseColorFactor.get_at(0).f, (float)baseColorFactor.get_at(1).f, (float)baseColorFactor.get_at(2).f, (float)baseColorFactor.get_at(3).f};
         }
 
-        if (try baseColorTexture) self.baseColorTexture.fromJson(baseColorTexture);
-        if (try metallicRoughnessTexture) self.metallicRoughnessTexture.fromJson(metallicRoughnessTexture);
+        if (try baseColorTexture) self.baseColorTexture = data.textures[baseColorTexture.get_int("index")!];
+        if (try metallicRoughnessTexture) self.metallicRoughnessTexture = data.textures[metallicRoughnessTexture.get_int("index")!];
     }
-}
 
-fn void TextureInfo.fromJson(&self, Object* json) {
-    uint! index = json.get_int("index");
-    uint! texCoord = json.get_int("texCoord");
-
-    if (try index) self.index = index;
-    if (try texCoord) self.texCoord = texCoord;
+    if (try occlusionTexture) self.occlusionTexture = data.textures[occlusionTexture.get_int("index")!];
+    if (try normalTexture) self.normalTexture = data.textures[normalTexture.get_int("index")!];
+    if (try emissiveTexture) self.emissiveTexture = data.textures[emissiveTexture.get_int("index")!];
 }
 
 fn void Texture.fromJson(&self, Object* json) {
@@ -1090,24 +1085,7 @@ fn Gltf! parse(InStream* stream) {
     if (try materials) {
         foreach (json : materials.array) {
             Material material;
-            material.fromJson(json);
-   
-
-            TextureInfo baseColor = material.baseColorTexture;
-            TextureInfo roughness = material.metallicRoughnessTexture;
-
-            if (baseColor.index >= 0) {
-                Texture texture = content.textures[material.baseColorTexture.index];
-                material.baseColorTexture.source = texture.source;
-                material.baseColorTexture.sampler = texture.sampler;
-            }
-
-            if (roughness.index >= 0) {
-                Texture texture = content.textures[material.metallicRoughnessTexture.index];
-                material.metallicRoughnessTexture.source = texture.source;
-                material.metallicRoughnessTexture.sampler = texture.sampler;
-            }
-
+            material.fromJson(json, content)!;
             content.materials.push(material);
         }
     }
