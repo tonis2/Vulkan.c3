@@ -44,11 +44,13 @@ void main() {
              vertex.skin_weight[1] * joint_buffer[uint(vertex.skin_pos[1])].matrix +
              vertex.skin_weight[2] * joint_buffer[uint(vertex.skin_pos[2])].matrix +
              vertex.skin_weight[3] * joint_buffer[uint(vertex.skin_pos[3])].matrix;
+        
     }
+
+    out_normal = normalize(transpose(inverse(mat3(model_matrix * skin_matrix))) * vertex.normal);
 
     // Out going parameters
     m_index = material_index;
-    out_normal = normalize(mat3(skin_matrix) * vec3(skin_matrix * vec4(vertex.normal, 1.0)));
     out_position = vec3(model_matrix * vec4(v_position, 1.0));
     
     fragTexCoord = vertex.tex_cord;

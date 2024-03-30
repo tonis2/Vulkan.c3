@@ -19,6 +19,7 @@ layout(location = 3) in vec3 in_position;
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outNormal;
 layout(location = 2) out vec4 outPosition;
+layout(location = 3) out vec4 outEmissiveMetallic;
 
 vec3 linearToSrgb(vec3 color) {
     return pow(color, vec3(1.0 / 2.2));
@@ -50,12 +51,12 @@ vec2 getRoughnessMetallic(Material material) {
     return vec2(1.0, 1.0);
 }
 
-vec4 getEmissive(Material material) {
+vec3 getEmissive(Material material) {
     Texture value = material.emissiveTexture;
     if (value.source >= 0) {
-        return texture(materialSamplers[value.source], tex_cord) * material.emissiveFactor;
+        return texture(materialSamplers[value.source], tex_cord).rgb * material.emissiveFactor.rgb;
     }
-    return vec4(0.0);
+    return vec3(0.0);
 }
 
 float getOcclusion(Material material) {
@@ -91,9 +92,12 @@ void main() {
 
     if (material_index >= 0) {
         material = material_buffer[material_index];
+        vec3 emissive = getEmissive(material);
+        vec2 metallic_roughness = getRoughnessMetallic(material);
 
         outColor = getBaseColor(material);
         outNormal = vec4(getNormal(material), 1.0);
-        outPosition = vec4(in_position, 1.0);
+        outPosition = vec4(in_position, metallic_roughness.g);
+        outEmissiveMetallic = vec4(emissive, metallic_roughness.r);
     }
 }
