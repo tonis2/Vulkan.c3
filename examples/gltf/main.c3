@@ -425,9 +425,7 @@ fn void! main()
         present_modes.free();
     }
 
-    SurfaceFormatKHR format = surface_formats.contains({.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR})
-        ? SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR}
-        : surface_formats[0];
+    SurfaceFormatKHR format = SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
 
     uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
@@ -435,7 +433,7 @@ fn void! main()
         .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
         .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
         .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-        .setPresentMode(present_modes.contains(vk::PRESENT_MODE_MAILBOX_KHR) ? vk::PRESENT_MODE_MAILBOX_KHR : present_modes[0])
+        .setPresentMode(vk::PRESENT_MODE_MAILBOX_KHR)
         .setPreTransform(capabilities.currentTransform)
         .setImageColorSpace(format.colorSpace)
         .setImageFormat(format.format)
