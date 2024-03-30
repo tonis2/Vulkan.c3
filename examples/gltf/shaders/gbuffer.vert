@@ -13,11 +13,6 @@ layout( push_constant ) uniform constants
     JointBuffer joint_buffer;
     int material_index;
     int8_t has_skin;
-
-    uint8_t morph_count;
-    uint morph_start;
-    uint morph_offset;
-    float[8] morph_weights;
 };
 
 // Shader out values
@@ -33,10 +28,10 @@ void main() {
     vec3 v_position = vertex.position;
     mat4 skin_matrix = mat4(1);
 
-    for (uint i = 0; i < morph_count; i++) {
-        uint offset = morph_start + (i * morph_offset) + gl_VertexIndex;
-        v_position += vertex_buffer[offset].position * morph_weights[i];
-    }
+    // for (uint i = 0; i < morph_count; i++) {
+    //     uint offset = morph_start + (i * morph_offset) + gl_VertexIndex;
+    //     v_position += vertex_buffer[offset].position * morph_weights[i];
+    // }
 
     if (has_skin >= 0) {
         skin_matrix =
