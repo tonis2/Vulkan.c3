@@ -38,11 +38,6 @@ struct PushConstantData {
     DeviceAddress joint_buffer;
     int material;
     ichar has_skin;
-
-    char morph_count;
-    uint morph_start;
-    uint morph_offset;
-    float[8] morph_weights;
 }
 
 struct ForwardConstantData {
@@ -174,8 +169,6 @@ fn void! main()
 
     // Preload vertex data from GLTF
     foreach (mesh: gltf.meshes) {
-        uint morph_adjustment = 0;
-
         foreach (prim_index, &primitive: mesh.primitives) {
             Accessor pos_accessor = gltf.accessors[primitive.attributes["POSITION"]!!];
             Accessor index_accessor = gltf.accessors[primitive.attributes["indices"]!!];
@@ -245,25 +238,6 @@ fn void! main()
                     .skin_pos = skin_pos,
                     .skin_weight = skin_weight
                 });
-            }
-
-            if (primitive.targets.len() > 0) {
-                primitive.attributes["morph_start"] = vertices.len() - morph_adjustment;
-                primitive.attributes["morph_offset"] = pos_accessor.count;
-                morph_adjustment += pos_accessor.count;
-            };
-
-            // Add morph data
-            foreach (targets: primitive.targets) {
-                Accessor position = gltf.accessors[targets["POSITION"]!!];
-                Accessor normal = gltf.accessors[targets["NORMAL"]!!];
-
-                for (usz i; i < position.count; i++) {
-                    vertices.push({
-                       .pos = gltf.@castBuffer(position, i, Vec3f),
-                       .normal = gltf.@castBuffer(normal, i, Vec3f),
-                    });
-                }
             }
         }
     }
@@ -1067,12 +1041,7 @@ fn void drawNode(Node node, CommandBuffer buffer, PipelineLayout pipeline_layout
                 .matrix = node.globalMatrix().transpose(),
                 .joint_buffer = joint_buffer.address,
                 .material = (int)primitive.attributes["material"] ?? -1,
-                .has_skin = (ichar)node.skin,
-
-                .morph_count = (char)primitive.targets.len(),
-                .morph_start = (uint)primitive.attributes["morph_start"] ?? 0,
-                .morph_offset = (uint)primitive.attributes["morph_offset"] ?? 0,
-                .morph_weights = weights,
+                .has_skin = (ichar)node.skin
             };
 
             vk::cmdPushConstants(buffer, pipeline_layout, vk::SHADER_STAGE_VERTEX_BIT, 0, PushConstantData.sizeof, &constant_data);
