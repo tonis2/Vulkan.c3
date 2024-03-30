@@ -518,11 +518,6 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
   }).join("\n")}
 """, mode: FileMode.append);
 
-  mainOutput.writeAsStringSync("""
-macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
-macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
-""", mode: FileMode.append);
-}
 
 class VkType {
   String name;
