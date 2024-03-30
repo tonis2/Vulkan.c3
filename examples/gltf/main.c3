@@ -12,7 +12,7 @@ import std::time;
 
 const WIDTH = 1200;
 const HEIGHT = 800;
-const ENABLE_VALIDATION_LAYERS = true;
+const ENABLE_VALIDATION_LAYERS = false;
 const MAX_FRAMES_IN_FLIGHT = 2;
 const SCENE_INDEX = 0;
 
