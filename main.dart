@@ -517,7 +517,7 @@ fn void! ${command.name.C3Name.camelCase()} (${command.values.map((type) => "${t
 """;
   }).join("\n")}
 """, mode: FileMode.append);
-
+}
 
 class VkType {
   String name;

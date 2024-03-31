@@ -4281,5 +4281,3 @@ struct OpaqueCaptureDescriptorDataCreateInfoEXT {
  void* pNext;
  void* opaqueCaptureDescriptorData;
 }
-macro bool SurfaceFormatKHR.equals(SurfaceFormatKHR a, SurfaceFormatKHR b) => a.format == b.format && a.colorSpace == b.colorSpace;
-macro bool PresentModeKHR.equals(PresentModeKHR a, PresentModeKHR b) => a == b;
