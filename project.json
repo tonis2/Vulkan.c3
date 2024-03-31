@@ -7,18 +7,12 @@
 	"dependencies": ["glfw"],
 	"features": ["GLFW_VK"],
 	"linked-libraries": ["vulkan", "glfw"],
-	"sources": [ "./examples/helpers/*", "./build/*"],
+	"sources": ["./build/*"],
 	"cflags": "-fPIE",
 	"targets": {
 		"cube": {
 			"type": "executable",
-			"sources-add": ["./examples/cube/main.c3"]
-		},
-		"gltf": {
-			"type": "executable",
-			"dependencies-add": ["stb"],
-			"sources-add": ["./examples/gltf/main.c3", "./examples/dependencies/gltf.c3"],
-			"c-sources-add": ["./examples/dependencies/stb.c3l/native/*"]
+			"sources-add": ["./examples/cube/main.c3", "./examples/dependencies/camera.c3"]
 		}
 	},
 	"output": "./build"
