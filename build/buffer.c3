@@ -256,6 +256,21 @@ fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, Physic
     };
 }
 
+fn vk::Format findDepthFormat(vk::Format[] formats = {FORMAT_D32_SFLOAT, FORMAT_D32_SFLOAT_S8_UINT, FORMAT_D24_UNORM_S8_UINT}, ImageTiling tiling = IMAGE_TILING_OPTIMAL, FormatFeatureFlags features, PhysicalDevice device) {
+    foreach (format: formats) {
+        FormatProperties props;
+        getPhysicalDeviceFormatProperties(device, format, &props);
+
+        if (tiling == IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
+            return format;
+        } else if (tiling == IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
+            return format;
+        }
+    }
+
+    return formats[0];
+}
+
 fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
     DeviceMemory memory;
     allocateMemory(device, self, null, &memory)!;
