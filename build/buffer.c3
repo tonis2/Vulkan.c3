@@ -46,6 +46,7 @@ fn usz alignUp(usz value, usz factor)  => value + factor - 1 - (value + factor -
 enum BufferType {
     IMAGE,
     BUFFER,
+    STAGING_BUFFER
 }
 
 struct Allocation {
@@ -85,9 +86,9 @@ fn Allocation! Allocation.build(&self) {
 }
 
 fn void Allocation.free(&self) {
-    foreach (block_info: self.blocks) block_info.free(self.device, false);
-    freeMemory(self.device, self.memory, null);
+    foreach (block_info: self.blocks) block_info.free(self.device);
     self.blocks.free();
+    freeMemory(self.device, self.memory, null);
 }
 
 struct MemoryBlock {
@@ -131,14 +132,24 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
     return MemoryBlock {
         .buffer = staging_buffer,
         .memory = memory,
+        .type = STAGING_BUFFER,
     };
 }
 
-fn void MemoryBlock.free(&self, Device device, bool free_mem = true)
+fn void MemoryBlock.free(&self, Device device)
 {
-    destroyBuffer(device, self.buffer, null);
-    destroyImage(device, self.image, null);
-    if (free_mem) freeMemory(device, self.memory, null);
+    if (self.type == BufferType.BUFFER) {
+        destroyBuffer(device, self.buffer, null);
+    }
+
+    if (self.type == BufferType.IMAGE) {
+        destroyImage(device, self.image, null);
+    }
+
+    if (self.type == BufferType.STAGING_BUFFER) {
+        destroyBuffer(device, self.buffer, null);
+        freeMemory(device, self.memory, null);
+    }
 }
 
 fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
