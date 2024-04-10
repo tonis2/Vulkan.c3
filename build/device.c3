@@ -57,30 +57,57 @@ struct DeviceInfo {
     SurfaceCapabilitiesKHR capabilities;
 }
 
-fn ShaderModule! Device.createShaderModule(self, char[] data)
-{
-    ShaderModule shader;
+struct Shader {
+    ShaderModule vert_mod;
+    ShaderModule frag_mod;
+    PipelineShaderStageCreateInfo[2] stages;
+}
+
+fn Shader! Device.createShader(self, char[] vertex, char[] fragment) {
+    Shader shader;
     createShaderModule(self, &&ShaderModuleCreateInfo{
        .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
        .pNext = null,
        .flags = 0,
-       .codeSize = data.len,
-       .pCode = (uint*)&data[0],
-    }, null, &shader)!;
+       .codeSize = vertex.len,
+       .pCode = (uint*)&vertex[0],
+    }, null, &shader.vert_mod)!;
+
+    createShaderModule(self, &&ShaderModuleCreateInfo{
+       .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+       .pNext = null,
+       .flags = 0,
+       .codeSize = fragment.len,
+       .pCode = (uint*)&fragment[0],
+    }, null, &shader.frag_mod)!;
+
+    shader.stages = PipelineShaderStageCreateInfo[2] {
+        {
+            .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .stage = vk::SHADER_STAGE_VERTEX_BIT,
+            .mod = shader.vert_mod,
+            .pName = "main",
+            .pSpecializationInfo = null,
+        },
+        {
+            .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+            .pNext = null,
+            .flags = 0,
+            .stage = vk::SHADER_STAGE_FRAGMENT_BIT,
+            .mod = shader.frag_mod,
+            .pName = "main",
+            .pSpecializationInfo = null,
+        }
+    };
+
     return shader;
 }
 
-fn PipelineShaderStageCreateInfo ShaderModule.info(self, ShaderStageFlagBits stage, SpecializationInfo* spec_info = null, PipelineShaderStageCreateFlags flags = 0)
-{
-    return PipelineShaderStageCreateInfo {
-        .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-        .pNext = null,
-        .flags = flags,
-        .stage = stage,
-        .mod = self,
-        .pName = "main",
-        .pSpecializationInfo = spec_info,
-    };
+fn void Shader.free(self, Device device) {
+    destroyShaderModule(device, self.frag_mod, null);
+    destroyShaderModule(device, self.vert_mod, null);
 }
 
 fn CommandPool! Device.createCommandPool(self, CommandPoolCreateInfo* info = null, uint queue)
@@ -428,11 +455,6 @@ fn void CommandPool.free(self, Device device)
 
 fn void SwapchainKHR.free(self, Device device) {
     destroySwapchainKHR(device, self, null);
-}
-
-fn void ShaderModule.free(self, Device device)
-{
-    destroyShaderModule(device, self, null);
 }
 
 fn void ImageView.free(self, Device device) {

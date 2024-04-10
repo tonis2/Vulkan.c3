@@ -1,6 +1,7 @@
 import std::io;
 import vk;
 import glfw;
+
 import camera;
 import std::math;
 import std::collections::list;
@@ -62,6 +63,7 @@ Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
 PhysicalDevice physical_device;
 QueueFamily queue_family;
+
 
 ZStringList validations;
 ZStringList extensions;
@@ -268,7 +270,7 @@ fn void! main()
     MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
                 .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                 .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                .setSize(indices.len * float.sizeof)
+                .setSize(indices.len * ushort.sizeof)
                 .bind(&device_allocation)!;
 
     // Create stage buffers and then copy the data to GPU only buffers
@@ -335,16 +337,13 @@ fn void! main()
     char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
 
-    ShaderModule vertex_module = device.createShaderModule(&vertex_shader_data)!;
-    ShaderModule frag_module = device.createShaderModule(&fragment_shader_data)!;
+    Shader draw_shaders = device.createShader(.vertex = &vertex_shader_data, .fragment = &fragment_shader_data)!;
+
     PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfoBuilder().setSetLayouts({ descriptor_set_layout }).build(device)!;
 
     // Create Renderpipeline info
     GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
-    .setStages({
-        vertex_module.info(vk::SHADER_STAGE_VERTEX_BIT),
-        frag_module.info(vk::SHADER_STAGE_FRAGMENT_BIT)
-    })
+    .setStages(&draw_shaders.stages)
      .setLayout(pipeline_layout)
      .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
         .setVertexBindingDescriptions(
@@ -575,14 +574,13 @@ fn void! main()
     foreach (view : swapchain_views) view.free(device);
     swapchain_images.free();
     swapchain_views.free();
-
-    uniform_buffer.free(device);
-    vertex_buffer.free(device);
     command_pool.free(device);
 
+    device_allocation.free();
+    local_allocation.free();
+    
     descriptor_set_layout.free(device);
-    vertex_module.free(device);
-    frag_module.free(device);
+    draw_shaders.free(device);
     pipeline.free(device);
     pipeline_layout.free(device);
 
@@ -594,4 +592,3 @@ fn void! main()
     device.free();
     instance.free();
 }
-
