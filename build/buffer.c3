@@ -190,6 +190,7 @@ fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
 
     usz offset = alignUp(allocation.used_size, mem_reqs.alignment);
     bindBufferMemory(allocation.device, buffer, allocation.memory, offset)!;
+    usz size = alignUp(mem_reqs.size, mem_reqs.alignment);
 
     MemoryBlock block = {
         .is_used = true,
@@ -197,12 +198,12 @@ fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
         .id = allocation.buffer_count - 1,
         .buffer = buffer,
         .memory = allocation.memory,
-        .size = mem_reqs.size,
+        .size = size,
         .mapped = allocation.mapped,
         .type = BufferType.BUFFER,
     };
 
-    allocation.used_size += mem_reqs.size;
+    allocation.used_size += size;
     allocation.buffer_count += 1;
     allocation.blocks.push(block);
 
