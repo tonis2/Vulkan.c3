@@ -78,7 +78,7 @@ fn Allocation! Allocation.build(&self) {
     self.buffer_count = 0;
 
     // Map data, when not meant for DEVICE LOCAL memory
-    if (self.properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT != self.properties) {
+    if ((MemoryPropertyFlagBits)self.properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT != self.properties) {
         vk::mapMemory(self.device, self.memory, 0, self.size, 0, &self.mapped)!;
     }
 
@@ -173,7 +173,7 @@ fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
     MemoryRequirements mem_reqs = buffer.memoryRequirements(allocation.device);
     uint memory_type = allocation.pdevice.getMemoryType(allocation.properties, mem_reqs.memoryTypeBits);
 
-    if (self.usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
+    if ((MemoryPropertyFlagBits)self.usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
         MemoryRequirements desc_mem_reqs = self.descriptorMemoryRequirements(allocation.pdevice);
         mem_reqs.size = desc_mem_reqs.size;
         mem_reqs.alignment = desc_mem_reqs.alignment;
@@ -207,7 +207,7 @@ fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
     allocation.buffer_count += 1;
     allocation.blocks.push(block);
 
-    if (self.usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+    if ((MemoryPropertyFlagBits)self.usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
         BufferDeviceAddressInfo address_info = {
           .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
           .buffer = buffer
