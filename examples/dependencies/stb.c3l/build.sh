@@ -1,1 +1,0 @@
-zip ./stb.c3l ./stb.c3 ./native ./manifest.json
