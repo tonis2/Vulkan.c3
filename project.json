@@ -6,9 +6,8 @@
 	"dependency-search-paths": [ "./examples/dependencies"],
 	"dependencies": ["glfw"],
 	"features": ["GLFW_VK"],
-	"linked-libraries": ["vulkan", "glfw"],
+	"linked-libraries": ["glfw", "vulkan"],
 	"sources": ["./build/*"],
-	"cflags": "-fPIE",
 	"targets": {
 		"cube": {
 			"type": "executable",
