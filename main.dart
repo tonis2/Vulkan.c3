@@ -78,7 +78,7 @@ var enabled_extensions = [
   "VK_KHR_multiview",
   "VK_KHR_dynamic_rendering",
   "VK_EXT_descriptor_buffer",
-
+  "VK_KHR_xlib_surface"
   // "VK_EXT_extended_dynamic_state2",
   //   "VK_EXT_extended_dynamic_state3",
 /*  "VK_KHR_acceleration_structure"*/

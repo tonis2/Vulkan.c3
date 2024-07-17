@@ -196,6 +196,7 @@ def DisplayModeCreateFlagsKHR = Flags;
 def DisplayPlaneAlphaFlagsKHR = Flags;
 def DisplaySurfaceCreateFlagsKHR = Flags;
 def SurfaceTransformFlagsKHR = Flags;
+def XlibSurfaceCreateFlagsKHR = Flags;
 def XcbSurfaceCreateFlagsKHR = Flags;
 def DebugReportFlagsEXT = Flags;
 def RenderingFlagsKHR = void*;
@@ -230,6 +231,8 @@ const KHR_SWAPCHAIN_SPEC_VERSION = 70;
 const KHR_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_swapchain";
 const KHR_DISPLAY_SPEC_VERSION = 23;
 const KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display";
+const KHR_XLIB_SURFACE_SPEC_VERSION = 6;
+const KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface";
 const KHR_XCB_SURFACE_SPEC_VERSION = 6;
 const KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
 const EXT_DEBUG_REPORT_SPEC_VERSION = 10;
@@ -242,7 +245,7 @@ const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION = 2;
 const KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_physical_device_properties2";
 const KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2;
 const KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor";
-const EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4;
+const EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 5;
 const EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME = "VK_EXT_swapchain_colorspace";
 const KHR_CREATE_RENDERPASS_2_SPEC_VERSION = 1;
 const KHR_CREATE_RENDERPASS_2_EXTENSION_NAME = "VK_KHR_create_renderpass2";
@@ -542,6 +545,7 @@ const StructureType STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR = 1000060011;
 const StructureType STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000060012;
 const StructureType STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
 const StructureType STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
+const StructureType STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR = 1000004000;
 const StructureType STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = 0;
@@ -637,6 +641,7 @@ const ObjectType OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = 1000011000;
 const ObjectType OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000;
 
 distinct VendorId = inline uint;
+const VendorId VENDOR_ID_KHRONOS = 0x10000;
 const VendorId VENDOR_ID_VIV = 0x10001;
 const VendorId VENDOR_ID_VSI = 0x10002;
 const VendorId VENDOR_ID_KAZAN = 0x10003;
@@ -1552,7 +1557,8 @@ const DriverId DRIVER_ID_MESA_VENUS = 22;
 const DriverId DRIVER_ID_MESA_DOZEN = 23;
 const DriverId DRIVER_ID_MESA_NVK = 24;
 const DriverId DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = 25;
-const DriverId DRIVER_ID_MESA_AGXV = 26;
+const DriverId DRIVER_ID_MESA_HONEYKRISP = 26;
+const DriverId DRIVER_ID_RESERVED_27 = 27;
 
 distinct ShaderFloatControlsIndependence = inline uint;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = 0;
@@ -4093,6 +4099,13 @@ struct DisplaySurfaceCreateInfoKHR {
  float globalAlpha;
  DisplayPlaneAlphaFlagBitsKHR alphaMode;
  Extent2D imageExtent;
+}
+struct XlibSurfaceCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ XlibSurfaceCreateFlagsKHR flags;
+ void** dpy;
+ ulong window;
 }
 struct XcbSurfaceCreateInfoKHR {
  StructureType sType;
