@@ -198,8 +198,10 @@ def DisplaySurfaceCreateFlagsKHR = Flags;
 def SurfaceTransformFlagsKHR = Flags;
 def XlibSurfaceCreateFlagsKHR = Flags;
 def XcbSurfaceCreateFlagsKHR = Flags;
+def Win32SurfaceCreateFlagsKHR = Flags;
 def DebugReportFlagsEXT = Flags;
 def RenderingFlagsKHR = void*;
+def MacOSSurfaceCreateFlagsMVK = Flags;
 def DebugUtilsMessageSeverityFlagsEXT = Flags;
 def DebugUtilsMessageTypeFlagsEXT = Flags;
 def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
@@ -235,6 +237,8 @@ const KHR_XLIB_SURFACE_SPEC_VERSION = 6;
 const KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface";
 const KHR_XCB_SURFACE_SPEC_VERSION = 6;
 const KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface";
+const KHR_WIN32_SURFACE_SPEC_VERSION = 6;
+const KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface";
 const EXT_DEBUG_REPORT_SPEC_VERSION = 10;
 const EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report";
 const KHR_DYNAMIC_RENDERING_SPEC_VERSION = 1;
@@ -253,6 +257,8 @@ const KHR_MAINTENANCE_2_SPEC_VERSION = 1;
 const KHR_MAINTENANCE_2_EXTENSION_NAME = "VK_KHR_maintenance2";
 const KHR_MAINTENANCE2_SPEC_VERSION = null;
 const KHR_MAINTENANCE2_EXTENSION_NAME = null;
+const MVK_MACOS_SURFACE_SPEC_VERSION = 3;
+const MVK_MACOS_SURFACE_EXTENSION_NAME = "VK_MVK_macos_surface";
 const EXT_DEBUG_UTILS_SPEC_VERSION = 2;
 const EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils";
 const KHR_PORTABILITY_SUBSET_SPEC_VERSION = 1;
@@ -547,6 +553,7 @@ const StructureType STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = 1000002000;
 const StructureType STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = 1000002001;
 const StructureType STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR = 1000004000;
 const StructureType STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = 1000005000;
+const StructureType STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR = 1000009000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000;
 const StructureType STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = 0;
 const StructureType STRUCTURE_TYPE_RENDERING_INFO_KHR = 0;
@@ -578,6 +585,7 @@ const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR
 const StructureType STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR = 0;
 const StructureType STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR = 0;
 const StructureType STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR = 0;
+const StructureType STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK = 1000123000;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001;
 const StructureType STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002;
@@ -4114,6 +4122,13 @@ struct XcbSurfaceCreateInfoKHR {
  void** connection;
  uint window;
 }
+struct Win32SurfaceCreateInfoKHR {
+ StructureType sType;
+ void* pNext;
+ Win32SurfaceCreateFlagsKHR flags;
+ void* hinstance;
+ void* hwnd;
+}
 struct DebugReportCallbackCreateInfoEXT {
  StructureType sType;
  void* pNext;
@@ -4125,6 +4140,12 @@ struct PhysicalDevicePushDescriptorPropertiesKHR {
  StructureType sType;
  void* pNext;
  uint maxPushDescriptors;
+}
+struct MacOSSurfaceCreateInfoMVK {
+ StructureType sType;
+ void* pNext;
+ MacOSSurfaceCreateFlagsMVK flags;
+ void* pView;
 }
 struct DebugUtilsLabelEXT {
  StructureType sType;

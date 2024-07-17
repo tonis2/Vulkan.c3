@@ -7678,6 +7678,37 @@ fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(self, 
        
 
 
+fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfoKHRBuilder() {
+  XlibSurfaceCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(self, XlibSurfaceCreateFlagsKHR flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(self, void** dpy) {
+  self.dpy = dpy;
+  return self;
+}
+       
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(self, ulong window) {
+  self.window = window;
+  return self;
+}
+       
+
+
 fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHRBuilder() {
   XcbSurfaceCreateInfoKHR defaultValue = {
     .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
@@ -7704,6 +7735,37 @@ fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setOnnection(self, void** con
        
 fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setWindow(self, uint window) {
   self.window = window;
+  return self;
+}
+       
+
+
+fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfoKHRBuilder() {
+  Win32SurfaceCreateInfoKHR defaultValue = {
+    .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setFlags(self, Win32SurfaceCreateFlagsKHR flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHinstance(self, void* hinstance) {
+  self.hinstance = hinstance;
+  return self;
+}
+       
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(self, void* hwnd) {
+  self.hwnd = hwnd;
   return self;
 }
        
@@ -7756,6 +7818,32 @@ fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropert
        
 fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setMaxPushDescriptors(self, uint maxPushDescriptors) {
   self.maxPushDescriptors = maxPushDescriptors;
+  return self;
+}
+       
+
+
+fn MacOSSurfaceCreateInfoMVK macOSSurfaceCreateInfoMVKBuilder() {
+  MacOSSurfaceCreateInfoMVK defaultValue = {
+    .sType = STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK,
+    .pNext = null
+  };
+  return defaultValue;
+}
+
+// Skip the .sType value
+fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setNext(self, void* pNext) {
+  self.pNext = pNext;
+  return self;
+}
+       
+fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setFlags(self, MacOSSurfaceCreateFlagsMVK flags) {
+  self.flags = flags;
+  return self;
+}
+       
+fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setView(self, void* pView) {
+  self.pView = pView;
   return self;
 }
        
