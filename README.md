@@ -15,6 +15,8 @@ Install C3 from https://c3-lang.org/
 
 Download VulkanSDK from https://vulkan.lunarg.com/sdk/home
 
+Install GLFW library
+
 Then run `c3c run cube` inside the cloned repository
 
 GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
