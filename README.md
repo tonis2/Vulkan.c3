@@ -2,8 +2,6 @@
 
 Vulkan bindings for C3 language
 
-Currently at very early stage, binding api could change.
-
 ### Features
 * Vulkan API 1.0 - 1.3 bindings
 * C3 error handling for Vulkan commands
