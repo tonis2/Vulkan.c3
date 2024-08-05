@@ -106,11 +106,23 @@ fn void XmlNode.find_nodes_by_tag_name(&self, char[] type, XmlNodeList* cache) {
 	}
 }
 
-fn char[]! XmlNode.get_attrib_value(&self, char[] name) {
+def SearchCallback = fn bool (XmlNode*);
+
+fn XmlNodeList XmlDoc.find(self, SearchCallback search_fn) {
+	XmlNodeList cache;
+	XmlNode* node = self.rootNode;
+
+	for (usz i = 0; i < node.children.size; i++) {
+		if (search_fn(node.children[i])) cache.push(node);
+	}
+	return cache;
+}
+
+fn String! XmlNode.get_attrib_value(&self, char[] name) {
 	for (usz i = 0; i < self.attributes.size; i++) {
 		XmlAttribute* attribute = self.attributes[i];
 		if (attribute.name == name) {
-			return attribute.value;
+			return (String)attribute.value;
 		}
 	}
 	return XmlFault.ATTRIBUTE_NOT_FOUND?;
