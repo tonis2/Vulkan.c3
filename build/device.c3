@@ -1,4 +1,6 @@
-module vk;
+module vk 
+@link("build/libs/libvulkan.1.dylib", "build/libs/libvulkan.1.3.290.dylib") @if(env::DARWIN);
+
 import std::io;
 import std::math;
 import std::core::env;

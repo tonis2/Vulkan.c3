@@ -6,7 +6,7 @@
 	"dependency-search-paths": [ "./examples/dependencies"],
 	"dependencies": ["glfw"],
 	"features": ["GLFW_VK"],
-	"linked-libraries": ["glfw", "vulkan"],
+	"linked-libraries": [],
 	"sources": ["./build/*"],
 	"targets": {
 		"cube": {
