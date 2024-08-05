@@ -8592,8 +8592,7 @@ fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setSa
   self.sampler = sampler;
   return self;
 }
-       
-
+      
 
 fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXTBuilder() {
   OpaqueCaptureDescriptorDataCreateInfoEXT defaultValue = {
