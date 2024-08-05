@@ -1,0 +1,12 @@
+{
+    "provides" : "xml",
+    "targets" : {
+      "freebsd-x64" : {},
+      "linux-aarch64" : {},
+      "linux-x86" : {},
+      "linux-x64" : {},
+      "macos-x64" : {},
+      "windows-aarch64" : {},
+      "windows-x64" : {}
+    }
+  }

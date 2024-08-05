@@ -3,15 +3,20 @@
 	"warnings": ["no-unused"],
 	"authors": [],
 	"version": "0.1.0",
-	"dependency-search-paths": [ "./examples/dependencies"],
-	"dependencies": ["glfw"],
+	"dependency-search-paths": ["libs"],
+	"dependencies": ["xml"],
 	"features": ["GLFW_VK"],
-	"linked-libraries": ["glfw", "vulkan"],
+	"linked-libraries": [ "vulkan"],
 	"sources": ["./build/*"],
 	"targets": {
 		"cube": {
 			"type": "executable",
-			"sources-add": ["./examples/cube/main.c3", "./examples/dependencies/camera.c3"]
+			"sources-add": ["./examples/cube/main.c3", "./examples/camera.c3"],
+			"dependencies-add": ["rgfw"]
+		},
+		"build": {
+			"type": "executable",
+			"sources-add": ["./build.c3"]
 		}
 	},
 	"output": "./build"
