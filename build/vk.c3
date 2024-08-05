@@ -1,41 +1,22 @@
-module vk; 
+module vk;
+
 // Platform types 
 def Rroutput = ulong;
 def Visualid = uint;
-def Display = void*;
-def Window = ulong;
+distinct XDisplay = void*;
+distinct XWindow = ulong;
+
+// Linux
 def Xcbconnection = void*;
 def Xcbwindow = uint;
 def Xcbvisualid = uint;
+
 def Mirconnection = void*;
 def Mirsurface = void*;
 def Hinstance = void*;
 def Hwnd = void*;
-def Wldisplay = void*;
-def Wlsurface = void*;
-def Handle = void*;
-def Hmonitor = void*;
-def Dword = ulong;
-def Lpcwstr = uint*;
-def Zxhandle = uint;
-def Screenbuffer = void*;
-def Screencontext = void*;
-def Screenwindow = void*;
-def Securityattributes = void*;
-def Anativewindow = void*;
-def Ahardwarebuffer = void*;
-def Cametallayer = void*;
-def Ggpstreamdescriptor = uint;
-def Ggpframetoken = ulong;
-def Idirectfb = void*;
-def Idirectfbsurface = void*;
-def Iosurface = void*;
-def Iosurfaceref = void*;
-def Mtlbufferid = void*;
-def Mtlcommandqueueid = void*;
-def Mtldeviceid = void*;
-def Mtlsharedeventid = void*;
-def Mtltextureid = void*;
+
+
 fault VkErrors {
   SUCCESS,
  NOT_READY,
@@ -67,7 +48,8 @@ fault VkErrors {
  ERROR_OUT_OF_DATE_KHR,
  ERROR_VALIDATION_FAILED_EXT
 }
- distinct Instance = inline void*;
+
+distinct Instance = inline void*;
 distinct PhysicalDevice = inline void*;
 distinct Device = inline void*;
 distinct Queue = inline void*;
@@ -4112,8 +4094,8 @@ struct XlibSurfaceCreateInfoKHR {
  StructureType sType;
  void* pNext;
  XlibSurfaceCreateFlagsKHR flags;
- void** dpy;
- ulong window;
+ XDisplay dpy;
+ XWindow window;
 }
 struct XcbSurfaceCreateInfoKHR {
  StructureType sType;

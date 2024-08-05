@@ -1,10 +1,9 @@
 import std::io;
-import vk;
-import glfw;
-
-import camera;
-import std::math;
 import std::collections::list;
+import std::math;
+import rgfw;
+import vk;
+import camera;
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -63,74 +62,60 @@ Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
 PhysicalDevice physical_device;
 QueueFamily queue_family;
+Device device;
+SurfaceKHR surface;
+SwapchainKHR swapchain;
 
+ImageViewList swapchain_views;
+vk::ImageList swapchain_images;
 
 ZStringList validations;
 ZStringList extensions;
 ZStringList device_extensions;
 
-fn void! main()
+
+
+fn void! main(String[] args)
 {
-    glfw::init();
-    glfw::windowHint(glfw::GLFW_CLIENT_API, glfw::GLFW_NO_API);
-    glfw::windowHint(glfw::GLFW_RESIZABLE, glfw::GLFW_FALSE);
-    glfw::windowHint(glfw::CONTEXT_VERSION_MAJOR, 4);
-    glfw::windowHint(glfw::CONTEXT_VERSION_MINOR, 1);
-    GLFWwindow window = glfw::createWindow(WIDTH, HEIGHT, "Vulkan triangle", null, null);
+    rgfw::Window* win = rgfw::createWindow("Vulkan Example", rgfw::Rect{0, 0, WIDTH, HEIGHT}, rgfw::CENTER);
+    defer rgfw::close(win);
+    
+    Camera camera = camera::new(.eye = {0.0, 5.0, 10}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
 
-   defer {
-        glfw::destroyWindow(window);
-        glfw::terminate();
-        validations.free();
-        extensions.free();
-        device_extensions.free();
-    }
-
-    if (window == null)
-    {
-        io::printfn("Failed to init glfw window");
-        return;
-    }
-
-    EventHandler eventHandler = { .window = window };
-    eventHandler.init();
-    camera::Camera camera = camera::new(.eye = {0.0, 5.0, 10}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
-
-    //"VK_LAYER_LUNARG_api_dump"
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
+    extensions.add_array({"VK_KHR_surface"});
 
-    // SETUP extensions
-    uint glfwExtensions_count = 0;
-    ZString* glfwExtensions = (ZString*)glfw::getRequiredInstanceExtensions(&glfwExtensions_count);
-    for (int i = 0; i < glfwExtensions_count; ++i) extensions.push(glfwExtensions[i]);
-
-    if (ENABLE_VALIDATION_LAYERS) {
-     extensions.add_array({"VK_EXT_debug_utils"});
+    if (env::OS_TYPE == MACOS) {
+        extensions.add_array({"VK_MVK_macos_surface", "VK_KHR_portability_enumeration"});
+        device_extensions.push("VK_KHR_portability_subset");
     }
 
-    if (env::os_is_darwin()) {
-      extensions.push("VK_KHR_portability_enumeration");
-      device_extensions.push("VK_KHR_portability_subset");
+    if (env::OS_TYPE == WIN32) {
+        extensions.add_array({"VK_KHR_win32_surface"});
+    }
+
+    if (env::OS_TYPE == LINUX) {
+        extensions.add_array({"VK_KHR_xlib_surface"});
     }
 
     vk::checkExtensionSupport(extensions)!;
 
     InstanceCreateInfo instanceInfo = vk::instanceCreateInfoBuilder()
     .setApplicationInfo(&&ApplicationInfo{
-      .pApplicationName = "Hello GLTF",
+      .pApplicationName = "TEST",
       .pEngineName = "Super engine",
       .applicationVersion = vk::@makeApiVersion(0,1,0,0),
       .engineVersion = vk::@makeApiVersion(0,1,0,0),
-      .apiVersion = VK_API_VERSION_1_3
+      .apiVersion = vk::@makeApiVersion(0,1,3,0)
     })
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
     .setEnabledExtensionNames(extensions.array_view());
 
     DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXTBuilder()
-             .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
-             .setMessageType(vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
-             .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback);
+    .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+    .setMessageType(vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+    .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback);
 
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
@@ -146,110 +131,180 @@ fn void! main()
      debug_messenger = debug_info.build(instance)!;
     }
 
-    SurfaceKHR surface = glfw::createWindowSurface(instance, window, null)!;
+    // Create surface
+    $switch(env::OS_TYPE)
+        $case LINUX: {
+            XlibSurfaceCreateInfoKHR createInfo = {
+                vk::STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, 
+                null, 
+                0, 
+                win.src.display, 
+                win.src.window, 
+            };
 
+            if (catch err = vk::createXlibSurfaceKHR(instance, &createInfo, null, &surface)) {
+                io::printfn("Surface creationg failed %s", err);
+                return;
+            }
+        }
+        $case MACOS: {
+            MacOSSurfaceCreateInfoMVK createInfo = { 
+                vk::STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK, 
+                null, 
+                0, 
+                win.src.window
+            };
+        }
+        $case WIN32: {
+            Win32SurfaceCreateInfoKHR createInfo = {
+                vk::STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+                null,
+                0,
+                win.src.window,
+                win.src.hdc
+            };
+        }
+        $default: {}
+    $endswitch
+
+    DeviceList devices = instance.getDevices()!;
     bool found_device = false;
-    // Macro to find a valid device
-    instance.@requestDevice(;PhysicalDevice pdevice) {
-      QueueFamily queue;
-      // Check for device extension support
-      bool supports_extensions = pdevice.checkExtensionSupport(device_extensions)!;
-      QueuePropertiesList queue_properties = pdevice.getQueueProperties()!;
 
-      queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
-      if (surface.checkSurfaceSupport(queue.graphics, pdevice)!) queue.present = queue.graphics;
+    foreach (entry: devices) {
+        QueueFamily queue;
+        // Check for device extension support
+        bool supports_extensions = entry.checkExtensionSupport(device_extensions)!;
+        QueuePropertiesList queue_properties = entry.getQueueProperties()!;
 
-      // Good physical device found
-      if (queue.is_ready() && supports_extensions) {
-         // Device is good
-         physical_device = pdevice;
-         queue_family = queue;
-         found_device = true;
-      }
-    }!;
+        queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
+        if (surface.checkSurfaceSupport(queue.graphics, entry)!) queue.present = queue.graphics;
+
+        if (queue.is_ready() && supports_extensions) {
+            physical_device = entry;
+            queue_family = queue;
+            found_device = true;
+        }
+    }
+
+    devices.free();
 
     if (!found_device) {
       io::printfn("Did not found suitable device!");
       return;
     }
 
-    DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
-    .setQueueFamilyIndex(queue_family.graphics)
-    .setQueuePriorities({1.0});
+    // Setup Vulkan extensions configuration
+    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
+                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
 
-    Device device = vk::deviceCreateInfoBuilder()
-      .setQueueCreateInfos({graphicsInfo})
-      .setEnabledFeatures(&vk::default_device_features)
-      .setEnabledExtensionNames(device_extensions.array_view())
-      .setEnabledLayerCount(0)
-      .setNext(&&PhysicalDeviceDynamicRenderingFeatures{
-         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-         .dynamicRendering = vk::TRUE,
-    }).build(physical_device)!;
+	vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
 
-    // Add actual queue handles to queue family, easier to keep them is one place
-    queue_family.graphics_handle = device.getQueue(queue_family.graphics);
+	PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
+		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+	};
 
-    SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
-    PresentModeList present_modes = surface.getPresentModes(physical_device)!;
-    SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(physical_device)!;
+	PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
+		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+		.pNext = &device_indexing_feature,
+		.bufferDeviceAddress = vk::TRUE,
+		.bufferDeviceAddressCaptureReplay = vk::TRUE
+	};
 
-    defer {
-      surface_formats.free();
-      present_modes.free();
-    }
+	PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
+		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+		.pNext = &buffer_device_feature
+	};
 
+	PhysicalDeviceSynchronization2Features syncronisation2_feature = {
+		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
+		.pNext = &dynamic_rendering_feature,
+		.synchronization2 = vk::TRUE
+	};
+
+	PhysicalDeviceFeatures2 device_features = {
+		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+		.pNext = &syncronisation2_feature,
+	};
+
+	vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
+
+	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
+	.setQueueFamilyIndex(queue_family.graphics)
+	.setQueuePriorities({1.0});
+
+	device = vk::deviceCreateInfoBuilder()
+		.setQueueCreateInfos({ graphicsInfo })
+		.setEnabledExtensionNames(device_extensions.array_view())
+		.setNext(&device_features)
+		.build(physical_device)!;
+
+	queue_family.graphics_handle = device.getQueue(queue_family.graphics);
+
+	SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
+	PresentModeList present_modes = surface.getPresentModes(physical_device)!;
+	SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(physical_device)!;
+
+	defer {
+		surface_formats.free();
+		present_modes.free();
+	}
+
+	vk::Format depth_format = vk::findDepthFormat(.device = physical_device, .features = vk::FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
     SurfaceFormatKHR format = SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
+    Extent2D extent = {.width = (uint)WIDTH, .height = (uint)HEIGHT };
 
     uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
+
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
       .setMinImageCount(min_images)
       .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
       .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
       .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-      .setPresentMode(vk::PRESENT_MODE_MAILBOX_KHR)
+      .setPresentMode(vk::PRESENT_MODE_FIFO_KHR)
       .setPreTransform(capabilities.currentTransform)
       .setImageColorSpace(format.colorSpace)
       .setImageFormat(format.format)
       .setSurface(surface)
       .setImageArrayLayers(1)
-      .setImageExtent({ .width = WIDTH, .height = HEIGHT });
+      .setImageExtent({ .width = (uint)WIDTH, .height = (uint)HEIGHT });
 
-    SwapchainKHR swapchain = swapchain_info.buildKHR(device)!;
-    ImageViewList swapchain_views;
-    vk::ImageList swapchain_images = swapchain.getImages(device, swapchain_info.minImageCount)!;
+    swapchain = swapchain_info.buildKHR(device)!;
+    swapchain_images = swapchain.getImages(device, swapchain_info.minImageCount)!;
 
     for (int i = 0; i < swapchain_info.minImageCount; ++i) {
-    ImageView view = vk::imageViewCreateInfoBuilder()
-      .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-      .setFormat(format.format)
-      .setComponents({
-         .r = vk::COMPONENT_SWIZZLE_IDENTITY,
-         .g = vk::COMPONENT_SWIZZLE_IDENTITY,
-         .b = vk::COMPONENT_SWIZZLE_IDENTITY,
-         .a = vk::COMPONENT_SWIZZLE_IDENTITY,
-      })
-      .setSubresourceRange({
-         .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-         .baseMipLevel = 0,
-         .baseArrayLayer = 0,
-         .layerCount = 1,
-         .levelCount = 1,
-      })
-      .setImage(swapchain_images[i])
-      .build(device)!;
-      swapchain_views.push(view);
+        ImageView view = vk::imageViewCreateInfoBuilder()
+        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+        .setFormat(format.format)
+        .setComponents({
+            .r = vk::COMPONENT_SWIZZLE_IDENTITY,
+            .g = vk::COMPONENT_SWIZZLE_IDENTITY,
+            .b = vk::COMPONENT_SWIZZLE_IDENTITY,
+            .a = vk::COMPONENT_SWIZZLE_IDENTITY,
+        })
+        .setSubresourceRange({
+            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .baseArrayLayer = 0,
+            .layerCount = 1,
+            .levelCount = 1,
+        })
+        .setImage(swapchain_images[i])
+        .build(device)!;
+
+        swapchain_views.push(view);
     }
 
+    // Create command pool
     CommandPool command_pool = device.createCommandPool(.queue = queue_family.graphics)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
-    // Create allocator of 10MB - DEVICE_ONLY memory
+    // Create allocator of 50MB - DEVICE_ONLY memory
     vk::Allocation device_allocation = vk::Allocation {
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        .size = 10_000_000
+        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+        .size = 50_000_000
     }.build()!;
 
     // Allocation where data can be changed from CPU
@@ -257,7 +312,8 @@ fn void! main()
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
-        .size = 5_000_000
+        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+        .size = 20_000_000
     }.build()!;
 
     // Create buffers, using only memory of the allocator
@@ -273,9 +329,15 @@ fn void! main()
                 .setSize(indices.len * ushort.sizeof)
                 .bind(&device_allocation)!;
 
+    MemoryBlock uniform_buffer = vk::bufferCreateInfoBuilder()
+                .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+                .setSize(UniformData.sizeof)
+                .bind(&local_allocation)!;
+
     // Create stage buffers and then copy the data to GPU only buffers
     MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len, .data = vertices, .pdevice = physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(.size = ushort.sizeof * indices.len, .data = indices, .pdevice = physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(.size = ushort.sizeof * indices.len, .data = indices, .pdevice = physical_device)!;    
 
     device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
          vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
@@ -294,12 +356,6 @@ fn void! main()
     index_stage_buffer.free(device);
     vertex_stage_buffer.free(device);
 
-   MemoryBlock uniform_buffer = vk::bufferCreateInfoBuilder()
-               .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
-               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-               .setSize(UniformData.sizeof)
-               .bind(&local_allocation)!;
-
     // Add data for uniform buffer
     uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
@@ -307,12 +363,12 @@ fn void! main()
     DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
         .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
         .setBindings({
-          {
-              .binding = 0,
-              .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-              .descriptorCount = 1,
-              .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
-          }
+            {
+                .binding = 0,
+                .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                .descriptorCount = 1,
+                .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+            }
         }).build(device)!;
 
     WriteDescriptorSet[] descriptorSets = {
@@ -327,22 +383,16 @@ fn void! main()
            })
     };
 
-    // Required for using push descriptors
-    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
-                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
-
-    vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
-
     // Load shaders
-    char[*] vertex_shader_data = $embed("./shaders/shader_vert.spv");
-    char[*] fragment_shader_data = $embed("./shaders/shader_frag.spv");
+    char[*] vertex_shader_data = $embed("./shaders/cube_vert.spv");
+    char[*] fragment_shader_data = $embed("./shaders/cube_frag.spv");
 
     Shader draw_shaders = device.createShader(.vertex = &vertex_shader_data, .fragment = &fragment_shader_data)!;
 
     PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfoBuilder().setSetLayouts({ descriptor_set_layout }).build(device)!;
 
     // Create Renderpipeline info
-    GraphicsPipelineCreateInfo pipeline_info = vk::graphicsPipelineCreateInfoBuilder()
+    Pipeline pipeline = vk::graphicsPipelineCreateInfoBuilder()
     .setStages(&draw_shaders.stages)
      .setLayout(pipeline_layout)
      .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
@@ -420,10 +470,8 @@ fn void! main()
     .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
                    .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
                    .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}));
-
-    Pipeline pipeline;
-    vk::createGraphicsPipelines(device, null, 1, &pipeline_info, null, &pipeline)!;
+    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}))
+    .build(device)!;
 
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
@@ -435,21 +483,15 @@ fn void! main()
         signal_semaphores.push(vk::semaphoreCreateInfoBuilder().build(device))!;
         frame_fences.push(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
     }
-
-    // Rendering loop
+    
+    bool running = true;
     uint frame = 0;
-    while(!glfw::windowShouldClose(window)) {
-        eventHandler.update();
 
-        if (eventHandler.scrolling) {
-            camera.zoom((float)eventHandler.scrollY * 5);
-            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
-        }
+    while (running) {
+        rgfw::Event* events = rgfw::checkEvent(win);
 
-        // Update camera  rotation on left-mouse click
-        if (eventHandler.left_mouse_click) {
-            camera.rotate((float)eventHandler.mouse_x_delta, (float)eventHandler.mouse_y_delta);
-            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
+        if (events != null) {
+            if (events.keyCode == Key.ESCAPE) running = false;
         }
 
         Fence frame_fence = frame_fences[frame];
@@ -565,7 +607,6 @@ fn void! main()
         vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
         frame = (frame + 1) % 2;
     }
-
 
     device.waitIdle();
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);

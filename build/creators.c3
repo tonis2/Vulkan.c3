@@ -174,4 +174,3 @@ fn vk::Device! DeviceCreateInfo.build(&self, PhysicalDevice device, AllocationCa
     return response;
 }
 
-

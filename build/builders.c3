@@ -7692,20 +7692,20 @@ fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setNext(self, void* pNext) 
   return self;
 }
        
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(self, XlibSurfaceCreateFlagsKHR flags) {
-  self.flags = flags;
-  return self;
-}
+// fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(self, XlibSurfaceCreateFlagsKHR flags) {
+//   self.flags = flags;
+//   return self;
+// }
        
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(self, void** dpy) {
-  self.dpy = dpy;
-  return self;
-}
+// fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(self, void** dpy) {
+//   self.dpy = dpy;
+//   return self;
+// }
        
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(self, ulong window) {
-  self.window = window;
-  return self;
-}
+// fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(self, ulong window) {
+//   self.window = window;
+//   return self;
+// }
        
 
 
