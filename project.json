@@ -17,7 +17,7 @@
 		"build": {
 			"type": "executable",
 			"dependencies-add": ["xml"],
-			"sources-add": ["./build.c3"]
+			"sources-add": ["./build.c3", "./types.c3"]
 		}
 	},
 	"output": "./build"
