@@ -119,12 +119,22 @@ fn void! main() {
 
                                 // Found reference type xml node
                                 if (try node_name && node_name == name && try type) {
-                                    io::printfn("type %s", type);
                                     switch (type) {
                                         case "enum": {
                                             VkEnum value;
                                             value.from_node(type_node);
                                             enums.push(value);
+                                        }
+                                        case "bitmask": {
+                                            VkEnum value;
+                                            value.from_node(type_node);
+                                            enums.push(value);
+                                        }
+                                        case "struct": {
+                                            io::printfn("%s", node_name);
+                                            // VkEnum value;
+                                            // value.from_node(type_node);
+                                            // enums.push(value);
                                         }
                                         default: {}
                                     }
@@ -146,30 +156,23 @@ fn void! main() {
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
 
     foreach (value : constants) {
-        DString text_body;
+        DString text_body = dstring::new_join({"const ", value.name, " = ", value.value, ";\n"}, "");
         defer text_body.free();
         
-        // // Comment
-        // text_body.append_chars("//".concat(enum_entry.name).concat("\n"));
-
-        text_body.append_chars("const ".concat(value.name).concat(" = ").concat(value.value).concat(";\n"));
-
         vk_main.write(text_body.str_view())!!;
     }
 
 
     foreach (enum_entry : enums) {
-        DString text_body;
+        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline uint;\n"}, "");
         defer text_body.free();
 
-        // Comment
-        text_body.append_chars("//".concat(enum_entry.name).concat("\n"));
-        text_body.append_chars("distinct ".concat(enum_entry.name).concat(" = ").concat("uint"));
         // Add values
         foreach (value : enum_entry.values) {
-            // text_body.append_chars("const ".concat(enum_entry.name).concat(" = ").concat(value.value).concat(";\n"));
+            text_body.append(dstring::new_join({"const ",enum_entry.name," ",value.name," = ",value.value,";\n"}, ""));
         }
-
+        
+        text_body.append_chars("\n");
         vk_main.write(text_body.str_view())!!;
     }
 }

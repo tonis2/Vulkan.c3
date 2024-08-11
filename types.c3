@@ -4,6 +4,7 @@ import std::io;
 import std::core;
 import std::math;
 import std::collections::list;
+import libc;
 import xml;
 
 struct Base {
@@ -47,12 +48,31 @@ fn void VkEnum.from_node(&self, XmlNode* node) {
     self.base.comment = node.get_attrib_value("comment") ?? "-";
 
     foreach (entry : node.children) {
-        self.values.push(
-            VkValue {
-                .name = entry.get_attrib_value("name") ?? "-",
-                .value = entry.get_attrib_value("value") ?? "-"
+        String! name = entry.get_attrib_value("name");
+        String! value = entry.get_attrib_value("value");
+        String! bitpos = entry.get_attrib_value("bitpos");
+
+        if (try name) {
+            if (try value) {
+                self.values.push(
+                    VkValue {
+                        .name = name,
+                        .value = value
+                    }
+                );
             }
-        );
+            if (try bitpos) {
+                char[10] buffer;
+                String res = (String)io::bprintf(&buffer, "0x%08x", 1 << bitpos.to_int()!!)!!;
+                
+                self.values.push(
+                    VkValue {
+                        .name = name,
+                        .value = res.copy(allocator::heap())
+                    }
+                );
+            }
+        }
     }
 }
 

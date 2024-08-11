@@ -9759,7 +9759,7 @@ typedef void* <name>MTLSharedEvent_id</name>;
         <enum value="1"     name="VK_ANTI_LAG_STAGE_PRESENT_AMD"/>
     </enums>
 
-        <comment>Flags</comment>
+    <comment>Flags</comment>
     <enums name="VkQueueFlagBits" type="bitmask">
         <enum bitpos="0"    name="VK_QUEUE_GRAPHICS_BIT"                             comment="Queue supports graphics operations"/>
         <enum bitpos="1"    name="VK_QUEUE_COMPUTE_BIT"                              comment="Queue supports compute operations"/>
