@@ -26,6 +26,11 @@ fn void! main() {
 
     root_node.find(fn (node) => node.name == "feature", &features);
 
+    NodeList types;
+    defer types.free();
+
+    root_node.find(fn (node) => node.name == "type" && node.attributes.has_key("category"), &types);
+
     List(<VkStruct>) structs;
     List(<VkCommand>) commands;
     List(<VkEnum>) enums;
@@ -58,7 +63,7 @@ fn void! main() {
 
                 if (try child_name) {
                     VkValue value;
-                    value.from_node(child_node);
+                    value.from_node(&child_node);
                     constants.push(value);
                 }
             }
@@ -103,8 +108,8 @@ fn void! main() {
                             String name = entry.attributes.get("name")!;
                             String! extends = entry.attributes.get("extends");
 
-                            for TYPES: (uint type_index; type_index < root_node.children.len(); type_index++) {
-                                xml::Node type_node = root_node.children[type_index];
+                            for TYPES: (uint type_index; type_index < types.len(); type_index++) {
+                                xml::Node* type_node = types[type_index];
                                 String! node_name = type_node.attributes.get("name");
                                 String! node_type = type_node.attributes.get("type");
                                 String! type = type_node.attributes.get("type") ?? type_node.attributes.get("category");
@@ -123,7 +128,7 @@ fn void! main() {
                                             enums.push(value);
                                         }
                                         case "struct": {
-                                            io::printfn("%s", node_name);
+                                            //io::printfn("%s", node_name);
                                             // VkEnum value;
                                             // value.from_node(type_node);
                                             // enums.push(value);

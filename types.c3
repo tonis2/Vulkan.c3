@@ -43,7 +43,7 @@ struct VkValue {
     uint pointer_level;
 }
 
-fn void VkEnum.from_node(&self, xml::Node node) {
+fn void VkEnum.from_node(&self, xml::Node* node) {
     self.base.name = node.attributes.get("name") ?? "-";
     self.base.comment = node.attributes.get("comment") ?? "-";
 
@@ -76,7 +76,7 @@ fn void VkEnum.from_node(&self, xml::Node node) {
     }
 }
 
-fn void VkValue.from_node(&self, xml::Node node) {
+fn void VkValue.from_node(&self, xml::Node* node) {
     String! value = node.attributes.get("value");
     String! type = node.attributes.get("type");
     String! name = node.attributes.get("name");
