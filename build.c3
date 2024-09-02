@@ -18,17 +18,13 @@ macro bool String[*].contains(self, String key) {
 }
 
 fn void! main() {
-    
-    File xmlFile = io::file::open("assets/vk.xml", "r")!!;
-    defer xmlFile.close()!!;
+    xml::Node root_node = xml::load_file("assets/vk.xml")!!;
+    defer root_node.free();
 
-    XmlDoc* doc = xml::read_file(xmlFile)!!;
-    defer doc.free();
-
-    XmlNodeList features;
+    NodeList features;
     defer features.free();
 
-    doc.find_nodes_by_tag_name("feature", &features);
+    root_node.find(fn (node) => node.name == "feature", &features);
 
     List(<VkStruct>) structs;
     List(<VkCommand>) commands;
@@ -41,17 +37,16 @@ fn void! main() {
         enums.free();
     }
 
-
     // Create api contants
-    foreach (node: doc.rootNode.children) {
-        String! name = node.get_attrib_value("name");
-        String! type = node.get_attrib_value("type");
-        String! comment = node.get_attrib_value("comment");
+    foreach (node: root_node.children) {
+        String! name = node.attributes.get("name");
+        String! type = node.attributes.get("type");
+        String! comment = node.attributes.get("comment");
         
         if (try name && name == "API Constants") {
             foreach (child_node: node.children) {
-                String! child_name = child_node.get_attrib_value("name");
-                String! alias = child_node.get_attrib_value("alias");
+                String! child_name = child_node.attributes.get("name");
+                String! alias = child_node.attributes.get("alias");
 
                 if (try alias && try child_name) {
                     // VkValue value;
@@ -67,23 +62,20 @@ fn void! main() {
                     constants.push(value);
                 }
             }
-         
         }
     }
 
-
-
     foreach (feature : features) {
-        String! number = feature.get_attrib_value("number");
-        String feature_api = feature.get_attrib_value("api")!;
+        String! number = feature.attributes.get("number");
+        String feature_api = feature.attributes.get("api")!;
         if (feature_api == "vulkansc") break;
 
         // Get only up-to required vulkan version
         if (try number && number.to_double()!! <= MAX_VERSION) {
             for REQUIRES: (uint index; index < feature.children.len(); index++) {
 
-                XmlNode* require = feature.children[index];
-                String! comment = require.get_attrib_value("comment");
+                xml::Node require = feature.children[index];
+                String! comment = require.attributes.get("comment");
                 
                 // Skip some required stuff, they are handled elsewhere 
                 if (try comment) if (SKIPED_REQUIRES.contains(comment)) continue REQUIRES;
@@ -91,16 +83,16 @@ fn void! main() {
                 foreach (entry : require.children) {
                     switch (entry.name) {
                         case "enum": {
-                            // String name = entry.get_attrib_value("name")!;
-                            // String! bitpos = entry.get_attrib_value("bitpos");
-                            // String! value = entry.get_attrib_value("value");
-                            // String! extends = entry.get_attrib_value("extends");
+                            // String name = entry.attributes.get("name")!;
+                            // String! bitpos = entry.attributes.get("bitpos");
+                            // String! value = entry.attributes.get("value");
+                            // String! extends = entry.attributes.get("extends");
 
                             // if (try extends) {
                             //     // Find enum node
                             //     foreach (node: doc.rootNode.children) {
-                            //         String! enum_name = node.get_attrib_value("name");
-                            //         String! type = node.get_attrib_value("type");
+                            //         String! enum_name = node.attributes.get("name");
+                            //         String! type = node.attributes.get("type");
                                     
                             //         //if (try enum_name && enum_name == name) io::printfn("enum %s", enum_name);
                             //     }
@@ -108,14 +100,14 @@ fn void! main() {
                             // enums.push({.base.name = name ?? "-" });
                         }
                         case "type": {
-                            String name = entry.get_attrib_value("name")!;
-                            String! extends = entry.get_attrib_value("extends");
+                            String name = entry.attributes.get("name")!;
+                            String! extends = entry.attributes.get("extends");
 
-                            for TYPES: (uint type_index; type_index < doc.rootNode.children.len(); type_index++) {
-                                XmlNode* type_node = doc.rootNode.children[type_index];
-                                String! node_name = type_node.get_attrib_value("name");
-                                String! node_type = type_node.get_attrib_value("type");
-                                String! type = type_node.get_attrib_value("type") ?? type_node.get_attrib_value("category");
+                            for TYPES: (uint type_index; type_index < root_node.children.len(); type_index++) {
+                                xml::Node type_node = root_node.children[type_index];
+                                String! node_name = type_node.attributes.get("name");
+                                String! node_type = type_node.attributes.get("type");
+                                String! type = type_node.attributes.get("type") ?? type_node.attributes.get("category");
 
                                 // Found reference type xml node
                                 if (try node_name && node_name == name && try type) {
@@ -151,7 +143,6 @@ fn void! main() {
         }
     }
 
-
     // Build C3 files
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
 
@@ -161,7 +152,6 @@ fn void! main() {
         
         vk_main.write(text_body.str_view())!!;
     }
-
 
     foreach (enum_entry : enums) {
         DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline uint;\n"}, "");
