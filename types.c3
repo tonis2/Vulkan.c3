@@ -43,14 +43,14 @@ struct VkValue {
     uint pointer_level;
 }
 
-fn void VkEnum.from_node(&self, XmlNode* node) {
-    self.base.name = node.get_attrib_value("name") ?? "-";
-    self.base.comment = node.get_attrib_value("comment") ?? "-";
+fn void VkEnum.from_node(&self, xml::Node node) {
+    self.base.name = node.attributes.get("name") ?? "-";
+    self.base.comment = node.attributes.get("comment") ?? "-";
 
     foreach (entry : node.children) {
-        String! name = entry.get_attrib_value("name");
-        String! value = entry.get_attrib_value("value");
-        String! bitpos = entry.get_attrib_value("bitpos");
+        String! name = entry.attributes.get("name");
+        String! value = entry.attributes.get("value");
+        String! bitpos = entry.attributes.get("bitpos");
 
         if (try name) {
             if (try value) {
@@ -76,10 +76,10 @@ fn void VkEnum.from_node(&self, XmlNode* node) {
     }
 }
 
-fn void VkValue.from_node(&self, XmlNode* node) {
-    String! value = node.get_attrib_value("value");
-    String! type = node.get_attrib_value("type");
-    String! name = node.get_attrib_value("name");
+fn void VkValue.from_node(&self, xml::Node node) {
+    String! value = node.attributes.get("value");
+    String! type = node.attributes.get("type");
+    String! name = node.attributes.get("name");
 
     self.name = name ?? "-";
     self.type = type ?? "-";
