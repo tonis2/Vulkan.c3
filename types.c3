@@ -40,7 +40,7 @@ struct VkValue {
     String comment;
     String value;
     String type;
-    uint pointer_level;
+    bool optional;
 }
 
 fn void VkEnum.from_node(&self, xml::Node* node) {
@@ -84,4 +84,24 @@ fn void VkValue.from_node(&self, xml::Node* node) {
     self.name = name ?? "-";
     self.type = type ?? "-";
     self.value = value ?? ".";
+}
+
+fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
+    self.name = node.attributes.get("name") ?? "-";
+    
+    foreach (member : node.children) {
+        VkValue struct_value;
+        String! value = member.attributes.get("values");
+        String! len = member.attributes.get("len");
+       
+        if (try value) struct_value.value = value;
+        struct_value.optional = member.attributes.has_key("optional");
+
+        foreach (entry : member.children) {
+            if (entry.name == "type") struct_value.type = entry.value;
+            if (entry.name == "name") struct_value.name = entry.value;
+        }
+        self.values.push(struct_value); 
+    }
+    return *self;
 }

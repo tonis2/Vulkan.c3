@@ -29,7 +29,7 @@ fn void! main() {
     NodeList types;
     defer types.free();
 
-    root_node.find(fn (node) => node.name == "type" && node.attributes.has_key("category"), &types);
+    root_node.find(fn (node) => node.children.len() > 0 && node.attributes.has_key("name"), &types);
 
     List(<VkStruct>) structs;
     List(<VkCommand>) commands;
@@ -37,6 +37,9 @@ fn void! main() {
     List(<VkValue>) constants;
 
     defer {
+        foreach (value : structs) value.base.free();
+        foreach (value : commands) value.base.free();
+        foreach (value : enums) value.base.free();
         structs.free();
         commands.free();
         enums.free();
@@ -129,9 +132,7 @@ fn void! main() {
                                         }
                                         case "struct": {
                                             //io::printfn("%s", node_name);
-                                            // VkEnum value;
-                                            // value.from_node(type_node);
-                                            // enums.push(value);
+                                            structs.push(VkStruct{}.from_node(type_node));
                                         }
                                         default: {}
                                     }
@@ -161,13 +162,25 @@ fn void! main() {
     foreach (enum_entry : enums) {
         DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline uint;\n"}, "");
         defer text_body.free();
-
         // Add values
         foreach (value : enum_entry.values) {
             text_body.append(dstring::new_join({"const ",enum_entry.name," ",value.name," = ",value.value,";\n"}, ""));
         }
         
         text_body.append_chars("\n");
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    foreach (entry : structs) {
+        DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
+        defer text_body.free();
+
+        // Add values
+        foreach (value : entry.values) {
+            text_body.append(dstring::new_join({value.type," ", value.name,"\n"}, ""));
+        }
+        
+        text_body.append_chars("}\n");
         vk_main.write(text_body.str_view())!!;
     }
 }
