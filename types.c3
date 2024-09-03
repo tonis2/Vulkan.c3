@@ -101,7 +101,7 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
             if (entry.name == "type") struct_value.type = entry.value;
             if (entry.name == "name") struct_value.name = entry.value;
         }
-        self.values.push(struct_value); 
+        if (member.name != "comment") self.values.push(struct_value); 
     }
     return *self;
 }

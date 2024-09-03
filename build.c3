@@ -17,7 +17,8 @@ macro bool String[*].contains(self, String key) {
     return false;
 }
 
-fn void! main() {
+fn void! main(String[] args) {
+
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
@@ -160,7 +161,7 @@ fn void! main() {
     }
 
     foreach (enum_entry : enums) {
-        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline uint;\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline int;\n"}, "");
         defer text_body.free();
         // Add values
         foreach (value : enum_entry.values) {
@@ -177,7 +178,7 @@ fn void! main() {
 
         // Add values
         foreach (value : entry.values) {
-            text_body.append(dstring::new_join({value.type," ", value.name,"\n"}, ""));
+            text_body.append(dstring::new_join({"   ", value.type," ", value.name,";\n"}, ""));
         }
         
         text_body.append_chars("}\n");
