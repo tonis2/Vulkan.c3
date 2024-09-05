@@ -25,6 +25,59 @@ const VK_MAX_GLOBAL_PRIORITY_SIZE_KHR = 16;
 const VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32;
 const VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7;
 const VK_SHADER_INDEX_UNUSED_AMDX = (~0U);
+
+distinct VkInstance = void*;
+distinct VkPhysicalDevice = void*;
+distinct VkDevice = void*;
+distinct VkQueue = void*;
+distinct VkCommandBuffer = void*;
+distinct VkDeviceMemory = void*;
+distinct VkCommandPool = void*;
+distinct VkBuffer = void*;
+distinct VkBufferView = void*;
+distinct VkImage = void*;
+distinct VkImageView = void*;
+distinct VkShaderModule = void*;
+distinct VkPipeline = void*;
+distinct VkPipelineLayout = void*;
+distinct VkSampler = void*;
+distinct VkDescriptorSet = void*;
+distinct VkDescriptorSetLayout = void*;
+distinct VkDescriptorPool = void*;
+distinct VkFence = void*;
+distinct VkSemaphore = void*;
+distinct VkEvent = void*;
+distinct VkQueryPool = void*;
+distinct VkFramebuffer = void*;
+distinct VkRenderPass = void*;
+distinct VkPipelineCache = void*;
+distinct VkIndirectCommandsLayoutNV = void*;
+distinct VkDescriptorUpdateTemplate = void*;
+distinct VkSamplerYcbcrConversion = void*;
+distinct VkValidationCacheEXT = void*;
+distinct VkAccelerationStructureKHR = void*;
+distinct VkAccelerationStructureNV = void*;
+distinct VkPerformanceConfigurationINTEL = void*;
+distinct VkBufferCollectionFUCHSIA = void*;
+distinct VkDeferredOperationKHR = void*;
+distinct VkPrivateDataSlot = void*;
+distinct VkCuModuleNVX = void*;
+distinct VkCuFunctionNVX = void*;
+distinct VkOpticalFlowSessionNV = void*;
+distinct VkMicromapEXT = void*;
+distinct VkShaderEXT = void*;
+distinct VkDisplayKHR = void*;
+distinct VkDisplayModeKHR = void*;
+distinct VkSurfaceKHR = void*;
+distinct VkSwapchainKHR = void*;
+distinct VkDebugReportCallbackEXT = void*;
+distinct VkDebugUtilsMessengerEXT = void*;
+distinct VkVideoSessionKHR = void*;
+distinct VkVideoSessionParametersKHR = void*;
+distinct VkSemaphoreSciSyncPoolNV = void*;
+distinct VkCudaModuleNV = void*;
+distinct VkCudaFunctionNV = void*;
+
 distinct VkResult = inline int;
 const VkResult VK_SUCCESS = 0;
 const VkResult VK_NOT_READY = 1;
@@ -46,7 +99,7 @@ const VkResult VK_ERROR_FORMAT_NOT_SUPPORTED = -11;
 const VkResult VK_ERROR_FRAGMENTED_POOL = -12;
 const VkResult VK_ERROR_UNKNOWN = -13;
 
-distinct VkStructureType = inline int;
+distinct VkStructureType = inline uint;
 const VkStructureType VK_STRUCTURE_TYPE_APPLICATION_INFO = 0;
 const VkStructureType VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO = 1;
 const VkStructureType VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO = 2;
@@ -97,7 +150,7 @@ const VkStructureType VK_STRUCTURE_TYPE_MEMORY_BARRIER = 46;
 const VkStructureType VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = 47;
 const VkStructureType VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = 48;
 
-distinct VkObjectType = inline int;
+distinct VkObjectType = inline uint;
 const VkObjectType VK_OBJECT_TYPE_UNKNOWN = 0;
 const VkObjectType VK_OBJECT_TYPE_INSTANCE = 1;
 const VkObjectType VK_OBJECT_TYPE_PHYSICAL_DEVICE = 2;
@@ -125,7 +178,7 @@ const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_SET = 23;
 const VkObjectType VK_OBJECT_TYPE_FRAMEBUFFER = 24;
 const VkObjectType VK_OBJECT_TYPE_COMMAND_POOL = 25;
 
-distinct VkVendorId = inline int;
+distinct VkVendorId = inline uint;
 const VkVendorId VK_VENDOR_ID_KHRONOS = 0x10000;
 const VkVendorId VK_VENDOR_ID_VIV = 0x10001;
 const VkVendorId VK_VENDOR_ID_VSI = 0x10002;
@@ -135,7 +188,7 @@ const VkVendorId VK_VENDOR_ID_MESA = 0x10005;
 const VkVendorId VK_VENDOR_ID_POCL = 0x10006;
 const VkVendorId VK_VENDOR_ID_MOBILEYE = 0x10007;
 
-distinct VkFormat = inline int;
+distinct VkFormat = inline uint;
 const VkFormat VK_FORMAT_UNDEFINED = 0;
 const VkFormat VK_FORMAT_R4G4_UNORM_PACK8 = 1;
 const VkFormat VK_FORMAT_R4G4B4A4_UNORM_PACK16 = 2;
@@ -322,7 +375,7 @@ const VkFormat VK_FORMAT_ASTC_12x10_SRGB_BLOCK = 182;
 const VkFormat VK_FORMAT_ASTC_12x12_UNORM_BLOCK = 183;
 const VkFormat VK_FORMAT_ASTC_12x12_SRGB_BLOCK = 184;
 
-distinct VkFormatFeatureFlagBits = inline int;
+distinct VkFormatFeatureFlagBits = inline uint;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = 0x00000002;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
@@ -337,23 +390,23 @@ const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
 
-distinct VkImageCreateFlagBits = inline int;
+distinct VkImageCreateFlagBits = inline uint;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = 0x00000008;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 0x00000010;
 
-distinct VkImageTiling = inline int;
+distinct VkImageTiling = inline uint;
 const VkImageTiling VK_IMAGE_TILING_OPTIMAL = 0;
 const VkImageTiling VK_IMAGE_TILING_LINEAR = 1;
 
-distinct VkImageType = inline int;
+distinct VkImageType = inline uint;
 const VkImageType VK_IMAGE_TYPE_1D = 0;
 const VkImageType VK_IMAGE_TYPE_2D = 1;
 const VkImageType VK_IMAGE_TYPE_3D = 2;
 
-distinct VkImageUsageFlagBits = inline int;
+distinct VkImageUsageFlagBits = inline uint;
 const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const VkImageUsageFlagBits VK_IMAGE_USAGE_SAMPLED_BIT = 0x00000004;
@@ -363,33 +416,33 @@ const VkImageUsageFlagBits VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000
 const VkImageUsageFlagBits VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040;
 const VkImageUsageFlagBits VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080;
 
-distinct VkInternalAllocationType = inline int;
+distinct VkInternalAllocationType = inline uint;
 const VkInternalAllocationType VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
 
-distinct VkMemoryHeapFlagBits = inline int;
+distinct VkMemoryHeapFlagBits = inline uint;
 const VkMemoryHeapFlagBits VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
 
-distinct VkMemoryPropertyFlagBits = inline int;
+distinct VkMemoryPropertyFlagBits = inline uint;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010;
 
-distinct VkPhysicalDeviceType = inline int;
+distinct VkPhysicalDeviceType = inline uint;
 const VkPhysicalDeviceType VK_PHYSICAL_DEVICE_TYPE_OTHER = 0;
 const VkPhysicalDeviceType VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1;
 const VkPhysicalDeviceType VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = 2;
 const VkPhysicalDeviceType VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = 3;
 const VkPhysicalDeviceType VK_PHYSICAL_DEVICE_TYPE_CPU = 4;
 
-distinct VkQueueFlagBits = inline int;
+distinct VkQueueFlagBits = inline uint;
 const VkQueueFlagBits VK_QUEUE_GRAPHICS_BIT = 0x00000001;
 const VkQueueFlagBits VK_QUEUE_COMPUTE_BIT = 0x00000002;
 const VkQueueFlagBits VK_QUEUE_TRANSFER_BIT = 0x00000004;
 const VkQueueFlagBits VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008;
 
-distinct VkSampleCountFlagBits = inline int;
+distinct VkSampleCountFlagBits = inline uint;
 const VkSampleCountFlagBits VK_SAMPLE_COUNT_1_BIT = 0x00000001;
 const VkSampleCountFlagBits VK_SAMPLE_COUNT_2_BIT = 0x00000002;
 const VkSampleCountFlagBits VK_SAMPLE_COUNT_4_BIT = 0x00000004;
@@ -398,14 +451,14 @@ const VkSampleCountFlagBits VK_SAMPLE_COUNT_16_BIT = 0x00000010;
 const VkSampleCountFlagBits VK_SAMPLE_COUNT_32_BIT = 0x00000020;
 const VkSampleCountFlagBits VK_SAMPLE_COUNT_64_BIT = 0x00000040;
 
-distinct VkSystemAllocationScope = inline int;
+distinct VkSystemAllocationScope = inline uint;
 const VkSystemAllocationScope VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = 0;
 const VkSystemAllocationScope VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = 1;
 const VkSystemAllocationScope VK_SYSTEM_ALLOCATION_SCOPE_CACHE = 2;
 const VkSystemAllocationScope VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = 3;
 const VkSystemAllocationScope VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = 4;
 
-distinct VkPipelineStageFlagBits = inline int;
+distinct VkPipelineStageFlagBits = inline uint;
 const VkPipelineStageFlagBits VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001;
 const VkPipelineStageFlagBits VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = 0x00000002;
 const VkPipelineStageFlagBits VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = 0x00000004;
@@ -424,24 +477,24 @@ const VkPipelineStageFlagBits VK_PIPELINE_STAGE_HOST_BIT = 0x00004000;
 const VkPipelineStageFlagBits VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000;
 const VkPipelineStageFlagBits VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
 
-distinct VkImageAspectFlagBits = inline int;
+distinct VkImageAspectFlagBits = inline uint;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008;
 
-distinct VkSparseImageFormatFlagBits = inline int;
+distinct VkSparseImageFormatFlagBits = inline uint;
 const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
 const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = 0x00000002;
 const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = 0x00000004;
 
-distinct VkSparseMemoryBindFlagBits = inline int;
+distinct VkSparseMemoryBindFlagBits = inline uint;
 const VkSparseMemoryBindFlagBits VK_SPARSE_MEMORY_BIND_METADATA_BIT = 0x00000001;
 
-distinct VkFenceCreateFlagBits = inline int;
+distinct VkFenceCreateFlagBits = inline uint;
 const VkFenceCreateFlagBits VK_FENCE_CREATE_SIGNALED_BIT = 0x00000001;
 
-distinct VkQueryPipelineStatisticFlagBits = inline int;
+distinct VkQueryPipelineStatisticFlagBits = inline uint;
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = 0x00000002;
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = 0x00000004;
@@ -454,23 +507,23 @@ const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = 0x00000200;
 const VkQueryPipelineStatisticFlagBits VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = 0x00000400;
 
-distinct VkQueryResultFlagBits = inline int;
+distinct VkQueryResultFlagBits = inline uint;
 const VkQueryResultFlagBits VK_QUERY_RESULT_64_BIT = 0x00000001;
 const VkQueryResultFlagBits VK_QUERY_RESULT_WAIT_BIT = 0x00000002;
 const VkQueryResultFlagBits VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = 0x00000004;
 const VkQueryResultFlagBits VK_QUERY_RESULT_PARTIAL_BIT = 0x00000008;
 
-distinct VkQueryType = inline int;
+distinct VkQueryType = inline uint;
 const VkQueryType VK_QUERY_TYPE_OCCLUSION = 0;
 const VkQueryType VK_QUERY_TYPE_PIPELINE_STATISTICS = 1;
 const VkQueryType VK_QUERY_TYPE_TIMESTAMP = 2;
 
-distinct VkBufferCreateFlagBits = inline int;
+distinct VkBufferCreateFlagBits = inline uint;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 
-distinct VkBufferUsageFlagBits = inline int;
+distinct VkBufferUsageFlagBits = inline uint;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004;
@@ -481,11 +534,11 @@ const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
 
-distinct VkSharingMode = inline int;
+distinct VkSharingMode = inline uint;
 const VkSharingMode VK_SHARING_MODE_EXCLUSIVE = 0;
 const VkSharingMode VK_SHARING_MODE_CONCURRENT = 1;
 
-distinct VkImageLayout = inline int;
+distinct VkImageLayout = inline uint;
 const VkImageLayout VK_IMAGE_LAYOUT_UNDEFINED = 0;
 const VkImageLayout VK_IMAGE_LAYOUT_GENERAL = 1;
 const VkImageLayout VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = 2;
@@ -496,7 +549,7 @@ const VkImageLayout VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = 6;
 const VkImageLayout VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7;
 const VkImageLayout VK_IMAGE_LAYOUT_PREINITIALIZED = 8;
 
-distinct VkComponentSwizzle = inline int;
+distinct VkComponentSwizzle = inline uint;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_IDENTITY = 0;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_ZERO = 1;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_ONE = 2;
@@ -505,7 +558,7 @@ const VkComponentSwizzle VK_COMPONENT_SWIZZLE_G = 4;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_B = 5;
 const VkComponentSwizzle VK_COMPONENT_SWIZZLE_A = 6;
 
-distinct VkImageViewType = inline int;
+distinct VkImageViewType = inline uint;
 const VkImageViewType VK_IMAGE_VIEW_TYPE_1D = 0;
 const VkImageViewType VK_IMAGE_VIEW_TYPE_2D = 1;
 const VkImageViewType VK_IMAGE_VIEW_TYPE_3D = 2;
@@ -514,7 +567,7 @@ const VkImageViewType VK_IMAGE_VIEW_TYPE_1D_ARRAY = 4;
 const VkImageViewType VK_IMAGE_VIEW_TYPE_2D_ARRAY = 5;
 const VkImageViewType VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = 6;
 
-distinct VkBlendFactor = inline int;
+distinct VkBlendFactor = inline uint;
 const VkBlendFactor VK_BLEND_FACTOR_ZERO = 0;
 const VkBlendFactor VK_BLEND_FACTOR_ONE = 1;
 const VkBlendFactor VK_BLEND_FACTOR_SRC_COLOR = 2;
@@ -535,20 +588,20 @@ const VkBlendFactor VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = 16;
 const VkBlendFactor VK_BLEND_FACTOR_SRC1_ALPHA = 17;
 const VkBlendFactor VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = 18;
 
-distinct VkBlendOp = inline int;
+distinct VkBlendOp = inline uint;
 const VkBlendOp VK_BLEND_OP_ADD = 0;
 const VkBlendOp VK_BLEND_OP_SUBTRACT = 1;
 const VkBlendOp VK_BLEND_OP_REVERSE_SUBTRACT = 2;
 const VkBlendOp VK_BLEND_OP_MIN = 3;
 const VkBlendOp VK_BLEND_OP_MAX = 4;
 
-distinct VkColorComponentFlagBits = inline int;
+distinct VkColorComponentFlagBits = inline uint;
 const VkColorComponentFlagBits VK_COLOR_COMPONENT_R_BIT = 0x00000001;
 const VkColorComponentFlagBits VK_COLOR_COMPONENT_G_BIT = 0x00000002;
 const VkColorComponentFlagBits VK_COLOR_COMPONENT_B_BIT = 0x00000004;
 const VkColorComponentFlagBits VK_COLOR_COMPONENT_A_BIT = 0x00000008;
 
-distinct VkCompareOp = inline int;
+distinct VkCompareOp = inline uint;
 const VkCompareOp VK_COMPARE_OP_NEVER = 0;
 const VkCompareOp VK_COMPARE_OP_LESS = 1;
 const VkCompareOp VK_COMPARE_OP_EQUAL = 2;
@@ -558,13 +611,13 @@ const VkCompareOp VK_COMPARE_OP_NOT_EQUAL = 5;
 const VkCompareOp VK_COMPARE_OP_GREATER_OR_EQUAL = 6;
 const VkCompareOp VK_COMPARE_OP_ALWAYS = 7;
 
-distinct VkCullModeFlagBits = inline int;
+distinct VkCullModeFlagBits = inline uint;
 const VkCullModeFlagBits VK_CULL_MODE_NONE = 0;
 const VkCullModeFlagBits VK_CULL_MODE_FRONT_BIT = 0x00000001;
 const VkCullModeFlagBits VK_CULL_MODE_BACK_BIT = 0x00000002;
 const VkCullModeFlagBits VK_CULL_MODE_FRONT_AND_BACK = 0x00000003;
 
-distinct VkDynamicState = inline int;
+distinct VkDynamicState = inline uint;
 const VkDynamicState VK_DYNAMIC_STATE_VIEWPORT = 0;
 const VkDynamicState VK_DYNAMIC_STATE_SCISSOR = 1;
 const VkDynamicState VK_DYNAMIC_STATE_LINE_WIDTH = 2;
@@ -575,11 +628,11 @@ const VkDynamicState VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = 6;
 const VkDynamicState VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = 7;
 const VkDynamicState VK_DYNAMIC_STATE_STENCIL_REFERENCE = 8;
 
-distinct VkFrontFace = inline int;
+distinct VkFrontFace = inline uint;
 const VkFrontFace VK_FRONT_FACE_COUNTER_CLOCKWISE = 0;
 const VkFrontFace VK_FRONT_FACE_CLOCKWISE = 1;
 
-distinct VkLogicOp = inline int;
+distinct VkLogicOp = inline uint;
 const VkLogicOp VK_LOGIC_OP_CLEAR = 0;
 const VkLogicOp VK_LOGIC_OP_AND = 1;
 const VkLogicOp VK_LOGIC_OP_AND_REVERSE = 2;
@@ -597,17 +650,17 @@ const VkLogicOp VK_LOGIC_OP_OR_INVERTED = 13;
 const VkLogicOp VK_LOGIC_OP_NAND = 14;
 const VkLogicOp VK_LOGIC_OP_SET = 15;
 
-distinct VkPipelineCreateFlagBits = inline int;
+distinct VkPipelineCreateFlagBits = inline uint;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
 
-distinct VkPolygonMode = inline int;
+distinct VkPolygonMode = inline uint;
 const VkPolygonMode VK_POLYGON_MODE_FILL = 0;
 const VkPolygonMode VK_POLYGON_MODE_LINE = 1;
 const VkPolygonMode VK_POLYGON_MODE_POINT = 2;
 
-distinct VkPrimitiveTopology = inline int;
+distinct VkPrimitiveTopology = inline uint;
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_POINT_LIST = 0;
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_LINE_LIST = 1;
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = 2;
@@ -620,7 +673,7 @@ const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = 8
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = 9;
 const VkPrimitiveTopology VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = 10;
 
-distinct VkShaderStageFlagBits = inline int;
+distinct VkShaderStageFlagBits = inline uint;
 const VkShaderStageFlagBits VK_SHADER_STAGE_VERTEX_BIT = 0x00000001;
 const VkShaderStageFlagBits VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002;
 const VkShaderStageFlagBits VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004;
@@ -630,7 +683,7 @@ const VkShaderStageFlagBits VK_SHADER_STAGE_COMPUTE_BIT = 0x00000020;
 const VkShaderStageFlagBits VK_SHADER_STAGE_ALL_GRAPHICS = 0x0000001F;
 const VkShaderStageFlagBits VK_SHADER_STAGE_ALL = 0x7FFFFFFF;
 
-distinct VkStencilOp = inline int;
+distinct VkStencilOp = inline uint;
 const VkStencilOp VK_STENCIL_OP_KEEP = 0;
 const VkStencilOp VK_STENCIL_OP_ZERO = 1;
 const VkStencilOp VK_STENCIL_OP_REPLACE = 2;
@@ -640,11 +693,11 @@ const VkStencilOp VK_STENCIL_OP_INVERT = 5;
 const VkStencilOp VK_STENCIL_OP_INCREMENT_AND_WRAP = 6;
 const VkStencilOp VK_STENCIL_OP_DECREMENT_AND_WRAP = 7;
 
-distinct VkVertexInputRate = inline int;
+distinct VkVertexInputRate = inline uint;
 const VkVertexInputRate VK_VERTEX_INPUT_RATE_VERTEX = 0;
 const VkVertexInputRate VK_VERTEX_INPUT_RATE_INSTANCE = 1;
 
-distinct VkBorderColor = inline int;
+distinct VkBorderColor = inline uint;
 const VkBorderColor VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = 0;
 const VkBorderColor VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = 1;
 const VkBorderColor VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = 2;
@@ -652,24 +705,24 @@ const VkBorderColor VK_BORDER_COLOR_INT_OPAQUE_BLACK = 3;
 const VkBorderColor VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = 4;
 const VkBorderColor VK_BORDER_COLOR_INT_OPAQUE_WHITE = 5;
 
-distinct VkFilter = inline int;
+distinct VkFilter = inline uint;
 const VkFilter VK_FILTER_NEAREST = 0;
 const VkFilter VK_FILTER_LINEAR = 1;
 
-distinct VkSamplerAddressMode = inline int;
+distinct VkSamplerAddressMode = inline uint;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_REPEAT = 0;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
 
-distinct VkSamplerMipmapMode = inline int;
+distinct VkSamplerMipmapMode = inline uint;
 const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODE_NEAREST = 0;
 const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODE_LINEAR = 1;
 
-distinct VkDescriptorPoolCreateFlagBits = inline int;
+distinct VkDescriptorPoolCreateFlagBits = inline uint;
 const VkDescriptorPoolCreateFlagBits VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
 
-distinct VkDescriptorType = inline int;
+distinct VkDescriptorType = inline uint;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_SAMPLER = 0;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = 1;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2;
@@ -682,7 +735,7 @@ const VkDescriptorType VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = 8;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = 9;
 const VkDescriptorType VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = 10;
 
-distinct VkAccessFlagBits = inline int;
+distinct VkAccessFlagBits = inline uint;
 const VkAccessFlagBits VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
 const VkAccessFlagBits VK_ACCESS_INDEX_READ_BIT = 0x00000002;
 const VkAccessFlagBits VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
@@ -701,57 +754,57 @@ const VkAccessFlagBits VK_ACCESS_HOST_WRITE_BIT = 0x00004000;
 const VkAccessFlagBits VK_ACCESS_MEMORY_READ_BIT = 0x00008000;
 const VkAccessFlagBits VK_ACCESS_MEMORY_WRITE_BIT = 0x00010000;
 
-distinct VkAttachmentDescriptionFlagBits = inline int;
+distinct VkAttachmentDescriptionFlagBits = inline uint;
 const VkAttachmentDescriptionFlagBits VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001;
 
-distinct VkAttachmentLoadOp = inline int;
+distinct VkAttachmentLoadOp = inline uint;
 const VkAttachmentLoadOp VK_ATTACHMENT_LOAD_OP_LOAD = 0;
 const VkAttachmentLoadOp VK_ATTACHMENT_LOAD_OP_CLEAR = 1;
 const VkAttachmentLoadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE = 2;
 
-distinct VkAttachmentStoreOp = inline int;
+distinct VkAttachmentStoreOp = inline uint;
 const VkAttachmentStoreOp VK_ATTACHMENT_STORE_OP_STORE = 0;
 const VkAttachmentStoreOp VK_ATTACHMENT_STORE_OP_DONT_CARE = 1;
 
-distinct VkDependencyFlagBits = inline int;
+distinct VkDependencyFlagBits = inline uint;
 const VkDependencyFlagBits VK_DEPENDENCY_BY_REGION_BIT = 0x00000001;
 
-distinct VkPipelineBindPoint = inline int;
+distinct VkPipelineBindPoint = inline uint;
 const VkPipelineBindPoint VK_PIPELINE_BIND_POINT_GRAPHICS = 0;
 const VkPipelineBindPoint VK_PIPELINE_BIND_POINT_COMPUTE = 1;
 
-distinct VkCommandPoolCreateFlagBits = inline int;
+distinct VkCommandPoolCreateFlagBits = inline uint;
 const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
 const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
 
-distinct VkCommandPoolResetFlagBits = inline int;
+distinct VkCommandPoolResetFlagBits = inline uint;
 const VkCommandPoolResetFlagBits VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 
-distinct VkCommandBufferLevel = inline int;
+distinct VkCommandBufferLevel = inline uint;
 const VkCommandBufferLevel VK_COMMAND_BUFFER_LEVEL_PRIMARY = 0;
 const VkCommandBufferLevel VK_COMMAND_BUFFER_LEVEL_SECONDARY = 1;
 
-distinct VkCommandBufferResetFlagBits = inline int;
+distinct VkCommandBufferResetFlagBits = inline uint;
 const VkCommandBufferResetFlagBits VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 
-distinct VkCommandBufferUsageFlagBits = inline int;
+distinct VkCommandBufferUsageFlagBits = inline uint;
 const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001;
 const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002;
 const VkCommandBufferUsageFlagBits VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004;
 
-distinct VkQueryControlFlagBits = inline int;
+distinct VkQueryControlFlagBits = inline uint;
 const VkQueryControlFlagBits VK_QUERY_CONTROL_PRECISE_BIT = 0x00000001;
 
-distinct VkIndexType = inline int;
+distinct VkIndexType = inline uint;
 const VkIndexType VK_INDEX_TYPE_UINT16 = 0;
 const VkIndexType VK_INDEX_TYPE_UINT32 = 1;
 
-distinct VkStencilFaceFlagBits = inline int;
+distinct VkStencilFaceFlagBits = inline uint;
 const VkStencilFaceFlagBits VK_STENCIL_FACE_FRONT_BIT = 0x00000001;
 const VkStencilFaceFlagBits VK_STENCIL_FACE_BACK_BIT = 0x00000002;
 const VkStencilFaceFlagBits VK_STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
 
-distinct VkSubpassContents = inline int;
+distinct VkSubpassContents = inline uint;
 const VkSubpassContents VK_SUBPASS_CONTENTS_INLINE = 0;
 const VkSubpassContents VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = 1;
 

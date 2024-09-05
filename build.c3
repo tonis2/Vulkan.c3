@@ -22,20 +22,40 @@ fn void! main(String[] args) {
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
-    NodeList features;
-    defer features.free();
+    NodeList feature_nodes;
+    defer feature_nodes.free();
 
-    root_node.find(fn (node) => node.name == "feature", &features);
+    root_node.find(fn (node) => node.name == "feature", &feature_nodes);
 
-    NodeList types;
-    defer types.free();
+    NodeList types_nodes;
+    defer types_nodes.free();
 
-    root_node.find(fn (node) => node.children.len() > 0 && node.attributes.has_key("name"), &types);
+    root_node.find(fn (node) => node.children.len() > 0 && node.attributes.has_key("name"), &types_nodes);
+
+    NodeList handle_nodes;
+    defer handle_nodes.free();
+
+    root_node.find(fn (node) => node.children.len() > 0 && node.attributes.has_key("category") && node.attributes["category"]!! == "handle", &handle_nodes);
+
+
+    NodeList command_nodes;
+    defer command_nodes.free();
+
+    root_node.find(fn (node) => {|
+        if (node.name == "command" && node.children.len() > 0) {
+            if (node.attributes.has_key("api") && node.attributes["api"]!! == "vulkansc") {
+                 return false;
+            };
+            return true;
+        }
+        return false;
+    |}, &command_nodes);
 
     List(<VkStruct>) structs;
     List(<VkCommand>) commands;
     List(<VkEnum>) enums;
     List(<VkValue>) constants;
+    List(<VkValue>) handles;
 
     defer {
         foreach (value : structs) value.base.free();
@@ -74,7 +94,12 @@ fn void! main(String[] args) {
         }
     }
 
-    foreach (feature : features) {
+    // Parse handle nodes
+    foreach (node: handle_nodes) {
+        handles.push(VkValue{}.from_handle(node));
+    }
+
+    foreach (feature : feature_nodes) {
         String! number = feature.attributes.get("number");
         String feature_api = feature.attributes.get("api")!;
         if (feature_api == "vulkansc") break;
@@ -92,28 +117,14 @@ fn void! main(String[] args) {
                 foreach (entry : require.children) {
                     switch (entry.name) {
                         case "enum": {
-                            // String name = entry.attributes.get("name")!;
-                            // String! bitpos = entry.attributes.get("bitpos");
-                            // String! value = entry.attributes.get("value");
-                            // String! extends = entry.attributes.get("extends");
 
-                            // if (try extends) {
-                            //     // Find enum node
-                            //     foreach (node: doc.rootNode.children) {
-                            //         String! enum_name = node.attributes.get("name");
-                            //         String! type = node.attributes.get("type");
-                                    
-                            //         //if (try enum_name && enum_name == name) io::printfn("enum %s", enum_name);
-                            //     }
-                            // }
-                            // enums.push({.base.name = name ?? "-" });
                         }
                         case "type": {
                             String name = entry.attributes.get("name")!;
                             String! extends = entry.attributes.get("extends");
 
-                            for TYPES: (uint type_index; type_index < types.len(); type_index++) {
-                                xml::Node* type_node = types[type_index];
+                            for TYPES: (uint type_index; type_index < types_nodes.len(); type_index++) {
+                                xml::Node* type_node = types_nodes[type_index];
                                 String! node_name = type_node.attributes.get("name");
                                 String! node_type = type_node.attributes.get("type");
                                 String! type = type_node.attributes.get("type") ?? type_node.attributes.get("category");
@@ -121,25 +132,33 @@ fn void! main(String[] args) {
                                 // Found reference type xml node
                                 if (try node_name && node_name == name && try type) {
                                     switch (type) {
-                                        case "enum": {
-                                            VkEnum value;
-                                            value.from_node(type_node);
-                                            enums.push(value);
-                                        }
-                                        case "bitmask": {
-                                            VkEnum value;
-                                            value.from_node(type_node);
-                                            enums.push(value);
+                                        case "bitmask" :
+                                        case "enum" : {
+                                            enums.push(VkEnum{}.from_node(type_node));
                                         }
                                         case "struct": {
-                                            //io::printfn("%s", node_name);
                                             structs.push(VkStruct{}.from_node(type_node));
                                         }
+                                        case "basetype": {
+                                            io::printfn("basetype %s", type_node.name);
+                                        }
+                                        case "union": {
+                                            io::printfn("union %s", type_node.name);
+                                        }
+                                        // case "funcpointer": {
+                                        //     io::printfn("funcpointer %s", type_node.name);
+                                        // }
+                                        // case "command": {
+                                        //     io::printfn("command %s", type_node.name);
+                                        // }
                                         default: {}
                                     }
                                     break TYPES;
                                 }
                             }
+                        }
+                        case "command": {
+
                         }
                         default: {
                   
@@ -159,9 +178,25 @@ fn void! main(String[] args) {
         
         vk_main.write(text_body.str_view())!!;
     }
+    
+    vk_main.write("\n")!!;
 
+
+    // Handles
+    foreach (entry : handles) {
+        DString text_body = dstring::new_join({"distinct ", entry.name, " = void*;\n"}, "");
+        defer text_body.free();
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    vk_main.write("\n")!!;
+
+    // Enums
     foreach (enum_entry : enums) {
-        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline int;\n"}, "");
+        String enum_type = "uint";
+        if (enum_entry.name == "VkResult") enum_type = "int";
+
+        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline ", enum_type, ";\n"}, "");
         defer text_body.free();
         // Add values
         foreach (value : enum_entry.values) {
@@ -171,7 +206,7 @@ fn void! main(String[] args) {
         text_body.append_chars("\n");
         vk_main.write(text_body.str_view())!!;
     }
-
+    // Structs
     foreach (entry : structs) {
         DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
         defer text_body.free();
