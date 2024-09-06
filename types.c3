@@ -32,7 +32,6 @@ struct VkEnum {
     inline Base base;
     uint bitpos;
     uint bitwidth;
-    String type;
 }
 
 struct VkValue {
@@ -40,12 +39,13 @@ struct VkValue {
     String comment;
     String value;
     String type;
+    String size;
     bool optional;
 }
 
 fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
-    self.base.name = node.attributes.get("name") ?? "-";
-    self.base.comment = node.attributes.get("comment") ?? "-";
+    self.name = node.attributes.get("name") ?? "-";
+    self.comment = node.attributes.get("comment") ?? "-";
 
     foreach (entry : node.children) {
         String! name = entry.attributes.get("name");
@@ -64,11 +64,11 @@ fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
             if (try bitpos) {
                 char[10] buffer;
                 String res = (String)io::bprintf(&buffer, "0x%08x", 1 << bitpos.to_int()!!)!!;
-                
+          
                 self.values.push(
                     VkValue {
                         .name = name,
-                        .value = res.copy(allocator::heap())
+                        .value = res.copy()
                     }
                 );
             }
@@ -102,12 +102,14 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
     foreach (member : node.children) {
         VkValue struct_value;
         String! value = member.attributes.get("values");
-        String! len = member.attributes.get("len");
-       
-        if (try value) struct_value.value = value;
+
+        if (try value) struct_value.value = value; 
         struct_value.optional = member.attributes.has_key("optional");
+        if (!struct_value.optional && member.value != "" && member.value[0] != '*') struct_value.size = member.value;
 
         foreach (entry : member.children) {
+            // Actually used as SIZE element at vulkan :/
+            if (entry.name == "enum") struct_value.size = entry.value;
             if (entry.name == "type") struct_value.type = entry.value;
             if (entry.name == "name") struct_value.name = entry.value;
         }
