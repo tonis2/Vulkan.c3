@@ -62,8 +62,8 @@ fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
                 );
             }
             if (try bitpos) {
-                char[10] buffer;
-                String res = (String)io::bprintf(&buffer, "0x%08x", 1 << bitpos.to_int()!!)!!;
+                char[32] buffer;
+                String res = (String)io::bprintf(&buffer, "0x%08x", (ulong)1 << bitpos.to_uint()!!)!!;
           
                 self.values.push(
                     VkValue {
@@ -100,20 +100,43 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
     self.name = node.attributes.get("name") ?? "-";
     
     foreach (member : node.children) {
-        VkValue struct_value;
-        String! value = member.attributes.get("values");
+        VkValue value;
+        String! node_value = member.attributes.get("values");
 
-        if (try value) struct_value.value = value; 
-        struct_value.optional = member.attributes.has_key("optional");
-        if (!struct_value.optional && member.value != "" && member.value[0] != '*') struct_value.size = member.value;
+        if (try node_value) value.value = node_value; 
+        value.optional = member.attributes.has_key("optional");
+        if (!value.optional && member.value != "" && member.value[0] != '*') value.size = member.value;
 
         foreach (entry : member.children) {
             // Actually used as SIZE element at vulkan :/
-            if (entry.name == "enum") struct_value.size = entry.value;
-            if (entry.name == "type") struct_value.type = entry.value;
-            if (entry.name == "name") struct_value.name = entry.value;
+            if (entry.name == "enum") value.size = entry.value;
+            if (entry.name == "type") value.type = entry.value;
+            if (entry.name == "name") value.name = entry.value;
         }
-        if (member.name != "comment") self.values.push(struct_value); 
+        if (member.name != "comment") self.values.push(value); 
+    }
+    return *self;
+}
+
+
+fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
+    self.name = node.attributes.get("name") ?? "-";
+    String! success_codes = node.attributes.get("successcodes");
+    String! error_codes = node.attributes.get("errorcodes");
+    
+    foreach (member : node.children) {
+        VkValue value;
+        // if (try node_value) value.value = node_value; 
+        // value.optional = member.attributes.has_key("optional");
+        // if (!value.optional && member.value != "" && member.value[0] != '*') value.size = member.value;
+
+        foreach (entry : member.children) {
+            // Actually used as SIZE element at vulkan :/
+            // if (entry.name == "proto") value.size = entry.value;
+            // if (entry.name == "param") value.type = entry.value;
+            // if (entry.name == "name") value.name = entry.value;
+        }
+        // if (member.name != "comment") self.values.push(value); 
     }
     return *self;
 }
