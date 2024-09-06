@@ -22,6 +22,8 @@ fn void! main(String[] args) {
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
+
+    // Find required nodes
     NodeList feature_nodes;
     defer feature_nodes.free();
 
@@ -56,14 +58,17 @@ fn void! main(String[] args) {
     List(<VkEnum>) enums;
     List(<VkValue>) constants;
     List(<VkValue>) handles;
+    List(<VkStruct>) unions;
 
     defer {
         foreach (value : structs) value.base.free();
         foreach (value : commands) value.base.free();
         foreach (value : enums) value.base.free();
+        foreach (value : unions) value.base.free();
         structs.free();
         commands.free();
         enums.free();
+        unions.free();
     }
 
     // Create api contants
@@ -77,13 +82,7 @@ fn void! main(String[] args) {
                 String! child_name = child_node.attributes.get("name");
                 String! alias = child_node.attributes.get("alias");
 
-                if (try alias && try child_name) {
-                    // VkValue value;
-                    // mem::copy(&enum_value.values[index - 1], &value, 1);
-                    // value.name = enum_name;
-                    // enum_value.base.values.push(value);
-                    continue;
-                }
+                if (try alias && try child_name) continue;
 
                 if (try child_name) {
                     VkValue value;
@@ -106,23 +105,26 @@ fn void! main(String[] args) {
 
         // Get only up-to required vulkan version
         if (try number && number.to_double()!! <= MAX_VERSION) {
-            for REQUIRES: (uint index; index < feature.children.len(); index++) {
-
-                xml::Node require = feature.children[index];
+            foreach (require: feature.children) {
                 String! comment = require.attributes.get("comment");
                 
                 // Skip some required stuff, they are handled elsewhere 
-                if (try comment) if (SKIPED_REQUIRES.contains(comment)) continue REQUIRES;
+                if (try comment) if (SKIPED_REQUIRES.contains(comment)) continue;
                 
                 foreach (entry : require.children) {
+                    String! name = entry.attributes.get("name");
+                    String! extends = entry.attributes.get("extends");
+
+                    if (catch err = name) {
+                        io::printfn("XML row broken at %s", entry.name);
+                        continue;
+                    } 
+
                     switch (entry.name) {
                         case "enum": {
 
                         }
                         case "type": {
-                            String name = entry.attributes.get("name")!;
-                            String! extends = entry.attributes.get("extends");
-
                             for TYPES: (uint type_index; type_index < types_nodes.len(); type_index++) {
                                 xml::Node* type_node = types_nodes[type_index];
                                 String! node_name = type_node.attributes.get("name");
@@ -143,14 +145,14 @@ fn void! main(String[] args) {
                                             io::printfn("basetype %s", type_node.name);
                                         }
                                         case "union": {
-                                            io::printfn("union %s", type_node.name);
+                                            unions.push(VkStruct{}.from_node(type_node));
                                         }
                                         // case "funcpointer": {
                                         //     io::printfn("funcpointer %s", type_node.name);
                                         // }
-                                        // case "command": {
-                                        //     io::printfn("command %s", type_node.name);
-                                        // }
+                                        case "command": {
+                                            commands.push(VkCommand{}.from_node(type_node));
+                                        }
                                         default: {}
                                     }
                                     break TYPES;
@@ -158,7 +160,7 @@ fn void! main(String[] args) {
                             }
                         }
                         case "command": {
-
+                            io::printfn("command %s", name);
                         }
                         default: {
                   
@@ -211,9 +213,39 @@ fn void! main(String[] args) {
         DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
         defer text_body.free();
 
+        // Add struct values
+        foreach (value : entry.values) {
+            if (value.size != "") {
+                if (value.size[0] != '[') {
+                    text_body.append(dstring::new_join({"   ", value.type, "[", value.size, "]", " ", value.name,";\n"}, ""));
+                } else {
+                    text_body.append(dstring::new_join({"   ", value.type, value.size, " ", value.name,";\n"}, ""));
+                }
+            } else {
+                text_body.append(dstring::new_join({"   ", value.type, " ", value.name,";\n"}, ""));
+            }
+        }
+        
+        text_body.append_chars("}\n");
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    // Unions
+    foreach (entry : unions) {
+        DString text_body = dstring::new_join({"union ", entry.name, " { \n"}, "");
+        defer text_body.free();
+
         // Add values
         foreach (value : entry.values) {
-            text_body.append(dstring::new_join({"   ", value.type," ", value.name,";\n"}, ""));
+            if (value.size != "") {
+                if (value.size[0] != '[') {
+                    text_body.append(dstring::new_join({"   ", value.type, "[", value.size, "]", " ", value.name,";\n"}, ""));
+                } else {
+                    text_body.append(dstring::new_join({"   ", value.type, value.size, " ", value.name,";\n"}, ""));
+                }
+            } else {
+                text_body.append(dstring::new_join({"   ", value.type, " ", value.name,";\n"}, ""));
+            }
         }
         
         text_body.append_chars("}\n");

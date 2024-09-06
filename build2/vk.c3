@@ -890,7 +890,7 @@ struct VkPipelineCacheHeaderVersionOne {
    VkPipelineCacheHeaderVersion headerVersion;
    uint32_t vendorID;
    uint32_t deviceID;
-   uint8_t pipelineCacheUUID;
+   uint8_t[VK_UUID_SIZE] pipelineCacheUUID;
 }
 struct VkAllocationCallbacks { 
    void pUserData;
@@ -1049,9 +1049,9 @@ struct VkPhysicalDeviceLimits {
    uint32_t maxFragmentDualSrcAttachments;
    uint32_t maxFragmentCombinedOutputResources;
    uint32_t maxComputeSharedMemorySize;
-   uint32_t maxComputeWorkGroupCount;
+   uint32_t[3] maxComputeWorkGroupCount;
    uint32_t maxComputeWorkGroupInvocations;
-   uint32_t maxComputeWorkGroupSize;
+   uint32_t[3] maxComputeWorkGroupSize;
    uint32_t subPixelPrecisionBits;
    uint32_t subTexelPrecisionBits;
    uint32_t mipmapPrecisionBits;
@@ -1060,8 +1060,8 @@ struct VkPhysicalDeviceLimits {
    float maxSamplerLodBias;
    float maxSamplerAnisotropy;
    uint32_t maxViewports;
-   uint32_t maxViewportDimensions;
-   float viewportBoundsRange;
+   uint32_t[2] maxViewportDimensions;
+   float[2] viewportBoundsRange;
    uint32_t viewportSubPixelBits;
    size_t minMemoryMapAlignment;
    VkDeviceSize minTexelBufferOffsetAlignment;
@@ -1094,8 +1094,8 @@ struct VkPhysicalDeviceLimits {
    uint32_t maxCullDistances;
    uint32_t maxCombinedClipAndCullDistances;
    uint32_t discreteQueuePriorities;
-   float pointSizeRange;
-   float lineWidthRange;
+   float[2] pointSizeRange;
+   float[2] lineWidthRange;
    float pointSizeGranularity;
    float lineWidthGranularity;
    VkBool32 strictLines;
@@ -1106,9 +1106,9 @@ struct VkPhysicalDeviceLimits {
 }
 struct VkPhysicalDeviceMemoryProperties { 
    uint32_t memoryTypeCount;
-   VkMemoryType memoryTypes;
+   VkMemoryType[VK_MAX_MEMORY_TYPES] memoryTypes;
    uint32_t memoryHeapCount;
-   VkMemoryHeap memoryHeaps;
+   VkMemoryHeap[VK_MAX_MEMORY_HEAPS] memoryHeaps;
 }
 struct VkPhysicalDeviceProperties { 
    uint32_t apiVersion;
@@ -1116,8 +1116,8 @@ struct VkPhysicalDeviceProperties {
    uint32_t vendorID;
    uint32_t deviceID;
    VkPhysicalDeviceType deviceType;
-   char deviceName;
-   uint8_t pipelineCacheUUID;
+   char[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE] deviceName;
+   uint8_t[VK_UUID_SIZE] pipelineCacheUUID;
    VkPhysicalDeviceLimits limits;
    VkPhysicalDeviceSparseProperties sparseProperties;
 }
@@ -1155,14 +1155,14 @@ struct VkDeviceQueueCreateInfo {
    float pQueuePriorities;
 }
 struct VkExtensionProperties { 
-   char extensionName;
+   char[VK_MAX_EXTENSION_NAME_SIZE] extensionName;
    uint32_t specVersion;
 }
 struct VkLayerProperties { 
-   char layerName;
+   char[VK_MAX_EXTENSION_NAME_SIZE] layerName;
    uint32_t specVersion;
    uint32_t implementationVersion;
-   char description;
+   char[VK_MAX_DESCRIPTION_SIZE] description;
 }
 struct VkSubmitInfo { 
    VkStructureType sType;
@@ -1407,7 +1407,7 @@ struct VkPipelineColorBlendStateCreateInfo {
    VkLogicOp logicOp;
    uint32_t attachmentCount;
    VkPipelineColorBlendAttachmentState pAttachments;
-   float blendConstants;
+   float[4] blendConstants;
 }
 struct VkPipelineDepthStencilStateCreateInfo { 
    VkStructureType sType;
@@ -1752,9 +1752,9 @@ struct VkClearRect {
 }
 struct VkImageBlit { 
    VkImageSubresourceLayers srcSubresource;
-   VkOffset3D srcOffsets;
+   VkOffset3D[2] srcOffsets;
    VkImageSubresourceLayers dstSubresource;
-   VkOffset3D dstOffsets;
+   VkOffset3D[2] dstOffsets;
 }
 struct VkImageCopy { 
    VkImageSubresourceLayers srcSubresource;
@@ -1784,4 +1784,13 @@ struct VkRenderPassBeginInfo {
    VkRect2D renderArea;
    uint32_t clearValueCount;
    VkClearValue pClearValues;
+}
+union VkClearColorValue { 
+   float[4] float32;
+   int32_t[4] int32;
+   uint32_t[4] uint32;
+}
+union VkClearValue { 
+   VkClearColorValue color;
+   VkClearDepthStencilValue depthStencil;
 }
