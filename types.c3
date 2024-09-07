@@ -120,23 +120,24 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
 
 
 fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
-    self.name = node.attributes.get("name") ?? "-";
     String! success_codes = node.attributes.get("successcodes");
     String! error_codes = node.attributes.get("errorcodes");
     
     foreach (member : node.children) {
+        String! api = member.attributes.get("api");
+        bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
-        // if (try node_value) value.value = node_value; 
-        // value.optional = member.attributes.has_key("optional");
-        // if (!value.optional && member.value != "" && member.value[0] != '*') value.size = member.value;
 
         foreach (entry : member.children) {
-            // Actually used as SIZE element at vulkan :/
-            // if (entry.name == "proto") value.size = entry.value;
-            // if (entry.name == "param") value.type = entry.value;
-            // if (entry.name == "name") value.name = entry.value;
+            if (member.name == "proto") {
+                if (entry.name == "name") self.name = entry.value;
+                if (entry.name == "type") self.returnType = entry.value;
+            } else if (!is_vulkansc) {
+                if (entry.name == "type") value.type = entry.value;
+                if (entry.name == "name") value.name = entry.value;
+            }
         }
-        // if (member.name != "comment") self.values.push(value); 
+        if (member.name == "param" && !is_vulkansc) self.values.push(value);
     }
     return *self;
 }

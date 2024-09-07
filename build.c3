@@ -112,10 +112,13 @@ fn void! main(String[] args) {
                 handles.push(VkValue{}.from_handle(node));
             }
             case "command": {
-                commands.push(VkCommand{}.from_node(node));
+                
             }
         }
     }
+
+    // Parse commands
+    foreach (node : command_nodes) commands.push(VkCommand{}.from_node(node));
 
     // Build C3 files
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
@@ -195,6 +198,20 @@ fn void! main(String[] args) {
         }
         
         text_body.append_chars("}\n");
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    // Commands
+    foreach (entry : commands) {
+        DString text_body = dstring::new_join({"extern fn ", entry.returnType, " ", entry.name, " ("}, "");
+        defer text_body.free();
+
+        // Add values
+        foreach (i, value : entry.values) {
+            text_body.append(dstring::new_join({value.type, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+        }
+
+        text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
         vk_main.write(text_body.str_view())!!;
     }
 }
