@@ -4,11 +4,22 @@ import std::io;
 import std::core;
 import std::math;
 import std::collections::list;
+import std::collections::map;
 import xml;
+
+def TypeMap = HashMap(<String, String>);
 
 const MAX_VERSION = 1.0;
 
 const String[*] SKIPED_REQUIRES = {"Header boilerplate", "API constants", "API version macros"};
+
+// TypeMap type_values;
+
+
+
+// const NEW_NAMES = HashMap {
+//     "void": "void*"
+// };
 
 macro bool String[*].contains(self, String key) {
     foreach (value : self) {
@@ -130,6 +141,8 @@ fn void! main(String[] args) {
 
     // Build C3 files
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
+
+    vk_main.write("module vk;\n")!!;
 
     // Constants
     foreach (value : constants) {
