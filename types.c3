@@ -40,6 +40,7 @@ struct VkValue {
     String value;
     String type;
     String size;
+    String len;
     bool optional;
 }
 
@@ -78,20 +79,10 @@ fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
 }
 
 fn VkValue VkValue.from_node(&self, xml::Node* node) {
-    String! value = node.attributes.get("value");
-    String! type = node.attributes.get("type");
-    String! name = node.attributes.get("name");
 
-    self.name = name ?? "-";
-    self.type = type ?? "-";
-    self.value = value ?? ".";
-    return *self;
-}
-
-fn VkValue VkValue.from_handle(&self, xml::Node* node) {
-    self.type = "node*";
     foreach (entry : node.children) {
         if (entry.name == "name") self.name = entry.value;
+        if (entry.name == "type") self.type = entry.value;
     }
     return *self;
 }
@@ -102,7 +93,9 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
     foreach (member : node.children) {
         VkValue value;
         String! node_value = member.attributes.get("values");
-
+        String! len = member.attributes.get("len");
+        
+        if (try len) value.len = len;
         if (try node_value) value.value = node_value; 
         value.optional = member.attributes.has_key("optional");
         if (!value.optional && member.value != "" && member.value[0] != '*') value.size = member.value;
