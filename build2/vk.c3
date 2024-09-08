@@ -1,3 +1,4 @@
+module vk;
 const VK_MAX_PHYSICAL_DEVICE_NAME_SIZE = 256;
 const VK_UUID_SIZE = 16;
 const VK_LUID_SIZE = 8;
