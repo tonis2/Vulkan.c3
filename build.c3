@@ -54,6 +54,7 @@ fn void! main(String[] args) {
     List(<VkEnum>) enums;
     List(<VkValue>) constants;
     List(<VkValue>) handles;
+    List(<VkValue>) basetypes;
     List(<VkStruct>) unions;
 
     defer {
@@ -65,6 +66,7 @@ fn void! main(String[] args) {
         commands.free();
         enums.free();
         unions.free();
+        basetypes.free();
     }
 
     // Create api contants
@@ -74,16 +76,19 @@ fn void! main(String[] args) {
         String! comment = node.attributes.get("comment");
         
         if (try name && name == "API Constants") {
-            foreach (child_node: node.children) {
-                String! child_name = child_node.attributes.get("name");
-                String! alias = child_node.attributes.get("alias");
+            foreach (child: node.children) {
+                String! child_name = child.attributes.get("name");
+                String! alias = child.attributes.get("alias");
+                String! value = child.attributes.get("value");
 
                 if (try alias && try child_name) continue;
 
                 if (try child_name) {
-                    VkValue value;
-                    value.from_node(&child_node);
-                    constants.push(value);
+                    constants.push(VkValue {
+                        .type = type ?? "",
+                        .value = value ?? "",
+                        .name = child_name
+                    });
                 }
             }
         }
@@ -103,16 +108,19 @@ fn void! main(String[] args) {
                 if (try name) enums.push(VkEnum{}.from_node(node));
             }
             case "struct": {
-                structs.push(VkStruct{}.from_node(node));
+                // Exclude NV ones for now
+                if (try name && !name.ends_with("NV")) {
+                    structs.push(VkStruct{}.from_node(node));
+                }
             }
             case "union": {
                 unions.push(VkStruct{}.from_node(node));
             }
             case "handle": {
-                handles.push(VkValue{}.from_handle(node));
+                handles.push(VkValue{}.from_node(node));
             }
-            case "command": {
-                
+            case "basetype": {
+                basetypes.push(VkValue{}.from_node(node));
             }
         }
     }
@@ -123,6 +131,7 @@ fn void! main(String[] args) {
     // Build C3 files
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
 
+    // Constants
     foreach (value : constants) {
         DString text_body = dstring::new_join({"const ", value.name, " = ", value.value, ";\n"}, "");
         defer text_body.free();
@@ -132,11 +141,19 @@ fn void! main(String[] args) {
     
     vk_main.write("\n")!!;
 
-
     // Handles
     foreach (entry : handles) {
         DString text_body = dstring::new_join({"distinct ", entry.name, " = void*;\n"}, "");
         defer text_body.free();
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    vk_main.write("\n")!!;
+
+    // BaseTypes
+    foreach (entry : basetypes) {
+        if (entry.type == "") continue;
+        DString text_body = dstring::new_join({"def ", entry.name, " = ", entry.type, ";\n"}, "");
         vk_main.write(text_body.str_view())!!;
     }
 
@@ -157,6 +174,7 @@ fn void! main(String[] args) {
         text_body.append_chars("\n");
         vk_main.write(text_body.str_view())!!;
     }
+
     // Structs
     foreach (entry : structs) {
         DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
@@ -164,14 +182,14 @@ fn void! main(String[] args) {
 
         // Add struct values
         foreach (value : entry.values) {
-            if (value.size != "") {
+            if (value.size != "" && value.size != "null-terminated" && value.len == "") {
                 if (value.size[0] != '[') {
                     text_body.append(dstring::new_join({"   ", value.type, "[", value.size, "]", " ", value.name,";\n"}, ""));
                 } else {
                     text_body.append(dstring::new_join({"   ", value.type, value.size, " ", value.name,";\n"}, ""));
                 }
             } else {
-                text_body.append(dstring::new_join({"   ", value.type, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", value.type, value.len != "" ? "*" : "", " ", value.name,";\n"}, ""));
             }
         }
         
