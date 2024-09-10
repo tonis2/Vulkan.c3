@@ -11,6 +11,7 @@ struct Base {
     String name;
     String comment;
     List(<VkValue>) values;
+    bool enabled;
 }
 
 fn void Base.free(&self) {
@@ -96,12 +97,14 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
         String! len = member.attributes.get("len");
         
         if (try len) value.len = len;
-        if (try node_value) value.value = node_value; 
+        if (try node_value) value.value = node_value;
+        if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
+
         value.optional = member.attributes.has_key("optional");
-        if (!value.optional && member.value != "" && member.value[0] != '*') value.size = member.value;
+        value.value = member.value.len > 1 ? member.value[0..0] : "";
 
         foreach (entry : member.children) {
-            // Actually used as SIZE element at vulkan :/
+            // Enum used as SIZE element at vulkan :/
             if (entry.name == "enum") value.size = entry.value;
             if (entry.name == "type") value.type = entry.value;
             if (entry.name == "name") value.name = entry.value;
@@ -120,6 +123,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
         String! api = member.attributes.get("api");
         bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
+        value.value = member.value.trim(" ");
 
         foreach (entry : member.children) {
             if (member.name == "proto") {
@@ -134,3 +138,20 @@ fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
     }
     return *self;
 }
+
+fn VkCommand VkCommand.from_func_ptr(&self, xml::Node* node) {
+    self.enabled = true;
+    if (node.value.len > 5) self.returnType = node.value;
+    //node.value[7..(node.value.len + 7 - 10)]
+    foreach (member : node.children) {
+        String! api = member.attributes.get("api");
+        bool is_vulkansc = @ok(api) && api!! == "vulkansc";
+        VkValue value;
+
+        if (member.name == "name") self.name = member.value;
+        if (member.name == "type") value.type = member.value;
+        if (member.name == "type" && !is_vulkansc) self.values.push(value);
+    }
+    return *self;
+}
+

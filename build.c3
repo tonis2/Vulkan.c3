@@ -9,27 +9,29 @@ import xml;
 
 def TypeMap = HashMap(<String, String>);
 
-const MAX_VERSION = 1.0;
-
 const String[*] SKIPED_REQUIRES = {"Header boilerplate", "API constants", "API version macros"};
-
-// TypeMap type_values;
-
-
-
-// const NEW_NAMES = HashMap {
-//     "void": "void*"
-// };
-
-macro bool String[*].contains(self, String key) {
-    foreach (value : self) {
-        if (value == key) return true;
-    }
-    return false;
-}
+const MAX_VERSION = 1.0;
 
 fn void! main(String[] args) {
 
+    TypeMap type_values = *TypeMap{}.new_init_with_key_values(
+        "uint16_t", "uint",
+        "int16_t", "short",
+        "uint32_t", "uint",
+        "int32_t", "int",
+        "uint64_t", "ulong",
+        "int64_t", "long",
+        "uint8_t", "uint",
+        "int8_t", "int",
+        "size_t", "usz",
+        "isize_t", "isz",
+        "null", "void*",
+        "HANDLE", "void*",
+        "char*", "ZString",
+        "VkBool32", "uint"
+    );
+    defer type_values.free();
+    
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
@@ -119,10 +121,7 @@ fn void! main(String[] args) {
                 if (try name) enums.push(VkEnum{}.from_node(node));
             }
             case "struct": {
-                // Exclude NV ones for now
-                if (try name && !name.ends_with("NV")) {
-                    structs.push(VkStruct{}.from_node(node));
-                }
+               structs.push(VkStruct{}.from_node(node));
             }
             case "union": {
                 unions.push(VkStruct{}.from_node(node));
@@ -138,6 +137,50 @@ fn void! main(String[] args) {
 
     // Parse commands
     foreach (node : command_nodes) commands.push(VkCommand{}.from_node(node));
+
+
+    // Enable correct features before writing C3 code
+    foreach (feature : feature_nodes) {
+        String! number = feature.attributes.get("number");
+        String feature_api = feature.attributes.get("api")!;
+        if (feature_api == "vulkansc") break;
+
+        // Get only up-to required vulkan version
+        if (try number && number.to_double()!! <= MAX_VERSION) {
+            foreach (require: feature.children) {
+                foreach (entry : require.children) {
+                    String! name = entry.attributes.get("name");
+                    String! extends = entry.attributes.get("extends");
+
+                    if (catch err = name) {
+                        io::printfn("XML row broken at %s", entry.name);
+                        continue;
+                    } 
+
+                    switch (entry.name) {
+                        case "type": {
+                            foreach (&node : structs) {
+                                if (node.name == name) {
+                                    node.enabled = true;
+                                    break;
+                                }
+                            }   
+                        }
+                        case "command": {
+                            foreach (&node : commands) {
+                                if (node.name == name) {
+                                    node.enabled = true;
+                                    break;
+                                }
+                            }
+                        }
+                        default: {}
+                    }
+                }
+            }
+        }
+    }
+
 
     // Build C3 files
     File vk_main = io::file::open("build2/vk.c3", "wb")!!;
@@ -190,19 +233,22 @@ fn void! main(String[] args) {
 
     // Structs
     foreach (entry : structs) {
+        if (!entry.enabled) continue;
         DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
         defer text_body.free();
 
         // Add struct values
         foreach (value : entry.values) {
-            if (value.size != "" && value.size != "null-terminated" && value.len == "") {
+            String type = type_values[value.type] ?? value.type;
+
+            if (value.size != "" && value.size != "null-terminated") {
                 if (value.size[0] != '[') {
-                    text_body.append(dstring::new_join({"   ", value.type, "[", value.size, "]", " ", value.name,";\n"}, ""));
+                    text_body.append(dstring::new_join({"   ", type, "[", value.size, "]", " ", value.name,";\n"}, ""));
                 } else {
-                    text_body.append(dstring::new_join({"   ", value.type, value.size, " ", value.name,";\n"}, ""));
+                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
                 }
             } else {
-                text_body.append(dstring::new_join({"   ", value.type, value.len != "" ? "*" : "", " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
             }
         }
         
@@ -212,19 +258,22 @@ fn void! main(String[] args) {
 
     // Unions
     foreach (entry : unions) {
+        if (!entry.enabled) continue;
         DString text_body = dstring::new_join({"union ", entry.name, " { \n"}, "");
         defer text_body.free();
 
         // Add values
         foreach (value : entry.values) {
+            String type = type_values[value.type] ?? value.type;
+
             if (value.size != "") {
                 if (value.size[0] != '[') {
-                    text_body.append(dstring::new_join({"   ", value.type, "[", value.size, "]", " ", value.name,";\n"}, ""));
+                    text_body.append(dstring::new_join({"   ", type, "[", value.size, "]", " ", value.name,";\n"}, ""));
                 } else {
-                    text_body.append(dstring::new_join({"   ", value.type, value.size, " ", value.name,";\n"}, ""));
+                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
                 }
             } else {
-                text_body.append(dstring::new_join({"   ", value.type, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, " ", value.name,";\n"}, ""));
             }
         }
         
@@ -234,12 +283,15 @@ fn void! main(String[] args) {
 
     // Commands
     foreach (entry : commands) {
+        if (!entry.enabled) continue;
         DString text_body = dstring::new_join({"extern fn ", entry.returnType, " ", entry.name, " ("}, "");
         defer text_body.free();
 
         // Add values
         foreach (i, value : entry.values) {
-            text_body.append(dstring::new_join({value.type, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+            String type = type_values[value.type] ?? value.type;
+
+            text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         }
 
         text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
@@ -247,75 +299,18 @@ fn void! main(String[] args) {
     }
 }
 
-   // foreach (feature : feature_nodes) {
-    //     String! number = feature.attributes.get("number");
-    //     String feature_api = feature.attributes.get("api")!;
-    //     if (feature_api == "vulkansc") break;
+macro HashMap* HashMap.new_init_with_key_values(&self, ..., uint capacity = 32, float load_factor = 0.1, Allocator allocator = allocator::heap())
+{
+	self.new_init(capacity, load_factor, allocator);
+	$for (var $i = 0; $i < $vacount; $i += 2)
+		self.set($vaarg[$i], $vaarg[$i+1]);
+	$endfor
+	return self;
+}
 
-    //     // Get only up-to required vulkan version
-    //     if (try number && number.to_double()!! <= MAX_VERSION) {
-    //         foreach (require: feature.children) {
-    //             String! comment = require.attributes.get("comment");
-                
-    //             // Skip some required stuff, they are handled elsewhere 
-    //             if (try comment) if (SKIPED_REQUIRES.contains(comment)) continue;
-                
-    //             foreach (entry : require.children) {
-    //                 String! name = entry.attributes.get("name");
-    //                 String! extends = entry.attributes.get("extends");
-
-    //                 if (catch err = name) {
-    //                     io::printfn("XML row broken at %s", entry.name);
-    //                     continue;
-    //                 } 
-
-    //                 switch (entry.name) {
-    //                     case "enum": {
-
-    //                     }
-    //                     case "type": {
-    //                         for TYPES: (uint type_index; type_index < types_nodes.len(); type_index++) {
-    //                             xml::Node* type_node = types_nodes[type_index];
-    //                             String! node_name = type_node.attributes.get("name");
-    //                             String! node_type = type_node.attributes.get("type");
-    //                             String! type = type_node.attributes.get("type") ?? type_node.attributes.get("category");
-
-    //                             // Found reference type xml node
-    //                             if (try node_name && node_name == name && try type) {
-    //                                 switch (type) {
-    //                                     case "bitmask" :
-    //                                     case "enum" : {
-    //                                         enums.push(VkEnum{}.from_node(type_node));
-    //                                     }
-    //                                     case "struct": {
-    //                                         structs.push(VkStruct{}.from_node(type_node));
-    //                                     }
-    //                                     case "basetype": {
-    //                                         io::printfn("basetype %s", type_node.name);
-    //                                     }
-    //                                     case "union": {
-    //                                         unions.push(VkStruct{}.from_node(type_node));
-    //                                     }
-    //                                     // case "funcpointer": {
-    //                                     //     io::printfn("funcpointer %s", type_node.name);
-    //                                     // }
-    //                                     case "command": {
-    //                                         commands.push(VkCommand{}.from_node(type_node));
-    //                                     }
-    //                                     default: {}
-    //                                 }
-    //                                 break TYPES;
-    //                             }
-    //                         }
-    //                     }
-    //                     case "command": {
-    //                         io::printfn("command %s", name);
-    //                     }
-    //                     default: {
-                  
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+macro bool String[*].contains(self, String key) {
+    foreach (value : self) {
+        if (value == key) return true;
+    }
+    return false;
+}
