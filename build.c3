@@ -10,7 +10,7 @@ import xml;
 def TypeMap = HashMap(<String, String>);
 
 const String[*] SKIPED_REQUIRES = {"Header boilerplate", "API constants", "API version macros"};
-const MAX_VERSION = 1.0;
+const MAX_VERSION = 1.1;
 
 fn void! main(String[] args) {
 
@@ -113,7 +113,7 @@ fn void! main(String[] args) {
         String! name = node.attributes.get("name");
         String category = node.attributes.get("category") ?? node.attributes.get("type")!;
 
-        if (try extends) continue;
+        // if (try extends) ;
 
         switch (category) {
             case "bitmask":
@@ -151,28 +151,52 @@ fn void! main(String[] args) {
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
                     String! extends = entry.attributes.get("extends");
+                    String! extnumber = entry.attributes.get("extnumber");
+                    String! offset = entry.attributes.get("offset");
+                    String! bitpos = entry.attributes.get("bitpos");
+                    String! dir = entry.attributes.get("dir");
 
                     if (catch err = name) {
-                        io::printfn("XML row broken at %s", entry.name);
                         continue;
                     } 
 
                     switch (entry.name) {
                         case "type": {
-                            foreach (&node : structs) {
-                                if (node.name == name) {
-                                    node.enabled = true;
-                                    break;
-                                }
-                            }   
+                            if (try extends) {
+
+                            } else {
+                                foreach (&node : structs) {
+                                    if (node.name == name) {
+                                        node.enabled = true;
+                                        break;
+                                    }
+                                }  
+                            }
+ 
                         }
                         case "command": {
-                            foreach (&node : commands) {
-                                if (node.name == name) {
-                                    node.enabled = true;
-                                    break;
+                            if (try extends) {}
+                            else {
+                                foreach (&node : commands) {
+                                    if (node.name == name) {
+                                        node.enabled = true;
+                                        break;
+                                    }
                                 }
                             }
+                    
+                        }
+                        case "enum": {
+                            if (try extends) {}
+                            else {
+                                foreach (&node : commands) {
+                                    if (node.name == name) {
+                                        node.enabled = true;
+                                        break;
+                                    }
+                                }
+                            }
+
                         }
                         default: {}
                     }
@@ -298,6 +322,7 @@ fn void! main(String[] args) {
         vk_main.write(text_body.str_view())!!;
     }
 }
+
 
 macro HashMap* HashMap.new_init_with_key_values(&self, ..., uint capacity = 32, float load_factor = 0.1, Allocator allocator = allocator::heap())
 {
