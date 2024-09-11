@@ -64,13 +64,10 @@ fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
                 );
             }
             if (try bitpos) {
-                char[32] buffer;
-                String res = (String)io::bprintf(&buffer, "0x%08x", (ulong)1 << bitpos.to_uint()!!)!!;
-          
                 self.values.push(
                     VkValue {
                         .name = name,
-                        .value = res.copy()
+                        .value = bitpos.from_bit_pos()
                     }
                 );
             }

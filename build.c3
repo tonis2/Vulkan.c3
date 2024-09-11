@@ -10,7 +10,7 @@ import xml;
 def TypeMap = HashMap(<String, String>);
 
 const String[*] SKIPED_REQUIRES = {"Header boilerplate", "API constants", "API version macros"};
-const MAX_VERSION = 1.1;
+const MAX_VERSION = 1.2;
 
 fn void! main(String[] args) {
 
@@ -155,6 +155,7 @@ fn void! main(String[] args) {
                     String! offset = entry.attributes.get("offset");
                     String! bitpos = entry.attributes.get("bitpos");
                     String! dir = entry.attributes.get("dir");
+                    String! value = entry.attributes.get("value");
 
                     if (catch err = name) {
                         continue;
@@ -187,7 +188,29 @@ fn void! main(String[] args) {
                     
                         }
                         case "enum": {
-                            if (try extends) {}
+                            if (try extends) {
+                                // Extends previous enum
+                                VkEnum* enum_parent = {|
+                                    foreach (&item: enums) {
+                                        if (item.name == extends) return item;
+                                    }
+                                    return null;
+                                |};
+
+                                if (!enum_parent) continue;
+
+                                String vk_value = value ?? "-";
+
+                                if (try bitpos && enum_parent) vk_value = bitpos.from_bit_pos();
+                                if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, .negative_value = @ok(dir));
+
+                                enum_parent.values.push(
+                                    VkValue {
+                                        .name = name,
+                                        .value = vk_value
+                                    }
+                                );
+                            }
                             else {
                                 foreach (&node : commands) {
                                     if (node.name == name) {
@@ -196,7 +219,6 @@ fn void! main(String[] args) {
                                     }
                                 }
                             }
-
                         }
                         default: {}
                     }
@@ -308,13 +330,14 @@ fn void! main(String[] args) {
     // Commands
     foreach (entry : commands) {
         if (!entry.enabled) continue;
-        DString text_body = dstring::new_join({"extern fn ", entry.returnType, " ", entry.name, " ("}, "");
+
+        String return_type = type_values[entry.returnType] ?? entry.returnType;
+        DString text_body = dstring::new_join({"extern fn ", return_type, " ", entry.name, " ("}, "");
         defer text_body.free();
 
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type;
-
             text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         }
 
@@ -338,4 +361,28 @@ macro bool String[*].contains(self, String key) {
         if (value == key) return true;
     }
     return false;
+}
+
+fn String String.from_bit_pos(&self) {
+    char[32] buffer;
+    String res = (String)io::bprintf(&buffer, "0x%08x", (ulong)1 << self.to_uint()!!)!!;
+    return res.copy();
+}
+
+fn String String.from_ext_value(&self, String offset, bool negative_value = false) {
+    char[32] buffer;
+    DString value;
+    uint ext_int = self.to_uint()!! - 1;
+    uint offset_int = offset.to_uint()!!;
+
+    if (negative_value) value.append_chars("-");
+    value.append_chars("1");
+    value.append_repeat('0', 6 - self.len);
+    value.append_chars((String)io::bprintf(&buffer, "%s", ext_int)!!);
+    value.append_repeat('0', 3 - offset.len);
+    value.append_chars(offset);
+
+    String res = value.copy_str();
+    value.free();
+    return res;
 }
