@@ -2397,6 +2397,13 @@ struct VkImageResolve {
    VkOffset3D dstOffset;
    VkExtent3D extent;
 }
+struct VkShaderModuleCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkShaderModuleCreateFlags flags;
+   usz codeSize;
+   uint* pCode;
+}
 struct VkDescriptorSetLayoutBinding { 
    uint binding;
    VkDescriptorType descriptorType;
@@ -2619,6 +2626,15 @@ struct VkPushConstantRange {
    VkShaderStageFlags stageFlags;
    uint offset;
    uint size;
+}
+struct VkPipelineLayoutCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkPipelineLayoutCreateFlags flags;
+   uint setLayoutCount;
+   VkDescriptorSetLayout* pSetLayouts;
+   uint pushConstantRangeCount;
+   VkPushConstantRange* pPushConstantRanges;
 }
 struct VkSamplerCreateInfo { 
    VkStructureType sType;
@@ -2969,6 +2985,422 @@ struct VkSubmitInfo {
    uint signalSemaphoreCount;
    VkSemaphore* pSignalSemaphores;
 }
+struct VkPhysicalDeviceFeatures2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkPhysicalDeviceFeatures features;
+}
+struct VkPhysicalDeviceProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkPhysicalDeviceProperties properties;
+}
+struct VkFormatProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkFormatProperties formatProperties;
+}
+struct VkImageFormatProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageFormatProperties imageFormatProperties;
+}
+struct VkPhysicalDeviceImageFormatInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkFormat format;
+   VkImageType type;
+   VkImageTiling tiling;
+   VkImageUsageFlags usage;
+   VkImageCreateFlags flags;
+}
+struct VkQueueFamilyProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkQueueFamilyProperties queueFamilyProperties;
+}
+struct VkPhysicalDeviceMemoryProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkPhysicalDeviceMemoryProperties memoryProperties;
+}
+struct VkSparseImageFormatProperties2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkSparseImageFormatProperties properties;
+}
+struct VkPhysicalDeviceSparseImageFormatInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkFormat format;
+   VkImageType type;
+   VkSampleCountFlagBits samples;
+   VkImageUsageFlags usage;
+   VkImageTiling tiling;
+}
+struct VkPhysicalDeviceVariablePointersFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint variablePointersStorageBuffer;
+   uint variablePointers;
+}
+struct VkExternalMemoryProperties { 
+   VkExternalMemoryFeatureFlags externalMemoryFeatures;
+   VkExternalMemoryHandleTypeFlags exportFromImportedHandleTypes;
+   VkExternalMemoryHandleTypeFlags compatibleHandleTypes;
+}
+struct VkPhysicalDeviceExternalImageFormatInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryHandleTypeFlagBits handleType;
+}
+struct VkExternalImageFormatProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryProperties externalMemoryProperties;
+}
+struct VkPhysicalDeviceExternalBufferInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkBufferCreateFlags flags;
+   VkBufferUsageFlags usage;
+   VkExternalMemoryHandleTypeFlagBits handleType;
+}
+struct VkExternalBufferProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryProperties externalMemoryProperties;
+}
+struct VkPhysicalDeviceIDProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint[VK_UUID_SIZE] deviceUUID;
+   uint[VK_UUID_SIZE] driverUUID;
+   uint[VK_LUID_SIZE] deviceLUID;
+   uint deviceNodeMask;
+   uint deviceLUIDValid;
+}
+struct VkExternalMemoryImageCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryHandleTypeFlags handleTypes;
+}
+struct VkExternalMemoryBufferCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryHandleTypeFlags handleTypes;
+}
+struct VkExportMemoryAllocateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalMemoryHandleTypeFlags handleTypes;
+}
+struct VkPhysicalDeviceExternalSemaphoreInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalSemaphoreHandleTypeFlagBits handleType;
+}
+struct VkExternalSemaphoreProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes;
+   VkExternalSemaphoreHandleTypeFlags compatibleHandleTypes;
+   VkExternalSemaphoreFeatureFlags externalSemaphoreFeatures;
+}
+struct VkExportSemaphoreCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalSemaphoreHandleTypeFlags handleTypes;
+}
+struct VkPhysicalDeviceExternalFenceInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalFenceHandleTypeFlagBits handleType;
+}
+struct VkExternalFenceProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalFenceHandleTypeFlags exportFromImportedHandleTypes;
+   VkExternalFenceHandleTypeFlags compatibleHandleTypes;
+   VkExternalFenceFeatureFlags externalFenceFeatures;
+}
+struct VkExportFenceCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkExternalFenceHandleTypeFlags handleTypes;
+}
+struct VkPhysicalDeviceMultiviewFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint multiview;
+   uint multiviewGeometryShader;
+   uint multiviewTessellationShader;
+}
+struct VkPhysicalDeviceMultiviewProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint maxMultiviewViewCount;
+   uint maxMultiviewInstanceIndex;
+}
+struct VkRenderPassMultiviewCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint subpassCount;
+   uint* pViewMasks;
+   uint dependencyCount;
+   int* pViewOffsets;
+   uint correlationMaskCount;
+   uint* pCorrelationMasks;
+}
+struct VkPhysicalDeviceGroupProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint physicalDeviceCount;
+   VkPhysicalDevice[VK_MAX_DEVICE_GROUP_SIZE] physicalDevices;
+   uint subsetAllocation;
+}
+struct VkMemoryAllocateFlagsInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkMemoryAllocateFlags flags;
+   uint deviceMask;
+}
+struct VkBindBufferMemoryInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkBuffer buffer;
+   VkDeviceMemory memory;
+   VkDeviceSize memoryOffset;
+}
+struct VkBindBufferMemoryDeviceGroupInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint deviceIndexCount;
+   uint* pDeviceIndices;
+}
+struct VkBindImageMemoryInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImage image;
+   VkDeviceMemory memory;
+   VkDeviceSize memoryOffset;
+}
+struct VkBindImageMemoryDeviceGroupInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint deviceIndexCount;
+   uint* pDeviceIndices;
+   uint splitInstanceBindRegionCount;
+   VkRect2D* pSplitInstanceBindRegions;
+}
+struct VkDeviceGroupRenderPassBeginInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint deviceMask;
+   uint deviceRenderAreaCount;
+   VkRect2D* pDeviceRenderAreas;
+}
+struct VkDeviceGroupCommandBufferBeginInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint deviceMask;
+}
+struct VkDeviceGroupSubmitInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint waitSemaphoreCount;
+   uint* pWaitSemaphoreDeviceIndices;
+   uint commandBufferCount;
+   uint* pCommandBufferDeviceMasks;
+   uint signalSemaphoreCount;
+   uint* pSignalSemaphoreDeviceIndices;
+}
+struct VkDeviceGroupBindSparseInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint resourceDeviceIndex;
+   uint memoryDeviceIndex;
+}
+struct VkDeviceGroupDeviceCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint physicalDeviceCount;
+   VkPhysicalDevice* pPhysicalDevices;
+}
+struct VkDescriptorUpdateTemplateEntry { 
+   uint dstBinding;
+   uint dstArrayElement;
+   uint descriptorCount;
+   VkDescriptorType descriptorType;
+   usz offset;
+   usz stride;
+}
+struct VkDescriptorUpdateTemplateCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkDescriptorUpdateTemplateCreateFlags flags;
+   uint descriptorUpdateEntryCount;
+   VkDescriptorUpdateTemplateEntry* pDescriptorUpdateEntries;
+   VkDescriptorUpdateTemplateType templateType;
+   VkDescriptorSetLayout descriptorSetLayout;
+   VkPipelineBindPoint pipelineBindPoint;
+   VkPipelineLayout pipelineLayout;
+   uint set;
+}
+struct VkInputAttachmentAspectReference { 
+   uint subpass;
+   uint inputAttachmentIndex;
+   VkImageAspectFlags aspectMask;
+}
+struct VkRenderPassInputAttachmentAspectCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint aspectReferenceCount;
+   VkInputAttachmentAspectReference* pAspectReferences;
+}
+struct VkPhysicalDevice16BitStorageFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint storageBuffer16BitAccess;
+   uint uniformAndStorageBuffer16BitAccess;
+   uint storagePushConstant16;
+   uint storageInputOutput16;
+}
+struct VkPhysicalDeviceSubgroupProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint subgroupSize;
+   VkShaderStageFlags supportedStages;
+   VkSubgroupFeatureFlags supportedOperations;
+   uint quadOperationsInAllStages;
+}
+struct VkBufferMemoryRequirementsInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkBuffer buffer;
+}
+struct VkImageMemoryRequirementsInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkImage image;
+}
+struct VkImageSparseMemoryRequirementsInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkImage image;
+}
+struct VkMemoryRequirements2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkMemoryRequirements memoryRequirements;
+}
+struct VkSparseImageMemoryRequirements2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkSparseImageMemoryRequirements memoryRequirements;
+}
+struct VkPhysicalDevicePointClippingProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkPointClippingBehavior pointClippingBehavior;
+}
+struct VkMemoryDedicatedRequirements { 
+   VkStructureType sType;
+   void* pNext;
+   uint prefersDedicatedAllocation;
+   uint requiresDedicatedAllocation;
+}
+struct VkMemoryDedicatedAllocateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImage image;
+   VkBuffer buffer;
+}
+struct VkImageViewUsageCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageUsageFlags usage;
+}
+struct VkPipelineTessellationDomainOriginStateCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkTessellationDomainOrigin domainOrigin;
+}
+struct VkSamplerYcbcrConversionInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSamplerYcbcrConversion conversion;
+}
+struct VkSamplerYcbcrConversionCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkFormat format;
+   VkSamplerYcbcrModelConversion ycbcrModel;
+   VkSamplerYcbcrRange ycbcrRange;
+   VkComponentMapping components;
+   VkChromaLocation xChromaOffset;
+   VkChromaLocation yChromaOffset;
+   VkFilter chromaFilter;
+   uint forceExplicitReconstruction;
+}
+struct VkBindImagePlaneMemoryInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageAspectFlagBits planeAspect;
+}
+struct VkImagePlaneMemoryRequirementsInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageAspectFlagBits planeAspect;
+}
+struct VkPhysicalDeviceSamplerYcbcrConversionFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint samplerYcbcrConversion;
+}
+struct VkSamplerYcbcrConversionImageFormatProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint combinedImageSamplerDescriptorCount;
+}
+struct VkProtectedSubmitInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint protectedSubmit;
+}
+struct VkPhysicalDeviceProtectedMemoryFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint protectedMemory;
+}
+struct VkPhysicalDeviceProtectedMemoryProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint protectedNoFault;
+}
+struct VkDeviceQueueInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkDeviceQueueCreateFlags flags;
+   uint queueFamilyIndex;
+   uint queueIndex;
+}
+struct VkPhysicalDeviceMaintenance3Properties { 
+   VkStructureType sType;
+   void* pNext;
+   uint maxPerSetDescriptors;
+   VkDeviceSize maxMemoryAllocationSize;
+}
+struct VkDescriptorSetLayoutSupport { 
+   VkStructureType sType;
+   void* pNext;
+   uint supported;
+}
+struct VkPhysicalDeviceShaderDrawParametersFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint shaderDrawParameters;
+}
 extern fn VkResult vkCreateInstance (VkInstanceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkInstance* pInstance) @extern("vkCreateInstance"); 
 extern fn void vkDestroyInstance (VkInstance instance, VkAllocationCallbacks* pAllocator) @extern("vkDestroyInstance"); 
 extern fn VkResult vkEnumeratePhysicalDevices (VkInstance instance, uint* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) @extern("vkEnumeratePhysicalDevices"); 
@@ -2982,6 +3414,7 @@ extern fn void vkGetPhysicalDeviceFormatProperties (VkPhysicalDevice physicalDev
 extern fn VkResult vkGetPhysicalDeviceImageFormatProperties (VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) @extern("vkGetPhysicalDeviceImageFormatProperties"); 
 extern fn VkResult vkCreateDevice (VkPhysicalDevice physicalDevice, VkDeviceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDevice* pDevice) @extern("vkCreateDevice"); 
 extern fn void vkDestroyDevice (VkDevice device, VkAllocationCallbacks* pAllocator) @extern("vkDestroyDevice"); 
+extern fn VkResult vkEnumerateInstanceVersion (uint* pApiVersion) @extern("vkEnumerateInstanceVersion"); 
 extern fn VkResult vkEnumerateInstanceLayerProperties (uint* pPropertyCount, VkLayerProperties* pProperties) @extern("vkEnumerateInstanceLayerProperties"); 
 extern fn VkResult vkEnumerateInstanceExtensionProperties (char* pLayerName, uint* pPropertyCount, VkExtensionProperties* pProperties) @extern("vkEnumerateInstanceExtensionProperties"); 
 extern fn VkResult vkEnumerateDeviceLayerProperties (VkPhysicalDevice physicalDevice, uint* pPropertyCount, VkLayerProperties* pProperties) @extern("vkEnumerateDeviceLayerProperties"); 
@@ -3106,3 +3539,30 @@ extern fn void vkCmdBeginRenderPass (VkCommandBuffer commandBuffer, VkRenderPass
 extern fn void vkCmdNextSubpass (VkCommandBuffer commandBuffer, VkSubpassContents contents) @extern("vkCmdNextSubpass"); 
 extern fn void vkCmdEndRenderPass (VkCommandBuffer commandBuffer) @extern("vkCmdEndRenderPass"); 
 extern fn void vkCmdExecuteCommands (VkCommandBuffer commandBuffer, uint commandBufferCount, VkCommandBuffer* pCommandBuffers) @extern("vkCmdExecuteCommands"); 
+extern fn void vkGetPhysicalDeviceFeatures2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) @extern("vkGetPhysicalDeviceFeatures2"); 
+extern fn void vkGetPhysicalDeviceProperties2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) @extern("vkGetPhysicalDeviceProperties2"); 
+extern fn void vkGetPhysicalDeviceFormatProperties2 (VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) @extern("vkGetPhysicalDeviceFormatProperties2"); 
+extern fn VkResult vkGetPhysicalDeviceImageFormatProperties2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) @extern("vkGetPhysicalDeviceImageFormatProperties2"); 
+extern fn void vkGetPhysicalDeviceQueueFamilyProperties2 (VkPhysicalDevice physicalDevice, uint* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) @extern("vkGetPhysicalDeviceQueueFamilyProperties2"); 
+extern fn void vkGetPhysicalDeviceMemoryProperties2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) @extern("vkGetPhysicalDeviceMemoryProperties2"); 
+extern fn void vkGetPhysicalDeviceSparseImageFormatProperties2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint* pPropertyCount, VkSparseImageFormatProperties2* pProperties) @extern("vkGetPhysicalDeviceSparseImageFormatProperties2"); 
+extern fn void vkTrimCommandPool (VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) @extern("vkTrimCommandPool"); 
+extern fn void vkGetPhysicalDeviceExternalBufferProperties (VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) @extern("vkGetPhysicalDeviceExternalBufferProperties"); 
+extern fn void vkGetPhysicalDeviceExternalSemaphoreProperties (VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) @extern("vkGetPhysicalDeviceExternalSemaphoreProperties"); 
+extern fn void vkGetPhysicalDeviceExternalFenceProperties (VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) @extern("vkGetPhysicalDeviceExternalFenceProperties"); 
+extern fn VkResult vkEnumeratePhysicalDeviceGroups (VkInstance instance, uint* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) @extern("vkEnumeratePhysicalDeviceGroups"); 
+extern fn void vkGetDeviceGroupPeerMemoryFeatures (VkDevice device, uint heapIndex, uint localDeviceIndex, uint remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) @extern("vkGetDeviceGroupPeerMemoryFeatures"); 
+extern fn VkResult vkBindBufferMemory2 (VkDevice device, uint bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) @extern("vkBindBufferMemory2"); 
+extern fn VkResult vkBindImageMemory2 (VkDevice device, uint bindInfoCount, VkBindImageMemoryInfo* pBindInfos) @extern("vkBindImageMemory2"); 
+extern fn void vkCmdSetDeviceMask (VkCommandBuffer commandBuffer, uint deviceMask) @extern("vkCmdSetDeviceMask"); 
+extern fn void vkCmdDispatchBase (VkCommandBuffer commandBuffer, uint baseGroupX, uint baseGroupY, uint baseGroupZ, uint groupCountX, uint groupCountY, uint groupCountZ) @extern("vkCmdDispatchBase"); 
+extern fn VkResult vkCreateDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) @extern("vkCreateDescriptorUpdateTemplate"); 
+extern fn void vkDestroyDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) @extern("vkDestroyDescriptorUpdateTemplate"); 
+extern fn void vkUpdateDescriptorSetWithTemplate (VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) @extern("vkUpdateDescriptorSetWithTemplate"); 
+extern fn void vkGetBufferMemoryRequirements2 (VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) @extern("vkGetBufferMemoryRequirements2"); 
+extern fn void vkGetImageMemoryRequirements2 (VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) @extern("vkGetImageMemoryRequirements2"); 
+extern fn void vkGetImageSparseMemoryRequirements2 (VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) @extern("vkGetImageSparseMemoryRequirements2"); 
+extern fn VkResult vkCreateSamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) @extern("vkCreateSamplerYcbcrConversion"); 
+extern fn void vkDestroySamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) @extern("vkDestroySamplerYcbcrConversion"); 
+extern fn void vkGetDeviceQueue2 (VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) @extern("vkGetDeviceQueue2"); 
+extern fn void vkGetDescriptorSetLayoutSupport (VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) @extern("vkGetDescriptorSetLayoutSupport"); 
