@@ -113,8 +113,6 @@ fn void! main(String[] args) {
         String! name = node.attributes.get("name");
         String category = node.attributes.get("category") ?? node.attributes.get("type")!;
 
-        // if (try extends) ;
-
         switch (category) {
             case "bitmask":
             case "enum": {
@@ -173,7 +171,6 @@ fn void! main(String[] args) {
                                     }
                                 }  
                             }
- 
                         }
                         case "command": {
                             if (try extends) {}
@@ -185,7 +182,6 @@ fn void! main(String[] args) {
                                     }
                                 }
                             }
-                    
                         }
                         case "enum": {
                             if (try extends) {
@@ -211,16 +207,7 @@ fn void! main(String[] args) {
                                     }
                                 );
                             }
-                            else {
-                                foreach (&node : commands) {
-                                    if (node.name == name) {
-                                        node.enabled = true;
-                                        break;
-                                    }
-                                }
-                            }
                         }
-                        default: {}
                     }
                 }
             }
@@ -262,20 +249,34 @@ fn void! main(String[] args) {
     vk_main.write("\n")!!;
 
     // Enums
-    foreach (enum_entry : enums) {
+    foreach (entry : enums) {
         String enum_type = "uint";
-        if (enum_entry.name == "VkResult") enum_type = "int";
+        if (entry.name == "VkResult") enum_type = "int";
 
-        DString text_body = dstring::new_join({"distinct ", enum_entry.name, " = ", "inline ", enum_type, ";\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name, " = ", "inline ", enum_type, ";\n"}, "");
         defer text_body.free();
         // Add values
-        foreach (value : enum_entry.values) {
-            text_body.append(dstring::new_join({"const ",enum_entry.name," ",value.name," = ",value.value,";\n"}, ""));
+        foreach (value : entry.values) {
+            text_body.append(dstring::new_join({"const ", entry.name," ", value.name," = ", value.value,";\n"}, ""));
         }
         
         text_body.append_chars("\n");
         vk_main.write(text_body.str_view())!!;
     }
+
+    // Write C3 errors
+    foreach (entry : enums) {
+        if (entry.name == "VkResult") {
+            DString text_body = dstring::new_join({"fault VkErrors {\n",}, "");
+            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name, ",\n"}, ""));
+            text_body.append("}\n");
+
+            vk_main.write(text_body.str_view())!!;
+
+            break;
+        }
+    }
+    vk_main.write("\n")!!;
 
     // Structs
     foreach (entry : structs) {
@@ -304,7 +305,6 @@ fn void! main(String[] args) {
 
     // Unions
     foreach (entry : unions) {
-        if (!entry.enabled) continue;
         DString text_body = dstring::new_join({"union ", entry.name, " { \n"}, "");
         defer text_body.free();
 
@@ -333,6 +333,24 @@ fn void! main(String[] args) {
 
         String return_type = type_values[entry.returnType] ?? entry.returnType;
         DString text_body = dstring::new_join({"extern fn ", return_type, " ", entry.name, " ("}, "");
+        defer text_body.free();
+
+        // Add values
+        foreach (i, value : entry.values) {
+            String type = type_values[value.type] ?? value.type;
+            text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+        }
+
+        text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    // Commands with error handling
+    foreach (entry : commands) {
+        if (!entry.enabled || entry.returnType != "VkResult") continue;
+        String return_type = type_values[entry.returnType] ?? entry.returnType;
+
+        DString text_body = dstring::new_join({"fn void! ", entry.name[2..], " ("}, "");
         defer text_body.free();
 
         // Add values
