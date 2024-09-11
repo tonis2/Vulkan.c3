@@ -97,6 +97,12 @@ const VkImageLayout VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = 5;
 const VkImageLayout VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = 6;
 const VkImageLayout VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7;
 const VkImageLayout VK_IMAGE_LAYOUT_PREINITIALIZED = 8;
+const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = 1000117000;
+const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = 1000117001;
+const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL = 1000241000;
+const VkImageLayout VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL = 1000241001;
+const VkImageLayout VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL = 1000241002;
+const VkImageLayout VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = 1000241003;
 
 distinct VkAttachmentLoadOp = inline uint;
 const VkAttachmentLoadOp VK_ATTACHMENT_LOAD_OP_LOAD = 0;
@@ -205,6 +211,7 @@ const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_REPEAT = 0;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2;
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
+const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 
 distinct VkCompareOp = inline uint;
 const VkCompareOp VK_COMPARE_OP_NEVER = 0;
@@ -488,6 +495,40 @@ const VkFormat VK_FORMAT_ASTC_12x10_UNORM_BLOCK = 181;
 const VkFormat VK_FORMAT_ASTC_12x10_SRGB_BLOCK = 182;
 const VkFormat VK_FORMAT_ASTC_12x12_UNORM_BLOCK = 183;
 const VkFormat VK_FORMAT_ASTC_12x12_SRGB_BLOCK = 184;
+const VkFormat VK_FORMAT_G8B8G8R8_422_UNORM = 1000156000;
+const VkFormat VK_FORMAT_B8G8R8G8_422_UNORM = 1000156001;
+const VkFormat VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM = 1000156002;
+const VkFormat VK_FORMAT_G8_B8R8_2PLANE_420_UNORM = 1000156003;
+const VkFormat VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM = 1000156004;
+const VkFormat VK_FORMAT_G8_B8R8_2PLANE_422_UNORM = 1000156005;
+const VkFormat VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM = 1000156006;
+const VkFormat VK_FORMAT_R10X6_UNORM_PACK16 = 1000156007;
+const VkFormat VK_FORMAT_R10X6G10X6_UNORM_2PACK16 = 1000156008;
+const VkFormat VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 = 1000156009;
+const VkFormat VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 = 1000156010;
+const VkFormat VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = 1000156011;
+const VkFormat VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = 1000156012;
+const VkFormat VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = 1000156013;
+const VkFormat VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = 1000156014;
+const VkFormat VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = 1000156015;
+const VkFormat VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = 1000156016;
+const VkFormat VK_FORMAT_R12X4_UNORM_PACK16 = 1000156017;
+const VkFormat VK_FORMAT_R12X4G12X4_UNORM_2PACK16 = 1000156018;
+const VkFormat VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 = 1000156019;
+const VkFormat VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = 1000156020;
+const VkFormat VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = 1000156021;
+const VkFormat VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = 1000156022;
+const VkFormat VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = 1000156023;
+const VkFormat VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = 1000156024;
+const VkFormat VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = 1000156025;
+const VkFormat VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = 1000156026;
+const VkFormat VK_FORMAT_G16B16G16R16_422_UNORM = 1000156027;
+const VkFormat VK_FORMAT_B16G16R16G16_422_UNORM = 1000156028;
+const VkFormat VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM = 1000156029;
+const VkFormat VK_FORMAT_G16_B16R16_2PLANE_420_UNORM = 1000156030;
+const VkFormat VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM = 1000156031;
+const VkFormat VK_FORMAT_G16_B16R16_2PLANE_422_UNORM = 1000156032;
+const VkFormat VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM = 1000156033;
 
 distinct VkStructureType = inline uint;
 const VkStructureType VK_STRUCTURE_TYPE_APPLICATION_INFO = 0;
@@ -539,6 +580,123 @@ const VkStructureType VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER = 45;
 const VkStructureType VK_STRUCTURE_TYPE_MEMORY_BARRIER = 46;
 const VkStructureType VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = 47;
 const VkStructureType VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = 48;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = 1000094000;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = 1000157000;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = 1000157001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = 1000083000;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS = 1000127000;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = 1000127001;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = 1000060000;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = 1000060003;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = 1000060004;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO = 1000060005;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO = 1000060006;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO = 1000060013;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO = 1000060014;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES = 1000070000;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO = 1000070001;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2 = 1000146000;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2 = 1000146001;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2 = 1000146002;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2 = 1000146003;
+const VkStructureType VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 = 1000146004;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 = 1000059000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2 = 1000059001;
+const VkStructureType VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2 = 1000059002;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2 = 1000059003;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2 = 1000059004;
+const VkStructureType VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2 = 1000059005;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2 = 1000059006;
+const VkStructureType VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2 = 1000059007;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 = 1000059008;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES = 1000117000;
+const VkStructureType VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = 1000117001;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO = 1000117002;
+const VkStructureType VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO = 1000117003;
+const VkStructureType VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = 1000053000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = 1000053001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = 1000053002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = 1000120000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = -;
+const VkStructureType VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO = 1000145000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES = 1000145001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES = 1000145002;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2 = 1000145003;
+const VkStructureType VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO = 1000156000;
+const VkStructureType VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = 1000156001;
+const VkStructureType VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = 1000156002;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = 1000156003;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES = 1000156004;
+const VkStructureType VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = 1000156005;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO = 1000085000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO = 1000071000;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES = 1000071001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO = 1000071002;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES = 1000071003;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES = 1000071004;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO = 1000072000;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO = 1000072001;
+const VkStructureType VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO = 1000072002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO = 1000112000;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES = 1000112001;
+const VkStructureType VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = 1000113000;
+const VkStructureType VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO = 1000077000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO = 1000076000;
+const VkStructureType VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = 1000076001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = -;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES = 49;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES = 50;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES = 51;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES = 52;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = 1000147000;
+const VkStructureType VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = 1000109000;
+const VkStructureType VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = 1000109001;
+const VkStructureType VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2 = 1000109002;
+const VkStructureType VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2 = 1000109003;
+const VkStructureType VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2 = 1000109004;
+const VkStructureType VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO = 1000109005;
+const VkStructureType VK_STRUCTURE_TYPE_SUBPASS_END_INFO = 1000109006;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES = 1000177000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES = 1000196000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES = 1000180000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES = 1000082000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES = 1000197000;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO = 1000161000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES = 1000161001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES = 1000161002;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO = 1000161003;
+const VkStructureType VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT = 1000161004;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES = 1000199000;
+const VkStructureType VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE = 1000199001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES = 1000221000;
+const VkStructureType VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO = 1000246000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES = 1000130000;
+const VkStructureType VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO = 1000130001;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES = 1000211000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES = 1000108000;
+const VkStructureType VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO = 1000108001;
+const VkStructureType VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO = 1000108002;
+const VkStructureType VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO = 1000108003;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES = 1000253000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES = 1000175000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES = 1000241000;
+const VkStructureType VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT = 1000241001;
+const VkStructureType VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT = 1000241002;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES = 1000261000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES = 1000207000;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES = 1000207001;
+const VkStructureType VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO = 1000207002;
+const VkStructureType VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO = 1000207003;
+const VkStructureType VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO = 1000207004;
+const VkStructureType VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO = 1000207005;
+const VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES = 1000257000;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO = 1000244001;
+const VkStructureType VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO = 1000257002;
+const VkStructureType VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO = 1000257003;
+const VkStructureType VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = 1000257004;
 
 distinct VkSubpassContents = inline uint;
 const VkSubpassContents VK_SUBPASS_CONTENTS_INLINE = 0;
@@ -564,6 +722,10 @@ const VkResult VK_ERROR_TOO_MANY_OBJECTS = -10;
 const VkResult VK_ERROR_FORMAT_NOT_SUPPORTED = -11;
 const VkResult VK_ERROR_FRAGMENTED_POOL = -12;
 const VkResult VK_ERROR_UNKNOWN = -13;
+const VkResult VK_ERROR_OUT_OF_POOL_MEMORY = -1000069000;
+const VkResult VK_ERROR_INVALID_EXTERNAL_HANDLE = -1000072003;
+const VkResult VK_ERROR_FRAGMENTATION = -1000161000;
+const VkResult VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = -1000257000;
 
 distinct VkDynamicState = inline uint;
 const VkDynamicState VK_DYNAMIC_STATE_VIEWPORT = 0;
@@ -606,6 +768,8 @@ const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_POOL = 22;
 const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_SET = 23;
 const VkObjectType VK_OBJECT_TYPE_FRAMEBUFFER = 24;
 const VkObjectType VK_OBJECT_TYPE_COMMAND_POOL = 25;
+const VkObjectType VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = 1000156000;
+const VkObjectType VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000;
 
 distinct VkRayTracingInvocationReorderModeNV = inline uint;
 const VkRayTracingInvocationReorderModeNV VK_RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV = 0;
@@ -629,6 +793,7 @@ const VkQueueFlagBits VK_QUEUE_GRAPHICS_BIT = 0x00000001;
 const VkQueueFlagBits VK_QUEUE_COMPUTE_BIT = 0x00000002;
 const VkQueueFlagBits VK_QUEUE_TRANSFER_BIT = 0x00000004;
 const VkQueueFlagBits VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008;
+const VkQueueFlagBits VK_QUEUE_PROTECTED_BIT = 0x00000010;
 
 distinct VkCullModeFlagBits = inline uint;
 const VkCullModeFlagBits VK_CULL_MODE_NONE = 0;
@@ -642,9 +807,11 @@ const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008;
 const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010;
+const VkMemoryPropertyFlagBits VK_MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020;
 
 distinct VkMemoryHeapFlagBits = inline uint;
 const VkMemoryHeapFlagBits VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
+const VkMemoryHeapFlagBits VK_MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
 
 distinct VkAccessFlagBits = inline uint;
 const VkAccessFlagBits VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
@@ -675,6 +842,7 @@ const VkBufferUsageFlagBits VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
 const VkBufferUsageFlagBits VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
+const VkBufferUsageFlagBits VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000;
 
 distinct VkBufferUsageFlagBits2KHR = inline uint;
 const VkBufferUsageFlagBits2KHR VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR = 0x00000001;
@@ -691,6 +859,8 @@ distinct VkBufferCreateFlagBits = inline uint;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const VkBufferCreateFlagBits VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
+const VkBufferCreateFlagBits VK_BUFFER_CREATE_PROTECTED_BIT = 0x00000008;
+const VkBufferCreateFlagBits VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000010;
 
 distinct VkShaderStageFlagBits = inline uint;
 const VkShaderStageFlagBits VK_SHADER_STAGE_VERTEX_BIT = 0x00000001;
@@ -718,11 +888,21 @@ const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = 0x00000008;
 const VkImageCreateFlagBits VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 0x00000010;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_ALIAS_BIT = 0x00000400;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = 0x00000040;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = 0x00000020;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = 0x00000080;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = 0x00000100;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_PROTECTED_BIT = 0x00000800;
+const VkImageCreateFlagBits VK_IMAGE_CREATE_DISJOINT_BIT = 0x00000200;
 
 distinct VkPipelineCreateFlagBits = inline uint;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
+const VkPipelineCreateFlagBits VK_PIPELINE_CREATE_DISPATCH_BASE = -;
 
 distinct VkPipelineCreateFlagBits2KHR = inline uint;
 const VkPipelineCreateFlagBits2KHR VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT_KHR = 0x00000001;
@@ -752,6 +932,16 @@ const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = 0
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800;
 const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_TRANSFER_SRC_BIT = 0x00004000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_TRANSFER_DST_BIT = 0x00008000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_DISJOINT_BIT = 0x00400000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const VkFormatFeatureFlagBits VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
 
 distinct VkQueryControlFlagBits = inline uint;
 const VkQueryControlFlagBits VK_QUERY_CONTROL_PRECISE_BIT = 0x00000001;
@@ -785,6 +975,9 @@ const VkImageAspectFlagBits VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
 const VkImageAspectFlagBits VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_PLANE_0_BIT = 0x00000010;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_PLANE_1_BIT = 0x00000020;
+const VkImageAspectFlagBits VK_IMAGE_ASPECT_PLANE_2_BIT = 0x00000040;
 
 distinct VkSparseImageFormatFlagBits = inline uint;
 const VkSparseImageFormatFlagBits VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
@@ -816,6 +1009,7 @@ const VkPipelineStageFlagBits VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
 distinct VkCommandPoolCreateFlagBits = inline uint;
 const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
 const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
+const VkCommandPoolCreateFlagBits VK_COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004;
 
 distinct VkCommandPoolResetFlagBits = inline uint;
 const VkCommandPoolResetFlagBits VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
@@ -842,9 +1036,12 @@ const VkStencilFaceFlagBits VK_STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
 
 distinct VkDescriptorPoolCreateFlagBits = inline uint;
 const VkDescriptorPoolCreateFlagBits VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
+const VkDescriptorPoolCreateFlagBits VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = 0x00000002;
 
 distinct VkDependencyFlagBits = inline uint;
 const VkDependencyFlagBits VK_DEPENDENCY_BY_REGION_BIT = 0x00000001;
+const VkDependencyFlagBits VK_DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
+const VkDependencyFlagBits VK_DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
 
 distinct VkSemaphoreType = inline uint;
 const VkSemaphoreType VK_SEMAPHORE_TYPE_BINARY = 0;
@@ -1079,6 +1276,8 @@ const VkPeerMemoryFeatureFlagBits VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT = 0x000
 
 distinct VkMemoryAllocateFlagBits = inline uint;
 const VkMemoryAllocateFlagBits VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001;
+const VkMemoryAllocateFlagBits VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = 0x00000002;
+const VkMemoryAllocateFlagBits VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000004;
 
 distinct VkDeviceGroupPresentModeFlagBitsKHR = inline uint;
 const VkDeviceGroupPresentModeFlagBitsKHR VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
@@ -3038,6 +3237,20 @@ struct VkPhysicalDeviceSparseImageFormatInfo2 {
    VkImageUsageFlags usage;
    VkImageTiling tiling;
 }
+struct VkConformanceVersion { 
+   uint major;
+   uint minor;
+   uint subminor;
+   uint patch;
+}
+struct VkPhysicalDeviceDriverProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkDriverId driverID;
+   char[VK_MAX_DRIVER_NAME_SIZE] driverName;
+   char[VK_MAX_DRIVER_INFO_SIZE] driverInfo;
+   VkConformanceVersion conformanceVersion;
+}
 struct VkPhysicalDeviceVariablePointersFeatures { 
    VkStructureType sType;
    void* pNext;
@@ -3274,6 +3487,11 @@ struct VkPhysicalDeviceSubgroupProperties {
    VkSubgroupFeatureFlags supportedOperations;
    uint quadOperationsInAllStages;
 }
+struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint shaderSubgroupExtendedTypes;
+}
 struct VkBufferMemoryRequirementsInfo2 { 
    VkStructureType sType;
    void* pNext;
@@ -3385,6 +3603,23 @@ struct VkDeviceQueueInfo2 {
    uint queueFamilyIndex;
    uint queueIndex;
 }
+struct VkPhysicalDeviceSamplerFilterMinmaxProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint filterMinmaxSingleComponentFormats;
+   uint filterMinmaxImageComponentMapping;
+}
+struct VkSamplerReductionModeCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSamplerReductionMode reductionMode;
+}
+struct VkImageFormatListCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint viewFormatCount;
+   VkFormat* pViewFormats;
+}
 struct VkPhysicalDeviceMaintenance3Properties { 
    VkStructureType sType;
    void* pNext;
@@ -3400,6 +3635,476 @@ struct VkPhysicalDeviceShaderDrawParametersFeatures {
    VkStructureType sType;
    void* pNext;
    uint shaderDrawParameters;
+}
+struct VkPhysicalDeviceShaderFloat16Int8Features { 
+   VkStructureType sType;
+   void* pNext;
+   uint shaderFloat16;
+   uint shaderInt8;
+}
+struct VkPhysicalDeviceFloatControlsProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkShaderFloatControlsIndependence denormBehaviorIndependence;
+   VkShaderFloatControlsIndependence roundingModeIndependence;
+   uint shaderSignedZeroInfNanPreserveFloat16;
+   uint shaderSignedZeroInfNanPreserveFloat32;
+   uint shaderSignedZeroInfNanPreserveFloat64;
+   uint shaderDenormPreserveFloat16;
+   uint shaderDenormPreserveFloat32;
+   uint shaderDenormPreserveFloat64;
+   uint shaderDenormFlushToZeroFloat16;
+   uint shaderDenormFlushToZeroFloat32;
+   uint shaderDenormFlushToZeroFloat64;
+   uint shaderRoundingModeRTEFloat16;
+   uint shaderRoundingModeRTEFloat32;
+   uint shaderRoundingModeRTEFloat64;
+   uint shaderRoundingModeRTZFloat16;
+   uint shaderRoundingModeRTZFloat32;
+   uint shaderRoundingModeRTZFloat64;
+}
+struct VkPhysicalDeviceHostQueryResetFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint hostQueryReset;
+}
+struct VkPhysicalDeviceDescriptorIndexingFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint shaderInputAttachmentArrayDynamicIndexing;
+   uint shaderUniformTexelBufferArrayDynamicIndexing;
+   uint shaderStorageTexelBufferArrayDynamicIndexing;
+   uint shaderUniformBufferArrayNonUniformIndexing;
+   uint shaderSampledImageArrayNonUniformIndexing;
+   uint shaderStorageBufferArrayNonUniformIndexing;
+   uint shaderStorageImageArrayNonUniformIndexing;
+   uint shaderInputAttachmentArrayNonUniformIndexing;
+   uint shaderUniformTexelBufferArrayNonUniformIndexing;
+   uint shaderStorageTexelBufferArrayNonUniformIndexing;
+   uint descriptorBindingUniformBufferUpdateAfterBind;
+   uint descriptorBindingSampledImageUpdateAfterBind;
+   uint descriptorBindingStorageImageUpdateAfterBind;
+   uint descriptorBindingStorageBufferUpdateAfterBind;
+   uint descriptorBindingUniformTexelBufferUpdateAfterBind;
+   uint descriptorBindingStorageTexelBufferUpdateAfterBind;
+   uint descriptorBindingUpdateUnusedWhilePending;
+   uint descriptorBindingPartiallyBound;
+   uint descriptorBindingVariableDescriptorCount;
+   uint runtimeDescriptorArray;
+}
+struct VkPhysicalDeviceDescriptorIndexingProperties { 
+   VkStructureType sType;
+   void* pNext;
+   uint maxUpdateAfterBindDescriptorsInAllPools;
+   uint shaderUniformBufferArrayNonUniformIndexingNative;
+   uint shaderSampledImageArrayNonUniformIndexingNative;
+   uint shaderStorageBufferArrayNonUniformIndexingNative;
+   uint shaderStorageImageArrayNonUniformIndexingNative;
+   uint shaderInputAttachmentArrayNonUniformIndexingNative;
+   uint robustBufferAccessUpdateAfterBind;
+   uint quadDivergentImplicitLod;
+   uint maxPerStageDescriptorUpdateAfterBindSamplers;
+   uint maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+   uint maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+   uint maxPerStageDescriptorUpdateAfterBindSampledImages;
+   uint maxPerStageDescriptorUpdateAfterBindStorageImages;
+   uint maxPerStageDescriptorUpdateAfterBindInputAttachments;
+   uint maxPerStageUpdateAfterBindResources;
+   uint maxDescriptorSetUpdateAfterBindSamplers;
+   uint maxDescriptorSetUpdateAfterBindUniformBuffers;
+   uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+   uint maxDescriptorSetUpdateAfterBindStorageBuffers;
+   uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+   uint maxDescriptorSetUpdateAfterBindSampledImages;
+   uint maxDescriptorSetUpdateAfterBindStorageImages;
+   uint maxDescriptorSetUpdateAfterBindInputAttachments;
+}
+struct VkDescriptorSetLayoutBindingFlagsCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint bindingCount;
+   VkDescriptorBindingFlags* pBindingFlags;
+}
+struct VkDescriptorSetVariableDescriptorCountAllocateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint descriptorSetCount;
+   uint* pDescriptorCounts;
+}
+struct VkDescriptorSetVariableDescriptorCountLayoutSupport { 
+   VkStructureType sType;
+   void* pNext;
+   uint maxVariableDescriptorCount;
+}
+struct VkAttachmentDescription2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkAttachmentDescriptionFlags flags;
+   VkFormat format;
+   VkSampleCountFlagBits samples;
+   VkAttachmentLoadOp loadOp;
+   VkAttachmentStoreOp storeOp;
+   VkAttachmentLoadOp stencilLoadOp;
+   VkAttachmentStoreOp stencilStoreOp;
+   VkImageLayout initialLayout;
+   VkImageLayout finalLayout;
+}
+struct VkAttachmentReference2 { 
+   VkStructureType sType;
+   void* pNext;
+   uint attachment;
+   VkImageLayout layout;
+   VkImageAspectFlags aspectMask;
+}
+struct VkSubpassDescription2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkSubpassDescriptionFlags flags;
+   VkPipelineBindPoint pipelineBindPoint;
+   uint viewMask;
+   uint inputAttachmentCount;
+   VkAttachmentReference2* pInputAttachments;
+   uint colorAttachmentCount;
+   VkAttachmentReference2* pColorAttachments;
+   VkAttachmentReference2* pResolveAttachments;
+   VkAttachmentReference2* pDepthStencilAttachment;
+   uint preserveAttachmentCount;
+   uint* pPreserveAttachments;
+}
+struct VkSubpassDependency2 { 
+   VkStructureType sType;
+   void* pNext;
+   uint srcSubpass;
+   uint dstSubpass;
+   VkPipelineStageFlags srcStageMask;
+   VkPipelineStageFlags dstStageMask;
+   VkAccessFlags srcAccessMask;
+   VkAccessFlags dstAccessMask;
+   VkDependencyFlags dependencyFlags;
+   int viewOffset;
+}
+struct VkRenderPassCreateInfo2 { 
+   VkStructureType sType;
+   void* pNext;
+   VkRenderPassCreateFlags flags;
+   uint attachmentCount;
+   VkAttachmentDescription2* pAttachments;
+   uint subpassCount;
+   VkSubpassDescription2* pSubpasses;
+   uint dependencyCount;
+   VkSubpassDependency2* pDependencies;
+   uint correlatedViewMaskCount;
+   uint* pCorrelatedViewMasks;
+}
+struct VkSubpassBeginInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSubpassContents contents;
+}
+struct VkSubpassEndInfo { 
+   VkStructureType sType;
+   void* pNext;
+}
+struct VkPhysicalDeviceTimelineSemaphoreFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint timelineSemaphore;
+}
+struct VkPhysicalDeviceTimelineSemaphoreProperties { 
+   VkStructureType sType;
+   void* pNext;
+   ulong maxTimelineSemaphoreValueDifference;
+}
+struct VkSemaphoreTypeCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSemaphoreType semaphoreType;
+   ulong initialValue;
+}
+struct VkTimelineSemaphoreSubmitInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint waitSemaphoreValueCount;
+   ulong* pWaitSemaphoreValues;
+   uint signalSemaphoreValueCount;
+   ulong* pSignalSemaphoreValues;
+}
+struct VkSemaphoreWaitInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSemaphoreWaitFlags flags;
+   uint semaphoreCount;
+   VkSemaphore* pSemaphores;
+   ulong* pValues;
+}
+struct VkSemaphoreSignalInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkSemaphore semaphore;
+   ulong value;
+}
+struct VkPhysicalDevice8BitStorageFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint storageBuffer8BitAccess;
+   uint uniformAndStorageBuffer8BitAccess;
+   uint storagePushConstant8;
+}
+struct VkPhysicalDeviceVulkanMemoryModelFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint vulkanMemoryModel;
+   uint vulkanMemoryModelDeviceScope;
+   uint vulkanMemoryModelAvailabilityVisibilityChains;
+}
+struct VkPhysicalDeviceShaderAtomicInt64Features { 
+   VkStructureType sType;
+   void* pNext;
+   uint shaderBufferInt64Atomics;
+   uint shaderSharedInt64Atomics;
+}
+struct VkPhysicalDeviceDepthStencilResolveProperties { 
+   VkStructureType sType;
+   void* pNext;
+   VkResolveModeFlags supportedDepthResolveModes;
+   VkResolveModeFlags supportedStencilResolveModes;
+   uint independentResolveNone;
+   uint independentResolve;
+}
+struct VkSubpassDescriptionDepthStencilResolve { 
+   VkStructureType sType;
+   void* pNext;
+   VkResolveModeFlagBits depthResolveMode;
+   VkResolveModeFlagBits stencilResolveMode;
+   VkAttachmentReference2* pDepthStencilResolveAttachment;
+}
+struct VkImageStencilUsageCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageUsageFlags stencilUsage;
+}
+struct VkPhysicalDeviceScalarBlockLayoutFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint scalarBlockLayout;
+}
+struct VkPhysicalDeviceUniformBufferStandardLayoutFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint uniformBufferStandardLayout;
+}
+struct VkPhysicalDeviceBufferDeviceAddressFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint bufferDeviceAddress;
+   uint bufferDeviceAddressCaptureReplay;
+   uint bufferDeviceAddressMultiDevice;
+}
+struct VkBufferDeviceAddressInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkBuffer buffer;
+}
+struct VkBufferOpaqueCaptureAddressCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   ulong opaqueCaptureAddress;
+}
+struct VkPhysicalDeviceImagelessFramebufferFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint imagelessFramebuffer;
+}
+struct VkFramebufferAttachmentsCreateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint attachmentImageInfoCount;
+   VkFramebufferAttachmentImageInfo* pAttachmentImageInfos;
+}
+struct VkFramebufferAttachmentImageInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageCreateFlags flags;
+   VkImageUsageFlags usage;
+   uint width;
+   uint height;
+   uint layerCount;
+   uint viewFormatCount;
+   VkFormat* pViewFormats;
+}
+struct VkRenderPassAttachmentBeginInfo { 
+   VkStructureType sType;
+   void* pNext;
+   uint attachmentCount;
+   VkImageView* pAttachments;
+}
+struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures { 
+   VkStructureType sType;
+   void* pNext;
+   uint separateDepthStencilLayouts;
+}
+struct VkAttachmentReferenceStencilLayout { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageLayout stencilLayout;
+}
+struct VkAttachmentDescriptionStencilLayout { 
+   VkStructureType sType;
+   void* pNext;
+   VkImageLayout stencilInitialLayout;
+   VkImageLayout stencilFinalLayout;
+}
+struct VkMemoryOpaqueCaptureAddressAllocateInfo { 
+   VkStructureType sType;
+   void* pNext;
+   ulong opaqueCaptureAddress;
+}
+struct VkDeviceMemoryOpaqueCaptureAddressInfo { 
+   VkStructureType sType;
+   void* pNext;
+   VkDeviceMemory memory;
+}
+struct VkPhysicalDeviceVulkan11Features { 
+   VkStructureType sType;
+   void* pNext;
+   uint storageBuffer16BitAccess;
+   uint uniformAndStorageBuffer16BitAccess;
+   uint storagePushConstant16;
+   uint storageInputOutput16;
+   uint multiview;
+   uint multiviewGeometryShader;
+   uint multiviewTessellationShader;
+   uint variablePointersStorageBuffer;
+   uint variablePointers;
+   uint protectedMemory;
+   uint samplerYcbcrConversion;
+   uint shaderDrawParameters;
+}
+struct VkPhysicalDeviceVulkan11Properties { 
+   VkStructureType sType;
+   void* pNext;
+   uint[VK_UUID_SIZE] deviceUUID;
+   uint[VK_UUID_SIZE] driverUUID;
+   uint[VK_LUID_SIZE] deviceLUID;
+   uint deviceNodeMask;
+   uint deviceLUIDValid;
+   uint subgroupSize;
+   VkShaderStageFlags subgroupSupportedStages;
+   VkSubgroupFeatureFlags subgroupSupportedOperations;
+   uint subgroupQuadOperationsInAllStages;
+   VkPointClippingBehavior pointClippingBehavior;
+   uint maxMultiviewViewCount;
+   uint maxMultiviewInstanceIndex;
+   uint protectedNoFault;
+   uint maxPerSetDescriptors;
+   VkDeviceSize maxMemoryAllocationSize;
+}
+struct VkPhysicalDeviceVulkan12Features { 
+   VkStructureType sType;
+   void* pNext;
+   uint samplerMirrorClampToEdge;
+   uint drawIndirectCount;
+   uint storageBuffer8BitAccess;
+   uint uniformAndStorageBuffer8BitAccess;
+   uint storagePushConstant8;
+   uint shaderBufferInt64Atomics;
+   uint shaderSharedInt64Atomics;
+   uint shaderFloat16;
+   uint shaderInt8;
+   uint descriptorIndexing;
+   uint shaderInputAttachmentArrayDynamicIndexing;
+   uint shaderUniformTexelBufferArrayDynamicIndexing;
+   uint shaderStorageTexelBufferArrayDynamicIndexing;
+   uint shaderUniformBufferArrayNonUniformIndexing;
+   uint shaderSampledImageArrayNonUniformIndexing;
+   uint shaderStorageBufferArrayNonUniformIndexing;
+   uint shaderStorageImageArrayNonUniformIndexing;
+   uint shaderInputAttachmentArrayNonUniformIndexing;
+   uint shaderUniformTexelBufferArrayNonUniformIndexing;
+   uint shaderStorageTexelBufferArrayNonUniformIndexing;
+   uint descriptorBindingUniformBufferUpdateAfterBind;
+   uint descriptorBindingSampledImageUpdateAfterBind;
+   uint descriptorBindingStorageImageUpdateAfterBind;
+   uint descriptorBindingStorageBufferUpdateAfterBind;
+   uint descriptorBindingUniformTexelBufferUpdateAfterBind;
+   uint descriptorBindingStorageTexelBufferUpdateAfterBind;
+   uint descriptorBindingUpdateUnusedWhilePending;
+   uint descriptorBindingPartiallyBound;
+   uint descriptorBindingVariableDescriptorCount;
+   uint runtimeDescriptorArray;
+   uint samplerFilterMinmax;
+   uint scalarBlockLayout;
+   uint imagelessFramebuffer;
+   uint uniformBufferStandardLayout;
+   uint shaderSubgroupExtendedTypes;
+   uint separateDepthStencilLayouts;
+   uint hostQueryReset;
+   uint timelineSemaphore;
+   uint bufferDeviceAddress;
+   uint bufferDeviceAddressCaptureReplay;
+   uint bufferDeviceAddressMultiDevice;
+   uint vulkanMemoryModel;
+   uint vulkanMemoryModelDeviceScope;
+   uint vulkanMemoryModelAvailabilityVisibilityChains;
+   uint shaderOutputViewportIndex;
+   uint shaderOutputLayer;
+   uint subgroupBroadcastDynamicId;
+}
+struct VkPhysicalDeviceVulkan12Properties { 
+   VkStructureType sType;
+   void* pNext;
+   VkDriverId driverID;
+   char[VK_MAX_DRIVER_NAME_SIZE] driverName;
+   char[VK_MAX_DRIVER_INFO_SIZE] driverInfo;
+   VkConformanceVersion conformanceVersion;
+   VkShaderFloatControlsIndependence denormBehaviorIndependence;
+   VkShaderFloatControlsIndependence roundingModeIndependence;
+   uint shaderSignedZeroInfNanPreserveFloat16;
+   uint shaderSignedZeroInfNanPreserveFloat32;
+   uint shaderSignedZeroInfNanPreserveFloat64;
+   uint shaderDenormPreserveFloat16;
+   uint shaderDenormPreserveFloat32;
+   uint shaderDenormPreserveFloat64;
+   uint shaderDenormFlushToZeroFloat16;
+   uint shaderDenormFlushToZeroFloat32;
+   uint shaderDenormFlushToZeroFloat64;
+   uint shaderRoundingModeRTEFloat16;
+   uint shaderRoundingModeRTEFloat32;
+   uint shaderRoundingModeRTEFloat64;
+   uint shaderRoundingModeRTZFloat16;
+   uint shaderRoundingModeRTZFloat32;
+   uint shaderRoundingModeRTZFloat64;
+   uint maxUpdateAfterBindDescriptorsInAllPools;
+   uint shaderUniformBufferArrayNonUniformIndexingNative;
+   uint shaderSampledImageArrayNonUniformIndexingNative;
+   uint shaderStorageBufferArrayNonUniformIndexingNative;
+   uint shaderStorageImageArrayNonUniformIndexingNative;
+   uint shaderInputAttachmentArrayNonUniformIndexingNative;
+   uint robustBufferAccessUpdateAfterBind;
+   uint quadDivergentImplicitLod;
+   uint maxPerStageDescriptorUpdateAfterBindSamplers;
+   uint maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+   uint maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+   uint maxPerStageDescriptorUpdateAfterBindSampledImages;
+   uint maxPerStageDescriptorUpdateAfterBindStorageImages;
+   uint maxPerStageDescriptorUpdateAfterBindInputAttachments;
+   uint maxPerStageUpdateAfterBindResources;
+   uint maxDescriptorSetUpdateAfterBindSamplers;
+   uint maxDescriptorSetUpdateAfterBindUniformBuffers;
+   uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+   uint maxDescriptorSetUpdateAfterBindStorageBuffers;
+   uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+   uint maxDescriptorSetUpdateAfterBindSampledImages;
+   uint maxDescriptorSetUpdateAfterBindStorageImages;
+   uint maxDescriptorSetUpdateAfterBindInputAttachments;
+   VkResolveModeFlags supportedDepthResolveModes;
+   VkResolveModeFlags supportedStencilResolveModes;
+   uint independentResolveNone;
+   uint independentResolve;
+   uint filterMinmaxSingleComponentFormats;
+   uint filterMinmaxImageComponentMapping;
+   ulong maxTimelineSemaphoreValueDifference;
+   VkSampleCountFlags framebufferIntegerColorSampleCounts;
 }
 extern fn VkResult vkCreateInstance (VkInstanceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkInstance* pInstance) @extern("vkCreateInstance"); 
 extern fn void vkDestroyInstance (VkInstance instance, VkAllocationCallbacks* pAllocator) @extern("vkDestroyInstance"); 
@@ -3452,6 +4157,7 @@ extern fn VkResult vkResetEvent (VkDevice device, VkEvent event) @extern("vkRese
 extern fn VkResult vkCreateQueryPool (VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) @extern("vkCreateQueryPool"); 
 extern fn void vkDestroyQueryPool (VkDevice device, VkQueryPool queryPool, VkAllocationCallbacks* pAllocator) @extern("vkDestroyQueryPool"); 
 extern fn VkResult vkGetQueryPoolResults (VkDevice device, VkQueryPool queryPool, uint firstQuery, uint queryCount, usz dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) @extern("vkGetQueryPoolResults"); 
+extern fn void vkResetQueryPool (VkDevice device, VkQueryPool queryPool, uint firstQuery, uint queryCount) @extern("vkResetQueryPool"); 
 extern fn VkResult vkCreateBuffer (VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) @extern("vkCreateBuffer"); 
 extern fn void vkDestroyBuffer (VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator) @extern("vkDestroyBuffer"); 
 extern fn VkResult vkCreateBufferView (VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView) @extern("vkCreateBufferView"); 
@@ -3566,3 +4272,15 @@ extern fn VkResult vkCreateSamplerYcbcrConversion (VkDevice device, VkSamplerYcb
 extern fn void vkDestroySamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) @extern("vkDestroySamplerYcbcrConversion"); 
 extern fn void vkGetDeviceQueue2 (VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) @extern("vkGetDeviceQueue2"); 
 extern fn void vkGetDescriptorSetLayoutSupport (VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) @extern("vkGetDescriptorSetLayoutSupport"); 
+extern fn VkResult vkCreateRenderPass2 (VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) @extern("vkCreateRenderPass2"); 
+extern fn void vkCmdBeginRenderPass2 (VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) @extern("vkCmdBeginRenderPass2"); 
+extern fn void vkCmdNextSubpass2 (VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) @extern("vkCmdNextSubpass2"); 
+extern fn void vkCmdEndRenderPass2 (VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) @extern("vkCmdEndRenderPass2"); 
+extern fn VkResult vkGetSemaphoreCounterValue (VkDevice device, VkSemaphore semaphore, ulong* pValue) @extern("vkGetSemaphoreCounterValue"); 
+extern fn VkResult vkWaitSemaphores (VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, ulong timeout) @extern("vkWaitSemaphores"); 
+extern fn VkResult vkSignalSemaphore (VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) @extern("vkSignalSemaphore"); 
+extern fn void vkCmdDrawIndirectCount (VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint maxDrawCount, uint stride) @extern("vkCmdDrawIndirectCount"); 
+extern fn void vkCmdDrawIndexedIndirectCount (VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint maxDrawCount, uint stride) @extern("vkCmdDrawIndexedIndirectCount"); 
+extern fn ulong vkGetBufferOpaqueCaptureAddress (VkDevice device, VkBufferDeviceAddressInfo* pInfo) @extern("vkGetBufferOpaqueCaptureAddress"); 
+extern fn VkDeviceAddress vkGetBufferDeviceAddress (VkDevice device, VkBufferDeviceAddressInfo* pInfo) @extern("vkGetBufferDeviceAddress"); 
+extern fn ulong vkGetDeviceMemoryOpaqueCaptureAddress (VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) @extern("vkGetDeviceMemoryOpaqueCaptureAddress"); 
