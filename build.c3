@@ -8,8 +8,12 @@ import std::collections::map;
 import xml;
 
 def TypeMap = HashMap(<String, String>);
+def StructList = List(<VkStruct>);
+def CommandList = List(<VkCommand>);
+def ValueList = List(<VkValue>);
+def EnumList = List(<VkEnum>);
 
-const MAX_VERSION = 1.2;
+const MAX_VERSION = 1.3;
 
 fn void! main(String[] args) {
 
@@ -38,18 +42,18 @@ fn void! main(String[] args) {
     NodeList feature_nodes;
     defer feature_nodes.free();
 
-    root_node.find(fn (node) => node.name == "feature", &feature_nodes);
+    NodeList command_nodes;
+    defer command_nodes.free();
 
     NodeList types_nodes;
     defer types_nodes.free();
+
+    root_node.find(fn (node) => node.name == "feature" || node.name == "extension", &feature_nodes);
 
     root_node.find(fn (node) => 
         node.children.len() > 0 &&
         (node.attributes.has_key("category") || node.attributes.has_key("type")), 
     &types_nodes);
-
-    NodeList command_nodes;
-    defer command_nodes.free();
 
     root_node.find(fn (node) => {|
         if (node.name == "command" && node.children.len() > 0) {
@@ -61,13 +65,13 @@ fn void! main(String[] args) {
         return false;
     |}, &command_nodes);
 
-    List(<VkStruct>) structs;
-    List(<VkCommand>) commands;
-    List(<VkEnum>) enums;
-    List(<VkValue>) constants;
-    List(<VkValue>) handles;
-    List(<VkValue>) basetypes;
-    List(<VkStruct>) unions;
+    StructList structs;
+    CommandList commands;
+    EnumList enums;
+    ValueList constants;
+    ValueList handles;
+    ValueList basetypes;
+    StructList unions;
 
     defer {
         foreach (value : structs) value.base.free();
@@ -138,12 +142,18 @@ fn void! main(String[] args) {
 
     // Enable correct features before writing C3 code
     foreach (feature : feature_nodes) {
+
+
+        
         String! number = feature.attributes.get("number");
-        String feature_api = feature.attributes.get("api")!;
-        if (feature_api == "vulkansc") break;
+        String! extension_name = feature.attributes.get("name");
+        String! feature_api = feature.attributes.get("api");
+
+        if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
+
 
         // Get only up-to required vulkan version
-        if (try number && number.to_double()!! <= MAX_VERSION) {
+        if ((@ok(number) && number.to_double()!! <= MAX_VERSION)) {
             foreach (require: feature.children) {
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
@@ -197,7 +207,7 @@ fn void! main(String[] args) {
                                 String vk_value = value ?? "-";
 
                                 if (try bitpos && enum_parent) vk_value = bitpos.from_bit_pos();
-                                if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, .negative_value = @ok(dir));
+                                if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, negative_value: @ok(dir));
 
                                 enum_parent.values.push(
                                     VkValue {
@@ -333,7 +343,7 @@ fn void! main(String[] args) {
         if (!entry.enabled) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..] : entry.name, " ("}, "");
+        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, " ("}, "");
         defer text_body.free();
 
         // Add values
@@ -376,25 +386,20 @@ fn void! main(String[] args) {
         }
         text_body.append(");\n");
 
-        text_body.append("  switch(result) { \n");
-        foreach (i, value : entry.error_codes) {
-            text_body.append(dstring::new_join({"       case ", value[3..], ": return VkErrors.", value[3..], "?;\n"}, ""));
+        if (entry.error_codes.len() > 0) {
+            text_body.append("  switch(result) { \n");
+            foreach (i, value : entry.error_codes) {
+                text_body.append(dstring::new_join({"       case ", value[3..], ": return VkErrors.", value[3..], "?;\n"}, ""));
+            }
+            text_body.append("  }\n");
+        } else {
+            text_body.append("  if (result != 0) VkErrors.ERROR_UNKNOWN?;\n");
         }
-        text_body.append("  }\n");
+
         text_body.append("}\n");
 
         vk_main.write(text_body.str_view())!!;
     }
-}
-
-
-macro HashMap* HashMap.new_init_with_key_values(&self, ..., uint capacity = 32, float load_factor = 0.1, Allocator allocator = allocator::heap())
-{
-	self.new_init(capacity, load_factor, allocator);
-	$for (var $i = 0; $i < $vacount; $i += 2)
-		self.set($vaarg[$i], $vaarg[$i+1]);
-	$endfor
-	return self;
 }
 
 macro bool String[*].contains(self, String key) {

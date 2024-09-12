@@ -51,7 +51,7 @@ fn void VkCommand.free(&self) {
     self.base.free();
 }
 
-fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
+fn VkEnum VkEnum.from_node(&self, xml::Node node) {
     self.name = node.attributes.get("name") ?? "-";
     self.comment = node.attributes.get("comment") ?? "-";
 
@@ -82,7 +82,7 @@ fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
     return *self;
 }
 
-fn VkValue VkValue.from_node(&self, xml::Node* node) {
+fn VkValue VkValue.from_node(&self, xml::Node node) {
 
     foreach (entry : node.children) {
         if (entry.name == "name") self.name = entry.value;
@@ -91,7 +91,7 @@ fn VkValue VkValue.from_node(&self, xml::Node* node) {
     return *self;
 }
 
-fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
+fn VkStruct VkStruct.from_node(&self, xml::Node node) {
     self.name = node.attributes.get("name") ?? "-";
     
     foreach (member : node.children) {
@@ -118,7 +118,7 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
 }
 
 
-fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
+fn VkCommand VkCommand.from_node(&self, xml::Node node) {
     String! success_codes = node.attributes.get("successcodes");
     String! error_codes = node.attributes.get("errorcodes");
 
@@ -148,7 +148,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
     return *self;
 }
 
-fn VkCommand VkCommand.from_func_ptr(&self, xml::Node* node) {
+fn VkCommand VkCommand.from_func_ptr(&self, xml::Node node) {
     self.enabled = true;
     if (node.value.len > 5) self.returnType = node.value;
     //node.value[7..(node.value.len + 7 - 10)]
