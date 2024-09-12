@@ -45,6 +45,12 @@ struct VkValue {
     bool optional;
 }
 
+fn void VkCommand.free(&self) {
+    self.success_codes.free();
+    self.error_codes.free();
+    self.base.free();
+}
+
 fn VkEnum VkEnum.from_node(&self, xml::Node* node) {
     self.name = node.attributes.get("name") ?? "-";
     self.comment = node.attributes.get("comment") ?? "-";
@@ -115,6 +121,12 @@ fn VkStruct VkStruct.from_node(&self, xml::Node* node) {
 fn VkCommand VkCommand.from_node(&self, xml::Node* node) {
     String! success_codes = node.attributes.get("successcodes");
     String! error_codes = node.attributes.get("errorcodes");
+
+    if (try error_codes) {
+        String[] error_codes_list = error_codes.split(",");
+        foreach (code : error_codes_list) self.error_codes.push(code);
+        free(error_codes_list);
+    }
     
     foreach (member : node.children) {
         String! api = member.attributes.get("api");

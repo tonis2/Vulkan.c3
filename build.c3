@@ -9,7 +9,6 @@ import xml;
 
 def TypeMap = HashMap(<String, String>);
 
-const String[*] SKIPED_REQUIRES = {"Header boilerplate", "API constants", "API version macros"};
 const MAX_VERSION = 1.2;
 
 fn void! main(String[] args) {
@@ -72,7 +71,7 @@ fn void! main(String[] args) {
 
     defer {
         foreach (value : structs) value.base.free();
-        foreach (value : commands) value.base.free();
+        foreach (value : commands) value.free();
         foreach (value : enums) value.base.free();
         foreach (value : unions) value.base.free();
         structs.free();
@@ -222,7 +221,7 @@ fn void! main(String[] args) {
 
     // Constants
     foreach (value : constants) {
-        DString text_body = dstring::new_join({"const ", value.name, " = ", value.value, ";\n"}, "");
+        DString text_body = dstring::new_join({"const ", value.name[3..], " = ", value.value, ";\n"}, "");
         defer text_body.free();
         
         vk_main.write(text_body.str_view())!!;
@@ -232,7 +231,7 @@ fn void! main(String[] args) {
 
     // Handles
     foreach (entry : handles) {
-        DString text_body = dstring::new_join({"distinct ", entry.name, " = void*;\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = void*;\n"}, "");
         defer text_body.free();
         vk_main.write(text_body.str_view())!!;
     }
@@ -242,7 +241,7 @@ fn void! main(String[] args) {
     // BaseTypes
     foreach (entry : basetypes) {
         if (entry.type == "") continue;
-        DString text_body = dstring::new_join({"def ", entry.name, " = ", entry.type, ";\n"}, "");
+        DString text_body = dstring::new_join({"def ", entry.name[2..], " = ", entry.type, ";\n"}, "");
         vk_main.write(text_body.str_view())!!;
     }
 
@@ -253,11 +252,11 @@ fn void! main(String[] args) {
         String enum_type = "uint";
         if (entry.name == "VkResult") enum_type = "int";
 
-        DString text_body = dstring::new_join({"distinct ", entry.name, " = ", "inline ", enum_type, ";\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = ", "inline ", enum_type, ";\n"}, "");
         defer text_body.free();
         // Add values
         foreach (value : entry.values) {
-            text_body.append(dstring::new_join({"const ", entry.name," ", value.name," = ", value.value,";\n"}, ""));
+            text_body.append(dstring::new_join({"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, ""));
         }
         
         text_body.append_chars("\n");
@@ -268,7 +267,7 @@ fn void! main(String[] args) {
     foreach (entry : enums) {
         if (entry.name == "VkResult") {
             DString text_body = dstring::new_join({"fault VkErrors {\n",}, "");
-            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name, ",\n"}, ""));
+            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name[3..], ",\n"}, ""));
             text_body.append("}\n");
 
             vk_main.write(text_body.str_view())!!;
@@ -281,14 +280,40 @@ fn void! main(String[] args) {
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
-        DString text_body = dstring::new_join({"struct ", entry.name, " { \n"}, "");
+        DString text_body = dstring::new_join({"struct ", entry.name[2..], " { \n"}, "");
         defer text_body.free();
 
         // Add struct values
         foreach (value : entry.values) {
-            String type = type_values[value.type] ?? value.type;
+            String type = type_values[value.type] ?? value.type.remove_vk();
 
             if (value.size != "" && value.size != "null-terminated") {
+                if (value.size[0] != '[') {
+                    text_body.append(dstring::new_join({"   ", type, "[", value.size[3..], "]", " ", value.name,";\n"}, ""));
+                } else {
+                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
+                }
+            } else {
+                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
+            }
+        }
+        
+        text_body.append_chars("}\n");
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    vk_main.write("\n")!!;
+
+    // Unions
+    foreach (entry : unions) {
+        DString text_body = dstring::new_join({"union ", entry.name[2..], " { \n"}, "");
+        defer text_body.free();
+
+        // Add values
+        foreach (value : entry.values) {
+            String type = type_values[value.type] ?? value.type.remove_vk();
+
+            if (value.size != "") {
                 if (value.size[0] != '[') {
                     text_body.append(dstring::new_join({"   ", type, "[", value.size, "]", " ", value.name,";\n"}, ""));
                 } else {
@@ -303,41 +328,17 @@ fn void! main(String[] args) {
         vk_main.write(text_body.str_view())!!;
     }
 
-    // Unions
-    foreach (entry : unions) {
-        DString text_body = dstring::new_join({"union ", entry.name, " { \n"}, "");
-        defer text_body.free();
-
-        // Add values
-        foreach (value : entry.values) {
-            String type = type_values[value.type] ?? value.type;
-
-            if (value.size != "") {
-                if (value.size[0] != '[') {
-                    text_body.append(dstring::new_join({"   ", type, "[", value.size, "]", " ", value.name,";\n"}, ""));
-                } else {
-                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
-                }
-            } else {
-                text_body.append(dstring::new_join({"   ", type, " ", value.name,";\n"}, ""));
-            }
-        }
-        
-        text_body.append_chars("}\n");
-        vk_main.write(text_body.str_view())!!;
-    }
-
     // Commands
     foreach (entry : commands) {
         if (!entry.enabled) continue;
 
-        String return_type = type_values[entry.returnType] ?? entry.returnType;
-        DString text_body = dstring::new_join({"extern fn ", return_type, " ", entry.name, " ("}, "");
+        String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
+        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..] : entry.name, " ("}, "");
         defer text_body.free();
 
         // Add values
         foreach (i, value : entry.values) {
-            String type = type_values[value.type] ?? value.type;
+            String type = type_values[value.type] ?? value.type.remove_vk();
             text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         }
 
@@ -345,12 +346,17 @@ fn void! main(String[] args) {
         vk_main.write(text_body.str_view())!!;
     }
 
+    vk_main.write("\n")!!;
+
     // Commands with error handling
     foreach (entry : commands) {
         if (!entry.enabled || entry.returnType != "VkResult") continue;
-        String return_type = type_values[entry.returnType] ?? entry.returnType;
+        String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
 
-        DString text_body = dstring::new_join({"fn void! ", entry.name[2..], " ("}, "");
+        DString text_body;
+        text_body.append("fn void! ");
+        text_body.append(dstring::new_join({entry.name[2..].to_lower_case(), " ("}, ""));
+
         defer text_body.free();
 
         // Add values
@@ -359,7 +365,24 @@ fn void! main(String[] args) {
             text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         }
 
-        text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
+        text_body.append(dstring::new_join({")", " {\n"}, ""));
+
+        text_body.append("  Result result = ");
+        text_body.append(dstring::new_join({entry.name, "("}, ""));
+
+        foreach (i, value : entry.values) {
+            String type = type_values[value.type] ?? value.type;
+            text_body.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+        }
+        text_body.append(");\n");
+
+        text_body.append("  switch(result) { \n");
+        foreach (i, value : entry.error_codes) {
+            text_body.append(dstring::new_join({"       case ", value[3..], ": return VkErrors.", value[3..], "?;\n"}, ""));
+        }
+        text_body.append("  }\n");
+        text_body.append("}\n");
+
         vk_main.write(text_body.str_view())!!;
     }
 }
@@ -385,6 +408,19 @@ fn String String.from_bit_pos(&self) {
     char[32] buffer;
     String res = (String)io::bprintf(&buffer, "0x%08x", (ulong)1 << self.to_uint()!!)!!;
     return res.copy();
+}
+
+fn String String.to_lower_case(self) {
+    String new_value = self.copy();
+    new_value[0] = new_value[0].to_lower();
+    return new_value;
+}
+
+fn String String.remove_vk(self) {
+    if (self[0..1] == "Vk") {
+         return self.copy()[2..];
+    }
+    return self;
 }
 
 fn String String.from_ext_value(&self, String offset, bool negative_value = false) {
