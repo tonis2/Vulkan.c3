@@ -13,6 +13,29 @@ def CommandList = List(<VkCommand>);
 def ValueList = List(<VkValue>);
 def EnumList = List(<VkEnum>);
 
+const String[*] ACTIVE_EXTENSIONS = {
+  "VK_KHR_portability_enumeration",
+  "VK_KHR_portability_subset",
+  "VK_KHR_push_descriptor",
+  "VK_KHR_surface",
+  "VK_KHR_xcb_surface",
+  "VK_KHR_swapchain",
+  "VK_KHR_display",
+  "VK_EXT_debug_report",
+  "VK_EXT_debug_utils",
+  "VK_EXT_swapchain_colorspace",
+  "VK_KHR_get_physical_device_properties2",
+  "VK_KHR_depth_stencil_resolve",
+  "VK_KHR_create_renderpass2",
+  "VK_KHR_maintenance2",
+  "VK_KHR_multiview",
+  "VK_KHR_dynamic_rendering",
+  "VK_EXT_descriptor_buffer",
+  "VK_KHR_xlib_surface",
+  "VK_MVK_macos_surface",
+  "VK_KHR_win32_surface"
+};
+
 const MAX_VERSION = 1.3;
 
 fn void! main(String[] args) {
@@ -75,7 +98,7 @@ fn void! main(String[] args) {
 
     defer {
         foreach (value : structs) value.base.free();
-        foreach (value : commands) value.free();
+        foreach (value : commands) value.free();;
         foreach (value : enums) value.base.free();
         foreach (value : unions) value.base.free();
         structs.free();
@@ -117,7 +140,6 @@ fn void! main(String[] args) {
         String category = node.attributes.get("category") ?? node.attributes.get("type")!;
 
         switch (category) {
-            case "bitmask":
             case "enum": {
                 if (try name) enums.push(VkEnum{}.from_node(node));
             }
@@ -130,6 +152,7 @@ fn void! main(String[] args) {
             case "handle": {
                 handles.push(VkValue{}.from_node(node));
             }
+            case "bitmask":
             case "basetype": {
                 basetypes.push(VkValue{}.from_node(node));
             }
@@ -142,23 +165,20 @@ fn void! main(String[] args) {
 
     // Enable correct features before writing C3 code
     foreach (feature : feature_nodes) {
-
-
-        
         String! number = feature.attributes.get("number");
         String! extension_name = feature.attributes.get("name");
         String! feature_api = feature.attributes.get("api");
 
         if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
 
-
+        
         // Get only up-to required vulkan version
-        if ((@ok(number) && number.to_double()!! <= MAX_VERSION)) {
+        if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || feature.name == "extension")) {
             foreach (require: feature.children) {
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
                     String! extends = entry.attributes.get("extends");
-                    String! extnumber = entry.attributes.get("extnumber");
+                    String! extnumber = feature.name == "extension" ? number : entry.attributes.get("extnumber");
                     String! offset = entry.attributes.get("offset");
                     String! bitpos = entry.attributes.get("bitpos");
                     String! dir = entry.attributes.get("dir");
@@ -208,7 +228,7 @@ fn void! main(String[] args) {
 
                                 if (try bitpos && enum_parent) vk_value = bitpos.from_bit_pos();
                                 if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, negative_value: @ok(dir));
-
+                                if (vk_value == "-") continue;
                                 enum_parent.values.push(
                                     VkValue {
                                         .name = name,
@@ -251,7 +271,9 @@ fn void! main(String[] args) {
     // BaseTypes
     foreach (entry : basetypes) {
         if (entry.type == "") continue;
-        DString text_body = dstring::new_join({"def ", entry.name[2..], " = ", entry.type, ";\n"}, "");
+
+        String type = type_values[entry.type] ?? entry.type.remove_vk();
+        DString text_body = dstring::new_join({"def ", entry.name[2..], " = ", type, ";\n"}, "");
         vk_main.write(text_body.str_view())!!;
     }
 
