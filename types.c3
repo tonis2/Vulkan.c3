@@ -24,6 +24,7 @@ struct VkStruct {
 
 struct VkCommand {
     inline Base base;
+    bool extension;
     String returnType;
     List(<String>) success_codes;
     List(<String>) error_codes;
