@@ -2,6 +2,11 @@ module vk;
 
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
 
+distinct XDisplay = void*;
+distinct ZHandle = void*;
+distinct WDisplay = void*;
+distinct XWindow = ulong;
+
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);
 def PFN_vkFreeFunction = fn void (void*, void*);
 def PFN_vkInternalAllocationNotification = fn void (void*, usz, InternalAllocationType, SystemAllocationScope);
