@@ -211,7 +211,7 @@ fn void! main(String[] args) {
                                 foreach (&node : commands) {
                                     if (node.name == name) {
                                         node.extension = feature.name == "extension";
-                                        node.enabled = true;
+                                        node.enabled = node.extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
                                         break;
                                     }
                                 }
@@ -371,7 +371,7 @@ fn void! main(String[] args) {
         if (!entry.enabled || entry.extension) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, " ("}, "");
+        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, "("}, "");
         defer text_body.free();
 
         // Add values
@@ -391,7 +391,7 @@ fn void! main(String[] args) {
         if (!entry.enabled || !entry.extension) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        DString text_body = dstring::new_join({"def PFN_", entry.name, " = fn ", return_type, "("}, "");
+        DString text_body = dstring::new_join({"def PFN_", entry.name, " = fn ", return_type, " ("}, "");
         defer text_body.free();
 
         // Add values
