@@ -55,10 +55,11 @@ fn void! main(String[] args) {
         "HANDLE", "void*",
         "char*", "ZString",
         "VkBool32", "uint",
-        "xcb_connection_t", "XDisplay",
-        "xcb_visualid_t", "XWindow",
-        "wl_display", "WDisplay",
-        "zx_handle_t", "ZHandle"
+        "xcb_connection_t", "Display",
+        "xcb_visualid_t", "Window",
+        "xcb_window_t", "Window",
+        "wl_display", "Display",
+        "zx_handle_t", "Display"
     );
 
     defer type_values.free();

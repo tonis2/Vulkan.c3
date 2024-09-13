@@ -3803,7 +3803,7 @@ struct WaylandSurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    WaylandSurfaceCreateFlagsKHR flags;
-   WDisplay* display;
+   Display* display;
    wl_surface* surface;
 }
 struct Win32SurfaceCreateInfoKHR { 
@@ -3824,8 +3824,8 @@ struct XcbSurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    XcbSurfaceCreateFlagsKHR flags;
-   XDisplay* connection;
-   xcb_window_t window;
+   Display* connection;
+   Window window;
 }
 struct DirectFBSurfaceCreateInfoEXT { 
    StructureType sType;
@@ -3838,7 +3838,7 @@ struct ImagePipeSurfaceCreateInfoFUCHSIA {
    StructureType sType;
    void* pNext;
    ImagePipeSurfaceCreateFlagsFUCHSIA flags;
-   ZHandle imagePipeHandle;
+   Display imagePipeHandle;
 }
 struct StreamDescriptorSurfaceCreateInfoGGP { 
    StructureType sType;
@@ -4344,7 +4344,7 @@ struct ImportMemoryZirconHandleInfoFUCHSIA {
    StructureType sType;
    void* pNext;
    ExternalMemoryHandleTypeFlagBits handleType;
-   ZHandle handle;
+   Display handle;
 }
 struct MemoryZirconHandlePropertiesFUCHSIA { 
    StructureType sType;
@@ -4463,7 +4463,7 @@ struct ImportSemaphoreZirconHandleInfoFUCHSIA {
    Semaphore semaphore;
    SemaphoreImportFlags flags;
    ExternalSemaphoreHandleTypeFlagBits handleType;
-   ZHandle zirconHandle;
+   Display zirconHandle;
 }
 struct SemaphoreGetZirconHandleInfoFUCHSIA { 
    StructureType sType;
@@ -8935,7 +8935,7 @@ struct BufferCollectionBufferCreateInfoFUCHSIA {
 struct BufferCollectionCreateInfoFUCHSIA { 
    StructureType sType;
    void* pNext;
-   ZHandle collectionToken;
+   Display collectionToken;
 }
 struct BufferCollectionPropertiesFUCHSIA { 
    StructureType sType;
@@ -10733,13 +10733,13 @@ def PFN_vkAcquireNextImageKHR = fn Result(Device, SwapchainKHR, ulong, Semaphore
 def PFN_vkQueuePresentKHR = fn Result(Queue, PresentInfoKHR*);
 def PFN_vkCreateViSurfaceNN = fn Result(Instance, ViSurfaceCreateInfoNN*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkCreateWaylandSurfaceKHR = fn Result(Instance, WaylandSurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
-def PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = fn uint(PhysicalDevice, uint, WDisplay*);
+def PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = fn uint(PhysicalDevice, uint, Display*);
 def PFN_vkCreateWin32SurfaceKHR = fn Result(Instance, Win32SurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR = fn uint(PhysicalDevice, uint);
 def PFN_vkCreateXlibSurfaceKHR = fn Result(Instance, XlibSurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR = fn uint(PhysicalDevice, uint, Display*, VisualID);
 def PFN_vkCreateXcbSurfaceKHR = fn Result(Instance, XcbSurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
-def PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = fn uint(PhysicalDevice, uint, XDisplay*, XWindow);
+def PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = fn uint(PhysicalDevice, uint, Display*, Window);
 def PFN_vkCreateDirectFBSurfaceEXT = fn Result(Instance, DirectFBSurfaceCreateInfoEXT*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkGetPhysicalDeviceDirectFBPresentationSupportEXT = fn uint(PhysicalDevice, uint, IDirectFB*);
 def PFN_vkCreateImagePipeSurfaceFUCHSIA = fn Result(Instance, ImagePipeSurfaceCreateInfoFUCHSIA*, AllocationCallbacks*, SurfaceKHR*);
@@ -10767,8 +10767,8 @@ def PFN_vkGetMemoryWin32HandleKHR = fn Result(Device, MemoryGetWin32HandleInfoKH
 def PFN_vkGetMemoryWin32HandlePropertiesKHR = fn Result(Device, ExternalMemoryHandleTypeFlagBits, void*, MemoryWin32HandlePropertiesKHR*);
 def PFN_vkGetMemoryFdKHR = fn Result(Device, MemoryGetFdInfoKHR*, int*);
 def PFN_vkGetMemoryFdPropertiesKHR = fn Result(Device, ExternalMemoryHandleTypeFlagBits, int, MemoryFdPropertiesKHR*);
-def PFN_vkGetMemoryZirconHandleFUCHSIA = fn Result(Device, MemoryGetZirconHandleInfoFUCHSIA*, ZHandle*);
-def PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA = fn Result(Device, ExternalMemoryHandleTypeFlagBits, ZHandle, MemoryZirconHandlePropertiesFUCHSIA*);
+def PFN_vkGetMemoryZirconHandleFUCHSIA = fn Result(Device, MemoryGetZirconHandleInfoFUCHSIA*, Display*);
+def PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA = fn Result(Device, ExternalMemoryHandleTypeFlagBits, Display, MemoryZirconHandlePropertiesFUCHSIA*);
 def PFN_vkGetMemoryRemoteAddressNV = fn Result(Device, MemoryGetRemoteAddressInfoNV*, RemoteAddressNV*);
 def PFN_vkGetMemorySciBufNV = fn Result(Device, MemoryGetSciBufInfoNV*, NvSciBufObj*);
 def PFN_vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV = fn Result(PhysicalDevice, ExternalMemoryHandleTypeFlagBits, NvSciBufObj, MemorySciBufPropertiesNV*);
@@ -10777,7 +10777,7 @@ def PFN_vkGetSemaphoreWin32HandleKHR = fn Result(Device, SemaphoreGetWin32Handle
 def PFN_vkImportSemaphoreWin32HandleKHR = fn Result(Device, ImportSemaphoreWin32HandleInfoKHR*);
 def PFN_vkGetSemaphoreFdKHR = fn Result(Device, SemaphoreGetFdInfoKHR*, int*);
 def PFN_vkImportSemaphoreFdKHR = fn Result(Device, ImportSemaphoreFdInfoKHR*);
-def PFN_vkGetSemaphoreZirconHandleFUCHSIA = fn Result(Device, SemaphoreGetZirconHandleInfoFUCHSIA*, ZHandle*);
+def PFN_vkGetSemaphoreZirconHandleFUCHSIA = fn Result(Device, SemaphoreGetZirconHandleInfoFUCHSIA*, Display*);
 def PFN_vkImportSemaphoreZirconHandleFUCHSIA = fn Result(Device, ImportSemaphoreZirconHandleInfoFUCHSIA*);
 def PFN_vkGetFenceWin32HandleKHR = fn Result(Device, FenceGetWin32HandleInfoKHR*, void**);
 def PFN_vkImportFenceWin32HandleKHR = fn Result(Device, ImportFenceWin32HandleInfoKHR*);
@@ -11808,14 +11808,14 @@ fn void! getMemoryFdPropertiesKHR (VkDevice device, VkExternalMemoryHandleTypeFl
        case ERROR_INVALID_EXTERNAL_HANDLE: return VkErrors.ERROR_INVALID_EXTERNAL_HANDLE?;
   }
 }
-fn void! getMemoryZirconHandleFUCHSIA (VkDevice device, VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, ZHandle* pZirconHandle) {
+fn void! getMemoryZirconHandleFUCHSIA (VkDevice device, VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, Display* pZirconHandle) {
   Result result = vkGetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
   switch(result) { 
        case ERROR_TOO_MANY_OBJECTS: return VkErrors.ERROR_TOO_MANY_OBJECTS?;
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! getMemoryZirconHandlePropertiesFUCHSIA (VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, ZHandle zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
+fn void! getMemoryZirconHandlePropertiesFUCHSIA (VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, Display zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
   Result result = vkGetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
   switch(result) { 
        case ERROR_INVALID_EXTERNAL_HANDLE: return VkErrors.ERROR_INVALID_EXTERNAL_HANDLE?;
@@ -11875,7 +11875,7 @@ fn void! importSemaphoreFdKHR (VkDevice device, VkImportSemaphoreFdInfoKHR* pImp
        case ERROR_INVALID_EXTERNAL_HANDLE: return VkErrors.ERROR_INVALID_EXTERNAL_HANDLE?;
   }
 }
-fn void! getSemaphoreZirconHandleFUCHSIA (VkDevice device, VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, ZHandle* pZirconHandle) {
+fn void! getSemaphoreZirconHandleFUCHSIA (VkDevice device, VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, Display* pZirconHandle) {
   Result result = vkGetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
   switch(result) { 
        case ERROR_TOO_MANY_OBJECTS: return VkErrors.ERROR_TOO_MANY_OBJECTS?;
