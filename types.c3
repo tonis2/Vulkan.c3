@@ -134,6 +134,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
         bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
         value.value = member.value.trim(" ");
+        if (value.value.contains("const")) value.value = value.value[0..1];
 
         foreach (entry : member.children) {
             if (member.name == "proto") {
