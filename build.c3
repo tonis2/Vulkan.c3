@@ -54,8 +54,13 @@ fn void! main(String[] args) {
         "null", "void*",
         "HANDLE", "void*",
         "char*", "ZString",
-        "VkBool32", "uint"
+        "VkBool32", "uint",
+        "xcb_connection_t", "XDisplay",
+        "xcb_visualid_t", "XWindow",
+        "wl_display", "WDisplay",
+        "zx_handle_t", "ZHandle"
     );
+
     defer type_values.free();
     
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
@@ -184,9 +189,7 @@ fn void! main(String[] args) {
                     String! dir = entry.attributes.get("dir");
                     String! value = entry.attributes.get("value");
 
-                    if (catch err = name) {
-                        continue;
-                    } 
+                    if (catch err = name) continue;
 
                     switch (entry.name) {
                         case "type": {
@@ -206,6 +209,7 @@ fn void! main(String[] args) {
                             else {
                                 foreach (&node : commands) {
                                     if (node.name == name) {
+                                        node.extension = feature.name == "extension";
                                         node.enabled = true;
                                         break;
                                     }
@@ -224,11 +228,12 @@ fn void! main(String[] args) {
 
                                 if (!enum_parent) continue;
 
-                                String vk_value = value ?? "-";
+                                String vk_value = value ?? "";
 
                                 if (try bitpos && enum_parent) vk_value = bitpos.from_bit_pos();
                                 if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, negative_value: @ok(dir));
-                                if (vk_value == "-") continue;
+                                if (vk_value == "") continue;
+
                                 enum_parent.values.push(
                                     VkValue {
                                         .name = name,
@@ -362,7 +367,7 @@ fn void! main(String[] args) {
 
     // Commands
     foreach (entry : commands) {
-        if (!entry.enabled) continue;
+        if (!entry.enabled || entry.extension) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, " ("}, "");
@@ -375,6 +380,26 @@ fn void! main(String[] args) {
         }
 
         text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
+        vk_main.write(text_body.str_view())!!;
+    }
+
+    vk_main.write("\n")!!;
+
+    // Extension commands
+    foreach (entry : commands) {
+        if (!entry.enabled || !entry.extension) continue;
+
+        String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
+        DString text_body = dstring::new_join({"def PFN_", entry.name, " = fn ", return_type, "("}, "");
+        defer text_body.free();
+
+        // Add values
+        foreach (i, value : entry.values) {
+            String type = type_values[value.type] ?? value.type.remove_vk();
+            text_body.append(dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, ""));
+        }
+
+        text_body.append(dstring::new_join({");\n"}, ""));
         vk_main.write(text_body.str_view())!!;
     }
 
