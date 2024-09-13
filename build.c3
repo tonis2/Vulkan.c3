@@ -177,7 +177,6 @@ fn void! main(String[] args) {
 
         if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
 
-        
         // Get only up-to required vulkan version
         if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || feature.name == "extension")) {
             foreach (require: feature.children) {
@@ -387,22 +386,62 @@ fn void! main(String[] args) {
     vk_main.write("\n")!!;
 
     // Extension commands
+    DString extension_definitions;
+    DString extension_pointers;
+    DString extension_bind;
+    DString extension_functions;
+
+    extension_pointers.append("struct VK_extension_bindings {\n");
+    extension_bind.append("fn void loadExtensions(Instance instance) {\n");
+    
     foreach (entry : commands) {
         if (!entry.enabled || !entry.extension) continue;
-
+        
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        DString text_body = dstring::new_join({"def PFN_", entry.name, " = fn ", return_type, " ("}, "");
-        defer text_body.free();
+        String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
+        bool no_result = return_type != "Result";
+
+        if (no_result) {
+            extension_functions.append(dstring::new_join({"fn ", return_type, " ", entry.name.remove_vk().to_lower_case(), " ("}, ""));
+        }
+
+        extension_definitions.append(dstring::new_join({"def ", extension_def, " = fn ", return_type, " ("}, ""));
+        extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, ""));
+        extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
 
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type.remove_vk();
-            text_body.append(dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, ""));
+            extension_definitions.append(dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, ""));
+
+            if (no_result) {
+                extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
+            }
         }
 
-        text_body.append(dstring::new_join({");\n"}, ""));
-        vk_main.write(text_body.str_view())!!;
+        if (no_result) {
+            extension_functions.append(dstring::new_join({" => extensions.", entry.name, "("}, ""));
+            foreach (i, value : entry.values) extension_functions.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));   
+        }
+        extension_definitions.append(dstring::new_join({");\n"}, ""));
     }
+
+    extension_pointers.append("}\nVK_extension_bindings extensions;\n");
+    extension_bind.append("}\n");
+
+    vk_main.write(extension_definitions.str_view())!!;
+    vk_main.write("\n")!!;
+    vk_main.write(extension_pointers.str_view())!!;
+    vk_main.write("\n")!!;
+    vk_main.write(extension_bind.str_view())!!;
+    vk_main.write("\n")!!;
+    vk_main.write(extension_functions.str_view())!!;
+    vk_main.write("\n")!!;
+
+    extension_definitions.free();
+    extension_pointers.free();
+    extension_bind.free();
+    extension_functions.free();
 
     vk_main.write("\n")!!;
 
@@ -425,7 +464,12 @@ fn void! main(String[] args) {
 
         text_body.append(dstring::new_join({")", " {\n"}, ""));
 
-        text_body.append("  Result result = ");
+        if (entry.extension) {
+            text_body.append("  Result result = extensions.");
+        } else {
+            text_body.append("  Result result = ");
+        }
+
         text_body.append(dstring::new_join({entry.name, "("}, ""));
 
         foreach (i, value : entry.values) {
@@ -470,7 +514,7 @@ fn String String.to_lower_case(self) {
 }
 
 fn String String.remove_vk(self) {
-    if (self[0..1] == "Vk") {
+    if (self[0..1] == "Vk" || self[0..1] == "vk") {
          return self.copy()[2..];
     }
     return self;
