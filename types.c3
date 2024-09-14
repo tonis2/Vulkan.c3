@@ -53,8 +53,8 @@ fn void VkCommand.free(&self) {
 }
 
 fn VkEnum VkEnum.from_node(&self, xml::Node node) {
-    self.name = node.attributes.get("name") ?? "-";
-    self.comment = node.attributes.get("comment") ?? "-";
+    self.comment = node.attributes.get("comment") ?? "";
+    self.name = node.attributes.get("name")!!;
 
     foreach (entry : node.children) {
         String! name = entry.attributes.get("name");

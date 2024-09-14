@@ -67,6 +67,15 @@ fn void! main(String[] args) {
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
+    File main_file = io::file::open("build2/vk.c3", "wb")!!;
+    defer main_file.close()!!;
+
+    File command_file = io::file::open("build2/commands.c3", "wb")!!;
+    defer command_file.close()!!;
+
+    File creators_file = io::file::open("build2/creators.c3", "wb")!!;
+    defer creators_file.close()!!;
+
     // Find required nodes
     NodeList feature_nodes;
     defer feature_nodes.free();
@@ -158,7 +167,9 @@ fn void! main(String[] args) {
             case "handle": {
                 handles.push(VkValue{}.from_node(node));
             }
-            case "bitmask":
+            case "bitmask": {
+               if (try name) enums.push(VkEnum{}.from_node(node));
+            }
             case "basetype": {
                 basetypes.push(VkValue{}.from_node(node));
             }
@@ -177,8 +188,10 @@ fn void! main(String[] args) {
 
         if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
 
+        bool is_extension = feature.name == "extension";
+
         // Get only up-to required vulkan version
-        if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || feature.name == "extension")) {
+        if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || is_extension)) {
             foreach (require: feature.children) {
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
@@ -191,6 +204,8 @@ fn void! main(String[] args) {
 
                     if (catch err = name) continue;
 
+                    bool enabled = is_extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
+
                     switch (entry.name) {
                         case "type": {
                             if (try extends) {
@@ -198,7 +213,7 @@ fn void! main(String[] args) {
                             } else {
                                 foreach (&node : structs) {
                                     if (node.name == name) {
-                                        node.enabled = true;
+                                        node.enabled = enabled;
                                         break;
                                     }
                                 }  
@@ -209,8 +224,8 @@ fn void! main(String[] args) {
                             else {
                                 foreach (&node : commands) {
                                     if (node.name == name) {
-                                        node.extension = feature.name == "extension";
-                                        node.enabled = node.extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
+                                        node.extension = is_extension;
+                                        node.enabled = enabled;
                                         break;
                                     }
                                 }
@@ -250,20 +265,14 @@ fn void! main(String[] args) {
 
 
     // Build C3 files
-    File main_file = io::file::open("build2/vk.c3", "wb")!!;
-    defer main_file.close()!!;
-
-    File command_file = io::file::open("build2/commands.c3", "wb")!!;
-    defer command_file.close()!!;
-
     main_file.write("module vk;\n")!!;
     command_file.write("module vk;\n")!!;
+    creators_file.write("module vk;\n")!!;
 
     // Constants
     foreach (value : constants) {
         DString text_body = dstring::new_join({"const ", value.name[3..], " = ", value.value, ";\n"}, "");
         defer text_body.free();
-        
         main_file.write(text_body.str_view())!!;
     }
     
@@ -319,11 +328,17 @@ fn void! main(String[] args) {
     }
     main_file.write("\n")!!;
 
+    DString creator_functions;
+
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
-        DString text_body = dstring::new_join({"struct ", entry.name[2..], " { \n"}, "");
+        
+        bool has_stype = entry.values[0].type == "VkStructureType";
+        DString text_body = dstring::new_join({"struct ", entry.name[2..], " {\n"}, "");
         defer text_body.free();
+
+        // if (has_stype) io::printfn("%s", entry.name);
 
         // Add struct values
         foreach (value : entry.values) {
@@ -372,13 +387,22 @@ fn void! main(String[] args) {
 
     command_file.write("\n")!!;
 
-    // Extension commands
+    // Build commands
     DString extension_definitions;
     DString extension_pointers;
     DString extension_bind;
     DString extension_functions;
     DString base_commands;
     DString create_commands;
+
+    defer {
+        base_commands.free();
+        extension_definitions.free();
+        extension_pointers.free();
+        extension_bind.free();
+        extension_functions.free();
+        create_commands.free();
+    }
 
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
@@ -412,8 +436,6 @@ fn void! main(String[] args) {
             |};
             String result_type = entry.values[entry.values.len() - 1].type;
 
-            // io::printfn("%s %s", command_name, result_type);
-
             create_commands.append(dstring::new_join({"fn ", result_type.remove_vk(), "! ", command_name.remove_vk(), ".build(&self, "}, ""));
 
             foreach (i, value : entry.values) {
@@ -425,7 +447,6 @@ fn void! main(String[] args) {
             create_commands.append(dstring::new_join({"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
 
             foreach (i, value : entry.values) {
-                // if (value.type == command_name || value.type == result_type) continue;
                 String name = value.name;
                 if (value.type == command_name) name = "self";
                 if (value.type == result_type) name = "&response";
@@ -472,15 +493,6 @@ fn void! main(String[] args) {
     command_file.write("\n")!!;
     command_file.write(extension_functions.str_view())!!;
     command_file.write("\n")!!;
-
-    defer {
-        base_commands.free();
-        extension_definitions.free();
-        extension_pointers.free();
-        extension_bind.free();
-        extension_functions.free();
-        create_commands.free();
-    }
 
     main_file.write("\n")!!;
 

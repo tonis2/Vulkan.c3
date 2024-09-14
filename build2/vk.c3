@@ -85,197 +85,6 @@ def Flags = uint;
 def Flags64 = ulong;
 def DeviceSize = ulong;
 def DeviceAddress = ulong;
-def FramebufferCreateFlags = Flags;
-def QueryPoolCreateFlags = Flags;
-def RenderPassCreateFlags = Flags;
-def SamplerCreateFlags = Flags;
-def PipelineLayoutCreateFlags = Flags;
-def PipelineCacheCreateFlags = Flags;
-def PipelineDepthStencilStateCreateFlags = Flags;
-def PipelineDepthStencilStateCreateFlags = Flags;
-def PipelineDynamicStateCreateFlags = Flags;
-def PipelineColorBlendStateCreateFlags = Flags;
-def PipelineColorBlendStateCreateFlags = Flags;
-def PipelineMultisampleStateCreateFlags = Flags;
-def PipelineRasterizationStateCreateFlags = Flags;
-def PipelineViewportStateCreateFlags = Flags;
-def PipelineTessellationStateCreateFlags = Flags;
-def PipelineInputAssemblyStateCreateFlags = Flags;
-def PipelineVertexInputStateCreateFlags = Flags;
-def PipelineShaderStageCreateFlags = Flags;
-def DescriptorSetLayoutCreateFlags = Flags;
-def BufferViewCreateFlags = Flags;
-def InstanceCreateFlags = Flags;
-def DeviceCreateFlags = Flags;
-def DeviceQueueCreateFlags = Flags;
-def QueueFlags = Flags;
-def MemoryPropertyFlags = Flags;
-def MemoryHeapFlags = Flags;
-def AccessFlags = Flags;
-def BufferUsageFlags = Flags;
-def BufferCreateFlags = Flags;
-def ShaderStageFlags = Flags;
-def ImageUsageFlags = Flags;
-def ImageCreateFlags = Flags;
-def ImageViewCreateFlags = Flags;
-def PipelineCreateFlags = Flags;
-def ColorComponentFlags = Flags;
-def FenceCreateFlags = Flags;
-def SemaphoreCreateFlags = Flags;
-def FormatFeatureFlags = Flags;
-def QueryControlFlags = Flags;
-def QueryResultFlags = Flags;
-def ShaderModuleCreateFlags = Flags;
-def EventCreateFlags = Flags;
-def CommandPoolCreateFlags = Flags;
-def CommandPoolResetFlags = Flags;
-def CommandBufferResetFlags = Flags;
-def CommandBufferUsageFlags = Flags;
-def QueryPipelineStatisticFlags = Flags;
-def MemoryMapFlags = Flags;
-def MemoryUnmapFlagsKHR = Flags;
-def ImageAspectFlags = Flags;
-def SparseMemoryBindFlags = Flags;
-def SparseImageFormatFlags = Flags;
-def SubpassDescriptionFlags = Flags;
-def PipelineStageFlags = Flags;
-def SampleCountFlags = Flags;
-def AttachmentDescriptionFlags = Flags;
-def StencilFaceFlags = Flags;
-def CullModeFlags = Flags;
-def DescriptorPoolCreateFlags = Flags;
-def DescriptorPoolResetFlags = Flags;
-def DependencyFlags = Flags;
-def SubgroupFeatureFlags = Flags;
-def IndirectCommandsLayoutUsageFlagsNV = Flags;
-def IndirectStateFlagsNV = Flags;
-def GeometryFlagsKHR = Flags;
-def GeometryInstanceFlagsKHR = Flags;
-def BuildAccelerationStructureFlagsKHR = Flags;
-def PrivateDataSlotCreateFlags = Flags;
-def AccelerationStructureCreateFlagsKHR = Flags;
-def DescriptorUpdateTemplateCreateFlags = Flags;
-def PipelineCreationFeedbackFlags = Flags;
-def PerformanceCounterDescriptionFlagsKHR = Flags;
-def AcquireProfilingLockFlagsKHR = Flags;
-def SemaphoreWaitFlags = Flags;
-def PipelineCompilerControlFlagsAMD = Flags;
-def ShaderCorePropertiesFlagsAMD = Flags;
-def DeviceDiagnosticsConfigFlagsNV = Flags;
-def RefreshObjectFlagsKHR = Flags;
-def AccessFlags2 = Flags64;
-def PipelineStageFlags2 = Flags64;
-def AccelerationStructureMotionInfoFlagsNV = Flags;
-def AccelerationStructureMotionInstanceFlagsNV = Flags;
-def FormatFeatureFlags2 = Flags64;
-def RenderingFlags = Flags;
-def MemoryDecompressionMethodFlagsNV = Flags64;
-def BuildMicromapFlagsEXT = Flags;
-def MicromapCreateFlagsEXT = Flags;
-def DirectDriverLoadingFlagsLUNARG = Flags;
-def PipelineCreateFlags2KHR = Flags64;
-def BufferUsageFlags2KHR = Flags64;
-def CompositeAlphaFlagsKHR = Flags;
-def DisplayPlaneAlphaFlagsKHR = Flags;
-def SurfaceTransformFlagsKHR = Flags;
-def SwapchainCreateFlagsKHR = Flags;
-def DisplayModeCreateFlagsKHR = Flags;
-def DisplaySurfaceCreateFlagsKHR = Flags;
-def AndroidSurfaceCreateFlagsKHR = Flags;
-def ViSurfaceCreateFlagsNN = Flags;
-def WaylandSurfaceCreateFlagsKHR = Flags;
-def Win32SurfaceCreateFlagsKHR = Flags;
-def XlibSurfaceCreateFlagsKHR = Flags;
-def XcbSurfaceCreateFlagsKHR = Flags;
-def DirectFBSurfaceCreateFlagsEXT = Flags;
-def IOSSurfaceCreateFlagsMVK = Flags;
-def MacOSSurfaceCreateFlagsMVK = Flags;
-def MetalSurfaceCreateFlagsEXT = Flags;
-def ImagePipeSurfaceCreateFlagsFUCHSIA = Flags;
-def StreamDescriptorSurfaceCreateFlagsGGP = Flags;
-def HeadlessSurfaceCreateFlagsEXT = Flags;
-def ScreenSurfaceCreateFlagsQNX = Flags;
-def PeerMemoryFeatureFlags = Flags;
-def MemoryAllocateFlags = Flags;
-def DeviceGroupPresentModeFlagsKHR = Flags;
-def DebugReportFlagsEXT = Flags;
-def CommandPoolTrimFlags = Flags;
-def ExternalMemoryHandleTypeFlagsNV = Flags;
-def ExternalMemoryFeatureFlagsNV = Flags;
-def ExternalMemoryHandleTypeFlags = Flags;
-def ExternalMemoryFeatureFlags = Flags;
-def ExternalSemaphoreHandleTypeFlags = Flags;
-def ExternalSemaphoreFeatureFlags = Flags;
-def SemaphoreImportFlags = Flags;
-def ExternalFenceHandleTypeFlags = Flags;
-def ExternalFenceFeatureFlags = Flags;
-def FenceImportFlags = Flags;
-def SurfaceCounterFlagsEXT = Flags;
-def PipelineViewportSwizzleStateCreateFlagsNV = Flags;
-def PipelineDiscardRectangleStateCreateFlagsEXT = Flags;
-def PipelineCoverageToColorStateCreateFlagsNV = Flags;
-def PipelineCoverageModulationStateCreateFlagsNV = Flags;
-def PipelineCoverageReductionStateCreateFlagsNV = Flags;
-def ValidationCacheCreateFlagsEXT = Flags;
-def DebugUtilsMessageSeverityFlagsEXT = Flags;
-def DebugUtilsMessageTypeFlagsEXT = Flags;
-def DebugUtilsMessengerCreateFlagsEXT = Flags;
-def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
-def DeviceMemoryReportFlagsEXT = Flags;
-def PipelineRasterizationConservativeStateCreateFlagsEXT = Flags;
-def DescriptorBindingFlags = Flags;
-def ConditionalRenderingFlagsEXT = Flags;
-def ResolveModeFlags = Flags;
-def PipelineRasterizationStateStreamCreateFlagsEXT = Flags;
-def PipelineRasterizationDepthClipStateCreateFlagsEXT = Flags;
-def SwapchainImageUsageFlagsANDROID = Flags;
-def ToolPurposeFlags = Flags;
-def SubmitFlags = Flags;
-def ImageFormatConstraintsFlagsFUCHSIA = Flags;
-def HostImageCopyFlagsEXT = Flags;
-def ImageConstraintsInfoFlagsFUCHSIA = Flags;
-def GraphicsPipelineLibraryFlagsEXT = Flags;
-def ImageCompressionFlagsEXT = Flags;
-def ImageCompressionFixedRateFlagsEXT = Flags;
-def ExportMetalObjectTypeFlagsEXT = Flags;
-def DeviceAddressBindingFlagsEXT = Flags;
-def OpticalFlowGridSizeFlagsNV = Flags;
-def OpticalFlowUsageFlagsNV = Flags;
-def OpticalFlowSessionCreateFlagsNV = Flags;
-def OpticalFlowExecuteFlagsNV = Flags;
-def FrameBoundaryFlagsEXT = Flags;
-def PresentScalingFlagsEXT = Flags;
-def PresentGravityFlagsEXT = Flags;
-def ShaderCreateFlagsEXT = Flags;
-def PhysicalDeviceSchedulingControlsFlagsARM = Flags64;
-def VideoCodecOperationFlagsKHR = Flags;
-def VideoCapabilityFlagsKHR = Flags;
-def VideoSessionCreateFlagsKHR = Flags;
-def VideoSessionParametersCreateFlagsKHR = Flags;
-def VideoBeginCodingFlagsKHR = Flags;
-def VideoEndCodingFlagsKHR = Flags;
-def VideoCodingControlFlagsKHR = Flags;
-def VideoDecodeUsageFlagsKHR = Flags;
-def VideoDecodeCapabilityFlagsKHR = Flags;
-def VideoDecodeFlagsKHR = Flags;
-def VideoDecodeH264PictureLayoutFlagsKHR = Flags;
-def VideoEncodeFlagsKHR = Flags;
-def VideoEncodeUsageFlagsKHR = Flags;
-def VideoEncodeContentFlagsKHR = Flags;
-def VideoEncodeCapabilityFlagsKHR = Flags;
-def VideoEncodeFeedbackFlagsKHR = Flags;
-def VideoEncodeRateControlFlagsKHR = Flags;
-def VideoEncodeRateControlModeFlagsKHR = Flags;
-def VideoChromaSubsamplingFlagsKHR = Flags;
-def VideoComponentBitDepthFlagsKHR = Flags;
-def VideoEncodeH264CapabilityFlagsKHR = Flags;
-def VideoEncodeH264StdFlagsKHR = Flags;
-def VideoEncodeH264RateControlFlagsKHR = Flags;
-def VideoEncodeH265CapabilityFlagsKHR = Flags;
-def VideoEncodeH265StdFlagsKHR = Flags;
-def VideoEncodeH265RateControlFlagsKHR = Flags;
-def VideoEncodeH265CtbSizeFlagsKHR = Flags;
-def VideoEncodeH265TransformBlockSizeFlagsKHR = Flags;
 def RemoteAddressNV = void;
 
 distinct ImageLayout = inline uint;
@@ -2027,9 +1836,460 @@ distinct AntiLagStageAMD = inline uint;
 const AntiLagStageAMD ANTI_LAG_STAGE_INPUT_AMD = 0;
 const AntiLagStageAMD ANTI_LAG_STAGE_PRESENT_AMD = 1;
 
+distinct QueueFlagBits = inline uint;
+const QueueFlagBits QUEUE_GRAPHICS_BIT = 0x00000001;
+const QueueFlagBits QUEUE_COMPUTE_BIT = 0x00000002;
+const QueueFlagBits QUEUE_TRANSFER_BIT = 0x00000004;
+const QueueFlagBits QUEUE_SPARSE_BINDING_BIT = 0x00000008;
+const QueueFlagBits QUEUE_PROTECTED_BIT = 0x00000010;
+const QueueFlagBits QUEUE_VIDEO_DECODE_BIT_KHR = 0x00000020;
+const QueueFlagBits QUEUE_RESERVED_9_BIT_EXT = 0x00000200;
+const QueueFlagBits QUEUE_VIDEO_ENCODE_BIT_KHR = 0x00000040;
+const QueueFlagBits QUEUE_RESERVED_7_BIT_QCOM = 0x00000080;
+const QueueFlagBits QUEUE_RESERVED_11_BIT_ARM = 0x00000800;
+const QueueFlagBits QUEUE_OPTICAL_FLOW_BIT_NV = 0x00000100;
+const QueueFlagBits QUEUE_RESERVED_10_BIT_EXT = 0x00000400;
+
+distinct CullModeFlagBits = inline uint;
+const CullModeFlagBits CULL_MODE_NONE = 0;
+const CullModeFlagBits CULL_MODE_FRONT_BIT = 0x00000001;
+const CullModeFlagBits CULL_MODE_BACK_BIT = 0x00000002;
+const CullModeFlagBits CULL_MODE_FRONT_AND_BACK = 0x00000003;
+
+distinct MemoryPropertyFlagBits = inline uint;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = 0x00000040;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = 0x00000080;
+const MemoryPropertyFlagBits MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV = 0x00000100;
+
+distinct MemoryHeapFlagBits = inline uint;
+const MemoryHeapFlagBits MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
+const MemoryHeapFlagBits MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
+
+distinct AccessFlagBits = inline uint;
+const AccessFlagBits ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
+const AccessFlagBits ACCESS_INDEX_READ_BIT = 0x00000002;
+const AccessFlagBits ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
+const AccessFlagBits ACCESS_UNIFORM_READ_BIT = 0x00000008;
+const AccessFlagBits ACCESS_INPUT_ATTACHMENT_READ_BIT = 0x00000010;
+const AccessFlagBits ACCESS_SHADER_READ_BIT = 0x00000020;
+const AccessFlagBits ACCESS_SHADER_WRITE_BIT = 0x00000040;
+const AccessFlagBits ACCESS_COLOR_ATTACHMENT_READ_BIT = 0x00000080;
+const AccessFlagBits ACCESS_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100;
+const AccessFlagBits ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200;
+const AccessFlagBits ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400;
+const AccessFlagBits ACCESS_TRANSFER_READ_BIT = 0x00000800;
+const AccessFlagBits ACCESS_TRANSFER_WRITE_BIT = 0x00001000;
+const AccessFlagBits ACCESS_HOST_READ_BIT = 0x00002000;
+const AccessFlagBits ACCESS_HOST_WRITE_BIT = 0x00004000;
+const AccessFlagBits ACCESS_MEMORY_READ_BIT = 0x00008000;
+const AccessFlagBits ACCESS_MEMORY_WRITE_BIT = 0x00010000;
+const AccessFlagBits ACCESS_NONE = 0;
+const AccessFlagBits ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT = 0x02000000;
+const AccessFlagBits ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = 0x04000000;
+const AccessFlagBits ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = 0x08000000;
+const AccessFlagBits ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT = 0x00100000;
+const AccessFlagBits ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = 0x00080000;
+const AccessFlagBits ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR = 0x00200000;
+const AccessFlagBits ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR = 0x00400000;
+const AccessFlagBits ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = 0x01000000;
+const AccessFlagBits ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR = 0x00800000;
+const AccessFlagBits ACCESS_COMMAND_PREPROCESS_READ_BIT_NV = 0x00020000;
+const AccessFlagBits ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV = 0x00040000;
+
+distinct BufferUsageFlagBits = inline uint;
+const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
+const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002;
+const BufferUsageFlagBits BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004;
+const BufferUsageFlagBits BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = 0x00000008;
+const BufferUsageFlagBits BUFFER_USAGE_UNIFORM_BUFFER_BIT = 0x00000010;
+const BufferUsageFlagBits BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020;
+const BufferUsageFlagBits BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040;
+const BufferUsageFlagBits BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080;
+const BufferUsageFlagBits BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100;
+const BufferUsageFlagBits BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000;
+const BufferUsageFlagBits BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR = 0x00002000;
+const BufferUsageFlagBits BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR = 0x00004000;
+const BufferUsageFlagBits BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = 0x00000800;
+const BufferUsageFlagBits BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = 0x00001000;
+const BufferUsageFlagBits BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = 0x00000200;
+const BufferUsageFlagBits BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = 0x02000000;
+const BufferUsageFlagBits BUFFER_USAGE_RESERVED_28_BIT_KHR = 0x10000000;
+const BufferUsageFlagBits BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = 0x00080000;
+const BufferUsageFlagBits BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = 0x00100000;
+const BufferUsageFlagBits BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR = 0x00000400;
+const BufferUsageFlagBits BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR = 0x00008000;
+const BufferUsageFlagBits BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR = 0x00010000;
+const BufferUsageFlagBits BUFFER_USAGE_RESERVED_27_BIT_QCOM = 0x08000000;
+const BufferUsageFlagBits BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = 0x00200000;
+const BufferUsageFlagBits BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00400000;
+const BufferUsageFlagBits BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = 0x04000000;
+const BufferUsageFlagBits BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = 0x00800000;
+const BufferUsageFlagBits BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT = 0x01000000;
+
+distinct BufferUsageFlagBits2KHR = inline uint;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR = 0x00000001;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR = 0x00000002;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR = 0x00000004;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR = 0x00000008;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR = 0x00000010;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR = 0x00000020;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR = 0x00000040;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR = 0x00000080;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR = 0x00000100;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = 0x02000000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_RESERVED_28_BIT_KHR = 0x10000000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_RESERVED_27_BIT_QCOM = 0x08000000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT = 0x00000200;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR = 0x00000400;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = 0x00000800;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = 0x00001000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR = 0x00002000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR = 0x00004000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR = 0x00008000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR = 0x00010000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR = 0x00020000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = 0x00080000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = 0x00100000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = 0x00200000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = 0x00400000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = 0x04000000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = 0x00800000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = 0x01000000;
+const BufferUsageFlagBits2KHR BUFFER_USAGE_2_EXTENSION_573_BIT_EXT = 0x100000000;
+
+distinct BufferCreateFlagBits = inline uint;
+const BufferCreateFlagBits BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
+const BufferCreateFlagBits BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
+const BufferCreateFlagBits BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
+const BufferCreateFlagBits BUFFER_CREATE_PROTECTED_BIT = 0x00000008;
+const BufferCreateFlagBits BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000010;
+const BufferCreateFlagBits BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000020;
+const BufferCreateFlagBits BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = 0x00000040;
+
+distinct ShaderStageFlagBits = inline uint;
+const ShaderStageFlagBits SHADER_STAGE_VERTEX_BIT = 0x00000001;
+const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002;
+const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004;
+const ShaderStageFlagBits SHADER_STAGE_GEOMETRY_BIT = 0x00000008;
+const ShaderStageFlagBits SHADER_STAGE_FRAGMENT_BIT = 0x00000010;
+const ShaderStageFlagBits SHADER_STAGE_COMPUTE_BIT = 0x00000020;
+const ShaderStageFlagBits SHADER_STAGE_ALL_GRAPHICS = 0x0000001F;
+const ShaderStageFlagBits SHADER_STAGE_ALL = 0x7FFFFFFF;
+const ShaderStageFlagBits SHADER_STAGE_RAYGEN_BIT_KHR = 0x00000100;
+const ShaderStageFlagBits SHADER_STAGE_ANY_HIT_BIT_KHR = 0x00000200;
+const ShaderStageFlagBits SHADER_STAGE_CLOSEST_HIT_BIT_KHR = 0x00000400;
+const ShaderStageFlagBits SHADER_STAGE_MISS_BIT_KHR = 0x00000800;
+const ShaderStageFlagBits SHADER_STAGE_INTERSECTION_BIT_KHR = 0x00001000;
+const ShaderStageFlagBits SHADER_STAGE_CALLABLE_BIT_KHR = 0x00002000;
+const ShaderStageFlagBits SHADER_STAGE_TASK_BIT_EXT = 0x00000040;
+const ShaderStageFlagBits SHADER_STAGE_MESH_BIT_EXT = 0x00000080;
+const ShaderStageFlagBits SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI = 0x00004000;
+const ShaderStageFlagBits SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI = 0x00080000;
+const ShaderStageFlagBits SHADER_STAGE_RESERVED_15_BIT_NV = 0x00008000;
+
+distinct ImageUsageFlagBits = inline uint;
+const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001;
+const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002;
+const ImageUsageFlagBits IMAGE_USAGE_SAMPLED_BIT = 0x00000004;
+const ImageUsageFlagBits IMAGE_USAGE_STORAGE_BIT = 0x00000008;
+const ImageUsageFlagBits IMAGE_USAGE_COLOR_ATTACHMENT_BIT = 0x00000010;
+const ImageUsageFlagBits IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000020;
+const ImageUsageFlagBits IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040;
+const ImageUsageFlagBits IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR = 0x00000400;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR = 0x00000800;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR = 0x00001000;
+const ImageUsageFlagBits IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = 0x00000200;
+const ImageUsageFlagBits IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x00000100;
+const ImageUsageFlagBits IMAGE_USAGE_HOST_TRANSFER_BIT_EXT = 0x00400000;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR = 0x00002000;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR = 0x00004000;
+const ImageUsageFlagBits IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR = 0x00008000;
+const ImageUsageFlagBits IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = 0x00080000;
+const ImageUsageFlagBits IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI = 0x00040000;
+const ImageUsageFlagBits IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM = 0x00100000;
+const ImageUsageFlagBits IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM = 0x00200000;
+const ImageUsageFlagBits IMAGE_USAGE_RESERVED_24_BIT_COREAVI = 0x01000000;
+const ImageUsageFlagBits IMAGE_USAGE_RESERVED_23_BIT_EXT = 0x00800000;
+const ImageUsageFlagBits IMAGE_USAGE_RESERVED_25_BIT_KHR = 0x02000000;
+const ImageUsageFlagBits IMAGE_USAGE_RESERVED_26_BIT_KHR = 0x04000000;
+
+distinct ImageCreateFlagBits = inline uint;
+const ImageCreateFlagBits IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001;
+const ImageCreateFlagBits IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
+const ImageCreateFlagBits IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
+const ImageCreateFlagBits IMAGE_CREATE_MUTABLE_FORMAT_BIT = 0x00000008;
+const ImageCreateFlagBits IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 0x00000010;
+const ImageCreateFlagBits IMAGE_CREATE_ALIAS_BIT = 0x00000400;
+const ImageCreateFlagBits IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = 0x00000040;
+const ImageCreateFlagBits IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = 0x00000020;
+const ImageCreateFlagBits IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = 0x00000080;
+const ImageCreateFlagBits IMAGE_CREATE_EXTENDED_USAGE_BIT = 0x00000100;
+const ImageCreateFlagBits IMAGE_CREATE_PROTECTED_BIT = 0x00000800;
+const ImageCreateFlagBits IMAGE_CREATE_DISJOINT_BIT = 0x00000200;
+const ImageCreateFlagBits IMAGE_CREATE_CORNER_SAMPLED_BIT_NV = 0x00002000;
+const ImageCreateFlagBits IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = 0x00001000;
+const ImageCreateFlagBits IMAGE_CREATE_SUBSAMPLED_BIT_EXT = 0x00004000;
+const ImageCreateFlagBits IMAGE_CREATE_RESERVED_19_BIT_EXT = 0x00080000;
+const ImageCreateFlagBits IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00010000;
+const ImageCreateFlagBits IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = 0x00040000;
+const ImageCreateFlagBits IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT = 0x00020000;
+const ImageCreateFlagBits IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = 0x00008000;
+const ImageCreateFlagBits IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = 0x00100000;
+
+distinct PipelineCreateFlagBits = inline uint;
+const PipelineCreateFlagBits PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
+const PipelineCreateFlagBits PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
+const PipelineCreateFlagBits PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
+const PipelineCreateFlagBits PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008;
+const PipelineCreateFlagBits PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010;
+const PipelineCreateFlagBits PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = 0x00000100;
+const PipelineCreateFlagBits PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = 0x00000200;
+const PipelineCreateFlagBits PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x00200000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = 0x00400000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = 0x00004000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = 0x00008000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = 0x00010000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = 0x00020000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = 0x00001000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR = 0x00002000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = 0x00080000;
+const PipelineCreateFlagBits PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = 0x00000020;
+const PipelineCreateFlagBits PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR = 0x00000040;
+const PipelineCreateFlagBits PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = 0x00000080;
+const PipelineCreateFlagBits PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV = 0x00040000;
+const PipelineCreateFlagBits PIPELINE_CREATE_LIBRARY_BIT_KHR = 0x00000800;
+const PipelineCreateFlagBits PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = 0x20000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = 0x00800000;
+const PipelineCreateFlagBits PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT = 0x00000400;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV = 0x00100000;
+const PipelineCreateFlagBits PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = 0x02000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = 0x04000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = 0x01000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = 0x10000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = 0x08000000;
+const PipelineCreateFlagBits PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = 0x40000000;
+
+distinct PipelineCreateFlagBits2KHR = inline uint;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT_KHR = 0x00000001;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT_KHR = 0x00000002;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DERIVATIVE_BIT_KHR = 0x00000004;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_RESERVED_36_BIT_KHR = 0x1000000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_33_BIT_KHR = 0x200000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT = 0x400000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR = 0x00000008;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DISPATCH_BASE_BIT_KHR = 0x00000010;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV = 0x00000020;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR = 0x00000040;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = 0x00000080;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_KHR = 0x00000100;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT_KHR = 0x00000200;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT = 0x00000400;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = 0x00800000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_LIBRARY_BIT_KHR = 0x00000800;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = 0x00001000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR = 0x00002000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = 0x00004000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = 0x00008000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = 0x00010000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = 0x00020000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = 0x00080000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV = 0x00040000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV = 0x00100000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x00200000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = 0x00400000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = 0x01000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = 0x02000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = 0x04000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT_EXT = 0x08000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT_EXT = 0x40000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = 0x10000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT = 0x20000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_32_BIT_KHR = 0x100000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_31_BIT_KHR = 0x80000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_EXTENSION_573_BIT_EXT = 0x4000000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_35_BIT_KHR = 0x800000000;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_37_BIT_ARM = 0x2000000000;
+
+distinct ColorComponentFlagBits = inline uint;
+const ColorComponentFlagBits COLOR_COMPONENT_R_BIT = 0x00000001;
+const ColorComponentFlagBits COLOR_COMPONENT_G_BIT = 0x00000002;
+const ColorComponentFlagBits COLOR_COMPONENT_B_BIT = 0x00000004;
+const ColorComponentFlagBits COLOR_COMPONENT_A_BIT = 0x00000008;
+
+distinct FenceCreateFlagBits = inline uint;
+const FenceCreateFlagBits FENCE_CREATE_SIGNALED_BIT = 0x00000001;
+
+distinct FormatFeatureFlagBits = inline uint;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
+const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_BIT = 0x00000002;
+const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
+const FormatFeatureFlagBits FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000008;
+const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = 0x00000010;
+const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = 0x00000020;
+const FormatFeatureFlagBits FORMAT_FEATURE_VERTEX_BUFFER_BIT = 0x00000040;
+const FormatFeatureFlagBits FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = 0x00000080;
+const FormatFeatureFlagBits FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = 0x00000100;
+const FormatFeatureFlagBits FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000200;
+const FormatFeatureFlagBits FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400;
+const FormatFeatureFlagBits FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const FormatFeatureFlagBits FORMAT_FEATURE_TRANSFER_SRC_BIT = 0x00004000;
+const FormatFeatureFlagBits FORMAT_FEATURE_TRANSFER_DST_BIT = 0x00008000;
+const FormatFeatureFlagBits FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const FormatFeatureFlagBits FORMAT_FEATURE_DISJOINT_BIT = 0x00400000;
+const FormatFeatureFlagBits FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
+const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_DECODE_OUTPUT_BIT_KHR = 0x02000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_DECODE_DPB_BIT_KHR = 0x04000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = 0x20000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = 0x00002000;
+const FormatFeatureFlagBits FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = 0x01000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x40000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_ENCODE_INPUT_BIT_KHR = 0x08000000;
+const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_ENCODE_DPB_BIT_KHR = 0x10000000;
+
+distinct QueryControlFlagBits = inline uint;
+const QueryControlFlagBits QUERY_CONTROL_PRECISE_BIT = 0x00000001;
+
+distinct QueryResultFlagBits = inline uint;
+const QueryResultFlagBits QUERY_RESULT_64_BIT = 0x00000001;
+const QueryResultFlagBits QUERY_RESULT_WAIT_BIT = 0x00000002;
+const QueryResultFlagBits QUERY_RESULT_WITH_AVAILABILITY_BIT = 0x00000004;
+const QueryResultFlagBits QUERY_RESULT_PARTIAL_BIT = 0x00000008;
+const QueryResultFlagBits QUERY_RESULT_WITH_STATUS_BIT_KHR = 0x00000010;
+
+distinct CommandBufferUsageFlagBits = inline uint;
+const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001;
+const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002;
+const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004;
+
+distinct QueryPipelineStatisticFlagBits = inline uint;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = 0x00000002;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = 0x00000004;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = 0x00000008;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = 0x00000010;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = 0x00000020;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = 0x00000040;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = 0x00000080;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = 0x00000100;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = 0x00000200;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = 0x00000400;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT = 0x00000800;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT = 0x00001000;
+const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI = 0x00002000;
+
+distinct ImageAspectFlagBits = inline uint;
+const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
+const ImageAspectFlagBits IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
+const ImageAspectFlagBits IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
+const ImageAspectFlagBits IMAGE_ASPECT_METADATA_BIT = 0x00000008;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_0_BIT = 0x00000010;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_1_BIT = 0x00000020;
+const ImageAspectFlagBits IMAGE_ASPECT_PLANE_2_BIT = 0x00000040;
+const ImageAspectFlagBits IMAGE_ASPECT_NONE = 0;
+const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT = 0x00000080;
+const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT = 0x00000100;
+const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = 0x00000200;
+const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = 0x00000400;
+
+distinct SparseImageFormatFlagBits = inline uint;
+const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
+const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = 0x00000002;
+const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = 0x00000004;
+
+distinct SparseMemoryBindFlagBits = inline uint;
+const SparseMemoryBindFlagBits SPARSE_MEMORY_BIND_METADATA_BIT = 0x00000001;
+
+distinct PipelineStageFlagBits = inline uint;
+const PipelineStageFlagBits PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001;
+const PipelineStageFlagBits PIPELINE_STAGE_DRAW_INDIRECT_BIT = 0x00000002;
+const PipelineStageFlagBits PIPELINE_STAGE_VERTEX_INPUT_BIT = 0x00000004;
+const PipelineStageFlagBits PIPELINE_STAGE_VERTEX_SHADER_BIT = 0x00000008;
+const PipelineStageFlagBits PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = 0x00000010;
+const PipelineStageFlagBits PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = 0x00000020;
+const PipelineStageFlagBits PIPELINE_STAGE_GEOMETRY_SHADER_BIT = 0x00000040;
+const PipelineStageFlagBits PIPELINE_STAGE_FRAGMENT_SHADER_BIT = 0x00000080;
+const PipelineStageFlagBits PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = 0x00000100;
+const PipelineStageFlagBits PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = 0x00000200;
+const PipelineStageFlagBits PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = 0x00000400;
+const PipelineStageFlagBits PIPELINE_STAGE_COMPUTE_SHADER_BIT = 0x00000800;
+const PipelineStageFlagBits PIPELINE_STAGE_TRANSFER_BIT = 0x00001000;
+const PipelineStageFlagBits PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = 0x00002000;
+const PipelineStageFlagBits PIPELINE_STAGE_HOST_BIT = 0x00004000;
+const PipelineStageFlagBits PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000;
+const PipelineStageFlagBits PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000;
+const PipelineStageFlagBits PIPELINE_STAGE_NONE = 0;
+const PipelineStageFlagBits PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT = 0x01000000;
+const PipelineStageFlagBits PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT = 0x00040000;
+const PipelineStageFlagBits PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR = 0x02000000;
+const PipelineStageFlagBits PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR = 0x00200000;
+const PipelineStageFlagBits PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT = 0x00800000;
+const PipelineStageFlagBits PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x00400000;
+const PipelineStageFlagBits PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV = 0x00020000;
+const PipelineStageFlagBits PIPELINE_STAGE_TASK_SHADER_BIT_EXT = 0x00080000;
+const PipelineStageFlagBits PIPELINE_STAGE_MESH_SHADER_BIT_EXT = 0x00100000;
+
+distinct CommandPoolCreateFlagBits = inline uint;
+const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
+const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
+const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004;
+
+distinct CommandPoolResetFlagBits = inline uint;
+const CommandPoolResetFlagBits COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
+const CommandPoolResetFlagBits COMMAND_POOL_RESET_RESERVED_1_BIT_COREAVI = 0x00000002;
+
+distinct CommandBufferResetFlagBits = inline uint;
+const CommandBufferResetFlagBits COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
+
+distinct SampleCountFlagBits = inline uint;
+const SampleCountFlagBits SAMPLE_COUNT_1_BIT = 0x00000001;
+const SampleCountFlagBits SAMPLE_COUNT_2_BIT = 0x00000002;
+const SampleCountFlagBits SAMPLE_COUNT_4_BIT = 0x00000004;
+const SampleCountFlagBits SAMPLE_COUNT_8_BIT = 0x00000008;
+const SampleCountFlagBits SAMPLE_COUNT_16_BIT = 0x00000010;
+const SampleCountFlagBits SAMPLE_COUNT_32_BIT = 0x00000020;
+const SampleCountFlagBits SAMPLE_COUNT_64_BIT = 0x00000040;
+
+distinct AttachmentDescriptionFlagBits = inline uint;
+const AttachmentDescriptionFlagBits ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001;
+
+distinct StencilFaceFlagBits = inline uint;
+const StencilFaceFlagBits STENCIL_FACE_FRONT_BIT = 0x00000001;
+const StencilFaceFlagBits STENCIL_FACE_BACK_BIT = 0x00000002;
+const StencilFaceFlagBits STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
+
+distinct DescriptorPoolCreateFlagBits = inline uint;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = 0x00000002;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT = 0x00000004;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV = 0x00000008;
+const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV = 0x00000010;
+
+distinct DependencyFlagBits = inline uint;
+const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
+const DependencyFlagBits DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
+const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
+const DependencyFlagBits DEPENDENCY_FEEDBACK_LOOP_BIT_EXT = 0x00000008;
+const DependencyFlagBits DEPENDENCY_EXTENSION_586_BIT_IMG = 0x00000010;
+
 distinct SemaphoreType = inline uint;
 const SemaphoreType SEMAPHORE_TYPE_BINARY = 0;
 const SemaphoreType SEMAPHORE_TYPE_TIMELINE = 1;
+
+distinct SemaphoreWaitFlagBits = inline uint;
+const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
 
 distinct PresentModeKHR = inline uint;
 const PresentModeKHR PRESENT_MODE_IMMEDIATE_KHR = 0;
@@ -2057,11 +2317,44 @@ const ColorSpaceKHR COLOR_SPACE_PASS_THROUGH_EXT = 1000104013;
 const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = 1000104014;
 const ColorSpaceKHR COLOR_SPACE_DISPLAY_NATIVE_AMD = 1000213000;
 
+distinct DisplayPlaneAlphaFlagBitsKHR = inline uint;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
+const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
+
+distinct CompositeAlphaFlagBitsKHR = inline uint;
+const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
+const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002;
+const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004;
+const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008;
+
+distinct SurfaceTransformFlagBitsKHR = inline uint;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = 0x00000002;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = 0x00000004;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = 0x00000008;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = 0x00000010;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = 0x00000020;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = 0x00000040;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080;
+const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100;
+
+distinct SwapchainImageUsageFlagBitsANDROID = inline uint;
+const SwapchainImageUsageFlagBitsANDROID SWAPCHAIN_IMAGE_USAGE_SHARED_BIT_ANDROID = 0x00000001;
+
 distinct TimeDomainKHR = inline uint;
 const TimeDomainKHR TIME_DOMAIN_DEVICE_KHR = 0;
 const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_KHR = 1;
 const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR = 2;
 const TimeDomainKHR TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR = 3;
+
+distinct DebugReportFlagBitsEXT = inline uint;
+const DebugReportFlagBitsEXT DEBUG_REPORT_INFORMATION_BIT_EXT = 0x00000001;
+const DebugReportFlagBitsEXT DEBUG_REPORT_WARNING_BIT_EXT = 0x00000002;
+const DebugReportFlagBitsEXT DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = 0x00000004;
+const DebugReportFlagBitsEXT DEBUG_REPORT_ERROR_BIT_EXT = 0x00000008;
+const DebugReportFlagBitsEXT DEBUG_REPORT_DEBUG_BIT_EXT = 0x00000010;
 
 distinct DebugReportObjectTypeEXT = inline uint;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
@@ -2118,6 +2411,17 @@ distinct RasterizationOrderAMD = inline uint;
 const RasterizationOrderAMD RASTERIZATION_ORDER_STRICT_AMD = 0;
 const RasterizationOrderAMD RASTERIZATION_ORDER_RELAXED_AMD = 1;
 
+distinct ExternalMemoryHandleTypeFlagBitsNV = inline uint;
+const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = 0x00000001;
+const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = 0x00000002;
+const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = 0x00000004;
+const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = 0x00000008;
+
+distinct ExternalMemoryFeatureFlagBitsNV = inline uint;
+const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = 0x00000001;
+const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = 0x00000002;
+const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = 0x00000004;
+
 distinct ValidationCheckEXT = inline uint;
 const ValidationCheckEXT VALIDATION_CHECK_ALL_EXT = 0;
 const ValidationCheckEXT VALIDATION_CHECK_SHADERS_EXT = 1;
@@ -2149,6 +2453,27 @@ const LayerSettingTypeEXT LAYER_SETTING_TYPE_FLOAT32_EXT = 5;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_FLOAT64_EXT = 6;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_STRING_EXT = 7;
 
+distinct SubgroupFeatureFlagBits = inline uint;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BASIC_BIT = 0x00000001;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_VOTE_BIT = 0x00000002;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ARITHMETIC_BIT = 0x00000004;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BALLOT_BIT = 0x00000008;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_SHUFFLE_BIT = 0x00000010;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = 0x00000020;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_CLUSTERED_BIT = 0x00000040;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_QUAD_BIT = 0x00000080;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_PARTITIONED_BIT_NV = 0x00000100;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ROTATE_BIT_KHR = 0x00000200;
+const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR = 0x00000400;
+
+distinct IndirectCommandsLayoutUsageFlagBitsNV = inline uint;
+const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = 0x00000001;
+const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = 0x00000002;
+const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV = 0x00000004;
+
+distinct IndirectStateFlagBitsNV = inline uint;
+const IndirectStateFlagBitsNV INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV = 0x00000001;
+
 distinct IndirectCommandsTokenTypeNV = inline uint;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV = 0;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV = 1;
@@ -2162,6 +2487,65 @@ const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_N
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NV = 1000428003;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NV = 1000428004;
 
+distinct ExternalMemoryHandleTypeFlagBits = inline uint;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = 0x00000008;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = 0x00000010;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = 0x00000020;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = 0x00000040;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = 0x00000200;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = 0x00000400;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = 0x00000080;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = 0x00000100;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA = 0x00000800;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV = 0x00001000;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_SCI_BUF_BIT_NV = 0x00002000;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX = 0x00004000;
+const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_590_BIT_HUAWEI = 0x00008000;
+
+distinct ExternalMemoryFeatureFlagBits = inline uint;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = 0x00000001;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = 0x00000002;
+const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = 0x00000004;
+
+distinct ExternalSemaphoreHandleTypeFlagBits = inline uint;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = 0x00000008;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000010;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA = 0x00000080;
+const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = 0x00000020;
+
+distinct ExternalSemaphoreFeatureFlagBits = inline uint;
+const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001;
+const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002;
+
+distinct SemaphoreImportFlagBits = inline uint;
+const SemaphoreImportFlagBits SEMAPHORE_IMPORT_TEMPORARY_BIT = 0x00000001;
+
+distinct ExternalFenceHandleTypeFlagBits = inline uint;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = 0x00000008;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = 0x00000010;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV = 0x00000020;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = 0x00000010;
+const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV = 0x00000020;
+
+distinct ExternalFenceFeatureFlagBits = inline uint;
+const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = 0x00000001;
+const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = 0x00000002;
+
+distinct FenceImportFlagBits = inline uint;
+const FenceImportFlagBits FENCE_IMPORT_TEMPORARY_BIT = 0x00000001;
+
+distinct SurfaceCounterFlagBitsEXT = inline uint;
+const SurfaceCounterFlagBitsEXT SURFACE_COUNTER_VBLANK_BIT_EXT = 0x00000001;
+
 distinct DisplayPowerStateEXT = inline uint;
 const DisplayPowerStateEXT DISPLAY_POWER_STATE_OFF_EXT = 0;
 const DisplayPowerStateEXT DISPLAY_POWER_STATE_SUSPEND_EXT = 1;
@@ -2172,6 +2556,23 @@ const DeviceEventTypeEXT DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = 0;
 
 distinct DisplayEventTypeEXT = inline uint;
 const DisplayEventTypeEXT DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = 0;
+
+distinct PeerMemoryFeatureFlagBits = inline uint;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_SRC_BIT = 0x00000001;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_DST_BIT = 0x00000002;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = 0x00000004;
+const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_DST_BIT = 0x00000008;
+
+distinct MemoryAllocateFlagBits = inline uint;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = 0x00000002;
+const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000004;
+
+distinct DeviceGroupPresentModeFlagBitsKHR = inline uint;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004;
+const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008;
 
 distinct ViewportCoordinateSwizzleNV = inline uint;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = 0;
@@ -2245,10 +2646,29 @@ const QueueGlobalPriorityKHR QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR = 256;
 const QueueGlobalPriorityKHR QUEUE_GLOBAL_PRIORITY_HIGH_KHR = 512;
 const QueueGlobalPriorityKHR QUEUE_GLOBAL_PRIORITY_REALTIME_KHR = 1024;
 
+distinct DebugUtilsMessageSeverityFlagBitsEXT = inline uint;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = 0x00000010;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = 0x00000100;
+const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = 0x00001000;
+
+distinct DebugUtilsMessageTypeFlagBitsEXT = inline uint;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = 0x00000001;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = 0x00000002;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
+const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT = 0x00000008;
+
 distinct ConservativeRasterizationModeEXT = inline uint;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = 0;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = 1;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = 2;
+
+distinct DescriptorBindingFlagBits = inline uint;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = 0x00000001;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = 0x00000002;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = 0x00000004;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = 0x00000008;
+const DescriptorBindingFlagBits DESCRIPTOR_BINDING_RESERVED_4_BIT_QCOM = 0x00000010;
 
 distinct VendorId = inline uint;
 const VendorId VENDOR_ID_KHRONOS = 0x10000;
@@ -2289,6 +2709,17 @@ const DriverId DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = 25;
 const DriverId DRIVER_ID_MESA_HONEYKRISP = 26;
 const DriverId DRIVER_ID_RESERVED_27 = 27;
 
+distinct ConditionalRenderingFlagBitsEXT = inline uint;
+const ConditionalRenderingFlagBitsEXT CONDITIONAL_RENDERING_INVERTED_BIT_EXT = 0x00000001;
+
+distinct ResolveModeFlagBits = inline uint;
+const ResolveModeFlagBits RESOLVE_MODE_NONE = 0;
+const ResolveModeFlagBits RESOLVE_MODE_SAMPLE_ZERO_BIT = 0x00000001;
+const ResolveModeFlagBits RESOLVE_MODE_AVERAGE_BIT = 0x00000002;
+const ResolveModeFlagBits RESOLVE_MODE_MIN_BIT = 0x00000004;
+const ResolveModeFlagBits RESOLVE_MODE_MAX_BIT = 0x00000008;
+const ResolveModeFlagBits RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID = 0x00000010;
+
 distinct ShadingRatePaletteEntryNV = inline uint;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = 0;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV = 1;
@@ -2308,6 +2739,36 @@ const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = 0;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = 1;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = 2;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = 3;
+
+distinct GeometryInstanceFlagBitsKHR = inline uint;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = 0x00000001;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR = 0x00000002;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = 0x00000004;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = 0x00000008;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT = 0x00000010;
+const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT = 0x00000020;
+
+distinct GeometryFlagBitsKHR = inline uint;
+const GeometryFlagBitsKHR GEOMETRY_OPAQUE_BIT_KHR = 0x00000001;
+const GeometryFlagBitsKHR GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR = 0x00000002;
+
+distinct BuildAccelerationStructureFlagBitsKHR = inline uint;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = 0x00000001;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR = 0x00000002;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = 0x00000004;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = 0x00000008;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = 0x00000010;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV = 0x00000020;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT = 0x00000040;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT = 0x00000080;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT = 0x00000100;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV = 0x00000200;
+const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR = 0x00000800;
+
+distinct AccelerationStructureCreateFlagBitsKHR = inline uint;
+const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = 0x00000001;
+const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000008;
+const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV = 0x00000004;
 
 distinct CopyAccelerationStructureModeKHR = inline uint;
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR = 0;
@@ -2359,6 +2820,17 @@ const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD
 const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = 1;
 const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = 2;
 
+distinct DeviceDiagnosticsConfigFlagBitsNV = inline uint;
+const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = 0x00000001;
+const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = 0x00000002;
+const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = 0x00000004;
+const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = 0x00000008;
+
+distinct PipelineCreationFeedbackFlagBits = inline uint;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_VALID_BIT = 0x00000001;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = 0x00000002;
+const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = 0x00000004;
+
 distinct FullScreenExclusiveEXT = inline uint;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = 0;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = 1;
@@ -2369,6 +2841,9 @@ distinct PerformanceCounterScopeKHR = inline uint;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = 0;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = 1;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = 2;
+
+distinct MemoryDecompressionMethodFlagBitsNV = inline uint;
+const MemoryDecompressionMethodFlagBitsNV MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV = 0x00000001;
 
 distinct PerformanceCounterUnitKHR = inline uint;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = 0;
@@ -2390,6 +2865,10 @@ const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = 2;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = 3;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = 4;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = 5;
+
+distinct PerformanceCounterDescriptionFlagBitsKHR = inline uint;
+const PerformanceCounterDescriptionFlagBitsKHR PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = 0x00000001;
+const PerformanceCounterDescriptionFlagBitsKHR PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = 0x00000002;
 
 distinct PerformanceConfigurationTypeINTEL = inline uint;
 const PerformanceConfigurationTypeINTEL PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL = 0;
@@ -2447,6 +2926,17 @@ const FaultType FAULT_TYPE_INVALID_API_USAGE = 6;
 distinct FaultQueryBehavior = inline uint;
 const FaultQueryBehavior FAULT_QUERY_BEHAVIOR_GET_AND_CLEAR_ALL_FAULTS = 0;
 
+distinct ToolPurposeFlagBits = inline uint;
+const ToolPurposeFlagBits TOOL_PURPOSE_VALIDATION_BIT = 0x00000001;
+const ToolPurposeFlagBits TOOL_PURPOSE_PROFILING_BIT = 0x00000002;
+const ToolPurposeFlagBits TOOL_PURPOSE_TRACING_BIT = 0x00000004;
+const ToolPurposeFlagBits TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = 0x00000008;
+const ToolPurposeFlagBits TOOL_PURPOSE_MODIFYING_FEATURES_BIT = 0x00000010;
+const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT = 0x00000020;
+const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = 0x00000040;
+const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT = 0x00000020;
+const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = 0x00000040;
+
 distinct PipelineMatchControl = inline uint;
 const PipelineMatchControl PIPELINE_MATCH_CONTROL_APPLICATION_UUID_EXACT_MATCH = 0;
 
@@ -2491,6 +2981,116 @@ const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_R
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT = 12;
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT = 13;
 
+distinct AccessFlagBits2 = inline uint;
+const AccessFlagBits2 ACCESS_2_NONE = 0;
+const AccessFlagBits2 ACCESS_2_INDIRECT_COMMAND_READ_BIT = 0x00000001;
+const AccessFlagBits2 ACCESS_2_INDEX_READ_BIT = 0x00000002;
+const AccessFlagBits2 ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
+const AccessFlagBits2 ACCESS_2_UNIFORM_READ_BIT = 0x00000008;
+const AccessFlagBits2 ACCESS_2_INPUT_ATTACHMENT_READ_BIT = 0x00000010;
+const AccessFlagBits2 ACCESS_2_SHADER_READ_BIT = 0x00000020;
+const AccessFlagBits2 ACCESS_2_SHADER_WRITE_BIT = 0x00000040;
+const AccessFlagBits2 ACCESS_2_COLOR_ATTACHMENT_READ_BIT = 0x00000080;
+const AccessFlagBits2 ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100;
+const AccessFlagBits2 ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200;
+const AccessFlagBits2 ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400;
+const AccessFlagBits2 ACCESS_2_TRANSFER_READ_BIT = 0x00000800;
+const AccessFlagBits2 ACCESS_2_TRANSFER_WRITE_BIT = 0x00001000;
+const AccessFlagBits2 ACCESS_2_HOST_READ_BIT = 0x00002000;
+const AccessFlagBits2 ACCESS_2_HOST_WRITE_BIT = 0x00004000;
+const AccessFlagBits2 ACCESS_2_MEMORY_READ_BIT = 0x00008000;
+const AccessFlagBits2 ACCESS_2_MEMORY_WRITE_BIT = 0x00010000;
+const AccessFlagBits2 ACCESS_2_SHADER_SAMPLED_READ_BIT = 0x100000000;
+const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_READ_BIT = 0x200000000;
+const AccessFlagBits2 ACCESS_2_SHADER_STORAGE_WRITE_BIT = 0x400000000;
+const AccessFlagBits2 ACCESS_2_VIDEO_DECODE_READ_BIT_KHR = 0x800000000;
+const AccessFlagBits2 ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR = 0x1000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_57_BIT_KHR = 0x200000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_58_BIT_KHR = 0x400000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_59_BIT_KHR = 0x800000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_46_BIT_INTEL = 0x400000000000;
+const AccessFlagBits2 ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR = 0x2000000000;
+const AccessFlagBits2 ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR = 0x4000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_51_BIT_QCOM = 0x8000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_52_BIT_QCOM = 0x10000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_53_BIT_QCOM = 0x20000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_54_BIT_QCOM = 0x40000000000000;
+const AccessFlagBits2 ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT = 0x02000000;
+const AccessFlagBits2 ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = 0x04000000;
+const AccessFlagBits2 ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = 0x08000000;
+const AccessFlagBits2 ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT = 0x00100000;
+const AccessFlagBits2 ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV = 0x00020000;
+const AccessFlagBits2 ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV = 0x00040000;
+const AccessFlagBits2 ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR = 0x00800000;
+const AccessFlagBits2 ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR = 0x00200000;
+const AccessFlagBits2 ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR = 0x00400000;
+const AccessFlagBits2 ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = 0x01000000;
+const AccessFlagBits2 ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = 0x00080000;
+const AccessFlagBits2 ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT = 0x20000000000;
+const AccessFlagBits2 ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI = 0x8000000000;
+const AccessFlagBits2 ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR = 0x10000000000;
+const AccessFlagBits2 ACCESS_2_MICROMAP_READ_BIT_EXT = 0x100000000000;
+const AccessFlagBits2 ACCESS_2_MICROMAP_WRITE_BIT_EXT = 0x200000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_49_BIT_ARM = 0x2000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_50_BIT_ARM = 0x4000000000000;
+const AccessFlagBits2 ACCESS_2_OPTICAL_FLOW_READ_BIT_NV = 0x40000000000;
+const AccessFlagBits2 ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV = 0x80000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_47_BIT_EXT = 0x800000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_48_BIT_EXT = 0x1000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_55_BIT_NV = 0x80000000000000;
+const AccessFlagBits2 ACCESS_2_RESERVED_56_BIT_NV = 0x100000000000000;
+
+distinct PipelineStageFlagBits2 = inline uint;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_NONE = 0;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = 0x00000001;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = 0x00000002;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_INPUT_BIT = 0x00000004;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_SHADER_BIT = 0x00000008;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT = 0x00000010;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT = 0x00000020;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT = 0x00000040;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT = 0x00000080;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = 0x00000100;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = 0x00000200;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT = 0x00000400;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COMPUTE_SHADER_BIT = 0x00000800;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_TRANSFER_BIT = 0x00001000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT = 0x00002000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_HOST_BIT = 0x00004000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_GRAPHICS_BIT = 0x00008000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ALL_COMMANDS_BIT = 0x00010000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COPY_BIT = 0x100000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESOLVE_BIT = 0x200000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_BLIT_BIT = 0x400000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_CLEAR_BIT = 0x800000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_INDEX_INPUT_BIT = 0x1000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = 0x2000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = 0x4000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR = 0x04000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR = 0x08000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT = 0x01000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT = 0x00040000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV = 0x00020000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x00400000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR = 0x02000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR = 0x00200000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT = 0x00800000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT = 0x00080000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT = 0x00100000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI = 0x8000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI = 0x10000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR = 0x10000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT = 0x40000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI = 0x20000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_43_BIT_ARM = 0x80000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV = 0x20000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_44_BIT_NV = 0x100000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_42_BIT_EXT = 0x40000000000;
+const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_45_BIT_NV = 0x200000000000;
+
+distinct SubmitFlagBits = inline uint;
+const SubmitFlagBits SUBMIT_PROTECTED_BIT = 0x00000001;
+
 distinct SciSyncClientTypeNV = inline uint;
 const SciSyncClientTypeNV SCI_SYNC_CLIENT_TYPE_SIGNALER_NV = 0;
 const SciSyncClientTypeNV SCI_SYNC_CLIENT_TYPE_WAITER_NV = 1;
@@ -2512,9 +3112,78 @@ const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_IN
 const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV = 1;
 const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV = 2;
 
+distinct GraphicsPipelineLibraryFlagBitsEXT = inline uint;
+const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT = 0x00000001;
+const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT = 0x00000002;
+const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT = 0x00000004;
+const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT = 0x00000008;
+
+distinct DeviceAddressBindingFlagBitsEXT = inline uint;
+const DeviceAddressBindingFlagBitsEXT DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT = 0x00000001;
+
 distinct DeviceAddressBindingTypeEXT = inline uint;
 const DeviceAddressBindingTypeEXT DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT = 0;
 const DeviceAddressBindingTypeEXT DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT = 1;
+
+distinct FrameBoundaryFlagBitsEXT = inline uint;
+const FrameBoundaryFlagBitsEXT FRAME_BOUNDARY_FRAME_END_BIT_EXT = 0x00000001;
+
+distinct PresentScalingFlagBitsEXT = inline uint;
+const PresentScalingFlagBitsEXT PRESENT_SCALING_ONE_TO_ONE_BIT_EXT = 0x00000001;
+const PresentScalingFlagBitsEXT PRESENT_SCALING_ASPECT_RATIO_STRETCH_BIT_EXT = 0x00000002;
+const PresentScalingFlagBitsEXT PRESENT_SCALING_STRETCH_BIT_EXT = 0x00000004;
+
+distinct PresentGravityFlagBitsEXT = inline uint;
+const PresentGravityFlagBitsEXT PRESENT_GRAVITY_MIN_BIT_EXT = 0x00000001;
+const PresentGravityFlagBitsEXT PRESENT_GRAVITY_MAX_BIT_EXT = 0x00000002;
+const PresentGravityFlagBitsEXT PRESENT_GRAVITY_CENTERED_BIT_EXT = 0x00000004;
+
+distinct PhysicalDeviceSchedulingControlsFlagBitsARM = inline uint;
+const PhysicalDeviceSchedulingControlsFlagBitsARM PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM = 0x00000001;
+
+distinct VideoCodecOperationFlagBitsKHR = inline uint;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_NONE_KHR = 0;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_KHR = 0x00010000;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_ENCODE_H265_BIT_KHR = 0x00020000;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_DECODE_H264_BIT_KHR = 0x00000001;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR = 0x00000002;
+const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_KHR = 0x00000004;
+
+distinct VideoChromaSubsamplingFlagBitsKHR = inline uint;
+const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_INVALID_KHR = 0;
+const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_MONOCHROME_BIT_KHR = 0x00000001;
+const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_420_BIT_KHR = 0x00000002;
+const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_422_BIT_KHR = 0x00000004;
+const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_444_BIT_KHR = 0x00000008;
+
+distinct VideoComponentBitDepthFlagBitsKHR = inline uint;
+const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR = 0;
+const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_8_BIT_KHR = 0x00000001;
+const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_10_BIT_KHR = 0x00000004;
+const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_12_BIT_KHR = 0x00000010;
+
+distinct VideoCapabilityFlagBitsKHR = inline uint;
+const VideoCapabilityFlagBitsKHR VIDEO_CAPABILITY_PROTECTED_CONTENT_BIT_KHR = 0x00000001;
+const VideoCapabilityFlagBitsKHR VIDEO_CAPABILITY_SEPARATE_REFERENCE_IMAGES_BIT_KHR = 0x00000002;
+
+distinct VideoSessionCreateFlagBitsKHR = inline uint;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_PROTECTED_CONTENT_BIT_KHR = 0x00000001;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_ALLOW_ENCODE_PARAMETER_OPTIMIZATIONS_BIT_KHR = 0x00000002;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_INLINE_QUERIES_BIT_KHR = 0x00000004;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_3_BIT_KHR = 0x00000008;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_4_BIT_KHR = 0x00000010;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_5_BIT_KHR = 0x00000020;
+const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_6_BIT_KHR = 0x00000040;
+
+distinct VideoDecodeH264PictureLayoutFlagBitsKHR = inline uint;
+const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_KHR = 0;
+const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_INTERLEAVED_LINES_BIT_KHR = 0x00000001;
+const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_SEPARATE_PLANES_BIT_KHR = 0x00000002;
+
+distinct VideoCodingControlFlagBitsKHR = inline uint;
+const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_RESET_BIT_KHR = 0x00000001;
+const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_ENCODE_RATE_CONTROL_BIT_KHR = 0x00000002;
+const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_ENCODE_QUALITY_LEVEL_BIT_KHR = 0x00000004;
 
 distinct QueryResultStatusKHR = inline uint;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_ERROR_KHR = -1;
@@ -2522,12 +3191,259 @@ const QueryResultStatusKHR QUERY_RESULT_STATUS_NOT_READY_KHR = 0;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_COMPLETE_KHR = 1;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_INSUFFICIENT_BITSTREAM_BUFFER_RANGE_KHR = -1000299000;
 
+distinct VideoDecodeUsageFlagBitsKHR = inline uint;
+const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_DEFAULT_KHR = 0;
+const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_TRANSCODING_BIT_KHR = 0x00000001;
+const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_OFFLINE_BIT_KHR = 0x00000002;
+const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_STREAMING_BIT_KHR = 0x00000004;
+
+distinct VideoDecodeCapabilityFlagBitsKHR = inline uint;
+const VideoDecodeCapabilityFlagBitsKHR VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_COINCIDE_BIT_KHR = 0x00000001;
+const VideoDecodeCapabilityFlagBitsKHR VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_DISTINCT_BIT_KHR = 0x00000002;
+
+distinct VideoEncodeUsageFlagBitsKHR = inline uint;
+const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_DEFAULT_KHR = 0;
+const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_TRANSCODING_BIT_KHR = 0x00000001;
+const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_STREAMING_BIT_KHR = 0x00000002;
+const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_RECORDING_BIT_KHR = 0x00000004;
+const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_CONFERENCING_BIT_KHR = 0x00000008;
+
+distinct VideoEncodeContentFlagBitsKHR = inline uint;
+const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_DEFAULT_KHR = 0;
+const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_CAMERA_BIT_KHR = 0x00000001;
+const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_DESKTOP_BIT_KHR = 0x00000002;
+const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_RENDERED_BIT_KHR = 0x00000004;
+
 distinct VideoEncodeTuningModeKHR = inline uint;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_DEFAULT_KHR = 0;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_HIGH_QUALITY_KHR = 1;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_LOW_LATENCY_KHR = 2;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_ULTRA_LOW_LATENCY_KHR = 3;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_LOSSLESS_KHR = 4;
+
+distinct VideoEncodeCapabilityFlagBitsKHR = inline uint;
+const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_PRECEDING_EXTERNALLY_ENCODED_BYTES_BIT_KHR = 0x00000001;
+const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_INSUFFICIENT_BITSTREAM_BUFFER_RANGE_DETECTION_BIT_KHR = 0x00000002;
+const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_RESERVED_2_BIT_KHR = 0x00000004;
+const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_RESERVED_3_BIT_KHR = 0x00000008;
+
+distinct VideoEncodeFeedbackFlagBitsKHR = inline uint;
+const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR = 0x00000001;
+const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR = 0x00000002;
+const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR = 0x00000004;
+
+distinct VideoEncodeRateControlModeFlagBitsKHR = inline uint;
+const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_DEFAULT_KHR = 0;
+const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_DISABLED_BIT_KHR = 0x00000001;
+const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_CBR_BIT_KHR = 0x00000002;
+const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_VBR_BIT_KHR = 0x00000004;
+
+distinct VideoEncodeH264CapabilityFlagBitsKHR = inline uint;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_KHR = 0x00000002;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_ROW_UNALIGNED_SLICE_BIT_KHR = 0x00000004;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_DIFFERENT_SLICE_TYPE_BIT_KHR = 0x00000008;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_B_FRAME_IN_L0_LIST_BIT_KHR = 0x00000010;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_B_FRAME_IN_L1_LIST_BIT_KHR = 0x00000020;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_PER_PICTURE_TYPE_MIN_MAX_QP_BIT_KHR = 0x00000040;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_PER_SLICE_CONSTANT_QP_BIT_KHR = 0x00000080;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_GENERATE_PREFIX_NALU_BIT_KHR = 0x00000100;
+const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_RESERVED_9_BIT_KHR = 0x00000200;
+
+distinct VideoEncodeH264StdFlagBitsKHR = inline uint;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR = 0x00000001;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG_SET_BIT_KHR = 0x00000002;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SCALING_MATRIX_PRESENT_FLAG_SET_BIT_KHR = 0x00000004;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_CHROMA_QP_INDEX_OFFSET_BIT_KHR = 0x00000008;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SECOND_CHROMA_QP_INDEX_OFFSET_BIT_KHR = 0x00000010;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_PIC_INIT_QP_MINUS26_BIT_KHR = 0x00000020;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_WEIGHTED_PRED_FLAG_SET_BIT_KHR = 0x00000040;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_WEIGHTED_BIPRED_IDC_EXPLICIT_BIT_KHR = 0x00000080;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_WEIGHTED_BIPRED_IDC_IMPLICIT_BIT_KHR = 0x00000100;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_TRANSFORM_8X8_MODE_FLAG_SET_BIT_KHR = 0x00000200;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DIRECT_SPATIAL_MV_PRED_FLAG_UNSET_BIT_KHR = 0x00000400;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_ENTROPY_CODING_MODE_FLAG_UNSET_BIT_KHR = 0x00000800;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_ENTROPY_CODING_MODE_FLAG_SET_BIT_KHR = 0x00001000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DIRECT_8X8_INFERENCE_FLAG_UNSET_BIT_KHR = 0x00002000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_CONSTRAINED_INTRA_PRED_FLAG_SET_BIT_KHR = 0x00004000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_DISABLED_BIT_KHR = 0x00008000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_ENABLED_BIT_KHR = 0x00010000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_PARTIAL_BIT_KHR = 0x00020000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SLICE_QP_DELTA_BIT_KHR = 0x00080000;
+const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DIFFERENT_SLICE_QP_DELTA_BIT_KHR = 0x00100000;
+
+distinct VideoEncodeH264RateControlFlagBitsKHR = inline uint;
+const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
+const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REGULAR_GOP_BIT_KHR = 0x00000002;
+const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_KHR = 0x00000004;
+const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_KHR = 0x00000008;
+const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_TEMPORAL_LAYER_PATTERN_DYADIC_BIT_KHR = 0x00000010;
+
+distinct HostImageCopyFlagBitsEXT = inline uint;
+const HostImageCopyFlagBitsEXT HOST_IMAGE_COPY_MEMCPY_EXT = 0x00000001;
+
+distinct ImageConstraintsInfoFlagBitsFUCHSIA = inline uint;
+const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA = 0x00000001;
+const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA = 0x00000002;
+const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA = 0x00000004;
+const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA = 0x00000008;
+const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA = 0x00000010;
+
+distinct FormatFeatureFlagBits2 = inline uint;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = 0x00000001;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = 0x00000002;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT = 0x00000008;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT = 0x00000010;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = 0x00000020;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = 0x00000040;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = 0x00000080;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = 0x00000100;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000200;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BLIT_SRC_BIT = 0x00000400;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BLIT_DST_BIT = 0x00000800;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT = 0x00002000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_TRANSFER_SRC_BIT = 0x00004000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_TRANSFER_DST_BIT = 0x00008000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT = 0x00010000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = 0x00020000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = 0x00040000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = 0x00080000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = 0x00100000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = 0x00200000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_DISJOINT_BIT = 0x00400000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = 0x00800000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = 0x80000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = 0x100000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = 0x200000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR = 0x02000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR = 0x04000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = 0x20000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT = 0x01000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = 0x40000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_44_BIT_EXT = 0x100000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_45_BIT_EXT = 0x200000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT = 0x400000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR = 0x08000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR = 0x10000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_51_BIT_EXT = 0x8000000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV = 0x4000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM = 0x400000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM = 0x800000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM = 0x1000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM = 0x2000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_47_BIT_ARM = 0x800000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_39_BIT_EXT = 0x8000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV = 0x10000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV = 0x20000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV = 0x40000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_48_BIT_EXT = 0x1000000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_49_BIT_KHR = 0x2000000000000;
+const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_50_BIT_KHR = 0x4000000000000;
+
+distinct RenderingFlagBits = inline uint;
+const RenderingFlagBits RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = 0x00000001;
+const RenderingFlagBits RENDERING_SUSPENDING_BIT = 0x00000002;
+const RenderingFlagBits RENDERING_RESUMING_BIT = 0x00000004;
+const RenderingFlagBits RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT = 0x00000008;
+const RenderingFlagBits RENDERING_EXTENSION_505_BIT_EXT = 0x00000020;
+const RenderingFlagBits RENDERING_CONTENTS_INLINE_BIT_KHR = 0x00000010;
+
+distinct VideoEncodeH265CapabilityFlagBitsKHR = inline uint;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_KHR = 0x00000002;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_ROW_UNALIGNED_SLICE_SEGMENT_BIT_KHR = 0x00000004;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_DIFFERENT_SLICE_SEGMENT_TYPE_BIT_KHR = 0x00000008;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_B_FRAME_IN_L0_LIST_BIT_KHR = 0x00000010;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_B_FRAME_IN_L1_LIST_BIT_KHR = 0x00000020;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_PER_PICTURE_TYPE_MIN_MAX_QP_BIT_KHR = 0x00000040;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_PER_SLICE_SEGMENT_CONSTANT_QP_BIT_KHR = 0x00000080;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE_TILES_PER_SLICE_SEGMENT_BIT_KHR = 0x00000100;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE_SLICE_SEGMENTS_PER_TILE_BIT_KHR = 0x00000200;
+const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_RESERVED_10_BIT_KHR = 0x00000400;
+
+distinct VideoEncodeH265StdFlagBitsKHR = inline uint;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR = 0x00000001;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SAMPLE_ADAPTIVE_OFFSET_ENABLED_FLAG_SET_BIT_KHR = 0x00000002;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SCALING_LIST_DATA_PRESENT_FLAG_SET_BIT_KHR = 0x00000004;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_PCM_ENABLED_FLAG_SET_BIT_KHR = 0x00000008;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SPS_TEMPORAL_MVP_ENABLED_FLAG_SET_BIT_KHR = 0x00000010;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_INIT_QP_MINUS26_BIT_KHR = 0x00000020;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_WEIGHTED_PRED_FLAG_SET_BIT_KHR = 0x00000040;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_WEIGHTED_BIPRED_FLAG_SET_BIT_KHR = 0x00000080;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_LOG2_PARALLEL_MERGE_LEVEL_MINUS2_BIT_KHR = 0x00000100;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SIGN_DATA_HIDING_ENABLED_FLAG_SET_BIT_KHR = 0x00000200;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_TRANSFORM_SKIP_ENABLED_FLAG_SET_BIT_KHR = 0x00000400;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_TRANSFORM_SKIP_ENABLED_FLAG_UNSET_BIT_KHR = 0x00000800;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_PPS_SLICE_CHROMA_QP_OFFSETS_PRESENT_FLAG_SET_BIT_KHR = 0x00001000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_TRANSQUANT_BYPASS_ENABLED_FLAG_SET_BIT_KHR = 0x00002000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_CONSTRAINED_INTRA_PRED_FLAG_SET_BIT_KHR = 0x00004000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_ENTROPY_CODING_SYNC_ENABLED_FLAG_SET_BIT_KHR = 0x00008000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DEBLOCKING_FILTER_OVERRIDE_ENABLED_FLAG_SET_BIT_KHR = 0x00010000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DEPENDENT_SLICE_SEGMENTS_ENABLED_FLAG_SET_BIT_KHR = 0x00020000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DEPENDENT_SLICE_SEGMENT_FLAG_SET_BIT_KHR = 0x00040000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SLICE_QP_DELTA_BIT_KHR = 0x00080000;
+const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DIFFERENT_SLICE_QP_DELTA_BIT_KHR = 0x00100000;
+
+distinct VideoEncodeH265RateControlFlagBitsKHR = inline uint;
+const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
+const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REGULAR_GOP_BIT_KHR = 0x00000002;
+const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_KHR = 0x00000004;
+const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_KHR = 0x00000008;
+const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_TEMPORAL_SUB_LAYER_PATTERN_DYADIC_BIT_KHR = 0x00000010;
+
+distinct VideoEncodeH265CtbSizeFlagBitsKHR = inline uint;
+const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_16_BIT_KHR = 0x00000001;
+const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_32_BIT_KHR = 0x00000002;
+const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_64_BIT_KHR = 0x00000004;
+
+distinct VideoEncodeH265TransformBlockSizeFlagBitsKHR = inline uint;
+const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_4_BIT_KHR = 0x00000001;
+const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_8_BIT_KHR = 0x00000002;
+const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_16_BIT_KHR = 0x00000004;
+const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_32_BIT_KHR = 0x00000008;
+
+distinct ExportMetalObjectTypeFlagBitsEXT = inline uint;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = 0x00000001;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = 0x00000002;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = 0x00000004;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT = 0x00000008;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = 0x00000010;
+const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = 0x00000020;
+
+distinct ImageCompressionFlagBitsEXT = inline uint;
+const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_DEFAULT_EXT = 0;
+const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT = 0x00000001;
+const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT = 0x00000002;
+const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_DISABLED_EXT = 0x00000004;
+
+distinct ImageCompressionFixedRateFlagBitsEXT = inline uint;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT = 0;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT = 0x00000001;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT = 0x00000002;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT = 0x00000004;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT = 0x00000008;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT = 0x00000010;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT = 0x00000020;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT = 0x00000040;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT = 0x00000080;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT = 0x00000100;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT = 0x00000200;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT = 0x00000400;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT = 0x00000800;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT = 0x00001000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT = 0x00002000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT = 0x00004000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT = 0x00008000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT = 0x00010000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT = 0x00020000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT = 0x00040000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT = 0x00080000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT = 0x00100000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT = 0x00200000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT = 0x00400000;
+const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT = 0x00800000;
 
 distinct PipelineRobustnessBufferBehaviorEXT = inline uint;
 const PipelineRobustnessBufferBehaviorEXT PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT = 0;
@@ -2540,6 +3456,21 @@ const PipelineRobustnessImageBehaviorEXT PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVI
 const PipelineRobustnessImageBehaviorEXT PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT = 1;
 const PipelineRobustnessImageBehaviorEXT PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT = 2;
 const PipelineRobustnessImageBehaviorEXT PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT = 3;
+
+distinct OpticalFlowGridSizeFlagBitsNV = inline uint;
+const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV = 0;
+const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV = 0x00000001;
+const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV = 0x00000002;
+const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV = 0x00000004;
+const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV = 0x00000008;
+
+distinct OpticalFlowUsageFlagBitsNV = inline uint;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_UNKNOWN_NV = 0;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_INPUT_BIT_NV = 0x00000001;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV = 0x00000002;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_HINT_BIT_NV = 0x00000004;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_COST_BIT_NV = 0x00000008;
+const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV = 0x00000010;
 
 distinct OpticalFlowPerformanceLevelNV = inline uint;
 const OpticalFlowPerformanceLevelNV OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_NV = 0;
@@ -2558,9 +3489,27 @@ const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_COST_N
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = 7;
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = 8;
 
+distinct OpticalFlowSessionCreateFlagBitsNV = inline uint;
+const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV = 0x00000001;
+const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV = 0x00000002;
+const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV = 0x00000004;
+const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV = 0x00000008;
+const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV = 0x00000010;
+
+distinct OpticalFlowExecuteFlagBitsNV = inline uint;
+const OpticalFlowExecuteFlagBitsNV OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV = 0x00000001;
+
 distinct MicromapTypeEXT = inline uint;
 const MicromapTypeEXT MICROMAP_TYPE_OPACITY_MICROMAP_EXT = 0;
 const MicromapTypeEXT MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV = 1000397000;
+
+distinct BuildMicromapFlagBitsEXT = inline uint;
+const BuildMicromapFlagBitsEXT BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT = 0x00000001;
+const BuildMicromapFlagBitsEXT BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT = 0x00000002;
+const BuildMicromapFlagBitsEXT BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT = 0x00000004;
+
+distinct MicromapCreateFlagBitsEXT = inline uint;
+const MicromapCreateFlagBitsEXT MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = 0x00000001;
 
 distinct CopyMicromapModeEXT = inline uint;
 const CopyMicromapModeEXT COPY_MICROMAP_MODE_CLONE_EXT = 0;
@@ -2602,6 +3551,19 @@ distinct DisplacementMicromapFormatNV = inline uint;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV = 1;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV = 2;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV = 3;
+
+distinct ShaderCreateFlagBitsEXT = inline uint;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_LINK_STAGE_BIT_EXT = 0x00000001;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_10_BIT_KHR = 0x00000400;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT = 0x00000002;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT = 0x00000004;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_NO_TASK_SHADER_BIT_EXT = 0x00000008;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_DISPATCH_BASE_BIT_EXT = 0x00000010;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT = 0x00000020;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = 0x00000040;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_EXTENSION_573_BIT_EXT = 0x00000080;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_8_BIT_EXT = 0x00000100;
+const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_9_BIT_EXT = 0x00000200;
 
 distinct ShaderCodeTypeEXT = inline uint;
 const ShaderCodeTypeEXT SHADER_CODE_TYPE_BINARY_EXT = 0;
@@ -2702,33 +3664,33 @@ fault VkErrors {
  ERROR_COMPRESSION_EXHAUSTED_EXT,
 }
 
-struct BaseOutStructure { 
+struct BaseOutStructure {
    StructureType sType;
    BaseOutStructure* pNext;
 }
-struct BaseInStructure { 
+struct BaseInStructure {
    StructureType sType;
    BaseInStructure* pNext;
 }
-struct Offset2D { 
+struct Offset2D {
    int x;
    int y;
 }
-struct Offset3D { 
+struct Offset3D {
    int x;
    int y;
    int z;
 }
-struct Extent2D { 
+struct Extent2D {
    uint width;
    uint height;
 }
-struct Extent3D { 
+struct Extent3D {
    uint width;
    uint height;
    uint depth;
 }
-struct Viewport { 
+struct Viewport {
    float x;
    float y;
    float width;
@@ -2736,22 +3698,22 @@ struct Viewport {
    float minDepth;
    float maxDepth;
 }
-struct Rect2D { 
+struct Rect2D {
    Offset2D offset;
    Extent2D extent;
 }
-struct ClearRect { 
+struct ClearRect {
    Rect2D rect;
    uint baseArrayLayer;
    uint layerCount;
 }
-struct ComponentMapping { 
+struct ComponentMapping {
    ComponentSwizzle r;
    ComponentSwizzle g;
    ComponentSwizzle b;
    ComponentSwizzle a;
 }
-struct PhysicalDeviceProperties { 
+struct PhysicalDeviceProperties {
    uint apiVersion;
    uint driverVersion;
    uint vendorID;
@@ -2762,17 +3724,17 @@ struct PhysicalDeviceProperties {
    PhysicalDeviceLimits limits;
    PhysicalDeviceSparseProperties sparseProperties;
 }
-struct ExtensionProperties { 
+struct ExtensionProperties {
    char[MAX_EXTENSION_NAME_SIZE] extensionName;
    uint specVersion;
 }
-struct LayerProperties { 
+struct LayerProperties {
    char[MAX_EXTENSION_NAME_SIZE] layerName;
    uint specVersion;
    uint implementationVersion;
    char[MAX_DESCRIPTION_SIZE] description;
 }
-struct ApplicationInfo { 
+struct ApplicationInfo {
    StructureType sType;
    void* pNext;
    char* pApplicationName;
@@ -2781,7 +3743,7 @@ struct ApplicationInfo {
    uint engineVersion;
    uint apiVersion;
 }
-struct AllocationCallbacks { 
+struct AllocationCallbacks {
    void* pUserData;
    PFN_vkAllocationFunction pfnAllocation;
    PFN_vkReallocationFunction pfnReallocation;
@@ -2789,7 +3751,7 @@ struct AllocationCallbacks {
    PFN_vkInternalAllocationNotification pfnInternalAllocation;
    PFN_vkInternalFreeNotification pfnInternalFree;
 }
-struct DeviceQueueCreateInfo { 
+struct DeviceQueueCreateInfo {
    StructureType sType;
    void* pNext;
    DeviceQueueCreateFlags flags;
@@ -2797,7 +3759,7 @@ struct DeviceQueueCreateInfo {
    uint queueCount;
    float* pQueuePriorities;
 }
-struct DeviceCreateInfo { 
+struct DeviceCreateInfo {
    StructureType sType;
    void* pNext;
    DeviceCreateFlags flags;
@@ -2809,7 +3771,7 @@ struct DeviceCreateInfo {
    char* ppEnabledExtensionNames;
    PhysicalDeviceFeatures* pEnabledFeatures;
 }
-struct InstanceCreateInfo { 
+struct InstanceCreateInfo {
    StructureType sType;
    void* pNext;
    InstanceCreateFlags flags;
@@ -2819,79 +3781,79 @@ struct InstanceCreateInfo {
    uint enabledExtensionCount;
    char* ppEnabledExtensionNames;
 }
-struct QueueFamilyProperties { 
+struct QueueFamilyProperties {
    QueueFlags queueFlags;
    uint queueCount;
    uint timestampValidBits;
    Extent3D minImageTransferGranularity;
 }
-struct PhysicalDeviceMemoryProperties { 
+struct PhysicalDeviceMemoryProperties {
    uint memoryTypeCount;
    MemoryType[MAX_MEMORY_TYPES] memoryTypes;
    uint memoryHeapCount;
    MemoryHeap[MAX_MEMORY_HEAPS] memoryHeaps;
 }
-struct MemoryAllocateInfo { 
+struct MemoryAllocateInfo {
    StructureType sType;
    void* pNext;
    DeviceSize allocationSize;
    uint memoryTypeIndex;
 }
-struct MemoryRequirements { 
+struct MemoryRequirements {
    DeviceSize size;
    DeviceSize alignment;
    uint memoryTypeBits;
 }
-struct SparseImageFormatProperties { 
+struct SparseImageFormatProperties {
    ImageAspectFlags aspectMask;
    Extent3D imageGranularity;
    SparseImageFormatFlags flags;
 }
-struct SparseImageMemoryRequirements { 
+struct SparseImageMemoryRequirements {
    SparseImageFormatProperties formatProperties;
    uint imageMipTailFirstLod;
    DeviceSize imageMipTailSize;
    DeviceSize imageMipTailOffset;
    DeviceSize imageMipTailStride;
 }
-struct MemoryType { 
+struct MemoryType {
    MemoryPropertyFlags propertyFlags;
    uint heapIndex;
 }
-struct MemoryHeap { 
+struct MemoryHeap {
    DeviceSize size;
    MemoryHeapFlags flags;
 }
-struct MappedMemoryRange { 
+struct MappedMemoryRange {
    StructureType sType;
    void* pNext;
    DeviceMemory memory;
    DeviceSize offset;
    DeviceSize size;
 }
-struct FormatProperties { 
+struct FormatProperties {
    FormatFeatureFlags linearTilingFeatures;
    FormatFeatureFlags optimalTilingFeatures;
    FormatFeatureFlags bufferFeatures;
 }
-struct ImageFormatProperties { 
+struct ImageFormatProperties {
    Extent3D maxExtent;
    uint maxMipLevels;
    uint maxArrayLayers;
    SampleCountFlags sampleCounts;
    DeviceSize maxResourceSize;
 }
-struct DescriptorBufferInfo { 
+struct DescriptorBufferInfo {
    Buffer buffer;
    DeviceSize offset;
    DeviceSize range;
 }
-struct DescriptorImageInfo { 
+struct DescriptorImageInfo {
    Sampler sampler;
    ImageView imageView;
    ImageLayout imageLayout;
 }
-struct WriteDescriptorSet { 
+struct WriteDescriptorSet {
    StructureType sType;
    void* pNext;
    DescriptorSet dstSet;
@@ -2903,7 +3865,7 @@ struct WriteDescriptorSet {
    DescriptorBufferInfo* pBufferInfo;
    BufferView* pTexelBufferView;
 }
-struct CopyDescriptorSet { 
+struct CopyDescriptorSet {
    StructureType sType;
    void* pNext;
    DescriptorSet srcSet;
@@ -2914,12 +3876,7 @@ struct CopyDescriptorSet {
    uint dstArrayElement;
    uint descriptorCount;
 }
-struct BufferUsageFlags2CreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   BufferUsageFlags2KHR usage;
-}
-struct BufferCreateInfo { 
+struct BufferCreateInfo {
    StructureType sType;
    void* pNext;
    BufferCreateFlags flags;
@@ -2929,7 +3886,7 @@ struct BufferCreateInfo {
    uint queueFamilyIndexCount;
    uint* pQueueFamilyIndices;
 }
-struct BufferViewCreateInfo { 
+struct BufferViewCreateInfo {
    StructureType sType;
    void* pNext;
    BufferViewCreateFlags flags;
@@ -2938,31 +3895,31 @@ struct BufferViewCreateInfo {
    DeviceSize offset;
    DeviceSize range;
 }
-struct ImageSubresource { 
+struct ImageSubresource {
    ImageAspectFlags aspectMask;
    uint mipLevel;
    uint arrayLayer;
 }
-struct ImageSubresourceLayers { 
+struct ImageSubresourceLayers {
    ImageAspectFlags aspectMask;
    uint mipLevel;
    uint baseArrayLayer;
    uint layerCount;
 }
-struct ImageSubresourceRange { 
+struct ImageSubresourceRange {
    ImageAspectFlags aspectMask;
    uint baseMipLevel;
    uint levelCount;
    uint baseArrayLayer;
    uint layerCount;
 }
-struct MemoryBarrier { 
+struct MemoryBarrier {
    StructureType sType;
    void* pNext;
    AccessFlags srcAccessMask;
    AccessFlags dstAccessMask;
 }
-struct BufferMemoryBarrier { 
+struct BufferMemoryBarrier {
    StructureType sType;
    void* pNext;
    AccessFlags srcAccessMask;
@@ -2973,7 +3930,7 @@ struct BufferMemoryBarrier {
    DeviceSize offset;
    DeviceSize size;
 }
-struct ImageMemoryBarrier { 
+struct ImageMemoryBarrier {
    StructureType sType;
    void* pNext;
    AccessFlags srcAccessMask;
@@ -2985,7 +3942,7 @@ struct ImageMemoryBarrier {
    Image image;
    ImageSubresourceRange subresourceRange;
 }
-struct ImageCreateInfo { 
+struct ImageCreateInfo {
    StructureType sType;
    void* pNext;
    ImageCreateFlags flags;
@@ -3002,14 +3959,14 @@ struct ImageCreateInfo {
    uint* pQueueFamilyIndices;
    ImageLayout initialLayout;
 }
-struct SubresourceLayout { 
+struct SubresourceLayout {
    DeviceSize offset;
    DeviceSize size;
    DeviceSize rowPitch;
    DeviceSize arrayPitch;
    DeviceSize depthPitch;
 }
-struct ImageViewCreateInfo { 
+struct ImageViewCreateInfo {
    StructureType sType;
    void* pNext;
    ImageViewCreateFlags flags;
@@ -3019,19 +3976,19 @@ struct ImageViewCreateInfo {
    ComponentMapping components;
    ImageSubresourceRange subresourceRange;
 }
-struct BufferCopy { 
+struct BufferCopy {
    DeviceSize srcOffset;
    DeviceSize dstOffset;
    DeviceSize size;
 }
-struct SparseMemoryBind { 
+struct SparseMemoryBind {
    DeviceSize resourceOffset;
    DeviceSize size;
    DeviceMemory memory;
    DeviceSize memoryOffset;
    SparseMemoryBindFlags flags;
 }
-struct SparseImageMemoryBind { 
+struct SparseImageMemoryBind {
    ImageSubresource subresource;
    Offset3D offset;
    Extent3D extent;
@@ -3039,22 +3996,22 @@ struct SparseImageMemoryBind {
    DeviceSize memoryOffset;
    SparseMemoryBindFlags flags;
 }
-struct SparseBufferMemoryBindInfo { 
+struct SparseBufferMemoryBindInfo {
    Buffer buffer;
    uint bindCount;
    SparseMemoryBind* pBinds;
 }
-struct SparseImageOpaqueMemoryBindInfo { 
+struct SparseImageOpaqueMemoryBindInfo {
    Image image;
    uint bindCount;
    SparseMemoryBind* pBinds;
 }
-struct SparseImageMemoryBindInfo { 
+struct SparseImageMemoryBindInfo {
    Image image;
    uint bindCount;
    SparseImageMemoryBind* pBinds;
 }
-struct BindSparseInfo { 
+struct BindSparseInfo {
    StructureType sType;
    void* pNext;
    uint waitSemaphoreCount;
@@ -3068,20 +4025,20 @@ struct BindSparseInfo {
    uint signalSemaphoreCount;
    Semaphore* pSignalSemaphores;
 }
-struct ImageCopy { 
+struct ImageCopy {
    ImageSubresourceLayers srcSubresource;
    Offset3D srcOffset;
    ImageSubresourceLayers dstSubresource;
    Offset3D dstOffset;
    Extent3D extent;
 }
-struct ImageBlit { 
+struct ImageBlit {
    ImageSubresourceLayers srcSubresource;
    Offset3D[2] srcOffsets;
    ImageSubresourceLayers dstSubresource;
    Offset3D[2] dstOffsets;
 }
-struct BufferImageCopy { 
+struct BufferImageCopy {
    DeviceSize bufferOffset;
    uint bufferRowLength;
    uint bufferImageHeight;
@@ -3089,52 +4046,39 @@ struct BufferImageCopy {
    Offset3D imageOffset;
    Extent3D imageExtent;
 }
-struct CopyMemoryIndirectCommandNV { 
-   DeviceAddress srcAddress;
-   DeviceAddress dstAddress;
-   DeviceSize size;
-}
-struct CopyMemoryToImageIndirectCommandNV { 
-   DeviceAddress srcAddress;
-   uint bufferRowLength;
-   uint bufferImageHeight;
-   ImageSubresourceLayers imageSubresource;
-   Offset3D imageOffset;
-   Extent3D imageExtent;
-}
-struct ImageResolve { 
+struct ImageResolve {
    ImageSubresourceLayers srcSubresource;
    Offset3D srcOffset;
    ImageSubresourceLayers dstSubresource;
    Offset3D dstOffset;
    Extent3D extent;
 }
-struct ShaderModuleCreateInfo { 
+struct ShaderModuleCreateInfo {
    StructureType sType;
    void* pNext;
    ShaderModuleCreateFlags flags;
    usz codeSize;
    uint* pCode;
 }
-struct DescriptorSetLayoutBinding { 
+struct DescriptorSetLayoutBinding {
    uint binding;
    DescriptorType descriptorType;
    uint descriptorCount;
    ShaderStageFlags stageFlags;
    Sampler* pImmutableSamplers;
 }
-struct DescriptorSetLayoutCreateInfo { 
+struct DescriptorSetLayoutCreateInfo {
    StructureType sType;
    void* pNext;
    DescriptorSetLayoutCreateFlags flags;
    uint bindingCount;
    DescriptorSetLayoutBinding* pBindings;
 }
-struct DescriptorPoolSize { 
+struct DescriptorPoolSize {
    DescriptorType type;
    uint descriptorCount;
 }
-struct DescriptorPoolCreateInfo { 
+struct DescriptorPoolCreateInfo {
    StructureType sType;
    void* pNext;
    DescriptorPoolCreateFlags flags;
@@ -3142,25 +4086,25 @@ struct DescriptorPoolCreateInfo {
    uint poolSizeCount;
    DescriptorPoolSize* pPoolSizes;
 }
-struct DescriptorSetAllocateInfo { 
+struct DescriptorSetAllocateInfo {
    StructureType sType;
    void* pNext;
    DescriptorPool descriptorPool;
    uint descriptorSetCount;
    DescriptorSetLayout* pSetLayouts;
 }
-struct SpecializationMapEntry { 
+struct SpecializationMapEntry {
    uint constantID;
    uint offset;
    usz size;
 }
-struct SpecializationInfo { 
+struct SpecializationInfo {
    uint mapEntryCount;
    SpecializationMapEntry* pMapEntries;
    usz dataSize;
    void* pData;
 }
-struct PipelineShaderStageCreateInfo { 
+struct PipelineShaderStageCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineShaderStageCreateFlags flags;
@@ -3170,7 +4114,7 @@ struct PipelineShaderStageCreateInfo {
    char* pName;
    SpecializationInfo* pSpecializationInfo;
 }
-struct ComputePipelineCreateInfo { 
+struct ComputePipelineCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineCreateFlags flags;
@@ -3179,30 +4123,18 @@ struct ComputePipelineCreateInfo {
    Pipeline basePipelineHandle;
    int basePipelineIndex;
 }
-struct ComputePipelineIndirectBufferInfoNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceAddress deviceAddress;
-   DeviceSize size;
-   DeviceAddress pipelineDeviceAddressCaptureReplay;
-}
-struct PipelineCreateFlags2CreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   PipelineCreateFlags2KHR flags;
-}
-struct VertexInputBindingDescription { 
+struct VertexInputBindingDescription {
    uint binding;
    uint stride;
    VertexInputRate inputRate;
 }
-struct VertexInputAttributeDescription { 
+struct VertexInputAttributeDescription {
    uint location;
    uint binding;
    Format format;
    uint offset;
 }
-struct PipelineVertexInputStateCreateInfo { 
+struct PipelineVertexInputStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineVertexInputStateCreateFlags flags;
@@ -3211,20 +4143,20 @@ struct PipelineVertexInputStateCreateInfo {
    uint vertexAttributeDescriptionCount;
    VertexInputAttributeDescription* pVertexAttributeDescriptions;
 }
-struct PipelineInputAssemblyStateCreateInfo { 
+struct PipelineInputAssemblyStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineInputAssemblyStateCreateFlags flags;
    PrimitiveTopology topology;
    uint primitiveRestartEnable;
 }
-struct PipelineTessellationStateCreateInfo { 
+struct PipelineTessellationStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineTessellationStateCreateFlags flags;
    uint patchControlPoints;
 }
-struct PipelineViewportStateCreateInfo { 
+struct PipelineViewportStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineViewportStateCreateFlags flags;
@@ -3233,7 +4165,7 @@ struct PipelineViewportStateCreateInfo {
    uint scissorCount;
    Rect2D* pScissors;
 }
-struct PipelineRasterizationStateCreateInfo { 
+struct PipelineRasterizationStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineRasterizationStateCreateFlags flags;
@@ -3248,7 +4180,7 @@ struct PipelineRasterizationStateCreateInfo {
    float depthBiasSlopeFactor;
    float lineWidth;
 }
-struct PipelineMultisampleStateCreateInfo { 
+struct PipelineMultisampleStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineMultisampleStateCreateFlags flags;
@@ -3259,7 +4191,7 @@ struct PipelineMultisampleStateCreateInfo {
    uint alphaToCoverageEnable;
    uint alphaToOneEnable;
 }
-struct PipelineColorBlendAttachmentState { 
+struct PipelineColorBlendAttachmentState {
    uint blendEnable;
    BlendFactor srcColorBlendFactor;
    BlendFactor dstColorBlendFactor;
@@ -3269,7 +4201,7 @@ struct PipelineColorBlendAttachmentState {
    BlendOp alphaBlendOp;
    ColorComponentFlags colorWriteMask;
 }
-struct PipelineColorBlendStateCreateInfo { 
+struct PipelineColorBlendStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineColorBlendStateCreateFlags flags;
@@ -3279,14 +4211,14 @@ struct PipelineColorBlendStateCreateInfo {
    PipelineColorBlendAttachmentState* pAttachments;
    float[4] blendConstants;
 }
-struct PipelineDynamicStateCreateInfo { 
+struct PipelineDynamicStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineDynamicStateCreateFlags flags;
    uint dynamicStateCount;
    DynamicState* pDynamicStates;
 }
-struct StencilOpState { 
+struct StencilOpState {
    StencilOp failOp;
    StencilOp passOp;
    StencilOp depthFailOp;
@@ -3295,7 +4227,7 @@ struct StencilOpState {
    uint writeMask;
    uint reference;
 }
-struct PipelineDepthStencilStateCreateInfo { 
+struct PipelineDepthStencilStateCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineDepthStencilStateCreateFlags flags;
@@ -3309,7 +4241,7 @@ struct PipelineDepthStencilStateCreateInfo {
    float minDepthBounds;
    float maxDepthBounds;
 }
-struct GraphicsPipelineCreateInfo { 
+struct GraphicsPipelineCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineCreateFlags flags;
@@ -3331,7 +4263,7 @@ struct GraphicsPipelineCreateInfo {
    Pipeline basePipelineHandle;
    int basePipelineIndex;
 }
-struct PipelineCacheCreateInfo { 
+struct PipelineCacheCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineCacheCreateFlags flags;
@@ -3339,19 +4271,19 @@ struct PipelineCacheCreateInfo {
    usz initialDataSize;
    void* pInitialData;
 }
-struct PipelineCacheHeaderVersionOne { 
+struct PipelineCacheHeaderVersionOne {
    uint headerSize;
    PipelineCacheHeaderVersion headerVersion;
    uint vendorID;
    uint deviceID;
    uint[UUID_SIZE] pipelineCacheUUID;
 }
-struct PushConstantRange { 
+struct PushConstantRange {
    ShaderStageFlags stageFlags;
    uint offset;
    uint size;
 }
-struct PipelineLayoutCreateInfo { 
+struct PipelineLayoutCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineLayoutCreateFlags flags;
@@ -3360,7 +4292,7 @@ struct PipelineLayoutCreateInfo {
    uint pushConstantRangeCount;
    PushConstantRange* pPushConstantRanges;
 }
-struct SamplerCreateInfo { 
+struct SamplerCreateInfo {
    StructureType sType;
    void* pNext;
    SamplerCreateFlags flags;
@@ -3380,20 +4312,20 @@ struct SamplerCreateInfo {
    BorderColor borderColor;
    uint unnormalizedCoordinates;
 }
-struct CommandPoolCreateInfo { 
+struct CommandPoolCreateInfo {
    StructureType sType;
    void* pNext;
    CommandPoolCreateFlags flags;
    uint queueFamilyIndex;
 }
-struct CommandBufferAllocateInfo { 
+struct CommandBufferAllocateInfo {
    StructureType sType;
    void* pNext;
    CommandPool commandPool;
    CommandBufferLevel level;
    uint commandBufferCount;
 }
-struct CommandBufferInheritanceInfo { 
+struct CommandBufferInheritanceInfo {
    StructureType sType;
    void* pNext;
    RenderPass renderPass;
@@ -3403,13 +4335,13 @@ struct CommandBufferInheritanceInfo {
    QueryControlFlags queryFlags;
    QueryPipelineStatisticFlags pipelineStatistics;
 }
-struct CommandBufferBeginInfo { 
+struct CommandBufferBeginInfo {
    StructureType sType;
    void* pNext;
    CommandBufferUsageFlags flags;
    CommandBufferInheritanceInfo* pInheritanceInfo;
 }
-struct RenderPassBeginInfo { 
+struct RenderPassBeginInfo {
    StructureType sType;
    void* pNext;
    RenderPass renderPass;
@@ -3418,16 +4350,16 @@ struct RenderPassBeginInfo {
    uint clearValueCount;
    ClearValue* pClearValues;
 }
-struct ClearDepthStencilValue { 
+struct ClearDepthStencilValue {
    float depth;
    uint stencil;
 }
-struct ClearAttachment { 
+struct ClearAttachment {
    ImageAspectFlags aspectMask;
    uint colorAttachment;
    ClearValue clearValue;
 }
-struct AttachmentDescription { 
+struct AttachmentDescription {
    AttachmentDescriptionFlags flags;
    Format format;
    SampleCountFlagBits samples;
@@ -3438,11 +4370,11 @@ struct AttachmentDescription {
    ImageLayout initialLayout;
    ImageLayout finalLayout;
 }
-struct AttachmentReference { 
+struct AttachmentReference {
    uint attachment;
    ImageLayout layout;
 }
-struct SubpassDescription { 
+struct SubpassDescription {
    SubpassDescriptionFlags flags;
    PipelineBindPoint pipelineBindPoint;
    uint inputAttachmentCount;
@@ -3454,7 +4386,7 @@ struct SubpassDescription {
    uint preserveAttachmentCount;
    uint* pPreserveAttachments;
 }
-struct SubpassDependency { 
+struct SubpassDependency {
    uint srcSubpass;
    uint dstSubpass;
    PipelineStageFlags srcStageMask;
@@ -3463,7 +4395,7 @@ struct SubpassDependency {
    AccessFlags dstAccessMask;
    DependencyFlags dependencyFlags;
 }
-struct RenderPassCreateInfo { 
+struct RenderPassCreateInfo {
    StructureType sType;
    void* pNext;
    RenderPassCreateFlags flags;
@@ -3474,17 +4406,17 @@ struct RenderPassCreateInfo {
    uint dependencyCount;
    SubpassDependency* pDependencies;
 }
-struct EventCreateInfo { 
+struct EventCreateInfo {
    StructureType sType;
    void* pNext;
    EventCreateFlags flags;
 }
-struct FenceCreateInfo { 
+struct FenceCreateInfo {
    StructureType sType;
    void* pNext;
    FenceCreateFlags flags;
 }
-struct PhysicalDeviceFeatures { 
+struct PhysicalDeviceFeatures {
    uint robustBufferAccess;
    uint fullDrawIndexUint32;
    uint imageCubeArray;
@@ -3541,14 +4473,14 @@ struct PhysicalDeviceFeatures {
    uint variableMultisampleRate;
    uint inheritedQueries;
 }
-struct PhysicalDeviceSparseProperties { 
+struct PhysicalDeviceSparseProperties {
    uint residencyStandard2DBlockShape;
    uint residencyStandard2DMultisampleBlockShape;
    uint residencyStandard3DBlockShape;
    uint residencyAlignedMipSize;
    uint residencyNonResidentStrict;
 }
-struct PhysicalDeviceLimits { 
+struct PhysicalDeviceLimits {
    uint maxImageDimension1D;
    uint maxImageDimension2D;
    uint maxImageDimension3D;
@@ -3656,12 +4588,12 @@ struct PhysicalDeviceLimits {
    DeviceSize optimalBufferCopyRowPitchAlignment;
    DeviceSize nonCoherentAtomSize;
 }
-struct SemaphoreCreateInfo { 
+struct SemaphoreCreateInfo {
    StructureType sType;
    void* pNext;
    SemaphoreCreateFlags flags;
 }
-struct QueryPoolCreateInfo { 
+struct QueryPoolCreateInfo {
    StructureType sType;
    void* pNext;
    QueryPoolCreateFlags flags;
@@ -3669,7 +4601,7 @@ struct QueryPoolCreateInfo {
    uint queryCount;
    QueryPipelineStatisticFlags pipelineStatistics;
 }
-struct FramebufferCreateInfo { 
+struct FramebufferCreateInfo {
    StructureType sType;
    void* pNext;
    FramebufferCreateFlags flags;
@@ -3680,34 +4612,25 @@ struct FramebufferCreateInfo {
    uint height;
    uint layers;
 }
-struct DrawIndirectCommand { 
+struct DrawIndirectCommand {
    uint vertexCount;
    uint instanceCount;
    uint firstVertex;
    uint firstInstance;
 }
-struct DrawIndexedIndirectCommand { 
+struct DrawIndexedIndirectCommand {
    uint indexCount;
    uint instanceCount;
    uint firstIndex;
    int vertexOffset;
    uint firstInstance;
 }
-struct DispatchIndirectCommand { 
+struct DispatchIndirectCommand {
    uint x;
    uint y;
    uint z;
 }
-struct MultiDrawInfoEXT { 
-   uint firstVertex;
-   uint vertexCount;
-}
-struct MultiDrawIndexedInfoEXT { 
-   uint firstIndex;
-   uint indexCount;
-   int vertexOffset;
-}
-struct SubmitInfo { 
+struct SubmitInfo {
    StructureType sType;
    void* pNext;
    uint waitSemaphoreCount;
@@ -3718,7 +4641,7 @@ struct SubmitInfo {
    uint signalSemaphoreCount;
    Semaphore* pSignalSemaphores;
 }
-struct DisplayPropertiesKHR { 
+struct DisplayPropertiesKHR {
    DisplayKHR display;
    char* displayName;
    Extent2D physicalDimensions;
@@ -3727,25 +4650,25 @@ struct DisplayPropertiesKHR {
    uint planeReorderPossible;
    uint persistentContent;
 }
-struct DisplayPlanePropertiesKHR { 
+struct DisplayPlanePropertiesKHR {
    DisplayKHR currentDisplay;
    uint currentStackIndex;
 }
-struct DisplayModeParametersKHR { 
+struct DisplayModeParametersKHR {
    Extent2D visibleRegion;
    uint refreshRate;
 }
-struct DisplayModePropertiesKHR { 
+struct DisplayModePropertiesKHR {
    DisplayModeKHR displayMode;
    DisplayModeParametersKHR parameters;
 }
-struct DisplayModeCreateInfoKHR { 
+struct DisplayModeCreateInfoKHR {
    StructureType sType;
    void* pNext;
    DisplayModeCreateFlagsKHR flags;
    DisplayModeParametersKHR parameters;
 }
-struct DisplayPlaneCapabilitiesKHR { 
+struct DisplayPlaneCapabilitiesKHR {
    DisplayPlaneAlphaFlagsKHR supportedAlpha;
    Offset2D minSrcPosition;
    Offset2D maxSrcPosition;
@@ -3756,7 +4679,7 @@ struct DisplayPlaneCapabilitiesKHR {
    Extent2D minDstExtent;
    Extent2D maxDstExtent;
 }
-struct DisplaySurfaceCreateInfoKHR { 
+struct DisplaySurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    DisplaySurfaceCreateFlagsKHR flags;
@@ -3768,14 +4691,7 @@ struct DisplaySurfaceCreateInfoKHR {
    DisplayPlaneAlphaFlagBitsKHR alphaMode;
    Extent2D imageExtent;
 }
-struct DisplayPresentInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Rect2D srcRect;
-   Rect2D dstRect;
-   uint persistent;
-}
-struct SurfaceCapabilitiesKHR { 
+struct SurfaceCapabilitiesKHR {
    uint minImageCount;
    uint maxImageCount;
    Extent2D currentExtent;
@@ -3787,77 +4703,32 @@ struct SurfaceCapabilitiesKHR {
    CompositeAlphaFlagsKHR supportedCompositeAlpha;
    ImageUsageFlags supportedUsageFlags;
 }
-struct AndroidSurfaceCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AndroidSurfaceCreateFlagsKHR flags;
-   ANativeWindow* window;
-}
-struct ViSurfaceCreateInfoNN { 
-   StructureType sType;
-   void* pNext;
-   ViSurfaceCreateFlagsNN flags;
-   void* window;
-}
-struct WaylandSurfaceCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   WaylandSurfaceCreateFlagsKHR flags;
-   Display* display;
-   wl_surface* surface;
-}
-struct Win32SurfaceCreateInfoKHR { 
+struct Win32SurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    Win32SurfaceCreateFlagsKHR flags;
    HINSTANCE hinstance;
    HWND hwnd;
 }
-struct XlibSurfaceCreateInfoKHR { 
+struct XlibSurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    XlibSurfaceCreateFlagsKHR flags;
    Display* dpy;
    Window window;
 }
-struct XcbSurfaceCreateInfoKHR { 
+struct XcbSurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    XcbSurfaceCreateFlagsKHR flags;
    Display* connection;
    Window window;
 }
-struct DirectFBSurfaceCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DirectFBSurfaceCreateFlagsEXT flags;
-   IDirectFB* dfb;
-   IDirectFBSurface* surface;
-}
-struct ImagePipeSurfaceCreateInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   ImagePipeSurfaceCreateFlagsFUCHSIA flags;
-   Display imagePipeHandle;
-}
-struct StreamDescriptorSurfaceCreateInfoGGP { 
-   StructureType sType;
-   void* pNext;
-   StreamDescriptorSurfaceCreateFlagsGGP flags;
-   GgpStreamDescriptor streamDescriptor;
-}
-struct ScreenSurfaceCreateInfoQNX { 
-   StructureType sType;
-   void* pNext;
-   ScreenSurfaceCreateFlagsQNX flags;
-   _screen_context* context;
-   _screen_window* window;
-}
-struct SurfaceFormatKHR { 
+struct SurfaceFormatKHR {
    Format format;
    ColorSpaceKHR colorSpace;
 }
-struct SwapchainCreateInfoKHR { 
+struct SwapchainCreateInfoKHR {
    StructureType sType;
    void* pNext;
    SwapchainCreateFlagsKHR flags;
@@ -3878,7 +4749,7 @@ struct SwapchainCreateInfoKHR {
    SwapchainKHR oldSwapchain;
    SwapchainKHR oldSwapchain;
 }
-struct PresentInfoKHR { 
+struct PresentInfoKHR {
    StructureType sType;
    void* pNext;
    uint waitSemaphoreCount;
@@ -3888,321 +4759,49 @@ struct PresentInfoKHR {
    uint* pImageIndices;
    Result* pResults;
 }
-struct DebugReportCallbackCreateInfoEXT { 
+struct DebugReportCallbackCreateInfoEXT {
    StructureType sType;
    void* pNext;
    DebugReportFlagsEXT flags;
    PFN_vkDebugReportCallbackEXT pfnCallback;
    void* pUserData;
 }
-struct ValidationFlagsEXT { 
-   StructureType sType;
-   void* pNext;
-   uint disabledValidationCheckCount;
-   ValidationCheckEXT* pDisabledValidationChecks;
-}
-struct ValidationFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint enabledValidationFeatureCount;
-   ValidationFeatureEnableEXT* pEnabledValidationFeatures;
-   uint disabledValidationFeatureCount;
-   ValidationFeatureDisableEXT* pDisabledValidationFeatures;
-}
-struct LayerSettingsCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint settingCount;
-   LayerSettingEXT* pSettings;
-}
-struct LayerSettingEXT { 
-   char* pLayerName;
-   char* pSettingName;
-   LayerSettingTypeEXT type;
-   uint valueCount;
-   void* pValues;
-}
-struct ApplicationParametersEXT { 
-   StructureType sType;
-   void* pNext;
-   uint vendorID;
-   uint deviceID;
-   uint key;
-   ulong value;
-}
-struct PipelineRasterizationStateRasterizationOrderAMD { 
-   StructureType sType;
-   void* pNext;
-   RasterizationOrderAMD rasterizationOrder;
-}
-struct DebugMarkerObjectNameInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DebugReportObjectTypeEXT objectType;
-   ulong object;
-   char* pObjectName;
-}
-struct DebugMarkerObjectTagInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DebugReportObjectTypeEXT objectType;
-   ulong object;
-   ulong tagName;
-   usz tagSize;
-   void* pTag;
-}
-struct DebugMarkerMarkerInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   char* pMarkerName;
-   float[4] color;
-}
-struct DedicatedAllocationImageCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint dedicatedAllocation;
-}
-struct DedicatedAllocationBufferCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint dedicatedAllocation;
-}
-struct DedicatedAllocationMemoryAllocateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Image image;
-   Buffer buffer;
-}
-struct ExternalImageFormatPropertiesNV { 
-   ImageFormatProperties imageFormatProperties;
-   ExternalMemoryFeatureFlagsNV externalMemoryFeatures;
-   ExternalMemoryHandleTypeFlagsNV exportFromImportedHandleTypes;
-   ExternalMemoryHandleTypeFlagsNV compatibleHandleTypes;
-}
-struct ExternalMemoryImageCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagsNV handleTypes;
-}
-struct ExportMemoryAllocateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagsNV handleTypes;
-}
-struct ImportMemoryWin32HandleInfoNV { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagsNV handleType;
-   void* handle;
-}
-struct ExportMemoryWin32HandleInfoNV { 
-   StructureType sType;
-   void* pNext;
-   SECURITY_ATTRIBUTES* pAttributes;
-   DWORD dwAccess;
-}
-struct ExportMemorySciBufInfoNV { 
-   StructureType sType;
-   void* pNext;
-   NvSciBufAttrList pAttributes;
-}
-struct ImportMemorySciBufInfoNV { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagBits handleType;
-   NvSciBufObj handle;
-}
-struct MemoryGetSciBufInfoNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   ExternalMemoryHandleTypeFlagBits handleType;
-}
-struct MemorySciBufPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-}
-struct PhysicalDeviceExternalMemorySciBufFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint sciBufImport;
-   uint sciBufExport;
-}
-struct Win32KeyedMutexAcquireReleaseInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint acquireCount;
-   DeviceMemory* pAcquireSyncs;
-   ulong* pAcquireKeys;
-   uint* pAcquireTimeoutMilliseconds;
-   uint releaseCount;
-   DeviceMemory* pReleaseSyncs;
-   ulong* pReleaseKeys;
-}
-struct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint deviceGeneratedCommands;
-}
-struct PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint deviceGeneratedCompute;
-   uint deviceGeneratedComputePipelines;
-   uint deviceGeneratedComputeCaptureReplay;
-}
-struct DevicePrivateDataCreateInfo { 
+struct DevicePrivateDataCreateInfo {
    StructureType sType;
    void* pNext;
    uint privateDataSlotRequestCount;
 }
-struct PrivateDataSlotCreateInfo { 
+struct PrivateDataSlotCreateInfo {
    StructureType sType;
    void* pNext;
    PrivateDataSlotCreateFlags flags;
 }
-struct PhysicalDevicePrivateDataFeatures { 
+struct PhysicalDevicePrivateDataFeatures {
    StructureType sType;
    void* pNext;
    uint privateData;
 }
-struct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint maxGraphicsShaderGroupCount;
-   uint maxIndirectSequenceCount;
-   uint maxIndirectCommandsTokenCount;
-   uint maxIndirectCommandsStreamCount;
-   uint maxIndirectCommandsTokenOffset;
-   uint maxIndirectCommandsStreamStride;
-   uint minSequencesCountBufferOffsetAlignment;
-   uint minSequencesIndexBufferOffsetAlignment;
-   uint minIndirectCommandsBufferOffsetAlignment;
-}
-struct PhysicalDeviceMultiDrawPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxMultiDrawCount;
-}
-struct GraphicsShaderGroupCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint stageCount;
-   PipelineShaderStageCreateInfo* pStages;
-   PipelineVertexInputStateCreateInfo* pVertexInputState;
-   PipelineTessellationStateCreateInfo* pTessellationState;
-}
-struct GraphicsPipelineShaderGroupsCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint groupCount;
-   GraphicsShaderGroupCreateInfoNV* pGroups;
-   uint pipelineCount;
-   Pipeline* pPipelines;
-}
-struct BindShaderGroupIndirectCommandNV { 
-   uint groupIndex;
-}
-struct BindIndexBufferIndirectCommandNV { 
-   DeviceAddress bufferAddress;
-   uint size;
-   IndexType indexType;
-}
-struct BindVertexBufferIndirectCommandNV { 
-   DeviceAddress bufferAddress;
-   uint size;
-   uint stride;
-}
-struct SetStateFlagsIndirectCommandNV { 
-   uint data;
-}
-struct IndirectCommandsStreamNV { 
-   Buffer buffer;
-   DeviceSize offset;
-}
-struct IndirectCommandsLayoutTokenNV { 
-   StructureType sType;
-   void* pNext;
-   IndirectCommandsTokenTypeNV tokenType;
-   uint stream;
-   uint offset;
-   uint vertexBindingUnit;
-   uint vertexDynamicStride;
-   PipelineLayout pushconstantPipelineLayout;
-   ShaderStageFlags pushconstantShaderStageFlags;
-   uint pushconstantOffset;
-   uint pushconstantSize;
-   IndirectStateFlagsNV indirectStateFlags;
-   uint indexTypeCount;
-   IndexType* pIndexTypes;
-   uint* pIndexTypeValues;
-}
-struct IndirectCommandsLayoutCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   IndirectCommandsLayoutUsageFlagsNV flags;
-   PipelineBindPoint pipelineBindPoint;
-   uint tokenCount;
-   IndirectCommandsLayoutTokenNV* pTokens;
-   uint streamCount;
-   uint* pStreamStrides;
-}
-struct GeneratedCommandsInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineBindPoint pipelineBindPoint;
-   Pipeline pipeline;
-   IndirectCommandsLayoutNV indirectCommandsLayout;
-   uint streamCount;
-   IndirectCommandsStreamNV* pStreams;
-   uint sequencesCount;
-   Buffer preprocessBuffer;
-   DeviceSize preprocessOffset;
-   DeviceSize preprocessSize;
-   Buffer sequencesCountBuffer;
-   DeviceSize sequencesCountOffset;
-   Buffer sequencesIndexBuffer;
-   DeviceSize sequencesIndexOffset;
-}
-struct GeneratedCommandsMemoryRequirementsInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineBindPoint pipelineBindPoint;
-   Pipeline pipeline;
-   IndirectCommandsLayoutNV indirectCommandsLayout;
-   uint maxSequencesCount;
-}
-struct PipelineIndirectDeviceAddressInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineBindPoint pipelineBindPoint;
-   Pipeline pipeline;
-}
-struct BindPipelineIndirectCommandNV { 
-   DeviceAddress pipelineAddress;
-}
-struct PhysicalDeviceFeatures2 { 
+struct PhysicalDeviceFeatures2 {
    StructureType sType;
    void* pNext;
    PhysicalDeviceFeatures features;
 }
-struct PhysicalDeviceProperties2 { 
+struct PhysicalDeviceProperties2 {
    StructureType sType;
    void* pNext;
    PhysicalDeviceProperties properties;
 }
-struct FormatProperties2 { 
+struct FormatProperties2 {
    StructureType sType;
    void* pNext;
    FormatProperties formatProperties;
 }
-struct ImageFormatProperties2 { 
+struct ImageFormatProperties2 {
    StructureType sType;
    void* pNext;
    ImageFormatProperties imageFormatProperties;
 }
-struct PhysicalDeviceImageFormatInfo2 { 
+struct PhysicalDeviceImageFormatInfo2 {
    StructureType sType;
    void* pNext;
    Format format;
@@ -4211,22 +4810,22 @@ struct PhysicalDeviceImageFormatInfo2 {
    ImageUsageFlags usage;
    ImageCreateFlags flags;
 }
-struct QueueFamilyProperties2 { 
+struct QueueFamilyProperties2 {
    StructureType sType;
    void* pNext;
    QueueFamilyProperties queueFamilyProperties;
 }
-struct PhysicalDeviceMemoryProperties2 { 
+struct PhysicalDeviceMemoryProperties2 {
    StructureType sType;
    void* pNext;
    PhysicalDeviceMemoryProperties memoryProperties;
 }
-struct SparseImageFormatProperties2 { 
+struct SparseImageFormatProperties2 {
    StructureType sType;
    void* pNext;
    SparseImageFormatProperties properties;
 }
-struct PhysicalDeviceSparseImageFormatInfo2 { 
+struct PhysicalDeviceSparseImageFormatInfo2 {
    StructureType sType;
    void* pNext;
    Format format;
@@ -4235,18 +4834,18 @@ struct PhysicalDeviceSparseImageFormatInfo2 {
    ImageUsageFlags usage;
    ImageTiling tiling;
 }
-struct PhysicalDevicePushDescriptorPropertiesKHR { 
+struct PhysicalDevicePushDescriptorPropertiesKHR {
    StructureType sType;
    void* pNext;
    uint maxPushDescriptors;
 }
-struct ConformanceVersion { 
+struct ConformanceVersion {
    uint major;
    uint minor;
    uint subminor;
    uint patch;
 }
-struct PhysicalDeviceDriverProperties { 
+struct PhysicalDeviceDriverProperties {
    StructureType sType;
    void* pNext;
    DriverId driverID;
@@ -4254,55 +4853,40 @@ struct PhysicalDeviceDriverProperties {
    char[MAX_DRIVER_INFO_SIZE] driverInfo;
    ConformanceVersion conformanceVersion;
 }
-struct PresentRegionsKHR { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   PresentRegionKHR* pRegions;
-}
-struct PresentRegionKHR { 
-   uint rectangleCount;
-   RectLayerKHR* pRectangles;
-}
-struct RectLayerKHR { 
-   Offset2D offset;
-   Extent2D extent;
-   uint layer;
-}
-struct PhysicalDeviceVariablePointersFeatures { 
+struct PhysicalDeviceVariablePointersFeatures {
    StructureType sType;
    void* pNext;
    uint variablePointersStorageBuffer;
    uint variablePointers;
 }
-struct ExternalMemoryProperties { 
+struct ExternalMemoryProperties {
    ExternalMemoryFeatureFlags externalMemoryFeatures;
    ExternalMemoryHandleTypeFlags exportFromImportedHandleTypes;
    ExternalMemoryHandleTypeFlags compatibleHandleTypes;
 }
-struct PhysicalDeviceExternalImageFormatInfo { 
+struct PhysicalDeviceExternalImageFormatInfo {
    StructureType sType;
    void* pNext;
    ExternalMemoryHandleTypeFlagBits handleType;
 }
-struct ExternalImageFormatProperties { 
+struct ExternalImageFormatProperties {
    StructureType sType;
    void* pNext;
    ExternalMemoryProperties externalMemoryProperties;
 }
-struct PhysicalDeviceExternalBufferInfo { 
+struct PhysicalDeviceExternalBufferInfo {
    StructureType sType;
    void* pNext;
    BufferCreateFlags flags;
    BufferUsageFlags usage;
    ExternalMemoryHandleTypeFlagBits handleType;
 }
-struct ExternalBufferProperties { 
+struct ExternalBufferProperties {
    StructureType sType;
    void* pNext;
    ExternalMemoryProperties externalMemoryProperties;
 }
-struct PhysicalDeviceIDProperties { 
+struct PhysicalDeviceIDProperties {
    StructureType sType;
    void* pNext;
    uint[UUID_SIZE] deviceUUID;
@@ -4311,307 +4895,69 @@ struct PhysicalDeviceIDProperties {
    uint deviceNodeMask;
    uint deviceLUIDValid;
 }
-struct ExternalMemoryImageCreateInfo { 
+struct ExternalMemoryImageCreateInfo {
    StructureType sType;
    void* pNext;
    ExternalMemoryHandleTypeFlags handleTypes;
 }
-struct ExternalMemoryBufferCreateInfo { 
+struct ExternalMemoryBufferCreateInfo {
    StructureType sType;
    void* pNext;
    ExternalMemoryHandleTypeFlags handleTypes;
 }
-struct ExportMemoryAllocateInfo { 
+struct ExportMemoryAllocateInfo {
    StructureType sType;
    void* pNext;
    ExternalMemoryHandleTypeFlags handleTypes;
 }
-struct ImportMemoryWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagBits handleType;
-   void* handle;
-   LPCWSTR name;
-}
-struct ExportMemoryWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SECURITY_ATTRIBUTES* pAttributes;
-   DWORD dwAccess;
-   LPCWSTR name;
-}
-struct ImportMemoryZirconHandleInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagBits handleType;
-   Display handle;
-}
-struct MemoryZirconHandlePropertiesFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-}
-struct MemoryGetZirconHandleInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   ExternalMemoryHandleTypeFlagBits handleType;
-}
-struct MemoryWin32HandlePropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-}
-struct MemoryGetWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   ExternalMemoryHandleTypeFlagBits handleType;
-}
-struct ImportMemoryFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagBits handleType;
-   int fd;
-}
-struct MemoryFdPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-}
-struct MemoryGetFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   ExternalMemoryHandleTypeFlagBits handleType;
-}
-struct Win32KeyedMutexAcquireReleaseInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint acquireCount;
-   DeviceMemory* pAcquireSyncs;
-   ulong* pAcquireKeys;
-   uint* pAcquireTimeouts;
-   uint releaseCount;
-   DeviceMemory* pReleaseSyncs;
-   ulong* pReleaseKeys;
-}
-struct PhysicalDeviceExternalSemaphoreInfo { 
+struct PhysicalDeviceExternalSemaphoreInfo {
    StructureType sType;
    void* pNext;
    ExternalSemaphoreHandleTypeFlagBits handleType;
 }
-struct ExternalSemaphoreProperties { 
+struct ExternalSemaphoreProperties {
    StructureType sType;
    void* pNext;
    ExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes;
    ExternalSemaphoreHandleTypeFlags compatibleHandleTypes;
    ExternalSemaphoreFeatureFlags externalSemaphoreFeatures;
 }
-struct ExportSemaphoreCreateInfo { 
+struct ExportSemaphoreCreateInfo {
    StructureType sType;
    void* pNext;
    ExternalSemaphoreHandleTypeFlags handleTypes;
 }
-struct ImportSemaphoreWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   SemaphoreImportFlags flags;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-   void* handle;
-   LPCWSTR name;
-}
-struct ExportSemaphoreWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SECURITY_ATTRIBUTES* pAttributes;
-   DWORD dwAccess;
-   LPCWSTR name;
-}
-struct D3D12FenceSubmitInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint waitSemaphoreValuesCount;
-   ulong* pWaitSemaphoreValues;
-   uint signalSemaphoreValuesCount;
-   ulong* pSignalSemaphoreValues;
-}
-struct SemaphoreGetWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-}
-struct ImportSemaphoreFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   SemaphoreImportFlags flags;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-   int fd;
-}
-struct SemaphoreGetFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-}
-struct ImportSemaphoreZirconHandleInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   SemaphoreImportFlags flags;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-   Display zirconHandle;
-}
-struct SemaphoreGetZirconHandleInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-}
-struct PhysicalDeviceExternalFenceInfo { 
+struct PhysicalDeviceExternalFenceInfo {
    StructureType sType;
    void* pNext;
    ExternalFenceHandleTypeFlagBits handleType;
 }
-struct ExternalFenceProperties { 
+struct ExternalFenceProperties {
    StructureType sType;
    void* pNext;
    ExternalFenceHandleTypeFlags exportFromImportedHandleTypes;
    ExternalFenceHandleTypeFlags compatibleHandleTypes;
    ExternalFenceFeatureFlags externalFenceFeatures;
 }
-struct ExportFenceCreateInfo { 
+struct ExportFenceCreateInfo {
    StructureType sType;
    void* pNext;
    ExternalFenceHandleTypeFlags handleTypes;
 }
-struct ImportFenceWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   FenceImportFlags flags;
-   ExternalFenceHandleTypeFlagBits handleType;
-   void* handle;
-   LPCWSTR name;
-}
-struct ExportFenceWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SECURITY_ATTRIBUTES* pAttributes;
-   DWORD dwAccess;
-   LPCWSTR name;
-}
-struct FenceGetWin32HandleInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   ExternalFenceHandleTypeFlagBits handleType;
-}
-struct ImportFenceFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   FenceImportFlags flags;
-   ExternalFenceHandleTypeFlagBits handleType;
-   int fd;
-}
-struct FenceGetFdInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   ExternalFenceHandleTypeFlagBits handleType;
-}
-struct ExportFenceSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   NvSciSyncAttrList pAttributes;
-}
-struct ImportFenceSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   ExternalFenceHandleTypeFlagBits handleType;
-   void* handle;
-}
-struct FenceGetSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Fence fence;
-   ExternalFenceHandleTypeFlagBits handleType;
-}
-struct ExportSemaphoreSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   NvSciSyncAttrList pAttributes;
-}
-struct ImportSemaphoreSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-   void* handle;
-}
-struct SemaphoreGetSciSyncInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   ExternalSemaphoreHandleTypeFlagBits handleType;
-}
-struct SciSyncAttributesInfoNV { 
-   StructureType sType;
-   void* pNext;
-   SciSyncClientTypeNV clientType;
-   SciSyncPrimitiveTypeNV primitiveType;
-}
-struct PhysicalDeviceExternalSciSyncFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint sciSyncFence;
-   uint sciSyncSemaphore;
-   uint sciSyncImport;
-   uint sciSyncExport;
-}
-struct PhysicalDeviceExternalSciSync2FeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint sciSyncFence;
-   uint sciSyncSemaphore2;
-   uint sciSyncImport;
-   uint sciSyncExport;
-}
-struct SemaphoreSciSyncPoolCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   NvSciSyncObj handle;
-}
-struct SemaphoreSciSyncCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   SemaphoreSciSyncPoolNV semaphorePool;
-   NvSciSyncFence* pFence;
-}
-struct DeviceSemaphoreSciSyncPoolReservationCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint semaphoreSciSyncPoolRequestCount;
-}
-struct PhysicalDeviceMultiviewFeatures { 
+struct PhysicalDeviceMultiviewFeatures {
    StructureType sType;
    void* pNext;
    uint multiview;
    uint multiviewGeometryShader;
    uint multiviewTessellationShader;
 }
-struct PhysicalDeviceMultiviewProperties { 
+struct PhysicalDeviceMultiviewProperties {
    StructureType sType;
    void* pNext;
    uint maxMultiviewViewCount;
    uint maxMultiviewInstanceIndex;
 }
-struct RenderPassMultiviewCreateInfo { 
+struct RenderPassMultiviewCreateInfo {
    StructureType sType;
    void* pNext;
    uint subpassCount;
@@ -4621,75 +4967,40 @@ struct RenderPassMultiviewCreateInfo {
    uint correlationMaskCount;
    uint* pCorrelationMasks;
 }
-struct SurfaceCapabilities2EXT { 
-   StructureType sType;
-   void* pNext;
-   uint minImageCount;
-   uint maxImageCount;
-   Extent2D currentExtent;
-   Extent2D minImageExtent;
-   Extent2D maxImageExtent;
-   uint maxImageArrayLayers;
-   SurfaceTransformFlagsKHR supportedTransforms;
-   SurfaceTransformFlagBitsKHR currentTransform;
-   CompositeAlphaFlagsKHR supportedCompositeAlpha;
-   ImageUsageFlags supportedUsageFlags;
-   SurfaceCounterFlagsEXT supportedSurfaceCounters;
-}
-struct DisplayPowerInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DisplayPowerStateEXT powerState;
-}
-struct DeviceEventInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceEventTypeEXT deviceEvent;
-}
-struct DisplayEventInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DisplayEventTypeEXT displayEvent;
-}
-struct SwapchainCounterCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   SurfaceCounterFlagsEXT surfaceCounters;
-}
-struct PhysicalDeviceGroupProperties { 
+struct PhysicalDeviceGroupProperties {
    StructureType sType;
    void* pNext;
    uint physicalDeviceCount;
    PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices;
    uint subsetAllocation;
 }
-struct MemoryAllocateFlagsInfo { 
+struct MemoryAllocateFlagsInfo {
    StructureType sType;
    void* pNext;
    MemoryAllocateFlags flags;
    uint deviceMask;
 }
-struct BindBufferMemoryInfo { 
+struct BindBufferMemoryInfo {
    StructureType sType;
    void* pNext;
    Buffer buffer;
    DeviceMemory memory;
    DeviceSize memoryOffset;
 }
-struct BindBufferMemoryDeviceGroupInfo { 
+struct BindBufferMemoryDeviceGroupInfo {
    StructureType sType;
    void* pNext;
    uint deviceIndexCount;
    uint* pDeviceIndices;
 }
-struct BindImageMemoryInfo { 
+struct BindImageMemoryInfo {
    StructureType sType;
    void* pNext;
    Image image;
    DeviceMemory memory;
    DeviceSize memoryOffset;
 }
-struct BindImageMemoryDeviceGroupInfo { 
+struct BindImageMemoryDeviceGroupInfo {
    StructureType sType;
    void* pNext;
    uint deviceIndexCount;
@@ -4697,19 +5008,19 @@ struct BindImageMemoryDeviceGroupInfo {
    uint splitInstanceBindRegionCount;
    Rect2D* pSplitInstanceBindRegions;
 }
-struct DeviceGroupRenderPassBeginInfo { 
+struct DeviceGroupRenderPassBeginInfo {
    StructureType sType;
    void* pNext;
    uint deviceMask;
    uint deviceRenderAreaCount;
    Rect2D* pDeviceRenderAreas;
 }
-struct DeviceGroupCommandBufferBeginInfo { 
+struct DeviceGroupCommandBufferBeginInfo {
    StructureType sType;
    void* pNext;
    uint deviceMask;
 }
-struct DeviceGroupSubmitInfo { 
+struct DeviceGroupSubmitInfo {
    StructureType sType;
    void* pNext;
    uint waitSemaphoreCount;
@@ -4719,57 +5030,19 @@ struct DeviceGroupSubmitInfo {
    uint signalSemaphoreCount;
    uint* pSignalSemaphoreDeviceIndices;
 }
-struct DeviceGroupBindSparseInfo { 
+struct DeviceGroupBindSparseInfo {
    StructureType sType;
    void* pNext;
    uint resourceDeviceIndex;
    uint memoryDeviceIndex;
 }
-struct DeviceGroupPresentCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint[MAX_DEVICE_GROUP_SIZE] presentMask;
-   DeviceGroupPresentModeFlagsKHR modes;
-}
-struct ImageSwapchainCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SwapchainKHR swapchain;
-}
-struct BindImageMemorySwapchainInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SwapchainKHR swapchain;
-   uint imageIndex;
-}
-struct AcquireNextImageInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   SwapchainKHR swapchain;
-   ulong timeout;
-   Semaphore semaphore;
-   Fence fence;
-   uint deviceMask;
-}
-struct DeviceGroupPresentInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   uint* pDeviceMasks;
-   DeviceGroupPresentModeFlagBitsKHR mode;
-}
-struct DeviceGroupDeviceCreateInfo { 
+struct DeviceGroupDeviceCreateInfo {
    StructureType sType;
    void* pNext;
    uint physicalDeviceCount;
    PhysicalDevice* pPhysicalDevices;
 }
-struct DeviceGroupSwapchainCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceGroupPresentModeFlagsKHR modes;
-}
-struct DescriptorUpdateTemplateEntry { 
+struct DescriptorUpdateTemplateEntry {
    uint dstBinding;
    uint dstArrayElement;
    uint descriptorCount;
@@ -4777,7 +5050,7 @@ struct DescriptorUpdateTemplateEntry {
    usz offset;
    usz stride;
 }
-struct DescriptorUpdateTemplateCreateInfo { 
+struct DescriptorUpdateTemplateCreateInfo {
    StructureType sType;
    void* pNext;
    DescriptorUpdateTemplateCreateFlags flags;
@@ -4789,186 +5062,24 @@ struct DescriptorUpdateTemplateCreateInfo {
    PipelineLayout pipelineLayout;
    uint set;
 }
-struct XYColorEXT { 
-   float x;
-   float y;
-}
-struct PhysicalDevicePresentIdFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint presentId;
-}
-struct PresentIdKHR { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   ulong* pPresentIds;
-}
-struct PhysicalDevicePresentWaitFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint presentWait;
-}
-struct HdrMetadataEXT { 
-   StructureType sType;
-   void* pNext;
-   XYColorEXT displayPrimaryRed;
-   XYColorEXT displayPrimaryGreen;
-   XYColorEXT displayPrimaryBlue;
-   XYColorEXT whitePoint;
-   float maxLuminance;
-   float minLuminance;
-   float maxContentLightLevel;
-   float maxFrameAverageLightLevel;
-}
-struct DisplayNativeHdrSurfaceCapabilitiesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint localDimmingSupport;
-}
-struct SwapchainDisplayNativeHdrCreateInfoAMD { 
-   StructureType sType;
-   void* pNext;
-   uint localDimmingEnable;
-}
-struct RefreshCycleDurationGOOGLE { 
-   ulong refreshDuration;
-}
-struct PastPresentationTimingGOOGLE { 
-   uint presentID;
-   ulong desiredPresentTime;
-   ulong actualPresentTime;
-   ulong earliestPresentTime;
-   ulong presentMargin;
-}
-struct PresentTimesInfoGOOGLE { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   PresentTimeGOOGLE* pTimes;
-}
-struct PresentTimeGOOGLE { 
-   uint presentID;
-   ulong desiredPresentTime;
-}
-struct IOSSurfaceCreateInfoMVK { 
-   StructureType sType;
-   void* pNext;
-   IOSSurfaceCreateFlagsMVK flags;
-   void* pView;
-}
-struct MacOSSurfaceCreateInfoMVK { 
+struct MacOSSurfaceCreateInfoMVK {
    StructureType sType;
    void* pNext;
    MacOSSurfaceCreateFlagsMVK flags;
    void* pView;
 }
-struct MetalSurfaceCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MetalSurfaceCreateFlagsEXT flags;
-   CAMetalLayer* pLayer;
-}
-struct ViewportWScalingNV { 
-   float xcoeff;
-   float ycoeff;
-}
-struct PipelineViewportWScalingStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint viewportWScalingEnable;
-   uint viewportCount;
-   ViewportWScalingNV* pViewportWScalings;
-}
-struct ViewportSwizzleNV { 
-   ViewportCoordinateSwizzleNV x;
-   ViewportCoordinateSwizzleNV y;
-   ViewportCoordinateSwizzleNV z;
-   ViewportCoordinateSwizzleNV w;
-}
-struct PipelineViewportSwizzleStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineViewportSwizzleStateCreateFlagsNV flags;
-   uint viewportCount;
-   ViewportSwizzleNV* pViewportSwizzles;
-}
-struct PhysicalDeviceDiscardRectanglePropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxDiscardRectangles;
-}
-struct PipelineDiscardRectangleStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineDiscardRectangleStateCreateFlagsEXT flags;
-   DiscardRectangleModeEXT discardRectangleMode;
-   uint discardRectangleCount;
-   Rect2D* pDiscardRectangles;
-}
-struct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX { 
-   StructureType sType;
-   void* pNext;
-   uint perViewPositionAllComponents;
-}
-struct InputAttachmentAspectReference { 
+struct InputAttachmentAspectReference {
    uint subpass;
    uint inputAttachmentIndex;
    ImageAspectFlags aspectMask;
 }
-struct RenderPassInputAttachmentAspectCreateInfo { 
+struct RenderPassInputAttachmentAspectCreateInfo {
    StructureType sType;
    void* pNext;
    uint aspectReferenceCount;
    InputAttachmentAspectReference* pAspectReferences;
 }
-struct PhysicalDeviceSurfaceInfo2KHR { 
-   StructureType sType;
-   void* pNext;
-   SurfaceKHR surface;
-}
-struct SurfaceCapabilities2KHR { 
-   StructureType sType;
-   void* pNext;
-   SurfaceCapabilitiesKHR surfaceCapabilities;
-}
-struct SurfaceFormat2KHR { 
-   StructureType sType;
-   void* pNext;
-   SurfaceFormatKHR surfaceFormat;
-}
-struct DisplayProperties2KHR { 
-   StructureType sType;
-   void* pNext;
-   DisplayPropertiesKHR displayProperties;
-}
-struct DisplayPlaneProperties2KHR { 
-   StructureType sType;
-   void* pNext;
-   DisplayPlanePropertiesKHR displayPlaneProperties;
-}
-struct DisplayModeProperties2KHR { 
-   StructureType sType;
-   void* pNext;
-   DisplayModePropertiesKHR displayModeProperties;
-}
-struct DisplayPlaneInfo2KHR { 
-   StructureType sType;
-   void* pNext;
-   DisplayModeKHR mode;
-   uint planeIndex;
-}
-struct DisplayPlaneCapabilities2KHR { 
-   StructureType sType;
-   void* pNext;
-   DisplayPlaneCapabilitiesKHR capabilities;
-}
-struct SharedPresentSurfaceCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   ImageUsageFlags sharedPresentSupportedUsageFlags;
-}
-struct PhysicalDevice16BitStorageFeatures { 
+struct PhysicalDevice16BitStorageFeatures {
    StructureType sType;
    void* pNext;
    uint storageBuffer16BitAccess;
@@ -4976,7 +5087,7 @@ struct PhysicalDevice16BitStorageFeatures {
    uint storagePushConstant16;
    uint storageInputOutput16;
 }
-struct PhysicalDeviceSubgroupProperties { 
+struct PhysicalDeviceSubgroupProperties {
    StructureType sType;
    void* pNext;
    uint subgroupSize;
@@ -4984,86 +5095,80 @@ struct PhysicalDeviceSubgroupProperties {
    SubgroupFeatureFlags supportedOperations;
    uint quadOperationsInAllStages;
 }
-struct PhysicalDeviceShaderSubgroupExtendedTypesFeatures { 
+struct PhysicalDeviceShaderSubgroupExtendedTypesFeatures {
    StructureType sType;
    void* pNext;
    uint shaderSubgroupExtendedTypes;
 }
-struct BufferMemoryRequirementsInfo2 { 
+struct BufferMemoryRequirementsInfo2 {
    StructureType sType;
    void* pNext;
    Buffer buffer;
 }
-struct DeviceBufferMemoryRequirements { 
+struct DeviceBufferMemoryRequirements {
    StructureType sType;
    void* pNext;
    BufferCreateInfo* pCreateInfo;
 }
-struct ImageMemoryRequirementsInfo2 { 
+struct ImageMemoryRequirementsInfo2 {
    StructureType sType;
    void* pNext;
    Image image;
 }
-struct ImageSparseMemoryRequirementsInfo2 { 
+struct ImageSparseMemoryRequirementsInfo2 {
    StructureType sType;
    void* pNext;
    Image image;
 }
-struct DeviceImageMemoryRequirements { 
+struct DeviceImageMemoryRequirements {
    StructureType sType;
    void* pNext;
    ImageCreateInfo* pCreateInfo;
    ImageAspectFlagBits planeAspect;
 }
-struct MemoryRequirements2 { 
+struct MemoryRequirements2 {
    StructureType sType;
    void* pNext;
    MemoryRequirements memoryRequirements;
 }
-struct SparseImageMemoryRequirements2 { 
+struct SparseImageMemoryRequirements2 {
    StructureType sType;
    void* pNext;
    SparseImageMemoryRequirements memoryRequirements;
 }
-struct PhysicalDevicePointClippingProperties { 
+struct PhysicalDevicePointClippingProperties {
    StructureType sType;
    void* pNext;
    PointClippingBehavior pointClippingBehavior;
 }
-struct MemoryDedicatedRequirements { 
+struct MemoryDedicatedRequirements {
    StructureType sType;
    void* pNext;
    uint prefersDedicatedAllocation;
    uint requiresDedicatedAllocation;
 }
-struct MemoryDedicatedAllocateInfo { 
+struct MemoryDedicatedAllocateInfo {
    StructureType sType;
    void* pNext;
    Image image;
    Buffer buffer;
 }
-struct ImageViewUsageCreateInfo { 
+struct ImageViewUsageCreateInfo {
    StructureType sType;
    void* pNext;
    ImageUsageFlags usage;
 }
-struct ImageViewSlicedCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint sliceOffset;
-   uint sliceCount;
-}
-struct PipelineTessellationDomainOriginStateCreateInfo { 
+struct PipelineTessellationDomainOriginStateCreateInfo {
    StructureType sType;
    void* pNext;
    TessellationDomainOrigin domainOrigin;
 }
-struct SamplerYcbcrConversionInfo { 
+struct SamplerYcbcrConversionInfo {
    StructureType sType;
    void* pNext;
    SamplerYcbcrConversion conversion;
 }
-struct SamplerYcbcrConversionCreateInfo { 
+struct SamplerYcbcrConversionCreateInfo {
    StructureType sType;
    void* pNext;
    Format format;
@@ -5075,160 +5180,66 @@ struct SamplerYcbcrConversionCreateInfo {
    Filter chromaFilter;
    uint forceExplicitReconstruction;
 }
-struct BindImagePlaneMemoryInfo { 
+struct BindImagePlaneMemoryInfo {
    StructureType sType;
    void* pNext;
    ImageAspectFlagBits planeAspect;
 }
-struct ImagePlaneMemoryRequirementsInfo { 
+struct ImagePlaneMemoryRequirementsInfo {
    StructureType sType;
    void* pNext;
    ImageAspectFlagBits planeAspect;
 }
-struct PhysicalDeviceSamplerYcbcrConversionFeatures { 
+struct PhysicalDeviceSamplerYcbcrConversionFeatures {
    StructureType sType;
    void* pNext;
    uint samplerYcbcrConversion;
 }
-struct SamplerYcbcrConversionImageFormatProperties { 
+struct SamplerYcbcrConversionImageFormatProperties {
    StructureType sType;
    void* pNext;
    uint combinedImageSamplerDescriptorCount;
 }
-struct TextureLODGatherFormatPropertiesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint supportsTextureGatherLODBiasAMD;
-}
-struct ConditionalRenderingBeginInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Buffer buffer;
-   DeviceSize offset;
-   ConditionalRenderingFlagsEXT flags;
-}
-struct ProtectedSubmitInfo { 
+struct ProtectedSubmitInfo {
    StructureType sType;
    void* pNext;
    uint protectedSubmit;
 }
-struct PhysicalDeviceProtectedMemoryFeatures { 
+struct PhysicalDeviceProtectedMemoryFeatures {
    StructureType sType;
    void* pNext;
    uint protectedMemory;
 }
-struct PhysicalDeviceProtectedMemoryProperties { 
+struct PhysicalDeviceProtectedMemoryProperties {
    StructureType sType;
    void* pNext;
    uint protectedNoFault;
 }
-struct DeviceQueueInfo2 { 
+struct DeviceQueueInfo2 {
    StructureType sType;
    void* pNext;
    DeviceQueueCreateFlags flags;
    uint queueFamilyIndex;
    uint queueIndex;
 }
-struct PipelineCoverageToColorStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineCoverageToColorStateCreateFlagsNV flags;
-   uint coverageToColorEnable;
-   uint coverageToColorLocation;
-}
-struct PhysicalDeviceSamplerFilterMinmaxProperties { 
+struct PhysicalDeviceSamplerFilterMinmaxProperties {
    StructureType sType;
    void* pNext;
    uint filterMinmaxSingleComponentFormats;
    uint filterMinmaxImageComponentMapping;
 }
-struct SampleLocationEXT { 
-   float x;
-   float y;
-}
-struct SampleLocationsInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   SampleCountFlagBits sampleLocationsPerPixel;
-   Extent2D sampleLocationGridSize;
-   uint sampleLocationsCount;
-   SampleLocationEXT* pSampleLocations;
-}
-struct AttachmentSampleLocationsEXT { 
-   uint attachmentIndex;
-   SampleLocationsInfoEXT sampleLocationsInfo;
-}
-struct SubpassSampleLocationsEXT { 
-   uint subpassIndex;
-   SampleLocationsInfoEXT sampleLocationsInfo;
-}
-struct RenderPassSampleLocationsBeginInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint attachmentInitialSampleLocationsCount;
-   AttachmentSampleLocationsEXT* pAttachmentInitialSampleLocations;
-   uint postSubpassSampleLocationsCount;
-   SubpassSampleLocationsEXT* pPostSubpassSampleLocations;
-}
-struct PipelineSampleLocationsStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint sampleLocationsEnable;
-   SampleLocationsInfoEXT sampleLocationsInfo;
-}
-struct PhysicalDeviceSampleLocationsPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   SampleCountFlags sampleLocationSampleCounts;
-   Extent2D maxSampleLocationGridSize;
-   float[2] sampleLocationCoordinateRange;
-   uint sampleLocationSubPixelBits;
-   uint variableSampleLocations;
-}
-struct MultisamplePropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   Extent2D maxSampleLocationGridSize;
-}
-struct SamplerReductionModeCreateInfo { 
+struct SamplerReductionModeCreateInfo {
    StructureType sType;
    void* pNext;
    SamplerReductionMode reductionMode;
 }
-struct PhysicalDeviceBlendOperationAdvancedFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint advancedBlendCoherentOperations;
-}
-struct PhysicalDeviceMultiDrawFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint multiDraw;
-}
-struct PhysicalDeviceBlendOperationAdvancedPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint advancedBlendMaxColorAttachments;
-   uint advancedBlendIndependentBlend;
-   uint advancedBlendNonPremultipliedSrcColor;
-   uint advancedBlendNonPremultipliedDstColor;
-   uint advancedBlendCorrelatedOverlap;
-   uint advancedBlendAllOperations;
-}
-struct PipelineColorBlendAdvancedStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint srcPremultiplied;
-   uint dstPremultiplied;
-   BlendOverlapEXT blendOverlap;
-}
-struct PhysicalDeviceInlineUniformBlockFeatures { 
+struct PhysicalDeviceInlineUniformBlockFeatures {
    StructureType sType;
    void* pNext;
    uint inlineUniformBlock;
    uint descriptorBindingInlineUniformBlockUpdateAfterBind;
 }
-struct PhysicalDeviceInlineUniformBlockProperties { 
+struct PhysicalDeviceInlineUniformBlockProperties {
    StructureType sType;
    void* pNext;
    uint maxInlineUniformBlockSize;
@@ -5237,149 +5248,56 @@ struct PhysicalDeviceInlineUniformBlockProperties {
    uint maxDescriptorSetInlineUniformBlocks;
    uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
 }
-struct WriteDescriptorSetInlineUniformBlock { 
+struct WriteDescriptorSetInlineUniformBlock {
    StructureType sType;
    void* pNext;
    uint dataSize;
    void* pData;
 }
-struct DescriptorPoolInlineUniformBlockCreateInfo { 
+struct DescriptorPoolInlineUniformBlockCreateInfo {
    StructureType sType;
    void* pNext;
    uint maxInlineUniformBlockBindings;
 }
-struct PipelineCoverageModulationStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineCoverageModulationStateCreateFlagsNV flags;
-   CoverageModulationModeNV coverageModulationMode;
-   uint coverageModulationTableEnable;
-   uint coverageModulationTableCount;
-   float* pCoverageModulationTable;
-}
-struct ImageFormatListCreateInfo { 
+struct ImageFormatListCreateInfo {
    StructureType sType;
    void* pNext;
    uint viewFormatCount;
    Format* pViewFormats;
 }
-struct ValidationCacheCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ValidationCacheCreateFlagsEXT flags;
-   usz initialDataSize;
-   void* pInitialData;
-}
-struct ShaderModuleValidationCacheCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ValidationCacheEXT validationCache;
-}
-struct PhysicalDeviceMaintenance3Properties { 
+struct PhysicalDeviceMaintenance3Properties {
    StructureType sType;
    void* pNext;
    uint maxPerSetDescriptors;
    DeviceSize maxMemoryAllocationSize;
 }
-struct PhysicalDeviceMaintenance4Features { 
+struct PhysicalDeviceMaintenance4Features {
    StructureType sType;
    void* pNext;
    uint maintenance4;
 }
-struct PhysicalDeviceMaintenance4Properties { 
+struct PhysicalDeviceMaintenance4Properties {
    StructureType sType;
    void* pNext;
    DeviceSize maxBufferSize;
 }
-struct PhysicalDeviceMaintenance5FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maintenance5;
-}
-struct PhysicalDeviceMaintenance5PropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint earlyFragmentMultisampleCoverageAfterSampleCounting;
-   uint earlyFragmentSampleMaskTestBeforeSampleCounting;
-   uint depthStencilSwizzleOneSupport;
-   uint polygonModePointSize;
-   uint nonStrictSinglePixelWideLinesUseParallelogram;
-   uint nonStrictWideLinesUseParallelogram;
-}
-struct PhysicalDeviceMaintenance6FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maintenance6;
-}
-struct PhysicalDeviceMaintenance6PropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint blockTexelViewCompatibleMultipleLayers;
-   uint maxCombinedImageSamplerDescriptorCount;
-   uint fragmentShadingRateClampCombinerInputs;
-}
-struct PhysicalDeviceMaintenance7FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maintenance7;
-}
-struct PhysicalDeviceMaintenance7PropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint robustFragmentShadingRateAttachmentAccess;
-   uint separateDepthStencilAttachmentAccess;
-   uint maxDescriptorSetTotalUniformBuffersDynamic;
-   uint maxDescriptorSetTotalStorageBuffersDynamic;
-   uint maxDescriptorSetTotalBuffersDynamic;
-   uint maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic;
-   uint maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic;
-   uint maxDescriptorSetUpdateAfterBindTotalBuffersDynamic;
-}
-struct PhysicalDeviceLayeredApiPropertiesListKHR { 
-   StructureType sType;
-   void* pNext;
-   uint layeredApiCount;
-   PhysicalDeviceLayeredApiPropertiesKHR* pLayeredApis;
-}
-struct PhysicalDeviceLayeredApiPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint vendorID;
-   uint deviceID;
-   PhysicalDeviceLayeredApiKHR layeredAPI;
-   char[MAX_PHYSICAL_DEVICE_NAME_SIZE] deviceName;
-}
-struct PhysicalDeviceLayeredApiVulkanPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   PhysicalDeviceProperties2 properties;
-}
-struct RenderingAreaInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint viewMask;
-   uint colorAttachmentCount;
-   Format* pColorAttachmentFormats;
-   Format depthAttachmentFormat;
-   Format stencilAttachmentFormat;
-}
-struct DescriptorSetLayoutSupport { 
+struct DescriptorSetLayoutSupport {
    StructureType sType;
    void* pNext;
    uint supported;
 }
-struct PhysicalDeviceShaderDrawParametersFeatures { 
+struct PhysicalDeviceShaderDrawParametersFeatures {
    StructureType sType;
    void* pNext;
    uint shaderDrawParameters;
 }
-struct PhysicalDeviceShaderFloat16Int8Features { 
+struct PhysicalDeviceShaderFloat16Int8Features {
    StructureType sType;
    void* pNext;
    uint shaderFloat16;
    uint shaderInt8;
 }
-struct PhysicalDeviceFloatControlsProperties { 
+struct PhysicalDeviceFloatControlsProperties {
    StructureType sType;
    void* pNext;
    ShaderFloatControlsIndependence denormBehaviorIndependence;
@@ -5400,74 +5318,19 @@ struct PhysicalDeviceFloatControlsProperties {
    uint shaderRoundingModeRTZFloat32;
    uint shaderRoundingModeRTZFloat64;
 }
-struct PhysicalDeviceHostQueryResetFeatures { 
+struct PhysicalDeviceHostQueryResetFeatures {
    StructureType sType;
    void* pNext;
    uint hostQueryReset;
 }
-struct NativeBufferUsage2ANDROID { 
-   ulong consumer;
-   ulong producer;
-}
-struct NativeBufferANDROID { 
-   StructureType sType;
-   void* pNext;
-   void* handle;
-   int stride;
-   int format;
-   int usage;
-   NativeBufferUsage2ANDROID usage2;
-}
-struct SwapchainImageCreateInfoANDROID { 
-   StructureType sType;
-   void* pNext;
-   SwapchainImageUsageFlagsANDROID usage;
-}
-struct PhysicalDevicePresentationPropertiesANDROID { 
-   StructureType sType;
-   void* pNext;
-   uint sharedImage;
-}
-struct ShaderResourceUsageAMD { 
-   uint numUsedVgprs;
-   uint numUsedSgprs;
-   uint ldsSizePerLocalWorkGroup;
-   usz ldsUsageSizeInBytes;
-   usz scratchMemUsageInBytes;
-}
-struct ShaderStatisticsInfoAMD { 
-   ShaderStageFlags shaderStageMask;
-   ShaderResourceUsageAMD resourceUsage;
-   uint numPhysicalVgprs;
-   uint numPhysicalSgprs;
-   uint numAvailableVgprs;
-   uint numAvailableSgprs;
-   uint[3] computeWorkGroupSize;
-}
-struct DeviceQueueGlobalPriorityCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   QueueGlobalPriorityKHR globalPriority;
-}
-struct PhysicalDeviceGlobalPriorityQueryFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint globalPriorityQuery;
-}
-struct QueueFamilyGlobalPriorityPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint priorityCount;
-   QueueGlobalPriorityKHR[MAX_GLOBAL_PRIORITY_SIZE_KHR] priorities;
-}
-struct DebugUtilsObjectNameInfoEXT { 
+struct DebugUtilsObjectNameInfoEXT {
    StructureType sType;
    void* pNext;
    ObjectType objectType;
    ulong objectHandle;
    char* pObjectName;
 }
-struct DebugUtilsObjectTagInfoEXT { 
+struct DebugUtilsObjectTagInfoEXT {
    StructureType sType;
    void* pNext;
    ObjectType objectType;
@@ -5476,13 +5339,13 @@ struct DebugUtilsObjectTagInfoEXT {
    usz tagSize;
    void* pTag;
 }
-struct DebugUtilsLabelEXT { 
+struct DebugUtilsLabelEXT {
    StructureType sType;
    void* pNext;
    char* pLabelName;
    float[4] color;
 }
-struct DebugUtilsMessengerCreateInfoEXT { 
+struct DebugUtilsMessengerCreateInfoEXT {
    StructureType sType;
    void* pNext;
    DebugUtilsMessengerCreateFlagsEXT flags;
@@ -5491,7 +5354,7 @@ struct DebugUtilsMessengerCreateInfoEXT {
    PFN_vkDebugUtilsMessengerCallbackEXT pfnUserCallback;
    void* pUserData;
 }
-struct DebugUtilsMessengerCallbackDataEXT { 
+struct DebugUtilsMessengerCallbackDataEXT {
    StructureType sType;
    void* pNext;
    DebugUtilsMessengerCallbackDataFlagsEXT flags;
@@ -5505,95 +5368,7 @@ struct DebugUtilsMessengerCallbackDataEXT {
    uint objectCount;
    DebugUtilsObjectNameInfoEXT* pObjects;
 }
-struct PhysicalDeviceDeviceMemoryReportFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint deviceMemoryReport;
-}
-struct DeviceDeviceMemoryReportCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemoryReportFlagsEXT flags;
-   PFN_vkDeviceMemoryReportCallbackEXT pfnUserCallback;
-   void* pUserData;
-}
-struct DeviceMemoryReportCallbackDataEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemoryReportFlagsEXT flags;
-   DeviceMemoryReportEventTypeEXT type;
-   ulong memoryObjectId;
-   DeviceSize size;
-   ObjectType objectType;
-   ulong objectHandle;
-   uint heapIndex;
-}
-struct ImportMemoryHostPointerInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ExternalMemoryHandleTypeFlagBits handleType;
-   void* pHostPointer;
-}
-struct MemoryHostPointerPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-}
-struct PhysicalDeviceExternalMemoryHostPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize minImportedHostPointerAlignment;
-}
-struct PhysicalDeviceConservativeRasterizationPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   float primitiveOverestimationSize;
-   float maxExtraPrimitiveOverestimationSize;
-   float extraPrimitiveOverestimationSizeGranularity;
-   uint primitiveUnderestimation;
-   uint conservativePointAndLineRasterization;
-   uint degenerateTrianglesRasterized;
-   uint degenerateLinesRasterized;
-   uint fullyCoveredFragmentShaderInputVariable;
-   uint conservativeRasterizationPostDepthCoverage;
-}
-struct CalibratedTimestampInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   TimeDomainKHR timeDomain;
-}
-struct PhysicalDeviceShaderCorePropertiesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint shaderEngineCount;
-   uint shaderArraysPerEngineCount;
-   uint computeUnitsPerShaderArray;
-   uint simdPerComputeUnit;
-   uint wavefrontsPerSimd;
-   uint wavefrontSize;
-   uint sgprsPerSimd;
-   uint minSgprAllocation;
-   uint maxSgprAllocation;
-   uint sgprAllocationGranularity;
-   uint vgprsPerSimd;
-   uint minVgprAllocation;
-   uint maxVgprAllocation;
-   uint vgprAllocationGranularity;
-}
-struct PhysicalDeviceShaderCoreProperties2AMD { 
-   StructureType sType;
-   void* pNext;
-   ShaderCorePropertiesFlagsAMD shaderCoreFeatures;
-   uint activeComputeUnitCount;
-}
-struct PipelineRasterizationConservativeStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineRasterizationConservativeStateCreateFlagsEXT flags;
-   ConservativeRasterizationModeEXT conservativeRasterizationMode;
-   float extraPrimitiveOverestimationSize;
-}
-struct PhysicalDeviceDescriptorIndexingFeatures { 
+struct PhysicalDeviceDescriptorIndexingFeatures {
    StructureType sType;
    void* pNext;
    uint shaderInputAttachmentArrayDynamicIndexing;
@@ -5617,7 +5392,7 @@ struct PhysicalDeviceDescriptorIndexingFeatures {
    uint descriptorBindingVariableDescriptorCount;
    uint runtimeDescriptorArray;
 }
-struct PhysicalDeviceDescriptorIndexingProperties { 
+struct PhysicalDeviceDescriptorIndexingProperties {
    StructureType sType;
    void* pNext;
    uint maxUpdateAfterBindDescriptorsInAllPools;
@@ -5644,24 +5419,24 @@ struct PhysicalDeviceDescriptorIndexingProperties {
    uint maxDescriptorSetUpdateAfterBindStorageImages;
    uint maxDescriptorSetUpdateAfterBindInputAttachments;
 }
-struct DescriptorSetLayoutBindingFlagsCreateInfo { 
+struct DescriptorSetLayoutBindingFlagsCreateInfo {
    StructureType sType;
    void* pNext;
    uint bindingCount;
    DescriptorBindingFlags* pBindingFlags;
 }
-struct DescriptorSetVariableDescriptorCountAllocateInfo { 
+struct DescriptorSetVariableDescriptorCountAllocateInfo {
    StructureType sType;
    void* pNext;
    uint descriptorSetCount;
    uint* pDescriptorCounts;
 }
-struct DescriptorSetVariableDescriptorCountLayoutSupport { 
+struct DescriptorSetVariableDescriptorCountLayoutSupport {
    StructureType sType;
    void* pNext;
    uint maxVariableDescriptorCount;
 }
-struct AttachmentDescription2 { 
+struct AttachmentDescription2 {
    StructureType sType;
    void* pNext;
    AttachmentDescriptionFlags flags;
@@ -5674,14 +5449,14 @@ struct AttachmentDescription2 {
    ImageLayout initialLayout;
    ImageLayout finalLayout;
 }
-struct AttachmentReference2 { 
+struct AttachmentReference2 {
    StructureType sType;
    void* pNext;
    uint attachment;
    ImageLayout layout;
    ImageAspectFlags aspectMask;
 }
-struct SubpassDescription2 { 
+struct SubpassDescription2 {
    StructureType sType;
    void* pNext;
    SubpassDescriptionFlags flags;
@@ -5696,7 +5471,7 @@ struct SubpassDescription2 {
    uint preserveAttachmentCount;
    uint* pPreserveAttachments;
 }
-struct SubpassDependency2 { 
+struct SubpassDependency2 {
    StructureType sType;
    void* pNext;
    uint srcSubpass;
@@ -5708,7 +5483,7 @@ struct SubpassDependency2 {
    DependencyFlags dependencyFlags;
    int viewOffset;
 }
-struct RenderPassCreateInfo2 { 
+struct RenderPassCreateInfo2 {
    StructureType sType;
    void* pNext;
    RenderPassCreateFlags flags;
@@ -5721,32 +5496,32 @@ struct RenderPassCreateInfo2 {
    uint correlatedViewMaskCount;
    uint* pCorrelatedViewMasks;
 }
-struct SubpassBeginInfo { 
+struct SubpassBeginInfo {
    StructureType sType;
    void* pNext;
    SubpassContents contents;
 }
-struct SubpassEndInfo { 
+struct SubpassEndInfo {
    StructureType sType;
    void* pNext;
 }
-struct PhysicalDeviceTimelineSemaphoreFeatures { 
+struct PhysicalDeviceTimelineSemaphoreFeatures {
    StructureType sType;
    void* pNext;
    uint timelineSemaphore;
 }
-struct PhysicalDeviceTimelineSemaphoreProperties { 
+struct PhysicalDeviceTimelineSemaphoreProperties {
    StructureType sType;
    void* pNext;
    ulong maxTimelineSemaphoreValueDifference;
 }
-struct SemaphoreTypeCreateInfo { 
+struct SemaphoreTypeCreateInfo {
    StructureType sType;
    void* pNext;
    SemaphoreType semaphoreType;
    ulong initialValue;
 }
-struct TimelineSemaphoreSubmitInfo { 
+struct TimelineSemaphoreSubmitInfo {
    StructureType sType;
    void* pNext;
    uint waitSemaphoreValueCount;
@@ -5754,7 +5529,7 @@ struct TimelineSemaphoreSubmitInfo {
    uint signalSemaphoreValueCount;
    ulong* pSignalSemaphoreValues;
 }
-struct SemaphoreWaitInfo { 
+struct SemaphoreWaitInfo {
    StructureType sType;
    void* pNext;
    SemaphoreWaitFlags flags;
@@ -5762,160 +5537,33 @@ struct SemaphoreWaitInfo {
    Semaphore* pSemaphores;
    ulong* pValues;
 }
-struct SemaphoreSignalInfo { 
+struct SemaphoreSignalInfo {
    StructureType sType;
    void* pNext;
    Semaphore semaphore;
    ulong value;
 }
-struct VertexInputBindingDivisorDescriptionKHR { 
-   uint binding;
-   uint divisor;
-}
-struct PipelineVertexInputDivisorStateCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint vertexBindingDivisorCount;
-   VertexInputBindingDivisorDescriptionKHR* pVertexBindingDivisors;
-}
-struct PhysicalDeviceVertexAttributeDivisorPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxVertexAttribDivisor;
-}
-struct PhysicalDeviceVertexAttributeDivisorPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxVertexAttribDivisor;
-   uint supportsNonZeroFirstInstance;
-}
-struct PhysicalDevicePCIBusInfoPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pciDomain;
-   uint pciBus;
-   uint pciDevice;
-   uint pciFunction;
-}
-struct ImportAndroidHardwareBufferInfoANDROID { 
-   StructureType sType;
-   void* pNext;
-   AHardwareBuffer* buffer;
-}
-struct AndroidHardwareBufferUsageANDROID { 
-   StructureType sType;
-   void* pNext;
-   ulong androidHardwareBufferUsage;
-}
-struct AndroidHardwareBufferPropertiesANDROID { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize allocationSize;
-   uint memoryTypeBits;
-}
-struct MemoryGetAndroidHardwareBufferInfoANDROID { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-}
-struct AndroidHardwareBufferFormatPropertiesANDROID { 
-   StructureType sType;
-   void* pNext;
-   Format format;
-   ulong externalFormat;
-   FormatFeatureFlags formatFeatures;
-   ComponentMapping samplerYcbcrConversionComponents;
-   SamplerYcbcrModelConversion suggestedYcbcrModel;
-   SamplerYcbcrRange suggestedYcbcrRange;
-   ChromaLocation suggestedXChromaOffset;
-   ChromaLocation suggestedYChromaOffset;
-}
-struct CommandBufferInheritanceConditionalRenderingInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint conditionalRenderingEnable;
-}
-struct ExternalFormatANDROID { 
-   StructureType sType;
-   void* pNext;
-   ulong externalFormat;
-}
-struct PhysicalDevice8BitStorageFeatures { 
+struct PhysicalDevice8BitStorageFeatures {
    StructureType sType;
    void* pNext;
    uint storageBuffer8BitAccess;
    uint uniformAndStorageBuffer8BitAccess;
    uint storagePushConstant8;
 }
-struct PhysicalDeviceConditionalRenderingFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint conditionalRendering;
-   uint inheritedConditionalRendering;
-}
-struct PhysicalDeviceVulkanMemoryModelFeatures { 
+struct PhysicalDeviceVulkanMemoryModelFeatures {
    StructureType sType;
    void* pNext;
    uint vulkanMemoryModel;
    uint vulkanMemoryModelDeviceScope;
    uint vulkanMemoryModelAvailabilityVisibilityChains;
 }
-struct PhysicalDeviceShaderAtomicInt64Features { 
+struct PhysicalDeviceShaderAtomicInt64Features {
    StructureType sType;
    void* pNext;
    uint shaderBufferInt64Atomics;
    uint shaderSharedInt64Atomics;
 }
-struct PhysicalDeviceShaderAtomicFloatFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderBufferFloat32Atomics;
-   uint shaderBufferFloat32AtomicAdd;
-   uint shaderBufferFloat64Atomics;
-   uint shaderBufferFloat64AtomicAdd;
-   uint shaderSharedFloat32Atomics;
-   uint shaderSharedFloat32AtomicAdd;
-   uint shaderSharedFloat64Atomics;
-   uint shaderSharedFloat64AtomicAdd;
-   uint shaderImageFloat32Atomics;
-   uint shaderImageFloat32AtomicAdd;
-   uint sparseImageFloat32Atomics;
-   uint sparseImageFloat32AtomicAdd;
-}
-struct PhysicalDeviceShaderAtomicFloat2FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderBufferFloat16Atomics;
-   uint shaderBufferFloat16AtomicAdd;
-   uint shaderBufferFloat16AtomicMinMax;
-   uint shaderBufferFloat32AtomicMinMax;
-   uint shaderBufferFloat64AtomicMinMax;
-   uint shaderSharedFloat16Atomics;
-   uint shaderSharedFloat16AtomicAdd;
-   uint shaderSharedFloat16AtomicMinMax;
-   uint shaderSharedFloat32AtomicMinMax;
-   uint shaderSharedFloat64AtomicMinMax;
-   uint shaderImageFloat32AtomicMinMax;
-   uint sparseImageFloat32AtomicMinMax;
-}
-struct PhysicalDeviceVertexAttributeDivisorFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint vertexAttributeInstanceRateDivisor;
-   uint vertexAttributeInstanceRateZeroDivisor;
-}
-struct QueueFamilyCheckpointPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineStageFlags checkpointExecutionStageMask;
-}
-struct CheckpointDataNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineStageFlagBits stage;
-   void* pCheckpointMarker;
-}
-struct PhysicalDeviceDepthStencilResolveProperties { 
+struct PhysicalDeviceDepthStencilResolveProperties {
    StructureType sType;
    void* pNext;
    ResolveModeFlags supportedDepthResolveModes;
@@ -5923,641 +5571,57 @@ struct PhysicalDeviceDepthStencilResolveProperties {
    uint independentResolveNone;
    uint independentResolve;
 }
-struct SubpassDescriptionDepthStencilResolve { 
+struct SubpassDescriptionDepthStencilResolve {
    StructureType sType;
    void* pNext;
    ResolveModeFlagBits depthResolveMode;
    ResolveModeFlagBits stencilResolveMode;
    AttachmentReference2* pDepthStencilResolveAttachment;
 }
-struct ImageViewASTCDecodeModeEXT { 
-   StructureType sType;
-   void* pNext;
-   Format decodeMode;
-}
-struct PhysicalDeviceASTCDecodeFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint decodeModeSharedExponent;
-}
-struct PhysicalDeviceTransformFeedbackFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint transformFeedback;
-   uint geometryStreams;
-}
-struct PhysicalDeviceTransformFeedbackPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxTransformFeedbackStreams;
-   uint maxTransformFeedbackBuffers;
-   DeviceSize maxTransformFeedbackBufferSize;
-   uint maxTransformFeedbackStreamDataSize;
-   uint maxTransformFeedbackBufferDataSize;
-   uint maxTransformFeedbackBufferDataStride;
-   uint transformFeedbackQueries;
-   uint transformFeedbackStreamsLinesTriangles;
-   uint transformFeedbackRasterizationStreamSelect;
-   uint transformFeedbackDraw;
-}
-struct PipelineRasterizationStateStreamCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineRasterizationStateStreamCreateFlagsEXT flags;
-   uint rasterizationStream;
-}
-struct PhysicalDeviceRepresentativeFragmentTestFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint representativeFragmentTest;
-}
-struct PipelineRepresentativeFragmentTestStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint representativeFragmentTestEnable;
-}
-struct PhysicalDeviceExclusiveScissorFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint exclusiveScissor;
-}
-struct PipelineViewportExclusiveScissorStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint exclusiveScissorCount;
-   Rect2D* pExclusiveScissors;
-}
-struct PhysicalDeviceCornerSampledImageFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint cornerSampledImage;
-}
-struct PhysicalDeviceComputeShaderDerivativesFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint computeDerivativeGroupQuads;
-   uint computeDerivativeGroupLinear;
-}
-struct PhysicalDeviceShaderImageFootprintFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint imageFootprint;
-}
-struct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint dedicatedAllocationImageAliasing;
-}
-struct PhysicalDeviceCopyMemoryIndirectFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint indirectCopy;
-}
-struct PhysicalDeviceCopyMemoryIndirectPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   QueueFlags supportedQueues;
-}
-struct PhysicalDeviceMemoryDecompressionFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint memoryDecompression;
-}
-struct PhysicalDeviceMemoryDecompressionPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   MemoryDecompressionMethodFlagsNV decompressionMethods;
-   ulong maxDecompressionIndirectCount;
-}
-struct ShadingRatePaletteNV { 
-   uint shadingRatePaletteEntryCount;
-   ShadingRatePaletteEntryNV* pShadingRatePaletteEntries;
-}
-struct PipelineViewportShadingRateImageStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint shadingRateImageEnable;
-   uint viewportCount;
-   ShadingRatePaletteNV* pShadingRatePalettes;
-}
-struct PhysicalDeviceShadingRateImageFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shadingRateImage;
-   uint shadingRateCoarseSampleOrder;
-}
-struct PhysicalDeviceShadingRateImagePropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   Extent2D shadingRateTexelSize;
-   uint shadingRatePaletteSize;
-   uint shadingRateMaxCoarseSamples;
-}
-struct PhysicalDeviceInvocationMaskFeaturesHUAWEI { 
-   StructureType sType;
-   void* pNext;
-   uint invocationMask;
-}
-struct CoarseSampleLocationNV { 
-   uint pixelX;
-   uint pixelY;
-   uint sample;
-}
-struct CoarseSampleOrderCustomNV { 
-   ShadingRatePaletteEntryNV shadingRate;
-   uint sampleCount;
-   uint sampleLocationCount;
-   CoarseSampleLocationNV* pSampleLocations;
-}
-struct PipelineViewportCoarseSampleOrderStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   CoarseSampleOrderTypeNV sampleOrderType;
-   uint customSampleOrderCount;
-   CoarseSampleOrderCustomNV* pCustomSampleOrders;
-}
-struct PhysicalDeviceMeshShaderFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint taskShader;
-   uint meshShader;
-}
-struct PhysicalDeviceMeshShaderPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint maxDrawMeshTasksCount;
-   uint maxTaskWorkGroupInvocations;
-   uint[3] maxTaskWorkGroupSize;
-   uint maxTaskTotalMemorySize;
-   uint maxTaskOutputCount;
-   uint maxMeshWorkGroupInvocations;
-   uint[3] maxMeshWorkGroupSize;
-   uint maxMeshTotalMemorySize;
-   uint maxMeshOutputVertices;
-   uint maxMeshOutputPrimitives;
-   uint maxMeshMultiviewViewCount;
-   uint meshOutputPerVertexGranularity;
-   uint meshOutputPerPrimitiveGranularity;
-}
-struct DrawMeshTasksIndirectCommandNV { 
-   uint taskCount;
-   uint firstTask;
-}
-struct PhysicalDeviceMeshShaderFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint taskShader;
-   uint meshShader;
-   uint multiviewMeshShader;
-   uint primitiveFragmentShadingRateMeshShader;
-   uint meshShaderQueries;
-}
-struct PhysicalDeviceMeshShaderPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxTaskWorkGroupTotalCount;
-   uint[3] maxTaskWorkGroupCount;
-   uint maxTaskWorkGroupInvocations;
-   uint[3] maxTaskWorkGroupSize;
-   uint maxTaskPayloadSize;
-   uint maxTaskSharedMemorySize;
-   uint maxTaskPayloadAndSharedMemorySize;
-   uint maxMeshWorkGroupTotalCount;
-   uint[3] maxMeshWorkGroupCount;
-   uint maxMeshWorkGroupInvocations;
-   uint[3] maxMeshWorkGroupSize;
-   uint maxMeshSharedMemorySize;
-   uint maxMeshPayloadAndSharedMemorySize;
-   uint maxMeshOutputMemorySize;
-   uint maxMeshPayloadAndOutputMemorySize;
-   uint maxMeshOutputComponents;
-   uint maxMeshOutputVertices;
-   uint maxMeshOutputPrimitives;
-   uint maxMeshOutputLayers;
-   uint maxMeshMultiviewViewCount;
-   uint meshOutputPerVertexGranularity;
-   uint meshOutputPerPrimitiveGranularity;
-   uint maxPreferredTaskWorkGroupInvocations;
-   uint maxPreferredMeshWorkGroupInvocations;
-   uint prefersLocalInvocationVertexOutput;
-   uint prefersLocalInvocationPrimitiveOutput;
-   uint prefersCompactVertexOutput;
-   uint prefersCompactPrimitiveOutput;
-}
-struct DrawMeshTasksIndirectCommandEXT { 
-   uint groupCountX;
-   uint groupCountY;
-   uint groupCountZ;
-}
-struct RayTracingShaderGroupCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   RayTracingShaderGroupTypeKHR type;
-   uint generalShader;
-   uint closestHitShader;
-   uint anyHitShader;
-   uint intersectionShader;
-}
-struct RayTracingShaderGroupCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   RayTracingShaderGroupTypeKHR type;
-   uint generalShader;
-   uint closestHitShader;
-   uint anyHitShader;
-   uint intersectionShader;
-   void* pShaderGroupCaptureReplayHandle;
-}
-struct RayTracingPipelineCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineCreateFlags flags;
-   uint stageCount;
-   PipelineShaderStageCreateInfo* pStages;
-   uint groupCount;
-   RayTracingShaderGroupCreateInfoNV* pGroups;
-   uint maxRecursionDepth;
-   PipelineLayout layout;
-   Pipeline basePipelineHandle;
-   int basePipelineIndex;
-}
-struct RayTracingPipelineCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   PipelineCreateFlags flags;
-   uint stageCount;
-   PipelineShaderStageCreateInfo* pStages;
-   uint groupCount;
-   RayTracingShaderGroupCreateInfoKHR* pGroups;
-   uint maxPipelineRayRecursionDepth;
-   PipelineLibraryCreateInfoKHR* pLibraryInfo;
-   RayTracingPipelineInterfaceCreateInfoKHR* pLibraryInterface;
-   PipelineDynamicStateCreateInfo* pDynamicState;
-   PipelineLayout layout;
-   Pipeline basePipelineHandle;
-   int basePipelineIndex;
-}
-struct GeometryTrianglesNV { 
-   StructureType sType;
-   void* pNext;
-   Buffer vertexData;
-   DeviceSize vertexOffset;
-   uint vertexCount;
-   DeviceSize vertexStride;
-   Format vertexFormat;
-   Buffer indexData;
-   DeviceSize indexOffset;
-   uint indexCount;
-   IndexType indexType;
-   Buffer transformData;
-   DeviceSize transformOffset;
-}
-struct GeometryAABBNV { 
-   StructureType sType;
-   void* pNext;
-   Buffer aabbData;
-   uint numAABBs;
-   uint stride;
-   DeviceSize offset;
-}
-struct GeometryDataNV { 
-   GeometryTrianglesNV triangles;
-   GeometryAABBNV aabbs;
-}
-struct GeometryNV { 
-   StructureType sType;
-   void* pNext;
-   GeometryTypeKHR geometryType;
-   GeometryDataNV geometry;
-   GeometryFlagsKHR flags;
-}
-struct AccelerationStructureInfoNV { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureTypeNV type;
-   BuildAccelerationStructureFlagsNV flags;
-   uint instanceCount;
-   uint geometryCount;
-   GeometryNV* pGeometries;
-}
-struct AccelerationStructureCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize compactedSize;
-   AccelerationStructureInfoNV info;
-}
-struct BindAccelerationStructureMemoryInfoNV { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureNV accelerationStructure;
-   DeviceMemory memory;
-   DeviceSize memoryOffset;
-   uint deviceIndexCount;
-   uint* pDeviceIndices;
-}
-struct WriteDescriptorSetAccelerationStructureKHR { 
-   StructureType sType;
-   void* pNext;
-   uint accelerationStructureCount;
-   AccelerationStructureKHR* pAccelerationStructures;
-}
-struct WriteDescriptorSetAccelerationStructureNV { 
-   StructureType sType;
-   void* pNext;
-   uint accelerationStructureCount;
-   AccelerationStructureNV* pAccelerationStructures;
-}
-struct AccelerationStructureMemoryRequirementsInfoNV { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureMemoryRequirementsTypeNV type;
-   AccelerationStructureNV accelerationStructure;
-}
-struct PhysicalDeviceAccelerationStructureFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint accelerationStructure;
-   uint accelerationStructureCaptureReplay;
-   uint accelerationStructureIndirectBuild;
-   uint accelerationStructureHostCommands;
-   uint descriptorBindingAccelerationStructureUpdateAfterBind;
-}
-struct PhysicalDeviceRayTracingPipelineFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingPipeline;
-   uint rayTracingPipelineShaderGroupHandleCaptureReplay;
-   uint rayTracingPipelineShaderGroupHandleCaptureReplayMixed;
-   uint rayTracingPipelineTraceRaysIndirect;
-   uint rayTraversalPrimitiveCulling;
-}
-struct PhysicalDeviceRayQueryFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint rayQuery;
-}
-struct PhysicalDeviceAccelerationStructurePropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   ulong maxGeometryCount;
-   ulong maxInstanceCount;
-   ulong maxPrimitiveCount;
-   uint maxPerStageDescriptorAccelerationStructures;
-   uint maxPerStageDescriptorUpdateAfterBindAccelerationStructures;
-   uint maxDescriptorSetAccelerationStructures;
-   uint maxDescriptorSetUpdateAfterBindAccelerationStructures;
-   uint minAccelerationStructureScratchOffsetAlignment;
-}
-struct PhysicalDeviceRayTracingPipelinePropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderGroupHandleSize;
-   uint maxRayRecursionDepth;
-   uint maxShaderGroupStride;
-   uint shaderGroupBaseAlignment;
-   uint shaderGroupHandleCaptureReplaySize;
-   uint maxRayDispatchInvocationCount;
-   uint shaderGroupHandleAlignment;
-   uint maxRayHitAttributeSize;
-}
-struct PhysicalDeviceRayTracingPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shaderGroupHandleSize;
-   uint maxRecursionDepth;
-   uint maxShaderGroupStride;
-   uint shaderGroupBaseAlignment;
-   ulong maxGeometryCount;
-   ulong maxInstanceCount;
-   ulong maxTriangleCount;
-   uint maxDescriptorSetAccelerationStructures;
-}
-struct StridedDeviceAddressRegionKHR { 
-   DeviceAddress deviceAddress;
-   DeviceSize stride;
-   DeviceSize size;
-}
-struct TraceRaysIndirectCommandKHR { 
-   uint width;
-   uint height;
-   uint depth;
-}
-struct TraceRaysIndirectCommand2KHR { 
-   DeviceAddress raygenShaderRecordAddress;
-   DeviceSize raygenShaderRecordSize;
-   DeviceAddress missShaderBindingTableAddress;
-   DeviceSize missShaderBindingTableSize;
-   DeviceSize missShaderBindingTableStride;
-   DeviceAddress hitShaderBindingTableAddress;
-   DeviceSize hitShaderBindingTableSize;
-   DeviceSize hitShaderBindingTableStride;
-   DeviceAddress callableShaderBindingTableAddress;
-   DeviceSize callableShaderBindingTableSize;
-   DeviceSize callableShaderBindingTableStride;
-   uint width;
-   uint height;
-   uint depth;
-}
-struct PhysicalDeviceRayTracingMaintenance1FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingMaintenance1;
-   uint rayTracingPipelineTraceRaysIndirect2;
-}
-struct DrmFormatModifierPropertiesListEXT { 
-   StructureType sType;
-   void* pNext;
-   uint drmFormatModifierCount;
-   DrmFormatModifierPropertiesEXT* pDrmFormatModifierProperties;
-}
-struct DrmFormatModifierPropertiesEXT { 
-   ulong drmFormatModifier;
-   uint drmFormatModifierPlaneCount;
-   FormatFeatureFlags drmFormatModifierTilingFeatures;
-}
-struct PhysicalDeviceImageDrmFormatModifierInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ulong drmFormatModifier;
-   SharingMode sharingMode;
-   uint queueFamilyIndexCount;
-   uint* pQueueFamilyIndices;
-}
-struct ImageDrmFormatModifierListCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint drmFormatModifierCount;
-   ulong* pDrmFormatModifiers;
-}
-struct ImageDrmFormatModifierExplicitCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ulong drmFormatModifier;
-   uint drmFormatModifierPlaneCount;
-   SubresourceLayout* pPlaneLayouts;
-}
-struct ImageDrmFormatModifierPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   ulong drmFormatModifier;
-}
-struct ImageStencilUsageCreateInfo { 
+struct ImageStencilUsageCreateInfo {
    StructureType sType;
    void* pNext;
    ImageUsageFlags stencilUsage;
 }
-struct DeviceMemoryOverallocationCreateInfoAMD { 
-   StructureType sType;
-   void* pNext;
-   MemoryOverallocationBehaviorAMD overallocationBehavior;
-}
-struct PhysicalDeviceFragmentDensityMapFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentDensityMap;
-   uint fragmentDensityMapDynamic;
-   uint fragmentDensityMapNonSubsampledImages;
-}
-struct PhysicalDeviceFragmentDensityMap2FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentDensityMapDeferred;
-}
-struct PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentDensityMapOffset;
-}
-struct PhysicalDeviceFragmentDensityMapPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   Extent2D minFragmentDensityTexelSize;
-   Extent2D maxFragmentDensityTexelSize;
-   uint fragmentDensityInvocations;
-}
-struct PhysicalDeviceFragmentDensityMap2PropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint subsampledLoads;
-   uint subsampledCoarseReconstructionEarlyAccess;
-   uint maxSubsampledArrayLayers;
-   uint maxDescriptorSetSubsampledSamplers;
-}
-struct PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM { 
-   StructureType sType;
-   void* pNext;
-   Extent2D fragmentDensityOffsetGranularity;
-}
-struct RenderPassFragmentDensityMapCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   AttachmentReference fragmentDensityMapAttachment;
-}
-struct SubpassFragmentDensityMapOffsetEndInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentDensityOffsetCount;
-   Offset2D* pFragmentDensityOffsets;
-}
-struct PhysicalDeviceScalarBlockLayoutFeatures { 
+struct PhysicalDeviceScalarBlockLayoutFeatures {
    StructureType sType;
    void* pNext;
    uint scalarBlockLayout;
 }
-struct SurfaceProtectedCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint supportsProtected;
-}
-struct PhysicalDeviceUniformBufferStandardLayoutFeatures { 
+struct PhysicalDeviceUniformBufferStandardLayoutFeatures {
    StructureType sType;
    void* pNext;
    uint uniformBufferStandardLayout;
 }
-struct PhysicalDeviceDepthClipEnableFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint depthClipEnable;
-}
-struct PipelineRasterizationDepthClipStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineRasterizationDepthClipStateCreateFlagsEXT flags;
-   uint depthClipEnable;
-}
-struct PhysicalDeviceMemoryBudgetPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize[MAX_MEMORY_HEAPS] heapBudget;
-   DeviceSize[MAX_MEMORY_HEAPS] heapUsage;
-}
-struct PhysicalDeviceMemoryPriorityFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint memoryPriority;
-}
-struct MemoryPriorityAllocateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   float priority;
-}
-struct PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pageableDeviceLocalMemory;
-}
-struct PhysicalDeviceBufferDeviceAddressFeatures { 
+struct PhysicalDeviceBufferDeviceAddressFeatures {
    StructureType sType;
    void* pNext;
    uint bufferDeviceAddress;
    uint bufferDeviceAddressCaptureReplay;
    uint bufferDeviceAddressMultiDevice;
 }
-struct PhysicalDeviceBufferDeviceAddressFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint bufferDeviceAddress;
-   uint bufferDeviceAddressCaptureReplay;
-   uint bufferDeviceAddressMultiDevice;
-}
-struct BufferDeviceAddressInfo { 
+struct BufferDeviceAddressInfo {
    StructureType sType;
    void* pNext;
    Buffer buffer;
 }
-struct BufferOpaqueCaptureAddressCreateInfo { 
+struct BufferOpaqueCaptureAddressCreateInfo {
    StructureType sType;
    void* pNext;
    ulong opaqueCaptureAddress;
 }
-struct BufferDeviceAddressCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceAddress deviceAddress;
-}
-struct PhysicalDeviceImageViewImageFormatInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ImageViewType imageViewType;
-}
-struct FilterCubicImageViewImageFormatPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint filterCubic;
-   uint filterCubicMinmax;
-}
-struct PhysicalDeviceImagelessFramebufferFeatures { 
+struct PhysicalDeviceImagelessFramebufferFeatures {
    StructureType sType;
    void* pNext;
    uint imagelessFramebuffer;
 }
-struct FramebufferAttachmentsCreateInfo { 
+struct FramebufferAttachmentsCreateInfo {
    StructureType sType;
    void* pNext;
    uint attachmentImageInfoCount;
    FramebufferAttachmentImageInfo* pAttachmentImageInfos;
 }
-struct FramebufferAttachmentImageInfo { 
+struct FramebufferAttachmentImageInfo {
    StructureType sType;
    void* pNext;
    ImageCreateFlags flags;
@@ -6568,322 +5632,50 @@ struct FramebufferAttachmentImageInfo {
    uint viewFormatCount;
    Format* pViewFormats;
 }
-struct RenderPassAttachmentBeginInfo { 
+struct RenderPassAttachmentBeginInfo {
    StructureType sType;
    void* pNext;
    uint attachmentCount;
    ImageView* pAttachments;
 }
-struct PhysicalDeviceTextureCompressionASTCHDRFeatures { 
+struct PhysicalDeviceTextureCompressionASTCHDRFeatures {
    StructureType sType;
    void* pNext;
    uint textureCompressionASTC_HDR;
 }
-struct PhysicalDeviceCooperativeMatrixFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint cooperativeMatrix;
-   uint cooperativeMatrixRobustBufferAccess;
-}
-struct PhysicalDeviceCooperativeMatrixPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags cooperativeMatrixSupportedStages;
-}
-struct CooperativeMatrixPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint MSize;
-   uint NSize;
-   uint KSize;
-   ComponentTypeNV AType;
-   ComponentTypeNV BType;
-   ComponentTypeNV CType;
-   ComponentTypeNV DType;
-   ScopeNV scope;
-}
-struct PhysicalDeviceYcbcrImageArraysFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint ycbcrImageArrays;
-}
-struct ImageViewHandleInfoNVX { 
-   StructureType sType;
-   void* pNext;
-   ImageView imageView;
-   DescriptorType descriptorType;
-   Sampler sampler;
-}
-struct ImageViewAddressPropertiesNVX { 
-   StructureType sType;
-   void* pNext;
-   DeviceAddress deviceAddress;
-   DeviceSize size;
-}
-struct PresentFrameTokenGGP { 
-   StructureType sType;
-   void* pNext;
-   GgpFrameToken frameToken;
-}
-struct PipelineCreationFeedback { 
+struct PipelineCreationFeedback {
    PipelineCreationFeedbackFlags flags;
    ulong duration;
 }
-struct PipelineCreationFeedbackCreateInfo { 
+struct PipelineCreationFeedbackCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineCreationFeedback* pPipelineCreationFeedback;
    uint pipelineStageCreationFeedbackCount;
    PipelineCreationFeedback* pPipelineStageCreationFeedbacks;
 }
-struct SurfaceFullScreenExclusiveInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   FullScreenExclusiveEXT fullScreenExclusive;
-}
-struct SurfaceFullScreenExclusiveWin32InfoEXT { 
-   StructureType sType;
-   void* pNext;
-   HMONITOR hmonitor;
-}
-struct SurfaceCapabilitiesFullScreenExclusiveEXT { 
-   StructureType sType;
-   void* pNext;
-   uint fullScreenExclusiveSupported;
-}
-struct PhysicalDevicePresentBarrierFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint presentBarrier;
-}
-struct SurfaceCapabilitiesPresentBarrierNV { 
-   StructureType sType;
-   void* pNext;
-   uint presentBarrierSupported;
-}
-struct SwapchainPresentBarrierCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint presentBarrierEnable;
-}
-struct PhysicalDevicePerformanceQueryFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint performanceCounterQueryPools;
-   uint performanceCounterMultipleQueryPools;
-}
-struct PhysicalDevicePerformanceQueryPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint allowCommandBufferQueryCopies;
-}
-struct PerformanceCounterKHR { 
-   StructureType sType;
-   void* pNext;
-   PerformanceCounterUnitKHR unit;
-   PerformanceCounterScopeKHR scope;
-   PerformanceCounterStorageKHR storage;
-   uint[UUID_SIZE] uuid;
-}
-struct PerformanceCounterDescriptionKHR { 
-   StructureType sType;
-   void* pNext;
-   PerformanceCounterDescriptionFlagsKHR flags;
-   char[MAX_DESCRIPTION_SIZE] name;
-   char[MAX_DESCRIPTION_SIZE] category;
-   char[MAX_DESCRIPTION_SIZE] description;
-}
-struct QueryPoolPerformanceCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint queueFamilyIndex;
-   uint counterIndexCount;
-   uint* pCounterIndices;
-}
-struct AcquireProfilingLockInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AcquireProfilingLockFlagsKHR flags;
-   ulong timeout;
-}
-struct PerformanceQuerySubmitInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint counterPassIndex;
-}
-struct PerformanceQueryReservationInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxPerformanceQueriesPerPool;
-}
-struct HeadlessSurfaceCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   HeadlessSurfaceCreateFlagsEXT flags;
-}
-struct PhysicalDeviceCoverageReductionModeFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint coverageReductionMode;
-}
-struct PipelineCoverageReductionStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   PipelineCoverageReductionStateCreateFlagsNV flags;
-   CoverageReductionModeNV coverageReductionMode;
-}
-struct FramebufferMixedSamplesCombinationNV { 
-   StructureType sType;
-   void* pNext;
-   CoverageReductionModeNV coverageReductionMode;
-   SampleCountFlagBits rasterizationSamples;
-   SampleCountFlags depthStencilSamples;
-   SampleCountFlags colorSamples;
-}
-struct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL { 
-   StructureType sType;
-   void* pNext;
-   uint shaderIntegerFunctions2;
-}
-struct PerformanceValueINTEL { 
-   PerformanceValueTypeINTEL type;
-   PerformanceValueDataINTEL data;
-}
-struct InitializePerformanceApiInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   void* pUserData;
-}
-struct QueryPoolPerformanceQueryCreateInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   QueryPoolSamplingModeINTEL performanceCountersSampling;
-}
-struct PerformanceMarkerInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   ulong marker;
-}
-struct PerformanceStreamMarkerInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   uint marker;
-}
-struct PerformanceOverrideInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   PerformanceOverrideTypeINTEL type;
-   uint enable;
-   ulong parameter;
-}
-struct PerformanceConfigurationAcquireInfoINTEL { 
-   StructureType sType;
-   void* pNext;
-   PerformanceConfigurationTypeINTEL type;
-}
-struct PhysicalDeviceShaderClockFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderSubgroupClock;
-   uint shaderDeviceClock;
-}
-struct PhysicalDeviceIndexTypeUint8FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint indexTypeUint8;
-}
-struct PhysicalDeviceShaderSMBuiltinsPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shaderSMCount;
-   uint shaderWarpsPerSM;
-}
-struct PhysicalDeviceShaderSMBuiltinsFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shaderSMBuiltins;
-}
-struct PhysicalDeviceFragmentShaderInterlockFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentShaderSampleInterlock;
-   uint fragmentShaderPixelInterlock;
-   uint fragmentShaderShadingRateInterlock;
-}
-struct PhysicalDeviceSeparateDepthStencilLayoutsFeatures { 
+struct PhysicalDeviceSeparateDepthStencilLayoutsFeatures {
    StructureType sType;
    void* pNext;
    uint separateDepthStencilLayouts;
 }
-struct AttachmentReferenceStencilLayout { 
+struct AttachmentReferenceStencilLayout {
    StructureType sType;
    void* pNext;
    ImageLayout stencilLayout;
 }
-struct PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint primitiveTopologyListRestart;
-   uint primitiveTopologyPatchListRestart;
-}
-struct AttachmentDescriptionStencilLayout { 
+struct AttachmentDescriptionStencilLayout {
    StructureType sType;
    void* pNext;
    ImageLayout stencilInitialLayout;
    ImageLayout stencilFinalLayout;
 }
-struct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint pipelineExecutableInfo;
-}
-struct PipelineInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Pipeline pipeline;
-}
-struct PipelineExecutablePropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags stages;
-   char[MAX_DESCRIPTION_SIZE] name;
-   char[MAX_DESCRIPTION_SIZE] description;
-   uint subgroupSize;
-}
-struct PipelineExecutableInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Pipeline pipeline;
-   uint executableIndex;
-}
-struct PipelineExecutableStatisticKHR { 
-   StructureType sType;
-   void* pNext;
-   char[MAX_DESCRIPTION_SIZE] name;
-   char[MAX_DESCRIPTION_SIZE] description;
-   PipelineExecutableStatisticFormatKHR format;
-   PipelineExecutableStatisticValueKHR value;
-}
-struct PipelineExecutableInternalRepresentationKHR { 
-   StructureType sType;
-   void* pNext;
-   char[MAX_DESCRIPTION_SIZE] name;
-   char[MAX_DESCRIPTION_SIZE] description;
-   uint isText;
-   usz dataSize;
-   void* pData;
-}
-struct PhysicalDeviceShaderDemoteToHelperInvocationFeatures { 
+struct PhysicalDeviceShaderDemoteToHelperInvocationFeatures {
    StructureType sType;
    void* pNext;
    uint shaderDemoteToHelperInvocation;
 }
-struct PhysicalDeviceTexelBufferAlignmentFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint texelBufferAlignment;
-}
-struct PhysicalDeviceTexelBufferAlignmentProperties { 
+struct PhysicalDeviceTexelBufferAlignmentProperties {
    StructureType sType;
    void* pNext;
    DeviceSize storageTexelBufferOffsetAlignmentBytes;
@@ -6891,13 +5683,13 @@ struct PhysicalDeviceTexelBufferAlignmentProperties {
    DeviceSize uniformTexelBufferOffsetAlignmentBytes;
    uint uniformTexelBufferOffsetSingleTexelAlignment;
 }
-struct PhysicalDeviceSubgroupSizeControlFeatures { 
+struct PhysicalDeviceSubgroupSizeControlFeatures {
    StructureType sType;
    void* pNext;
    uint subgroupSizeControl;
    uint computeFullSubgroups;
 }
-struct PhysicalDeviceSubgroupSizeControlProperties { 
+struct PhysicalDeviceSubgroupSizeControlProperties {
    StructureType sType;
    void* pNext;
    uint minSubgroupSize;
@@ -6905,69 +5697,27 @@ struct PhysicalDeviceSubgroupSizeControlProperties {
    uint maxComputeWorkgroupSubgroups;
    ShaderStageFlags requiredSubgroupSizeStages;
 }
-struct PipelineShaderStageRequiredSubgroupSizeCreateInfo { 
+struct PipelineShaderStageRequiredSubgroupSizeCreateInfo {
    StructureType sType;
    void* pNext;
    uint requiredSubgroupSize;
 }
-struct SubpassShadingPipelineCreateInfoHUAWEI { 
-   StructureType sType;
-   void* pNext;
-   RenderPass renderPass;
-   uint subpass;
-}
-struct PhysicalDeviceSubpassShadingPropertiesHUAWEI { 
-   StructureType sType;
-   void* pNext;
-   uint maxSubpassShadingWorkgroupSizeAspectRatio;
-}
-struct PhysicalDeviceClusterCullingShaderPropertiesHUAWEI { 
-   StructureType sType;
-   void* pNext;
-   uint[3] maxWorkGroupCount;
-   uint[3] maxWorkGroupSize;
-   uint maxOutputClusterCount;
-   DeviceSize indirectBufferOffsetAlignment;
-}
-struct MemoryOpaqueCaptureAddressAllocateInfo { 
+struct MemoryOpaqueCaptureAddressAllocateInfo {
    StructureType sType;
    void* pNext;
    ulong opaqueCaptureAddress;
 }
-struct DeviceMemoryOpaqueCaptureAddressInfo { 
+struct DeviceMemoryOpaqueCaptureAddressInfo {
    StructureType sType;
    void* pNext;
    DeviceMemory memory;
 }
-struct PhysicalDeviceLineRasterizationFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint rectangularLines;
-   uint bresenhamLines;
-   uint smoothLines;
-   uint stippledRectangularLines;
-   uint stippledBresenhamLines;
-   uint stippledSmoothLines;
-}
-struct PhysicalDeviceLineRasterizationPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint lineSubPixelPrecisionBits;
-}
-struct PipelineRasterizationLineStateCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   LineRasterizationModeKHR lineRasterizationMode;
-   uint stippledLineEnable;
-   uint lineStippleFactor;
-   uint lineStipplePattern;
-}
-struct PhysicalDevicePipelineCreationCacheControlFeatures { 
+struct PhysicalDevicePipelineCreationCacheControlFeatures {
    StructureType sType;
    void* pNext;
    uint pipelineCreationCacheControl;
 }
-struct PhysicalDeviceVulkan11Features { 
+struct PhysicalDeviceVulkan11Features {
    StructureType sType;
    void* pNext;
    uint storageBuffer16BitAccess;
@@ -6983,7 +5733,7 @@ struct PhysicalDeviceVulkan11Features {
    uint samplerYcbcrConversion;
    uint shaderDrawParameters;
 }
-struct PhysicalDeviceVulkan11Properties { 
+struct PhysicalDeviceVulkan11Properties {
    StructureType sType;
    void* pNext;
    uint[UUID_SIZE] deviceUUID;
@@ -7002,7 +5752,7 @@ struct PhysicalDeviceVulkan11Properties {
    uint maxPerSetDescriptors;
    DeviceSize maxMemoryAllocationSize;
 }
-struct PhysicalDeviceVulkan12Features { 
+struct PhysicalDeviceVulkan12Features {
    StructureType sType;
    void* pNext;
    uint samplerMirrorClampToEdge;
@@ -7053,7 +5803,7 @@ struct PhysicalDeviceVulkan12Features {
    uint shaderOutputLayer;
    uint subgroupBroadcastDynamicId;
 }
-struct PhysicalDeviceVulkan12Properties { 
+struct PhysicalDeviceVulkan12Properties {
    StructureType sType;
    void* pNext;
    DriverId driverID;
@@ -7109,7 +5859,7 @@ struct PhysicalDeviceVulkan12Properties {
    ulong maxTimelineSemaphoreValueDifference;
    SampleCountFlags framebufferIntegerColorSampleCounts;
 }
-struct PhysicalDeviceVulkan13Features { 
+struct PhysicalDeviceVulkan13Features {
    StructureType sType;
    void* pNext;
    uint robustImageAccess;
@@ -7128,7 +5878,7 @@ struct PhysicalDeviceVulkan13Features {
    uint shaderIntegerDotProduct;
    uint maintenance4;
 }
-struct PhysicalDeviceVulkan13Properties { 
+struct PhysicalDeviceVulkan13Properties {
    StructureType sType;
    void* pNext;
    uint minSubgroupSize;
@@ -7177,17 +5927,7 @@ struct PhysicalDeviceVulkan13Properties {
    uint uniformTexelBufferOffsetSingleTexelAlignment;
    DeviceSize maxBufferSize;
 }
-struct PipelineCompilerControlCreateInfoAMD { 
-   StructureType sType;
-   void* pNext;
-   PipelineCompilerControlFlagsAMD compilerControlFlags;
-}
-struct PhysicalDeviceCoherentMemoryFeaturesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint deviceCoherentMemory;
-}
-struct PhysicalDeviceToolProperties { 
+struct PhysicalDeviceToolProperties {
    StructureType sType;
    void* pNext;
    char[MAX_EXTENSION_NAME_SIZE] name;
@@ -7196,297 +5936,17 @@ struct PhysicalDeviceToolProperties {
    char[MAX_DESCRIPTION_SIZE] description;
    char[MAX_EXTENSION_NAME_SIZE] layer;
 }
-struct SamplerCustomBorderColorCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ClearColorValue customBorderColor;
-   Format format;
-}
-struct PhysicalDeviceCustomBorderColorPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxCustomBorderColorSamplers;
-}
-struct PhysicalDeviceCustomBorderColorFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint customBorderColors;
-   uint customBorderColorWithoutFormat;
-}
-struct SamplerBorderColorComponentMappingCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ComponentMapping components;
-   uint srgb;
-}
-struct PhysicalDeviceBorderColorSwizzleFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint borderColorSwizzle;
-   uint borderColorSwizzleFromImage;
-}
-struct AccelerationStructureGeometryTrianglesDataKHR { 
-   StructureType sType;
-   void* pNext;
-   Format vertexFormat;
-   DeviceOrHostAddressConstKHR vertexData;
-   DeviceSize vertexStride;
-   uint maxVertex;
-   IndexType indexType;
-   DeviceOrHostAddressConstKHR indexData;
-   DeviceOrHostAddressConstKHR transformData;
-}
-struct AccelerationStructureGeometryAabbsDataKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceOrHostAddressConstKHR data;
-   DeviceSize stride;
-}
-struct AccelerationStructureGeometryInstancesDataKHR { 
-   StructureType sType;
-   void* pNext;
-   uint arrayOfPointers;
-   DeviceOrHostAddressConstKHR data;
-}
-struct AccelerationStructureGeometryKHR { 
-   StructureType sType;
-   void* pNext;
-   GeometryTypeKHR geometryType;
-   AccelerationStructureGeometryDataKHR geometry;
-   GeometryFlagsKHR flags;
-}
-struct AccelerationStructureBuildGeometryInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureTypeKHR type;
-   BuildAccelerationStructureFlagsKHR flags;
-   BuildAccelerationStructureModeKHR mode;
-   AccelerationStructureKHR srcAccelerationStructure;
-   AccelerationStructureKHR dstAccelerationStructure;
-   uint geometryCount;
-   AccelerationStructureGeometryKHR* pGeometries;
-   AccelerationStructureGeometryKHR* ppGeometries;
-   DeviceOrHostAddressKHR scratchData;
-}
-struct AccelerationStructureBuildRangeInfoKHR { 
-   uint primitiveCount;
-   uint primitiveOffset;
-   uint firstVertex;
-   uint transformOffset;
-}
-struct AccelerationStructureCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureCreateFlagsKHR createFlags;
-   Buffer buffer;
-   DeviceSize offset;
-   DeviceSize size;
-   AccelerationStructureTypeKHR type;
-   DeviceAddress deviceAddress;
-}
-struct AabbPositionsKHR { 
-   float minX;
-   float minY;
-   float minZ;
-   float maxX;
-   float maxY;
-   float maxZ;
-}
-struct TransformMatrixKHR { 
-   float[3][4] matrix;
-}
-struct AccelerationStructureInstanceKHR { 
-   TransformMatrixKHR transform;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
-   ulong accelerationStructureReference;
-}
-struct AccelerationStructureDeviceAddressInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureKHR accelerationStructure;
-}
-struct AccelerationStructureVersionInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint* pVersionData;
-}
-struct CopyAccelerationStructureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureKHR src;
-   AccelerationStructureKHR dst;
-   CopyAccelerationStructureModeKHR mode;
-}
-struct CopyAccelerationStructureToMemoryInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureKHR src;
-   DeviceOrHostAddressKHR dst;
-   CopyAccelerationStructureModeKHR mode;
-}
-struct CopyMemoryToAccelerationStructureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceOrHostAddressConstKHR src;
-   AccelerationStructureKHR dst;
-   CopyAccelerationStructureModeKHR mode;
-}
-struct RayTracingPipelineInterfaceCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxPipelineRayPayloadSize;
-   uint maxPipelineRayHitAttributeSize;
-}
-struct PipelineLibraryCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint libraryCount;
-   Pipeline* pLibraries;
-}
-struct RefreshObjectKHR { 
-   ObjectType objectType;
-   ulong objectHandle;
-   RefreshObjectFlagsKHR flags;
-}
-struct RefreshObjectListKHR { 
-   StructureType sType;
-   void* pNext;
-   uint objectCount;
-   RefreshObjectKHR* pObjects;
-}
-struct PhysicalDeviceExtendedDynamicStateFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint extendedDynamicState;
-}
-struct PhysicalDeviceExtendedDynamicState2FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint extendedDynamicState2;
-   uint extendedDynamicState2LogicOp;
-   uint extendedDynamicState2PatchControlPoints;
-}
-struct PhysicalDeviceExtendedDynamicState3FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint extendedDynamicState3TessellationDomainOrigin;
-   uint extendedDynamicState3DepthClampEnable;
-   uint extendedDynamicState3PolygonMode;
-   uint extendedDynamicState3RasterizationSamples;
-   uint extendedDynamicState3SampleMask;
-   uint extendedDynamicState3AlphaToCoverageEnable;
-   uint extendedDynamicState3AlphaToOneEnable;
-   uint extendedDynamicState3LogicOpEnable;
-   uint extendedDynamicState3ColorBlendEnable;
-   uint extendedDynamicState3ColorBlendEquation;
-   uint extendedDynamicState3ColorWriteMask;
-   uint extendedDynamicState3RasterizationStream;
-   uint extendedDynamicState3ConservativeRasterizationMode;
-   uint extendedDynamicState3ExtraPrimitiveOverestimationSize;
-   uint extendedDynamicState3DepthClipEnable;
-   uint extendedDynamicState3SampleLocationsEnable;
-   uint extendedDynamicState3ColorBlendAdvanced;
-   uint extendedDynamicState3ProvokingVertexMode;
-   uint extendedDynamicState3LineRasterizationMode;
-   uint extendedDynamicState3LineStippleEnable;
-   uint extendedDynamicState3DepthClipNegativeOneToOne;
-   uint extendedDynamicState3ViewportWScalingEnable;
-   uint extendedDynamicState3ViewportSwizzle;
-   uint extendedDynamicState3CoverageToColorEnable;
-   uint extendedDynamicState3CoverageToColorLocation;
-   uint extendedDynamicState3CoverageModulationMode;
-   uint extendedDynamicState3CoverageModulationTableEnable;
-   uint extendedDynamicState3CoverageModulationTable;
-   uint extendedDynamicState3CoverageReductionMode;
-   uint extendedDynamicState3RepresentativeFragmentTestEnable;
-   uint extendedDynamicState3ShadingRateImageEnable;
-}
-struct PhysicalDeviceExtendedDynamicState3PropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint dynamicPrimitiveTopologyUnrestricted;
-}
-struct ColorBlendEquationEXT { 
-   BlendFactor srcColorBlendFactor;
-   BlendFactor dstColorBlendFactor;
-   BlendOp colorBlendOp;
-   BlendFactor srcAlphaBlendFactor;
-   BlendFactor dstAlphaBlendFactor;
-   BlendOp alphaBlendOp;
-}
-struct ColorBlendAdvancedEXT { 
-   BlendOp advancedBlendOp;
-   uint srcPremultiplied;
-   uint dstPremultiplied;
-   BlendOverlapEXT blendOverlap;
-   uint clampResults;
-}
-struct RenderPassTransformBeginInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   SurfaceTransformFlagBitsKHR transform;
-}
-struct CopyCommandTransformInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   SurfaceTransformFlagBitsKHR transform;
-}
-struct CommandBufferInheritanceRenderPassTransformInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   SurfaceTransformFlagBitsKHR transform;
-   Rect2D renderArea;
-}
-struct PhysicalDeviceDiagnosticsConfigFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint diagnosticsConfig;
-}
-struct DeviceDiagnosticsConfigCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceDiagnosticsConfigFlagsNV flags;
-}
-struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures { 
+struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
    StructureType sType;
    void* pNext;
    uint shaderZeroInitializeWorkgroupMemory;
 }
-struct PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderSubgroupUniformControlFlow;
-}
-struct PhysicalDeviceRobustness2FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint robustBufferAccess2;
-   uint robustImageAccess2;
-   uint nullDescriptor;
-}
-struct PhysicalDeviceRobustness2PropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize robustStorageBufferAccessSizeAlignment;
-   DeviceSize robustUniformBufferAccessSizeAlignment;
-}
-struct PhysicalDeviceImageRobustnessFeatures { 
+struct PhysicalDeviceImageRobustnessFeatures {
    StructureType sType;
    void* pNext;
    uint robustImageAccess;
 }
-struct PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint workgroupMemoryExplicitLayout;
-   uint workgroupMemoryExplicitLayoutScalarBlockLayout;
-   uint workgroupMemoryExplicitLayout8BitAccess;
-   uint workgroupMemoryExplicitLayout16BitAccess;
-}
-struct PhysicalDevicePortabilitySubsetFeaturesKHR { 
+struct PhysicalDevicePortabilitySubsetFeaturesKHR {
    StructureType sType;
    void* pNext;
    uint constantAlphaColorBlendFactors;
@@ -7505,41 +5965,19 @@ struct PhysicalDevicePortabilitySubsetFeaturesKHR {
    uint triangleFans;
    uint vertexAttributeAccessBeyondStride;
 }
-struct PhysicalDevicePortabilitySubsetPropertiesKHR { 
+struct PhysicalDevicePortabilitySubsetPropertiesKHR {
    StructureType sType;
    void* pNext;
    uint minVertexInputBindingStrideAlignment;
 }
-struct PhysicalDevice4444FormatsFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint formatA4R4G4B4;
-   uint formatA4B4G4R4;
-}
-struct PhysicalDeviceSubpassShadingFeaturesHUAWEI { 
-   StructureType sType;
-   void* pNext;
-   uint subpassShading;
-}
-struct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI { 
-   StructureType sType;
-   void pNext;
-   uint clustercullingShader;
-   uint multiviewClusterCullingShader;
-}
-struct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI { 
-   StructureType sType;
-   void pNext;
-   uint clusterShadingRate;
-}
-struct BufferCopy2 { 
+struct BufferCopy2 {
    StructureType sType;
    void* pNext;
    DeviceSize srcOffset;
    DeviceSize dstOffset;
    DeviceSize size;
 }
-struct ImageCopy2 { 
+struct ImageCopy2 {
    StructureType sType;
    void* pNext;
    ImageSubresourceLayers srcSubresource;
@@ -7548,7 +5986,7 @@ struct ImageCopy2 {
    Offset3D dstOffset;
    Extent3D extent;
 }
-struct ImageBlit2 { 
+struct ImageBlit2 {
    StructureType sType;
    void* pNext;
    ImageSubresourceLayers srcSubresource;
@@ -7556,7 +5994,7 @@ struct ImageBlit2 {
    ImageSubresourceLayers dstSubresource;
    Offset3D[2] dstOffsets;
 }
-struct BufferImageCopy2 { 
+struct BufferImageCopy2 {
    StructureType sType;
    void* pNext;
    DeviceSize bufferOffset;
@@ -7566,7 +6004,7 @@ struct BufferImageCopy2 {
    Offset3D imageOffset;
    Extent3D imageExtent;
 }
-struct ImageResolve2 { 
+struct ImageResolve2 {
    StructureType sType;
    void* pNext;
    ImageSubresourceLayers srcSubresource;
@@ -7575,7 +6013,7 @@ struct ImageResolve2 {
    Offset3D dstOffset;
    Extent3D extent;
 }
-struct CopyBufferInfo2 { 
+struct CopyBufferInfo2 {
    StructureType sType;
    void* pNext;
    Buffer srcBuffer;
@@ -7583,7 +6021,7 @@ struct CopyBufferInfo2 {
    uint regionCount;
    BufferCopy2* pRegions;
 }
-struct CopyImageInfo2 { 
+struct CopyImageInfo2 {
    StructureType sType;
    void* pNext;
    Image srcImage;
@@ -7593,7 +6031,7 @@ struct CopyImageInfo2 {
    uint regionCount;
    ImageCopy2* pRegions;
 }
-struct BlitImageInfo2 { 
+struct BlitImageInfo2 {
    StructureType sType;
    void* pNext;
    Image srcImage;
@@ -7604,7 +6042,7 @@ struct BlitImageInfo2 {
    ImageBlit2* pRegions;
    Filter filter;
 }
-struct CopyBufferToImageInfo2 { 
+struct CopyBufferToImageInfo2 {
    StructureType sType;
    void* pNext;
    Buffer srcBuffer;
@@ -7613,7 +6051,7 @@ struct CopyBufferToImageInfo2 {
    uint regionCount;
    BufferImageCopy2* pRegions;
 }
-struct CopyImageToBufferInfo2 { 
+struct CopyImageToBufferInfo2 {
    StructureType sType;
    void* pNext;
    Image srcImage;
@@ -7622,7 +6060,7 @@ struct CopyImageToBufferInfo2 {
    uint regionCount;
    BufferImageCopy2* pRegions;
 }
-struct ResolveImageInfo2 { 
+struct ResolveImageInfo2 {
    StructureType sType;
    void* pNext;
    Image srcImage;
@@ -7632,183 +6070,12 @@ struct ResolveImageInfo2 {
    uint regionCount;
    ImageResolve2* pRegions;
 }
-struct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderImageInt64Atomics;
-   uint sparseImageInt64Atomics;
-}
-struct FragmentShadingRateAttachmentInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   AttachmentReference2* pFragmentShadingRateAttachment;
-   Extent2D shadingRateAttachmentTexelSize;
-}
-struct PipelineFragmentShadingRateStateCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Extent2D fragmentSize;
-   FragmentShadingRateCombinerOpKHR[2] combinerOps;
-}
-struct PhysicalDeviceFragmentShadingRateFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint pipelineFragmentShadingRate;
-   uint primitiveFragmentShadingRate;
-   uint attachmentFragmentShadingRate;
-}
-struct PhysicalDeviceFragmentShadingRatePropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   Extent2D minFragmentShadingRateAttachmentTexelSize;
-   Extent2D maxFragmentShadingRateAttachmentTexelSize;
-   uint maxFragmentShadingRateAttachmentTexelSizeAspectRatio;
-   uint primitiveFragmentShadingRateWithMultipleViewports;
-   uint layeredShadingRateAttachments;
-   uint fragmentShadingRateNonTrivialCombinerOps;
-   Extent2D maxFragmentSize;
-   uint maxFragmentSizeAspectRatio;
-   uint maxFragmentShadingRateCoverageSamples;
-   SampleCountFlagBits maxFragmentShadingRateRasterizationSamples;
-   uint fragmentShadingRateWithShaderDepthStencilWrites;
-   uint fragmentShadingRateWithSampleMask;
-   uint fragmentShadingRateWithShaderSampleMask;
-   uint fragmentShadingRateWithConservativeRasterization;
-   uint fragmentShadingRateWithFragmentShaderInterlock;
-   uint fragmentShadingRateWithCustomSampleLocations;
-   uint fragmentShadingRateStrictMultiplyCombiner;
-}
-struct PhysicalDeviceFragmentShadingRateKHR { 
-   StructureType sType;
-   void* pNext;
-   SampleCountFlags sampleCounts;
-   Extent2D fragmentSize;
-}
-struct PhysicalDeviceShaderTerminateInvocationFeatures { 
+struct PhysicalDeviceShaderTerminateInvocationFeatures {
    StructureType sType;
    void* pNext;
    uint shaderTerminateInvocation;
 }
-struct PhysicalDeviceFragmentShadingRateEnumsFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentShadingRateEnums;
-   uint supersampleFragmentShadingRates;
-   uint noInvocationFragmentShadingRates;
-}
-struct PhysicalDeviceFragmentShadingRateEnumsPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   SampleCountFlagBits maxFragmentShadingRateInvocationCount;
-}
-struct PipelineFragmentShadingRateEnumStateCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   FragmentShadingRateTypeNV shadingRateType;
-   FragmentShadingRateNV shadingRate;
-   FragmentShadingRateCombinerOpKHR[2] combinerOps;
-}
-struct AccelerationStructureBuildSizesInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize accelerationStructureSize;
-   DeviceSize updateScratchSize;
-   DeviceSize buildScratchSize;
-}
-struct PhysicalDeviceImage2DViewOf3DFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint image2DViewOf3D;
-   uint sampler2DViewOf3D;
-}
-struct PhysicalDeviceImageSlicedViewOf3DFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint imageSlicedViewOf3D;
-}
-struct PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint attachmentFeedbackLoopDynamicState;
-}
-struct PhysicalDeviceLegacyVertexAttributesFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint legacyVertexAttributes;
-}
-struct PhysicalDeviceLegacyVertexAttributesPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint nativeUnalignedPerformance;
-}
-struct PhysicalDeviceMutableDescriptorTypeFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint mutableDescriptorType;
-}
-struct MutableDescriptorTypeListEXT { 
-   uint descriptorTypeCount;
-   DescriptorType* pDescriptorTypes;
-}
-struct MutableDescriptorTypeCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint mutableDescriptorTypeListCount;
-   MutableDescriptorTypeListEXT* pMutableDescriptorTypeLists;
-}
-struct PhysicalDeviceDepthClipControlFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint depthClipControl;
-}
-struct PipelineViewportDepthClipControlCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint negativeOneToOne;
-}
-struct PhysicalDeviceVertexInputDynamicStateFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint vertexInputDynamicState;
-}
-struct PhysicalDeviceExternalMemoryRDMAFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint externalMemoryRDMA;
-}
-struct PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderRelaxedExtendedInstruction;
-}
-struct VertexInputBindingDescription2EXT { 
-   StructureType sType;
-   void* pNext;
-   uint binding;
-   uint stride;
-   VertexInputRate inputRate;
-   uint divisor;
-}
-struct VertexInputAttributeDescription2EXT { 
-   StructureType sType;
-   void* pNext;
-   uint location;
-   uint binding;
-   Format format;
-   uint offset;
-}
-struct PhysicalDeviceColorWriteEnableFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint colorWriteEnable;
-}
-struct PipelineColorWriteCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint attachmentCount;
-   uint* pColorWriteEnables;
-}
-struct MemoryBarrier2 { 
+struct MemoryBarrier2 {
    StructureType sType;
    void* pNext;
    PipelineStageFlags2 srcStageMask;
@@ -7816,7 +6083,7 @@ struct MemoryBarrier2 {
    PipelineStageFlags2 dstStageMask;
    AccessFlags2 dstAccessMask;
 }
-struct ImageMemoryBarrier2 { 
+struct ImageMemoryBarrier2 {
    StructureType sType;
    void* pNext;
    PipelineStageFlags2 srcStageMask;
@@ -7830,7 +6097,7 @@ struct ImageMemoryBarrier2 {
    Image image;
    ImageSubresourceRange subresourceRange;
 }
-struct BufferMemoryBarrier2 { 
+struct BufferMemoryBarrier2 {
    StructureType sType;
    void* pNext;
    PipelineStageFlags2 srcStageMask;
@@ -7843,7 +6110,7 @@ struct BufferMemoryBarrier2 {
    DeviceSize offset;
    DeviceSize size;
 }
-struct DependencyInfo { 
+struct DependencyInfo {
    StructureType sType;
    void* pNext;
    DependencyFlags dependencyFlags;
@@ -7854,7 +6121,7 @@ struct DependencyInfo {
    uint imageMemoryBarrierCount;
    ImageMemoryBarrier2* pImageMemoryBarriers;
 }
-struct SemaphoreSubmitInfo { 
+struct SemaphoreSubmitInfo {
    StructureType sType;
    void* pNext;
    Semaphore semaphore;
@@ -7862,13 +6129,13 @@ struct SemaphoreSubmitInfo {
    PipelineStageFlags2 stageMask;
    uint deviceIndex;
 }
-struct CommandBufferSubmitInfo { 
+struct CommandBufferSubmitInfo {
    StructureType sType;
    void* pNext;
    CommandBuffer commandBuffer;
    uint deviceMask;
 }
-struct SubmitInfo2 { 
+struct SubmitInfo2 {
    StructureType sType;
    void* pNext;
    SubmitFlags flags;
@@ -7879,809 +6146,12 @@ struct SubmitInfo2 {
    uint signalSemaphoreInfoCount;
    SemaphoreSubmitInfo* pSignalSemaphoreInfos;
 }
-struct QueueFamilyCheckpointProperties2NV { 
-   StructureType sType;
-   void* pNext;
-   PipelineStageFlags2 checkpointExecutionStageMask;
-}
-struct CheckpointData2NV { 
-   StructureType sType;
-   void* pNext;
-   PipelineStageFlags2 stage;
-   void* pCheckpointMarker;
-}
-struct PhysicalDeviceSynchronization2Features { 
+struct PhysicalDeviceSynchronization2Features {
    StructureType sType;
    void* pNext;
    uint synchronization2;
 }
-struct PhysicalDeviceHostImageCopyFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint hostImageCopy;
-}
-struct PhysicalDeviceHostImageCopyPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint copySrcLayoutCount;
-   ImageLayout* pCopySrcLayouts;
-   uint copyDstLayoutCount;
-   ImageLayout* pCopyDstLayouts;
-   uint[UUID_SIZE] optimalTilingLayoutUUID;
-   uint identicalMemoryTypeRequirements;
-}
-struct MemoryToImageCopyEXT { 
-   StructureType sType;
-   void* pNext;
-   void* pHostPointer;
-   uint memoryRowLength;
-   uint memoryImageHeight;
-   ImageSubresourceLayers imageSubresource;
-   Offset3D imageOffset;
-   Extent3D imageExtent;
-}
-struct ImageToMemoryCopyEXT { 
-   StructureType sType;
-   void* pNext;
-   void* pHostPointer;
-   uint memoryRowLength;
-   uint memoryImageHeight;
-   ImageSubresourceLayers imageSubresource;
-   Offset3D imageOffset;
-   Extent3D imageExtent;
-}
-struct CopyMemoryToImageInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   HostImageCopyFlagsEXT flags;
-   Image dstImage;
-   ImageLayout dstImageLayout;
-   uint regionCount;
-   MemoryToImageCopyEXT* pRegions;
-}
-struct CopyImageToMemoryInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   HostImageCopyFlagsEXT flags;
-   Image srcImage;
-   ImageLayout srcImageLayout;
-   uint regionCount;
-   ImageToMemoryCopyEXT* pRegions;
-}
-struct CopyImageToImageInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   HostImageCopyFlagsEXT flags;
-   Image srcImage;
-   ImageLayout srcImageLayout;
-   Image dstImage;
-   ImageLayout dstImageLayout;
-   uint regionCount;
-   ImageCopy2* pRegions;
-}
-struct HostImageLayoutTransitionInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Image image;
-   ImageLayout oldLayout;
-   ImageLayout newLayout;
-   ImageSubresourceRange subresourceRange;
-}
-struct SubresourceHostMemcpySizeEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize size;
-}
-struct HostImageCopyDevicePerformanceQueryEXT { 
-   StructureType sType;
-   void* pNext;
-   uint optimalDeviceAccess;
-   uint identicalMemoryLayout;
-}
-struct PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint primitivesGeneratedQuery;
-   uint primitivesGeneratedQueryWithRasterizerDiscard;
-   uint primitivesGeneratedQueryWithNonZeroStreams;
-}
-struct PhysicalDeviceLegacyDitheringFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint legacyDithering;
-}
-struct PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint multisampledRenderToSingleSampled;
-}
-struct SubpassResolvePerformanceQueryEXT { 
-   StructureType sType;
-   void* pNext;
-   uint optimal;
-}
-struct MultisampledRenderToSingleSampledInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint multisampledRenderToSingleSampledEnable;
-   SampleCountFlagBits rasterizationSamples;
-}
-struct PhysicalDevicePipelineProtectedAccessFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pipelineProtectedAccess;
-}
-struct QueueFamilyVideoPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoCodecOperationFlagsKHR videoCodecOperations;
-}
-struct QueueFamilyQueryResultStatusPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint queryResultStatusSupport;
-}
-struct VideoProfileListInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint profileCount;
-   VideoProfileInfoKHR* pProfiles;
-}
-struct PhysicalDeviceVideoFormatInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ImageUsageFlags imageUsage;
-}
-struct VideoFormatPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   Format format;
-   ComponentMapping componentMapping;
-   ImageCreateFlags imageCreateFlags;
-   ImageType imageType;
-   ImageTiling imageTiling;
-   ImageUsageFlags imageUsageFlags;
-}
-struct VideoProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoCodecOperationFlagBitsKHR videoCodecOperation;
-   VideoChromaSubsamplingFlagsKHR chromaSubsampling;
-   VideoComponentBitDepthFlagsKHR lumaBitDepth;
-   VideoComponentBitDepthFlagsKHR chromaBitDepth;
-}
-struct VideoCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoCapabilityFlagsKHR flags;
-   DeviceSize minBitstreamBufferOffsetAlignment;
-   DeviceSize minBitstreamBufferSizeAlignment;
-   Extent2D pictureAccessGranularity;
-   Extent2D minCodedExtent;
-   Extent2D maxCodedExtent;
-   uint maxDpbSlots;
-   uint maxActiveReferencePictures;
-   ExtensionProperties stdHeaderVersion;
-}
-struct VideoSessionMemoryRequirementsKHR { 
-   StructureType sType;
-   void* pNext;
-   uint memoryBindIndex;
-   MemoryRequirements memoryRequirements;
-}
-struct BindVideoSessionMemoryInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint memoryBindIndex;
-   DeviceMemory memory;
-   DeviceSize memoryOffset;
-   DeviceSize memorySize;
-}
-struct VideoPictureResourceInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   Offset2D codedOffset;
-   Extent2D codedExtent;
-   uint baseArrayLayer;
-   ImageView imageViewBinding;
-}
-struct VideoReferenceSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   int slotIndex;
-   VideoPictureResourceInfoKHR* pPictureResource;
-}
-struct VideoDecodeCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoDecodeCapabilityFlagsKHR flags;
-}
-struct VideoDecodeUsageInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoDecodeUsageFlagsKHR videoUsageHints;
-}
-struct VideoDecodeInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoDecodeFlagsKHR flags;
-   Buffer srcBuffer;
-   DeviceSize srcBufferOffset;
-   DeviceSize srcBufferRange;
-   VideoPictureResourceInfoKHR dstPictureResource;
-   VideoReferenceSlotInfoKHR* pSetupReferenceSlot;
-   uint referenceSlotCount;
-   VideoReferenceSlotInfoKHR* pReferenceSlots;
-}
-struct PhysicalDeviceVideoMaintenance1FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint videoMaintenance1;
-}
-struct VideoInlineQueryInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   QueryPool queryPool;
-   uint firstQuery;
-   uint queryCount;
-}
-struct VideoDecodeH264ProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH264ProfileIdc stdProfileIdc;
-   VideoDecodeH264PictureLayoutFlagBitsKHR pictureLayout;
-}
-struct VideoDecodeH264CapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH264LevelIdc maxLevelIdc;
-   Offset2D fieldOffsetGranularity;
-}
-struct VideoDecodeH264SessionParametersAddInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint stdSPSCount;
-   StdVideoH264SequenceParameterSet* pStdSPSs;
-   uint stdPPSCount;
-   StdVideoH264PictureParameterSet* pStdPPSs;
-}
-struct VideoDecodeH264SessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxStdSPSCount;
-   uint maxStdPPSCount;
-   VideoDecodeH264SessionParametersAddInfoKHR* pParametersAddInfo;
-}
-struct VideoDecodeH264PictureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeH264PictureInfo* pStdPictureInfo;
-   uint sliceCount;
-   uint* pSliceOffsets;
-}
-struct VideoDecodeH264DpbSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeH264ReferenceInfo* pStdReferenceInfo;
-}
-struct VideoDecodeH265ProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH265ProfileIdc stdProfileIdc;
-}
-struct VideoDecodeH265CapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH265LevelIdc maxLevelIdc;
-}
-struct VideoDecodeH265SessionParametersAddInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint stdVPSCount;
-   StdVideoH265VideoParameterSet* pStdVPSs;
-   uint stdSPSCount;
-   StdVideoH265SequenceParameterSet* pStdSPSs;
-   uint stdPPSCount;
-   StdVideoH265PictureParameterSet* pStdPPSs;
-}
-struct VideoDecodeH265SessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxStdVPSCount;
-   uint maxStdSPSCount;
-   uint maxStdPPSCount;
-   VideoDecodeH265SessionParametersAddInfoKHR* pParametersAddInfo;
-}
-struct VideoDecodeH265PictureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeH265PictureInfo* pStdPictureInfo;
-   uint sliceSegmentCount;
-   uint* pSliceSegmentOffsets;
-}
-struct VideoDecodeH265DpbSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeH265ReferenceInfo* pStdReferenceInfo;
-}
-struct VideoDecodeAV1ProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoAV1Profile stdProfile;
-   uint filmGrainSupport;
-}
-struct VideoDecodeAV1CapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoAV1Level maxLevel;
-}
-struct VideoDecodeAV1SessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoAV1SequenceHeader* pStdSequenceHeader;
-}
-struct VideoDecodeAV1PictureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeAV1PictureInfo* pStdPictureInfo;
-   int[MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR] referenceNameSlotIndices;
-   uint frameHeaderOffset;
-   uint tileCount;
-   uint* pTileOffsets;
-   uint* pTileSizes;
-}
-struct VideoDecodeAV1DpbSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoDecodeAV1ReferenceInfo* pStdReferenceInfo;
-}
-struct VideoSessionCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint queueFamilyIndex;
-   VideoSessionCreateFlagsKHR flags;
-   VideoProfileInfoKHR* pVideoProfile;
-   Format pictureFormat;
-   Extent2D maxCodedExtent;
-   Format referencePictureFormat;
-   uint maxDpbSlots;
-   uint maxActiveReferencePictures;
-   ExtensionProperties* pStdHeaderVersion;
-}
-struct VideoSessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoSessionParametersCreateFlagsKHR flags;
-   VideoSessionParametersKHR videoSessionParametersTemplate;
-   VideoSessionKHR videoSession;
-}
-struct VideoSessionParametersUpdateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint updateSequenceCount;
-}
-struct VideoEncodeSessionParametersGetInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoSessionParametersKHR videoSessionParameters;
-}
-struct VideoEncodeSessionParametersFeedbackInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint hasOverrides;
-}
-struct VideoBeginCodingInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoBeginCodingFlagsKHR flags;
-   VideoSessionKHR videoSession;
-   VideoSessionParametersKHR videoSessionParameters;
-   uint referenceSlotCount;
-   VideoReferenceSlotInfoKHR* pReferenceSlots;
-}
-struct VideoEndCodingInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEndCodingFlagsKHR flags;
-}
-struct VideoCodingControlInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoCodingControlFlagsKHR flags;
-}
-struct VideoEncodeUsageInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeUsageFlagsKHR videoUsageHints;
-   VideoEncodeContentFlagsKHR videoContentHints;
-   VideoEncodeTuningModeKHR tuningMode;
-}
-struct VideoEncodeInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeFlagsKHR flags;
-   Buffer dstBuffer;
-   DeviceSize dstBufferOffset;
-   DeviceSize dstBufferRange;
-   VideoPictureResourceInfoKHR srcPictureResource;
-   VideoReferenceSlotInfoKHR* pSetupReferenceSlot;
-   uint referenceSlotCount;
-   VideoReferenceSlotInfoKHR* pReferenceSlots;
-   uint precedingExternallyEncodedBytes;
-}
-struct QueryPoolVideoEncodeFeedbackCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeFeedbackFlagsKHR encodeFeedbackFlags;
-}
-struct VideoEncodeQualityLevelInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint qualityLevel;
-}
-struct PhysicalDeviceVideoEncodeQualityLevelInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoProfileInfoKHR* pVideoProfile;
-   uint qualityLevel;
-}
-struct VideoEncodeQualityLevelPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeRateControlModeFlagBitsKHR preferredRateControlMode;
-   uint preferredRateControlLayerCount;
-}
-struct VideoEncodeRateControlInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeRateControlFlagsKHR flags;
-   VideoEncodeRateControlModeFlagBitsKHR rateControlMode;
-   uint layerCount;
-   VideoEncodeRateControlLayerInfoKHR* pLayers;
-   uint virtualBufferSizeInMs;
-   uint initialVirtualBufferSizeInMs;
-}
-struct VideoEncodeRateControlLayerInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ulong averageBitrate;
-   ulong maxBitrate;
-   uint frameRateNumerator;
-   uint frameRateDenominator;
-}
-struct VideoEncodeCapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeCapabilityFlagsKHR flags;
-   VideoEncodeRateControlModeFlagsKHR rateControlModes;
-   uint maxRateControlLayers;
-   ulong maxBitrate;
-   uint maxQualityLevels;
-   Extent2D encodeInputPictureGranularity;
-   VideoEncodeFeedbackFlagsKHR supportedEncodeFeedbackFlags;
-}
-struct VideoEncodeH264CapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH264CapabilityFlagsKHR flags;
-   StdVideoH264LevelIdc maxLevelIdc;
-   uint maxSliceCount;
-   uint maxPPictureL0ReferenceCount;
-   uint maxBPictureL0ReferenceCount;
-   uint maxL1ReferenceCount;
-   uint maxTemporalLayerCount;
-   uint expectDyadicTemporalLayerPattern;
-   int minQp;
-   int maxQp;
-   uint prefersGopRemainingFrames;
-   uint requiresGopRemainingFrames;
-   VideoEncodeH264StdFlagsKHR stdSyntaxFlags;
-}
-struct VideoEncodeH264QualityLevelPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH264RateControlFlagsKHR preferredRateControlFlags;
-   uint preferredGopFrameCount;
-   uint preferredIdrPeriod;
-   uint preferredConsecutiveBFrameCount;
-   uint preferredTemporalLayerCount;
-   VideoEncodeH264QpKHR preferredConstantQp;
-   uint preferredMaxL0ReferenceCount;
-   uint preferredMaxL1ReferenceCount;
-   uint preferredStdEntropyCodingModeFlag;
-}
-struct VideoEncodeH264SessionCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useMaxLevelIdc;
-   StdVideoH264LevelIdc maxLevelIdc;
-}
-struct VideoEncodeH264SessionParametersAddInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint stdSPSCount;
-   StdVideoH264SequenceParameterSet* pStdSPSs;
-   uint stdPPSCount;
-   StdVideoH264PictureParameterSet* pStdPPSs;
-}
-struct VideoEncodeH264SessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxStdSPSCount;
-   uint maxStdPPSCount;
-   VideoEncodeH264SessionParametersAddInfoKHR* pParametersAddInfo;
-}
-struct VideoEncodeH264SessionParametersGetInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint writeStdSPS;
-   uint writeStdPPS;
-   uint stdSPSId;
-   uint stdPPSId;
-}
-struct VideoEncodeH264SessionParametersFeedbackInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint hasStdSPSOverrides;
-   uint hasStdPPSOverrides;
-}
-struct VideoEncodeH264DpbSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoEncodeH264ReferenceInfo* pStdReferenceInfo;
-}
-struct VideoEncodeH264PictureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint naluSliceEntryCount;
-   VideoEncodeH264NaluSliceInfoKHR* pNaluSliceEntries;
-   StdVideoEncodeH264PictureInfo* pStdPictureInfo;
-   uint generatePrefixNalu;
-}
-struct VideoEncodeH264ProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH264ProfileIdc stdProfileIdc;
-}
-struct VideoEncodeH264NaluSliceInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   int constantQp;
-   StdVideoEncodeH264SliceHeader* pStdSliceHeader;
-}
-struct VideoEncodeH264RateControlInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH264RateControlFlagsKHR flags;
-   uint gopFrameCount;
-   uint idrPeriod;
-   uint consecutiveBFrameCount;
-   uint temporalLayerCount;
-}
-struct VideoEncodeH264QpKHR { 
-   int qpI;
-   int qpP;
-   int qpB;
-}
-struct VideoEncodeH264FrameSizeKHR { 
-   uint frameISize;
-   uint framePSize;
-   uint frameBSize;
-}
-struct VideoEncodeH264GopRemainingFrameInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useGopRemainingFrames;
-   uint gopRemainingI;
-   uint gopRemainingP;
-   uint gopRemainingB;
-}
-struct VideoEncodeH264RateControlLayerInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useMinQp;
-   VideoEncodeH264QpKHR minQp;
-   uint useMaxQp;
-   VideoEncodeH264QpKHR maxQp;
-   uint useMaxFrameSize;
-   VideoEncodeH264FrameSizeKHR maxFrameSize;
-}
-struct VideoEncodeH265CapabilitiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH265CapabilityFlagsKHR flags;
-   StdVideoH265LevelIdc maxLevelIdc;
-   uint maxSliceSegmentCount;
-   Extent2D maxTiles;
-   VideoEncodeH265CtbSizeFlagsKHR ctbSizes;
-   VideoEncodeH265TransformBlockSizeFlagsKHR transformBlockSizes;
-   uint maxPPictureL0ReferenceCount;
-   uint maxBPictureL0ReferenceCount;
-   uint maxL1ReferenceCount;
-   uint maxSubLayerCount;
-   uint expectDyadicTemporalSubLayerPattern;
-   int minQp;
-   int maxQp;
-   uint prefersGopRemainingFrames;
-   uint requiresGopRemainingFrames;
-   VideoEncodeH265StdFlagsKHR stdSyntaxFlags;
-}
-struct VideoEncodeH265QualityLevelPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH265RateControlFlagsKHR preferredRateControlFlags;
-   uint preferredGopFrameCount;
-   uint preferredIdrPeriod;
-   uint preferredConsecutiveBFrameCount;
-   uint preferredSubLayerCount;
-   VideoEncodeH265QpKHR preferredConstantQp;
-   uint preferredMaxL0ReferenceCount;
-   uint preferredMaxL1ReferenceCount;
-}
-struct VideoEncodeH265SessionCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useMaxLevelIdc;
-   StdVideoH265LevelIdc maxLevelIdc;
-}
-struct VideoEncodeH265SessionParametersAddInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint stdVPSCount;
-   StdVideoH265VideoParameterSet* pStdVPSs;
-   uint stdSPSCount;
-   StdVideoH265SequenceParameterSet* pStdSPSs;
-   uint stdPPSCount;
-   StdVideoH265PictureParameterSet* pStdPPSs;
-}
-struct VideoEncodeH265SessionParametersCreateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint maxStdVPSCount;
-   uint maxStdSPSCount;
-   uint maxStdPPSCount;
-   VideoEncodeH265SessionParametersAddInfoKHR* pParametersAddInfo;
-}
-struct VideoEncodeH265SessionParametersGetInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint writeStdVPS;
-   uint writeStdSPS;
-   uint writeStdPPS;
-   uint stdVPSId;
-   uint stdSPSId;
-   uint stdPPSId;
-}
-struct VideoEncodeH265SessionParametersFeedbackInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint hasStdVPSOverrides;
-   uint hasStdSPSOverrides;
-   uint hasStdPPSOverrides;
-}
-struct VideoEncodeH265PictureInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint naluSliceSegmentEntryCount;
-   VideoEncodeH265NaluSliceSegmentInfoKHR* pNaluSliceSegmentEntries;
-   StdVideoEncodeH265PictureInfo* pStdPictureInfo;
-}
-struct VideoEncodeH265NaluSliceSegmentInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   int constantQp;
-   StdVideoEncodeH265SliceSegmentHeader* pStdSliceSegmentHeader;
-}
-struct VideoEncodeH265RateControlInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   VideoEncodeH265RateControlFlagsKHR flags;
-   uint gopFrameCount;
-   uint idrPeriod;
-   uint consecutiveBFrameCount;
-   uint subLayerCount;
-}
-struct VideoEncodeH265QpKHR { 
-   int qpI;
-   int qpP;
-   int qpB;
-}
-struct VideoEncodeH265FrameSizeKHR { 
-   uint frameISize;
-   uint framePSize;
-   uint frameBSize;
-}
-struct VideoEncodeH265GopRemainingFrameInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useGopRemainingFrames;
-   uint gopRemainingI;
-   uint gopRemainingP;
-   uint gopRemainingB;
-}
-struct VideoEncodeH265RateControlLayerInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint useMinQp;
-   VideoEncodeH265QpKHR minQp;
-   uint useMaxQp;
-   VideoEncodeH265QpKHR maxQp;
-   uint useMaxFrameSize;
-   VideoEncodeH265FrameSizeKHR maxFrameSize;
-}
-struct VideoEncodeH265ProfileInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoH265ProfileIdc stdProfileIdc;
-}
-struct VideoEncodeH265DpbSlotInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   StdVideoEncodeH265ReferenceInfo* pStdReferenceInfo;
-}
-struct PhysicalDeviceInheritedViewportScissorFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint inheritedViewportScissor2D;
-}
-struct CommandBufferInheritanceViewportScissorInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint viewportScissor2D;
-   uint viewportDepthCount;
-   Viewport* pViewportDepths;
-}
-struct PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint ycbcr2plane444Formats;
-}
-struct PhysicalDeviceProvokingVertexFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint provokingVertexLast;
-   uint transformFeedbackPreservesProvokingVertex;
-}
-struct PhysicalDeviceProvokingVertexPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint provokingVertexModePerPipeline;
-   uint transformFeedbackPreservesTriangleFanProvokingVertex;
-}
-struct PipelineRasterizationProvokingVertexStateCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ProvokingVertexModeEXT provokingVertexMode;
-}
-struct CuModuleCreateInfoNVX { 
-   StructureType sType;
-   void* pNext;
-   usz dataSize;
-   void* pData;
-}
-struct CuFunctionCreateInfoNVX { 
-   StructureType sType;
-   void* pNext;
-   CuModuleNVX module;
-   char* pName;
-}
-struct CuLaunchInfoNVX { 
-   StructureType sType;
-   void* pNext;
-   CuFunctionNVX function;
-   uint gridDimX;
-   uint gridDimY;
-   uint gridDimZ;
-   uint blockDimX;
-   uint blockDimY;
-   uint blockDimZ;
-   uint sharedMemBytes;
-   usz paramCount;
-   void* pParams;
-   usz extraCount;
-   void* pExtras;
-}
-struct PhysicalDeviceDescriptorBufferFeaturesEXT { 
+struct PhysicalDeviceDescriptorBufferFeaturesEXT {
    StructureType sType;
    void* pNext;
    uint descriptorBuffer;
@@ -8689,7 +6159,7 @@ struct PhysicalDeviceDescriptorBufferFeaturesEXT {
    uint descriptorBufferImageLayoutIgnored;
    uint descriptorBufferPushDescriptors;
 }
-struct PhysicalDeviceDescriptorBufferPropertiesEXT { 
+struct PhysicalDeviceDescriptorBufferPropertiesEXT {
    StructureType sType;
    void* pNext;
    uint combinedImageSamplerDescriptorSingleArray;
@@ -8726,72 +6196,72 @@ struct PhysicalDeviceDescriptorBufferPropertiesEXT {
    DeviceSize resourceDescriptorBufferAddressSpaceSize;
    DeviceSize descriptorBufferAddressSpaceSize;
 }
-struct PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT { 
+struct PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT {
    StructureType sType;
    void* pNext;
    usz combinedImageSamplerDensityMapDescriptorSize;
 }
-struct DescriptorAddressInfoEXT { 
+struct DescriptorAddressInfoEXT {
    StructureType sType;
    void* pNext;
    DeviceAddress address;
    DeviceSize range;
    Format format;
 }
-struct DescriptorBufferBindingInfoEXT { 
+struct DescriptorBufferBindingInfoEXT {
    StructureType sType;
    void* pNext;
    DeviceAddress address;
    BufferUsageFlags usage;
 }
-struct DescriptorBufferBindingPushDescriptorBufferHandleEXT { 
+struct DescriptorBufferBindingPushDescriptorBufferHandleEXT {
    StructureType sType;
    void* pNext;
    Buffer buffer;
 }
-struct DescriptorGetInfoEXT { 
+struct DescriptorGetInfoEXT {
    StructureType sType;
    void* pNext;
    DescriptorType type;
    DescriptorDataEXT data;
 }
-struct BufferCaptureDescriptorDataInfoEXT { 
+struct BufferCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    Buffer buffer;
 }
-struct ImageCaptureDescriptorDataInfoEXT { 
+struct ImageCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    Image image;
 }
-struct ImageViewCaptureDescriptorDataInfoEXT { 
+struct ImageViewCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    ImageView imageView;
 }
-struct SamplerCaptureDescriptorDataInfoEXT { 
+struct SamplerCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    Sampler sampler;
 }
-struct AccelerationStructureCaptureDescriptorDataInfoEXT { 
+struct AccelerationStructureCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    AccelerationStructureKHR accelerationStructure;
    AccelerationStructureNV accelerationStructureNV;
 }
-struct OpaqueCaptureDescriptorDataCreateInfoEXT { 
+struct OpaqueCaptureDescriptorDataCreateInfoEXT {
    StructureType sType;
    void* pNext;
    void* opaqueCaptureDescriptorData;
 }
-struct PhysicalDeviceShaderIntegerDotProductFeatures { 
+struct PhysicalDeviceShaderIntegerDotProductFeatures {
    StructureType sType;
    void* pNext;
    uint shaderIntegerDotProduct;
 }
-struct PhysicalDeviceShaderIntegerDotProductProperties { 
+struct PhysicalDeviceShaderIntegerDotProductProperties {
    StructureType sType;
    void* pNext;
    uint integerDotProduct8BitUnsignedAccelerated;
@@ -8825,236 +6295,14 @@ struct PhysicalDeviceShaderIntegerDotProductProperties {
    uint integerDotProductAccumulatingSaturating64BitSignedAccelerated;
    uint integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
 }
-struct PhysicalDeviceDrmPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint hasPrimary;
-   uint hasRender;
-   long primaryMajor;
-   long primaryMinor;
-   long renderMajor;
-   long renderMinor;
-}
-struct PhysicalDeviceFragmentShaderBarycentricFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint fragmentShaderBarycentric;
-}
-struct PhysicalDeviceFragmentShaderBarycentricPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint triStripVertexOrderIndependentOfProvokingVertex;
-}
-struct PhysicalDeviceRayTracingMotionBlurFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingMotionBlur;
-   uint rayTracingMotionBlurPipelineTraceRaysIndirect;
-}
-struct PhysicalDeviceRayTracingValidationFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingValidation;
-}
-struct AccelerationStructureGeometryMotionTrianglesDataNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceOrHostAddressConstKHR vertexData;
-}
-struct AccelerationStructureMotionInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint maxInstances;
-   AccelerationStructureMotionInfoFlagsNV flags;
-}
-struct SRTDataNV { 
-   float sx;
-   float a;
-   float b;
-   float pvx;
-   float sy;
-   float c;
-   float pvy;
-   float sz;
-   float pvz;
-   float qx;
-   float qy;
-   float qz;
-   float qw;
-   float tx;
-   float ty;
-   float tz;
-}
-struct AccelerationStructureSRTMotionInstanceNV { 
-   SRTDataNV transformT0;
-   SRTDataNV transformT1;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
-   ulong accelerationStructureReference;
-}
-struct AccelerationStructureMatrixMotionInstanceNV { 
-   TransformMatrixKHR transformT0;
-   TransformMatrixKHR transformT1;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
-   ulong accelerationStructureReference;
-}
-struct AccelerationStructureMotionInstanceNV { 
-   AccelerationStructureMotionInstanceTypeNV type;
-   AccelerationStructureMotionInstanceFlagsNV flags;
-   AccelerationStructureMotionInstanceDataNV data;
-}
-struct MemoryGetRemoteAddressInfoNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   ExternalMemoryHandleTypeFlagBits handleType;
-}
-struct ImportMemoryBufferCollectionFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   BufferCollectionFUCHSIA collection;
-   uint index;
-}
-struct BufferCollectionImageCreateInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   BufferCollectionFUCHSIA collection;
-   uint index;
-}
-struct BufferCollectionBufferCreateInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   BufferCollectionFUCHSIA collection;
-   uint index;
-}
-struct BufferCollectionCreateInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   Display collectionToken;
-}
-struct BufferCollectionPropertiesFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   uint memoryTypeBits;
-   uint bufferCount;
-   uint createInfoIndex;
-   ulong sysmemPixelFormat;
-   FormatFeatureFlags formatFeatures;
-   SysmemColorSpaceFUCHSIA sysmemColorSpaceIndex;
-   ComponentMapping samplerYcbcrConversionComponents;
-   SamplerYcbcrModelConversion suggestedYcbcrModel;
-   SamplerYcbcrRange suggestedYcbcrRange;
-   ChromaLocation suggestedXChromaOffset;
-   ChromaLocation suggestedYChromaOffset;
-}
-struct BufferConstraintsInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   BufferCreateInfo createInfo;
-   FormatFeatureFlags requiredFormatFeatures;
-   BufferCollectionConstraintsInfoFUCHSIA bufferCollectionConstraints;
-}
-struct SysmemColorSpaceFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   uint colorSpace;
-}
-struct ImageFormatConstraintsInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   ImageCreateInfo imageCreateInfo;
-   FormatFeatureFlags requiredFormatFeatures;
-   ImageFormatConstraintsFlagsFUCHSIA flags;
-   ulong sysmemPixelFormat;
-   uint colorSpaceCount;
-   SysmemColorSpaceFUCHSIA* pColorSpaces;
-}
-struct ImageConstraintsInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   uint formatConstraintsCount;
-   ImageFormatConstraintsInfoFUCHSIA* pFormatConstraints;
-   BufferCollectionConstraintsInfoFUCHSIA bufferCollectionConstraints;
-   ImageConstraintsInfoFlagsFUCHSIA flags;
-}
-struct BufferCollectionConstraintsInfoFUCHSIA { 
-   StructureType sType;
-   void* pNext;
-   uint minBufferCount;
-   uint maxBufferCount;
-   uint minBufferCountForCamping;
-   uint minBufferCountForDedicatedSlack;
-   uint minBufferCountForSharedSlack;
-}
-struct CudaModuleCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   usz dataSize;
-   void* pData;
-}
-struct CudaFunctionCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   CudaModuleNV module;
-   char* pName;
-}
-struct CudaLaunchInfoNV { 
-   StructureType sType;
-   void* pNext;
-   CudaFunctionNV function;
-   uint gridDimX;
-   uint gridDimY;
-   uint gridDimZ;
-   uint blockDimX;
-   uint blockDimY;
-   uint blockDimZ;
-   uint sharedMemBytes;
-   usz paramCount;
-   void* pParams;
-   usz extraCount;
-   void* pExtras;
-}
-struct PhysicalDeviceRGBA10X6FormatsFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint formatRgba10x6WithoutYCbCrSampler;
-}
-struct FormatProperties3 { 
+struct FormatProperties3 {
    StructureType sType;
    void* pNext;
    FormatFeatureFlags2 linearTilingFeatures;
    FormatFeatureFlags2 optimalTilingFeatures;
    FormatFeatureFlags2 bufferFeatures;
 }
-struct DrmFormatModifierPropertiesList2EXT { 
-   StructureType sType;
-   void* pNext;
-   uint drmFormatModifierCount;
-   DrmFormatModifierProperties2EXT* pDrmFormatModifierProperties;
-}
-struct DrmFormatModifierProperties2EXT { 
-   ulong drmFormatModifier;
-   uint drmFormatModifierPlaneCount;
-   FormatFeatureFlags2 drmFormatModifierTilingFeatures;
-}
-struct AndroidHardwareBufferFormatProperties2ANDROID { 
-   StructureType sType;
-   void* pNext;
-   Format format;
-   ulong externalFormat;
-   FormatFeatureFlags2 formatFeatures;
-   ComponentMapping samplerYcbcrConversionComponents;
-   SamplerYcbcrModelConversion suggestedYcbcrModel;
-   SamplerYcbcrRange suggestedYcbcrRange;
-   ChromaLocation suggestedXChromaOffset;
-   ChromaLocation suggestedYChromaOffset;
-}
-struct PipelineRenderingCreateInfo { 
+struct PipelineRenderingCreateInfo {
    StructureType sType;
    void* pNext;
    uint viewMask;
@@ -9063,7 +6311,7 @@ struct PipelineRenderingCreateInfo {
    Format depthAttachmentFormat;
    Format stencilAttachmentFormat;
 }
-struct RenderingInfo { 
+struct RenderingInfo {
    StructureType sType;
    void* pNext;
    RenderingFlags flags;
@@ -9075,7 +6323,7 @@ struct RenderingInfo {
    RenderingAttachmentInfo* pDepthAttachment;
    RenderingAttachmentInfo* pStencilAttachment;
 }
-struct RenderingAttachmentInfo { 
+struct RenderingAttachmentInfo {
    StructureType sType;
    void* pNext;
    ImageView imageView;
@@ -9087,25 +6335,25 @@ struct RenderingAttachmentInfo {
    AttachmentStoreOp storeOp;
    ClearValue clearValue;
 }
-struct RenderingFragmentShadingRateAttachmentInfoKHR { 
+struct RenderingFragmentShadingRateAttachmentInfoKHR {
    StructureType sType;
    void* pNext;
    ImageView imageView;
    ImageLayout imageLayout;
    Extent2D shadingRateAttachmentTexelSize;
 }
-struct RenderingFragmentDensityMapAttachmentInfoEXT { 
+struct RenderingFragmentDensityMapAttachmentInfoEXT {
    StructureType sType;
    void* pNext;
    ImageView imageView;
    ImageLayout imageLayout;
 }
-struct PhysicalDeviceDynamicRenderingFeatures { 
+struct PhysicalDeviceDynamicRenderingFeatures {
    StructureType sType;
    void* pNext;
    uint dynamicRendering;
 }
-struct CommandBufferInheritanceRenderingInfo { 
+struct CommandBufferInheritanceRenderingInfo {
    StructureType sType;
    void* pNext;
    RenderingFlags flags;
@@ -9117,1306 +6365,18 @@ struct CommandBufferInheritanceRenderingInfo {
    Format stencilAttachmentFormat;
    SampleCountFlagBits rasterizationSamples;
 }
-struct AttachmentSampleCountInfoAMD { 
+struct AttachmentSampleCountInfoAMD {
    StructureType sType;
    void* pNext;
    uint colorAttachmentCount;
    SampleCountFlagBits* pColorAttachmentSamples;
    SampleCountFlagBits depthStencilAttachmentSamples;
 }
-struct MultiviewPerViewAttributesInfoNVX { 
+struct MultiviewPerViewAttributesInfoNVX {
    StructureType sType;
    void* pNext;
    uint perViewAttributes;
    uint perViewAttributesPositionXOnly;
-}
-struct PhysicalDeviceImageViewMinLodFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint minLod;
-}
-struct ImageViewMinLodCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   float minLod;
-}
-struct PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint rasterizationOrderColorAttachmentAccess;
-   uint rasterizationOrderDepthAttachmentAccess;
-   uint rasterizationOrderStencilAttachmentAccess;
-}
-struct PhysicalDeviceLinearColorAttachmentFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint linearColorAttachment;
-}
-struct PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint graphicsPipelineLibrary;
-}
-struct PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint graphicsPipelineLibraryFastLinking;
-   uint graphicsPipelineLibraryIndependentInterpolationDecoration;
-}
-struct GraphicsPipelineLibraryCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   GraphicsPipelineLibraryFlagsEXT flags;
-}
-struct PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE { 
-   StructureType sType;
-   void* pNext;
-   uint descriptorSetHostMapping;
-}
-struct DescriptorSetBindingReferenceVALVE { 
-   StructureType sType;
-   void* pNext;
-   DescriptorSetLayout descriptorSetLayout;
-   uint binding;
-}
-struct DescriptorSetLayoutHostMappingInfoVALVE { 
-   StructureType sType;
-   void* pNext;
-   usz descriptorOffset;
-   uint descriptorSize;
-}
-struct PhysicalDeviceNestedCommandBufferFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint nestedCommandBuffer;
-   uint nestedCommandBufferRendering;
-   uint nestedCommandBufferSimultaneousUse;
-}
-struct PhysicalDeviceNestedCommandBufferPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxCommandBufferNestingLevel;
-}
-struct PhysicalDeviceShaderModuleIdentifierFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderModuleIdentifier;
-}
-struct PhysicalDeviceShaderModuleIdentifierPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID;
-}
-struct PipelineShaderStageModuleIdentifierCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint identifierSize;
-   uint* pIdentifier;
-}
-struct ShaderModuleIdentifierEXT { 
-   StructureType sType;
-   void* pNext;
-   uint identifierSize;
-   uint[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier;
-}
-struct ImageCompressionControlEXT { 
-   StructureType sType;
-   void* pNext;
-   ImageCompressionFlagsEXT flags;
-   uint compressionControlPlaneCount;
-   ImageCompressionFixedRateFlagsEXT* pFixedRateFlags;
-}
-struct PhysicalDeviceImageCompressionControlFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint imageCompressionControl;
-}
-struct ImageCompressionPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   ImageCompressionFlagsEXT imageCompressionFlags;
-   ImageCompressionFixedRateFlagsEXT imageCompressionFixedRateFlags;
-}
-struct PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint imageCompressionControlSwapchain;
-}
-struct ImageSubresource2KHR { 
-   StructureType sType;
-   void* pNext;
-   ImageSubresource imageSubresource;
-}
-struct SubresourceLayout2KHR { 
-   StructureType sType;
-   void* pNext;
-   SubresourceLayout subresourceLayout;
-}
-struct RenderPassCreationControlEXT { 
-   StructureType sType;
-   void* pNext;
-   uint disallowMerging;
-}
-struct RenderPassCreationFeedbackInfoEXT { 
-   uint postMergeSubpassCount;
-}
-struct RenderPassCreationFeedbackCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   RenderPassCreationFeedbackInfoEXT* pRenderPassFeedback;
-}
-struct RenderPassSubpassFeedbackInfoEXT { 
-   SubpassMergeStatusEXT subpassMergeStatus;
-   char[MAX_DESCRIPTION_SIZE] description;
-   uint postMergeIndex;
-}
-struct RenderPassSubpassFeedbackCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   RenderPassSubpassFeedbackInfoEXT* pSubpassFeedback;
-}
-struct PhysicalDeviceSubpassMergeFeedbackFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint subpassMergeFeedback;
-}
-struct MicromapBuildInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MicromapTypeEXT type;
-   BuildMicromapFlagsEXT flags;
-   BuildMicromapModeEXT mode;
-   MicromapEXT dstMicromap;
-   uint usageCountsCount;
-   MicromapUsageEXT* pUsageCounts;
-   MicromapUsageEXT* ppUsageCounts;
-   DeviceOrHostAddressConstKHR data;
-   DeviceOrHostAddressKHR scratchData;
-   DeviceOrHostAddressConstKHR triangleArray;
-   DeviceSize triangleArrayStride;
-}
-struct MicromapCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MicromapCreateFlagsEXT createFlags;
-   Buffer buffer;
-   DeviceSize offset;
-   DeviceSize size;
-   MicromapTypeEXT type;
-   DeviceAddress deviceAddress;
-}
-struct MicromapVersionInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint* pVersionData;
-}
-struct CopyMicromapInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MicromapEXT src;
-   MicromapEXT dst;
-   CopyMicromapModeEXT mode;
-}
-struct CopyMicromapToMemoryInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MicromapEXT src;
-   DeviceOrHostAddressKHR dst;
-   CopyMicromapModeEXT mode;
-}
-struct CopyMemoryToMicromapInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceOrHostAddressConstKHR src;
-   MicromapEXT dst;
-   CopyMicromapModeEXT mode;
-}
-struct MicromapBuildSizesInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize micromapSize;
-   DeviceSize buildScratchSize;
-   uint discardable;
-}
-struct MicromapUsageEXT { 
-   uint count;
-   uint subdivisionLevel;
-   uint format;
-}
-struct MicromapTriangleEXT { 
-   uint dataOffset;
-   uint subdivisionLevel;
-   uint format;
-}
-struct PhysicalDeviceOpacityMicromapFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint micromap;
-   uint micromapCaptureReplay;
-   uint micromapHostCommands;
-}
-struct PhysicalDeviceOpacityMicromapPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint maxOpacity2StateSubdivisionLevel;
-   uint maxOpacity4StateSubdivisionLevel;
-}
-struct AccelerationStructureTrianglesOpacityMicromapEXT { 
-   StructureType sType;
-   void* pNext;
-   IndexType indexType;
-   DeviceOrHostAddressConstKHR indexBuffer;
-   DeviceSize indexStride;
-   uint baseTriangle;
-   uint usageCountsCount;
-   MicromapUsageEXT* pUsageCounts;
-   MicromapUsageEXT* ppUsageCounts;
-   MicromapEXT micromap;
-}
-struct PhysicalDeviceDisplacementMicromapFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint displacementMicromap;
-}
-struct PhysicalDeviceDisplacementMicromapPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint maxDisplacementMicromapSubdivisionLevel;
-}
-struct AccelerationStructureTrianglesDisplacementMicromapNV { 
-   StructureType sType;
-   void* pNext;
-   Format displacementBiasAndScaleFormat;
-   Format displacementVectorFormat;
-   DeviceOrHostAddressConstKHR displacementBiasAndScaleBuffer;
-   DeviceSize displacementBiasAndScaleStride;
-   DeviceOrHostAddressConstKHR displacementVectorBuffer;
-   DeviceSize displacementVectorStride;
-   DeviceOrHostAddressConstKHR displacedMicromapPrimitiveFlags;
-   DeviceSize displacedMicromapPrimitiveFlagsStride;
-   IndexType indexType;
-   DeviceOrHostAddressConstKHR indexBuffer;
-   DeviceSize indexStride;
-   uint baseTriangle;
-   uint usageCountsCount;
-   MicromapUsageEXT* pUsageCounts;
-   MicromapUsageEXT* ppUsageCounts;
-   MicromapEXT micromap;
-}
-struct PipelinePropertiesIdentifierEXT { 
-   StructureType sType;
-   void* pNext;
-   uint[UUID_SIZE] pipelineIdentifier;
-}
-struct PhysicalDevicePipelinePropertiesFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pipelinePropertiesIdentifier;
-}
-struct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint shaderEarlyAndLateFragmentTests;
-}
-struct ExternalMemoryAcquireUnmodifiedEXT { 
-   StructureType sType;
-   void* pNext;
-   uint acquireUnmodifiedMemory;
-}
-struct ExportMetalObjectCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ExportMetalObjectTypeFlagBitsEXT exportObjectType;
-}
-struct ExportMetalObjectsInfoEXT { 
-   StructureType sType;
-   void* pNext;
-}
-struct ExportMetalDeviceInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MTLDevice_id mtlDevice;
-}
-struct ExportMetalCommandQueueInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Queue queue;
-   MTLCommandQueue_id mtlCommandQueue;
-}
-struct ExportMetalBufferInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceMemory memory;
-   MTLBuffer_id mtlBuffer;
-}
-struct ImportMetalBufferInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MTLBuffer_id mtlBuffer;
-}
-struct ExportMetalTextureInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Image image;
-   ImageView imageView;
-   BufferView bufferView;
-   ImageAspectFlagBits plane;
-   MTLTexture_id mtlTexture;
-}
-struct ImportMetalTextureInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ImageAspectFlagBits plane;
-   MTLTexture_id mtlTexture;
-}
-struct ExportMetalIOSurfaceInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Image image;
-   IOSurfaceRef ioSurface;
-}
-struct ImportMetalIOSurfaceInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   IOSurfaceRef ioSurface;
-}
-struct ExportMetalSharedEventInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   Semaphore semaphore;
-   Event event;
-   MTLSharedEvent_id mtlSharedEvent;
-}
-struct ImportMetalSharedEventInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   MTLSharedEvent_id mtlSharedEvent;
-}
-struct PhysicalDeviceNonSeamlessCubeMapFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint nonSeamlessCubeMap;
-}
-struct PhysicalDevicePipelineRobustnessFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pipelineRobustness;
-}
-struct PipelineRobustnessCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineRobustnessBufferBehaviorEXT storageBuffers;
-   PipelineRobustnessBufferBehaviorEXT uniformBuffers;
-   PipelineRobustnessBufferBehaviorEXT vertexInputs;
-   PipelineRobustnessImageBehaviorEXT images;
-}
-struct PhysicalDevicePipelineRobustnessPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   PipelineRobustnessBufferBehaviorEXT defaultRobustnessStorageBuffers;
-   PipelineRobustnessBufferBehaviorEXT defaultRobustnessUniformBuffers;
-   PipelineRobustnessBufferBehaviorEXT defaultRobustnessVertexInputs;
-   PipelineRobustnessImageBehaviorEXT defaultRobustnessImages;
-}
-struct ImageViewSampleWeightCreateInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   Offset2D filterCenter;
-   Extent2D filterSize;
-   uint numPhases;
-}
-struct PhysicalDeviceImageProcessingFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint textureSampleWeighted;
-   uint textureBoxFilter;
-   uint textureBlockMatch;
-}
-struct PhysicalDeviceImageProcessingPropertiesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint maxWeightFilterPhases;
-   Extent2D maxWeightFilterDimension;
-   Extent2D maxBlockMatchRegion;
-   Extent2D maxBoxFilterBlockSize;
-}
-struct PhysicalDeviceTilePropertiesFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint tileProperties;
-}
-struct TilePropertiesQCOM { 
-   StructureType sType;
-   void* pNext;
-   Extent3D tileSize;
-   Extent2D apronSize;
-   Offset2D origin;
-}
-struct PhysicalDeviceAmigoProfilingFeaturesSEC { 
-   StructureType sType;
-   void* pNext;
-   uint amigoProfiling;
-}
-struct AmigoProfilingSubmitInfoSEC { 
-   StructureType sType;
-   void* pNext;
-   ulong firstDrawTimestamp;
-   ulong swapBufferTimestamp;
-}
-struct PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint attachmentFeedbackLoopLayout;
-}
-struct PhysicalDeviceDepthClampZeroOneFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint depthClampZeroOne;
-}
-struct PhysicalDeviceAddressBindingReportFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint reportAddressBinding;
-}
-struct DeviceAddressBindingCallbackDataEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceAddressBindingFlagsEXT flags;
-   DeviceAddress baseAddress;
-   DeviceSize size;
-   DeviceAddressBindingTypeEXT bindingType;
-}
-struct PhysicalDeviceOpticalFlowFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint opticalFlow;
-}
-struct PhysicalDeviceOpticalFlowPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   OpticalFlowGridSizeFlagsNV supportedOutputGridSizes;
-   OpticalFlowGridSizeFlagsNV supportedHintGridSizes;
-   uint hintSupported;
-   uint costSupported;
-   uint bidirectionalFlowSupported;
-   uint globalFlowSupported;
-   uint minWidth;
-   uint minHeight;
-   uint maxWidth;
-   uint maxHeight;
-   uint maxNumRegionsOfInterest;
-}
-struct OpticalFlowImageFormatInfoNV { 
-   StructureType sType;
-   void* pNext;
-   OpticalFlowUsageFlagsNV usage;
-}
-struct OpticalFlowImageFormatPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   Format format;
-}
-struct OpticalFlowSessionCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint width;
-   uint height;
-   Format imageFormat;
-   Format flowVectorFormat;
-   Format costFormat;
-   OpticalFlowGridSizeFlagsNV outputGridSize;
-   OpticalFlowGridSizeFlagsNV hintGridSize;
-   OpticalFlowPerformanceLevelNV performanceLevel;
-   OpticalFlowSessionCreateFlagsNV flags;
-}
-struct OpticalFlowSessionCreatePrivateDataInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint id;
-   uint size;
-   void* pPrivateData;
-}
-struct OpticalFlowExecuteInfoNV { 
-   StructureType sType;
-   void* pNext;
-   OpticalFlowExecuteFlagsNV flags;
-   uint regionCount;
-   Rect2D* pRegions;
-}
-struct PhysicalDeviceFaultFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint deviceFault;
-   uint deviceFaultVendorBinary;
-}
-struct DeviceFaultAddressInfoEXT { 
-   DeviceFaultAddressTypeEXT addressType;
-   DeviceAddress reportedAddress;
-   DeviceSize addressPrecision;
-}
-struct DeviceFaultVendorInfoEXT { 
-   char[MAX_DESCRIPTION_SIZE] description;
-   ulong vendorFaultCode;
-   ulong vendorFaultData;
-}
-struct DeviceFaultCountsEXT { 
-   StructureType sType;
-   void* pNext;
-   uint addressInfoCount;
-   uint vendorInfoCount;
-   DeviceSize vendorBinarySize;
-}
-struct DeviceFaultInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   char[MAX_DESCRIPTION_SIZE] description;
-   DeviceFaultAddressInfoEXT* pAddressInfos;
-   DeviceFaultVendorInfoEXT* pVendorInfos;
-   void* pVendorBinaryData;
-}
-struct DeviceFaultVendorBinaryHeaderVersionOneEXT { 
-   uint headerSize;
-   DeviceFaultVendorBinaryHeaderVersionEXT headerVersion;
-   uint vendorID;
-   uint deviceID;
-   uint driverVersion;
-   uint[UUID_SIZE] pipelineCacheUUID;
-   uint applicationNameOffset;
-   uint applicationVersion;
-   uint engineNameOffset;
-   uint engineVersion;
-   uint apiVersion;
-}
-struct PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint pipelineLibraryGroupHandles;
-}
-struct DepthBiasInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   float depthBiasConstantFactor;
-   float depthBiasClamp;
-   float depthBiasSlopeFactor;
-}
-struct DepthBiasRepresentationInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   DepthBiasRepresentationEXT depthBiasRepresentation;
-   uint depthBiasExact;
-}
-struct DecompressMemoryRegionNV { 
-   DeviceAddress srcAddress;
-   DeviceAddress dstAddress;
-   DeviceSize compressedSize;
-   DeviceSize decompressedSize;
-   MemoryDecompressionMethodFlagsNV decompressionMethod;
-}
-struct PhysicalDeviceShaderCoreBuiltinsPropertiesARM { 
-   StructureType sType;
-   void* pNext;
-   ulong shaderCoreMask;
-   uint shaderCoreCount;
-   uint shaderWarpsPerCore;
-}
-struct PhysicalDeviceShaderCoreBuiltinsFeaturesARM { 
-   StructureType sType;
-   void* pNext;
-   uint shaderCoreBuiltins;
-}
-struct FrameBoundaryEXT { 
-   StructureType sType;
-   void* pNext;
-   FrameBoundaryFlagsEXT flags;
-   ulong frameID;
-   uint imageCount;
-   Image* pImages;
-   uint bufferCount;
-   Buffer* pBuffers;
-   ulong tagName;
-   usz tagSize;
-   void* pTag;
-}
-struct PhysicalDeviceFrameBoundaryFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint frameBoundary;
-}
-struct PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint dynamicRenderingUnusedAttachments;
-}
-struct SurfacePresentModeEXT { 
-   StructureType sType;
-   void* pNext;
-   PresentModeKHR presentMode;
-}
-struct SurfacePresentScalingCapabilitiesEXT { 
-   StructureType sType;
-   void* pNext;
-   PresentScalingFlagsEXT supportedPresentScaling;
-   PresentGravityFlagsEXT supportedPresentGravityX;
-   PresentGravityFlagsEXT supportedPresentGravityY;
-   Extent2D minScaledImageExtent;
-   Extent2D maxScaledImageExtent;
-}
-struct SurfacePresentModeCompatibilityEXT { 
-   StructureType sType;
-   void* pNext;
-   uint presentModeCount;
-   PresentModeKHR* pPresentModes;
-}
-struct PhysicalDeviceSwapchainMaintenance1FeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainMaintenance1;
-}
-struct SwapchainPresentFenceInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   Fence* pFences;
-}
-struct SwapchainPresentModesCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint presentModeCount;
-   PresentModeKHR* pPresentModes;
-}
-struct SwapchainPresentModeInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   uint swapchainCount;
-   PresentModeKHR* pPresentModes;
-}
-struct SwapchainPresentScalingCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   PresentScalingFlagsEXT scalingBehavior;
-   PresentGravityFlagsEXT presentGravityX;
-   PresentGravityFlagsEXT presentGravityY;
-}
-struct ReleaseSwapchainImagesInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   SwapchainKHR swapchain;
-   uint imageIndexCount;
-   uint* pImageIndices;
-}
-struct PhysicalDeviceDepthBiasControlFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint depthBiasControl;
-   uint leastRepresentableValueForceUnormRepresentation;
-   uint floatRepresentation;
-   uint depthBiasExact;
-}
-struct PhysicalDeviceRayTracingInvocationReorderFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingInvocationReorder;
-}
-struct PhysicalDeviceRayTracingInvocationReorderPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   RayTracingInvocationReorderModeNV rayTracingInvocationReorderReorderingHint;
-}
-struct PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint extendedSparseAddressSpace;
-}
-struct PhysicalDeviceExtendedSparseAddressSpacePropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize extendedSparseAddressSpaceSize;
-   ImageUsageFlags extendedSparseImageUsageFlags;
-   BufferUsageFlags extendedSparseBufferUsageFlags;
-}
-struct DirectDriverLoadingInfoLUNARG { 
-   StructureType sType;
-   void* pNext;
-   DirectDriverLoadingFlagsLUNARG flags;
-   PFN_vkGetInstanceProcAddrLUNARG pfnGetInstanceProcAddr;
-}
-struct DirectDriverLoadingListLUNARG { 
-   StructureType sType;
-   void* pNext;
-   DirectDriverLoadingModeLUNARG mode;
-   uint driverCount;
-   DirectDriverLoadingInfoLUNARG* pDrivers;
-}
-struct PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint multiviewPerViewViewports;
-}
-struct PhysicalDeviceRayTracingPositionFetchFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint rayTracingPositionFetch;
-}
-struct DeviceImageSubresourceInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ImageCreateInfo* pCreateInfo;
-   ImageSubresource2KHR* pSubresource;
-}
-struct PhysicalDeviceShaderCorePropertiesARM { 
-   StructureType sType;
-   void* pNext;
-   uint pixelRate;
-   uint texelRate;
-   uint fmaRate;
-}
-struct PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint multiviewPerViewRenderAreas;
-}
-struct MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint perViewRenderAreaCount;
-   Rect2D* pPerViewRenderAreas;
-}
-struct QueryLowLatencySupportNV { 
-   StructureType sType;
-   void* pNext;
-   void* pQueriedLowLatencyData;
-}
-struct MemoryMapInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   MemoryMapFlags flags;
-   DeviceMemory memory;
-   DeviceSize offset;
-   DeviceSize size;
-}
-struct MemoryUnmapInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   MemoryUnmapFlagsKHR flags;
-   DeviceMemory memory;
-}
-struct PhysicalDeviceShaderObjectFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderObject;
-}
-struct PhysicalDeviceShaderObjectPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint[UUID_SIZE] shaderBinaryUUID;
-   uint shaderBinaryVersion;
-}
-struct ShaderCreateInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ShaderCreateFlagsEXT flags;
-   ShaderStageFlagBits stage;
-   ShaderStageFlags nextStage;
-   ShaderCodeTypeEXT codeType;
-   usz codeSize;
-   void* pCode;
-   char* pName;
-   uint setLayoutCount;
-   DescriptorSetLayout* pSetLayouts;
-   uint pushConstantRangeCount;
-   PushConstantRange* pPushConstantRanges;
-   SpecializationInfo* pSpecializationInfo;
-}
-struct PhysicalDeviceShaderTileImageFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderTileImageColorReadAccess;
-   uint shaderTileImageDepthReadAccess;
-   uint shaderTileImageStencilReadAccess;
-}
-struct PhysicalDeviceShaderTileImagePropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderTileImageCoherentReadAccelerated;
-   uint shaderTileImageReadSampleFromPixelRateInvocation;
-   uint shaderTileImageReadFromHelperInvocation;
-}
-struct ImportScreenBufferInfoQNX { 
-   StructureType sType;
-   void* pNext;
-   _screen_buffer* buffer;
-}
-struct ScreenBufferPropertiesQNX { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize allocationSize;
-   uint memoryTypeBits;
-}
-struct ScreenBufferFormatPropertiesQNX { 
-   StructureType sType;
-   void* pNext;
-   Format format;
-   ulong externalFormat;
-   ulong screenUsage;
-   FormatFeatureFlags formatFeatures;
-   ComponentMapping samplerYcbcrConversionComponents;
-   SamplerYcbcrModelConversion suggestedYcbcrModel;
-   SamplerYcbcrRange suggestedYcbcrRange;
-   ChromaLocation suggestedXChromaOffset;
-   ChromaLocation suggestedYChromaOffset;
-}
-struct ExternalFormatQNX { 
-   StructureType sType;
-   void* pNext;
-   ulong externalFormat;
-}
-struct PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX { 
-   StructureType sType;
-   void* pNext;
-   uint screenBufferImport;
-}
-struct PhysicalDeviceCooperativeMatrixFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint cooperativeMatrix;
-   uint cooperativeMatrixRobustBufferAccess;
-}
-struct CooperativeMatrixPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint MSize;
-   uint NSize;
-   uint KSize;
-   ComponentTypeKHR AType;
-   ComponentTypeKHR BType;
-   ComponentTypeKHR CType;
-   ComponentTypeKHR ResultType;
-   uint saturatingAccumulation;
-   ScopeKHR scope;
-}
-struct PhysicalDeviceCooperativeMatrixPropertiesKHR { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags cooperativeMatrixSupportedStages;
-}
-struct PhysicalDeviceShaderEnqueuePropertiesAMDX { 
-   StructureType sType;
-   void* pNext;
-   uint maxExecutionGraphDepth;
-   uint maxExecutionGraphShaderOutputNodes;
-   uint maxExecutionGraphShaderPayloadSize;
-   uint maxExecutionGraphShaderPayloadCount;
-   uint executionGraphDispatchAddressAlignment;
-}
-struct PhysicalDeviceShaderEnqueueFeaturesAMDX { 
-   StructureType sType;
-   void* pNext;
-   uint shaderEnqueue;
-}
-struct ExecutionGraphPipelineCreateInfoAMDX { 
-   StructureType sType;
-   void* pNext;
-   PipelineCreateFlags flags;
-   uint stageCount;
-   PipelineShaderStageCreateInfo* pStages;
-   PipelineLibraryCreateInfoKHR* pLibraryInfo;
-   PipelineLayout layout;
-   Pipeline basePipelineHandle;
-   int basePipelineIndex;
-}
-struct PipelineShaderStageNodeCreateInfoAMDX { 
-   StructureType sType;
-   void* pNext;
-   char* pName;
-   uint index;
-}
-struct ExecutionGraphPipelineScratchSizeAMDX { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize size;
-}
-struct DispatchGraphInfoAMDX { 
-   uint nodeIndex;
-   uint payloadCount;
-   DeviceOrHostAddressConstAMDX payloads;
-   ulong payloadStride;
-}
-struct DispatchGraphCountInfoAMDX { 
-   uint count;
-   DeviceOrHostAddressConstAMDX infos;
-   ulong stride;
-}
-struct PhysicalDeviceAntiLagFeaturesAMD { 
-   StructureType sType;
-   void* pNext;
-   uint antiLag;
-}
-struct AntiLagDataAMD { 
-   StructureType sType;
-   void* pNext;
-   AntiLagModeAMD mode;
-   uint maxFPS;
-   AntiLagPresentationInfoAMD* pPresentationInfo;
-}
-struct AntiLagPresentationInfoAMD { 
-   StructureType sType;
-   void* pNext;
-   AntiLagStageAMD stage;
-   ulong frameIndex;
-}
-struct BindMemoryStatusKHR { 
-   StructureType sType;
-   void* pNext;
-   Result* pResult;
-}
-struct BindDescriptorSetsInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags stageFlags;
-   PipelineLayout layout;
-   uint firstSet;
-   uint descriptorSetCount;
-   DescriptorSet* pDescriptorSets;
-   uint dynamicOffsetCount;
-   uint* pDynamicOffsets;
-}
-struct PushConstantsInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   PipelineLayout layout;
-   ShaderStageFlags stageFlags;
-   uint offset;
-   uint size;
-   void* pValues;
-}
-struct PushDescriptorSetInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags stageFlags;
-   PipelineLayout layout;
-   uint set;
-   uint descriptorWriteCount;
-   WriteDescriptorSet* pDescriptorWrites;
-}
-struct PushDescriptorSetWithTemplateInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   DescriptorUpdateTemplate descriptorUpdateTemplate;
-   PipelineLayout layout;
-   uint set;
-   void* pData;
-}
-struct SetDescriptorBufferOffsetsInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags stageFlags;
-   PipelineLayout layout;
-   uint firstSet;
-   uint setCount;
-   uint* pBufferIndices;
-   DeviceSize* pOffsets;
-}
-struct BindDescriptorBufferEmbeddedSamplersInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   ShaderStageFlags stageFlags;
-   PipelineLayout layout;
-   uint set;
-}
-struct PhysicalDeviceCubicClampFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint cubicRangeClamp;
-}
-struct PhysicalDeviceYcbcrDegammaFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint ycbcrDegamma;
-}
-struct SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint enableYDegamma;
-   uint enableCbCrDegamma;
-}
-struct PhysicalDeviceCubicWeightsFeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint selectableCubicWeights;
-}
-struct SamplerCubicWeightsCreateInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   CubicFilterWeightsQCOM cubicWeights;
-}
-struct BlitImageCubicWeightsInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   CubicFilterWeightsQCOM cubicWeights;
-}
-struct PhysicalDeviceImageProcessing2FeaturesQCOM { 
-   StructureType sType;
-   void* pNext;
-   uint textureBlockMatch2;
-}
-struct PhysicalDeviceImageProcessing2PropertiesQCOM { 
-   StructureType sType;
-   void* pNext;
-   Extent2D maxBlockMatchWindow;
-}
-struct SamplerBlockMatchWindowCreateInfoQCOM { 
-   StructureType sType;
-   void* pNext;
-   Extent2D windowExtent;
-   BlockMatchWindowCompareModeQCOM windowCompareMode;
-}
-struct PhysicalDeviceDescriptorPoolOverallocationFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint descriptorPoolOverallocation;
-}
-struct PhysicalDeviceLayeredDriverPropertiesMSFT { 
-   StructureType sType;
-   void* pNext;
-   LayeredDriverUnderlyingApiMSFT underlyingAPI;
-}
-struct PhysicalDevicePerStageDescriptorSetFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint perStageDescriptorSet;
-   uint dynamicPipelineLayout;
-}
-struct PhysicalDeviceExternalFormatResolveFeaturesANDROID { 
-   StructureType sType;
-   void* pNext;
-   uint externalFormatResolve;
-}
-struct PhysicalDeviceExternalFormatResolvePropertiesANDROID { 
-   StructureType sType;
-   void* pNext;
-   uint nullColorAttachmentWithExternalFormatResolve;
-   ChromaLocation externalFormatResolveChromaOffsetX;
-   ChromaLocation externalFormatResolveChromaOffsetY;
-}
-struct AndroidHardwareBufferFormatResolvePropertiesANDROID { 
-   StructureType sType;
-   void* pNext;
-   Format colorAttachmentFormat;
-}
-struct LatencySleepModeInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint lowLatencyMode;
-   uint lowLatencyBoost;
-   uint minimumIntervalUs;
-}
-struct LatencySleepInfoNV { 
-   StructureType sType;
-   void* pNext;
-   Semaphore signalSemaphore;
-   ulong value;
-}
-struct SetLatencyMarkerInfoNV { 
-   StructureType sType;
-   void* pNext;
-   ulong presentID;
-   LatencyMarkerNV marker;
-}
-struct GetLatencyMarkerInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint timingCount;
-   LatencyTimingsFrameReportNV* pTimings;
-}
-struct LatencyTimingsFrameReportNV { 
-   StructureType sType;
-   void* pNext;
-   ulong presentID;
-   ulong inputSampleTimeUs;
-   ulong simStartTimeUs;
-   ulong simEndTimeUs;
-   ulong renderSubmitStartTimeUs;
-   ulong renderSubmitEndTimeUs;
-   ulong presentStartTimeUs;
-   ulong presentEndTimeUs;
-   ulong driverStartTimeUs;
-   ulong driverEndTimeUs;
-   ulong osRenderQueueStartTimeUs;
-   ulong osRenderQueueEndTimeUs;
-   ulong gpuRenderStartTimeUs;
-   ulong gpuRenderEndTimeUs;
-}
-struct OutOfBandQueueTypeInfoNV { 
-   StructureType sType;
-   void* pNext;
-   OutOfBandQueueTypeNV queueType;
-}
-struct LatencySubmissionPresentIdNV { 
-   StructureType sType;
-   void* pNext;
-   ulong presentID;
-}
-struct SwapchainLatencyCreateInfoNV { 
-   StructureType sType;
-   void* pNext;
-   uint latencyModeEnable;
-}
-struct LatencySurfaceCapabilitiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint presentModeCount;
-   PresentModeKHR* pPresentModes;
-}
-struct PhysicalDeviceCudaKernelLaunchFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint cudaKernelLaunchFeatures;
-}
-struct PhysicalDeviceCudaKernelLaunchPropertiesNV { 
-   StructureType sType;
-   void* pNext;
-   uint computeCapabilityMinor;
-   uint computeCapabilityMajor;
-}
-struct DeviceQueueShaderCoreControlCreateInfoARM { 
-   StructureType sType;
-   void* pNext;
-   uint shaderCoreCount;
-}
-struct PhysicalDeviceSchedulingControlsFeaturesARM { 
-   StructureType sType;
-   void* pNext;
-   uint schedulingControls;
-}
-struct PhysicalDeviceSchedulingControlsPropertiesARM { 
-   StructureType sType;
-   void* pNext;
-   PhysicalDeviceSchedulingControlsFlagsARM schedulingControlsFlags;
-}
-struct PhysicalDeviceRelaxedLineRasterizationFeaturesIMG { 
-   StructureType sType;
-   void* pNext;
-   uint relaxedLineRasterization;
-}
-struct PhysicalDeviceRenderPassStripedFeaturesARM { 
-   StructureType sType;
-   void* pNext;
-   uint renderPassStriped;
-}
-struct PhysicalDeviceRenderPassStripedPropertiesARM { 
-   StructureType sType;
-   void* pNext;
-   Extent2D renderPassStripeGranularity;
-   uint maxRenderPassStripes;
-}
-struct RenderPassStripeInfoARM { 
-   StructureType sType;
-   void* pNext;
-   Rect2D stripeArea;
-}
-struct RenderPassStripeBeginInfoARM { 
-   StructureType sType;
-   void* pNext;
-   uint stripeInfoCount;
-   RenderPassStripeInfoARM* pStripeInfos;
-}
-struct RenderPassStripeSubmitInfoARM { 
-   StructureType sType;
-   void* pNext;
-   uint stripeSemaphoreInfoCount;
-   SemaphoreSubmitInfo* pStripeSemaphoreInfos;
-}
-struct PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderMaximalReconvergence;
-}
-struct PhysicalDeviceShaderSubgroupRotateFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderSubgroupRotate;
-   uint shaderSubgroupRotateClustered;
-}
-struct PhysicalDeviceShaderExpectAssumeFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderExpectAssume;
-}
-struct PhysicalDeviceShaderFloatControls2FeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderFloatControls2;
-}
-struct PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint dynamicRenderingLocalRead;
-}
-struct RenderingAttachmentLocationInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint colorAttachmentCount;
-   uint* pColorAttachmentLocations;
-}
-struct RenderingInputAttachmentIndexInfoKHR { 
-   StructureType sType;
-   void* pNext;
-   uint colorAttachmentCount;
-   uint* pColorAttachmentInputIndices;
-   uint* pDepthInputAttachmentIndex;
-   uint* pStencilInputAttachmentIndex;
-}
-struct PhysicalDeviceShaderQuadControlFeaturesKHR { 
-   StructureType sType;
-   void* pNext;
-   uint shaderQuadControl;
-}
-struct PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shaderFloat16VectorAtomics;
-}
-struct PhysicalDeviceMapMemoryPlacedFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint memoryMapPlaced;
-   uint memoryMapRangePlaced;
-   uint memoryUnmapReserve;
-}
-struct PhysicalDeviceMapMemoryPlacedPropertiesEXT { 
-   StructureType sType;
-   void* pNext;
-   DeviceSize minPlacedMemoryMapAlignment;
-}
-struct MemoryMapPlacedInfoEXT { 
-   StructureType sType;
-   void* pNext;
-   void* pPlacedAddress;
-}
-struct PhysicalDeviceRawAccessChainsFeaturesNV { 
-   StructureType sType;
-   void* pNext;
-   uint shaderRawAccessChains;
-}
-struct PhysicalDeviceImageAlignmentControlFeaturesMESA { 
-   StructureType sType;
-   void* pNext;
-   uint imageAlignmentControl;
-}
-struct PhysicalDeviceImageAlignmentControlPropertiesMESA { 
-   StructureType sType;
-   void* pNext;
-   uint supportedImageAlignmentMask;
-}
-struct ImageAlignmentControlCreateInfoMESA { 
-   StructureType sType;
-   void* pNext;
-   uint maximumRequestedAlignment;
-}
-struct PhysicalDeviceShaderReplicatedCompositesFeaturesEXT { 
-   StructureType sType;
-   void* pNext;
-   uint shaderReplicatedComposites;
 }
 
 union ClearColorValue { 
