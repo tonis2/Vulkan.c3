@@ -255,6 +255,22 @@ def PFN_vkCmdInsertDebugUtilsLabelEXT = fn void (CommandBuffer, DebugUtilsLabelE
 def PFN_vkCreateDebugUtilsMessengerEXT = fn Result (Instance, DebugUtilsMessengerCreateInfoEXT*, AllocationCallbacks*, DebugUtilsMessengerEXT*);
 def PFN_vkDestroyDebugUtilsMessengerEXT = fn void (Instance, DebugUtilsMessengerEXT, AllocationCallbacks*);
 def PFN_vkSubmitDebugUtilsMessageEXT = fn void (Instance, DebugUtilsMessageSeverityFlagBitsEXT, DebugUtilsMessageTypeFlagsEXT, DebugUtilsMessengerCallbackDataEXT*);
+def PFN_vkDestroyAccelerationStructureKHR = fn void (Device, AccelerationStructureKHR, AllocationCallbacks*);
+def PFN_vkCmdCopyAccelerationStructureKHR = fn void (CommandBuffer, CopyAccelerationStructureInfoKHR*);
+def PFN_vkCopyAccelerationStructureKHR = fn Result (Device, DeferredOperationKHR, CopyAccelerationStructureInfoKHR*);
+def PFN_vkCmdCopyAccelerationStructureToMemoryKHR = fn void (CommandBuffer, CopyAccelerationStructureToMemoryInfoKHR*);
+def PFN_vkCopyAccelerationStructureToMemoryKHR = fn Result (Device, DeferredOperationKHR, CopyAccelerationStructureToMemoryInfoKHR*);
+def PFN_vkCmdCopyMemoryToAccelerationStructureKHR = fn void (CommandBuffer, CopyMemoryToAccelerationStructureInfoKHR*);
+def PFN_vkCopyMemoryToAccelerationStructureKHR = fn Result (Device, DeferredOperationKHR, CopyMemoryToAccelerationStructureInfoKHR*);
+def PFN_vkCmdWriteAccelerationStructuresPropertiesKHR = fn void (CommandBuffer, uint, AccelerationStructureKHR*, QueryType, QueryPool, uint);
+def PFN_vkWriteAccelerationStructuresPropertiesKHR = fn Result (Device, uint, AccelerationStructureKHR*, QueryType, usz, void*, usz);
+def PFN_vkGetDeviceAccelerationStructureCompatibilityKHR = fn void (Device, AccelerationStructureVersionInfoKHR*, AccelerationStructureCompatibilityKHR*);
+def PFN_vkCreateAccelerationStructureKHR = fn Result (Device, AccelerationStructureCreateInfoKHR*, AllocationCallbacks*, AccelerationStructureKHR*);
+def PFN_vkCmdBuildAccelerationStructuresKHR = fn void (CommandBuffer, uint, AccelerationStructureBuildGeometryInfoKHR*, AccelerationStructureBuildRangeInfoKHR* );
+def PFN_vkCmdBuildAccelerationStructuresIndirectKHR = fn void (CommandBuffer, uint, AccelerationStructureBuildGeometryInfoKHR*, DeviceAddress*, uint*, uint* );
+def PFN_vkBuildAccelerationStructuresKHR = fn Result (Device, DeferredOperationKHR, uint, AccelerationStructureBuildGeometryInfoKHR*, AccelerationStructureBuildRangeInfoKHR* );
+def PFN_vkGetAccelerationStructureDeviceAddressKHR = fn DeviceAddress (Device, AccelerationStructureDeviceAddressInfoKHR*);
+def PFN_vkGetAccelerationStructureBuildSizesKHR = fn void (Device, AccelerationStructureBuildTypeKHR, AccelerationStructureBuildGeometryInfoKHR*, uint*, AccelerationStructureBuildSizesInfoKHR*);
 def PFN_vkGetDescriptorSetLayoutSizeEXT = fn void (Device, DescriptorSetLayout, DeviceSize*);
 def PFN_vkGetDescriptorSetLayoutBindingOffsetEXT = fn void (Device, DescriptorSetLayout, uint, DeviceSize*);
 def PFN_vkGetDescriptorEXT = fn void (Device, DescriptorGetInfoEXT*, usz, void*);
@@ -307,6 +323,22 @@ struct VK_extension_bindings {
   PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
   PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
   PFN_vkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXT;
+  PFN_vkDestroyAccelerationStructureKHR vkDestroyAccelerationStructureKHR;
+  PFN_vkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHR;
+  PFN_vkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHR;
+  PFN_vkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHR;
+  PFN_vkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHR;
+  PFN_vkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHR;
+  PFN_vkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHR;
+  PFN_vkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHR;
+  PFN_vkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHR;
+  PFN_vkGetDeviceAccelerationStructureCompatibilityKHR vkGetDeviceAccelerationStructureCompatibilityKHR;
+  PFN_vkCreateAccelerationStructureKHR vkCreateAccelerationStructureKHR;
+  PFN_vkCmdBuildAccelerationStructuresKHR vkCmdBuildAccelerationStructuresKHR;
+  PFN_vkCmdBuildAccelerationStructuresIndirectKHR vkCmdBuildAccelerationStructuresIndirectKHR;
+  PFN_vkBuildAccelerationStructuresKHR vkBuildAccelerationStructuresKHR;
+  PFN_vkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHR;
+  PFN_vkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHR;
   PFN_vkGetDescriptorSetLayoutSizeEXT vkGetDescriptorSetLayoutSizeEXT;
   PFN_vkGetDescriptorSetLayoutBindingOffsetEXT vkGetDescriptorSetLayoutBindingOffsetEXT;
   PFN_vkGetDescriptorEXT vkGetDescriptorEXT;
@@ -361,6 +393,22 @@ fn void loadExtensions(Instance instance) {
    extensions.vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)getInstanceProcAddr(instance,"vkCreateDebugUtilsMessengerEXT");
    extensions.vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)getInstanceProcAddr(instance,"vkDestroyDebugUtilsMessengerEXT");
    extensions.vkSubmitDebugUtilsMessageEXT = (PFN_vkSubmitDebugUtilsMessageEXT)getInstanceProcAddr(instance,"vkSubmitDebugUtilsMessageEXT");
+   extensions.vkDestroyAccelerationStructureKHR = (PFN_vkDestroyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkDestroyAccelerationStructureKHR");
+   extensions.vkCmdCopyAccelerationStructureKHR = (PFN_vkCmdCopyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCmdCopyAccelerationStructureKHR");
+   extensions.vkCopyAccelerationStructureKHR = (PFN_vkCopyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCopyAccelerationStructureKHR");
+   extensions.vkCmdCopyAccelerationStructureToMemoryKHR = (PFN_vkCmdCopyAccelerationStructureToMemoryKHR)getInstanceProcAddr(instance,"vkCmdCopyAccelerationStructureToMemoryKHR");
+   extensions.vkCopyAccelerationStructureToMemoryKHR = (PFN_vkCopyAccelerationStructureToMemoryKHR)getInstanceProcAddr(instance,"vkCopyAccelerationStructureToMemoryKHR");
+   extensions.vkCmdCopyMemoryToAccelerationStructureKHR = (PFN_vkCmdCopyMemoryToAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCmdCopyMemoryToAccelerationStructureKHR");
+   extensions.vkCopyMemoryToAccelerationStructureKHR = (PFN_vkCopyMemoryToAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCopyMemoryToAccelerationStructureKHR");
+   extensions.vkCmdWriteAccelerationStructuresPropertiesKHR = (PFN_vkCmdWriteAccelerationStructuresPropertiesKHR)getInstanceProcAddr(instance,"vkCmdWriteAccelerationStructuresPropertiesKHR");
+   extensions.vkWriteAccelerationStructuresPropertiesKHR = (PFN_vkWriteAccelerationStructuresPropertiesKHR)getInstanceProcAddr(instance,"vkWriteAccelerationStructuresPropertiesKHR");
+   extensions.vkGetDeviceAccelerationStructureCompatibilityKHR = (PFN_vkGetDeviceAccelerationStructureCompatibilityKHR)getInstanceProcAddr(instance,"vkGetDeviceAccelerationStructureCompatibilityKHR");
+   extensions.vkCreateAccelerationStructureKHR = (PFN_vkCreateAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCreateAccelerationStructureKHR");
+   extensions.vkCmdBuildAccelerationStructuresKHR = (PFN_vkCmdBuildAccelerationStructuresKHR)getInstanceProcAddr(instance,"vkCmdBuildAccelerationStructuresKHR");
+   extensions.vkCmdBuildAccelerationStructuresIndirectKHR = (PFN_vkCmdBuildAccelerationStructuresIndirectKHR)getInstanceProcAddr(instance,"vkCmdBuildAccelerationStructuresIndirectKHR");
+   extensions.vkBuildAccelerationStructuresKHR = (PFN_vkBuildAccelerationStructuresKHR)getInstanceProcAddr(instance,"vkBuildAccelerationStructuresKHR");
+   extensions.vkGetAccelerationStructureDeviceAddressKHR = (PFN_vkGetAccelerationStructureDeviceAddressKHR)getInstanceProcAddr(instance,"vkGetAccelerationStructureDeviceAddressKHR");
+   extensions.vkGetAccelerationStructureBuildSizesKHR = (PFN_vkGetAccelerationStructureBuildSizesKHR)getInstanceProcAddr(instance,"vkGetAccelerationStructureBuildSizesKHR");
    extensions.vkGetDescriptorSetLayoutSizeEXT = (PFN_vkGetDescriptorSetLayoutSizeEXT)getInstanceProcAddr(instance,"vkGetDescriptorSetLayoutSizeEXT");
    extensions.vkGetDescriptorSetLayoutBindingOffsetEXT = (PFN_vkGetDescriptorSetLayoutBindingOffsetEXT)getInstanceProcAddr(instance,"vkGetDescriptorSetLayoutBindingOffsetEXT");
    extensions.vkGetDescriptorEXT = (PFN_vkGetDescriptorEXT)getInstanceProcAddr(instance,"vkGetDescriptorEXT");
@@ -390,6 +438,16 @@ fn void cmdEndDebugUtilsLabelEXT (CommandBuffer commandBuffer) => extensions.vkC
 fn void cmdInsertDebugUtilsLabelEXT (CommandBuffer commandBuffer, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkCmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 fn void destroyDebugUtilsMessengerEXT (Instance instance, DebugUtilsMessengerEXT messenger, AllocationCallbacks* pAllocator) => extensions.vkDestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
 fn void submitDebugUtilsMessageEXT (Instance instance, DebugUtilsMessageSeverityFlagBitsEXT messageSeverity, DebugUtilsMessageTypeFlagsEXT messageTypes, DebugUtilsMessengerCallbackDataEXT* pCallbackData) => extensions.vkSubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
+fn void destroyAccelerationStructureKHR (Device device, AccelerationStructureKHR accelerationStructure, AllocationCallbacks* pAllocator) => extensions.vkDestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
+fn void cmdCopyAccelerationStructureKHR (CommandBuffer commandBuffer, CopyAccelerationStructureInfoKHR* pInfo) => extensions.vkCmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
+fn void cmdCopyAccelerationStructureToMemoryKHR (CommandBuffer commandBuffer, CopyAccelerationStructureToMemoryInfoKHR* pInfo) => extensions.vkCmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
+fn void cmdCopyMemoryToAccelerationStructureKHR (CommandBuffer commandBuffer, CopyMemoryToAccelerationStructureInfoKHR* pInfo) => extensions.vkCmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
+fn void cmdWriteAccelerationStructuresPropertiesKHR (CommandBuffer commandBuffer, uint accelerationStructureCount, AccelerationStructureKHR* pAccelerationStructures, QueryType queryType, QueryPool queryPool, uint firstQuery) => extensions.vkCmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
+fn void getDeviceAccelerationStructureCompatibilityKHR (Device device, AccelerationStructureVersionInfoKHR* pVersionInfo, AccelerationStructureCompatibilityKHR* pCompatibility) => extensions.vkGetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
+fn void cmdBuildAccelerationStructuresKHR (CommandBuffer commandBuffer, uint infoCount, AccelerationStructureBuildGeometryInfoKHR* pInfos, AccelerationStructureBuildRangeInfoKHR*  ppBuildRangeInfos) => extensions.vkCmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
+fn void cmdBuildAccelerationStructuresIndirectKHR (CommandBuffer commandBuffer, uint infoCount, AccelerationStructureBuildGeometryInfoKHR* pInfos, DeviceAddress* pIndirectDeviceAddresses, uint* pIndirectStrides, uint*  ppMaxPrimitiveCounts) => extensions.vkCmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
+fn DeviceAddress getAccelerationStructureDeviceAddressKHR (Device device, AccelerationStructureDeviceAddressInfoKHR* pInfo) => extensions.vkGetAccelerationStructureDeviceAddressKHR(device, pInfo);
+fn void getAccelerationStructureBuildSizesKHR (Device device, AccelerationStructureBuildTypeKHR buildType, AccelerationStructureBuildGeometryInfoKHR* pBuildInfo, uint* pMaxPrimitiveCounts, AccelerationStructureBuildSizesInfoKHR* pSizeInfo) => extensions.vkGetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 fn void getDescriptorSetLayoutSizeEXT (Device device, DescriptorSetLayout layout, DeviceSize* pLayoutSizeInBytes) => extensions.vkGetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
 fn void getDescriptorSetLayoutBindingOffsetEXT (Device device, DescriptorSetLayout layout, uint binding, DeviceSize* pOffset) => extensions.vkGetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
 fn void getDescriptorEXT (Device device, DescriptorGetInfoEXT* pDescriptorInfo, usz dataSize, void* pDescriptor) => extensions.vkGetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
@@ -1066,10 +1124,52 @@ fn void! signalSemaphore (VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
+fn void! copyAccelerationStructureKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureInfoKHR* pInfo) {
+  Result result = extensions.vkCopyAccelerationStructureKHR(device, deferredOperation, pInfo);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
+fn void! copyAccelerationStructureToMemoryKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+  Result result = extensions.vkCopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
+fn void! copyMemoryToAccelerationStructureKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+  Result result = extensions.vkCopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
+fn void! writeAccelerationStructuresPropertiesKHR (VkDevice device, uint accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, usz dataSize, void* pData, usz stride) {
+  Result result = extensions.vkWriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
 fn void! getPhysicalDeviceToolProperties (VkPhysicalDevice physicalDevice, uint* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
   Result result = vkGetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+  }
+}
+fn void! createAccelerationStructureKHR (VkDevice device, VkAccelerationStructureCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
+  Result result = extensions.vkCreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
+  }
+}
+fn void! buildAccelerationStructuresKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, uint infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR*  ppBuildRangeInfos) {
+  Result result = extensions.vkBuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
 fn void! createPrivateDataSlot (VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
@@ -1291,6 +1391,11 @@ fn DebugUtilsMessengerEXT! DebugUtilsMessengerCreateInfoEXT.build(&self, Instanc
 fn RenderPass! RenderPassCreateInfo2.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
    RenderPass response;
    createRenderPass2(device, self, pAllocator, &response)!;
+   return response;
+}
+fn AccelerationStructureKHR! AccelerationStructureCreateInfoKHR.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   AccelerationStructureKHR response;
+   createAccelerationStructureKHR(device, self, pAllocator, &response)!;
    return response;
 }
 fn PrivateDataSlot! PrivateDataSlotCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {

@@ -85,6 +85,197 @@ def Flags = uint;
 def Flags64 = ulong;
 def DeviceSize = ulong;
 def DeviceAddress = ulong;
+def FramebufferCreateFlags = Flags;
+def QueryPoolCreateFlags = Flags;
+def RenderPassCreateFlags = Flags;
+def SamplerCreateFlags = Flags;
+def PipelineLayoutCreateFlags = Flags;
+def PipelineCacheCreateFlags = Flags;
+def PipelineDepthStencilStateCreateFlags = Flags;
+def PipelineDepthStencilStateCreateFlags = Flags;
+def PipelineDynamicStateCreateFlags = Flags;
+def PipelineColorBlendStateCreateFlags = Flags;
+def PipelineColorBlendStateCreateFlags = Flags;
+def PipelineMultisampleStateCreateFlags = Flags;
+def PipelineRasterizationStateCreateFlags = Flags;
+def PipelineViewportStateCreateFlags = Flags;
+def PipelineTessellationStateCreateFlags = Flags;
+def PipelineInputAssemblyStateCreateFlags = Flags;
+def PipelineVertexInputStateCreateFlags = Flags;
+def PipelineShaderStageCreateFlags = Flags;
+def DescriptorSetLayoutCreateFlags = Flags;
+def BufferViewCreateFlags = Flags;
+def InstanceCreateFlags = Flags;
+def DeviceCreateFlags = Flags;
+def DeviceQueueCreateFlags = Flags;
+def QueueFlags = Flags;
+def MemoryPropertyFlags = Flags;
+def MemoryHeapFlags = Flags;
+def AccessFlags = Flags;
+def BufferUsageFlags = Flags;
+def BufferCreateFlags = Flags;
+def ShaderStageFlags = Flags;
+def ImageUsageFlags = Flags;
+def ImageCreateFlags = Flags;
+def ImageViewCreateFlags = Flags;
+def PipelineCreateFlags = Flags;
+def ColorComponentFlags = Flags;
+def FenceCreateFlags = Flags;
+def SemaphoreCreateFlags = Flags;
+def FormatFeatureFlags = Flags;
+def QueryControlFlags = Flags;
+def QueryResultFlags = Flags;
+def ShaderModuleCreateFlags = Flags;
+def EventCreateFlags = Flags;
+def CommandPoolCreateFlags = Flags;
+def CommandPoolResetFlags = Flags;
+def CommandBufferResetFlags = Flags;
+def CommandBufferUsageFlags = Flags;
+def QueryPipelineStatisticFlags = Flags;
+def MemoryMapFlags = Flags;
+def MemoryUnmapFlagsKHR = Flags;
+def ImageAspectFlags = Flags;
+def SparseMemoryBindFlags = Flags;
+def SparseImageFormatFlags = Flags;
+def SubpassDescriptionFlags = Flags;
+def PipelineStageFlags = Flags;
+def SampleCountFlags = Flags;
+def AttachmentDescriptionFlags = Flags;
+def StencilFaceFlags = Flags;
+def CullModeFlags = Flags;
+def DescriptorPoolCreateFlags = Flags;
+def DescriptorPoolResetFlags = Flags;
+def DependencyFlags = Flags;
+def SubgroupFeatureFlags = Flags;
+def IndirectCommandsLayoutUsageFlagsNV = Flags;
+def IndirectStateFlagsNV = Flags;
+def GeometryFlagsKHR = Flags;
+def GeometryInstanceFlagsKHR = Flags;
+def BuildAccelerationStructureFlagsKHR = Flags;
+def PrivateDataSlotCreateFlags = Flags;
+def AccelerationStructureCreateFlagsKHR = Flags;
+def DescriptorUpdateTemplateCreateFlags = Flags;
+def PipelineCreationFeedbackFlags = Flags;
+def PerformanceCounterDescriptionFlagsKHR = Flags;
+def AcquireProfilingLockFlagsKHR = Flags;
+def SemaphoreWaitFlags = Flags;
+def PipelineCompilerControlFlagsAMD = Flags;
+def ShaderCorePropertiesFlagsAMD = Flags;
+def DeviceDiagnosticsConfigFlagsNV = Flags;
+def RefreshObjectFlagsKHR = Flags;
+def AccessFlags2 = Flags64;
+def PipelineStageFlags2 = Flags64;
+def AccelerationStructureMotionInfoFlagsNV = Flags;
+def AccelerationStructureMotionInstanceFlagsNV = Flags;
+def FormatFeatureFlags2 = Flags64;
+def RenderingFlags = Flags;
+def MemoryDecompressionMethodFlagsNV = Flags64;
+def BuildMicromapFlagsEXT = Flags;
+def MicromapCreateFlagsEXT = Flags;
+def DirectDriverLoadingFlagsLUNARG = Flags;
+def PipelineCreateFlags2KHR = Flags64;
+def BufferUsageFlags2KHR = Flags64;
+def CompositeAlphaFlagsKHR = Flags;
+def DisplayPlaneAlphaFlagsKHR = Flags;
+def SurfaceTransformFlagsKHR = Flags;
+def SwapchainCreateFlagsKHR = Flags;
+def DisplayModeCreateFlagsKHR = Flags;
+def DisplaySurfaceCreateFlagsKHR = Flags;
+def AndroidSurfaceCreateFlagsKHR = Flags;
+def ViSurfaceCreateFlagsNN = Flags;
+def WaylandSurfaceCreateFlagsKHR = Flags;
+def Win32SurfaceCreateFlagsKHR = Flags;
+def XlibSurfaceCreateFlagsKHR = Flags;
+def XcbSurfaceCreateFlagsKHR = Flags;
+def DirectFBSurfaceCreateFlagsEXT = Flags;
+def IOSSurfaceCreateFlagsMVK = Flags;
+def MacOSSurfaceCreateFlagsMVK = Flags;
+def MetalSurfaceCreateFlagsEXT = Flags;
+def ImagePipeSurfaceCreateFlagsFUCHSIA = Flags;
+def StreamDescriptorSurfaceCreateFlagsGGP = Flags;
+def HeadlessSurfaceCreateFlagsEXT = Flags;
+def ScreenSurfaceCreateFlagsQNX = Flags;
+def PeerMemoryFeatureFlags = Flags;
+def MemoryAllocateFlags = Flags;
+def DeviceGroupPresentModeFlagsKHR = Flags;
+def DebugReportFlagsEXT = Flags;
+def CommandPoolTrimFlags = Flags;
+def ExternalMemoryHandleTypeFlagsNV = Flags;
+def ExternalMemoryFeatureFlagsNV = Flags;
+def ExternalMemoryHandleTypeFlags = Flags;
+def ExternalMemoryFeatureFlags = Flags;
+def ExternalSemaphoreHandleTypeFlags = Flags;
+def ExternalSemaphoreFeatureFlags = Flags;
+def SemaphoreImportFlags = Flags;
+def ExternalFenceHandleTypeFlags = Flags;
+def ExternalFenceFeatureFlags = Flags;
+def FenceImportFlags = Flags;
+def SurfaceCounterFlagsEXT = Flags;
+def PipelineViewportSwizzleStateCreateFlagsNV = Flags;
+def PipelineDiscardRectangleStateCreateFlagsEXT = Flags;
+def PipelineCoverageToColorStateCreateFlagsNV = Flags;
+def PipelineCoverageModulationStateCreateFlagsNV = Flags;
+def PipelineCoverageReductionStateCreateFlagsNV = Flags;
+def ValidationCacheCreateFlagsEXT = Flags;
+def DebugUtilsMessageSeverityFlagsEXT = Flags;
+def DebugUtilsMessageTypeFlagsEXT = Flags;
+def DebugUtilsMessengerCreateFlagsEXT = Flags;
+def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
+def DeviceMemoryReportFlagsEXT = Flags;
+def PipelineRasterizationConservativeStateCreateFlagsEXT = Flags;
+def DescriptorBindingFlags = Flags;
+def ConditionalRenderingFlagsEXT = Flags;
+def ResolveModeFlags = Flags;
+def PipelineRasterizationStateStreamCreateFlagsEXT = Flags;
+def PipelineRasterizationDepthClipStateCreateFlagsEXT = Flags;
+def SwapchainImageUsageFlagsANDROID = Flags;
+def ToolPurposeFlags = Flags;
+def SubmitFlags = Flags;
+def ImageFormatConstraintsFlagsFUCHSIA = Flags;
+def HostImageCopyFlagsEXT = Flags;
+def ImageConstraintsInfoFlagsFUCHSIA = Flags;
+def GraphicsPipelineLibraryFlagsEXT = Flags;
+def ImageCompressionFlagsEXT = Flags;
+def ImageCompressionFixedRateFlagsEXT = Flags;
+def ExportMetalObjectTypeFlagsEXT = Flags;
+def DeviceAddressBindingFlagsEXT = Flags;
+def OpticalFlowGridSizeFlagsNV = Flags;
+def OpticalFlowUsageFlagsNV = Flags;
+def OpticalFlowSessionCreateFlagsNV = Flags;
+def OpticalFlowExecuteFlagsNV = Flags;
+def FrameBoundaryFlagsEXT = Flags;
+def PresentScalingFlagsEXT = Flags;
+def PresentGravityFlagsEXT = Flags;
+def ShaderCreateFlagsEXT = Flags;
+def PhysicalDeviceSchedulingControlsFlagsARM = Flags64;
+def VideoCodecOperationFlagsKHR = Flags;
+def VideoCapabilityFlagsKHR = Flags;
+def VideoSessionCreateFlagsKHR = Flags;
+def VideoSessionParametersCreateFlagsKHR = Flags;
+def VideoBeginCodingFlagsKHR = Flags;
+def VideoEndCodingFlagsKHR = Flags;
+def VideoCodingControlFlagsKHR = Flags;
+def VideoDecodeUsageFlagsKHR = Flags;
+def VideoDecodeCapabilityFlagsKHR = Flags;
+def VideoDecodeFlagsKHR = Flags;
+def VideoDecodeH264PictureLayoutFlagsKHR = Flags;
+def VideoEncodeFlagsKHR = Flags;
+def VideoEncodeUsageFlagsKHR = Flags;
+def VideoEncodeContentFlagsKHR = Flags;
+def VideoEncodeCapabilityFlagsKHR = Flags;
+def VideoEncodeFeedbackFlagsKHR = Flags;
+def VideoEncodeRateControlFlagsKHR = Flags;
+def VideoEncodeRateControlModeFlagsKHR = Flags;
+def VideoChromaSubsamplingFlagsKHR = Flags;
+def VideoComponentBitDepthFlagsKHR = Flags;
+def VideoEncodeH264CapabilityFlagsKHR = Flags;
+def VideoEncodeH264StdFlagsKHR = Flags;
+def VideoEncodeH264RateControlFlagsKHR = Flags;
+def VideoEncodeH265CapabilityFlagsKHR = Flags;
+def VideoEncodeH265StdFlagsKHR = Flags;
+def VideoEncodeH265RateControlFlagsKHR = Flags;
+def VideoEncodeH265CtbSizeFlagsKHR = Flags;
+def VideoEncodeH265TransformBlockSizeFlagsKHR = Flags;
 def RemoteAddressNV = void;
 
 distinct ImageLayout = inline uint;
@@ -5578,6 +5769,33 @@ struct SubpassDescriptionDepthStencilResolve {
    ResolveModeFlagBits stencilResolveMode;
    AttachmentReference2* pDepthStencilResolveAttachment;
 }
+struct WriteDescriptorSetAccelerationStructureKHR {
+   StructureType sType;
+   void* pNext;
+   uint accelerationStructureCount;
+   AccelerationStructureKHR* pAccelerationStructures;
+}
+struct PhysicalDeviceAccelerationStructureFeaturesKHR {
+   StructureType sType;
+   void* pNext;
+   uint accelerationStructure;
+   uint accelerationStructureCaptureReplay;
+   uint accelerationStructureIndirectBuild;
+   uint accelerationStructureHostCommands;
+   uint descriptorBindingAccelerationStructureUpdateAfterBind;
+}
+struct PhysicalDeviceAccelerationStructurePropertiesKHR {
+   StructureType sType;
+   void* pNext;
+   ulong maxGeometryCount;
+   ulong maxInstanceCount;
+   ulong maxPrimitiveCount;
+   uint maxPerStageDescriptorAccelerationStructures;
+   uint maxPerStageDescriptorUpdateAfterBindAccelerationStructures;
+   uint maxDescriptorSetAccelerationStructures;
+   uint maxDescriptorSetUpdateAfterBindAccelerationStructures;
+   uint minAccelerationStructureScratchOffsetAlignment;
+}
 struct ImageStencilUsageCreateInfo {
    StructureType sType;
    void* pNext;
@@ -5936,6 +6154,115 @@ struct PhysicalDeviceToolProperties {
    char[MAX_DESCRIPTION_SIZE] description;
    char[MAX_EXTENSION_NAME_SIZE] layer;
 }
+struct AccelerationStructureGeometryTrianglesDataKHR {
+   StructureType sType;
+   void* pNext;
+   Format vertexFormat;
+   DeviceOrHostAddressConstKHR vertexData;
+   DeviceSize vertexStride;
+   uint maxVertex;
+   IndexType indexType;
+   DeviceOrHostAddressConstKHR indexData;
+   DeviceOrHostAddressConstKHR transformData;
+}
+struct AccelerationStructureGeometryAabbsDataKHR {
+   StructureType sType;
+   void* pNext;
+   DeviceOrHostAddressConstKHR data;
+   DeviceSize stride;
+}
+struct AccelerationStructureGeometryInstancesDataKHR {
+   StructureType sType;
+   void* pNext;
+   uint arrayOfPointers;
+   DeviceOrHostAddressConstKHR data;
+}
+struct AccelerationStructureGeometryKHR {
+   StructureType sType;
+   void* pNext;
+   GeometryTypeKHR geometryType;
+   AccelerationStructureGeometryDataKHR geometry;
+   GeometryFlagsKHR flags;
+}
+struct AccelerationStructureBuildGeometryInfoKHR {
+   StructureType sType;
+   void* pNext;
+   AccelerationStructureTypeKHR type;
+   BuildAccelerationStructureFlagsKHR flags;
+   BuildAccelerationStructureModeKHR mode;
+   AccelerationStructureKHR srcAccelerationStructure;
+   AccelerationStructureKHR dstAccelerationStructure;
+   uint geometryCount;
+   AccelerationStructureGeometryKHR* pGeometries;
+   AccelerationStructureGeometryKHR* ppGeometries;
+   DeviceOrHostAddressKHR scratchData;
+}
+struct AccelerationStructureBuildRangeInfoKHR {
+   uint primitiveCount;
+   uint primitiveOffset;
+   uint firstVertex;
+   uint transformOffset;
+}
+struct AccelerationStructureCreateInfoKHR {
+   StructureType sType;
+   void* pNext;
+   AccelerationStructureCreateFlagsKHR createFlags;
+   Buffer buffer;
+   DeviceSize offset;
+   DeviceSize size;
+   AccelerationStructureTypeKHR type;
+   DeviceAddress deviceAddress;
+}
+struct AabbPositionsKHR {
+   float minX;
+   float minY;
+   float minZ;
+   float maxX;
+   float maxY;
+   float maxZ;
+}
+struct TransformMatrixKHR {
+   float[3][4] matrix;
+}
+struct AccelerationStructureInstanceKHR {
+   TransformMatrixKHR transform;
+   uint: instanceCustomIndex;
+   uint: mask;
+   uint: instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR: flags;
+   ulong accelerationStructureReference;
+}
+struct AccelerationStructureDeviceAddressInfoKHR {
+   StructureType sType;
+   void* pNext;
+   AccelerationStructureKHR accelerationStructure;
+}
+struct AccelerationStructureVersionInfoKHR {
+   StructureType sType;
+   void* pNext;
+   uint* pVersionData;
+}
+struct CopyAccelerationStructureInfoKHR {
+   StructureType sType;
+   void* pNext;
+   AccelerationStructureKHR src;
+   AccelerationStructureKHR dst;
+   CopyAccelerationStructureModeKHR mode;
+}
+struct CopyAccelerationStructureToMemoryInfoKHR {
+   StructureType sType;
+   void* pNext;
+   AccelerationStructureKHR src;
+   DeviceOrHostAddressKHR dst;
+   CopyAccelerationStructureModeKHR mode;
+}
+struct CopyMemoryToAccelerationStructureInfoKHR {
+   StructureType sType;
+   void* pNext;
+   DeviceOrHostAddressConstKHR src;
+   AccelerationStructureKHR dst;
+   CopyAccelerationStructureModeKHR mode;
+}
 struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
    StructureType sType;
    void* pNext;
@@ -6074,6 +6401,13 @@ struct PhysicalDeviceShaderTerminateInvocationFeatures {
    StructureType sType;
    void* pNext;
    uint shaderTerminateInvocation;
+}
+struct AccelerationStructureBuildSizesInfoKHR {
+   StructureType sType;
+   void* pNext;
+   DeviceSize accelerationStructureSize;
+   DeviceSize updateScratchSize;
+   DeviceSize buildScratchSize;
 }
 struct MemoryBarrier2 {
    StructureType sType;
@@ -6294,6 +6628,64 @@ struct PhysicalDeviceShaderIntegerDotProductProperties {
    uint integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
    uint integerDotProductAccumulatingSaturating64BitSignedAccelerated;
    uint integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+}
+struct PhysicalDeviceRayTracingMotionBlurFeaturesNV {
+   StructureType sType;
+   void* pNext;
+   uint rayTracingMotionBlur;
+   uint rayTracingMotionBlurPipelineTraceRaysIndirect;
+}
+struct AccelerationStructureGeometryMotionTrianglesDataNV {
+   StructureType sType;
+   void* pNext;
+   DeviceOrHostAddressConstKHR vertexData;
+}
+struct AccelerationStructureMotionInfoNV {
+   StructureType sType;
+   void* pNext;
+   uint maxInstances;
+   AccelerationStructureMotionInfoFlagsNV flags;
+}
+struct SRTDataNV {
+   float sx;
+   float a;
+   float b;
+   float pvx;
+   float sy;
+   float c;
+   float pvy;
+   float sz;
+   float pvz;
+   float qx;
+   float qy;
+   float qz;
+   float qw;
+   float tx;
+   float ty;
+   float tz;
+}
+struct AccelerationStructureSRTMotionInstanceNV {
+   SRTDataNV transformT0;
+   SRTDataNV transformT1;
+   uint: instanceCustomIndex;
+   uint: mask;
+   uint: instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR: flags;
+   ulong accelerationStructureReference;
+}
+struct AccelerationStructureMatrixMotionInstanceNV {
+   TransformMatrixKHR transformT0;
+   TransformMatrixKHR transformT1;
+   uint: instanceCustomIndex;
+   uint: mask;
+   uint: instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR: flags;
+   ulong accelerationStructureReference;
+}
+struct AccelerationStructureMotionInstanceNV {
+   AccelerationStructureMotionInstanceTypeNV type;
+   AccelerationStructureMotionInstanceFlagsNV flags;
+   AccelerationStructureMotionInstanceDataNV data;
 }
 struct FormatProperties3 {
    StructureType sType;
