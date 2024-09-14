@@ -9,8 +9,6 @@ distinct Window = ulong;
 distinct HINSTANCE = ulong;
 distinct HWND = void*;
 
-
-
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);
 def PFN_vkFreeFunction = fn void (void*, void*);
 def PFN_vkInternalAllocationNotification = fn void (void*, usz, InternalAllocationType, SystemAllocationScope);

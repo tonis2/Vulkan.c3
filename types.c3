@@ -40,6 +40,7 @@ struct VkValue {
     String name;
     String comment;
     String value;
+    String defaultValue;
     String type;
     String size;
     String len;
@@ -97,11 +98,10 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
     
     foreach (member : node.children) {
         VkValue value;
-        String! node_value = member.attributes.get("values");
-        String! len = member.attributes.get("len");
-        
-        if (try len) value.len = len;
-        if (try node_value) value.value = node_value;
+        value.len = member.attributes.get("len") ?? "";
+        value.defaultValue = member.attributes.get("values") ?? "";
+
+        if (value.len.contains("null-terminated")) value.len = "";
         if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
 
         value.optional = member.attributes.has_key("optional");
@@ -113,6 +113,13 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
             if (entry.name == "type") value.type = entry.value;
             if (entry.name == "name") value.name = entry.value;
         }
+
+        if (value.size != "" && value.size != "null-terminated" && value.size[0] != '[') {
+            DString size_value = dstring::new_join({"[", value.size[3..], "]"}, "");
+            value.size = size_value.copy_str();
+            size_value.free();
+        }
+
         if (member.name != "comment") self.values.push(value); 
     }
     return *self;
