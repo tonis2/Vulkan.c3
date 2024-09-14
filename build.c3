@@ -250,28 +250,33 @@ fn void! main(String[] args) {
 
 
     // Build C3 files
-    File vk_main = io::file::open("build2/vk.c3", "wb")!!;
+    File main_file = io::file::open("build2/vk.c3", "wb")!!;
+    defer main_file.close()!!;
 
-    vk_main.write("module vk;\n")!!;
+    File command_file = io::file::open("build2/commands.c3", "wb")!!;
+    defer command_file.close()!!;
+
+    main_file.write("module vk;\n")!!;
+    command_file.write("module vk;\n")!!;
 
     // Constants
     foreach (value : constants) {
         DString text_body = dstring::new_join({"const ", value.name[3..], " = ", value.value, ";\n"}, "");
         defer text_body.free();
         
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
     
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // Handles
     foreach (entry : handles) {
         DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = void*;\n"}, "");
         defer text_body.free();
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
 
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // BaseTypes
     foreach (entry : basetypes) {
@@ -279,10 +284,10 @@ fn void! main(String[] args) {
 
         String type = type_values[entry.type] ?? entry.type.remove_vk();
         DString text_body = dstring::new_join({"def ", entry.name[2..], " = ", type, ";\n"}, "");
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
 
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // Enums
     foreach (entry : enums) {
@@ -297,7 +302,7 @@ fn void! main(String[] args) {
         }
         
         text_body.append_chars("\n");
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
 
     // Write C3 errors
@@ -307,12 +312,12 @@ fn void! main(String[] args) {
             foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name[3..], ",\n"}, ""));
             text_body.append("}\n");
 
-            vk_main.write(text_body.str_view())!!;
+            main_file.write(text_body.str_view())!!;
 
             break;
         }
     }
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // Structs
     foreach (entry : structs) {
@@ -336,10 +341,10 @@ fn void! main(String[] args) {
         }
         
         text_body.append_chars("}\n");
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
 
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // Unions
     foreach (entry : unions) {
@@ -362,88 +367,87 @@ fn void! main(String[] args) {
         }
         
         text_body.append_chars("}\n");
-        vk_main.write(text_body.str_view())!!;
+        main_file.write(text_body.str_view())!!;
     }
 
-    // Commands
-    foreach (entry : commands) {
-        if (!entry.enabled || entry.extension) continue;
-
-        String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        DString text_body = dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, "("}, "");
-        defer text_body.free();
-
-        // Add values
-        foreach (i, value : entry.values) {
-            String type = type_values[value.type] ?? value.type.remove_vk();
-            text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
-        }
-
-        text_body.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
-        vk_main.write(text_body.str_view())!!;
-    }
-
-    vk_main.write("\n")!!;
+    command_file.write("\n")!!;
 
     // Extension commands
     DString extension_definitions;
     DString extension_pointers;
     DString extension_bind;
     DString extension_functions;
+    DString base_commands;
 
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
     
     foreach (entry : commands) {
-        if (!entry.enabled || !entry.extension) continue;
+        if (!entry.enabled) continue;
         
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
         bool no_result = return_type != "Result";
 
-        if (no_result) {
+        if (!entry.extension) {
+            base_commands.append(dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
+        }
+
+        if (no_result && entry.extension) {
             extension_functions.append(dstring::new_join({"fn ", return_type, " ", entry.name.remove_vk().to_lower_case(), " ("}, ""));
         }
 
-        extension_definitions.append(dstring::new_join({"def ", extension_def, " = fn ", return_type, " ("}, ""));
-        extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, ""));
-        extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
-
+        if (entry.extension) {
+            extension_definitions.append(dstring::new_join({"def ", extension_def, " = fn ", return_type, " ("}, ""));
+            extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, ""));
+            extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
+        }
+      
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type.remove_vk();
-            extension_definitions.append(dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, ""));
+            String fn_values = dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, "").str_view();
 
-            if (no_result) {
-                extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
+            if (entry.extension) {
+                extension_definitions.append(fn_values);
+                if (no_result) extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
+            } else {
+               base_commands.append(fn_values); 
             }
         }
 
-        if (no_result) {
-            extension_functions.append(dstring::new_join({" => extensions.", entry.name, "("}, ""));
-            foreach (i, value : entry.values) extension_functions.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));   
+        if (entry.extension) {
+            if (no_result) {
+                extension_functions.append(dstring::new_join({" => extensions.", entry.name, "("}, ""));
+                foreach (i, value : entry.values) extension_functions.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));   
+            }
+            extension_definitions.append(dstring::new_join({");\n"}, ""));
+        } else {
+            base_commands.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
         }
-        extension_definitions.append(dstring::new_join({");\n"}, ""));
     }
 
     extension_pointers.append("}\nVK_extension_bindings extensions;\n");
     extension_bind.append("}\n");
 
-    vk_main.write(extension_definitions.str_view())!!;
-    vk_main.write("\n")!!;
-    vk_main.write(extension_pointers.str_view())!!;
-    vk_main.write("\n")!!;
-    vk_main.write(extension_bind.str_view())!!;
-    vk_main.write("\n")!!;
-    vk_main.write(extension_functions.str_view())!!;
-    vk_main.write("\n")!!;
+    command_file.write(base_commands.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(extension_definitions.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(extension_pointers.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(extension_bind.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(extension_functions.str_view())!!;
+    command_file.write("\n")!!;
 
+    base_commands.free();
     extension_definitions.free();
     extension_pointers.free();
     extension_bind.free();
     extension_functions.free();
 
-    vk_main.write("\n")!!;
+    main_file.write("\n")!!;
 
     // Commands with error handling
     foreach (entry : commands) {
@@ -490,7 +494,7 @@ fn void! main(String[] args) {
 
         text_body.append("}\n");
 
-        vk_main.write(text_body.str_view())!!;
+        command_file.write(text_body.str_view())!!;
     }
 }
 
