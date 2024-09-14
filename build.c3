@@ -332,26 +332,45 @@ fn void! main(String[] args) {
     main_file.write("\n")!!;
 
     DString creator_functions;
+    defer creator_functions.free();
 
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
-        bool has_stype = entry.values[0].type == "VkStructureType";
-        DString text_body = dstring::new_join({"struct ", entry.name[2..], " {\n"}, "");
+        bool has_stype = entry.values[0].type == "VkStructureType" && entry.values[0].defaultValue != "";
+
+        String name = entry.name.remove_vk();
+
+        DString text_body = dstring::new_join({"struct ", name, " {\n"}, "");
         defer text_body.free();
 
-        // if (has_stype) io::printfn("%s", entry.name);
+        if (has_stype) {
+            creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case(), "() => ",
+            name,
+            " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, ""));
+        }
 
         // Add struct values
-        foreach (value : entry.values) {
+        foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type.remove_vk();
 
-            if (value.size != "" && value.size != "null-terminated") {
-                if (value.size[0] != '[') {
-                    text_body.append(dstring::new_join({"   ", type, "[", value.size[3..], "]", " ", value.name,";\n"}, ""));
+            if (has_stype && i > 0) {
+                String value_name = value.value == "*" ? value.name[1..].to_upper_case() : value.name.to_upper_case();
+
+                if (value.len != "") {
+                    creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, "[] ", value.name.to_lower_case(), ") {\n",
+                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len();\n"
+                    "   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"
+                    }, ""));
                 } else {
-                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
+                    creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, value.value, " ", value.name.to_lower_case(), ") {\n",
+                    "   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"
+                    }, ""));
                 }
+            }
+
+            if (value.size != "") {
+                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
             } else {
                 text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
             }
@@ -361,6 +380,7 @@ fn void! main(String[] args) {
         main_file.write(text_body.str_view())!!;
     }
 
+    creators_file.write(creator_functions.str_view())!!;
     main_file.write("\n")!!;
 
     // Unions
@@ -373,11 +393,7 @@ fn void! main(String[] args) {
             String type = type_values[value.type] ?? value.type.remove_vk();
 
             if (value.size != "") {
-                if (value.size[0] != '[') {
-                    text_body.append(dstring::new_join({"   ", type, "[", value.size, "]", " ", value.name,";\n"}, ""));
-                } else {
-                    text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
-                }
+                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
             } else {
                 text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
             }
@@ -567,6 +583,12 @@ fn String String.from_bit_pos(&self) {
 fn String String.to_lower_case(self) {
     String new_value = self.copy();
     new_value[0] = new_value[0].to_lower();
+    return new_value;
+}
+
+fn String String.to_upper_case(self) {
+    String new_value = self.copy();
+    new_value[0] = new_value[0].to_upper();
     return new_value;
 }
 
