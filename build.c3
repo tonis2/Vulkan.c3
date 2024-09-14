@@ -75,8 +75,8 @@ fn void! main(String[] args) {
     File command_file = io::file::open("build2/commands.c3", "wb")!!;
     defer command_file.close()!!;
 
-    File creators_file = io::file::open("build2/creators.c3", "wb")!!;
-    defer creators_file.close()!!;
+    File builders_file = io::file::open("build2/builders.c3", "wb")!!;
+    defer builders_file.close()!!;
 
     // Find required nodes
     NodeList feature_nodes;
@@ -270,7 +270,7 @@ fn void! main(String[] args) {
     // Build C3 files
     main_file.write("module vk;\n")!!;
     command_file.write("module vk;\n")!!;
-    creators_file.write("module vk;\n")!!;
+    builders_file.write("module vk;\n")!!;
 
     // Constants
     foreach (value : constants) {
@@ -380,7 +380,7 @@ fn void! main(String[] args) {
         main_file.write(text_body.str_view())!!;
     }
 
-    creators_file.write(creator_functions.str_view())!!;
+    builders_file.write(creator_functions.str_view())!!;
     main_file.write("\n")!!;
 
     // Unions
