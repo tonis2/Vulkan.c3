@@ -33,7 +33,9 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_EXT_descriptor_buffer",
   "VK_KHR_xlib_surface",
   "VK_MVK_macos_surface",
-  "VK_KHR_win32_surface"
+  "VK_KHR_win32_surface",
+  "VK_KHR_acceleration_structure",
+  "VK_NV_ray_tracing_motion_blur"
 };
 
 const MAX_VERSION = 1.3;
@@ -168,7 +170,8 @@ fn void! main(String[] args) {
                 handles.push(VkValue{}.from_node(node));
             }
             case "bitmask": {
-               if (try name) enums.push(VkEnum{}.from_node(node));
+               if (node.name == "type") basetypes.push(VkValue{}.from_node(node));
+               if (node.name == "enums") enums.push(VkEnum{}.from_node(node));
             }
             case "basetype": {
                 basetypes.push(VkValue{}.from_node(node));
@@ -333,7 +336,6 @@ fn void! main(String[] args) {
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
-        
         bool has_stype = entry.values[0].type == "VkStructureType";
         DString text_body = dstring::new_join({"struct ", entry.name[2..], " {\n"}, "");
         defer text_body.free();
