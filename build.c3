@@ -378,16 +378,18 @@ fn void! main(String[] args) {
     DString extension_bind;
     DString extension_functions;
     DString base_commands;
+    DString create_commands;
 
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
     
     foreach (entry : commands) {
         if (!entry.enabled) continue;
-        
+
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
         bool no_result = return_type != "Result";
+        bool create_command = entry.name.contains("Create");
 
         if (!entry.extension) {
             base_commands.append(dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
@@ -402,6 +404,36 @@ fn void! main(String[] args) {
             extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, ""));
             extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
         }
+
+        if (create_command) {
+            String command_name = {|
+                foreach (value : entry.values) if (value.type.contains("CreateInfo")) return value.type;
+                return "";
+            |};
+            String result_type = entry.values[entry.values.len() - 1].type;
+
+            // io::printfn("%s %s", command_name, result_type);
+
+            create_commands.append(dstring::new_join({"fn ", result_type.remove_vk(), "! ", command_name.remove_vk(), ".build(&self, "}, ""));
+
+            foreach (i, value : entry.values) {
+                if (value.type == command_name || value.type == result_type) continue;
+                String type = type_values[value.type] ?? value.type.remove_vk();
+                create_commands.append(dstring::new_join({type, value.value, " ", value.name, type == "AllocationCallbacks" ? " = null" : "", i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
+            }
+
+            create_commands.append(dstring::new_join({"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
+
+            foreach (i, value : entry.values) {
+                // if (value.type == command_name || value.type == result_type) continue;
+                String name = value.name;
+                if (value.type == command_name) name = "self";
+                if (value.type == result_type) name = "&response";
+                create_commands.append(dstring::new_join({name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, ""));
+            }
+
+            create_commands.append("   return response;\n}\n");
+        }
       
         // Add values
         foreach (i, value : entry.values) {
@@ -411,9 +443,9 @@ fn void! main(String[] args) {
             if (entry.extension) {
                 extension_definitions.append(fn_values);
                 if (no_result) extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
-            } else {
-               base_commands.append(fn_values); 
-            }
+            } 
+            
+            if (!entry.extension) base_commands.append(fn_values); 
         }
 
         if (entry.extension) {
@@ -441,11 +473,14 @@ fn void! main(String[] args) {
     command_file.write(extension_functions.str_view())!!;
     command_file.write("\n")!!;
 
-    base_commands.free();
-    extension_definitions.free();
-    extension_pointers.free();
-    extension_bind.free();
-    extension_functions.free();
+    defer {
+        base_commands.free();
+        extension_definitions.free();
+        extension_pointers.free();
+        extension_bind.free();
+        extension_functions.free();
+        create_commands.free();
+    }
 
     main_file.write("\n")!!;
 
@@ -496,6 +531,10 @@ fn void! main(String[] args) {
 
         command_file.write(text_body.str_view())!!;
     }
+    
+    command_file.write("\n")!!;
+    command_file.write(create_commands.str_view())!!;
+    command_file.write("\n")!!;
 }
 
 macro bool String[*].contains(self, String key) {

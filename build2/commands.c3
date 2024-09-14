@@ -1127,3 +1127,175 @@ fn void! getAccelerationStructureOpaqueCaptureDescriptorDataEXT (VkDevice device
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
+
+fn Instance! InstanceCreateInfo.build(&self, AllocationCallbacks* pAllocator = null) {
+   Instance response;
+   createInstance(self, pAllocator, &response)!;
+   return response;
+}
+fn Device! DeviceCreateInfo.build(&self, PhysicalDevice physicalDevice, AllocationCallbacks* pAllocator = null) {
+   Device response;
+   createDevice(physicalDevice, self, pAllocator, &response)!;
+   return response;
+}
+fn Fence! FenceCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Fence response;
+   createFence(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Semaphore! SemaphoreCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Semaphore response;
+   createSemaphore(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Event! EventCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Event response;
+   createEvent(device, self, pAllocator, &response)!;
+   return response;
+}
+fn QueryPool! QueryPoolCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   QueryPool response;
+   createQueryPool(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Buffer! BufferCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Buffer response;
+   createBuffer(device, self, pAllocator, &response)!;
+   return response;
+}
+fn BufferView! BufferViewCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   BufferView response;
+   createBufferView(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Image! ImageCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Image response;
+   createImage(device, self, pAllocator, &response)!;
+   return response;
+}
+fn ImageView! ImageViewCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   ImageView response;
+   createImageView(device, self, pAllocator, &response)!;
+   return response;
+}
+fn ShaderModule! ShaderModuleCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   ShaderModule response;
+   createShaderModule(device, self, pAllocator, &response)!;
+   return response;
+}
+fn PipelineCache! PipelineCacheCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   PipelineCache response;
+   createPipelineCache(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Pipeline! GraphicsPipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache, uint createInfoCount, AllocationCallbacks* pAllocator = null) {
+   Pipeline response;
+   createGraphicsPipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
+   return response;
+}
+fn Pipeline! ComputePipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache, uint createInfoCount, AllocationCallbacks* pAllocator = null) {
+   Pipeline response;
+   createComputePipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
+   return response;
+}
+fn PipelineLayout! PipelineLayoutCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   PipelineLayout response;
+   createPipelineLayout(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Sampler! SamplerCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Sampler response;
+   createSampler(device, self, pAllocator, &response)!;
+   return response;
+}
+fn DescriptorSetLayout! DescriptorSetLayoutCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   DescriptorSetLayout response;
+   createDescriptorSetLayout(device, self, pAllocator, &response)!;
+   return response;
+}
+fn DescriptorPool! DescriptorPoolCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   DescriptorPool response;
+   createDescriptorPool(device, self, pAllocator, &response)!;
+   return response;
+}
+fn Framebuffer! FramebufferCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   Framebuffer response;
+   createFramebuffer(device, self, pAllocator, &response)!;
+   return response;
+}
+fn RenderPass! RenderPassCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   RenderPass response;
+   createRenderPass(device, self, pAllocator, &response)!;
+   return response;
+}
+fn CommandPool! CommandPoolCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   CommandPool response;
+   createCommandPool(device, self, pAllocator, &response)!;
+   return response;
+}
+fn DisplayModeKHR! DisplayModeCreateInfoKHR.build(&self, PhysicalDevice physicalDevice, DisplayKHR display, AllocationCallbacks* pAllocator = null) {
+   DisplayModeKHR response;
+   createDisplayModeKHR(physicalDevice, display, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! DisplaySurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createDisplayPlaneSurfaceKHR(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn SwapchainKHR! SwapchainCreateInfoKHR.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   SwapchainKHR response;
+   createSwapchainKHR(device, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! Win32SurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createWin32SurfaceKHR(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! XlibSurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createXlibSurfaceKHR(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! XcbSurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createXcbSurfaceKHR(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn DebugReportCallbackEXT! DebugReportCallbackCreateInfoEXT.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   DebugReportCallbackEXT response;
+   createDebugReportCallbackEXT(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn DescriptorUpdateTemplate! DescriptorUpdateTemplateCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   DescriptorUpdateTemplate response;
+   createDescriptorUpdateTemplate(device, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! MacOSSurfaceCreateInfoMVK.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createMacOSSurfaceMVK(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn SamplerYcbcrConversion! SamplerYcbcrConversionCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   SamplerYcbcrConversion response;
+   createSamplerYcbcrConversion(device, self, pAllocator, &response)!;
+   return response;
+}
+fn DebugUtilsMessengerEXT! DebugUtilsMessengerCreateInfoEXT.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   DebugUtilsMessengerEXT response;
+   createDebugUtilsMessengerEXT(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn RenderPass! RenderPassCreateInfo2.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   RenderPass response;
+   createRenderPass2(device, self, pAllocator, &response)!;
+   return response;
+}
+fn PrivateDataSlot! PrivateDataSlotCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
+   PrivateDataSlot response;
+   createPrivateDataSlot(device, self, pAllocator, &response)!;
+   return response;
+}
+
