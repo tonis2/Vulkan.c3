@@ -1395,7 +1395,7 @@ fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(&self, XlibSurface
    self.flags = flags;
    return *self;
 }
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(&self, Display* dpy) {
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(&self, Display dpy) {
    self.dpy = dpy;
    return *self;
 }

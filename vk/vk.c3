@@ -5418,7 +5418,7 @@ struct XlibSurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    XlibSurfaceCreateFlagsKHR flags;
-   Display* dpy;
+   Display dpy;
    Window window;
 }
 struct XcbSurfaceCreateInfoKHR {
