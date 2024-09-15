@@ -51,7 +51,6 @@ fn void! main(String[] args) {
         "isize_t", "isz",
         "null", "void*",
         "HANDLE", "void*",
-        "char*", "ZString",
         "VkBool32", "uint",
         "xcb_connection_t", "Display",
         "xcb_visualid_t", "Window",
@@ -365,14 +364,14 @@ fn void! main(String[] args) {
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
-        bool has_stype = entry.values[0].type == "VkStructureType" && entry.values[0].defaultValue != "";
+        bool has_struct_type = entry.values[0].type == "VkStructureType" && entry.values[0].defaultValue != "";
 
         String name = entry.name.remove_vk();
 
         DString text_body = dstring::new_join({"struct ", name, " {\n"}, "");
         defer text_body.free();
 
-        if (has_stype) {
+        if (has_struct_type) {
             creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case().strip_end("KHR"), "() => ",
             name,
             " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, ""));
@@ -382,14 +381,21 @@ fn void! main(String[] args) {
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type.remove_vk();
 
-            if (has_stype && i > 0) {
+            if (has_struct_type && i > 0) {
                 String value_name = value.value == "*" ? value.name[1..].capitalize() : value.name.capitalize();
-
                 if (value.len != "" && type != "void") {
-                    creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, "[] ", value.name.to_lower_case(), ") {\n",
-                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"
-                    "   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"
-                    }, ""));
+
+                    DString buffer = dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type == "char" ? "ZString" : type, value.size != "" ? value.size : "[]", " ", value.name.to_lower_case(), ") {\n",
+                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"},  "");
+
+                    if (type == "char") {
+                        buffer.append(dstring::new_join({"   self.", value.name, " = (char*)&", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"},""));
+                    } else if (value.size != "") {
+                        buffer.append(dstring::new_join({"   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"},""));
+                    } else {
+                        buffer.append(dstring::new_join({"   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"}, ""));
+                    }
+                    creator_functions.append(buffer);
                 } else {
                     creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, value.size != "" ? value.size : value.value, " ", value.name.to_lower_case(), ") {\n",
                     "   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"

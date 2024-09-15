@@ -66,7 +66,7 @@ struct Allocation {
 fn Allocation! Allocation.build(&self) {
     DeviceMemory memory;
 
-    memory = memoryAllocateInfoBuilder()
+    memory = memoryAllocateInfo()
                 .setAllocationSize(self.size)
                 .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags })
                 .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
@@ -118,7 +118,7 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
     }.build(self)!;
 
     MemoryRequirements mem_reqs = staging_buffer.memoryRequirements(self);
-    DeviceMemory memory = memoryAllocateInfoBuilder()
+    DeviceMemory memory = memoryAllocateInfo()
                 .setAllocationSize(mem_reqs.size)
                 .setMemoryTypeIndex(pdevice.getMemoryType(MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,  mem_reqs.memoryTypeBits))
                 .build(self)!;
@@ -258,7 +258,7 @@ fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, Physic
         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
     };
 
-    PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2Builder()
+    PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2()
       .setNext(&descriptorProperties)
       .build(device);
 

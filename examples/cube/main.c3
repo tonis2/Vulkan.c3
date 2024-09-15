@@ -8,7 +8,7 @@ import camera;
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
@@ -108,7 +108,7 @@ fn void! main(String[] args)
       .apiVersion = vk::@makeApiVersion(0,1,3,0)
     })
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
-    .setEnabledExtensionNames(extensions.array_view());
+    .setPEnabledLayerNames(extensions.array_view());
 
     DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXT()
     .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
@@ -232,7 +232,7 @@ fn void! main(String[] args)
 
 	device = vk::deviceCreateInfo()
 		.setQueueCreateInfos({ graphicsInfo })
-		.setEnabledExtensionNames(device_extensions.array_view())
+		.setPEnabledExtensionNames(device_extensions.array_view())
 		.setNext(&device_features)
 		.build(physical_device)!;
 
