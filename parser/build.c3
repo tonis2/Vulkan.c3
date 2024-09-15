@@ -247,7 +247,6 @@ fn void! main(String[] args) {
                                     return null;
                                 |};
 
-
                                 if (!enum_parent) {
                                     enums.push(VkEnum { .base.name = extends });
                                     enum_parent = &enums[enums.len() - 1];
@@ -308,7 +307,7 @@ fn void! main(String[] args) {
 
     // Handles
     foreach (entry : handles) {
-        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = void*;\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = inline void*;\n"}, "");
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
