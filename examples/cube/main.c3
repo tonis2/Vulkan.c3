@@ -73,14 +73,12 @@ ZStringList validations;
 ZStringList extensions;
 ZStringList device_extensions;
 
-
-
 fn void! main(String[] args)
 {
     rgfw::Window* win = rgfw::createWindow("Vulkan Example", rgfw::Rect{0, 0, WIDTH, HEIGHT}, rgfw::CENTER);
     defer rgfw::close(win);
     
-    Camera camera = camera::new(.eye = {0.0, 5.0, 10}, .aspect = 800/600, .min_zoom = 0.01, .max_zoom = 1000);
+    Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: 800/600, min_zoom: 0.01, max_zoom: 1000);
 
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
@@ -101,7 +99,7 @@ fn void! main(String[] args)
 
     vk::checkExtensionSupport(extensions)!;
 
-    InstanceCreateInfo instanceInfo = vk::instanceCreateInfoBuilder()
+    InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
     .setApplicationInfo(&&ApplicationInfo{
       .pApplicationName = "TEST",
       .pEngineName = "Super engine",
@@ -112,7 +110,7 @@ fn void! main(String[] args)
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
     .setEnabledExtensionNames(extensions.array_view());
 
-    DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXTBuilder()
+    DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXT()
     .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
     .setMessageType(vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
     .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback);
@@ -138,7 +136,7 @@ fn void! main(String[] args)
                 vk::STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, 
                 null, 
                 0, 
-                win.src.display, 
+                &win.src.display, 
                 win.src.window, 
             };
 
@@ -161,7 +159,7 @@ fn void! main(String[] args)
                 null,
                 0,
                 win.src.window,
-                win.src.hdc
+                &win.src.hdc
             };
         }
         $default: {}
@@ -194,8 +192,8 @@ fn void! main(String[] args)
     }
 
     // Setup Vulkan extensions configuration
-    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2Builder()
-                                                .setNext(&&vk::physicalDevicePushDescriptorPropertiesKHRBuilder().setMaxPushDescriptors(1));
+    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2()
+                                                .setNext(&&vk::physicalDevicePushDescriptorProperties().setMaxPushDescriptors(1));
 
 	vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
 
@@ -228,11 +226,11 @@ fn void! main(String[] args)
 
 	vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
 
-	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfoBuilder()
+	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo()
 	.setQueueFamilyIndex(queue_family.graphics)
 	.setQueuePriorities({1.0});
 
-	device = vk::deviceCreateInfoBuilder()
+	device = vk::deviceCreateInfo()
 		.setQueueCreateInfos({ graphicsInfo })
 		.setEnabledExtensionNames(device_extensions.array_view())
 		.setNext(&device_features)
@@ -255,7 +253,7 @@ fn void! main(String[] args)
 
     uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
 
-    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHRBuilder()
+    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfo()
       .setMinImageCount(min_images)
       .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
       .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
@@ -268,11 +266,11 @@ fn void! main(String[] args)
       .setImageArrayLayers(1)
       .setImageExtent({ .width = (uint)WIDTH, .height = (uint)HEIGHT });
 
-    swapchain = swapchain_info.buildKHR(device)!;
+    swapchain = swapchain_info.build(device)!;
     swapchain_images = swapchain.getImages(device, swapchain_info.minImageCount)!;
 
     for (int i = 0; i < swapchain_info.minImageCount; ++i) {
-        ImageView view = vk::imageViewCreateInfoBuilder()
+        ImageView view = vk::imageViewCreateInfo()
         .setViewType(vk::IMAGE_VIEW_TYPE_2D)
         .setFormat(format.format)
         .setComponents({
@@ -295,7 +293,7 @@ fn void! main(String[] args)
     }
 
     // Create command pool
-    CommandPool command_pool = device.createCommandPool(.queue = queue_family.graphics)!;
+    CommandPool command_pool = device.createCommandPool(queue: queue_family.graphics)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Create allocator of 50MB - DEVICE_ONLY memory
@@ -317,29 +315,29 @@ fn void! main(String[] args)
     }.build()!;
 
     // Create buffers, using only memory of the allocator
-    MemoryBlock vertex_buffer = vk::bufferCreateInfoBuilder()
+    MemoryBlock vertex_buffer = vk::bufferCreateInfo()
                .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                .setSize(Vertex.sizeof * vertices.len)
                .bind(&device_allocation)!;
 
-    MemoryBlock index_buffer = vk::bufferCreateInfoBuilder()
+    MemoryBlock index_buffer = vk::bufferCreateInfo()
                 .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
                 .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                 .setSize(indices.len * ushort.sizeof)
                 .bind(&device_allocation)!;
 
-    MemoryBlock uniform_buffer = vk::bufferCreateInfoBuilder()
+    MemoryBlock uniform_buffer = vk::bufferCreateInfo()
                 .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
                 .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
                 .setSize(UniformData.sizeof)
                 .bind(&local_allocation)!;
 
     // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(.size = Vertex.sizeof * vertices.len, .data = vertices, .pdevice = physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(.size = ushort.sizeof * indices.len, .data = indices, .pdevice = physical_device)!;    
+    MemoryBlock vertex_stage_buffer = device.staging_buffer(size: Vertex.sizeof * vertices.len, data: vertices, pdevice: physical_device)!;
+    MemoryBlock index_stage_buffer = device.staging_buffer(size: ushort.sizeof * indices.len, data: indices, pdevice: physical_device)!;    
 
-    device.@single_time_command(.queue = queue_family.graphics_handle, .queue_index = queue_family.graphics; CommandBuffer command_buffer) {
+    device.@single_time_command(queue: queue_family.graphics_handle, queue_index: queue_family.graphics; CommandBuffer command_buffer) {
          vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
              .srcOffset = 0,
              .dstOffset = 0,
@@ -360,7 +358,7 @@ fn void! main(String[] args)
     uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
     // Set-up descriptor info for uniform buffer usage
-    DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfoBuilder()
+    DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
         .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
         .setBindings({
             {
@@ -372,7 +370,7 @@ fn void! main(String[] args)
         }).build(device)!;
 
     WriteDescriptorSet[] descriptorSets = {
-            vk::writeDescriptorSetBuilder()
+            vk::writeDescriptorSet()
             .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
             .setBufferInfo({
               {
@@ -387,15 +385,15 @@ fn void! main(String[] args)
     char[*] vertex_shader_data = $embed("./shaders/cube_vert.spv");
     char[*] fragment_shader_data = $embed("./shaders/cube_frag.spv");
 
-    Shader draw_shaders = device.createShader(.vertex = &vertex_shader_data, .fragment = &fragment_shader_data)!;
+    Shader draw_shaders = device.createShader(vertex: &vertex_shader_data, fragment: &fragment_shader_data)!;
 
-    PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfoBuilder().setSetLayouts({ descriptor_set_layout }).build(device)!;
+    PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout }).build(device)!;
 
     // Create Renderpipeline info
-    Pipeline pipeline = vk::graphicsPipelineCreateInfoBuilder()
+    Pipeline pipeline = vk::graphicsPipelineCreateInfo()
     .setStages(&draw_shaders.stages)
-     .setLayout(pipeline_layout)
-     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfoBuilder()
+    .setLayout(pipeline_layout)
+     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfo()
         .setVertexBindingDescriptions(
         {
             {
@@ -420,7 +418,7 @@ fn void! main(String[] args)
         })
     )
     .setDynamicState(
-       &&vk::pipelineDynamicStateCreateInfoBuilder()
+       &&vk::pipelineDynamicStateCreateInfo()
         .setDynamicStates(
         {
             vk::DYNAMIC_STATE_VIEWPORT,
@@ -428,7 +426,7 @@ fn void! main(String[] args)
         })
     )
     .setRasterizationState(
-        &&vk::pipelineRasterizationStateCreateInfoBuilder()
+        &&vk::pipelineRasterizationStateCreateInfo()
         .setDepthClampEnable(vk::FALSE)
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
@@ -437,19 +435,19 @@ fn void! main(String[] args)
         .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
         .setDepthBiasEnable(vk::FALSE)
     )
-    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfoBuilder().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
-    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfoBuilder()
+    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfo().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfo()
                       .setSampleShadingEnable(vk::FALSE)
                       .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
                       .setMinSampleShading(1.0)
                       .setAlphaToCoverageEnable(vk::FALSE)
                       .setAlphaToOneEnable(vk::FALSE))
-    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfoBuilder()
+    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfo()
                         .setDepthTestEnable(vk::FALSE)
                         .setDepthWriteEnable(vk::FALSE)
                         .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
                         .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
-    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfoBuilder()
+    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfo()
                     .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
                     .setLogicOp(vk::LOGIC_OP_COPY)
                     .setAttachments({
@@ -467,10 +465,10 @@ fn void! main(String[] args)
                            .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
                            .alphaBlendOp = vk::BLEND_OP_ADD,
                        }}))
-    .setViewportState(&&vk::pipelineViewportStateCreateInfoBuilder()
+    .setViewportState(&&vk::pipelineViewportStateCreateInfo()
                    .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
                    .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfoBuilder().setColorAttachmentFormats({swapchain_info.imageFormat}))
+    .setNext(&&vk::pipelineRenderingCreateInfo().setColorAttachmentFormats({swapchain_info.imageFormat}))
     .build(device)!;
 
     // Create syncronisation stuff
@@ -479,9 +477,9 @@ fn void! main(String[] args)
     FenceList frame_fences;
 
     for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        wait_semaphores.push(vk::semaphoreCreateInfoBuilder().build(device))!;
-        signal_semaphores.push(vk::semaphoreCreateInfoBuilder().build(device))!;
-        frame_fences.push(vk::fenceCreateInfoBuilder().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
+        wait_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
+        signal_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
+        frame_fences.push(vk::fenceCreateInfo().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
     }
     
     bool running = true;
@@ -504,14 +502,14 @@ fn void! main(String[] args)
         uint next_image = swapchain.getNextImage(device, wait_semaphore);
 
         // Start dynamic rendering
-        RenderingInfo rendering_info = vk::renderingInfoBuilder()
+        RenderingInfo rendering_info = vk::renderingInfo()
         .setLayerCount(1)
         .setRenderArea({
             .offset = Offset2D{ .x = 0, .y = 0 },
             .extent = swapchain_info.imageExtent,
         })
         .setColorAttachments({
-            vk::renderingAttachmentInfoBuilder()
+            vk::renderingAttachmentInfo()
             .setImageView(swapchain_views[next_image])
             .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
             .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
@@ -523,9 +521,9 @@ fn void! main(String[] args)
 
         CommandBuffer command_buffer = command_buffers[next_image];
         vk::resetCommandBuffer(command_buffer, 0)!;
-        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfoBuilder())!;
+        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!;
 
-        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrierBuilder()
+        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrier()
         .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
         .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
@@ -551,7 +549,7 @@ fn void! main(String[] args)
             &image_memory_start
         );
 
-        vk::cmdBeginRenderingKHR(command_buffer, &rendering_info);
+        vk::cmdBeginRendering(command_buffer, &rendering_info);
 
         vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
         vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
@@ -562,9 +560,9 @@ fn void! main(String[] args)
         vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
         vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
         vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
-        vk::cmdEndRenderingKHR(command_buffer);
+        vk::cmdEndRendering(command_buffer);
 
-        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrierBuilder()
+        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrier()
         .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
         .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
         .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
@@ -590,7 +588,7 @@ fn void! main(String[] args)
             &image_memory_end
         );
 
-        SubmitInfo submit_info = vk::submitInfoBuilder()
+        SubmitInfo submit_info = vk::submitInfo()
         .setWaitSemaphores({ wait_semaphore })
         .setCommandBuffers({ command_buffer })
         .setSignalSemaphores({ signal_semaphore })
@@ -599,7 +597,7 @@ fn void! main(String[] args)
         vk::endCommandBuffer(command_buffer)!;
         vk::queueSubmit(queue_family.graphics_handle, 1, &submit_info, frame_fence)!;
 
-        PresentInfoKHR present_info = vk::presentInfoKHRBuilder()
+        PresentInfoKHR present_info = vk::presentInfo()
         .setWaitSemaphores({ signal_semaphore })
         .setSwapchains({ swapchain })
         .setImageIndices({ next_image });
