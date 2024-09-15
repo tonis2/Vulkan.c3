@@ -61,7 +61,10 @@ fn void! main(String[] args) {
         "xcb_visualid_t", "Window",
         "xcb_window_t", "Window",
         "wl_display", "Display",
-        "zx_handle_t", "Display"
+        "zx_handle_t", "Display",
+        "HINSTANCE", "Hinstance",
+        "HWND", "Hwnd",
+        "(~0ULL)", "(~0UL)"
     );
 
     defer type_values.free();
@@ -274,7 +277,8 @@ fn void! main(String[] args) {
 
     // Constants
     foreach (value : constants) {
-        DString text_body = dstring::new_join({"const ", value.name[3..], " = ", value.value, ";\n"}, "");
+        String type = type_values[value.value] ?? value.value;
+        DString text_body = dstring::new_join({"const ", value.name[3..], " = ", type, ";\n"}, "");
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
@@ -359,11 +363,11 @@ fn void! main(String[] args) {
 
                 if (value.len != "") {
                     creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, "[] ", value.name.to_lower_case(), ") {\n",
-                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len();\n"
+                    "   self.", value.name, "= (uint)", value.name.to_lower_case(), ".len();\n"
                     "   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"
                     }, ""));
                 } else {
-                    creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, value.value, " ", value.name.to_lower_case(), ") {\n",
+                    creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, value.size != "" ? value.size : value.value, " ", value.name.to_lower_case(), ") {\n",
                     "   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"
                     }, ""));
                 }

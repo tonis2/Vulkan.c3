@@ -101,17 +101,21 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
         value.len = member.attributes.get("len") ?? "";
         value.defaultValue = member.attributes.get("values") ?? "";
 
-        if (value.len.contains("null-terminated")) value.len = "";
+        if (value.len.contains("null-terminated") || value.len.contains("latexmath")) value.len = "";
         if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
 
         value.optional = member.attributes.has_key("optional");
         value.value = member.value.len > 1 ? member.value[0..0] : "";
+        if (value.value == ":") value.value = "";
 
         foreach (entry : member.children) {
             // Enum used as SIZE element at vulkan :/
             if (entry.name == "enum") value.size = entry.value;
             if (entry.name == "type") value.type = entry.value;
-            if (entry.name == "name") value.name = entry.value;
+            if (entry.name == "name") {
+                value.name = entry.value;
+                if (value.name == "module") value.name = "mod";
+            };
         }
 
         if (value.size != "" && value.size != "null-terminated" && value.size[0] != '[') {
