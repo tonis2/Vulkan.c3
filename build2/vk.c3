@@ -10,7 +10,7 @@ const LOD_CLAMP_NONE = 1000.0F;
 const REMAINING_MIP_LEVELS = (~0U);
 const REMAINING_ARRAY_LAYERS = (~0U);
 const REMAINING_3D_SLICES_EXT = (~0U);
-const WHOLE_SIZE = (~0ULL);
+const WHOLE_SIZE = (~0UL);
 const ATTACHMENT_UNUSED = (~0U);
 const TRUE = 1;
 const FALSE = 0;
@@ -4300,7 +4300,7 @@ struct PipelineShaderStageCreateInfo {
    void* pNext;
    PipelineShaderStageCreateFlags flags;
    ShaderStageFlagBits stage;
-   ShaderModule module;
+   ShaderModule mod;
    char* pName;
    char* pName;
    SpecializationInfo* pSpecializationInfo;
@@ -4898,8 +4898,8 @@ struct Win32SurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    Win32SurfaceCreateFlagsKHR flags;
-   HINSTANCE hinstance;
-   HWND hwnd;
+   Hinstance hinstance;
+   Hwnd hwnd;
 }
 struct XlibSurfaceCreateInfoKHR {
    StructureType sType;
@@ -6226,10 +6226,10 @@ struct TransformMatrixKHR {
 }
 struct AccelerationStructureInstanceKHR {
    TransformMatrixKHR transform;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
+   uint instanceCustomIndex;
+   uint mask;
+   uint instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR flags;
    ulong accelerationStructureReference;
 }
 struct AccelerationStructureDeviceAddressInfoKHR {
@@ -6667,19 +6667,19 @@ struct SRTDataNV {
 struct AccelerationStructureSRTMotionInstanceNV {
    SRTDataNV transformT0;
    SRTDataNV transformT1;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
+   uint instanceCustomIndex;
+   uint mask;
+   uint instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR flags;
    ulong accelerationStructureReference;
 }
 struct AccelerationStructureMatrixMotionInstanceNV {
    TransformMatrixKHR transformT0;
    TransformMatrixKHR transformT1;
-   uint: instanceCustomIndex;
-   uint: mask;
-   uint: instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR: flags;
+   uint instanceCustomIndex;
+   uint mask;
+   uint instanceShaderBindingTableRecordOffset;
+   GeometryInstanceFlagsKHR flags;
    ulong accelerationStructureReference;
 }
 struct AccelerationStructureMotionInstanceNV {
