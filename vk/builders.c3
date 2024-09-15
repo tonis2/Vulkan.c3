@@ -68,16 +68,18 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerCount(&self, uint enabledLay
    self.enabledLayerCount = enabledLayerCount;
    return *self;
 }
-fn DeviceCreateInfo DeviceCreateInfo.setPEnabledLayerNames(&self, char* ppEnabledLayerNames) {
-   self.ppEnabledLayerNames = ppEnabledLayerNames;
+fn DeviceCreateInfo DeviceCreateInfo.setPEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
+   self.enabledLayerCount= (uint)ppEnabledLayerNames.len;
+   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
    return *self;
 }
 fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionCount(&self, uint enabledExtensionCount) {
    self.enabledExtensionCount = enabledExtensionCount;
    return *self;
 }
-fn DeviceCreateInfo DeviceCreateInfo.setPEnabledExtensionNames(&self, char* ppEnabledExtensionNames) {
-   self.ppEnabledExtensionNames = ppEnabledExtensionNames;
+fn DeviceCreateInfo DeviceCreateInfo.setPEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
+   self.enabledExtensionCount= (uint)ppEnabledExtensionNames.len;
+   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
    return *self;
 }
 fn DeviceCreateInfo DeviceCreateInfo.setEnabledFeatures(&self, PhysicalDeviceFeatures* pEnabledFeatures) {
@@ -101,16 +103,18 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerCount(&self, uint enable
    self.enabledLayerCount = enabledLayerCount;
    return *self;
 }
-fn InstanceCreateInfo InstanceCreateInfo.setPEnabledLayerNames(&self, char* ppEnabledLayerNames) {
-   self.ppEnabledLayerNames = ppEnabledLayerNames;
+fn InstanceCreateInfo InstanceCreateInfo.setPEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
+   self.enabledLayerCount= (uint)ppEnabledLayerNames.len;
+   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
    return *self;
 }
 fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionCount(&self, uint enabledExtensionCount) {
    self.enabledExtensionCount = enabledExtensionCount;
    return *self;
 }
-fn InstanceCreateInfo InstanceCreateInfo.setPEnabledExtensionNames(&self, char* ppEnabledExtensionNames) {
-   self.ppEnabledExtensionNames = ppEnabledExtensionNames;
+fn InstanceCreateInfo InstanceCreateInfo.setPEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
+   self.enabledExtensionCount= (uint)ppEnabledExtensionNames.len;
+   self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
    return *self;
 }
 fn MemoryAllocateInfo memoryAllocateInfo() => MemoryAllocateInfo { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, .pNext = null };
@@ -1956,9 +1960,9 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevice
    self.physicalDeviceCount = physicalDeviceCount;
    return *self;
 }
-fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(&self, PhysicalDevice[] physicalDevices) {
+fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(&self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices) {
    self.physicalDeviceCount= (uint)physicalDevices.len;
-   self.physicalDevices = &physicalDevices[0];
+   self.physicalDevices = physicalDevices;
    return *self;
 }
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocation(&self, uint subsetAllocation) {

@@ -123,7 +123,9 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
         value.defaultValue = member.attributes.get("values") ?? "";
         value.optional = member.attributes.has_key("optional");
 
-        if (value.len.contains("null-terminated") || value.len.contains("latexmath") || value.len.contains(",")) value.len = "";
+        value.len = value.len.strip_end(",null-terminated");
+
+        if (value.len.contains("latexmath") || value.len.contains(",") || value.len == "null-terminated") value.len = "";
         if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
  
         value.value = member.value.len > 1 ? member.value[0..0] : "";
