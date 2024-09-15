@@ -8,7 +8,7 @@ import camera;
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = true;
+const ENABLE_VALIDATION_LAYERS = false;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
@@ -81,21 +81,21 @@ fn void! main(String[] args)
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: 800/600, min_zoom: 0.01, max_zoom: 1000);
 
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
-    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
+    // device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_dynamic_rendering"});
     extensions.add_array({"VK_KHR_surface"});
 
-    if (env::OS_TYPE == MACOS) {
-        extensions.add_array({"VK_MVK_macos_surface", "VK_KHR_portability_enumeration"});
-        device_extensions.push("VK_KHR_portability_subset");
-    }
+    // if (env::OS_TYPE == MACOS) {
+    //     extensions.add_array({"VK_MVK_macos_surface", "VK_KHR_portability_enumeration"});
+    //     device_extensions.push("VK_KHR_portability_subset");
+    // }
 
-    if (env::OS_TYPE == WIN32) {
-        extensions.add_array({"VK_KHR_win32_surface"});
-    }
+    // if (env::OS_TYPE == WIN32) {
+    //     extensions.add_array({"VK_KHR_win32_surface"});
+    // }
 
-    if (env::OS_TYPE == LINUX) {
-        extensions.add_array({"VK_KHR_xlib_surface"});
-    }
+    // if (env::OS_TYPE == LINUX) {
+    //     extensions.add_array({"VK_KHR_xlib_surface"});
+    // }
 
     vk::checkExtensionSupport(extensions)!;
 
@@ -108,7 +108,8 @@ fn void! main(String[] args)
       .apiVersion = vk::@makeApiVersion(0,1,3,0)
     })
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
-    .setPEnabledLayerNames(extensions.array_view());
+    .setPEnabledLayerNames(extensions.array_view())
+    .setEnabledLayerCount(0);
 
     DebugUtilsMessengerCreateInfoEXT debug_info = vk::debugUtilsMessengerCreateInfoEXT()
     .setMessageSeverity(vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
@@ -117,16 +118,16 @@ fn void! main(String[] args)
 
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
-      vk::checkValidationLayersSupport(validations)!;
+      vk::checkValidationLayersSupport(validations)!!;
       instanceInfo.enabledLayerCount = (uint)validations.len();
       instanceInfo.ppEnabledLayerNames = (char*)validations.entries;
     }
 
-    vk::createInstance(&instanceInfo, null, &instance)!;
+    vk::createInstance(&instanceInfo, null, &instance)!!;
     vk::loadExtensions(instance);
 
     if (ENABLE_VALIDATION_LAYERS) {
-     debug_messenger = debug_info.build(instance)!;
+     debug_messenger = debug_info.build(instance)!!;
     }
 
     // Create surface
@@ -136,7 +137,7 @@ fn void! main(String[] args)
                 vk::STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, 
                 null, 
                 0, 
-                &win.src.display, 
+                win.src.display, 
                 win.src.window, 
             };
 
@@ -165,469 +166,469 @@ fn void! main(String[] args)
         $default: {}
     $endswitch
 
-    DeviceList devices = instance.getDevices()!;
-    bool found_device = false;
+    // DeviceList devices = instance.getDevices()!;
+    // bool found_device = false;
 
-    foreach (entry: devices) {
-        QueueFamily queue;
-        // Check for device extension support
-        bool supports_extensions = entry.checkExtensionSupport(device_extensions)!;
-        QueuePropertiesList queue_properties = entry.getQueueProperties()!;
+    // foreach (entry: devices) {
+    //     QueueFamily queue;
+    //     // Check for device extension support
+    //     bool supports_extensions = entry.checkExtensionSupport(device_extensions)!;
+    //     QueuePropertiesList queue_properties = entry.getQueueProperties()!;
 
-        queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
-        if (surface.checkSurfaceSupport(queue.graphics, entry)!) queue.present = queue.graphics;
+    //     queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
+    //     if (surface.checkSurfaceSupport(queue.graphics, entry)!) queue.present = queue.graphics;
 
-        if (queue.is_ready() && supports_extensions) {
-            physical_device = entry;
-            queue_family = queue;
-            found_device = true;
-        }
-    }
+    //     if (queue.is_ready() && supports_extensions) {
+    //         physical_device = entry;
+    //         queue_family = queue;
+    //         found_device = true;
+    //     }
+    // }
 
-    devices.free();
+    // devices.free();
 
-    if (!found_device) {
-      io::printfn("Did not found suitable device!");
-      return;
-    }
+    // if (!found_device) {
+    //   io::printfn("Did not found suitable device!");
+    //   return;
+    // }
 
-    // Setup Vulkan extensions configuration
-    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2()
-                                                .setNext(&&vk::physicalDevicePushDescriptorProperties().setMaxPushDescriptors(1));
+    // // Setup Vulkan extensions configuration
+    // PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2()
+    //                                             .setNext(&&vk::physicalDevicePushDescriptorProperties().setMaxPushDescriptors(1));
 
-	vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
+	// vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
 
-	PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
-	};
+	// PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
+	// 	.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+	// };
 
-	PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
-		.pNext = &device_indexing_feature,
-		.bufferDeviceAddress = vk::TRUE,
-		.bufferDeviceAddressCaptureReplay = vk::TRUE
-	};
+	// PhysicalDeviceBufferDeviceAddressFeatures buffer_device_feature = {
+	// 	.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+	// 	.pNext = &device_indexing_feature,
+	// 	.bufferDeviceAddress = vk::TRUE,
+	// 	.bufferDeviceAddressCaptureReplay = vk::TRUE
+	// };
 
-	PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
-		.pNext = &buffer_device_feature
-	};
+	// PhysicalDeviceDynamicRenderingFeatures dynamic_rendering_feature = {
+	// 	.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+	// 	.pNext = &buffer_device_feature
+	// };
 
-	PhysicalDeviceSynchronization2Features syncronisation2_feature = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
-		.pNext = &dynamic_rendering_feature,
-		.synchronization2 = vk::TRUE
-	};
+	// PhysicalDeviceSynchronization2Features syncronisation2_feature = {
+	// 	.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
+	// 	.pNext = &dynamic_rendering_feature,
+	// 	.synchronization2 = vk::TRUE
+	// };
 
-	PhysicalDeviceFeatures2 device_features = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-		.pNext = &syncronisation2_feature,
-	};
+	// PhysicalDeviceFeatures2 device_features = {
+	// 	.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+	// 	.pNext = &syncronisation2_feature,
+	// };
 
-	vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
+	// vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
 
-	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo()
-	.setQueueFamilyIndex(queue_family.graphics)
-	.setQueuePriorities({1.0});
+	// DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo()
+	// .setQueueFamilyIndex(queue_family.graphics)
+	// .setQueuePriorities({1.0});
 
-	device = vk::deviceCreateInfo()
-		.setQueueCreateInfos({ graphicsInfo })
-		.setPEnabledExtensionNames(device_extensions.array_view())
-		.setNext(&device_features)
-		.build(physical_device)!;
+	// device = vk::deviceCreateInfo()
+	// 	.setQueueCreateInfos({ graphicsInfo })
+	// 	.setPEnabledExtensionNames(device_extensions.array_view())
+	// 	.setNext(&device_features)
+	// 	.build(physical_device)!;
 
-	queue_family.graphics_handle = device.getQueue(queue_family.graphics);
+	// queue_family.graphics_handle = device.getQueue(queue_family.graphics);
 
-	SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
-	PresentModeList present_modes = surface.getPresentModes(physical_device)!;
-	SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(physical_device)!;
+	// SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
+	// PresentModeList present_modes = surface.getPresentModes(physical_device)!;
+	// SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(physical_device)!;
 
-	defer {
-		surface_formats.free();
-		present_modes.free();
-	}
+	// defer {
+	// 	surface_formats.free();
+	// 	present_modes.free();
+	// }
 
-	vk::Format depth_format = vk::findDepthFormat(features: vk::FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, device: physical_device);
-    SurfaceFormatKHR format = SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
-    Extent2D extent = {.width = (uint)WIDTH, .height = (uint)HEIGHT };
+	// vk::Format depth_format = vk::findDepthFormat(features: vk::FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, device: physical_device);
+    // SurfaceFormatKHR format = SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
+    // Extent2D extent = {.width = (uint)WIDTH, .height = (uint)HEIGHT };
 
-    uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
+    // uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
 
-    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfo()
-      .setMinImageCount(min_images)
-      .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
-      .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-      .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-      .setPresentMode(vk::PRESENT_MODE_FIFO_KHR)
-      .setPreTransform(capabilities.currentTransform)
-      .setImageColorSpace(format.colorSpace)
-      .setImageFormat(format.format)
-      .setSurface(surface)
-      .setImageArrayLayers(1)
-      .setImageExtent({ .width = (uint)WIDTH, .height = (uint)HEIGHT });
+    // SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfo()
+    //   .setMinImageCount(min_images)
+    //   .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+    //   .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+    //   .setCompositeAlpha(vk::COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+    //   .setPresentMode(vk::PRESENT_MODE_FIFO_KHR)
+    //   .setPreTransform(capabilities.currentTransform)
+    //   .setImageColorSpace(format.colorSpace)
+    //   .setImageFormat(format.format)
+    //   .setSurface(surface)
+    //   .setImageArrayLayers(1)
+    //   .setImageExtent({ .width = (uint)WIDTH, .height = (uint)HEIGHT });
 
-    swapchain = swapchain_info.build(device)!;
-    swapchain_images = swapchain.getImages(device, swapchain_info.minImageCount)!;
+    // swapchain = swapchain_info.build(device)!;
+    // swapchain_images = swapchain.getImages(device, swapchain_info.minImageCount)!;
 
-    for (int i = 0; i < swapchain_info.minImageCount; ++i) {
-        ImageView view = vk::imageViewCreateInfo()
-        .setViewType(vk::IMAGE_VIEW_TYPE_2D)
-        .setFormat(format.format)
-        .setComponents({
-            .r = vk::COMPONENT_SWIZZLE_IDENTITY,
-            .g = vk::COMPONENT_SWIZZLE_IDENTITY,
-            .b = vk::COMPONENT_SWIZZLE_IDENTITY,
-            .a = vk::COMPONENT_SWIZZLE_IDENTITY,
-        })
-        .setSubresourceRange({
-            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
-            .levelCount = 1,
-        })
-        .setImage(swapchain_images[i])
-        .build(device)!;
+    // for (int i = 0; i < swapchain_info.minImageCount; ++i) {
+    //     ImageView view = vk::imageViewCreateInfo()
+    //     .setViewType(vk::IMAGE_VIEW_TYPE_2D)
+    //     .setFormat(format.format)
+    //     .setComponents({
+    //         .r = vk::COMPONENT_SWIZZLE_IDENTITY,
+    //         .g = vk::COMPONENT_SWIZZLE_IDENTITY,
+    //         .b = vk::COMPONENT_SWIZZLE_IDENTITY,
+    //         .a = vk::COMPONENT_SWIZZLE_IDENTITY,
+    //     })
+    //     .setSubresourceRange({
+    //         .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+    //         .baseMipLevel = 0,
+    //         .baseArrayLayer = 0,
+    //         .layerCount = 1,
+    //         .levelCount = 1,
+    //     })
+    //     .setImage(swapchain_images[i])
+    //     .build(device)!;
 
-        swapchain_views.push(view);
-    }
+    //     swapchain_views.push(view);
+    // }
 
-    // Create command pool
-    CommandPool command_pool = device.createCommandPool(queue: queue_family.graphics)!;
-    CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
+    // // Create command pool
+    // CommandPool command_pool = device.createCommandPool(queue: queue_family.graphics)!;
+    // CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
-    // Create allocator of 50MB - DEVICE_ONLY memory
-    vk::Allocation device_allocation = vk::Allocation {
-        .device = device,
-        .pdevice = physical_device,
-        .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 50_000_000
-    }.build()!;
+    // // Create allocator of 50MB - DEVICE_ONLY memory
+    // vk::Allocation device_allocation = vk::Allocation {
+    //     .device = device,
+    //     .pdevice = physical_device,
+    //     .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+    //     .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+    //     .size = 50_000_000
+    // }.build()!;
 
-    // Allocation where data can be changed from CPU
-    vk::Allocation local_allocation = vk::Allocation {
-        .device = device,
-        .pdevice = physical_device,
-        .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
-        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 20_000_000
-    }.build()!;
+    // // Allocation where data can be changed from CPU
+    // vk::Allocation local_allocation = vk::Allocation {
+    //     .device = device,
+    //     .pdevice = physical_device,
+    //     .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+    //     .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+    //     .size = 20_000_000
+    // }.build()!;
 
-    // Create buffers, using only memory of the allocator
-    MemoryBlock vertex_buffer = vk::bufferCreateInfo()
-               .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
-               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-               .setSize(Vertex.sizeof * vertices.len)
-               .bind(&device_allocation)!;
+    // // Create buffers, using only memory of the allocator
+    // MemoryBlock vertex_buffer = vk::bufferCreateInfo()
+    //            .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+    //            .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+    //            .setSize(Vertex.sizeof * vertices.len)
+    //            .bind(&device_allocation)!;
 
-    MemoryBlock index_buffer = vk::bufferCreateInfo()
-                .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
-                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                .setSize(indices.len * ushort.sizeof)
-                .bind(&device_allocation)!;
+    // MemoryBlock index_buffer = vk::bufferCreateInfo()
+    //             .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
+    //             .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+    //             .setSize(indices.len * ushort.sizeof)
+    //             .bind(&device_allocation)!;
 
-    MemoryBlock uniform_buffer = vk::bufferCreateInfo()
-                .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
-                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                .setSize(UniformData.sizeof)
-                .bind(&local_allocation)!;
+    // MemoryBlock uniform_buffer = vk::bufferCreateInfo()
+    //             .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+    //             .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
+    //             .setSize(UniformData.sizeof)
+    //             .bind(&local_allocation)!;
 
-    // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(size: Vertex.sizeof * vertices.len, data: vertices, pdevice: physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(size: ushort.sizeof * indices.len, data: indices, pdevice: physical_device)!;    
+    // // Create stage buffers and then copy the data to GPU only buffers
+    // MemoryBlock vertex_stage_buffer = device.staging_buffer(size: Vertex.sizeof * vertices.len, data: vertices, pdevice: physical_device)!;
+    // MemoryBlock index_stage_buffer = device.staging_buffer(size: ushort.sizeof * indices.len, data: indices, pdevice: physical_device)!;    
 
-    device.@single_time_command(queue: queue_family.graphics_handle, queue_index: queue_family.graphics; CommandBuffer command_buffer) {
-         vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
-             .srcOffset = 0,
-             .dstOffset = 0,
-             .size = ushort.sizeof * indices.len
-         });
+    // device.@single_time_command(queue: queue_family.graphics_handle, queue_index: queue_family.graphics; CommandBuffer command_buffer) {
+    //      vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
+    //          .srcOffset = 0,
+    //          .dstOffset = 0,
+    //          .size = ushort.sizeof * indices.len
+    //      });
 
-         vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
-            .srcOffset = 0,
-            .dstOffset = 0,
-            .size = Vertex.sizeof * vertices.len
-         });
-    }!;
+    //      vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
+    //         .srcOffset = 0,
+    //         .dstOffset = 0,
+    //         .size = Vertex.sizeof * vertices.len
+    //      });
+    // }!;
 
-    index_stage_buffer.free(device);
-    vertex_stage_buffer.free(device);
+    // index_stage_buffer.free(device);
+    // vertex_stage_buffer.free(device);
 
-    // Add data for uniform buffer
-    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
+    // // Add data for uniform buffer
+    // uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
 
-    // Set-up descriptor info for uniform buffer usage
-    DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
-        .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-        .setBindings({
-            {
-                .binding = 0,
-                .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                .descriptorCount = 1,
-                .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
-            }
-        }).build(device)!;
+    // // Set-up descriptor info for uniform buffer usage
+    // DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
+    //     .setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+    //     .setBindings({
+    //         {
+    //             .binding = 0,
+    //             .descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    //             .descriptorCount = 1,
+    //             .stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+    //         }
+    //     }).build(device)!;
 
-    WriteDescriptorSet[] descriptorSets = {
-            vk::writeDescriptorSet()
-            .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-            .setBufferInfo({
-              {
-                   .buffer = uniform_buffer.buffer,
-                   .offset = 0,
-                   .range = UniformData.sizeof,
-               },
-           })
-    };
+    // WriteDescriptorSet[] descriptorSets = {
+    //         vk::writeDescriptorSet()
+    //         .setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+    //         .setBufferInfo({
+    //           {
+    //                .buffer = uniform_buffer.buffer,
+    //                .offset = 0,
+    //                .range = UniformData.sizeof,
+    //            },
+    //        })
+    // };
 
-    // Load shaders
-    char[*] vertex_shader_data = $embed("./shaders/cube_vert.spv");
-    char[*] fragment_shader_data = $embed("./shaders/cube_frag.spv");
+    // // Load shaders
+    // char[*] vertex_shader_data = $embed("./shaders/cube_vert.spv");
+    // char[*] fragment_shader_data = $embed("./shaders/cube_frag.spv");
 
-    Shader draw_shaders = device.createShader(vertex: &vertex_shader_data, fragment: &fragment_shader_data)!;
+    // Shader draw_shaders = device.createShader(vertex: &vertex_shader_data, fragment: &fragment_shader_data)!;
 
-    PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout }).build(device)!;
+    // PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout }).build(device)!;
 
-    // Create Renderpipeline info
-    Pipeline pipeline = vk::graphicsPipelineCreateInfo()
-    .setStages(&draw_shaders.stages)
-    .setLayout(pipeline_layout)
-     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfo()
-        .setVertexBindingDescriptions(
-        {
-            {
-             .binding = 0,
-             .stride = Vertex.sizeof,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            }
-        })
-        .setVertexAttributeDescriptions({
-            {
-               .binding = 0,
-               .location = 0,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.pos.offsetof
-            },
-            {
-               .binding = 0,
-               .location = 1,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.color.offsetof
-            }
-        })
-    )
-    .setDynamicState(
-       &&vk::pipelineDynamicStateCreateInfo()
-        .setDynamicStates(
-        {
-            vk::DYNAMIC_STATE_VIEWPORT,
-            vk::DYNAMIC_STATE_LINE_WIDTH,
-        })
-    )
-    .setRasterizationState(
-        &&vk::pipelineRasterizationStateCreateInfo()
-        .setDepthClampEnable(vk::FALSE)
-        .setRasterizerDiscardEnable(vk::FALSE)
-        .setPolygonMode(vk::POLYGON_MODE_FILL)
-        .setLineWidth(1.0)
-        .setCullMode(vk::CULL_MODE_FRONT_BIT)
-        .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
-        .setDepthBiasEnable(vk::FALSE)
-    )
-    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfo().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
-    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfo()
-                      .setSampleShadingEnable(vk::FALSE)
-                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
-                      .setMinSampleShading(1.0)
-                      .setAlphaToCoverageEnable(vk::FALSE)
-                      .setAlphaToOneEnable(vk::FALSE))
-    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfo()
-                        .setDepthTestEnable(vk::FALSE)
-                        .setDepthWriteEnable(vk::FALSE)
-                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
-                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
-    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfo()
-                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
-                    .setLogicOp(vk::LOGIC_OP_COPY)
-                    .setAttachments({
-                       {
-                           .colorWriteMask =
-                               vk::COLOR_COMPONENT_R_BIT |
-                               vk::COLOR_COMPONENT_G_BIT |
-                               vk::COLOR_COMPONENT_B_BIT |
-                               vk::COLOR_COMPONENT_A_BIT,
-                           .blendEnable = vk::TRUE,
-                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .colorBlendOp = vk::BLEND_OP_ADD,
-                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .alphaBlendOp = vk::BLEND_OP_ADD,
-                       }}))
-    .setViewportState(&&vk::pipelineViewportStateCreateInfo()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
-    .setNext(&&vk::pipelineRenderingCreateInfo().setColorAttachmentFormats({swapchain_info.imageFormat}))
-    .build(device)!;
+    // // Create Renderpipeline info
+    // Pipeline pipeline = vk::graphicsPipelineCreateInfo()
+    // .setStages(&draw_shaders.stages)
+    // .setLayout(pipeline_layout)
+    //  .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfo()
+    //     .setVertexBindingDescriptions(
+    //     {
+    //         {
+    //          .binding = 0,
+    //          .stride = Vertex.sizeof,
+    //          .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+    //         }
+    //     })
+    //     .setVertexAttributeDescriptions({
+    //         {
+    //            .binding = 0,
+    //            .location = 0,
+    //            .format = vk::FORMAT_R32G32B32_SFLOAT,
+    //            .offset = Vertex.pos.offsetof
+    //         },
+    //         {
+    //            .binding = 0,
+    //            .location = 1,
+    //            .format = vk::FORMAT_R32G32B32_SFLOAT,
+    //            .offset = Vertex.color.offsetof
+    //         }
+    //     })
+    // )
+    // .setDynamicState(
+    //    &&vk::pipelineDynamicStateCreateInfo()
+    //     .setDynamicStates(
+    //     {
+    //         vk::DYNAMIC_STATE_VIEWPORT,
+    //         vk::DYNAMIC_STATE_LINE_WIDTH,
+    //     })
+    // )
+    // .setRasterizationState(
+    //     &&vk::pipelineRasterizationStateCreateInfo()
+    //     .setDepthClampEnable(vk::FALSE)
+    //     .setRasterizerDiscardEnable(vk::FALSE)
+    //     .setPolygonMode(vk::POLYGON_MODE_FILL)
+    //     .setLineWidth(1.0)
+    //     .setCullMode(vk::CULL_MODE_FRONT_BIT)
+    //     .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
+    //     .setDepthBiasEnable(vk::FALSE)
+    // )
+    // .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfo().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
+    // .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfo()
+    //                   .setSampleShadingEnable(vk::FALSE)
+    //                   .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+    //                   .setMinSampleShading(1.0)
+    //                   .setAlphaToCoverageEnable(vk::FALSE)
+    //                   .setAlphaToOneEnable(vk::FALSE))
+    // .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfo()
+    //                     .setDepthTestEnable(vk::FALSE)
+    //                     .setDepthWriteEnable(vk::FALSE)
+    //                     .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+    //                     .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
+    // .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfo()
+    //                 .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+    //                 .setLogicOp(vk::LOGIC_OP_COPY)
+    //                 .setAttachments({
+    //                    {
+    //                        .colorWriteMask =
+    //                            vk::COLOR_COMPONENT_R_BIT |
+    //                            vk::COLOR_COMPONENT_G_BIT |
+    //                            vk::COLOR_COMPONENT_B_BIT |
+    //                            vk::COLOR_COMPONENT_A_BIT,
+    //                        .blendEnable = vk::TRUE,
+    //                        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+    //                        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+    //                        .colorBlendOp = vk::BLEND_OP_ADD,
+    //                        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+    //                        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+    //                        .alphaBlendOp = vk::BLEND_OP_ADD,
+    //                    }}))
+    // .setViewportState(&&vk::pipelineViewportStateCreateInfo()
+    //                .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
+    //                .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
+    // .setNext(&&vk::pipelineRenderingCreateInfo().setColorAttachmentFormats({swapchain_info.imageFormat}))
+    // .build(device)!;
 
-    // Create syncronisation stuff
-    SemaphoreList wait_semaphores;
-    SemaphoreList signal_semaphores;
-    FenceList frame_fences;
+    // // Create syncronisation stuff
+    // SemaphoreList wait_semaphores;
+    // SemaphoreList signal_semaphores;
+    // FenceList frame_fences;
 
-    for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        wait_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
-        signal_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
-        frame_fences.push(vk::fenceCreateInfo().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
-    }
+    // for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+    //     wait_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
+    //     signal_semaphores.push(vk::semaphoreCreateInfo().build(device))!;
+    //     frame_fences.push(vk::fenceCreateInfo().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!;
+    // }
     
-    bool running = true;
-    uint frame = 0;
+    // bool running = true;
+    // uint frame = 0;
 
-    while (running) {
-        rgfw::Event* events = rgfw::checkEvent(win);
+    // while (running) {
+    //     rgfw::Event* events = rgfw::checkEvent(win);
 
-        if (events != null) {
-            if (events.keyCode == Key.ESCAPE) running = false;
-        }
+    //     if (events != null) {
+    //         if (events.keyCode == Key.ESCAPE) running = false;
+    //     }
 
-        Fence frame_fence = frame_fences[frame];
-        Semaphore wait_semaphore = wait_semaphores[frame];
-        Semaphore signal_semaphore = signal_semaphores[frame];
+    //     Fence frame_fence = frame_fences[frame];
+    //     Semaphore wait_semaphore = wait_semaphores[frame];
+    //     Semaphore signal_semaphore = signal_semaphores[frame];
 
-        frame_fence.wait(device)!;
-        frame_fence.reset(device)!;
+    //     frame_fence.wait(device)!;
+    //     frame_fence.reset(device)!;
 
-        uint next_image = swapchain.getNextImage(device, wait_semaphore);
+    //     uint next_image = swapchain.getNextImage(device, wait_semaphore);
 
-        // Start dynamic rendering
-        RenderingInfo rendering_info = vk::renderingInfo()
-        .setLayerCount(1)
-        .setRenderArea({
-            .offset = Offset2D{ .x = 0, .y = 0 },
-            .extent = swapchain_info.imageExtent,
-        })
-        .setColorAttachments({
-            vk::renderingAttachmentInfo()
-            .setImageView(swapchain_views[next_image])
-            .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-            .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-            .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
-            .setClearValue({
-                .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
-            })
-        });
+    //     // Start dynamic rendering
+    //     RenderingInfo rendering_info = vk::renderingInfo()
+    //     .setLayerCount(1)
+    //     .setRenderArea({
+    //         .offset = Offset2D{ .x = 0, .y = 0 },
+    //         .extent = swapchain_info.imageExtent,
+    //     })
+    //     .setColorAttachments({
+    //         vk::renderingAttachmentInfo()
+    //         .setImageView(swapchain_views[next_image])
+    //         .setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+    //         .setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
+    //         .setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+    //         .setClearValue({
+    //             .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
+    //         })
+    //     });
 
-        CommandBuffer command_buffer = command_buffers[next_image];
-        vk::resetCommandBuffer(command_buffer, 0)!;
-        vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!;
+    //     CommandBuffer command_buffer = command_buffers[next_image];
+    //     vk::resetCommandBuffer(command_buffer, 0)!;
+    //     vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!;
 
-        ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrier()
-        .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-        .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
-        .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setImage(swapchain_images[next_image])
-        .setSubresourceRange({
-            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .levelCount = 1,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
-        });
+    //     ImageMemoryBarrier image_memory_start = vk::imageMemoryBarrier()
+    //     .setDstAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+    //     .setOldLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+    //     .setNewLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+    //     .setImage(swapchain_images[next_image])
+    //     .setSubresourceRange({
+    //         .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+    //         .baseMipLevel = 0,
+    //         .levelCount = 1,
+    //         .baseArrayLayer = 0,
+    //         .layerCount = 1,
+    //     });
 
-        vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &image_memory_start
-        );
+    //     vk::cmdPipelineBarrier(
+    //         command_buffer,
+    //         vk::PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+    //         vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+    //         0,
+    //         0,
+    //         null,
+    //         0,
+    //         null,
+    //         1,
+    //         &image_memory_start
+    //     );
 
-        vk::cmdBeginRendering(command_buffer, &rendering_info);
+    //     vk::cmdBeginRendering(command_buffer, &rendering_info);
 
-        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
+    //     vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
+    //     vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
 
-        vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
+    //     vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+    //     vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
-        vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
-        vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
-        vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
-        vk::cmdEndRendering(command_buffer);
+    //     vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+    //     vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+    //     vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
+    //     vk::cmdEndRendering(command_buffer);
 
-        ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrier()
-        .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-        .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        .setImage(swapchain_images[next_image])
-        .setSubresourceRange({
-            .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .levelCount = 1,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
-        });
+    //     ImageMemoryBarrier image_memory_end = vk::imageMemoryBarrier()
+    //     .setSrcAccessMask(vk::ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+    //     .setOldLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+    //     .setNewLayout(vk::IMAGE_LAYOUT_PRESENT_SRC_KHR)
+    //     .setImage(swapchain_images[next_image])
+    //     .setSubresourceRange({
+    //         .aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+    //         .baseMipLevel = 0,
+    //         .levelCount = 1,
+    //         .baseArrayLayer = 0,
+    //         .layerCount = 1,
+    //     });
 
-        vk::cmdPipelineBarrier(
-            command_buffer,
-            vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            0,
-            0,
-            null,
-            0,
-            null,
-            1,
-            &image_memory_end
-        );
+    //     vk::cmdPipelineBarrier(
+    //         command_buffer,
+    //         vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+    //         vk::PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+    //         0,
+    //         0,
+    //         null,
+    //         0,
+    //         null,
+    //         1,
+    //         &image_memory_end
+    //     );
 
-        SubmitInfo submit_info = vk::submitInfo()
-        .setWaitSemaphores({ wait_semaphore })
-        .setCommandBuffers({ command_buffer })
-        .setSignalSemaphores({ signal_semaphore })
-        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
+    //     SubmitInfo submit_info = vk::submitInfo()
+    //     .setWaitSemaphores({ wait_semaphore })
+    //     .setCommandBuffers({ command_buffer })
+    //     .setSignalSemaphores({ signal_semaphore })
+    //     .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
 
-        vk::endCommandBuffer(command_buffer)!;
-        vk::queueSubmit(queue_family.graphics_handle, 1, &submit_info, frame_fence)!;
+    //     vk::endCommandBuffer(command_buffer)!;
+    //     vk::queueSubmit(queue_family.graphics_handle, 1, &submit_info, frame_fence)!;
 
-        PresentInfoKHR present_info = vk::presentInfo()
-        .setWaitSemaphores({ signal_semaphore })
-        .setSwapchains({ swapchain })
-        .setImageIndices({ next_image });
+    //     PresentInfoKHR present_info = vk::presentInfo()
+    //     .setWaitSemaphores({ signal_semaphore })
+    //     .setSwapchains({ swapchain })
+    //     .setImageIndices({ next_image });
 
-        vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
-        frame = (frame + 1) % 2;
-    }
+    //     vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
+    //     frame = (frame + 1) % 2;
+    // }
 
-    device.waitIdle();
-    if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
+    // device.waitIdle();
+    // if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
-    swapchain.free(device);
-    foreach (view : swapchain_views) view.free(device);
-    swapchain_images.free();
-    swapchain_views.free();
-    command_pool.free(device);
+    // swapchain.free(device);
+    // foreach (view : swapchain_views) view.free(device);
+    // swapchain_images.free();
+    // swapchain_views.free();
+    // command_pool.free(device);
 
-    device_allocation.free();
-    local_allocation.free();
+    // device_allocation.free();
+    // local_allocation.free();
     
-    descriptor_set_layout.free(device);
-    draw_shaders.free(device);
-    pipeline.free(device);
-    pipeline_layout.free(device);
+    // descriptor_set_layout.free(device);
+    // draw_shaders.free(device);
+    // pipeline.free(device);
+    // pipeline_layout.free(device);
 
-    wait_semaphores.release(device);
-    signal_semaphores.release(device);
-    frame_fences.release(device);
-    surface.free(instance);
+    // wait_semaphores.release(device);
+    // signal_semaphores.release(device);
+    // frame_fences.release(device);
+    // surface.free(instance);
 
-    device.free();
-    instance.free();
+    // device.free();
+    // instance.free();
 }
