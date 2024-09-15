@@ -1,8 +1,11 @@
 module vk;
+
 import std::io;
 import std::math;
 import std::core::env;
 import std::collections::list;
+import libc;
+
 
 def FenceList = List(<vk::Fence>);
 def SemaphoreList = List(<vk::Semaphore>);
@@ -35,16 +38,6 @@ struct QueueFamily {
 fn bool QueueFamily.is_ready(&self)
 {
     return self.graphics >= 0 && self.present >= 0;
-}
-
-
-fn void Instance.free(self)
-{
-    vk::destroyInstance(self, null);
-}
-
-fn void DebugUtilsMessengerEXT.free(self, Instance instance) {
-    vk::destroyDebugUtilsMessengerEXT(instance, self, null);
 }
 
 struct DeviceInfo {
@@ -143,13 +136,6 @@ fn CommandBufferList! Device.createCommandBuffers(self, CommandPool pool, uint c
     }
 
     return buffers;
-}
-
-macro void! Instance.@requestDevice(self; @callback(PhysicalDevice device)) {
-   @pool() {
-       // Find usable physical device (GPU)
-       foreach ( device : self.getDevices()!) @callback(device);
-   };
 }
 
 /*fn Extent2D DeviceInfo.getExtent(self) {
@@ -512,4 +498,29 @@ fn void DescriptorImageInfo.free(&self, Device device)
     vk::destroySampler(device, self.sampler, null);
 }
 
-macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
+fn void Instance.free(self)
+{
+    vk::destroyInstance(self, null);
+}
+
+fn void DebugUtilsMessengerEXT.free(self, Instance instance) {
+    vk::destroyDebugUtilsMessengerEXT(instance, self, null);
+}
+
+fn bool debugCallback(
+    vk::DebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    vk::DebugUtilsMessageTypeFlagsEXT messageType,
+    vk::DebugUtilsMessengerCallbackDataEXT* data,
+    void* userData
+) {
+    if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+       libc::printf("%s \n", data.pMessage);
+    }
+    return false;
+}

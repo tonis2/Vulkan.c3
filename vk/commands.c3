@@ -3,8 +3,8 @@ module vk;
 extern fn Result vkCreateInstance(InstanceCreateInfo*, AllocationCallbacks*, Instance*) @extern("vkCreateInstance"); 
 extern fn void destroyInstance(Instance, AllocationCallbacks*) @extern("vkDestroyInstance"); 
 extern fn Result vkEnumeratePhysicalDevices(Instance, uint*, PhysicalDevice*) @extern("vkEnumeratePhysicalDevices"); 
-extern fn PFN_vkVoidFunction vkGetDeviceProcAddr(Device, char*) @extern("vkGetDeviceProcAddr"); 
-extern fn PFN_vkVoidFunction vkGetInstanceProcAddr(Instance, char*) @extern("vkGetInstanceProcAddr"); 
+extern fn PFN_vkVoidFunction getDeviceProcAddr(Device, char*) @extern("vkGetDeviceProcAddr"); 
+extern fn PFN_vkVoidFunction getInstanceProcAddr(Instance, char*) @extern("vkGetInstanceProcAddr"); 
 extern fn void getPhysicalDeviceProperties(PhysicalDevice, PhysicalDeviceProperties*) @extern("vkGetPhysicalDeviceProperties"); 
 extern fn void getPhysicalDeviceQueueFamilyProperties(PhysicalDevice, uint*, QueueFamilyProperties*) @extern("vkGetPhysicalDeviceQueueFamilyProperties"); 
 extern fn void getPhysicalDeviceMemoryProperties(PhysicalDevice, PhysicalDeviceMemoryProperties*) @extern("vkGetPhysicalDeviceMemoryProperties"); 
@@ -178,9 +178,9 @@ extern fn Result vkWaitSemaphores(Device, SemaphoreWaitInfo*, ulong) @extern("vk
 extern fn Result vkSignalSemaphore(Device, SemaphoreSignalInfo*) @extern("vkSignalSemaphore"); 
 extern fn void cmdDrawIndirectCount(CommandBuffer, Buffer, DeviceSize, Buffer, DeviceSize, uint, uint) @extern("vkCmdDrawIndirectCount"); 
 extern fn void cmdDrawIndexedIndirectCount(CommandBuffer, Buffer, DeviceSize, Buffer, DeviceSize, uint, uint) @extern("vkCmdDrawIndexedIndirectCount"); 
-extern fn ulong vkGetBufferOpaqueCaptureAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferOpaqueCaptureAddress"); 
-extern fn DeviceAddress vkGetBufferDeviceAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferDeviceAddress"); 
-extern fn ulong vkGetDeviceMemoryOpaqueCaptureAddress(Device, DeviceMemoryOpaqueCaptureAddressInfo*) @extern("vkGetDeviceMemoryOpaqueCaptureAddress"); 
+extern fn ulong getBufferOpaqueCaptureAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferOpaqueCaptureAddress"); 
+extern fn DeviceAddress getBufferDeviceAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferDeviceAddress"); 
+extern fn ulong getDeviceMemoryOpaqueCaptureAddress(Device, DeviceMemoryOpaqueCaptureAddressInfo*) @extern("vkGetDeviceMemoryOpaqueCaptureAddress"); 
 extern fn Result vkGetPhysicalDeviceToolProperties(PhysicalDevice, uint*, PhysicalDeviceToolProperties*) @extern("vkGetPhysicalDeviceToolProperties"); 
 extern fn void cmdSetCullMode(CommandBuffer, CullModeFlags) @extern("vkCmdSetCullMode"); 
 extern fn void cmdSetFrontFace(CommandBuffer, FrontFace) @extern("vkCmdSetFrontFace"); 
@@ -455,7 +455,7 @@ fn void cmdBindDescriptorBuffersEXT (CommandBuffer commandBuffer, uint bufferCou
 fn void cmdSetDescriptorBufferOffsetsEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint setCount, uint* pBufferIndices, DeviceSize* pOffsets) => extensions.vkCmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 fn void cmdBindDescriptorBufferEmbeddedSamplersEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set) => extensions.vkCmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
 
-fn void! createInstance (VkInstanceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkInstance* pInstance) {
+fn void! createInstance (InstanceCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Instance* pInstance) {
   Result result = vkCreateInstance(pCreateInfo, pAllocator, pInstance);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -466,7 +466,7 @@ fn void! createInstance (VkInstanceCreateInfo* pCreateInfo, VkAllocationCallback
        case ERROR_INCOMPATIBLE_DRIVER: return VkErrors.ERROR_INCOMPATIBLE_DRIVER?;
   }
 }
-fn void! enumeratePhysicalDevices (VkInstance instance, uint* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) {
+fn void! enumeratePhysicalDevices (Instance instance, uint* pPhysicalDeviceCount, PhysicalDevice* pPhysicalDevices) {
   Result result = vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -474,7 +474,7 @@ fn void! enumeratePhysicalDevices (VkInstance instance, uint* pPhysicalDeviceCou
        case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
   }
 }
-fn void! getPhysicalDeviceImageFormatProperties (VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) {
+fn void! getPhysicalDeviceImageFormatProperties (PhysicalDevice physicalDevice, Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, ImageFormatProperties* pImageFormatProperties) {
   Result result = vkGetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -482,7 +482,7 @@ fn void! getPhysicalDeviceImageFormatProperties (VkPhysicalDevice physicalDevice
        case ERROR_FORMAT_NOT_SUPPORTED: return VkErrors.ERROR_FORMAT_NOT_SUPPORTED?;
   }
 }
-fn void! createDevice (VkPhysicalDevice physicalDevice, VkDeviceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDevice* pDevice) {
+fn void! createDevice (PhysicalDevice physicalDevice, DeviceCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Device* pDevice) {
   Result result = vkCreateDevice(physicalDevice, pCreateInfo, pAllocator, pDevice);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -500,14 +500,14 @@ fn void! enumerateInstanceVersion (uint* pApiVersion) {
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! enumerateInstanceLayerProperties (uint* pPropertyCount, VkLayerProperties* pProperties) {
+fn void! enumerateInstanceLayerProperties (uint* pPropertyCount, LayerProperties* pProperties) {
   Result result = vkEnumerateInstanceLayerProperties(pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! enumerateInstanceExtensionProperties (char* pLayerName, uint* pPropertyCount, VkExtensionProperties* pProperties) {
+fn void! enumerateInstanceExtensionProperties (char* pLayerName, uint* pPropertyCount, ExtensionProperties* pProperties) {
   Result result = vkEnumerateInstanceExtensionProperties(pLayerName, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -515,14 +515,14 @@ fn void! enumerateInstanceExtensionProperties (char* pLayerName, uint* pProperty
        case ERROR_LAYER_NOT_PRESENT: return VkErrors.ERROR_LAYER_NOT_PRESENT?;
   }
 }
-fn void! enumerateDeviceLayerProperties (VkPhysicalDevice physicalDevice, uint* pPropertyCount, VkLayerProperties* pProperties) {
+fn void! enumerateDeviceLayerProperties (PhysicalDevice physicalDevice, uint* pPropertyCount, LayerProperties* pProperties) {
   Result result = vkEnumerateDeviceLayerProperties(physicalDevice, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! enumerateDeviceExtensionProperties (VkPhysicalDevice physicalDevice, char* pLayerName, uint* pPropertyCount, VkExtensionProperties* pProperties) {
+fn void! enumerateDeviceExtensionProperties (PhysicalDevice physicalDevice, char* pLayerName, uint* pPropertyCount, ExtensionProperties* pProperties) {
   Result result = vkEnumerateDeviceExtensionProperties(physicalDevice, pLayerName, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -530,7 +530,7 @@ fn void! enumerateDeviceExtensionProperties (VkPhysicalDevice physicalDevice, ch
        case ERROR_LAYER_NOT_PRESENT: return VkErrors.ERROR_LAYER_NOT_PRESENT?;
   }
 }
-fn void! queueSubmit (VkQueue queue, uint submitCount, VkSubmitInfo* pSubmits, VkFence fence) {
+fn void! queueSubmit (Queue queue, uint submitCount, SubmitInfo* pSubmits, Fence fence) {
   Result result = vkQueueSubmit(queue, submitCount, pSubmits, fence);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -538,7 +538,7 @@ fn void! queueSubmit (VkQueue queue, uint submitCount, VkSubmitInfo* pSubmits, V
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! queueWaitIdle (VkQueue queue) {
+fn void! queueWaitIdle (Queue queue) {
   Result result = vkQueueWaitIdle(queue);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -546,7 +546,7 @@ fn void! queueWaitIdle (VkQueue queue) {
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! deviceWaitIdle (VkDevice device) {
+fn void! deviceWaitIdle (Device device) {
   Result result = vkDeviceWaitIdle(device);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -554,7 +554,7 @@ fn void! deviceWaitIdle (VkDevice device) {
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! allocateMemory (VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
+fn void! allocateMemory (Device device, MemoryAllocateInfo* pAllocateInfo, AllocationCallbacks* pAllocator, DeviceMemory* pMemory) {
   Result result = vkAllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -563,7 +563,7 @@ fn void! allocateMemory (VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, V
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! mapMemory (VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
+fn void! mapMemory (Device device, DeviceMemory memory, DeviceSize offset, DeviceSize size, MemoryMapFlags flags, void** ppData) {
   Result result = vkMapMemory(device, memory, offset, size, flags, ppData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -571,21 +571,21 @@ fn void! mapMemory (VkDevice device, VkDeviceMemory memory, VkDeviceSize offset,
        case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
   }
 }
-fn void! flushMappedMemoryRanges (VkDevice device, uint memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
+fn void! flushMappedMemoryRanges (Device device, uint memoryRangeCount, MappedMemoryRange* pMemoryRanges) {
   Result result = vkFlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! invalidateMappedMemoryRanges (VkDevice device, uint memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
+fn void! invalidateMappedMemoryRanges (Device device, uint memoryRangeCount, MappedMemoryRange* pMemoryRanges) {
   Result result = vkInvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! bindBufferMemory (VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+fn void! bindBufferMemory (Device device, Buffer buffer, DeviceMemory memory, DeviceSize memoryOffset) {
   Result result = vkBindBufferMemory(device, buffer, memory, memoryOffset);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -593,14 +593,14 @@ fn void! bindBufferMemory (VkDevice device, VkBuffer buffer, VkDeviceMemory memo
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! bindImageMemory (VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+fn void! bindImageMemory (Device device, Image image, DeviceMemory memory, DeviceSize memoryOffset) {
   Result result = vkBindImageMemory(device, image, memory, memoryOffset);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! queueBindSparse (VkQueue queue, uint bindInfoCount, VkBindSparseInfo* pBindInfo, VkFence fence) {
+fn void! queueBindSparse (Queue queue, uint bindInfoCount, BindSparseInfo* pBindInfo, Fence fence) {
   Result result = vkQueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -608,20 +608,20 @@ fn void! queueBindSparse (VkQueue queue, uint bindInfoCount, VkBindSparseInfo* p
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! createFence (VkDevice device, VkFenceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+fn void! createFence (Device device, FenceCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Fence* pFence) {
   Result result = vkCreateFence(device, pCreateInfo, pAllocator, pFence);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! resetFences (VkDevice device, uint fenceCount, VkFence* pFences) {
+fn void! resetFences (Device device, uint fenceCount, Fence* pFences) {
   Result result = vkResetFences(device, fenceCount, pFences);
   switch(result) { 
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getFenceStatus (VkDevice device, VkFence fence) {
+fn void! getFenceStatus (Device device, Fence fence) {
   Result result = vkGetFenceStatus(device, fence);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -629,7 +629,7 @@ fn void! getFenceStatus (VkDevice device, VkFence fence) {
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! waitForFences (VkDevice device, uint fenceCount, VkFence* pFences, uint waitAll, ulong timeout) {
+fn void! waitForFences (Device device, uint fenceCount, Fence* pFences, uint waitAll, ulong timeout) {
   Result result = vkWaitForFences(device, fenceCount, pFences, waitAll, timeout);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -637,21 +637,21 @@ fn void! waitForFences (VkDevice device, uint fenceCount, VkFence* pFences, uint
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! createSemaphore (VkDevice device, VkSemaphoreCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
+fn void! createSemaphore (Device device, SemaphoreCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Semaphore* pSemaphore) {
   Result result = vkCreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createEvent (VkDevice device, VkEventCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
+fn void! createEvent (Device device, EventCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Event* pEvent) {
   Result result = vkCreateEvent(device, pCreateInfo, pAllocator, pEvent);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getEventStatus (VkDevice device, VkEvent event) {
+fn void! getEventStatus (Device device, Event event) {
   Result result = vkGetEventStatus(device, event);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -659,27 +659,27 @@ fn void! getEventStatus (VkDevice device, VkEvent event) {
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! setEvent (VkDevice device, VkEvent event) {
+fn void! setEvent (Device device, Event event) {
   Result result = vkSetEvent(device, event);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! resetEvent (VkDevice device, VkEvent event) {
+fn void! resetEvent (Device device, Event event) {
   Result result = vkResetEvent(device, event);
   switch(result) { 
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createQueryPool (VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
+fn void! createQueryPool (Device device, QueryPoolCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, QueryPool* pQueryPool) {
   Result result = vkCreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getQueryPoolResults (VkDevice device, VkQueryPool queryPool, uint firstQuery, uint queryCount, usz dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
+fn void! getQueryPoolResults (Device device, QueryPool queryPool, uint firstQuery, uint queryCount, usz dataSize, void* pData, DeviceSize stride, QueryResultFlags flags) {
   Result result = vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -687,7 +687,7 @@ fn void! getQueryPoolResults (VkDevice device, VkQueryPool queryPool, uint first
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! createBuffer (VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
+fn void! createBuffer (Device device, BufferCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Buffer* pBuffer) {
   Result result = vkCreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -695,14 +695,14 @@ fn void! createBuffer (VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAlloc
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! createBufferView (VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
+fn void! createBufferView (Device device, BufferViewCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, BufferView* pView) {
   Result result = vkCreateBufferView(device, pCreateInfo, pAllocator, pView);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createImage (VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage) {
+fn void! createImage (Device device, ImageCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Image* pImage) {
   Result result = vkCreateImage(device, pCreateInfo, pAllocator, pImage);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -711,7 +711,7 @@ fn void! createImage (VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocat
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! createImageView (VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView) {
+fn void! createImageView (Device device, ImageViewCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, ImageView* pView) {
   Result result = vkCreateImageView(device, pCreateInfo, pAllocator, pView);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -719,7 +719,7 @@ fn void! createImageView (VkDevice device, VkImageViewCreateInfo* pCreateInfo, V
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! createShaderModule (VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
+fn void! createShaderModule (Device device, ShaderModuleCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, ShaderModule* pShaderModule) {
   Result result = vkCreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -727,28 +727,28 @@ fn void! createShaderModule (VkDevice device, VkShaderModuleCreateInfo* pCreateI
        case ERROR_INVALID_SHADER_NV: return VkErrors.ERROR_INVALID_SHADER_NV?;
   }
 }
-fn void! createPipelineCache (VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
+fn void! createPipelineCache (Device device, PipelineCacheCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, PipelineCache* pPipelineCache) {
   Result result = vkCreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getPipelineCacheData (VkDevice device, VkPipelineCache pipelineCache, usz* pDataSize, void* pData) {
+fn void! getPipelineCacheData (Device device, PipelineCache pipelineCache, usz* pDataSize, void* pData) {
   Result result = vkGetPipelineCacheData(device, pipelineCache, pDataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! mergePipelineCaches (VkDevice device, VkPipelineCache dstCache, uint srcCacheCount, VkPipelineCache* pSrcCaches) {
+fn void! mergePipelineCaches (Device device, PipelineCache dstCache, uint srcCacheCount, PipelineCache* pSrcCaches) {
   Result result = vkMergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createGraphicsPipelines (VkDevice device, VkPipelineCache pipelineCache, uint createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+fn void! createGraphicsPipelines (Device device, PipelineCache pipelineCache, uint createInfoCount, GraphicsPipelineCreateInfo* pCreateInfos, AllocationCallbacks* pAllocator, Pipeline* pPipelines) {
   Result result = vkCreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -756,7 +756,7 @@ fn void! createGraphicsPipelines (VkDevice device, VkPipelineCache pipelineCache
        case ERROR_INVALID_SHADER_NV: return VkErrors.ERROR_INVALID_SHADER_NV?;
   }
 }
-fn void! createComputePipelines (VkDevice device, VkPipelineCache pipelineCache, uint createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+fn void! createComputePipelines (Device device, PipelineCache pipelineCache, uint createInfoCount, ComputePipelineCreateInfo* pCreateInfos, AllocationCallbacks* pAllocator, Pipeline* pPipelines) {
   Result result = vkCreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -764,14 +764,14 @@ fn void! createComputePipelines (VkDevice device, VkPipelineCache pipelineCache,
        case ERROR_INVALID_SHADER_NV: return VkErrors.ERROR_INVALID_SHADER_NV?;
   }
 }
-fn void! createPipelineLayout (VkDevice device, VkPipelineLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
+fn void! createPipelineLayout (Device device, PipelineLayoutCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, PipelineLayout* pPipelineLayout) {
   Result result = vkCreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createSampler (VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
+fn void! createSampler (Device device, SamplerCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Sampler* pSampler) {
   Result result = vkCreateSampler(device, pCreateInfo, pAllocator, pSampler);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -779,14 +779,14 @@ fn void! createSampler (VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAll
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! createDescriptorSetLayout (VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
+fn void! createDescriptorSetLayout (Device device, DescriptorSetLayoutCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, DescriptorSetLayout* pSetLayout) {
   Result result = vkCreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDescriptorPool (VkDevice device, VkDescriptorPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
+fn void! createDescriptorPool (Device device, DescriptorPoolCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, DescriptorPool* pDescriptorPool) {
   Result result = vkCreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -794,11 +794,11 @@ fn void! createDescriptorPool (VkDevice device, VkDescriptorPoolCreateInfo* pCre
        case ERROR_FRAGMENTATION_EXT: return VkErrors.ERROR_FRAGMENTATION_EXT?;
   }
 }
-fn void! resetDescriptorPool (VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
+fn void! resetDescriptorPool (Device device, DescriptorPool descriptorPool, DescriptorPoolResetFlags flags) {
   Result result = vkResetDescriptorPool(device, descriptorPool, flags);
-  if (result != 0) VkErrors.ERROR_UNKNOWN?;
+  if (result != 0) return VkErrors.ERROR_UNKNOWN?;
 }
-fn void! allocateDescriptorSets (VkDevice device, VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
+fn void! allocateDescriptorSets (Device device, DescriptorSetAllocateInfo* pAllocateInfo, DescriptorSet* pDescriptorSets) {
   Result result = vkAllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -807,52 +807,52 @@ fn void! allocateDescriptorSets (VkDevice device, VkDescriptorSetAllocateInfo* p
        case ERROR_OUT_OF_POOL_MEMORY: return VkErrors.ERROR_OUT_OF_POOL_MEMORY?;
   }
 }
-fn void! freeDescriptorSets (VkDevice device, VkDescriptorPool descriptorPool, uint descriptorSetCount, VkDescriptorSet* pDescriptorSets) {
+fn void! freeDescriptorSets (Device device, DescriptorPool descriptorPool, uint descriptorSetCount, DescriptorSet* pDescriptorSets) {
   Result result = vkFreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
-  if (result != 0) VkErrors.ERROR_UNKNOWN?;
+  if (result != 0) return VkErrors.ERROR_UNKNOWN?;
 }
-fn void! createFramebuffer (VkDevice device, VkFramebufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
+fn void! createFramebuffer (Device device, FramebufferCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Framebuffer* pFramebuffer) {
   Result result = vkCreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createRenderPass (VkDevice device, VkRenderPassCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+fn void! createRenderPass (Device device, RenderPassCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, RenderPass* pRenderPass) {
   Result result = vkCreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createCommandPool (VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
+fn void! createCommandPool (Device device, CommandPoolCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, CommandPool* pCommandPool) {
   Result result = vkCreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! resetCommandPool (VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
+fn void! resetCommandPool (Device device, CommandPool commandPool, CommandPoolResetFlags flags) {
   Result result = vkResetCommandPool(device, commandPool, flags);
   switch(result) { 
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! allocateCommandBuffers (VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
+fn void! allocateCommandBuffers (Device device, CommandBufferAllocateInfo* pAllocateInfo, CommandBuffer* pCommandBuffers) {
   Result result = vkAllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! beginCommandBuffer (VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo) {
+fn void! beginCommandBuffer (CommandBuffer commandBuffer, CommandBufferBeginInfo* pBeginInfo) {
   Result result = vkBeginCommandBuffer(commandBuffer, pBeginInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! endCommandBuffer (VkCommandBuffer commandBuffer) {
+fn void! endCommandBuffer (CommandBuffer commandBuffer) {
   Result result = vkEndCommandBuffer(commandBuffer);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -860,41 +860,41 @@ fn void! endCommandBuffer (VkCommandBuffer commandBuffer) {
        case ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR: return VkErrors.ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR?;
   }
 }
-fn void! resetCommandBuffer (VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
+fn void! resetCommandBuffer (CommandBuffer commandBuffer, CommandBufferResetFlags flags) {
   Result result = vkResetCommandBuffer(commandBuffer, flags);
   switch(result) { 
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getPhysicalDeviceDisplayPropertiesKHR (VkPhysicalDevice physicalDevice, uint* pPropertyCount, VkDisplayPropertiesKHR* pProperties) {
+fn void! getPhysicalDeviceDisplayPropertiesKHR (PhysicalDevice physicalDevice, uint* pPropertyCount, DisplayPropertiesKHR* pProperties) {
   Result result = extensions.vkGetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getPhysicalDeviceDisplayPlanePropertiesKHR (VkPhysicalDevice physicalDevice, uint* pPropertyCount, VkDisplayPlanePropertiesKHR* pProperties) {
+fn void! getPhysicalDeviceDisplayPlanePropertiesKHR (PhysicalDevice physicalDevice, uint* pPropertyCount, DisplayPlanePropertiesKHR* pProperties) {
   Result result = extensions.vkGetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getDisplayPlaneSupportedDisplaysKHR (VkPhysicalDevice physicalDevice, uint planeIndex, uint* pDisplayCount, VkDisplayKHR* pDisplays) {
+fn void! getDisplayPlaneSupportedDisplaysKHR (PhysicalDevice physicalDevice, uint planeIndex, uint* pDisplayCount, DisplayKHR* pDisplays) {
   Result result = extensions.vkGetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getDisplayModePropertiesKHR (VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint* pPropertyCount, VkDisplayModePropertiesKHR* pProperties) {
+fn void! getDisplayModePropertiesKHR (PhysicalDevice physicalDevice, DisplayKHR display, uint* pPropertyCount, DisplayModePropertiesKHR* pProperties) {
   Result result = extensions.vkGetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDisplayModeKHR (VkPhysicalDevice physicalDevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode) {
+fn void! createDisplayModeKHR (PhysicalDevice physicalDevice, DisplayKHR display, DisplayModeCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, DisplayModeKHR* pMode) {
   Result result = extensions.vkCreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -902,21 +902,21 @@ fn void! createDisplayModeKHR (VkPhysicalDevice physicalDevice, VkDisplayKHR dis
        case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
   }
 }
-fn void! getDisplayPlaneCapabilitiesKHR (VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode, uint planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities) {
+fn void! getDisplayPlaneCapabilitiesKHR (PhysicalDevice physicalDevice, DisplayModeKHR mode, uint planeIndex, DisplayPlaneCapabilitiesKHR* pCapabilities) {
   Result result = extensions.vkGetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDisplayPlaneSurfaceKHR (VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+fn void! createDisplayPlaneSurfaceKHR (Instance instance, DisplaySurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physicalDevice, uint queueFamilyIndex, VkSurfaceKHR surface, uint* pSupported) {
+fn void! getPhysicalDeviceSurfaceSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, SurfaceKHR surface, uint* pSupported) {
   Result result = extensions.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -924,7 +924,7 @@ fn void! getPhysicalDeviceSurfaceSupportKHR (VkPhysicalDevice physicalDevice, ui
        case ERROR_SURFACE_LOST_KHR: return VkErrors.ERROR_SURFACE_LOST_KHR?;
   }
 }
-fn void! getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities) {
+fn void! getPhysicalDeviceSurfaceCapabilitiesKHR (PhysicalDevice physicalDevice, SurfaceKHR surface, SurfaceCapabilitiesKHR* pSurfaceCapabilities) {
   Result result = extensions.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -932,7 +932,7 @@ fn void! getPhysicalDeviceSurfaceCapabilitiesKHR (VkPhysicalDevice physicalDevic
        case ERROR_SURFACE_LOST_KHR: return VkErrors.ERROR_SURFACE_LOST_KHR?;
   }
 }
-fn void! getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats) {
+fn void! getPhysicalDeviceSurfaceFormatsKHR (PhysicalDevice physicalDevice, SurfaceKHR surface, uint* pSurfaceFormatCount, SurfaceFormatKHR* pSurfaceFormats) {
   Result result = extensions.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -940,7 +940,7 @@ fn void! getPhysicalDeviceSurfaceFormatsKHR (VkPhysicalDevice physicalDevice, Vk
        case ERROR_SURFACE_LOST_KHR: return VkErrors.ERROR_SURFACE_LOST_KHR?;
   }
 }
-fn void! getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
+fn void! getPhysicalDeviceSurfacePresentModesKHR (PhysicalDevice physicalDevice, SurfaceKHR surface, uint* pPresentModeCount, PresentModeKHR* pPresentModes) {
   Result result = extensions.vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -948,7 +948,7 @@ fn void! getPhysicalDeviceSurfacePresentModesKHR (VkPhysicalDevice physicalDevic
        case ERROR_SURFACE_LOST_KHR: return VkErrors.ERROR_SURFACE_LOST_KHR?;
   }
 }
-fn void! createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
+fn void! createSwapchainKHR (Device device, SwapchainCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SwapchainKHR* pSwapchain) {
   Result result = extensions.vkCreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -960,14 +960,14 @@ fn void! createSwapchainKHR (VkDevice device, VkSwapchainCreateInfoKHR* pCreateI
        case ERROR_COMPRESSION_EXHAUSTED_EXT: return VkErrors.ERROR_COMPRESSION_EXHAUSTED_EXT?;
   }
 }
-fn void! getSwapchainImagesKHR (VkDevice device, VkSwapchainKHR swapchain, uint* pSwapchainImageCount, VkImage* pSwapchainImages) {
+fn void! getSwapchainImagesKHR (Device device, SwapchainKHR swapchain, uint* pSwapchainImageCount, Image* pSwapchainImages) {
   Result result = extensions.vkGetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! acquireNextImageKHR (VkDevice device, VkSwapchainKHR swapchain, ulong timeout, VkSemaphore semaphore, VkFence fence, uint* pImageIndex) {
+fn void! acquireNextImageKHR (Device device, SwapchainKHR swapchain, ulong timeout, Semaphore semaphore, Fence fence, uint* pImageIndex) {
   Result result = extensions.vkAcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -978,7 +978,7 @@ fn void! acquireNextImageKHR (VkDevice device, VkSwapchainKHR swapchain, ulong t
        case ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT: return VkErrors.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT?;
   }
 }
-fn void! queuePresentKHR (VkQueue queue, VkPresentInfoKHR* pPresentInfo) {
+fn void! queuePresentKHR (Queue queue, PresentInfoKHR* pPresentInfo) {
   Result result = extensions.vkQueuePresentKHR(queue, pPresentInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -989,34 +989,34 @@ fn void! queuePresentKHR (VkQueue queue, VkPresentInfoKHR* pPresentInfo) {
        case ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT: return VkErrors.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT?;
   }
 }
-fn void! createWin32SurfaceKHR (VkInstance instance, VkWin32SurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+fn void! createWin32SurfaceKHR (Instance instance, Win32SurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createXlibSurfaceKHR (VkInstance instance, VkXlibSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+fn void! createXlibSurfaceKHR (Instance instance, XlibSurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createXcbSurfaceKHR (VkInstance instance, VkXcbSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+fn void! createXcbSurfaceKHR (Instance instance, XcbSurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDebugReportCallbackEXT (VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
+fn void! createDebugReportCallbackEXT (Instance instance, DebugReportCallbackCreateInfoEXT* pCreateInfo, AllocationCallbacks* pAllocator, DebugReportCallbackEXT* pCallback) {
   Result result = extensions.vkCreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! getPhysicalDeviceImageFormatProperties2 (VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
+fn void! getPhysicalDeviceImageFormatProperties2 (PhysicalDevice physicalDevice, PhysicalDeviceImageFormatInfo2* pImageFormatInfo, ImageFormatProperties2* pImageFormatProperties) {
   Result result = vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1029,7 +1029,7 @@ fn void! getPhysicalDeviceImageFormatProperties2 (VkPhysicalDevice physicalDevic
        case ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR?;
   }
 }
-fn void! enumeratePhysicalDeviceGroups (VkInstance instance, uint* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
+fn void! enumeratePhysicalDeviceGroups (Instance instance, uint* pPhysicalDeviceGroupCount, PhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
   Result result = vkEnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1037,7 +1037,7 @@ fn void! enumeratePhysicalDeviceGroups (VkInstance instance, uint* pPhysicalDevi
        case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
   }
 }
-fn void! bindBufferMemory2 (VkDevice device, uint bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
+fn void! bindBufferMemory2 (Device device, uint bindInfoCount, BindBufferMemoryInfo* pBindInfos) {
   Result result = vkBindBufferMemory2(device, bindInfoCount, pBindInfos);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1045,21 +1045,21 @@ fn void! bindBufferMemory2 (VkDevice device, uint bindInfoCount, VkBindBufferMem
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! bindImageMemory2 (VkDevice device, uint bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
+fn void! bindImageMemory2 (Device device, uint bindInfoCount, BindImageMemoryInfo* pBindInfos) {
   Result result = vkBindImageMemory2(device, bindInfoCount, pBindInfos);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDescriptorUpdateTemplate (VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+fn void! createDescriptorUpdateTemplate (Device device, DescriptorUpdateTemplateCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, DescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
   Result result = vkCreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createMacOSSurfaceMVK (VkInstance instance, VkMacOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+fn void! createMacOSSurfaceMVK (Instance instance, MacOSSurfaceCreateInfoMVK* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1067,41 +1067,41 @@ fn void! createMacOSSurfaceMVK (VkInstance instance, VkMacOSSurfaceCreateInfoMVK
        case ERROR_NATIVE_WINDOW_IN_USE_KHR: return VkErrors.ERROR_NATIVE_WINDOW_IN_USE_KHR?;
   }
 }
-fn void! createSamplerYcbcrConversion (VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+fn void! createSamplerYcbcrConversion (Device device, SamplerYcbcrConversionCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, SamplerYcbcrConversion* pYcbcrConversion) {
   Result result = vkCreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! setDebugUtilsObjectNameEXT (VkDevice device, VkDebugUtilsObjectNameInfoEXT* pNameInfo) {
+fn void! setDebugUtilsObjectNameEXT (Device device, DebugUtilsObjectNameInfoEXT* pNameInfo) {
   Result result = extensions.vkSetDebugUtilsObjectNameEXT(device, pNameInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! setDebugUtilsObjectTagEXT (VkDevice device, VkDebugUtilsObjectTagInfoEXT* pTagInfo) {
+fn void! setDebugUtilsObjectTagEXT (Device device, DebugUtilsObjectTagInfoEXT* pTagInfo) {
   Result result = extensions.vkSetDebugUtilsObjectTagEXT(device, pTagInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pMessenger) {
+fn void! createDebugUtilsMessengerEXT (Instance instance, DebugUtilsMessengerCreateInfoEXT* pCreateInfo, AllocationCallbacks* pAllocator, DebugUtilsMessengerEXT* pMessenger) {
   Result result = extensions.vkCreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! createRenderPass2 (VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+fn void! createRenderPass2 (Device device, RenderPassCreateInfo2* pCreateInfo, AllocationCallbacks* pAllocator, RenderPass* pRenderPass) {
   Result result = vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getSemaphoreCounterValue (VkDevice device, VkSemaphore semaphore, ulong* pValue) {
+fn void! getSemaphoreCounterValue (Device device, Semaphore semaphore, ulong* pValue) {
   Result result = vkGetSemaphoreCounterValue(device, semaphore, pValue);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1109,7 +1109,7 @@ fn void! getSemaphoreCounterValue (VkDevice device, VkSemaphore semaphore, ulong
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! waitSemaphores (VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, ulong timeout) {
+fn void! waitSemaphores (Device device, SemaphoreWaitInfo* pWaitInfo, ulong timeout) {
   Result result = vkWaitSemaphores(device, pWaitInfo, timeout);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1117,74 +1117,74 @@ fn void! waitSemaphores (VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, ulong 
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! signalSemaphore (VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
+fn void! signalSemaphore (Device device, SemaphoreSignalInfo* pSignalInfo) {
   Result result = vkSignalSemaphore(device, pSignalInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! copyAccelerationStructureKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureInfoKHR* pInfo) {
+fn void! copyAccelerationStructureKHR (Device device, DeferredOperationKHR deferredOperation, CopyAccelerationStructureInfoKHR* pInfo) {
   Result result = extensions.vkCopyAccelerationStructureKHR(device, deferredOperation, pInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! copyAccelerationStructureToMemoryKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+fn void! copyAccelerationStructureToMemoryKHR (Device device, DeferredOperationKHR deferredOperation, CopyAccelerationStructureToMemoryInfoKHR* pInfo) {
   Result result = extensions.vkCopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! copyMemoryToAccelerationStructureKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+fn void! copyMemoryToAccelerationStructureKHR (Device device, DeferredOperationKHR deferredOperation, CopyMemoryToAccelerationStructureInfoKHR* pInfo) {
   Result result = extensions.vkCopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! writeAccelerationStructuresPropertiesKHR (VkDevice device, uint accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, usz dataSize, void* pData, usz stride) {
+fn void! writeAccelerationStructuresPropertiesKHR (Device device, uint accelerationStructureCount, AccelerationStructureKHR* pAccelerationStructures, QueryType queryType, usz dataSize, void* pData, usz stride) {
   Result result = extensions.vkWriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getPhysicalDeviceToolProperties (VkPhysicalDevice physicalDevice, uint* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
+fn void! getPhysicalDeviceToolProperties (PhysicalDevice physicalDevice, uint* pToolCount, PhysicalDeviceToolProperties* pToolProperties) {
   Result result = vkGetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! createAccelerationStructureKHR (VkDevice device, VkAccelerationStructureCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
+fn void! createAccelerationStructureKHR (Device device, AccelerationStructureCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, AccelerationStructureKHR* pAccelerationStructure) {
   Result result = extensions.vkCreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return VkErrors.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR?;
   }
 }
-fn void! buildAccelerationStructuresKHR (VkDevice device, VkDeferredOperationKHR deferredOperation, uint infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR*  ppBuildRangeInfos) {
+fn void! buildAccelerationStructuresKHR (Device device, DeferredOperationKHR deferredOperation, uint infoCount, AccelerationStructureBuildGeometryInfoKHR* pInfos, AccelerationStructureBuildRangeInfoKHR*  ppBuildRangeInfos) {
   Result result = extensions.vkBuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! createPrivateDataSlot (VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
+fn void! createPrivateDataSlot (Device device, PrivateDataSlotCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, PrivateDataSlot* pPrivateDataSlot) {
   Result result = vkCreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! setPrivateData (VkDevice device, VkObjectType objectType, ulong objectHandle, VkPrivateDataSlot privateDataSlot, ulong data) {
+fn void! setPrivateData (Device device, ObjectType objectType, ulong objectHandle, PrivateDataSlot privateDataSlot, ulong data) {
   Result result = vkSetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
   }
 }
-fn void! queueSubmit2 (VkQueue queue, uint submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
+fn void! queueSubmit2 (Queue queue, uint submitCount, SubmitInfo2* pSubmits, Fence fence) {
   Result result = vkQueueSubmit2(queue, submitCount, pSubmits, fence);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1192,35 +1192,35 @@ fn void! queueSubmit2 (VkQueue queue, uint submitCount, VkSubmitInfo2* pSubmits,
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
-fn void! getBufferOpaqueCaptureDescriptorDataEXT (VkDevice device, VkBufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+fn void! getBufferOpaqueCaptureDescriptorDataEXT (Device device, BufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getImageOpaqueCaptureDescriptorDataEXT (VkDevice device, VkImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+fn void! getImageOpaqueCaptureDescriptorDataEXT (Device device, ImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getImageViewOpaqueCaptureDescriptorDataEXT (VkDevice device, VkImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+fn void! getImageViewOpaqueCaptureDescriptorDataEXT (Device device, ImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getSamplerOpaqueCaptureDescriptorDataEXT (VkDevice device, VkSamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+fn void! getSamplerOpaqueCaptureDescriptorDataEXT (Device device, SamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
   }
 }
-fn void! getAccelerationStructureOpaqueCaptureDescriptorDataEXT (VkDevice device, VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+fn void! getAccelerationStructureOpaqueCaptureDescriptorDataEXT (Device device, AccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
@@ -1288,12 +1288,12 @@ fn PipelineCache! PipelineCacheCreateInfo.build(&self, Device device, Allocation
    createPipelineCache(device, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline! GraphicsPipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache, uint createInfoCount, AllocationCallbacks* pAllocator = null) {
+fn Pipeline! GraphicsPipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createGraphicsPipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline! ComputePipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache, uint createInfoCount, AllocationCallbacks* pAllocator = null) {
+fn Pipeline! ComputePipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createComputePipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;

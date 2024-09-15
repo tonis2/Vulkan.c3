@@ -8,6 +8,8 @@ distinct Display = void*;
 distinct Window = ulong;
 distinct Hinstance = ulong;
 distinct Hwnd = void*;
+distinct VisualID = ulong;
+
 
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);
 def PFN_vkFreeFunction = fn void (void*, void*);
@@ -17,3 +19,4 @@ def PFN_vkReallocationFunction = fn void* (void*, void*, usz, usz, SystemAllocat
 def PFN_vkVoidFunction = fn void ();
 def PFN_vkDebugReportCallbackEXT = fn uint (DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, usz, int, char, char, void*);
 def PFN_vkDebugUtilsMessengerCallbackEXT = fn uint (DebugUtilsMessageSeverityFlagBitsEXT, DebugUtilsMessageTypeFlagsEXT, DebugUtilsMessengerCallbackDataEXT, void*);
+

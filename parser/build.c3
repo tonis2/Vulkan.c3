@@ -7,11 +7,9 @@ import std::collections::list;
 import std::collections::map;
 import xml;
 
+const MAX_VERSION = 1.3;
+
 def TypeMap = HashMap(<String, String>);
-def StructList = List(<VkStruct>);
-def CommandList = List(<VkCommand>);
-def ValueList = List(<VkValue>);
-def EnumList = List(<VkEnum>);
 
 const String[*] ACTIVE_EXTENSIONS = {
   "VK_KHR_portability_enumeration",
@@ -37,8 +35,6 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_KHR_acceleration_structure",
   "VK_NV_ray_tracing_motion_blur"
 };
-
-const MAX_VERSION = 1.3;
 
 fn void! main(String[] args) {
 
@@ -72,13 +68,13 @@ fn void! main(String[] args) {
     xml::Node root_node = xml::load_file("assets/vk.xml")!!;
     defer root_node.free();
 
-    File main_file = io::file::open("build2/vk.c3", "wb")!!;
+    File main_file = io::file::open("vk/vk.c3", "wb")!!;
     defer main_file.close()!!;
 
-    File command_file = io::file::open("build2/commands.c3", "wb")!!;
+    File command_file = io::file::open("vk/commands.c3", "wb")!!;
     defer command_file.close()!!;
 
-    File builders_file = io::file::open("build2/builders.c3", "wb")!!;
+    File builders_file = io::file::open("vk/builders.c3", "wb")!!;
     defer builders_file.close()!!;
 
     // Find required nodes
@@ -173,7 +169,10 @@ fn void! main(String[] args) {
                 handles.push(VkValue{}.from_node(node));
             }
             case "bitmask": {
-               if (node.name == "type") basetypes.push(VkValue{}.from_node(node));
+               if (node.name == "type") {
+                    VkValue value = VkValue{}.from_node(node);
+                    if (!basetypes.contains_value(value.name)) basetypes.push(value);
+               };
                if (node.name == "enums") enums.push(VkEnum{}.from_node(node));
             }
             case "basetype": {
@@ -202,10 +201,6 @@ fn void! main(String[] args) {
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
                     String! extends = entry.attributes.get("extends");
-                    String! extnumber = feature.name == "extension" ? number : entry.attributes.get("extnumber");
-                    String! offset = entry.attributes.get("offset");
-                    String! bitpos = entry.attributes.get("bitpos");
-                    String! dir = entry.attributes.get("dir");
                     String! value = entry.attributes.get("value");
 
                     if (catch err = name) continue;
@@ -239,6 +234,12 @@ fn void! main(String[] args) {
                         }
                         case "enum": {
                             if (try extends) {
+                                String! extnumber = feature.name == "extension" ? number : entry.attributes.get("extnumber");
+                                String! offset = entry.attributes.get("offset");
+                                String! bitpos = entry.attributes.get("bitpos");
+                                String! dir = entry.attributes.get("dir");
+                                String! alias = entry.attributes.get("alias");
+
                                 // Extends previous enum
                                 VkEnum* enum_parent = {|
                                     foreach (&item: enums) {
@@ -247,20 +248,40 @@ fn void! main(String[] args) {
                                     return null;
                                 |};
 
-                                if (!enum_parent) continue;
+
+                                if (!enum_parent) {
+                                    enums.push(VkEnum { .base.name = extends });
+                                    enum_parent = &enums[enums.len() - 1];
+                                };
+
+                                if (try alias) {
+                                    foreach (node: enum_parent.values) {
+                                        if (node.name == alias) {
+                                            if (!enum_parent.contains_value(name)) {
+                                                VkValue alias_node = node;
+                                                alias_node.name = name;
+                                                enum_parent.values.push(alias_node);
+                                            }
+                                        }
+                                    }
+                                }
+
 
                                 String vk_value = value ?? "";
 
-                                if (try bitpos && enum_parent) vk_value = bitpos.from_bit_pos();
-                                if (try extnumber && try offset && enum_parent) vk_value = extnumber.from_ext_value(offset, negative_value: @ok(dir));
+                                if (try bitpos) vk_value = bitpos.from_bit_pos();
+                                if (try extnumber && try offset) vk_value = extnumber.from_ext_value(offset, negative_value: @ok(dir));
                                 if (vk_value == "") continue;
 
-                                enum_parent.values.push(
-                                    VkValue {
-                                        .name = name,
-                                        .value = vk_value
-                                    }
-                                );
+                                if (!enum_parent.contains_value(name)) {
+                                    enum_parent.values.push(
+                                        VkValue {
+                                            .name = name,
+                                            .value = vk_value
+                                        }
+                                    );
+                                }
+
                             }
                         }
                     }
@@ -278,6 +299,7 @@ fn void! main(String[] args) {
     // Constants
     foreach (value : constants) {
         String type = type_values[value.value] ?? value.value;
+
         DString text_body = dstring::new_join({"const ", value.name[3..], " = ", type, ";\n"}, "");
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
@@ -308,12 +330,14 @@ fn void! main(String[] args) {
     // Enums
     foreach (entry : enums) {
         String enum_type = "uint";
-        if (entry.name == "VkResult") enum_type = "int";
+        if (entry.name == "VkResult" || entry.negative) enum_type = "int";
+        if (entry.bitwidth == "64") enum_type = "ulong";
 
         DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = ", "inline ", enum_type, ";\n"}, "");
         defer text_body.free();
         // Add values
         foreach (value : entry.values) {
+            value.name.convert_ascii_to_upper();
             text_body.append(dstring::new_join({"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, ""));
         }
         
@@ -349,7 +373,7 @@ fn void! main(String[] args) {
         defer text_body.free();
 
         if (has_stype) {
-            creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case(), "() => ",
+            creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case().strip_end("KHR"), "() => ",
             name,
             " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, ""));
         }
@@ -359,11 +383,11 @@ fn void! main(String[] args) {
             String type = type_values[value.type] ?? value.type.remove_vk();
 
             if (has_stype && i > 0) {
-                String value_name = value.value == "*" ? value.name[1..].to_upper_case() : value.name.to_upper_case();
+                String value_name = value.value == "*" ? value.name[1..].capitalize() : value.name.capitalize();
 
-                if (value.len != "") {
+                if (value.len != "" && type != "void") {
                     creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, "[] ", value.name.to_lower_case(), ") {\n",
-                    "   self.", value.name, "= (uint)", value.name.to_lower_case(), ".len();\n"
+                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"
                     "   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"
                     }, ""));
                 } else {
@@ -433,12 +457,13 @@ fn void! main(String[] args) {
         if (!entry.enabled) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
-        String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
         bool no_result = return_type != "Result";
         bool create_command = entry.name.contains("Create");
 
+        String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
+
         if (!entry.extension) {
-            base_commands.append(dstring::new_join({"extern fn ", return_type, " ", return_type == "void" ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
+            base_commands.append(dstring::new_join({"extern fn ", return_type, " ", no_result ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
         }
 
         if (no_result && entry.extension) {
@@ -463,7 +488,11 @@ fn void! main(String[] args) {
             foreach (i, value : entry.values) {
                 if (value.type == command_name || value.type == result_type) continue;
                 String type = type_values[value.type] ?? value.type.remove_vk();
-                create_commands.append(dstring::new_join({type, value.value, " ", value.name, type == "AllocationCallbacks" ? " = null" : "", i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
+                String default_value = "";
+                if (value.optional) default_value = " = null";
+                if (type == "uint") default_value = " = 1";
+                
+                create_commands.append(dstring::new_join({type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
             }
 
             create_commands.append(dstring::new_join({"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
@@ -532,7 +561,7 @@ fn void! main(String[] args) {
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type;
-            text_body.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+            text_body.append(dstring::new_join({type.remove_vk(), value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         }
 
         text_body.append(dstring::new_join({")", " {\n"}, ""));
@@ -545,10 +574,7 @@ fn void! main(String[] args) {
 
         text_body.append(dstring::new_join({entry.name, "("}, ""));
 
-        foreach (i, value : entry.values) {
-            String type = type_values[value.type] ?? value.type;
-            text_body.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
-        }
+        foreach (i, value : entry.values) text_body.append(dstring::new_join({ value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
         text_body.append(");\n");
 
         if (entry.error_codes.len() > 0) {
@@ -558,7 +584,7 @@ fn void! main(String[] args) {
             }
             text_body.append("  }\n");
         } else {
-            text_body.append("  if (result != 0) VkErrors.ERROR_UNKNOWN?;\n");
+            text_body.append("  if (result != 0) return VkErrors.ERROR_UNKNOWN?;\n");
         }
 
         text_body.append("}\n");
@@ -590,7 +616,7 @@ fn String String.to_lower_case(self) {
     return new_value;
 }
 
-fn String String.to_upper_case(self) {
+fn String String.capitalize(self) {
     String new_value = self.copy();
     new_value[0] = new_value[0].to_upper();
     return new_value;

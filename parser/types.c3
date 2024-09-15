@@ -7,11 +7,26 @@ import std::collections::list;
 import libc;
 import xml;
 
+def StructList = List(<VkStruct>);
+def CommandList = List(<VkCommand>);
+def ValueList = List(<VkValue>);
+def EnumList = List(<VkEnum>);
+
 struct Base {
     String name;
     String comment;
     List(<VkValue>) values;
     bool enabled;
+}
+
+fn bool ValueList.contains_value(self, String value_name) {
+    foreach (child: self) if (child.name == value_name) return true;
+    return false;
+}
+
+fn bool Base.contains_value(self, String value_name) {
+    foreach (value: self.values) if (value.name == value_name) return true;
+    return false;
 }
 
 fn void Base.free(&self) {
@@ -32,8 +47,8 @@ struct VkCommand {
 
 struct VkEnum {
     inline Base base;
-    uint bitpos;
-    uint bitwidth;
+    String bitwidth;
+    bool negative;
 }
 
 struct VkValue {
@@ -56,14 +71,17 @@ fn void VkCommand.free(&self) {
 fn VkEnum VkEnum.from_node(&self, xml::Node node) {
     self.comment = node.attributes.get("comment") ?? "";
     self.name = node.attributes.get("name")!!;
+    self.bitwidth = node.attributes.get("bitwidth") ?? "";
 
     foreach (entry : node.children) {
         String! name = entry.attributes.get("name");
         String! value = entry.attributes.get("value");
         String! bitpos = entry.attributes.get("bitpos");
-
+        VkValue result;
         if (try name) {
             if (try value) {
+                if (value[0] == '-') self.negative = true;
+                
                 self.values.push(
                     VkValue {
                         .name = name,
@@ -97,14 +115,17 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
     self.name = node.attributes.get("name") ?? "-";
     
     foreach (member : node.children) {
+        String! api = member.attributes.get("api");
+        if (try api && api == "vulkansc") continue;
+
         VkValue value;
         value.len = member.attributes.get("len") ?? "";
         value.defaultValue = member.attributes.get("values") ?? "";
-
-        if (value.len.contains("null-terminated") || value.len.contains("latexmath")) value.len = "";
-        if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
-
         value.optional = member.attributes.has_key("optional");
+
+        if (value.len.contains("null-terminated") || value.len.contains("latexmath") || value.len.contains(",")) value.len = "";
+        if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
+ 
         value.value = member.value.len > 1 ? member.value[0..0] : "";
         if (value.value == ":") value.value = "";
 
@@ -144,6 +165,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
         String! api = member.attributes.get("api");
         bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
+        value.optional = member.attributes.has_key("optional");
         value.value = member.value.trim(" ");
         if (value.value.contains("const")) value.value = value.value[0..1];
 

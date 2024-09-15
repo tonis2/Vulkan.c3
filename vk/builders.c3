@@ -42,7 +42,7 @@ fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueueCount(&self, uint queueCo
    return *self;
 }
 fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueuePriorities(&self, float[] pQueuePriorities) {
-   self.pQueuePriorities= (uint)pQueuePriorities.len();
+   self.queueCount= (uint)pQueuePriorities.len;
    self.pQueuePriorities = &pQueuePriorities[0];
    return *self;
 }
@@ -60,7 +60,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfoCount(&self, uint queueCr
    return *self;
 }
 fn DeviceCreateInfo DeviceCreateInfo.setQueueCreateInfos(&self, DeviceQueueCreateInfo[] pQueueCreateInfos) {
-   self.pQueueCreateInfos= (uint)pQueueCreateInfos.len();
+   self.queueCreateInfoCount= (uint)pQueueCreateInfos.len;
    self.pQueueCreateInfos = &pQueueCreateInfos[0];
    return *self;
 }
@@ -169,17 +169,17 @@ fn WriteDescriptorSet WriteDescriptorSet.setDescriptorType(&self, DescriptorType
    return *self;
 }
 fn WriteDescriptorSet WriteDescriptorSet.setImageInfo(&self, DescriptorImageInfo[] pImageInfo) {
-   self.pImageInfo= (uint)pImageInfo.len();
+   self.descriptorCount= (uint)pImageInfo.len;
    self.pImageInfo = &pImageInfo[0];
    return *self;
 }
 fn WriteDescriptorSet WriteDescriptorSet.setBufferInfo(&self, DescriptorBufferInfo[] pBufferInfo) {
-   self.pBufferInfo= (uint)pBufferInfo.len();
+   self.descriptorCount= (uint)pBufferInfo.len;
    self.pBufferInfo = &pBufferInfo[0];
    return *self;
 }
 fn WriteDescriptorSet WriteDescriptorSet.setTexelBufferView(&self, BufferView[] pTexelBufferView) {
-   self.pTexelBufferView= (uint)pTexelBufferView.len();
+   self.descriptorCount= (uint)pTexelBufferView.len;
    self.pTexelBufferView = &pTexelBufferView[0];
    return *self;
 }
@@ -242,7 +242,7 @@ fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndexCount(&self, uint queueF
    return *self;
 }
 fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndices(&self, uint[] pQueueFamilyIndices) {
-   self.pQueueFamilyIndices= (uint)pQueueFamilyIndices.len();
+   self.queueFamilyIndexCount= (uint)pQueueFamilyIndices.len;
    self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
    return *self;
 }
@@ -404,7 +404,7 @@ fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndexCount(&self, uint queueFam
    return *self;
 }
 fn ImageCreateInfo ImageCreateInfo.setQueueFamilyIndices(&self, uint[] pQueueFamilyIndices) {
-   self.pQueueFamilyIndices= (uint)pQueueFamilyIndices.len();
+   self.queueFamilyIndexCount= (uint)pQueueFamilyIndices.len;
    self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
    return *self;
 }
@@ -451,7 +451,7 @@ fn BindSparseInfo BindSparseInfo.setWaitSemaphoreCount(&self, uint waitSemaphore
    return *self;
 }
 fn BindSparseInfo BindSparseInfo.setWaitSemaphores(&self, Semaphore[] pWaitSemaphores) {
-   self.pWaitSemaphores= (uint)pWaitSemaphores.len();
+   self.waitSemaphoreCount= (uint)pWaitSemaphores.len;
    self.pWaitSemaphores = &pWaitSemaphores[0];
    return *self;
 }
@@ -460,7 +460,7 @@ fn BindSparseInfo BindSparseInfo.setBufferBindCount(&self, uint bufferBindCount)
    return *self;
 }
 fn BindSparseInfo BindSparseInfo.setBufferBinds(&self, SparseBufferMemoryBindInfo[] pBufferBinds) {
-   self.pBufferBinds= (uint)pBufferBinds.len();
+   self.bufferBindCount= (uint)pBufferBinds.len;
    self.pBufferBinds = &pBufferBinds[0];
    return *self;
 }
@@ -469,7 +469,7 @@ fn BindSparseInfo BindSparseInfo.setImageOpaqueBindCount(&self, uint imageOpaque
    return *self;
 }
 fn BindSparseInfo BindSparseInfo.setImageOpaqueBinds(&self, SparseImageOpaqueMemoryBindInfo[] pImageOpaqueBinds) {
-   self.pImageOpaqueBinds= (uint)pImageOpaqueBinds.len();
+   self.imageOpaqueBindCount= (uint)pImageOpaqueBinds.len;
    self.pImageOpaqueBinds = &pImageOpaqueBinds[0];
    return *self;
 }
@@ -478,7 +478,7 @@ fn BindSparseInfo BindSparseInfo.setImageBindCount(&self, uint imageBindCount) {
    return *self;
 }
 fn BindSparseInfo BindSparseInfo.setImageBinds(&self, SparseImageMemoryBindInfo[] pImageBinds) {
-   self.pImageBinds= (uint)pImageBinds.len();
+   self.imageBindCount= (uint)pImageBinds.len;
    self.pImageBinds = &pImageBinds[0];
    return *self;
 }
@@ -487,7 +487,7 @@ fn BindSparseInfo BindSparseInfo.setSignalSemaphoreCount(&self, uint signalSemap
    return *self;
 }
 fn BindSparseInfo BindSparseInfo.setSignalSemaphores(&self, Semaphore[] pSignalSemaphores) {
-   self.pSignalSemaphores= (uint)pSignalSemaphores.len();
+   self.signalSemaphoreCount= (uint)pSignalSemaphores.len;
    self.pSignalSemaphores = &pSignalSemaphores[0];
    return *self;
 }
@@ -522,7 +522,7 @@ fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindingCount(&
    return *self;
 }
 fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindings(&self, DescriptorSetLayoutBinding[] pBindings) {
-   self.pBindings= (uint)pBindings.len();
+   self.bindingCount= (uint)pBindings.len;
    self.pBindings = &pBindings[0];
    return *self;
 }
@@ -544,7 +544,7 @@ fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizeCount(&self, uin
    return *self;
 }
 fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizes(&self, DescriptorPoolSize[] pPoolSizes) {
-   self.pPoolSizes= (uint)pPoolSizes.len();
+   self.poolSizeCount= (uint)pPoolSizes.len;
    self.pPoolSizes = &pPoolSizes[0];
    return *self;
 }
@@ -562,7 +562,7 @@ fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setDescriptorSetCount(&se
    return *self;
 }
 fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setSetLayouts(&self, DescriptorSetLayout[] pSetLayouts) {
-   self.pSetLayouts= (uint)pSetLayouts.len();
+   self.descriptorSetCount= (uint)pSetLayouts.len;
    self.pSetLayouts = &pSetLayouts[0];
    return *self;
 }
@@ -581,10 +581,6 @@ fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setStage(&self, S
 }
 fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setMod(&self, ShaderModule mod) {
    self.mod = mod;
-   return *self;
-}
-fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setName(&self, char* pName) {
-   self.pName = pName;
    return *self;
 }
 fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setName(&self, char* pName) {
@@ -634,7 +630,7 @@ fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVert
    return *self;
 }
 fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexBindingDescriptions(&self, VertexInputBindingDescription[] pVertexBindingDescriptions) {
-   self.pVertexBindingDescriptions= (uint)pVertexBindingDescriptions.len();
+   self.vertexBindingDescriptionCount= (uint)pVertexBindingDescriptions.len;
    self.pVertexBindingDescriptions = &pVertexBindingDescriptions[0];
    return *self;
 }
@@ -643,7 +639,7 @@ fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVert
    return *self;
 }
 fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVertexAttributeDescriptions(&self, VertexInputAttributeDescription[] pVertexAttributeDescriptions) {
-   self.pVertexAttributeDescriptions= (uint)pVertexAttributeDescriptions.len();
+   self.vertexAttributeDescriptionCount= (uint)pVertexAttributeDescriptions.len;
    self.pVertexAttributeDescriptions = &pVertexAttributeDescriptions[0];
    return *self;
 }
@@ -691,7 +687,7 @@ fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewportCo
    return *self;
 }
 fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setViewports(&self, Viewport[] pViewports) {
-   self.pViewports= (uint)pViewports.len();
+   self.viewportCount= (uint)pViewports.len;
    self.pViewports = &pViewports[0];
    return *self;
 }
@@ -700,7 +696,7 @@ fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissorCou
    return *self;
 }
 fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissors(&self, Rect2D[] pScissors) {
-   self.pScissors= (uint)pScissors.len();
+   self.scissorCount= (uint)pScissors.len;
    self.pScissors = &pScissors[0];
    return *self;
 }
@@ -808,7 +804,7 @@ fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttach
    return *self;
 }
 fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setAttachments(&self, PipelineColorBlendAttachmentState[] pAttachments) {
-   self.pAttachments= (uint)pAttachments.len();
+   self.attachmentCount= (uint)pAttachments.len;
    self.pAttachments = &pAttachments[0];
    return *self;
 }
@@ -830,7 +826,7 @@ fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicState
    return *self;
 }
 fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicStates(&self, DynamicState[] pDynamicStates) {
-   self.pDynamicStates= (uint)pDynamicStates.len();
+   self.dynamicStateCount= (uint)pDynamicStates.len;
    self.pDynamicStates = &pDynamicStates[0];
    return *self;
 }
@@ -893,12 +889,7 @@ fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStageCount(&self, ui
    return *self;
 }
 fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
-   self.pStages= (uint)pStages.len();
-   self.pStages = &pStages[0];
-   return *self;
-}
-fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
-   self.pStages= (uint)pStages.len();
+   self.stageCount= (uint)pStages.len;
    self.pStages = &pStages[0];
    return *self;
 }
@@ -971,13 +962,8 @@ fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(&self, usz
    self.initialDataSize = initialDataSize;
    return *self;
 }
-fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(&self, usz initialDataSize) {
-   self.initialDataSize = initialDataSize;
-   return *self;
-}
-fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(&self, void[] pInitialData) {
-   self.pInitialData= (uint)pInitialData.len();
-   self.pInitialData = &pInitialData[0];
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(&self, void* pInitialData) {
+   self.pInitialData = pInitialData;
    return *self;
 }
 fn PipelineLayoutCreateInfo pipelineLayoutCreateInfo() => PipelineLayoutCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO, .pNext = null };
@@ -994,7 +980,7 @@ fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayoutCount(&self, ui
    return *self;
 }
 fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setSetLayouts(&self, DescriptorSetLayout[] pSetLayouts) {
-   self.pSetLayouts= (uint)pSetLayouts.len();
+   self.setLayoutCount= (uint)pSetLayouts.len;
    self.pSetLayouts = &pSetLayouts[0];
    return *self;
 }
@@ -1003,7 +989,7 @@ fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRangeCount(&
    return *self;
 }
 fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRanges(&self, PushConstantRange[] pPushConstantRanges) {
-   self.pPushConstantRanges= (uint)pPushConstantRanges.len();
+   self.pushConstantRangeCount= (uint)pPushConstantRanges.len;
    self.pPushConstantRanges = &pPushConstantRanges[0];
    return *self;
 }
@@ -1170,7 +1156,7 @@ fn RenderPassBeginInfo RenderPassBeginInfo.setClearValueCount(&self, uint clearV
    return *self;
 }
 fn RenderPassBeginInfo RenderPassBeginInfo.setClearValues(&self, ClearValue[] pClearValues) {
-   self.pClearValues= (uint)pClearValues.len();
+   self.clearValueCount= (uint)pClearValues.len;
    self.pClearValues = &pClearValues[0];
    return *self;
 }
@@ -1188,7 +1174,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setAttachmentCount(&self, uint atta
    return *self;
 }
 fn RenderPassCreateInfo RenderPassCreateInfo.setAttachments(&self, AttachmentDescription[] pAttachments) {
-   self.pAttachments= (uint)pAttachments.len();
+   self.attachmentCount= (uint)pAttachments.len;
    self.pAttachments = &pAttachments[0];
    return *self;
 }
@@ -1197,7 +1183,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setSubpassCount(&self, uint subpass
    return *self;
 }
 fn RenderPassCreateInfo RenderPassCreateInfo.setSubpasses(&self, SubpassDescription[] pSubpasses) {
-   self.pSubpasses= (uint)pSubpasses.len();
+   self.subpassCount= (uint)pSubpasses.len;
    self.pSubpasses = &pSubpasses[0];
    return *self;
 }
@@ -1206,7 +1192,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setDependencyCount(&self, uint depe
    return *self;
 }
 fn RenderPassCreateInfo RenderPassCreateInfo.setDependencies(&self, SubpassDependency[] pDependencies) {
-   self.pDependencies= (uint)pDependencies.len();
+   self.dependencyCount= (uint)pDependencies.len;
    self.pDependencies = &pDependencies[0];
    return *self;
 }
@@ -1276,7 +1262,7 @@ fn FramebufferCreateInfo FramebufferCreateInfo.setAttachmentCount(&self, uint at
    return *self;
 }
 fn FramebufferCreateInfo FramebufferCreateInfo.setAttachments(&self, ImageView[] pAttachments) {
-   self.pAttachments= (uint)pAttachments.len();
+   self.attachmentCount= (uint)pAttachments.len;
    self.pAttachments = &pAttachments[0];
    return *self;
 }
@@ -1302,12 +1288,12 @@ fn SubmitInfo SubmitInfo.setWaitSemaphoreCount(&self, uint waitSemaphoreCount) {
    return *self;
 }
 fn SubmitInfo SubmitInfo.setWaitSemaphores(&self, Semaphore[] pWaitSemaphores) {
-   self.pWaitSemaphores= (uint)pWaitSemaphores.len();
+   self.waitSemaphoreCount= (uint)pWaitSemaphores.len;
    self.pWaitSemaphores = &pWaitSemaphores[0];
    return *self;
 }
 fn SubmitInfo SubmitInfo.setWaitDstStageMask(&self, PipelineStageFlags[] pWaitDstStageMask) {
-   self.pWaitDstStageMask= (uint)pWaitDstStageMask.len();
+   self.waitSemaphoreCount= (uint)pWaitDstStageMask.len;
    self.pWaitDstStageMask = &pWaitDstStageMask[0];
    return *self;
 }
@@ -1316,7 +1302,7 @@ fn SubmitInfo SubmitInfo.setCommandBufferCount(&self, uint commandBufferCount) {
    return *self;
 }
 fn SubmitInfo SubmitInfo.setCommandBuffers(&self, CommandBuffer[] pCommandBuffers) {
-   self.pCommandBuffers= (uint)pCommandBuffers.len();
+   self.commandBufferCount= (uint)pCommandBuffers.len;
    self.pCommandBuffers = &pCommandBuffers[0];
    return *self;
 }
@@ -1325,11 +1311,11 @@ fn SubmitInfo SubmitInfo.setSignalSemaphoreCount(&self, uint signalSemaphoreCoun
    return *self;
 }
 fn SubmitInfo SubmitInfo.setSignalSemaphores(&self, Semaphore[] pSignalSemaphores) {
-   self.pSignalSemaphores= (uint)pSignalSemaphores.len();
+   self.signalSemaphoreCount= (uint)pSignalSemaphores.len;
    self.pSignalSemaphores = &pSignalSemaphores[0];
    return *self;
 }
-fn DisplayModeCreateInfoKHR displayModeCreateInfoKHR() => DisplayModeCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR, .pNext = null };
+fn DisplayModeCreateInfoKHR displayModeCreateInfo() => DisplayModeCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR, .pNext = null };
 fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1342,7 +1328,7 @@ fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setParameters(&self, Displa
    self.parameters = parameters;
    return *self;
 }
-fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHR() => DisplaySurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfo() => DisplaySurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1379,7 +1365,7 @@ fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(&self,
    self.imageExtent = imageExtent;
    return *self;
 }
-fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfoKHR() => Win32SurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfo() => Win32SurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1396,7 +1382,7 @@ fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(&self, Hwnd hwnd)
    self.hwnd = hwnd;
    return *self;
 }
-fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfoKHR() => XlibSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfo() => XlibSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1413,7 +1399,7 @@ fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(&self, Window win
    self.window = window;
    return *self;
 }
-fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHR() => XcbSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfo() => XcbSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1430,7 +1416,7 @@ fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setWindow(&self, Window windo
    self.window = window;
    return *self;
 }
-fn SwapchainCreateInfoKHR swapchainCreateInfoKHR() => SwapchainCreateInfoKHR { .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainCreateInfoKHR swapchainCreateInfo() => SwapchainCreateInfoKHR { .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
 fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1476,7 +1462,7 @@ fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndexCount(&self,
    return *self;
 }
 fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setQueueFamilyIndices(&self, uint[] pQueueFamilyIndices) {
-   self.pQueueFamilyIndices= (uint)pQueueFamilyIndices.len();
+   self.queueFamilyIndexCount= (uint)pQueueFamilyIndices.len;
    self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
    return *self;
 }
@@ -1500,11 +1486,7 @@ fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setOldSwapchain(&self, Swapchai
    self.oldSwapchain = oldSwapchain;
    return *self;
 }
-fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setOldSwapchain(&self, SwapchainKHR oldSwapchain) {
-   self.oldSwapchain = oldSwapchain;
-   return *self;
-}
-fn PresentInfoKHR presentInfoKHR() => PresentInfoKHR { .sType = STRUCTURE_TYPE_PRESENT_INFO_KHR, .pNext = null };
+fn PresentInfoKHR presentInfo() => PresentInfoKHR { .sType = STRUCTURE_TYPE_PRESENT_INFO_KHR, .pNext = null };
 fn PresentInfoKHR PresentInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1514,7 +1496,7 @@ fn PresentInfoKHR PresentInfoKHR.setWaitSemaphoreCount(&self, uint waitSemaphore
    return *self;
 }
 fn PresentInfoKHR PresentInfoKHR.setWaitSemaphores(&self, Semaphore[] pWaitSemaphores) {
-   self.pWaitSemaphores= (uint)pWaitSemaphores.len();
+   self.waitSemaphoreCount= (uint)pWaitSemaphores.len;
    self.pWaitSemaphores = &pWaitSemaphores[0];
    return *self;
 }
@@ -1523,17 +1505,17 @@ fn PresentInfoKHR PresentInfoKHR.setSwapchainCount(&self, uint swapchainCount) {
    return *self;
 }
 fn PresentInfoKHR PresentInfoKHR.setSwapchains(&self, SwapchainKHR[] pSwapchains) {
-   self.pSwapchains= (uint)pSwapchains.len();
+   self.swapchainCount= (uint)pSwapchains.len;
    self.pSwapchains = &pSwapchains[0];
    return *self;
 }
 fn PresentInfoKHR PresentInfoKHR.setImageIndices(&self, uint[] pImageIndices) {
-   self.pImageIndices= (uint)pImageIndices.len();
+   self.swapchainCount= (uint)pImageIndices.len;
    self.pImageIndices = &pImageIndices[0];
    return *self;
 }
 fn PresentInfoKHR PresentInfoKHR.setResults(&self, Result[] pResults) {
-   self.pResults= (uint)pResults.len();
+   self.swapchainCount= (uint)pResults.len;
    self.pResults = &pResults[0];
    return *self;
 }
@@ -1694,7 +1676,7 @@ fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.set
    self.tiling = tiling;
    return *self;
 }
-fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHR() => PhysicalDevicePushDescriptorPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorProperties() => PhysicalDevicePushDescriptorPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR, .pNext = null };
 fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1943,7 +1925,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setSubpassCount(&
    return *self;
 }
 fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewMasks(&self, uint[] pViewMasks) {
-   self.pViewMasks= (uint)pViewMasks.len();
+   self.subpassCount= (uint)pViewMasks.len;
    self.pViewMasks = &pViewMasks[0];
    return *self;
 }
@@ -1952,7 +1934,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setDependencyCoun
    return *self;
 }
 fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setViewOffsets(&self, int[] pViewOffsets) {
-   self.pViewOffsets= (uint)pViewOffsets.len();
+   self.dependencyCount= (uint)pViewOffsets.len;
    self.pViewOffsets = &pViewOffsets[0];
    return *self;
 }
@@ -1961,7 +1943,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMas
    return *self;
 }
 fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMasks(&self, uint[] pCorrelationMasks) {
-   self.pCorrelationMasks= (uint)pCorrelationMasks.len();
+   self.correlationMaskCount= (uint)pCorrelationMasks.len;
    self.pCorrelationMasks = &pCorrelationMasks[0];
    return *self;
 }
@@ -1975,7 +1957,7 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevice
    return *self;
 }
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setPhysicalDevices(&self, PhysicalDevice[] physicalDevices) {
-   self.physicalDevices= (uint)physicalDevices.len();
+   self.physicalDeviceCount= (uint)physicalDevices.len;
    self.physicalDevices = &physicalDevices[0];
    return *self;
 }
@@ -2023,7 +2005,7 @@ fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceInde
    return *self;
 }
 fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndices(&self, uint[] pDeviceIndices) {
-   self.pDeviceIndices= (uint)pDeviceIndices.len();
+   self.deviceIndexCount= (uint)pDeviceIndices.len;
    self.pDeviceIndices = &pDeviceIndices[0];
    return *self;
 }
@@ -2054,7 +2036,7 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndexC
    return *self;
 }
 fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setDeviceIndices(&self, uint[] pDeviceIndices) {
-   self.pDeviceIndices= (uint)pDeviceIndices.len();
+   self.deviceIndexCount= (uint)pDeviceIndices.len;
    self.pDeviceIndices = &pDeviceIndices[0];
    return *self;
 }
@@ -2063,7 +2045,7 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanc
    return *self;
 }
 fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanceBindRegions(&self, Rect2D[] pSplitInstanceBindRegions) {
-   self.pSplitInstanceBindRegions= (uint)pSplitInstanceBindRegions.len();
+   self.splitInstanceBindRegionCount= (uint)pSplitInstanceBindRegions.len;
    self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
    return *self;
 }
@@ -2081,7 +2063,7 @@ fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRender
    return *self;
 }
 fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRenderAreas(&self, Rect2D[] pDeviceRenderAreas) {
-   self.pDeviceRenderAreas= (uint)pDeviceRenderAreas.len();
+   self.deviceRenderAreaCount= (uint)pDeviceRenderAreas.len;
    self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
    return *self;
 }
@@ -2104,7 +2086,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreCount(&self, uint
    return *self;
 }
 fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setWaitSemaphoreDeviceIndices(&self, uint[] pWaitSemaphoreDeviceIndices) {
-   self.pWaitSemaphoreDeviceIndices= (uint)pWaitSemaphoreDeviceIndices.len();
+   self.waitSemaphoreCount= (uint)pWaitSemaphoreDeviceIndices.len;
    self.pWaitSemaphoreDeviceIndices = &pWaitSemaphoreDeviceIndices[0];
    return *self;
 }
@@ -2113,7 +2095,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferCount(&self, uint
    return *self;
 }
 fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setCommandBufferDeviceMasks(&self, uint[] pCommandBufferDeviceMasks) {
-   self.pCommandBufferDeviceMasks= (uint)pCommandBufferDeviceMasks.len();
+   self.commandBufferCount= (uint)pCommandBufferDeviceMasks.len;
    self.pCommandBufferDeviceMasks = &pCommandBufferDeviceMasks[0];
    return *self;
 }
@@ -2122,7 +2104,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreCount(&self, ui
    return *self;
 }
 fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(&self, uint[] pSignalSemaphoreDeviceIndices) {
-   self.pSignalSemaphoreDeviceIndices= (uint)pSignalSemaphoreDeviceIndices.len();
+   self.signalSemaphoreCount= (uint)pSignalSemaphoreDeviceIndices.len;
    self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
    return *self;
 }
@@ -2149,7 +2131,7 @@ fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDeviceCoun
    return *self;
 }
 fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDevices(&self, PhysicalDevice[] pPhysicalDevices) {
-   self.pPhysicalDevices= (uint)pPhysicalDevices.len();
+   self.physicalDeviceCount= (uint)pPhysicalDevices.len;
    self.pPhysicalDevices = &pPhysicalDevices[0];
    return *self;
 }
@@ -2167,7 +2149,7 @@ fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDesc
    return *self;
 }
 fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setDescriptorUpdateEntries(&self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
-   self.pDescriptorUpdateEntries= (uint)pDescriptorUpdateEntries.len();
+   self.descriptorUpdateEntryCount= (uint)pDescriptorUpdateEntries.len;
    self.pDescriptorUpdateEntries = &pDescriptorUpdateEntries[0];
    return *self;
 }
@@ -2214,7 +2196,7 @@ fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCrea
    return *self;
 }
 fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setAspectReferences(&self, InputAttachmentAspectReference[] pAspectReferences) {
-   self.pAspectReferences= (uint)pAspectReferences.len();
+   self.aspectReferenceCount= (uint)pAspectReferences.len;
    self.pAspectReferences = &pAspectReferences[0];
    return *self;
 }
@@ -2584,9 +2566,8 @@ fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.set
    self.dataSize = dataSize;
    return *self;
 }
-fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setData(&self, void[] pData) {
-   self.pData= (uint)pData.len();
-   self.pData = &pData[0];
+fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setData(&self, void* pData) {
+   self.pData = pData;
    return *self;
 }
 fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfo() => DescriptorPoolInlineUniformBlockCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO, .pNext = null };
@@ -2608,7 +2589,7 @@ fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormatCount(&self,
    return *self;
 }
 fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormats(&self, Format[] pViewFormats) {
-   self.pViewFormats= (uint)pViewFormats.len();
+   self.viewFormatCount= (uint)pViewFormats.len;
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
@@ -2794,9 +2775,8 @@ fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagSize(&self, usz t
    self.tagSize = tagSize;
    return *self;
 }
-fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTag(&self, void[] pTag) {
-   self.pTag= (uint)pTag.len();
-   self.pTag = &pTag[0];
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTag(&self, void* pTag) {
+   self.pTag = pTag;
    return *self;
 }
 fn DebugUtilsLabelEXT debugUtilsLabelEXT() => DebugUtilsLabelEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, .pNext = null };
@@ -2863,7 +2843,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueu
    return *self;
 }
 fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setQueueLabels(&self, DebugUtilsLabelEXT[] pQueueLabels) {
-   self.pQueueLabels= (uint)pQueueLabels.len();
+   self.queueLabelCount= (uint)pQueueLabels.len;
    self.pQueueLabels = &pQueueLabels[0];
    return *self;
 }
@@ -2872,7 +2852,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdB
    return *self;
 }
 fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setCmdBufLabels(&self, DebugUtilsLabelEXT[] pCmdBufLabels) {
-   self.pCmdBufLabels= (uint)pCmdBufLabels.len();
+   self.cmdBufLabelCount= (uint)pCmdBufLabels.len;
    self.pCmdBufLabels = &pCmdBufLabels[0];
    return *self;
 }
@@ -2881,7 +2861,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObje
    return *self;
 }
 fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObjects(&self, DebugUtilsObjectNameInfoEXT[] pObjects) {
-   self.pObjects= (uint)pObjects.len();
+   self.objectCount= (uint)pObjects.len;
    self.pObjects = &pObjects[0];
    return *self;
 }
@@ -3077,7 +3057,7 @@ fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCrea
    return *self;
 }
 fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingFlags(&self, DescriptorBindingFlags[] pBindingFlags) {
-   self.pBindingFlags= (uint)pBindingFlags.len();
+   self.bindingCount= (uint)pBindingFlags.len;
    self.pBindingFlags = &pBindingFlags[0];
    return *self;
 }
@@ -3091,7 +3071,7 @@ fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescrip
    return *self;
 }
 fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setDescriptorCounts(&self, uint[] pDescriptorCounts) {
-   self.pDescriptorCounts= (uint)pDescriptorCounts.len();
+   self.descriptorSetCount= (uint)pDescriptorCounts.len;
    self.pDescriptorCounts = &pDescriptorCounts[0];
    return *self;
 }
@@ -3184,7 +3164,7 @@ fn SubpassDescription2 SubpassDescription2.setInputAttachmentCount(&self, uint i
    return *self;
 }
 fn SubpassDescription2 SubpassDescription2.setInputAttachments(&self, AttachmentReference2[] pInputAttachments) {
-   self.pInputAttachments= (uint)pInputAttachments.len();
+   self.inputAttachmentCount= (uint)pInputAttachments.len;
    self.pInputAttachments = &pInputAttachments[0];
    return *self;
 }
@@ -3193,12 +3173,12 @@ fn SubpassDescription2 SubpassDescription2.setColorAttachmentCount(&self, uint c
    return *self;
 }
 fn SubpassDescription2 SubpassDescription2.setColorAttachments(&self, AttachmentReference2[] pColorAttachments) {
-   self.pColorAttachments= (uint)pColorAttachments.len();
+   self.colorAttachmentCount= (uint)pColorAttachments.len;
    self.pColorAttachments = &pColorAttachments[0];
    return *self;
 }
 fn SubpassDescription2 SubpassDescription2.setResolveAttachments(&self, AttachmentReference2[] pResolveAttachments) {
-   self.pResolveAttachments= (uint)pResolveAttachments.len();
+   self.colorAttachmentCount= (uint)pResolveAttachments.len;
    self.pResolveAttachments = &pResolveAttachments[0];
    return *self;
 }
@@ -3211,7 +3191,7 @@ fn SubpassDescription2 SubpassDescription2.setPreserveAttachmentCount(&self, uin
    return *self;
 }
 fn SubpassDescription2 SubpassDescription2.setPreserveAttachments(&self, uint[] pPreserveAttachments) {
-   self.pPreserveAttachments= (uint)pPreserveAttachments.len();
+   self.preserveAttachmentCount= (uint)pPreserveAttachments.len;
    self.pPreserveAttachments = &pPreserveAttachments[0];
    return *self;
 }
@@ -3266,7 +3246,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachmentCount(&self, uint at
    return *self;
 }
 fn RenderPassCreateInfo2 RenderPassCreateInfo2.setAttachments(&self, AttachmentDescription2[] pAttachments) {
-   self.pAttachments= (uint)pAttachments.len();
+   self.attachmentCount= (uint)pAttachments.len;
    self.pAttachments = &pAttachments[0];
    return *self;
 }
@@ -3275,7 +3255,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpassCount(&self, uint subpa
    return *self;
 }
 fn RenderPassCreateInfo2 RenderPassCreateInfo2.setSubpasses(&self, SubpassDescription2[] pSubpasses) {
-   self.pSubpasses= (uint)pSubpasses.len();
+   self.subpassCount= (uint)pSubpasses.len;
    self.pSubpasses = &pSubpasses[0];
    return *self;
 }
@@ -3284,7 +3264,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencyCount(&self, uint de
    return *self;
 }
 fn RenderPassCreateInfo2 RenderPassCreateInfo2.setDependencies(&self, SubpassDependency2[] pDependencies) {
-   self.pDependencies= (uint)pDependencies.len();
+   self.dependencyCount= (uint)pDependencies.len;
    self.pDependencies = &pDependencies[0];
    return *self;
 }
@@ -3293,7 +3273,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMaskCount(&self,
    return *self;
 }
 fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMasks(&self, uint[] pCorrelatedViewMasks) {
-   self.pCorrelatedViewMasks= (uint)pCorrelatedViewMasks.len();
+   self.correlatedViewMaskCount= (uint)pCorrelatedViewMasks.len;
    self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
    return *self;
 }
@@ -3352,7 +3332,7 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValue
    return *self;
 }
 fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setWaitSemaphoreValues(&self, ulong[] pWaitSemaphoreValues) {
-   self.pWaitSemaphoreValues= (uint)pWaitSemaphoreValues.len();
+   self.waitSemaphoreValueCount= (uint)pWaitSemaphoreValues.len;
    self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
    return *self;
 }
@@ -3361,7 +3341,7 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreVal
    return *self;
 }
 fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValues(&self, ulong[] pSignalSemaphoreValues) {
-   self.pSignalSemaphoreValues= (uint)pSignalSemaphoreValues.len();
+   self.signalSemaphoreValueCount= (uint)pSignalSemaphoreValues.len;
    self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
    return *self;
 }
@@ -3379,12 +3359,12 @@ fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphoreCount(&self, uint semaphoreCo
    return *self;
 }
 fn SemaphoreWaitInfo SemaphoreWaitInfo.setSemaphores(&self, Semaphore[] pSemaphores) {
-   self.pSemaphores= (uint)pSemaphores.len();
+   self.semaphoreCount= (uint)pSemaphores.len;
    self.pSemaphores = &pSemaphores[0];
    return *self;
 }
 fn SemaphoreWaitInfo SemaphoreWaitInfo.setValues(&self, ulong[] pValues) {
-   self.pValues= (uint)pValues.len();
+   self.semaphoreCount= (uint)pValues.len;
    self.pValues = &pValues[0];
    return *self;
 }
@@ -3486,7 +3466,7 @@ fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.s
    self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
    return *self;
 }
-fn WriteDescriptorSetAccelerationStructureKHR writeDescriptorSetAccelerationStructureKHR() => WriteDescriptorSetAccelerationStructureKHR { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR, .pNext = null };
+fn WriteDescriptorSetAccelerationStructureKHR writeDescriptorSetAccelerationStructure() => WriteDescriptorSetAccelerationStructureKHR { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR, .pNext = null };
 fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStructureKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3496,11 +3476,11 @@ fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStru
    return *self;
 }
 fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStructureKHR.setAccelerationStructures(&self, AccelerationStructureKHR[] pAccelerationStructures) {
-   self.pAccelerationStructures= (uint)pAccelerationStructures.len();
+   self.accelerationStructureCount= (uint)pAccelerationStructures.len;
    self.pAccelerationStructures = &pAccelerationStructures[0];
    return *self;
 }
-fn PhysicalDeviceAccelerationStructureFeaturesKHR physicalDeviceAccelerationStructureFeaturesKHR() => PhysicalDeviceAccelerationStructureFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceAccelerationStructureFeaturesKHR physicalDeviceAccelerationStructureFeatures() => PhysicalDeviceAccelerationStructureFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR, .pNext = null };
 fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStructureFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3525,7 +3505,7 @@ fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStru
    self.descriptorBindingAccelerationStructureUpdateAfterBind = descriptorBindingAccelerationStructureUpdateAfterBind;
    return *self;
 }
-fn PhysicalDeviceAccelerationStructurePropertiesKHR physicalDeviceAccelerationStructurePropertiesKHR() => PhysicalDeviceAccelerationStructurePropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceAccelerationStructurePropertiesKHR physicalDeviceAccelerationStructureProperties() => PhysicalDeviceAccelerationStructurePropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR, .pNext = null };
 fn PhysicalDeviceAccelerationStructurePropertiesKHR PhysicalDeviceAccelerationStructurePropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3643,7 +3623,7 @@ fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachme
    return *self;
 }
 fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfos(&self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
-   self.pAttachmentImageInfos= (uint)pAttachmentImageInfos.len();
+   self.attachmentImageInfoCount= (uint)pAttachmentImageInfos.len;
    self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
    return *self;
 }
@@ -3677,7 +3657,7 @@ fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormatCo
    return *self;
 }
 fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormats(&self, Format[] pViewFormats) {
-   self.pViewFormats= (uint)pViewFormats.len();
+   self.viewFormatCount= (uint)pViewFormats.len;
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
@@ -3691,7 +3671,7 @@ fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachmentCoun
    return *self;
 }
 fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachments(&self, ImageView[] pAttachments) {
-   self.pAttachments= (uint)pAttachments.len();
+   self.attachmentCount= (uint)pAttachments.len;
    self.pAttachments = &pAttachments[0];
    return *self;
 }
@@ -3718,7 +3698,7 @@ fn PipelineCreationFeedbackCreateInfo PipelineCreationFeedbackCreateInfo.setPipe
    return *self;
 }
 fn PipelineCreationFeedbackCreateInfo PipelineCreationFeedbackCreateInfo.setPipelineStageCreationFeedbacks(&self, PipelineCreationFeedback[] pPipelineStageCreationFeedbacks) {
-   self.pPipelineStageCreationFeedbacks= (uint)pPipelineStageCreationFeedbacks.len();
+   self.pipelineStageCreationFeedbackCount= (uint)pPipelineStageCreationFeedbacks.len;
    self.pPipelineStageCreationFeedbacks = &pPipelineStageCreationFeedbacks[0];
    return *self;
 }
@@ -4652,7 +4632,7 @@ fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setLayer(&self, cha
    self.layer = layer;
    return *self;
 }
-fn AccelerationStructureGeometryTrianglesDataKHR accelerationStructureGeometryTrianglesDataKHR() => AccelerationStructureGeometryTrianglesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryTrianglesDataKHR accelerationStructureGeometryTrianglesData() => AccelerationStructureGeometryTrianglesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryTrianglesDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4685,7 +4665,7 @@ fn AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryTr
    self.transformData = transformData;
    return *self;
 }
-fn AccelerationStructureGeometryAabbsDataKHR accelerationStructureGeometryAabbsDataKHR() => AccelerationStructureGeometryAabbsDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryAabbsDataKHR accelerationStructureGeometryAabbsData() => AccelerationStructureGeometryAabbsDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryAabbsDataKHR AccelerationStructureGeometryAabbsDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4698,7 +4678,7 @@ fn AccelerationStructureGeometryAabbsDataKHR AccelerationStructureGeometryAabbsD
    self.stride = stride;
    return *self;
 }
-fn AccelerationStructureGeometryInstancesDataKHR accelerationStructureGeometryInstancesDataKHR() => AccelerationStructureGeometryInstancesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryInstancesDataKHR accelerationStructureGeometryInstancesData() => AccelerationStructureGeometryInstancesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryInstancesDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4711,7 +4691,7 @@ fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryIn
    self.data = data;
    return *self;
 }
-fn AccelerationStructureGeometryKHR accelerationStructureGeometryKHR() => AccelerationStructureGeometryKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR, .pNext = null };
+fn AccelerationStructureGeometryKHR accelerationStructureGeometry() => AccelerationStructureGeometryKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR, .pNext = null };
 fn AccelerationStructureGeometryKHR AccelerationStructureGeometryKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4728,7 +4708,7 @@ fn AccelerationStructureGeometryKHR AccelerationStructureGeometryKHR.setFlags(&s
    self.flags = flags;
    return *self;
 }
-fn AccelerationStructureBuildGeometryInfoKHR accelerationStructureBuildGeometryInfoKHR() => AccelerationStructureBuildGeometryInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR, .pNext = null };
+fn AccelerationStructureBuildGeometryInfoKHR accelerationStructureBuildGeometryInfo() => AccelerationStructureBuildGeometryInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR, .pNext = null };
 fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4758,20 +4738,19 @@ fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryI
    return *self;
 }
 fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setGeometries(&self, AccelerationStructureGeometryKHR[] pGeometries) {
-   self.pGeometries= (uint)pGeometries.len();
+   self.geometryCount= (uint)pGeometries.len;
    self.pGeometries = &pGeometries[0];
    return *self;
 }
-fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setPGeometries(&self, AccelerationStructureGeometryKHR[] ppGeometries) {
-   self.ppGeometries= (uint)ppGeometries.len();
-   self.ppGeometries = &ppGeometries[0];
+fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setPGeometries(&self, AccelerationStructureGeometryKHR* ppGeometries) {
+   self.ppGeometries = ppGeometries;
    return *self;
 }
 fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setScratchData(&self, DeviceOrHostAddressKHR scratchData) {
    self.scratchData = scratchData;
    return *self;
 }
-fn AccelerationStructureCreateInfoKHR accelerationStructureCreateInfoKHR() => AccelerationStructureCreateInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR, .pNext = null };
+fn AccelerationStructureCreateInfoKHR accelerationStructureCreateInfo() => AccelerationStructureCreateInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR, .pNext = null };
 fn AccelerationStructureCreateInfoKHR AccelerationStructureCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4800,7 +4779,7 @@ fn AccelerationStructureCreateInfoKHR AccelerationStructureCreateInfoKHR.setDevi
    self.deviceAddress = deviceAddress;
    return *self;
 }
-fn AccelerationStructureDeviceAddressInfoKHR accelerationStructureDeviceAddressInfoKHR() => AccelerationStructureDeviceAddressInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR, .pNext = null };
+fn AccelerationStructureDeviceAddressInfoKHR accelerationStructureDeviceAddressInfo() => AccelerationStructureDeviceAddressInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR, .pNext = null };
 fn AccelerationStructureDeviceAddressInfoKHR AccelerationStructureDeviceAddressInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4809,7 +4788,7 @@ fn AccelerationStructureDeviceAddressInfoKHR AccelerationStructureDeviceAddressI
    self.accelerationStructure = accelerationStructure;
    return *self;
 }
-fn AccelerationStructureVersionInfoKHR accelerationStructureVersionInfoKHR() => AccelerationStructureVersionInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR, .pNext = null };
+fn AccelerationStructureVersionInfoKHR accelerationStructureVersionInfo() => AccelerationStructureVersionInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR, .pNext = null };
 fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4818,7 +4797,7 @@ fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setVe
    self.pVersionData = pVersionData;
    return *self;
 }
-fn CopyAccelerationStructureInfoKHR copyAccelerationStructureInfoKHR() => CopyAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
+fn CopyAccelerationStructureInfoKHR copyAccelerationStructureInfo() => CopyAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
 fn CopyAccelerationStructureInfoKHR CopyAccelerationStructureInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4835,7 +4814,7 @@ fn CopyAccelerationStructureInfoKHR CopyAccelerationStructureInfoKHR.setMode(&se
    self.mode = mode;
    return *self;
 }
-fn CopyAccelerationStructureToMemoryInfoKHR copyAccelerationStructureToMemoryInfoKHR() => CopyAccelerationStructureToMemoryInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR, .pNext = null };
+fn CopyAccelerationStructureToMemoryInfoKHR copyAccelerationStructureToMemoryInfo() => CopyAccelerationStructureToMemoryInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR, .pNext = null };
 fn CopyAccelerationStructureToMemoryInfoKHR CopyAccelerationStructureToMemoryInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4852,7 +4831,7 @@ fn CopyAccelerationStructureToMemoryInfoKHR CopyAccelerationStructureToMemoryInf
    self.mode = mode;
    return *self;
 }
-fn CopyMemoryToAccelerationStructureInfoKHR copyMemoryToAccelerationStructureInfoKHR() => CopyMemoryToAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
+fn CopyMemoryToAccelerationStructureInfoKHR copyMemoryToAccelerationStructureInfo() => CopyMemoryToAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
 fn CopyMemoryToAccelerationStructureInfoKHR CopyMemoryToAccelerationStructureInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4887,7 +4866,7 @@ fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.s
    self.robustImageAccess = robustImageAccess;
    return *self;
 }
-fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHR() => PhysicalDevicePortabilitySubsetFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeatures() => PhysicalDevicePortabilitySubsetFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR, .pNext = null };
 fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4952,7 +4931,7 @@ fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFea
    self.vertexAttributeAccessBeyondStride = vertexAttributeAccessBeyondStride;
    return *self;
 }
-fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHR() => PhysicalDevicePortabilitySubsetPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetProperties() => PhysicalDevicePortabilitySubsetPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR, .pNext = null };
 fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5096,7 +5075,7 @@ fn CopyBufferInfo2 CopyBufferInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn CopyBufferInfo2 CopyBufferInfo2.setRegions(&self, BufferCopy2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5126,7 +5105,7 @@ fn CopyImageInfo2 CopyImageInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn CopyImageInfo2 CopyImageInfo2.setRegions(&self, ImageCopy2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5156,7 +5135,7 @@ fn BlitImageInfo2 BlitImageInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn BlitImageInfo2 BlitImageInfo2.setRegions(&self, ImageBlit2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5186,7 +5165,7 @@ fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegionCount(&self, uint regi
    return *self;
 }
 fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegions(&self, BufferImageCopy2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5212,7 +5191,7 @@ fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegionCount(&self, uint regi
    return *self;
 }
 fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegions(&self, BufferImageCopy2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5242,7 +5221,7 @@ fn ResolveImageInfo2 ResolveImageInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn ResolveImageInfo2 ResolveImageInfo2.setRegions(&self, ImageResolve2[] pRegions) {
-   self.pRegions= (uint)pRegions.len();
+   self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
 }
@@ -5255,7 +5234,7 @@ fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminate
    self.shaderTerminateInvocation = shaderTerminateInvocation;
    return *self;
 }
-fn AccelerationStructureBuildSizesInfoKHR accelerationStructureBuildSizesInfoKHR() => AccelerationStructureBuildSizesInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR, .pNext = null };
+fn AccelerationStructureBuildSizesInfoKHR accelerationStructureBuildSizesInfo() => AccelerationStructureBuildSizesInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR, .pNext = null };
 fn AccelerationStructureBuildSizesInfoKHR AccelerationStructureBuildSizesInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5393,7 +5372,7 @@ fn DependencyInfo DependencyInfo.setMemoryBarrierCount(&self, uint memoryBarrier
    return *self;
 }
 fn DependencyInfo DependencyInfo.setMemoryBarriers(&self, MemoryBarrier2[] pMemoryBarriers) {
-   self.pMemoryBarriers= (uint)pMemoryBarriers.len();
+   self.memoryBarrierCount= (uint)pMemoryBarriers.len;
    self.pMemoryBarriers = &pMemoryBarriers[0];
    return *self;
 }
@@ -5402,7 +5381,7 @@ fn DependencyInfo DependencyInfo.setBufferMemoryBarrierCount(&self, uint bufferM
    return *self;
 }
 fn DependencyInfo DependencyInfo.setBufferMemoryBarriers(&self, BufferMemoryBarrier2[] pBufferMemoryBarriers) {
-   self.pBufferMemoryBarriers= (uint)pBufferMemoryBarriers.len();
+   self.bufferMemoryBarrierCount= (uint)pBufferMemoryBarriers.len;
    self.pBufferMemoryBarriers = &pBufferMemoryBarriers[0];
    return *self;
 }
@@ -5411,7 +5390,7 @@ fn DependencyInfo DependencyInfo.setImageMemoryBarrierCount(&self, uint imageMem
    return *self;
 }
 fn DependencyInfo DependencyInfo.setImageMemoryBarriers(&self, ImageMemoryBarrier2[] pImageMemoryBarriers) {
-   self.pImageMemoryBarriers= (uint)pImageMemoryBarriers.len();
+   self.imageMemoryBarrierCount= (uint)pImageMemoryBarriers.len;
    self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
    return *self;
 }
@@ -5463,7 +5442,7 @@ fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfoCount(&self, uint waitSemaphoreIn
    return *self;
 }
 fn SubmitInfo2 SubmitInfo2.setWaitSemaphoreInfos(&self, SemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
-   self.pWaitSemaphoreInfos= (uint)pWaitSemaphoreInfos.len();
+   self.waitSemaphoreInfoCount= (uint)pWaitSemaphoreInfos.len;
    self.pWaitSemaphoreInfos = &pWaitSemaphoreInfos[0];
    return *self;
 }
@@ -5472,7 +5451,7 @@ fn SubmitInfo2 SubmitInfo2.setCommandBufferInfoCount(&self, uint commandBufferIn
    return *self;
 }
 fn SubmitInfo2 SubmitInfo2.setCommandBufferInfos(&self, CommandBufferSubmitInfo[] pCommandBufferInfos) {
-   self.pCommandBufferInfos= (uint)pCommandBufferInfos.len();
+   self.commandBufferInfoCount= (uint)pCommandBufferInfos.len;
    self.pCommandBufferInfos = &pCommandBufferInfos[0];
    return *self;
 }
@@ -5481,7 +5460,7 @@ fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfoCount(&self, uint signalSemapho
    return *self;
 }
 fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfos(&self, SemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
-   self.pSignalSemaphoreInfos= (uint)pSignalSemaphoreInfos.len();
+   self.signalSemaphoreInfoCount= (uint)pSignalSemaphoreInfos.len;
    self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
    return *self;
 }
@@ -5971,7 +5950,7 @@ fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentCou
    return *self;
 }
 fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setColorAttachmentFormats(&self, Format[] pColorAttachmentFormats) {
-   self.pColorAttachmentFormats= (uint)pColorAttachmentFormats.len();
+   self.colorAttachmentCount= (uint)pColorAttachmentFormats.len;
    self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
    return *self;
 }
@@ -6009,7 +5988,7 @@ fn RenderingInfo RenderingInfo.setColorAttachmentCount(&self, uint colorAttachme
    return *self;
 }
 fn RenderingInfo RenderingInfo.setColorAttachments(&self, RenderingAttachmentInfo[] pColorAttachments) {
-   self.pColorAttachments= (uint)pColorAttachments.len();
+   self.colorAttachmentCount= (uint)pColorAttachments.len;
    self.pColorAttachments = &pColorAttachments[0];
    return *self;
 }
@@ -6058,7 +6037,7 @@ fn RenderingAttachmentInfo RenderingAttachmentInfo.setClearValue(&self, ClearVal
    self.clearValue = clearValue;
    return *self;
 }
-fn RenderingFragmentShadingRateAttachmentInfoKHR renderingFragmentShadingRateAttachmentInfoKHR() => RenderingFragmentShadingRateAttachmentInfoKHR { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
+fn RenderingFragmentShadingRateAttachmentInfoKHR renderingFragmentShadingRateAttachmentInfo() => RenderingFragmentShadingRateAttachmentInfoKHR { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
 fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6114,12 +6093,8 @@ fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.s
    self.colorAttachmentCount = colorAttachmentCount;
    return *self;
 }
-fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setColorAttachmentCount(&self, uint colorAttachmentCount) {
-   self.colorAttachmentCount = colorAttachmentCount;
-   return *self;
-}
 fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setColorAttachmentFormats(&self, Format[] pColorAttachmentFormats) {
-   self.pColorAttachmentFormats= (uint)pColorAttachmentFormats.len();
+   self.colorAttachmentCount= (uint)pColorAttachmentFormats.len;
    self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
    return *self;
 }
@@ -6145,7 +6120,7 @@ fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentC
    return *self;
 }
 fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentSamples(&self, SampleCountFlagBits[] pColorAttachmentSamples) {
-   self.pColorAttachmentSamples= (uint)pColorAttachmentSamples.len();
+   self.colorAttachmentCount= (uint)pColorAttachmentSamples.len;
    self.pColorAttachmentSamples = &pColorAttachmentSamples[0];
    return *self;
 }
