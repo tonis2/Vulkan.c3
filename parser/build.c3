@@ -52,7 +52,7 @@ fn void! main(String[] args) {
         "null", "void*",
         "HANDLE", "void*",
         "VkBool32", "uint",
-        "xcb_connection_t", "Display",
+        "xcb_connection_t", "Connection",
         "xcb_visualid_t", "Window",
         "xcb_window_t", "Window",
         "wl_display", "Display",
@@ -233,7 +233,7 @@ fn void! main(String[] args) {
                         }
                         case "enum": {
                             if (try extends) {
-                                String! extnumber = feature.name == "extension" ? number : entry.attributes.get("extnumber");
+                                String! extnumber = entry.attributes.get("extnumber") ?? number;
                                 String! offset = entry.attributes.get("offset");
                                 String! bitpos = entry.attributes.get("bitpos");
                                 String! dir = entry.attributes.get("dir");
@@ -384,7 +384,7 @@ fn void! main(String[] args) {
                 String value_name = value.value == "*" ? value.name[1..].capitalize() : value.name.capitalize();
                 if (value.len != "" && type != "void") {
 
-                    DString buffer = dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type == "char" ? "ZString" : type, value.size != "" ? value.size : "[]", " ", value.name.to_lower_case(), ") {\n",
+                    DString buffer = dstring::new_join({"fn ", name, " ", name, ".set", type == "char" ? value_name[1..] : value_name, "(&self, ", type == "char" ? "ZString" : type, value.size != "" ? value.size : "[]", " ", value.name.to_lower_case(), ") {\n",
                     "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"},  "");
 
                     if (type == "char") {
