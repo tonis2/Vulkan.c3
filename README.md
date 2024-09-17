@@ -30,6 +30,5 @@ GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
 
 ### Building bindings
 
-Install Dart https://dart.dev/get-dart
-
-run `sh build.sh`
+run `sh build.sh` 
+or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
