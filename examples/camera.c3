@@ -1,5 +1,6 @@
 module camera;
 import std::math;
+import std::math::matrix;
 import std::io;
 
 fn float radians(float value) {
@@ -26,8 +27,8 @@ fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float
     return Camera {
         target,
         eye,
-        perspective(radians(view), aspect, min_zoom, max_zoom),
-        matrix_look_at(eye, target, {0.0, 1.0, 0.0}),
+        matrix::perspective(<float>)(radians(view), aspect, min_zoom, max_zoom),
+        matrix::look_at(<float>)(eye, target, {0.0, 1.0, 0.0}),
         0,
         0,
         -eye.z
@@ -45,7 +46,7 @@ fn void Camera.rotate (Camera* self, float x_offset, float y_offset) {
                        math::sin(radians(self.pitch)),
                        math::sin(radians(self.yaw)) * math::cos(radians(self.pitch))};
 
-    self.view = matrix_look_at(self.eye, self.target, {0.0, 1.0, 0.0});
+    self.view = matrix::look_at(<float>)(self.eye, self.target, {0.0, 1.0, 0.0});
     self.view.m23 = self.zoom_value;
 }
 
@@ -61,31 +62,4 @@ fn UniformData Camera.matrix(Camera self) {
         self.view.transpose(),
         self.eye,
     };
-}
-
-fn Matrix4f matrix_look_at(Vec3f eye, Vec3f target, Vec3f up)
-{
-	Vec3f vz = (eye - target).normalize();
-	Vec3f vx = up.cross(vz).normalize();
-	Vec3f vy = vz.cross(vx);
-
-	return Matrix4f {
-		vx[0], vx[1], vx[2], - vx.dot(eye),
-		vy[0], vy[1], vy[2], - vy.dot(eye),
-		vz[0], vz[1], vz[2], - vz.dot(eye),
-		0.0, 0.0, 0.0, 1
-	};
-}
-
-fn Matrix4f perspective(float fov, float aspect_ratio, float near, float far)
-{
-	float f = (float)math::tan(math::PI * 0.5 - 0.5 * fov);
-	float rangeInv = (float)1.0 / (near - far);
-
-	return {
-		f / aspect_ratio, 0, 0, 0,
-		0, f, 0, 0,
-		0, 0, (near + far) * rangeInv,  near * far * rangeInv * 2,
-		0, 0, -1, 0,
-	};
 }
