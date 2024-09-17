@@ -2,13 +2,12 @@ module vk;
 
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
 
-distinct Display = void*;
-// distinct ZHandle = void*;
-// distinct WDisplay = void*;
-distinct Window = ulong;
-distinct Hinstance = ulong;
-distinct Hwnd = void*;
-distinct VisualID = ulong;
+distinct Display = inline void*;
+distinct Connection = inline void*;
+distinct Window = inline ulong;
+distinct Hinstance = inline ulong;
+distinct Hwnd = inline void*;
+distinct VisualID = inline ulong;
 
 
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);

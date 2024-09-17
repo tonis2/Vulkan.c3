@@ -68,7 +68,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerCount(&self, uint enabledLay
    self.enabledLayerCount = enabledLayerCount;
    return *self;
 }
-fn DeviceCreateInfo DeviceCreateInfo.setPEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
    self.enabledLayerCount= (uint)ppEnabledLayerNames.len;
    self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
    return *self;
@@ -77,7 +77,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionCount(&self, uint enable
    self.enabledExtensionCount = enabledExtensionCount;
    return *self;
 }
-fn DeviceCreateInfo DeviceCreateInfo.setPEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
+fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
    self.enabledExtensionCount= (uint)ppEnabledExtensionNames.len;
    self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
    return *self;
@@ -103,7 +103,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerCount(&self, uint enable
    self.enabledLayerCount = enabledLayerCount;
    return *self;
 }
-fn InstanceCreateInfo InstanceCreateInfo.setPEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
    self.enabledLayerCount= (uint)ppEnabledLayerNames.len;
    self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
    return *self;
@@ -112,7 +112,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionCount(&self, uint en
    self.enabledExtensionCount = enabledExtensionCount;
    return *self;
 }
-fn InstanceCreateInfo InstanceCreateInfo.setPEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
+fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionNames(&self, ZString[] ppEnabledExtensionNames) {
    self.enabledExtensionCount= (uint)ppEnabledExtensionNames.len;
    self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
    return *self;
@@ -1395,7 +1395,7 @@ fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(&self, XlibSurface
    self.flags = flags;
    return *self;
 }
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(&self, Display dpy) {
+fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(&self, Display* dpy) {
    self.dpy = dpy;
    return *self;
 }
@@ -1412,7 +1412,7 @@ fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setFlags(&self, XcbSurfaceCre
    self.flags = flags;
    return *self;
 }
-fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setOnnection(&self, Display* connection) {
+fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setOnnection(&self, Connection* connection) {
    self.connection = connection;
    return *self;
 }
