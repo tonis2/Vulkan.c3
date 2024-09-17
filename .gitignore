@@ -7,10 +7,12 @@
 *.obj
 *.elf
 *.o
-
+build
 tmp
 _c3l
 vk.xml
+
+.vscode/
 
 # Linker output
 *.ilk
