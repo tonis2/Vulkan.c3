@@ -1,3 +1,4 @@
+mkdir -p ./assets
 curl https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml --output ./assets/vk.xml
 c3c run build
 cp ./vk/*.c3 .

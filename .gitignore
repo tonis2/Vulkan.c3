@@ -1,6 +1,5 @@
 # Prerequisites
 *.d
-# vk.xml
 # Object files
 *.o
 *.ko
@@ -10,7 +9,7 @@
 build
 tmp
 _c3l
-vk.xml
+assets/
 
 .vscode/
 
