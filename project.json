@@ -10,13 +10,13 @@
 	"targets": {
 		"cube": {
 			"type": "executable",
-			"sources-add": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
-			"dependencies-add": ["rgfw"]
+			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
+			"dependencies": ["rgfw"]
 		},
 		"build": {
 			"type": "executable",
-			"dependencies-add": ["xml"],
-			"sources-add": ["./parser/build.c3", "./parser/types.c3"]
+			"dependencies": ["xml"],
+			"sources": ["./parser/build.c3", "./parser/types.c3"]
 		}
 	},
 	"output": "./build"
