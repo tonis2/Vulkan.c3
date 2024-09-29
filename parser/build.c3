@@ -294,11 +294,15 @@ fn void! main(String[] args) {
     command_file.write("module vk;\n")!!;
     builders_file.write("module vk;\n")!!;
 
+    DynamicArenaAllocator allocator;
+    allocator.init(page_size: 256, allocator: allocator::heap());
+    defer allocator.free();
+
     // Constants
     foreach (value : constants) {
         String type = type_values[value.value] ?? value.value;
 
-        DString text_body = dstring::new_join({"const ", value.name[3..], " = ", type, ";\n"}, "");
+        DString text_body = dstring::new_join({"const ", value.name[3..], " = ", type, ";\n"}, "", allocator: &allocator);
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
@@ -307,7 +311,7 @@ fn void! main(String[] args) {
 
     // Handles
     foreach (entry : handles) {
-        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = inline void*;\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = inline void*;\n"}, "", allocator: &allocator);
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
@@ -331,12 +335,12 @@ fn void! main(String[] args) {
         if (entry.name == "VkResult" || entry.negative) enum_type = "int";
         if (entry.bitwidth == "64") enum_type = "ulong";
 
-        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = ", "inline ", enum_type, ";\n"}, "");
+        DString text_body = dstring::new_join({"distinct ", entry.name[2..], " = ", "inline ", enum_type, ";\n"}, "", allocator: &allocator);
         defer text_body.free();
         // Add values
         foreach (value : entry.values) {
             value.name.convert_ascii_to_upper();
-            text_body.append(dstring::new_join({"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, ""));
+            text_body.append(dstring::new_join({"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, "", allocator: &allocator));
         }
         
         text_body.append_chars("\n");
@@ -347,7 +351,7 @@ fn void! main(String[] args) {
     foreach (entry : enums) {
         if (entry.name == "VkResult") {
             DString text_body = dstring::new_join({"fault VkErrors {\n",}, "");
-            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name[3..], ",\n"}, ""));
+            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::new_join({" ", value.name[3..], ",\n"}, "", allocator: &allocator));
             text_body.append("}\n");
 
             main_file.write(text_body.str_view())!!;
@@ -367,13 +371,13 @@ fn void! main(String[] args) {
 
         String name = entry.name.remove_vk();
 
-        DString text_body = dstring::new_join({"struct ", name, " {\n"}, "");
+        DString text_body = dstring::new_join({"struct ", name, " {\n"}, "", allocator: &allocator);
         defer text_body.free();
 
         if (has_struct_type) {
             creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case().strip_end("KHR"), "() => ",
             name,
-            " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, ""));
+            " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, "", allocator: &allocator));
         }
 
         // Add struct values
@@ -385,27 +389,27 @@ fn void! main(String[] args) {
                 if (value.len != "" && type != "void") {
 
                     DString buffer = dstring::new_join({"fn ", name, " ", name, ".set", type == "char" ? value_name[1..] : value_name, "(&self, ", type == "char" ? "ZString" : type, value.size != "" ? value.size : "[]", " ", value.name.to_lower_case(), ") {\n",
-                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"},  "");
+                    "   self.", value.len, "= (uint)", value.name.to_lower_case(), ".len;\n"},  "", allocator: &allocator);
 
                     if (type == "char") {
-                        buffer.append(dstring::new_join({"   self.", value.name, " = (char*)&", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"},""));
+                        buffer.append(dstring::new_join({"   self.", value.name, " = (char*)&", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"},"", allocator: &allocator));
                     } else if (value.size != "") {
-                        buffer.append(dstring::new_join({"   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"},""));
+                        buffer.append(dstring::new_join({"   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"},"", allocator: &allocator));
                     } else {
-                        buffer.append(dstring::new_join({"   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"}, ""));
+                        buffer.append(dstring::new_join({"   self.", value.name, " = &", value.name.to_lower_case(), "[0];\n", "   return *self;\n}\n"}, "", allocator: &allocator));
                     }
                     creator_functions.append(buffer);
                 } else {
                     creator_functions.append(dstring::new_join({"fn ", name, " ", name, ".set", value_name, "(&self, ", type, value.size != "" ? value.size : value.value, " ", value.name.to_lower_case(), ") {\n",
                     "   self.", value.name, " = ", value.name.to_lower_case(), ";\n", "   return *self;\n}\n"
-                    }, ""));
+                    }, "", allocator: &allocator));
                 }
             }
 
             if (value.size != "") {
-                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, "", allocator: &allocator));
             } else {
-                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, "", allocator: &allocator));
             }
         }
         
@@ -418,7 +422,7 @@ fn void! main(String[] args) {
 
     // Unions
     foreach (entry : unions) {
-        DString text_body = dstring::new_join({"union ", entry.name[2..], " { \n"}, "");
+        DString text_body = dstring::new_join({"union ", entry.name[2..], " { \n"}, "", allocator: &allocator);
         defer text_body.free();
 
         // Add values
@@ -426,9 +430,9 @@ fn void! main(String[] args) {
             String type = type_values[value.type] ?? value.type.remove_vk();
 
             if (value.size != "") {
-                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, value.size, " ", value.name,";\n"}, "", allocator: &allocator));
             } else {
-                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, ""));
+                text_body.append(dstring::new_join({"   ", type, value.value, " ", value.name,";\n"}, "", allocator: &allocator));
             }
         }
         
@@ -465,20 +469,20 @@ fn void! main(String[] args) {
         bool no_result = return_type != "Result";
         bool create_command = entry.name.contains("Create");
 
-        String extension_def = dstring::new_join({"PFN_", entry.name}, "").str_view();
+        String extension_def = dstring::new_join({"PFN_", entry.name}, "", allocator: &allocator).str_view();
 
         if (!entry.extension) {
-            base_commands.append(dstring::new_join({"extern fn ", return_type, " ", no_result ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
+            base_commands.append(dstring::new_join({"extern fn ", return_type, " ", no_result ? entry.name[2..].to_lower_case() : entry.name, "("}, "", allocator: &allocator));
         }
 
         if (no_result && entry.extension) {
-            extension_functions.append(dstring::new_join({"fn ", return_type, " ", entry.name.remove_vk().to_lower_case(), " ("}, ""));
+            extension_functions.append(dstring::new_join({"fn ", return_type, " ", entry.name.remove_vk().to_lower_case(), " ("}, "", allocator: &allocator));
         }
 
         if (entry.extension) {
-            extension_definitions.append(dstring::new_join({"def ", extension_def, " = fn ", return_type, " ("}, ""));
-            extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, ""));
-            extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
+            extension_definitions.append(dstring::new_join({"def ", extension_def, " = fn ", return_type, " ("}, "", allocator: &allocator));
+            extension_pointers.append(dstring::new_join({"  ", extension_def, " ", entry.name, ";\n"}, "", allocator: &allocator));
+            extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, "", allocator: &allocator));
         }
 
         if (create_command) {
@@ -488,7 +492,7 @@ fn void! main(String[] args) {
             |};
             String result_type = entry.values[entry.values.len() - 1].type;
 
-            create_commands.append(dstring::new_join({"fn ", result_type.remove_vk(), "! ", command_name.remove_vk(), ".build(&self, "}, ""));
+            create_commands.append(dstring::new_join({"fn ", result_type.remove_vk(), "! ", command_name.remove_vk(), ".build(&self, "}, "", allocator: &allocator));
 
             foreach (i, value : entry.values) {
                 if (value.type == command_name || value.type == result_type) continue;
@@ -497,16 +501,16 @@ fn void! main(String[] args) {
                 if (value.optional) default_value = " = null";
                 if (type == "uint") default_value = " = 1";
                 
-                create_commands.append(dstring::new_join({type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
+                create_commands.append(dstring::new_join({type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, "", allocator: &allocator));
             }
 
-            create_commands.append(dstring::new_join({"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
+            create_commands.append(dstring::new_join({"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, "", allocator: &allocator));
 
             foreach (i, value : entry.values) {
                 String name = value.name;
                 if (value.type == command_name) name = "self";
                 if (value.type == result_type) name = "&response";
-                create_commands.append(dstring::new_join({name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, ""));
+                create_commands.append(dstring::new_join({name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, "", allocator: &allocator));
             }
 
             create_commands.append("   return response;\n}\n");
@@ -515,11 +519,11 @@ fn void! main(String[] args) {
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type.remove_vk();
-            String fn_values = dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, "").str_view();
+            String fn_values = dstring::new_join({type, value.value, i == entry.values.len() - 1 ? "" : ", "}, "", allocator: &allocator).str_view();
 
             if (entry.extension) {
                 extension_definitions.append(fn_values);
-                if (no_result) extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
+                if (no_result) extension_functions.append(dstring::new_join({type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, "", allocator: &allocator));
             } 
             
             if (!entry.extension) base_commands.append(fn_values); 
@@ -528,11 +532,11 @@ fn void! main(String[] args) {
         if (entry.extension) {
             if (no_result) {
                 extension_functions.append(dstring::new_join({" => extensions.", entry.name, "("}, ""));
-                foreach (i, value : entry.values) extension_functions.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));   
+                foreach (i, value : entry.values) extension_functions.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, "", allocator: &allocator));   
             }
-            extension_definitions.append(dstring::new_join({");\n"}, ""));
+            extension_definitions.append(dstring::new_join({");\n"}, "", allocator: &allocator));
         } else {
-            base_commands.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, ""));
+            base_commands.append(dstring::new_join({")", " @extern(\"", entry.name, "\"); \n"}, "", allocator: &allocator));
         }
     }
 
@@ -559,17 +563,17 @@ fn void! main(String[] args) {
 
         DString text_body;
         text_body.append("fn void! ");
-        text_body.append(dstring::new_join({entry.name[2..].to_lower_case(), " ("}, ""));
+        text_body.append(dstring::new_join({entry.name[2..].to_lower_case(), " ("}, "", allocator: &allocator));
 
         defer text_body.free();
 
         // Add values
         foreach (i, value : entry.values) {
             String type = type_values[value.type] ?? value.type;
-            text_body.append(dstring::new_join({type.remove_vk(), value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+            text_body.append(dstring::new_join({type.remove_vk(), value.value, " ", value.name, i == entry.values.len() - 1 ? "" : ", "}, "", allocator: &allocator));
         }
 
-        text_body.append(dstring::new_join({")", " {\n"}, ""));
+        text_body.append(dstring::new_join({")", " {\n"}, "", allocator: &allocator));
 
         if (entry.extension) {
             text_body.append("  Result result = extensions.");
@@ -577,15 +581,15 @@ fn void! main(String[] args) {
             text_body.append("  Result result = ");
         }
 
-        text_body.append(dstring::new_join({entry.name, "("}, ""));
+        text_body.append(dstring::new_join({entry.name, "("}, "", allocator: &allocator));
 
-        foreach (i, value : entry.values) text_body.append(dstring::new_join({ value.name, i == entry.values.len() - 1 ? "" : ", "}, ""));
+        foreach (i, value : entry.values) text_body.append(dstring::new_join({value.name, i == entry.values.len() - 1 ? "" : ", "}, "", allocator: &allocator));
         text_body.append(");\n");
 
         if (entry.error_codes.len() > 0) {
             text_body.append("  switch(result) { \n");
             foreach (i, value : entry.error_codes) {
-                text_body.append(dstring::new_join({"       case ", value[3..], ": return VkErrors.", value[3..], "?;\n"}, ""));
+                text_body.append(dstring::new_join({"       case ", value[3..], ": return VkErrors.", value[3..], "?;\n"}, "", allocator: &allocator));
             }
             text_body.append("  }\n");
         } else {
