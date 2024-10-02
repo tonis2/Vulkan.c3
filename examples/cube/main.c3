@@ -97,7 +97,7 @@ fn void! main(String[] args)
         extensions.add_array({"VK_KHR_xlib_surface", "VK_KHR_xcb_surface"});
     }
 
-    vk::checkExtensionSupport(extensions)!;
+    vk::checkInstanceExtensionSupport(extensions)!;
 
     InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
     .setApplicationInfo(&&ApplicationInfo{

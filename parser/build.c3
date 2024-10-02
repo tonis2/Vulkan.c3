@@ -183,7 +183,6 @@ fn void! main(String[] args) {
     // Parse commands
     foreach (node : command_nodes) commands.push(VkCommand{}.from_node(node));
 
-
     // Enable correct features before writing C3 code
     foreach (feature : feature_nodes) {
         String! number = feature.attributes.get("number");
@@ -204,13 +203,16 @@ fn void! main(String[] args) {
 
                     if (catch err = name) continue;
 
+                    foreach (&node: unions) if (node.name == name && ACTIVE_EXTENSIONS.contains(extension_name!!) || node.name == name && is_extension == false) {
+                        node.enabled = true;
+                    }
+
                     bool enabled = is_extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
 
                     switch (entry.name) {
                         case "type": {
-                            if (try extends) {
-
-                            } else {
+                            if (try extends) {} 
+                            else {
                                 foreach (&node : structs) {
                                     if (node.name == name) {
                                         node.enabled = enabled;
@@ -264,7 +266,6 @@ fn void! main(String[] args) {
                                     }
                                 }
 
-
                                 String vk_value = value ?? "";
 
                                 if (try bitpos) vk_value = bitpos.from_bit_pos();
@@ -279,7 +280,6 @@ fn void! main(String[] args) {
                                         }
                                     );
                                 }
-
                             }
                         }
                     }
@@ -287,7 +287,6 @@ fn void! main(String[] args) {
             }
         }
     }
-
 
     // Build C3 files
     main_file.write("module vk;\n")!!;
@@ -422,6 +421,7 @@ fn void! main(String[] args) {
 
     // Unions
     foreach (entry : unions) {
+        if (!entry.enabled) continue;
         DString text_body = dstring::new_join({"union ", entry.name[2..], " { \n"}, "", allocator: &allocator);
         defer text_body.free();
 
