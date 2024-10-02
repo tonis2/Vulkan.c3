@@ -257,24 +257,24 @@ fn DeviceList! Instance.getDevices(self) {
     return deviceList;
 }
 
-fn StringList! PhysicalDevice.getExtensions(self) {
-    uint extensionCount;
-    StringList extensionList;
-    vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, null)!;
-    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
-    defer mem::free(layers);
+// fn StringList! PhysicalDevice.getExtensions(self) {
+//     uint extensionCount;
+//     StringList extensionList;
+//     vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, null)!;
+//     ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
+//     defer mem::free(layers);
 
-    vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, layers)!;
-    for (uint i = 0; i < extensionCount; ++i) {
-        ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view());
-    };
-    return extensionList;
-}
+//     vk::enumerateDeviceExtensionProperties(self, null, &extensionCount, layers)!;
+//     for (uint i = 0; i < extensionCount; ++i) {
+//         ZString name = (ZString)&layers[i].extensionName;
+//         extensionList.push(name.str_view());
+//     };
+//     return extensionList;
+// }
 
 fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
     bool supports = true;
-    StringList device_extensions = self.getExtensions()!;
+    StringList device_extensions = getDeviceExtensions(self)!;
     defer device_extensions.free();
 
     foreach (extension_name : extensions) {
@@ -332,8 +332,19 @@ fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
     return propertiesList;
 }
 
-fn void! checkExtensionSupport(ZStringList requested_extensions) {
-   StringList extensions = getInstanceExtensions()!;
+fn void! checkInstanceExtensionSupport(ZStringList requested_extensions) {
+    uint extensionCount;
+    StringList extensions;
+    vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)!;
+    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
+    defer mem::free(layers);
+
+    vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
+    for (uint i = 0; i < extensionCount; ++i) {
+        ZString name = (ZString)&layers[i].extensionName;
+        extensions.push(name.str_view().copy());
+    };
+ 
    defer extensions.free();
    foreach (i, value : requested_extensions)
    {
@@ -342,6 +353,21 @@ fn void! checkExtensionSupport(ZStringList requested_extensions) {
            return ContextErrors.EXTENSION_NOT_SUPPORTED?;
        }
    }
+}
+
+fn StringList! getDeviceExtensions(PhysicalDevice device) {
+    uint extensionCount;
+    StringList extensionList;
+    vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
+    ExtensionProperties* layers = mem::new_array(ExtensionProperties, extensionCount);
+    defer mem::free(layers);
+
+    vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
+    for (uint i = 0; i < extensionCount; ++i) {
+        ZString name = (ZString)&layers[i].extensionName;
+        extensionList.push(name.str_view().copy());
+    };
+    return extensionList;
 }
 
 // Check for validation support
@@ -367,7 +393,7 @@ fn StringList! getInstanceExtensions() {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view());
+        extensionList.push(name.str_view().copy());
     };
     return extensionList;
 }
@@ -383,7 +409,7 @@ fn StringList! getValidationLayers() {
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
     for (uint i = 0; i < layerCount; ++i) {
         ZString name = (ZString)&layers[i].layerName;
-        layersList.push(name.str_view());
+        layersList.push(name.str_view().copy());
     };
     return layersList;
 }
