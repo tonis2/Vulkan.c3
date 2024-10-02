@@ -6,12 +6,12 @@
 	"dependency-search-paths": ["libs"],
 	"dependencies": [],
 	"features": [],
-	"linked-libraries": [],
+	"linked-libraries": ["vulkan"],
 	"targets": {
 		"cube": {
 			"type": "executable",
 			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
-			"dependencies": ["rgfw"]
+			"dependencies": ["c3w"]
 		},
 		"build": {
 			"type": "executable",

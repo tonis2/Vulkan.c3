@@ -8,8 +8,8 @@
     "linux-x64" : {
       "linked-libraries" : ["vulkan"]
     },
-  "windows-x64" : {
-		"linked-libraries" : ["vulkan"]
-	}
+    "windows-x64" : {
+      "linked-libraries" : ["vulkan"]
+    }
   }
 }
