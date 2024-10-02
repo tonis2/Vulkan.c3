@@ -6,7 +6,6 @@ import std::core::env;
 import std::collections::list;
 import libc;
 
-
 def FenceList = List(<vk::Fence>);
 def SemaphoreList = List(<vk::Semaphore>);
 def StringList = List(<String>);
@@ -18,6 +17,7 @@ def PresentModeList = List(<PresentModeKHR>);
 def CommandBufferList = List(<CommandBuffer>);
 def ImageList = List(<vk::Image>);
 def ImageViewList = List(<vk::ImageView>);
+def FrameBufferList = List(<vk::Framebuffer>);
 
 fault ContextErrors
 {
@@ -133,6 +133,19 @@ fn CommandBufferList! Device.createCommandBuffers(self, CommandPool pool, uint c
     allocateCommandBuffers(self, &command_buffer_info, command_buffers)!;
     for (int i = 0; i < count; ++i) {
         buffers.push(command_buffers[i]);
+    }
+
+    return buffers;
+}
+
+fn FrameBufferList! Device.createFrameBuffers(self, FramebufferCreateInfo* info,  ImageViewList swapchain_views)
+{
+    FrameBufferList buffers;
+    for (int i = 0; i < swapchain_views.len(); ++i) {
+        Framebuffer frame_buffer;
+        info.pAttachments = &swapchain_views[i];
+        vk::createFramebuffer(self, info, null, &frame_buffer)!;
+        buffers.push(frame_buffer);
     }
 
     return buffers;
@@ -525,6 +538,10 @@ fn void DescriptorImageInfo.free(&self, Device device)
 {
     self.imageView.free(device);
     vk::destroySampler(device, self.sampler, null);
+}
+
+fn void Framebuffer.free(self, Device device) {
+    destroyFramebuffer(device, self, null);
 }
 
 fn void Instance.free(self)
