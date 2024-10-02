@@ -491,6 +491,9 @@ fn void Pipeline.free(self, Device device) {
    destroyPipeline(device, self, null);
 }
 
+fn void RenderPass.free(self, Device device) {
+   destroyRenderPass(device, self, null);
+}
 
 fn void FenceList.release(self, vk::Device device) {
   for (uint i = 0; i < self.len(); ++i) {
