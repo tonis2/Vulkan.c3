@@ -90,7 +90,7 @@ fn void! main(String[] args)
     
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
-    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
+    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_EXT_shader_object"});
     validations.add_array({"VK_LAYER_KHRONOS_validation"});
     extensions.add_array({"VK_KHR_surface", "VK_EXT_debug_utils"});
 

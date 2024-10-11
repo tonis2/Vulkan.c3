@@ -1799,6 +1799,7 @@ const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_E
 const StructureType STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT = 1000355001;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT = 1000356000;
 const StructureType STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR = 1000360000;
+const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT = 1000361000;
 const StructureType STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA = 1000364000;
 const StructureType STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA = 1000364001;
 const StructureType STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA = 1000364002;
@@ -2592,6 +2593,7 @@ distinct PipelineCreateFlagBits2KHR = inline ulong;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT_KHR = 0x00000001;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT_KHR = 0x00000002;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DERIVATIVE_BIT_KHR = 0x00000004;
+const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX = 0x100000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_RESERVED_36_BIT_KHR = 0x1000000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_33_BIT_KHR = 0x200000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT = 0x400000000;
@@ -2623,7 +2625,6 @@ const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT_EXT =
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT_EXT = 0x40000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = 0x10000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT = 0x20000000;
-const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_32_BIT_KHR = 0x100000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR = 0x80000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT = 0x4000000000;
 const PipelineCreateFlagBits2KHR PIPELINE_CREATE_2_RESERVED_35_BIT_KHR = 0x800000000;
@@ -2835,6 +2836,7 @@ const PresentModeKHR PRESENT_MODE_FIFO_KHR = 2;
 const PresentModeKHR PRESENT_MODE_FIFO_RELAXED_KHR = 3;
 const PresentModeKHR PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = 1000111000;
 const PresentModeKHR PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = 1000111001;
+const PresentModeKHR PRESENT_MODE_FIFO_LATEST_READY_EXT = 1000361000;
 
 distinct ColorSpaceKHR = inline uint;
 const ColorSpaceKHR COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
@@ -7227,64 +7229,6 @@ struct PhysicalDeviceShaderIntegerDotProductProperties {
    uint integerDotProductAccumulatingSaturating64BitSignedAccelerated;
    uint integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
 }
-struct PhysicalDeviceRayTracingMotionBlurFeaturesNV {
-   StructureType sType;
-   void* pNext;
-   uint rayTracingMotionBlur;
-   uint rayTracingMotionBlurPipelineTraceRaysIndirect;
-}
-struct AccelerationStructureGeometryMotionTrianglesDataNV {
-   StructureType sType;
-   void* pNext;
-   DeviceOrHostAddressConstKHR vertexData;
-}
-struct AccelerationStructureMotionInfoNV {
-   StructureType sType;
-   void* pNext;
-   uint maxInstances;
-   AccelerationStructureMotionInfoFlagsNV flags;
-}
-struct SRTDataNV {
-   float sx;
-   float a;
-   float b;
-   float pvx;
-   float sy;
-   float c;
-   float pvy;
-   float sz;
-   float pvz;
-   float qx;
-   float qy;
-   float qz;
-   float qw;
-   float tx;
-   float ty;
-   float tz;
-}
-struct AccelerationStructureSRTMotionInstanceNV {
-   SRTDataNV transformT0;
-   SRTDataNV transformT1;
-   uint instanceCustomIndex;
-   uint mask;
-   uint instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR flags;
-   ulong accelerationStructureReference;
-}
-struct AccelerationStructureMatrixMotionInstanceNV {
-   TransformMatrixKHR transformT0;
-   TransformMatrixKHR transformT1;
-   uint instanceCustomIndex;
-   uint mask;
-   uint instanceShaderBindingTableRecordOffset;
-   GeometryInstanceFlagsKHR flags;
-   ulong accelerationStructureReference;
-}
-struct AccelerationStructureMotionInstanceNV {
-   AccelerationStructureMotionInstanceTypeNV type;
-   AccelerationStructureMotionInstanceFlagsNV flags;
-   AccelerationStructureMotionInstanceDataNV data;
-}
 struct FormatProperties3 {
    StructureType sType;
    void* pNext;
@@ -7401,10 +7345,5 @@ union DescriptorDataEXT {
    DescriptorAddressInfoEXT* pUniformBuffer;
    DescriptorAddressInfoEXT* pStorageBuffer;
    DeviceAddress accelerationStructure;
-}
-union AccelerationStructureMotionInstanceDataNV { 
-   AccelerationStructureInstanceKHR staticInstance;
-   AccelerationStructureMatrixMotionInstanceNV matrixMotionInstance;
-   AccelerationStructureSRTMotionInstanceNV srtMotionInstance;
 }
 

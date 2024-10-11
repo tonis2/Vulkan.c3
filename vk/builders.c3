@@ -5888,41 +5888,6 @@ fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDo
    self.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
    return *self;
 }
-fn PhysicalDeviceRayTracingMotionBlurFeaturesNV physicalDeviceRayTracingMotionBlurFeaturesNV() => PhysicalDeviceRayTracingMotionBlurFeaturesNV { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MOTION_BLUR_FEATURES_NV, .pNext = null };
-fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setRayTracingMotionBlur(&self, uint rayTracingMotionBlur) {
-   self.rayTracingMotionBlur = rayTracingMotionBlur;
-   return *self;
-}
-fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setRayTracingMotionBlurPipelineTraceRaysIndirect(&self, uint rayTracingMotionBlurPipelineTraceRaysIndirect) {
-   self.rayTracingMotionBlurPipelineTraceRaysIndirect = rayTracingMotionBlurPipelineTraceRaysIndirect;
-   return *self;
-}
-fn AccelerationStructureGeometryMotionTrianglesDataNV accelerationStructureGeometryMotionTrianglesDataNV() => AccelerationStructureGeometryMotionTrianglesDataNV { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV, .pNext = null };
-fn AccelerationStructureGeometryMotionTrianglesDataNV AccelerationStructureGeometryMotionTrianglesDataNV.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn AccelerationStructureGeometryMotionTrianglesDataNV AccelerationStructureGeometryMotionTrianglesDataNV.setVertexData(&self, DeviceOrHostAddressConstKHR vertexData) {
-   self.vertexData = vertexData;
-   return *self;
-}
-fn AccelerationStructureMotionInfoNV accelerationStructureMotionInfoNV() => AccelerationStructureMotionInfoNV { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV, .pNext = null };
-fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setMaxInstances(&self, uint maxInstances) {
-   self.maxInstances = maxInstances;
-   return *self;
-}
-fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setFlags(&self, AccelerationStructureMotionInfoFlagsNV flags) {
-   self.flags = flags;
-   return *self;
-}
 fn FormatProperties3 formatProperties3() => FormatProperties3 { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3, .pNext = null };
 fn FormatProperties3 FormatProperties3.setNext(&self, void* pNext) {
    self.pNext = pNext;
