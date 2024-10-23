@@ -3,13 +3,13 @@
   "provides" : "vk",
   "targets" : {
     "macos-x64" : {
-      "linked-libraries" : ["vulkan"]
+      "linked-libraries" : []
     },
     "linux-x64" : {
       "linked-libraries" : ["vulkan"]
     },
     "windows-x64" : {
-      "linked-libraries" : ["vulkan"]
+      "linked-libraries" : []
     }
   }
 }
