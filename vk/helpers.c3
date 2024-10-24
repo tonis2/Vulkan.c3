@@ -534,6 +534,10 @@ fn void SurfaceKHR.free(self, Instance instance) {
     destroySurfaceKHR(instance, self, null);
 }
 
+fn void ShaderModule.free(self, Device device) {
+    destroyShaderModule(device, self, null);
+}
+
 fn void DescriptorImageInfo.free(&self, Device device)
 {
     self.imageView.free(device);
