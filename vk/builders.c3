@@ -6006,36 +6006,6 @@ fn RenderingAttachmentInfo RenderingAttachmentInfo.setClearValue(&self, ClearVal
    self.clearValue = clearValue;
    return *self;
 }
-fn RenderingFragmentShadingRateAttachmentInfoKHR renderingFragmentShadingRateAttachmentInfo() => RenderingFragmentShadingRateAttachmentInfoKHR { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
-fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setImageView(&self, ImageView imageView) {
-   self.imageView = imageView;
-   return *self;
-}
-fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setImageLayout(&self, ImageLayout imageLayout) {
-   self.imageLayout = imageLayout;
-   return *self;
-}
-fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setShadingRateAttachmentTexelSize(&self, Extent2D shadingRateAttachmentTexelSize) {
-   self.shadingRateAttachmentTexelSize = shadingRateAttachmentTexelSize;
-   return *self;
-}
-fn RenderingFragmentDensityMapAttachmentInfoEXT renderingFragmentDensityMapAttachmentInfoEXT() => RenderingFragmentDensityMapAttachmentInfoEXT { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT, .pNext = null };
-fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setImageView(&self, ImageView imageView) {
-   self.imageView = imageView;
-   return *self;
-}
-fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setImageLayout(&self, ImageLayout imageLayout) {
-   self.imageLayout = imageLayout;
-   return *self;
-}
 fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatures() => PhysicalDeviceDynamicRenderingFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
 fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6077,36 +6047,5 @@ fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.s
 }
 fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setRasterizationSamples(&self, SampleCountFlagBits rasterizationSamples) {
    self.rasterizationSamples = rasterizationSamples;
-   return *self;
-}
-fn AttachmentSampleCountInfoAMD attachmentSampleCountInfoAMD() => AttachmentSampleCountInfoAMD { .sType = STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD, .pNext = null };
-fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentCount(&self, uint colorAttachmentCount) {
-   self.colorAttachmentCount = colorAttachmentCount;
-   return *self;
-}
-fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentSamples(&self, SampleCountFlagBits[] pColorAttachmentSamples) {
-   self.colorAttachmentCount= (uint)pColorAttachmentSamples.len;
-   self.pColorAttachmentSamples = &pColorAttachmentSamples[0];
-   return *self;
-}
-fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setDepthStencilAttachmentSamples(&self, SampleCountFlagBits depthStencilAttachmentSamples) {
-   self.depthStencilAttachmentSamples = depthStencilAttachmentSamples;
-   return *self;
-}
-fn MultiviewPerViewAttributesInfoNVX multiviewPerViewAttributesInfoNVX() => MultiviewPerViewAttributesInfoNVX { .sType = STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX, .pNext = null };
-fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setPerViewAttributes(&self, uint perViewAttributes) {
-   self.perViewAttributes = perViewAttributes;
-   return *self;
-}
-fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setPerViewAttributesPositionXOnly(&self, uint perViewAttributesPositionXOnly) {
-   self.perViewAttributesPositionXOnly = perViewAttributesPositionXOnly;
    return *self;
 }
