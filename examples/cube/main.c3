@@ -152,7 +152,6 @@ fn void! main(String[] args)
                 win.src.connection,
                 win.src.window,
             };
-
             vk::createXcbSurfaceKHR(instance, &createInfo, null, &surface)!!;
         }
         $case WIN32: {
@@ -179,7 +178,6 @@ fn void! main(String[] args)
 
         queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
         if (surface.checkSurfaceSupport(queue.graphics, entry)!!) queue.present = queue.graphics;
-
         if (queue.is_ready() && supports_extensions) {
             physical_device = entry;
             queue_family = queue;
@@ -192,6 +190,11 @@ fn void! main(String[] args)
     if (!found_device) {
       io::printfn("Did not found suitable device!");
       return;
+    }
+
+    defer {
+        device.free();
+        instance.free();
     }
 
     // // Setup Vulkan extensions configuration
@@ -210,6 +213,7 @@ fn void! main(String[] args)
 		.bufferDeviceAddress = vk::TRUE,
 		.bufferDeviceAddressCaptureReplay = vk::TRUE
 	};
+    
 	PhysicalDeviceSynchronization2Features syncronisation2_feature = {
 		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
 		.pNext = &buffer_device_feature,
@@ -379,10 +383,14 @@ fn void! main(String[] args)
     };
 
     // Load shaders
-    char[*] vertex_shader_data = $embed("./shaders/cube_vert.spv");
-    char[*] fragment_shader_data = $embed("./shaders/cube_frag.spv");
+    char[*] shader = $embed("./shaders/shader.spv");
 
-    Shader draw_shaders = device.createShader(vertex: &vertex_shader_data, fragment: &fragment_shader_data)!;
+    ShaderModule shader_module = vk::shaderModuleCreateInfo()
+    .setCodeSize(shader.len)
+    .setCode((uint*)&shader[0])
+    .build(device)!;
+
+    defer shader_module.free(device);
 
     PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout }).build(device)!;
 
@@ -413,7 +421,16 @@ fn void! main(String[] args)
 
     // Create Renderpipeline info
     Pipeline pipeline = vk::graphicsPipelineCreateInfo()
-    .setStages(&draw_shaders.stages)
+    .setStages({
+        vk::pipelineShaderStageCreateInfo()
+        .setStage(vk::SHADER_STAGE_VERTEX_BIT)
+        .setMod(shader_module)
+        .setName("main"),
+         vk::pipelineShaderStageCreateInfo()
+        .setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
+        .setMod(shader_module)
+        .setName("main")
+    })
     .setLayout(pipeline_layout)
      .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfo()
         .setVertexBindingDescriptions(
@@ -610,7 +627,6 @@ fn void! main(String[] args)
     local_allocation.free();
     
     descriptor_set_layout.free(device);
-    draw_shaders.free(device);
     pipeline.free(device);
     pipeline_layout.free(device);
 
@@ -618,8 +634,4 @@ fn void! main(String[] args)
     signal_semaphores.release(device);
     frame_fences.release(device);
     surface.free(instance);
-
-    device.free();
-    instance.free();
-
 }
