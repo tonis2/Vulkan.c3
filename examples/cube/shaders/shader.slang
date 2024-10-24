@@ -10,8 +10,8 @@ cbuffer Uniforms
 // Per-vertex attributes to be assembled from bound vertex buffers.
 struct VertexInput
 {
-    float3	position : POSITION;
-    float4	color    : COLOR;
+    float3	position;
+    float4	color;
 };
 
 // Output of the fragment shader
@@ -23,8 +23,8 @@ struct Fragment
 // Vertex  Shader
 struct VertexOutPut
 {
-    Fragment    coarseVertex    : CoarseVertex;
-    float4      sv_position     : SV_Position;
+    Fragment    coarseVertex;
+    float4      sv_position : SV_Position;
 };
 
 [shader("vertex")]
@@ -44,7 +44,7 @@ VertexOutPut vertexMain(VertexInput assembledVertex)
 // Fragment Shader
 
 [shader("fragment")]
-float4 fragmentMain(Fragment coarseVertex : CoarseVertex) : SV_Target
+float4 fragmentMain(Fragment coarseVertex) : SV_Target
 {
     return coarseVertex.color;
 }
