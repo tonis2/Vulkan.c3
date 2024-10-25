@@ -1,6 +1,8 @@
 // Shader written in Slang https://github.com/shader-slang/slang
 
 // Uniform data to be passed from application -> shader.
+
+[[vk::binding(0, 0)]] 
 cbuffer Uniforms
 {
     float4x4 projection;
