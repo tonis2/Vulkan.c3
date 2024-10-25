@@ -11,7 +11,7 @@
 		"shaders": {
 			"type": "static-lib",
 			"exec": [
-				"slangc ../examples/cube/shaders/shader.slang -profile glsl_450 -target spirv -o ../examples/cube/shaders/shader.spv -entry vertexMain -entry fragmentMain"
+				"slangc ../examples/cube/shaders/shader.slang -profile glsl_450 -target spirv -o ../examples/cube/shaders/shader.spv"
 			]
 		},
 		"cube": {
