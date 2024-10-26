@@ -90,8 +90,7 @@ fn void! main(String[] args)
     
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
-    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_EXT_shader_object"});
-    validations.add_array({"VK_LAYER_KHRONOS_validation"});
+    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
     extensions.add_array({"VK_KHR_surface", "VK_EXT_debug_utils"});
 
     if (env::OS_TYPE == MACOS) {
@@ -129,6 +128,8 @@ fn void! main(String[] args)
 
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
+      validations.add_array({"VK_LAYER_KHRONOS_validation"});
+
       vk::checkValidationLayersSupport(validations)!!;
       instanceInfo.enabledLayerCount = (uint)validations.len();
       instanceInfo.ppEnabledLayerNames = (char*)validations.entries;
@@ -177,11 +178,18 @@ fn void! main(String[] args)
         QueuePropertiesList queue_properties = entry.getQueueProperties()!!;
 
         queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
+
+        PhysicalDeviceProperties properties;
+        vk::getPhysicalDeviceProperties(entry, &properties);
+
         if (surface.checkSurfaceSupport(queue.graphics, entry)!!) queue.present = queue.graphics;
-        if (queue.is_ready() && supports_extensions) {
+        if (queue.is_ready() && supports_extensions && properties.vendorID != 0) {
+            io::printfn("Device selected %s", (ZString)properties.deviceName[0..]);
+
             physical_device = entry;
             queue_family = queue;
             found_device = true;
+            break;
         }
     }
 
@@ -190,11 +198,6 @@ fn void! main(String[] args)
     if (!found_device) {
       io::printfn("Did not found suitable device!");
       return;
-    }
-
-    defer {
-        device.free();
-        instance.free();
     }
 
     // // Setup Vulkan extensions configuration
@@ -235,8 +238,13 @@ fn void! main(String[] args)
 		.setQueueCreateInfos({ graphicsInfo })
 		.setEnabledExtensionNames(device_extensions.array_view())
 		.setNext(&device_features)
-		.build(physical_device)!;
+		.build(physical_device)!!;
 
+
+    defer {
+        device.free();
+        instance.free();
+    }
 	queue_family.graphics_handle = device.getQueue(queue_family.graphics);
 
 	SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
@@ -293,7 +301,7 @@ fn void! main(String[] args)
         swapchain_views.push(view);
     }
 
-    // Create command pool
+    //Create command pool
     CommandPool command_pool = device.createCommandPool(queue: queue_family.graphics)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
