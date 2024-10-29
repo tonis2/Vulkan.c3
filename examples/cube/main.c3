@@ -364,7 +364,7 @@ fn void! main(String[] args)
     vertex_stage_buffer.free(device);
 
     // Add data for uniform buffer
-    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
+    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
 
     // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
@@ -554,7 +554,7 @@ fn void! main(String[] args)
         if (win.left_click) {
            MouseParams params = c3w::getMousePos(win);
            camera.rotate((float)params.x - last_params.x, -((float)params.y - last_params.y));
-           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size, device);
+           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
            last_params = params;
         }
         
