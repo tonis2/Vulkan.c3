@@ -102,6 +102,7 @@ struct MemoryBlock {
     void* mapped;
     bool is_used;
     DeviceAddress address;
+    Allocation* allocator;
 }
 
 fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice pdevice)
@@ -162,57 +163,58 @@ fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
     return *self;
 }
 
-fn void MemoryBlock.upload(&self, void* data, ulong size, Device device)
+fn void MemoryBlock.upload(&self, void* data, ulong size)
 {
     mem::copy(self.mapped + self.offset, data, size);
 }
 
-fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocation)
+fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocator)
 {
-    vk::Buffer buffer = self.build(allocation.device)!;
-    MemoryRequirements mem_reqs = buffer.memoryRequirements(allocation.device);
-    uint memory_type = allocation.pdevice.getMemoryType(allocation.properties, mem_reqs.memoryTypeBits);
+    vk::Buffer buffer = self.build(allocator.device)!;
+    MemoryRequirements mem_reqs = buffer.memoryRequirements(allocator.device);
+    uint memory_type = allocator.pdevice.getMemoryType(allocator.properties, mem_reqs.memoryTypeBits);
 
     if ((MemoryPropertyFlagBits)self.usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
-        MemoryRequirements desc_mem_reqs = self.descriptorMemoryRequirements(allocation.pdevice);
+        MemoryRequirements desc_mem_reqs = self.descriptorMemoryRequirements(allocator.pdevice);
         mem_reqs.size = desc_mem_reqs.size;
         mem_reqs.alignment = desc_mem_reqs.alignment;
     }
 
-    if (memory_type != allocation.memory_type) {
-        io::printfn("Allocation memory type is %d, but buffer requires %d", allocation.memory_type, memory_type);
+    if (memory_type != allocator.memory_type) {
+        io::printfn("Allocation memory type is %d, but buffer requires %d", allocator.memory_type, memory_type);
     }
 
-    if (allocation.size - allocation.used_size < mem_reqs.size) {
+    if (allocator.size - allocator.used_size < mem_reqs.size) {
        io::printfn("Allocation has no enough free memory");
        return BufferError.ALLOCATION_HAS_NO_ROOM?;
     }
 
-    usz offset = alignUp(allocation.used_size, mem_reqs.alignment);
-    bindBufferMemory(allocation.device, buffer, allocation.memory, offset)!;
+    usz offset = alignUp(allocator.used_size, mem_reqs.alignment);
+    bindBufferMemory(allocator.device, buffer, allocator.memory, offset)!;
     usz size = alignUp(mem_reqs.size, mem_reqs.alignment);
 
     MemoryBlock block = {
         .is_used = true,
         .offset = offset,
-        .id = allocation.buffer_count - 1,
+        .id = allocator.buffer_count - 1,
         .buffer = buffer,
-        .memory = allocation.memory,
+        .memory = allocator.memory,
         .size = size,
-        .mapped = allocation.mapped,
+        .mapped = allocator.mapped,
         .type = BufferType.BUFFER,
+        .allocator = allocator
     };
 
-    allocation.used_size += size;
-    allocation.buffer_count += 1;
-    allocation.blocks.push(block);
+    allocator.used_size += size;
+    allocator.buffer_count += 1;
+    allocator.blocks.push(block);
 
     if ((MemoryPropertyFlagBits)self.usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
         BufferDeviceAddressInfo address_info = {
           .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
           .buffer = buffer
         };
-        block.address = getBufferDeviceAddress(allocation.device, &address_info);
+        block.address = getBufferDeviceAddress(allocator.device, &address_info);
     }
 
     return block;
