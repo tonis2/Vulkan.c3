@@ -138,19 +138,6 @@ fn CommandBufferList! Device.createCommandBuffers(self, CommandPool pool, uint c
     return buffers;
 }
 
-fn FrameBufferList! Device.createFrameBuffers(self, FramebufferCreateInfo* info,  ImageViewList swapchain_views)
-{
-    FrameBufferList buffers;
-    for (int i = 0; i < swapchain_views.len(); ++i) {
-        Framebuffer frame_buffer;
-        info.pAttachments = &swapchain_views[i];
-        vk::createFramebuffer(self, info, null, &frame_buffer)!;
-        buffers.push(frame_buffer);
-    }
-
-    return buffers;
-}
-
 /*fn Extent2D DeviceInfo.getExtent(self) {
     int width, height;
     glfw::getFramebufferSize(self.window, (uint*)&width, (uint*)&height);
@@ -511,6 +498,13 @@ fn void RenderPass.free(self, Device device) {
 fn void FenceList.release(self, vk::Device device) {
   for (uint i = 0; i < self.len(); ++i) {
       vk::destroyFence(device, self.entries[i], null);
+  }
+  self.free();
+}
+
+fn void FrameBufferList.release(self, vk::Device device) {
+  for (uint i = 0; i < self.len(); ++i) {
+      vk::destroyFramebuffer(device, self.entries[i], null);
   }
   self.free();
 }

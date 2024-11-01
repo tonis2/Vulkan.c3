@@ -200,12 +200,6 @@ fn void! main(String[] args)
       return;
     }
 
-    // // Setup Vulkan extensions configuration
-    PhysicalDeviceProperties2 deviceProps2 = vk::physicalDeviceProperties2()
-                                                .setNext(&&vk::physicalDevicePushDescriptorProperties().setMaxPushDescriptors(1));
-
-	vk::getPhysicalDeviceProperties2(physical_device, &deviceProps2);
-
 	PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
 		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
 	};
@@ -518,20 +512,17 @@ fn void! main(String[] args)
     .setRenderPass(render_pass)
     .build(device)!;
 
-
-    FrameBufferList frame_buffers = device.createFrameBuffers(
-        &&FramebufferCreateInfo {
-            .sType = vk::STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .renderPass = render_pass,
-            .attachmentCount = 1,
-            .width = WIDTH,
-            .height = HEIGHT,
-            .layers = 1,
-        },
-        swapchain_views
-    )!;
-
-    defer frame_buffers.free();
+    FrameBufferList frame_buffers;
+    
+    foreach (swapchain: swapchain_views) {
+       FramebufferCreateInfo frame_buffer_info = vk::framebufferCreateInfo()
+        .setRenderPass(render_pass)
+        .setWidth((uint)WIDTH)
+        .setHeight((uint)HEIGHT)
+        .setLayers(1)
+        .setAttachments({ swapchain });
+        frame_buffers.push(frame_buffer_info.build(device)!);
+    }
 
     // Create syncronisation stuff
     SemaphoreList wait_semaphores;
@@ -625,8 +616,11 @@ fn void! main(String[] args)
     if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
     swapchain.free(device);
+
     foreach (view : swapchain_views) view.free(device);
     foreach (buffer : frame_buffers) buffer.free(device);
+
+    render_pass.free(device);
     swapchain_images.free();
     swapchain_views.free();
     command_pool.free(device);
