@@ -60,7 +60,7 @@ ushort[] indices = {
 Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
 PhysicalDevice physical_device;
-QueueFamily queue_family;
+DeviceQueue graphics_queue;
 Device device;
 SurfaceKHR surface;
 SwapchainKHR swapchain;
@@ -169,36 +169,34 @@ fn void! main(String[] args)
     $endswitch
 
     DeviceList devices = instance.getDevices()!!;
-    bool found_device = false;
 
     foreach (entry: devices) {
-        QueueFamily queue;
+        int queue_index = -1;
         // Check for device extension support
         bool supports_extensions = entry.checkExtensionSupport(device_extensions)!!;
         QueuePropertiesList queue_properties = entry.getQueueProperties()!!;
 
-        queue.graphics = queue_properties.find(fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0);
+        queue_index = queue_properties.find(fn (usz index, QueueFamilyProperties props) => 
+        (QueueFlagBits)props.queueFlags & vk::QUEUE_GRAPHICS_BIT != 0 && (QueueFlagBits)props.queueFlags & vk::QUEUE_TRANSFER_BIT);
 
         PhysicalDeviceProperties properties;
         vk::getPhysicalDeviceProperties(entry, &properties);
-
-        if (surface.checkSurfaceSupport(queue.graphics, entry)!!) queue.present = queue.graphics;
-        if (queue.is_ready() && supports_extensions && properties.vendorID != 0) {
+        assert(surface.checkSurfaceSupport((usz)queue_index, entry)!!);
+        
+        if (queue_index >= 0 && supports_extensions && properties.vendorID != 0) {
             io::printfn("Device selected %s", (ZString)properties.deviceName[0..]);
-
             physical_device = entry;
-            queue_family = queue;
-            found_device = true;
+            graphics_queue.index = queue_index;
             break;
         }
     }
 
-    devices.free();
-
-    if (!found_device) {
-      io::printfn("Did not found suitable device!");
-      return;
+    if (physical_device == null) {
+        io::printfn("Found no suitable device");
+        return;
     }
+
+    devices.free();
 
 	PhysicalDeviceDescriptorIndexingFeatures device_indexing_feature = {
 		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
@@ -225,7 +223,7 @@ fn void! main(String[] args)
 	vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
 
 	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo()
-	.setQueueFamilyIndex(queue_family.graphics)
+	.setQueueFamilyIndex(graphics_queue.index)
 	.setQueuePriorities({1.0});
 
 	device = vk::deviceCreateInfo()
@@ -239,7 +237,8 @@ fn void! main(String[] args)
         device.free();
         instance.free();
     }
-	queue_family.graphics_handle = device.getQueue(queue_family.graphics);
+
+    graphics_queue.handle = device.getQueue(graphics_queue.index);
 
 	SurfaceFormatList surface_formats = surface.getFormats(physical_device)!;
 	PresentModeList present_modes = surface.getPresentModes(physical_device)!;
@@ -296,7 +295,7 @@ fn void! main(String[] args)
     }
 
     //Create command pool
-    CommandPool command_pool = device.createCommandPool(queue: queue_family.graphics)!;
+    CommandPool command_pool = device.createCommandPool(queue: graphics_queue.index)!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!;
 
     // Create allocator of 50MB - DEVICE_ONLY memory
@@ -340,7 +339,7 @@ fn void! main(String[] args)
     MemoryBlock vertex_stage_buffer = device.staging_buffer(size: Vertex.sizeof * vertices.len, data: vertices, pdevice: physical_device)!;
     MemoryBlock index_stage_buffer = device.staging_buffer(size: ushort.sizeof * indices.len, data: indices, pdevice: physical_device)!;    
 
-    device.@single_time_command(queue: queue_family.graphics_handle, queue_index: queue_family.graphics; CommandBuffer command_buffer) {
+    device.@single_time_command(queue: graphics_queue; CommandBuffer command_buffer) {
          vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
              .srcOffset = 0,
              .dstOffset = 0,
@@ -601,14 +600,14 @@ fn void! main(String[] args)
         .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
 
         vk::endCommandBuffer(command_buffer)!;
-        vk::queueSubmit(queue_family.graphics_handle, 1, &submit_info, frame_fence)!;
+        vk::queueSubmit(graphics_queue.handle, 1, &submit_info, frame_fence)!;
 
         PresentInfoKHR present_info = vk::presentInfo()
         .setWaitSemaphores({ signal_semaphore })
         .setSwapchains({ swapchain })
         .setImageIndices({ next_image });
 
-        vk::queuePresentKHR(queue_family.graphics_handle, &present_info)!;
+        vk::queuePresentKHR(graphics_queue.handle, &present_info)!;
         frame = (frame + 1) % 2;
     }
 
