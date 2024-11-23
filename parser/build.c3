@@ -197,6 +197,8 @@ fn void! main(String[] args) {
         // Get only up-to required vulkan version
         if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || is_extension)) {
             foreach (require: feature.children) {
+                String! depends = require.attributes.get("depends");
+
                 foreach (entry : require.children) {
                     String! name = entry.attributes.get("name");
                     String! extends = entry.attributes.get("extends");
@@ -209,13 +211,14 @@ fn void! main(String[] args) {
                     }
 
                     bool enabled = is_extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
+                    if (try depends && is_extension && !ACTIVE_EXTENSIONS.contains(depends)) enabled = false;
 
                     switch (entry.name) {
                         case "type": {
                             if (try extends) {} 
                             else {
                                 foreach (&node : structs) {
-                                    if (node.name == name) {
+                                    if (node.name == name && node.enabled == false) {
                                         node.enabled = enabled;
                                         break;
                                     }
@@ -223,14 +226,11 @@ fn void! main(String[] args) {
                             }
                         }
                         case "command": {
-                            if (try extends) {}
-                            else {
-                                foreach (&node : commands) {
-                                    if (node.name == name) {
-                                        node.extension = is_extension;
-                                        node.enabled = enabled;
-                                        break;
-                                    }
+                            foreach (&node : commands) {
+                                if (node.name == name && node.enabled == false) {
+                                    node.extension = is_extension;
+                                    node.enabled = enabled;
+                                    break;
                                 }
                             }
                         }
@@ -464,7 +464,7 @@ fn void! main(String[] args) {
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
     
     foreach (entry : commands) {
-        if (!entry.enabled) continue;
+        if (entry.enabled == false) continue;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         bool no_result = return_type != "Result";

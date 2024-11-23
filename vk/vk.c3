@@ -6985,6 +6985,21 @@ struct PhysicalDeviceExtendedDynamicState3PropertiesEXT {
    void* pNext;
    uint dynamicPrimitiveTopologyUnrestricted;
 }
+struct ColorBlendEquationEXT {
+   BlendFactor srcColorBlendFactor;
+   BlendFactor dstColorBlendFactor;
+   BlendOp colorBlendOp;
+   BlendFactor srcAlphaBlendFactor;
+   BlendFactor dstAlphaBlendFactor;
+   BlendOp alphaBlendOp;
+}
+struct ColorBlendAdvancedEXT {
+   BlendOp advancedBlendOp;
+   uint srcPremultiplied;
+   uint dstPremultiplied;
+   BlendOverlapEXT blendOverlap;
+   uint clampResults;
+}
 struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
    StructureType sType;
    void* pNext;
@@ -7300,12 +7315,6 @@ struct SamplerCaptureDescriptorDataInfoEXT {
    StructureType sType;
    void* pNext;
    Sampler sampler;
-}
-struct AccelerationStructureCaptureDescriptorDataInfoEXT {
-   StructureType sType;
-   void* pNext;
-   AccelerationStructureKHR accelerationStructure;
-   AccelerationStructureNV accelerationStructureNV;
 }
 struct OpaqueCaptureDescriptorDataCreateInfoEXT {
    StructureType sType;

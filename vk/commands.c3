@@ -270,6 +270,16 @@ def PFN_vkCmdBuildAccelerationStructuresKHR = fn void (CommandBuffer, uint, Acce
 def PFN_vkCmdBuildAccelerationStructuresIndirectKHR = fn void (CommandBuffer, uint, AccelerationStructureBuildGeometryInfoKHR*, DeviceAddress*, uint*, uint* );
 def PFN_vkBuildAccelerationStructuresKHR = fn Result (Device, DeferredOperationKHR, uint, AccelerationStructureBuildGeometryInfoKHR*, AccelerationStructureBuildRangeInfoKHR* );
 def PFN_vkGetAccelerationStructureDeviceAddressKHR = fn DeviceAddress (Device, AccelerationStructureDeviceAddressInfoKHR*);
+def PFN_vkCmdSetDepthClampEnableEXT = fn void (CommandBuffer, uint);
+def PFN_vkCmdSetPolygonModeEXT = fn void (CommandBuffer, PolygonMode);
+def PFN_vkCmdSetRasterizationSamplesEXT = fn void (CommandBuffer, SampleCountFlagBits);
+def PFN_vkCmdSetSampleMaskEXT = fn void (CommandBuffer, SampleCountFlagBits, SampleMask*);
+def PFN_vkCmdSetAlphaToCoverageEnableEXT = fn void (CommandBuffer, uint);
+def PFN_vkCmdSetAlphaToOneEnableEXT = fn void (CommandBuffer, uint);
+def PFN_vkCmdSetLogicOpEnableEXT = fn void (CommandBuffer, uint);
+def PFN_vkCmdSetColorBlendEnableEXT = fn void (CommandBuffer, uint, uint, uint*);
+def PFN_vkCmdSetColorBlendEquationEXT = fn void (CommandBuffer, uint, uint, ColorBlendEquationEXT*);
+def PFN_vkCmdSetColorWriteMaskEXT = fn void (CommandBuffer, uint, uint, ColorComponentFlags*);
 def PFN_vkGetAccelerationStructureBuildSizesKHR = fn void (Device, AccelerationStructureBuildTypeKHR, AccelerationStructureBuildGeometryInfoKHR*, uint*, AccelerationStructureBuildSizesInfoKHR*);
 def PFN_vkGetDescriptorSetLayoutSizeEXT = fn void (Device, DescriptorSetLayout, DeviceSize*);
 def PFN_vkGetDescriptorSetLayoutBindingOffsetEXT = fn void (Device, DescriptorSetLayout, uint, DeviceSize*);
@@ -281,7 +291,6 @@ def PFN_vkGetBufferOpaqueCaptureDescriptorDataEXT = fn Result (Device, BufferCap
 def PFN_vkGetImageOpaqueCaptureDescriptorDataEXT = fn Result (Device, ImageCaptureDescriptorDataInfoEXT*, void*);
 def PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT = fn Result (Device, ImageViewCaptureDescriptorDataInfoEXT*, void*);
 def PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT = fn Result (Device, SamplerCaptureDescriptorDataInfoEXT*, void*);
-def PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = fn Result (Device, AccelerationStructureCaptureDescriptorDataInfoEXT*, void*);
 
 struct VK_extension_bindings {
   PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
@@ -338,6 +347,16 @@ struct VK_extension_bindings {
   PFN_vkCmdBuildAccelerationStructuresIndirectKHR vkCmdBuildAccelerationStructuresIndirectKHR;
   PFN_vkBuildAccelerationStructuresKHR vkBuildAccelerationStructuresKHR;
   PFN_vkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHR;
+  PFN_vkCmdSetDepthClampEnableEXT vkCmdSetDepthClampEnableEXT;
+  PFN_vkCmdSetPolygonModeEXT vkCmdSetPolygonModeEXT;
+  PFN_vkCmdSetRasterizationSamplesEXT vkCmdSetRasterizationSamplesEXT;
+  PFN_vkCmdSetSampleMaskEXT vkCmdSetSampleMaskEXT;
+  PFN_vkCmdSetAlphaToCoverageEnableEXT vkCmdSetAlphaToCoverageEnableEXT;
+  PFN_vkCmdSetAlphaToOneEnableEXT vkCmdSetAlphaToOneEnableEXT;
+  PFN_vkCmdSetLogicOpEnableEXT vkCmdSetLogicOpEnableEXT;
+  PFN_vkCmdSetColorBlendEnableEXT vkCmdSetColorBlendEnableEXT;
+  PFN_vkCmdSetColorBlendEquationEXT vkCmdSetColorBlendEquationEXT;
+  PFN_vkCmdSetColorWriteMaskEXT vkCmdSetColorWriteMaskEXT;
   PFN_vkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHR;
   PFN_vkGetDescriptorSetLayoutSizeEXT vkGetDescriptorSetLayoutSizeEXT;
   PFN_vkGetDescriptorSetLayoutBindingOffsetEXT vkGetDescriptorSetLayoutBindingOffsetEXT;
@@ -349,7 +368,6 @@ struct VK_extension_bindings {
   PFN_vkGetImageOpaqueCaptureDescriptorDataEXT vkGetImageOpaqueCaptureDescriptorDataEXT;
   PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT vkGetImageViewOpaqueCaptureDescriptorDataEXT;
   PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT vkGetSamplerOpaqueCaptureDescriptorDataEXT;
-  PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT;
 }
 VK_extension_bindings extensions;
 
@@ -408,6 +426,16 @@ fn void loadExtensions(Instance instance) {
    extensions.vkCmdBuildAccelerationStructuresIndirectKHR = (PFN_vkCmdBuildAccelerationStructuresIndirectKHR)getInstanceProcAddr(instance,"vkCmdBuildAccelerationStructuresIndirectKHR");
    extensions.vkBuildAccelerationStructuresKHR = (PFN_vkBuildAccelerationStructuresKHR)getInstanceProcAddr(instance,"vkBuildAccelerationStructuresKHR");
    extensions.vkGetAccelerationStructureDeviceAddressKHR = (PFN_vkGetAccelerationStructureDeviceAddressKHR)getInstanceProcAddr(instance,"vkGetAccelerationStructureDeviceAddressKHR");
+   extensions.vkCmdSetDepthClampEnableEXT = (PFN_vkCmdSetDepthClampEnableEXT)getInstanceProcAddr(instance,"vkCmdSetDepthClampEnableEXT");
+   extensions.vkCmdSetPolygonModeEXT = (PFN_vkCmdSetPolygonModeEXT)getInstanceProcAddr(instance,"vkCmdSetPolygonModeEXT");
+   extensions.vkCmdSetRasterizationSamplesEXT = (PFN_vkCmdSetRasterizationSamplesEXT)getInstanceProcAddr(instance,"vkCmdSetRasterizationSamplesEXT");
+   extensions.vkCmdSetSampleMaskEXT = (PFN_vkCmdSetSampleMaskEXT)getInstanceProcAddr(instance,"vkCmdSetSampleMaskEXT");
+   extensions.vkCmdSetAlphaToCoverageEnableEXT = (PFN_vkCmdSetAlphaToCoverageEnableEXT)getInstanceProcAddr(instance,"vkCmdSetAlphaToCoverageEnableEXT");
+   extensions.vkCmdSetAlphaToOneEnableEXT = (PFN_vkCmdSetAlphaToOneEnableEXT)getInstanceProcAddr(instance,"vkCmdSetAlphaToOneEnableEXT");
+   extensions.vkCmdSetLogicOpEnableEXT = (PFN_vkCmdSetLogicOpEnableEXT)getInstanceProcAddr(instance,"vkCmdSetLogicOpEnableEXT");
+   extensions.vkCmdSetColorBlendEnableEXT = (PFN_vkCmdSetColorBlendEnableEXT)getInstanceProcAddr(instance,"vkCmdSetColorBlendEnableEXT");
+   extensions.vkCmdSetColorBlendEquationEXT = (PFN_vkCmdSetColorBlendEquationEXT)getInstanceProcAddr(instance,"vkCmdSetColorBlendEquationEXT");
+   extensions.vkCmdSetColorWriteMaskEXT = (PFN_vkCmdSetColorWriteMaskEXT)getInstanceProcAddr(instance,"vkCmdSetColorWriteMaskEXT");
    extensions.vkGetAccelerationStructureBuildSizesKHR = (PFN_vkGetAccelerationStructureBuildSizesKHR)getInstanceProcAddr(instance,"vkGetAccelerationStructureBuildSizesKHR");
    extensions.vkGetDescriptorSetLayoutSizeEXT = (PFN_vkGetDescriptorSetLayoutSizeEXT)getInstanceProcAddr(instance,"vkGetDescriptorSetLayoutSizeEXT");
    extensions.vkGetDescriptorSetLayoutBindingOffsetEXT = (PFN_vkGetDescriptorSetLayoutBindingOffsetEXT)getInstanceProcAddr(instance,"vkGetDescriptorSetLayoutBindingOffsetEXT");
@@ -419,7 +447,6 @@ fn void loadExtensions(Instance instance) {
    extensions.vkGetImageOpaqueCaptureDescriptorDataEXT = (PFN_vkGetImageOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetImageOpaqueCaptureDescriptorDataEXT");
    extensions.vkGetImageViewOpaqueCaptureDescriptorDataEXT = (PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetImageViewOpaqueCaptureDescriptorDataEXT");
    extensions.vkGetSamplerOpaqueCaptureDescriptorDataEXT = (PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetSamplerOpaqueCaptureDescriptorDataEXT");
-   extensions.vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = (PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT");
 }
 
 fn void destroySurfaceKHR (Instance instance, SurfaceKHR surface, AllocationCallbacks* pAllocator) => extensions.vkDestroySurfaceKHR(instance, surface, pAllocator);
@@ -447,6 +474,16 @@ fn void getDeviceAccelerationStructureCompatibilityKHR (Device device, Accelerat
 fn void cmdBuildAccelerationStructuresKHR (CommandBuffer commandBuffer, uint infoCount, AccelerationStructureBuildGeometryInfoKHR* pInfos, AccelerationStructureBuildRangeInfoKHR*  ppBuildRangeInfos) => extensions.vkCmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 fn void cmdBuildAccelerationStructuresIndirectKHR (CommandBuffer commandBuffer, uint infoCount, AccelerationStructureBuildGeometryInfoKHR* pInfos, DeviceAddress* pIndirectDeviceAddresses, uint* pIndirectStrides, uint*  ppMaxPrimitiveCounts) => extensions.vkCmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 fn DeviceAddress getAccelerationStructureDeviceAddressKHR (Device device, AccelerationStructureDeviceAddressInfoKHR* pInfo) => extensions.vkGetAccelerationStructureDeviceAddressKHR(device, pInfo);
+fn void cmdSetDepthClampEnableEXT (CommandBuffer commandBuffer, uint depthClampEnable) => extensions.vkCmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
+fn void cmdSetPolygonModeEXT (CommandBuffer commandBuffer, PolygonMode polygonMode) => extensions.vkCmdSetPolygonModeEXT(commandBuffer, polygonMode);
+fn void cmdSetRasterizationSamplesEXT (CommandBuffer commandBuffer, SampleCountFlagBits rasterizationSamples) => extensions.vkCmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
+fn void cmdSetSampleMaskEXT (CommandBuffer commandBuffer, SampleCountFlagBits samples, SampleMask* pSampleMask) => extensions.vkCmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
+fn void cmdSetAlphaToCoverageEnableEXT (CommandBuffer commandBuffer, uint alphaToCoverageEnable) => extensions.vkCmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
+fn void cmdSetAlphaToOneEnableEXT (CommandBuffer commandBuffer, uint alphaToOneEnable) => extensions.vkCmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
+fn void cmdSetLogicOpEnableEXT (CommandBuffer commandBuffer, uint logicOpEnable) => extensions.vkCmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
+fn void cmdSetColorBlendEnableEXT (CommandBuffer commandBuffer, uint firstAttachment, uint attachmentCount, uint* pColorBlendEnables) => extensions.vkCmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
+fn void cmdSetColorBlendEquationEXT (CommandBuffer commandBuffer, uint firstAttachment, uint attachmentCount, ColorBlendEquationEXT* pColorBlendEquations) => extensions.vkCmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
+fn void cmdSetColorWriteMaskEXT (CommandBuffer commandBuffer, uint firstAttachment, uint attachmentCount, ColorComponentFlags* pColorWriteMasks) => extensions.vkCmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
 fn void getAccelerationStructureBuildSizesKHR (Device device, AccelerationStructureBuildTypeKHR buildType, AccelerationStructureBuildGeometryInfoKHR* pBuildInfo, uint* pMaxPrimitiveCounts, AccelerationStructureBuildSizesInfoKHR* pSizeInfo) => extensions.vkGetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 fn void getDescriptorSetLayoutSizeEXT (Device device, DescriptorSetLayout layout, DeviceSize* pLayoutSizeInBytes) => extensions.vkGetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
 fn void getDescriptorSetLayoutBindingOffsetEXT (Device device, DescriptorSetLayout layout, uint binding, DeviceSize* pOffset) => extensions.vkGetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
@@ -1215,13 +1252,6 @@ fn void! getImageViewOpaqueCaptureDescriptorDataEXT (Device device, ImageViewCap
 }
 fn void! getSamplerOpaqueCaptureDescriptorDataEXT (Device device, SamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-  switch(result) { 
-       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
-       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
-  }
-}
-fn void! getAccelerationStructureOpaqueCaptureDescriptorDataEXT (Device device, AccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-  Result result = extensions.vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
