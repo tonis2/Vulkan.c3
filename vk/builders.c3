@@ -4852,6 +4852,144 @@ fn CopyMemoryToAccelerationStructureInfoKHR CopyMemoryToAccelerationStructureInf
    self.mode = mode;
    return *self;
 }
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT physicalDeviceExtendedDynamicState3FeaturesEXT() => PhysicalDeviceExtendedDynamicState3FeaturesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3TessellationDomainOrigin(&self, uint extendedDynamicState3TessellationDomainOrigin) {
+   self.extendedDynamicState3TessellationDomainOrigin = extendedDynamicState3TessellationDomainOrigin;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3DepthClampEnable(&self, uint extendedDynamicState3DepthClampEnable) {
+   self.extendedDynamicState3DepthClampEnable = extendedDynamicState3DepthClampEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3PolygonMode(&self, uint extendedDynamicState3PolygonMode) {
+   self.extendedDynamicState3PolygonMode = extendedDynamicState3PolygonMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3RasterizationSamples(&self, uint extendedDynamicState3RasterizationSamples) {
+   self.extendedDynamicState3RasterizationSamples = extendedDynamicState3RasterizationSamples;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3SampleMask(&self, uint extendedDynamicState3SampleMask) {
+   self.extendedDynamicState3SampleMask = extendedDynamicState3SampleMask;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3AlphaToCoverageEnable(&self, uint extendedDynamicState3AlphaToCoverageEnable) {
+   self.extendedDynamicState3AlphaToCoverageEnable = extendedDynamicState3AlphaToCoverageEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3AlphaToOneEnable(&self, uint extendedDynamicState3AlphaToOneEnable) {
+   self.extendedDynamicState3AlphaToOneEnable = extendedDynamicState3AlphaToOneEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3LogicOpEnable(&self, uint extendedDynamicState3LogicOpEnable) {
+   self.extendedDynamicState3LogicOpEnable = extendedDynamicState3LogicOpEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ColorBlendEnable(&self, uint extendedDynamicState3ColorBlendEnable) {
+   self.extendedDynamicState3ColorBlendEnable = extendedDynamicState3ColorBlendEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ColorBlendEquation(&self, uint extendedDynamicState3ColorBlendEquation) {
+   self.extendedDynamicState3ColorBlendEquation = extendedDynamicState3ColorBlendEquation;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ColorWriteMask(&self, uint extendedDynamicState3ColorWriteMask) {
+   self.extendedDynamicState3ColorWriteMask = extendedDynamicState3ColorWriteMask;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3RasterizationStream(&self, uint extendedDynamicState3RasterizationStream) {
+   self.extendedDynamicState3RasterizationStream = extendedDynamicState3RasterizationStream;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ConservativeRasterizationMode(&self, uint extendedDynamicState3ConservativeRasterizationMode) {
+   self.extendedDynamicState3ConservativeRasterizationMode = extendedDynamicState3ConservativeRasterizationMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ExtraPrimitiveOverestimationSize(&self, uint extendedDynamicState3ExtraPrimitiveOverestimationSize) {
+   self.extendedDynamicState3ExtraPrimitiveOverestimationSize = extendedDynamicState3ExtraPrimitiveOverestimationSize;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3DepthClipEnable(&self, uint extendedDynamicState3DepthClipEnable) {
+   self.extendedDynamicState3DepthClipEnable = extendedDynamicState3DepthClipEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3SampleLocationsEnable(&self, uint extendedDynamicState3SampleLocationsEnable) {
+   self.extendedDynamicState3SampleLocationsEnable = extendedDynamicState3SampleLocationsEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ColorBlendAdvanced(&self, uint extendedDynamicState3ColorBlendAdvanced) {
+   self.extendedDynamicState3ColorBlendAdvanced = extendedDynamicState3ColorBlendAdvanced;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ProvokingVertexMode(&self, uint extendedDynamicState3ProvokingVertexMode) {
+   self.extendedDynamicState3ProvokingVertexMode = extendedDynamicState3ProvokingVertexMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3LineRasterizationMode(&self, uint extendedDynamicState3LineRasterizationMode) {
+   self.extendedDynamicState3LineRasterizationMode = extendedDynamicState3LineRasterizationMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3LineStippleEnable(&self, uint extendedDynamicState3LineStippleEnable) {
+   self.extendedDynamicState3LineStippleEnable = extendedDynamicState3LineStippleEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3DepthClipNegativeOneToOne(&self, uint extendedDynamicState3DepthClipNegativeOneToOne) {
+   self.extendedDynamicState3DepthClipNegativeOneToOne = extendedDynamicState3DepthClipNegativeOneToOne;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ViewportWScalingEnable(&self, uint extendedDynamicState3ViewportWScalingEnable) {
+   self.extendedDynamicState3ViewportWScalingEnable = extendedDynamicState3ViewportWScalingEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ViewportSwizzle(&self, uint extendedDynamicState3ViewportSwizzle) {
+   self.extendedDynamicState3ViewportSwizzle = extendedDynamicState3ViewportSwizzle;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageToColorEnable(&self, uint extendedDynamicState3CoverageToColorEnable) {
+   self.extendedDynamicState3CoverageToColorEnable = extendedDynamicState3CoverageToColorEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageToColorLocation(&self, uint extendedDynamicState3CoverageToColorLocation) {
+   self.extendedDynamicState3CoverageToColorLocation = extendedDynamicState3CoverageToColorLocation;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageModulationMode(&self, uint extendedDynamicState3CoverageModulationMode) {
+   self.extendedDynamicState3CoverageModulationMode = extendedDynamicState3CoverageModulationMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageModulationTableEnable(&self, uint extendedDynamicState3CoverageModulationTableEnable) {
+   self.extendedDynamicState3CoverageModulationTableEnable = extendedDynamicState3CoverageModulationTableEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageModulationTable(&self, uint extendedDynamicState3CoverageModulationTable) {
+   self.extendedDynamicState3CoverageModulationTable = extendedDynamicState3CoverageModulationTable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3CoverageReductionMode(&self, uint extendedDynamicState3CoverageReductionMode) {
+   self.extendedDynamicState3CoverageReductionMode = extendedDynamicState3CoverageReductionMode;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3RepresentativeFragmentTestEnable(&self, uint extendedDynamicState3RepresentativeFragmentTestEnable) {
+   self.extendedDynamicState3RepresentativeFragmentTestEnable = extendedDynamicState3RepresentativeFragmentTestEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setExtendedDynamicState3ShadingRateImageEnable(&self, uint extendedDynamicState3ShadingRateImageEnable) {
+   self.extendedDynamicState3ShadingRateImageEnable = extendedDynamicState3ShadingRateImageEnable;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3PropertiesEXT physicalDeviceExtendedDynamicState3PropertiesEXT() => PhysicalDeviceExtendedDynamicState3PropertiesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicState3PropertiesEXT PhysicalDeviceExtendedDynamicState3PropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState3PropertiesEXT PhysicalDeviceExtendedDynamicState3PropertiesEXT.setDynamicPrimitiveTopologyUnrestricted(&self, uint dynamicPrimitiveTopologyUnrestricted) {
+   self.dynamicPrimitiveTopologyUnrestricted = dynamicPrimitiveTopologyUnrestricted;
+   return *self;
+}
 fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeatures() => PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES, .pNext = null };
 fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;

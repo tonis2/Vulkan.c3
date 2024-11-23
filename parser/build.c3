@@ -33,7 +33,8 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_MVK_macos_surface",
   "VK_KHR_win32_surface",
   "VK_KHR_acceleration_structure",
-  "VK_KHR_swapchain_mutable_format"
+  "VK_KHR_swapchain_mutable_format",
+  "VK_EXT_extended_dynamic_state3"
 };
 
 fn void! main(String[] args) {
