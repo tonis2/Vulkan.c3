@@ -5870,19 +5870,6 @@ fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setSa
    self.sampler = sampler;
    return *self;
 }
-fn AccelerationStructureCaptureDescriptorDataInfoEXT accelerationStructureCaptureDescriptorDataInfoEXT() => AccelerationStructureCaptureDescriptorDataInfoEXT { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
-fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setAccelerationStructure(&self, AccelerationStructureKHR accelerationStructure) {
-   self.accelerationStructure = accelerationStructure;
-   return *self;
-}
-fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setAccelerationStructureNV(&self, AccelerationStructureNV accelerationStructureNV) {
-   self.accelerationStructureNV = accelerationStructureNV;
-   return *self;
-}
 fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXT() => OpaqueCaptureDescriptorDataCreateInfoEXT { .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT, .pNext = null };
 fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
