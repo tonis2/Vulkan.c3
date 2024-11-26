@@ -91,6 +91,7 @@ fn void Allocation.free(&self) {
     freeMemory(self.device, self.memory, null);
 }
 
+
 struct MemoryBlock {
     uint id;
     BufferType type;
@@ -99,13 +100,65 @@ struct MemoryBlock {
     DeviceMemory memory;
     ulong size;
     ulong offset;
+    ulong used_size;
     void* mapped;
     bool is_used;
     DeviceAddress address;
     Allocation* allocator;
 }
 
-fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice pdevice)
+
+// macro MemoryBlock.@upload_from_stage(&self) {
+// 	$for (var $i = 0; $i < $vacount; $i++)
+// 		{
+// 			$vatype[$i] x;
+// 		}
+// 		io::printfn("%s", $vatype[$i].nameof);
+// 	$endfor;
+// }
+
+macro void! @upload_from_stage(usz size, DeviceQueue queue, Allocation allocator; @body(MemoryBlock stage_buffer, CommandBuffer command_buffer)) {
+    Device device = allocator.device;
+    PhysicalDevice pdevice = allocator.pdevice;
+
+    Buffer staging_buffer_info = BufferCreateInfo {
+      .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+      .pNext = null,
+      .flags = 0,
+      .size = size,
+      .usage = BUFFER_USAGE_TRANSFER_SRC_BIT,
+      .sharingMode = SHARING_MODE_EXCLUSIVE,
+      .queueFamilyIndexCount = 0,
+      .pQueueFamilyIndices = null,
+    }.build(device)!;
+
+    MemoryRequirements mem_reqs = staging_buffer_info.memoryRequirements(device);
+    DeviceMemory memory = memoryAllocateInfo()
+                .setAllocationSize(mem_reqs.size)
+                .setMemoryTypeIndex(pdevice.getMemoryType(MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,  mem_reqs.memoryTypeBits))
+                .build(device)!;
+
+    bindBufferMemory(device, staging_buffer_info, memory, 0)!;
+    void* mapped;
+    vk::mapMemory(device, memory, 0, size, 0, &mapped)!;
+
+
+    MemoryBlock stage_buffer = MemoryBlock {
+        .buffer = staging_buffer_info,
+        .memory = memory,
+        .type = STAGING_BUFFER,
+        .mapped = mapped
+    };
+
+    device.@single_time_command(queue: queue; CommandBuffer command_buffer) {
+        @body(stage_buffer, command_buffer);
+    }!;
+
+    stage_buffer.free(device);
+}
+
+
+fn MemoryBlock! create_staging_buffer(usz size, Device device, PhysicalDevice pdevice)
 {
     Buffer staging_buffer = BufferCreateInfo {
       .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -116,24 +169,23 @@ fn MemoryBlock! Device.staging_buffer(self, usz size, void* data, PhysicalDevice
       .sharingMode = SHARING_MODE_EXCLUSIVE,
       .queueFamilyIndexCount = 0,
       .pQueueFamilyIndices = null,
-    }.build(self)!;
+    }.build(device)!;
 
-    MemoryRequirements mem_reqs = staging_buffer.memoryRequirements(self);
+    MemoryRequirements mem_reqs = staging_buffer.memoryRequirements(device);
     DeviceMemory memory = memoryAllocateInfo()
                 .setAllocationSize(mem_reqs.size)
                 .setMemoryTypeIndex(pdevice.getMemoryType(MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,  mem_reqs.memoryTypeBits))
-                .build(self)!;
+                .build(device)!;
 
-    bindBufferMemory(self, staging_buffer, memory, 0)!;
+    bindBufferMemory(device, staging_buffer, memory, 0)!;
     void* mapped;
-    vk::mapMemory(self, memory, 0, size, 0, &mapped)!;
-    mem::copy(mapped, data, size);
-    // vk::unmapMemory(self, memory);
+    vk::mapMemory(device, memory, 0, size, 0, &mapped)!;
 
     return MemoryBlock {
         .buffer = staging_buffer,
         .memory = memory,
         .type = STAGING_BUFFER,
+        .mapped = mapped
     };
 }
 
@@ -153,19 +205,15 @@ fn void MemoryBlock.free(&self, Device device)
     }
 }
 
-fn MemoryBlock MemoryBlock.getAddress(&self, Device device)
+fn void MemoryBlock.upload(&self, void* data, ulong size, usz offset = 0)
 {
-    BufferDeviceAddressInfo address_info = {
-        .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
-        .buffer = self.buffer
-    };
-    self.address = getBufferDeviceAddress(device, &address_info);
-    return *self;
+    mem::copy(self.mapped + self.offset + offset, data, size);
 }
 
-fn void MemoryBlock.upload(&self, void* data, ulong size)
+fn void MemoryBlock.push(&self, void* data, ulong size, usz offset = 0)
 {
-    mem::copy(self.mapped + self.offset, data, size);
+    mem::copy(self.mapped + self.offset + offset + self.used_size, data, size);
+    self.used_size += size;
 }
 
 fn MemoryBlock! vk::BufferCreateInfo.bind(self, Allocation* allocator)
