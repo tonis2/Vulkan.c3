@@ -57,6 +57,9 @@ ushort[] indices = {
     20, 21, 22,     20, 22, 23    // left
 };
 
+// Shader data
+char[*] shader = $embed("./shaders/shader.spv");
+
 Instance instance;
 DebugUtilsMessengerEXT debug_messenger;
 PhysicalDevice physical_device;
@@ -333,26 +336,25 @@ fn void! main(String[] args)
                 .setSize(UniformData.sizeof)
                 .bind(&local_allocation)!;
 
-    // Create stage buffers and then copy the data to GPU only buffers
-    MemoryBlock vertex_stage_buffer = device.staging_buffer(size: Vertex.sizeof * vertices.len, data: vertices, pdevice: physical_device)!;
-    MemoryBlock index_stage_buffer = device.staging_buffer(size: ushort.sizeof * indices.len, data: indices, pdevice: physical_device)!;    
 
-    device.@single_time_command(queue: graphics_queue; CommandBuffer command_buffer) {
-         vk::cmdCopyBuffer(command_buffer, index_stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
+    // Create stage buffers and then copy the data to GPU only buffers
+    usz buffer_size = Vertex.sizeof * vertices.len + ushort.sizeof * indices.len;
+    vk::@upload_from_stage(size: buffer_size, queue: graphics_queue, allocator: local_allocation; MemoryBlock stage_buffer, CommandBuffer command_buffer) {
+        stage_buffer.push(indices, ushort.sizeof * indices.len);
+        stage_buffer.push(vertices, Vertex.sizeof * vertices.len);
+
+        vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
              .srcOffset = 0,
              .dstOffset = 0,
              .size = ushort.sizeof * indices.len
          });
 
-         vk::cmdCopyBuffer(command_buffer, vertex_stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
-            .srcOffset = 0,
+         vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
+            .srcOffset = ushort.sizeof * indices.len,
             .dstOffset = 0,
             .size = Vertex.sizeof * vertices.len
          });
     }!;
-
-    index_stage_buffer.free(device);
-    vertex_stage_buffer.free(device);
 
     // Add data for uniform buffer
     uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
@@ -381,9 +383,7 @@ fn void! main(String[] args)
            })
     };
 
-    // Load shaders
-    char[*] shader = $embed("./shaders/shader.spv");
-
+    // Create shader module
     ShaderModule shader_module = vk::shaderModuleCreateInfo()
     .setCodeSize(shader.len)
     .setCode((uint*)&shader[0])
