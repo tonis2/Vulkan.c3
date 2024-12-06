@@ -256,7 +256,7 @@ fn void! main(String[] args)
     uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
     Extent2D extent = capabilities.maxImageExtent;
 
-    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfo()
+    SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHR()
       .setMinImageCount(min_images)
       .setImageUsage(vk::IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
       .setImageSharingMode(vk::SHARING_MODE_EXCLUSIVE)
@@ -600,7 +600,7 @@ fn void! main(String[] args)
         vk::endCommandBuffer(command_buffer)!;
         vk::queueSubmit(graphics_queue.handle, 1, &submit_info, frame_fence)!;
 
-        PresentInfoKHR present_info = vk::presentInfo()
+        PresentInfoKHR present_info = vk::presentInfoKHR()
         .setWaitSemaphores({ signal_semaphore })
         .setSwapchains({ swapchain })
         .setImageIndices({ next_image });

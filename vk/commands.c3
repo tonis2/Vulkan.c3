@@ -87,6 +87,7 @@ extern fn void destroyFramebuffer(Device, Framebuffer, AllocationCallbacks*) @ex
 extern fn Result vkCreateRenderPass(Device, RenderPassCreateInfo*, AllocationCallbacks*, RenderPass*) @extern("vkCreateRenderPass"); 
 extern fn void destroyRenderPass(Device, RenderPass, AllocationCallbacks*) @extern("vkDestroyRenderPass"); 
 extern fn void getRenderAreaGranularity(Device, RenderPass, Extent2D*) @extern("vkGetRenderAreaGranularity"); 
+extern fn void getRenderingAreaGranularity(Device, RenderingAreaInfo*, Extent2D*) @extern("vkGetRenderingAreaGranularity"); 
 extern fn Result vkCreateCommandPool(Device, CommandPoolCreateInfo*, AllocationCallbacks*, CommandPool*) @extern("vkCreateCommandPool"); 
 extern fn void destroyCommandPool(Device, CommandPool, AllocationCallbacks*) @extern("vkDestroyCommandPool"); 
 extern fn Result vkResetCommandPool(Device, CommandPool, CommandPoolResetFlags) @extern("vkResetCommandPool"); 
@@ -146,6 +147,7 @@ extern fn Result vkGetPhysicalDeviceImageFormatProperties2(PhysicalDevice, Physi
 extern fn void getPhysicalDeviceQueueFamilyProperties2(PhysicalDevice, uint*, QueueFamilyProperties2*) @extern("vkGetPhysicalDeviceQueueFamilyProperties2"); 
 extern fn void getPhysicalDeviceMemoryProperties2(PhysicalDevice, PhysicalDeviceMemoryProperties2*) @extern("vkGetPhysicalDeviceMemoryProperties2"); 
 extern fn void getPhysicalDeviceSparseImageFormatProperties2(PhysicalDevice, PhysicalDeviceSparseImageFormatInfo2*, uint*, SparseImageFormatProperties2*) @extern("vkGetPhysicalDeviceSparseImageFormatProperties2"); 
+extern fn void cmdPushDescriptorSet(CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, WriteDescriptorSet*) @extern("vkCmdPushDescriptorSet"); 
 extern fn void trimCommandPool(Device, CommandPool, CommandPoolTrimFlags) @extern("vkTrimCommandPool"); 
 extern fn void getPhysicalDeviceExternalBufferProperties(PhysicalDevice, PhysicalDeviceExternalBufferInfo*, ExternalBufferProperties*) @extern("vkGetPhysicalDeviceExternalBufferProperties"); 
 extern fn void getPhysicalDeviceExternalSemaphoreProperties(PhysicalDevice, PhysicalDeviceExternalSemaphoreInfo*, ExternalSemaphoreProperties*) @extern("vkGetPhysicalDeviceExternalSemaphoreProperties"); 
@@ -159,6 +161,7 @@ extern fn void cmdDispatchBase(CommandBuffer, uint, uint, uint, uint, uint, uint
 extern fn Result vkCreateDescriptorUpdateTemplate(Device, DescriptorUpdateTemplateCreateInfo*, AllocationCallbacks*, DescriptorUpdateTemplate*) @extern("vkCreateDescriptorUpdateTemplate"); 
 extern fn void destroyDescriptorUpdateTemplate(Device, DescriptorUpdateTemplate, AllocationCallbacks*) @extern("vkDestroyDescriptorUpdateTemplate"); 
 extern fn void updateDescriptorSetWithTemplate(Device, DescriptorSet, DescriptorUpdateTemplate, void*) @extern("vkUpdateDescriptorSetWithTemplate"); 
+extern fn void cmdPushDescriptorSetWithTemplate(CommandBuffer, DescriptorUpdateTemplate, PipelineLayout, uint, void*) @extern("vkCmdPushDescriptorSetWithTemplate"); 
 extern fn void getBufferMemoryRequirements2(Device, BufferMemoryRequirementsInfo2*, MemoryRequirements2*) @extern("vkGetBufferMemoryRequirements2"); 
 extern fn void getImageMemoryRequirements2(Device, ImageMemoryRequirementsInfo2*, MemoryRequirements2*) @extern("vkGetImageMemoryRequirements2"); 
 extern fn void getImageSparseMemoryRequirements2(Device, ImageSparseMemoryRequirementsInfo2*, uint*, SparseImageMemoryRequirements2*) @extern("vkGetImageSparseMemoryRequirements2"); 
@@ -181,12 +184,14 @@ extern fn void cmdDrawIndexedIndirectCount(CommandBuffer, Buffer, DeviceSize, Bu
 extern fn ulong getBufferOpaqueCaptureAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferOpaqueCaptureAddress"); 
 extern fn DeviceAddress getBufferDeviceAddress(Device, BufferDeviceAddressInfo*) @extern("vkGetBufferDeviceAddress"); 
 extern fn ulong getDeviceMemoryOpaqueCaptureAddress(Device, DeviceMemoryOpaqueCaptureAddressInfo*) @extern("vkGetDeviceMemoryOpaqueCaptureAddress"); 
+extern fn void cmdSetLineStipple(CommandBuffer, uint, uint) @extern("vkCmdSetLineStipple"); 
 extern fn Result vkGetPhysicalDeviceToolProperties(PhysicalDevice, uint*, PhysicalDeviceToolProperties*) @extern("vkGetPhysicalDeviceToolProperties"); 
 extern fn void cmdSetCullMode(CommandBuffer, CullModeFlags) @extern("vkCmdSetCullMode"); 
 extern fn void cmdSetFrontFace(CommandBuffer, FrontFace) @extern("vkCmdSetFrontFace"); 
 extern fn void cmdSetPrimitiveTopology(CommandBuffer, PrimitiveTopology) @extern("vkCmdSetPrimitiveTopology"); 
 extern fn void cmdSetViewportWithCount(CommandBuffer, uint, Viewport*) @extern("vkCmdSetViewportWithCount"); 
 extern fn void cmdSetScissorWithCount(CommandBuffer, uint, Rect2D*) @extern("vkCmdSetScissorWithCount"); 
+extern fn void cmdBindIndexBuffer2(CommandBuffer, Buffer, DeviceSize, DeviceSize, IndexType) @extern("vkCmdBindIndexBuffer2"); 
 extern fn void cmdBindVertexBuffers2(CommandBuffer, uint, uint, Buffer*, DeviceSize*, DeviceSize*, DeviceSize*) @extern("vkCmdBindVertexBuffers2"); 
 extern fn void cmdSetDepthTestEnable(CommandBuffer, uint) @extern("vkCmdSetDepthTestEnable"); 
 extern fn void cmdSetDepthWriteEnable(CommandBuffer, uint) @extern("vkCmdSetDepthWriteEnable"); 
@@ -213,8 +218,22 @@ extern fn void cmdWaitEvents2(CommandBuffer, uint, Event*, DependencyInfo*) @ext
 extern fn void cmdPipelineBarrier2(CommandBuffer, DependencyInfo*) @extern("vkCmdPipelineBarrier2"); 
 extern fn Result vkQueueSubmit2(Queue, uint, SubmitInfo2*, Fence) @extern("vkQueueSubmit2"); 
 extern fn void cmdWriteTimestamp2(CommandBuffer, PipelineStageFlags2, QueryPool, uint) @extern("vkCmdWriteTimestamp2"); 
+extern fn Result vkCopyMemoryToImage(Device, CopyMemoryToImageInfo*) @extern("vkCopyMemoryToImage"); 
+extern fn Result vkCopyImageToMemory(Device, CopyImageToMemoryInfo*) @extern("vkCopyImageToMemory"); 
+extern fn Result vkCopyImageToImage(Device, CopyImageToImageInfo*) @extern("vkCopyImageToImage"); 
+extern fn Result vkTransitionImageLayout(Device, uint, HostImageLayoutTransitionInfo*) @extern("vkTransitionImageLayout"); 
 extern fn void cmdBeginRendering(CommandBuffer, RenderingInfo*) @extern("vkCmdBeginRendering"); 
 extern fn void cmdEndRendering(CommandBuffer) @extern("vkCmdEndRendering"); 
+extern fn void getImageSubresourceLayout2(Device, Image, ImageSubresource2*, SubresourceLayout2*) @extern("vkGetImageSubresourceLayout2"); 
+extern fn void getDeviceImageSubresourceLayout(Device, DeviceImageSubresourceInfo*, SubresourceLayout2*) @extern("vkGetDeviceImageSubresourceLayout"); 
+extern fn Result vkMapMemory2(Device, MemoryMapInfo*, void**) @extern("vkMapMemory2"); 
+extern fn Result vkUnmapMemory2(Device, MemoryUnmapInfo*) @extern("vkUnmapMemory2"); 
+extern fn void cmdBindDescriptorSets2(CommandBuffer, BindDescriptorSetsInfo*) @extern("vkCmdBindDescriptorSets2"); 
+extern fn void cmdPushConstants2(CommandBuffer, PushConstantsInfo*) @extern("vkCmdPushConstants2"); 
+extern fn void cmdPushDescriptorSet2(CommandBuffer, PushDescriptorSetInfo*) @extern("vkCmdPushDescriptorSet2"); 
+extern fn void cmdPushDescriptorSetWithTemplate2(CommandBuffer, PushDescriptorSetWithTemplateInfo*) @extern("vkCmdPushDescriptorSetWithTemplate2"); 
+extern fn void cmdSetRenderingAttachmentLocations(CommandBuffer, RenderingAttachmentLocationInfo*) @extern("vkCmdSetRenderingAttachmentLocations"); 
+extern fn void cmdSetRenderingInputAttachmentIndices(CommandBuffer, RenderingInputAttachmentIndexInfo*) @extern("vkCmdSetRenderingInputAttachmentIndices"); 
 
 def PFN_vkGetPhysicalDeviceDisplayPropertiesKHR = fn Result (PhysicalDevice, uint*, DisplayPropertiesKHR*);
 def PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR = fn Result (PhysicalDevice, uint*, DisplayPlanePropertiesKHR*);
@@ -242,6 +261,13 @@ def PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = fn uint (PhysicalDevice, 
 def PFN_vkCreateDebugReportCallbackEXT = fn Result (Instance, DebugReportCallbackCreateInfoEXT*, AllocationCallbacks*, DebugReportCallbackEXT*);
 def PFN_vkDestroyDebugReportCallbackEXT = fn void (Instance, DebugReportCallbackEXT, AllocationCallbacks*);
 def PFN_vkDebugReportMessageEXT = fn void (Instance, DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, usz, int, char*, char*);
+def PFN_vkGetPhysicalDeviceFeatures2KHR = fn void (PhysicalDevice, PhysicalDeviceFeatures2*);
+def PFN_vkGetPhysicalDeviceProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceProperties2*);
+def PFN_vkGetPhysicalDeviceFormatProperties2KHR = fn void (PhysicalDevice, Format, FormatProperties2*);
+def PFN_vkGetPhysicalDeviceImageFormatProperties2KHR = fn Result (PhysicalDevice, PhysicalDeviceImageFormatInfo2*, ImageFormatProperties2*);
+def PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR = fn void (PhysicalDevice, uint*, QueueFamilyProperties2*);
+def PFN_vkGetPhysicalDeviceMemoryProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceMemoryProperties2*);
+def PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceSparseImageFormatInfo2*, uint*, SparseImageFormatProperties2*);
 def PFN_vkCmdPushDescriptorSetKHR = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, WriteDescriptorSet*);
 def PFN_vkCreateMacOSSurfaceMVK = fn Result (Instance, MacOSSurfaceCreateInfoMVK*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkSetDebugUtilsObjectNameEXT = fn Result (Device, DebugUtilsObjectNameInfoEXT*);
@@ -255,6 +281,10 @@ def PFN_vkCmdInsertDebugUtilsLabelEXT = fn void (CommandBuffer, DebugUtilsLabelE
 def PFN_vkCreateDebugUtilsMessengerEXT = fn Result (Instance, DebugUtilsMessengerCreateInfoEXT*, AllocationCallbacks*, DebugUtilsMessengerEXT*);
 def PFN_vkDestroyDebugUtilsMessengerEXT = fn void (Instance, DebugUtilsMessengerEXT, AllocationCallbacks*);
 def PFN_vkSubmitDebugUtilsMessageEXT = fn void (Instance, DebugUtilsMessageSeverityFlagBitsEXT, DebugUtilsMessageTypeFlagsEXT, DebugUtilsMessengerCallbackDataEXT*);
+def PFN_vkCreateRenderPass2KHR = fn Result (Device, RenderPassCreateInfo2*, AllocationCallbacks*, RenderPass*);
+def PFN_vkCmdBeginRenderPass2KHR = fn void (CommandBuffer, RenderPassBeginInfo*, SubpassBeginInfo*);
+def PFN_vkCmdNextSubpass2KHR = fn void (CommandBuffer, SubpassBeginInfo*, SubpassEndInfo*);
+def PFN_vkCmdEndRenderPass2KHR = fn void (CommandBuffer, SubpassEndInfo*);
 def PFN_vkDestroyAccelerationStructureKHR = fn void (Device, AccelerationStructureKHR, AllocationCallbacks*);
 def PFN_vkCmdCopyAccelerationStructureKHR = fn void (CommandBuffer, CopyAccelerationStructureInfoKHR*);
 def PFN_vkCopyAccelerationStructureKHR = fn Result (Device, DeferredOperationKHR, CopyAccelerationStructureInfoKHR*);
@@ -291,6 +321,8 @@ def PFN_vkGetBufferOpaqueCaptureDescriptorDataEXT = fn Result (Device, BufferCap
 def PFN_vkGetImageOpaqueCaptureDescriptorDataEXT = fn Result (Device, ImageCaptureDescriptorDataInfoEXT*, void*);
 def PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT = fn Result (Device, ImageViewCaptureDescriptorDataInfoEXT*, void*);
 def PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT = fn Result (Device, SamplerCaptureDescriptorDataInfoEXT*, void*);
+def PFN_vkCmdBeginRenderingKHR = fn void (CommandBuffer, RenderingInfo*);
+def PFN_vkCmdEndRenderingKHR = fn void (CommandBuffer);
 
 struct VK_extension_bindings {
   PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
@@ -319,6 +351,13 @@ struct VK_extension_bindings {
   PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
   PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
   PFN_vkDebugReportMessageEXT vkDebugReportMessageEXT;
+  PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+  PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+  PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
+  PFN_vkGetPhysicalDeviceImageFormatProperties2KHR vkGetPhysicalDeviceImageFormatProperties2KHR;
+  PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
+  PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
+  PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR;
   PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
   PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
   PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
@@ -332,6 +371,10 @@ struct VK_extension_bindings {
   PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
   PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
   PFN_vkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXT;
+  PFN_vkCreateRenderPass2KHR vkCreateRenderPass2KHR;
+  PFN_vkCmdBeginRenderPass2KHR vkCmdBeginRenderPass2KHR;
+  PFN_vkCmdNextSubpass2KHR vkCmdNextSubpass2KHR;
+  PFN_vkCmdEndRenderPass2KHR vkCmdEndRenderPass2KHR;
   PFN_vkDestroyAccelerationStructureKHR vkDestroyAccelerationStructureKHR;
   PFN_vkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHR;
   PFN_vkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHR;
@@ -368,6 +411,8 @@ struct VK_extension_bindings {
   PFN_vkGetImageOpaqueCaptureDescriptorDataEXT vkGetImageOpaqueCaptureDescriptorDataEXT;
   PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT vkGetImageViewOpaqueCaptureDescriptorDataEXT;
   PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT vkGetSamplerOpaqueCaptureDescriptorDataEXT;
+  PFN_vkCmdBeginRenderingKHR vkCmdBeginRenderingKHR;
+  PFN_vkCmdEndRenderingKHR vkCmdEndRenderingKHR;
 }
 VK_extension_bindings extensions;
 
@@ -398,6 +443,13 @@ fn void loadExtensions(Instance instance) {
    extensions.vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)getInstanceProcAddr(instance,"vkCreateDebugReportCallbackEXT");
    extensions.vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)getInstanceProcAddr(instance,"vkDestroyDebugReportCallbackEXT");
    extensions.vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT)getInstanceProcAddr(instance,"vkDebugReportMessageEXT");
+   extensions.vkGetPhysicalDeviceFeatures2KHR = (PFN_vkGetPhysicalDeviceFeatures2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceFeatures2KHR");
+   extensions.vkGetPhysicalDeviceProperties2KHR = (PFN_vkGetPhysicalDeviceProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceProperties2KHR");
+   extensions.vkGetPhysicalDeviceFormatProperties2KHR = (PFN_vkGetPhysicalDeviceFormatProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceFormatProperties2KHR");
+   extensions.vkGetPhysicalDeviceImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceImageFormatProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceImageFormatProperties2KHR");
+   extensions.vkGetPhysicalDeviceQueueFamilyProperties2KHR = (PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceQueueFamilyProperties2KHR");
+   extensions.vkGetPhysicalDeviceMemoryProperties2KHR = (PFN_vkGetPhysicalDeviceMemoryProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceMemoryProperties2KHR");
+   extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceSparseImageFormatProperties2KHR");
    extensions.vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)getInstanceProcAddr(instance,"vkCmdPushDescriptorSetKHR");
    extensions.vkCreateMacOSSurfaceMVK = (PFN_vkCreateMacOSSurfaceMVK)getInstanceProcAddr(instance,"vkCreateMacOSSurfaceMVK");
    extensions.vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)getInstanceProcAddr(instance,"vkSetDebugUtilsObjectNameEXT");
@@ -411,6 +463,10 @@ fn void loadExtensions(Instance instance) {
    extensions.vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)getInstanceProcAddr(instance,"vkCreateDebugUtilsMessengerEXT");
    extensions.vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)getInstanceProcAddr(instance,"vkDestroyDebugUtilsMessengerEXT");
    extensions.vkSubmitDebugUtilsMessageEXT = (PFN_vkSubmitDebugUtilsMessageEXT)getInstanceProcAddr(instance,"vkSubmitDebugUtilsMessageEXT");
+   extensions.vkCreateRenderPass2KHR = (PFN_vkCreateRenderPass2KHR)getInstanceProcAddr(instance,"vkCreateRenderPass2KHR");
+   extensions.vkCmdBeginRenderPass2KHR = (PFN_vkCmdBeginRenderPass2KHR)getInstanceProcAddr(instance,"vkCmdBeginRenderPass2KHR");
+   extensions.vkCmdNextSubpass2KHR = (PFN_vkCmdNextSubpass2KHR)getInstanceProcAddr(instance,"vkCmdNextSubpass2KHR");
+   extensions.vkCmdEndRenderPass2KHR = (PFN_vkCmdEndRenderPass2KHR)getInstanceProcAddr(instance,"vkCmdEndRenderPass2KHR");
    extensions.vkDestroyAccelerationStructureKHR = (PFN_vkDestroyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkDestroyAccelerationStructureKHR");
    extensions.vkCmdCopyAccelerationStructureKHR = (PFN_vkCmdCopyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCmdCopyAccelerationStructureKHR");
    extensions.vkCopyAccelerationStructureKHR = (PFN_vkCopyAccelerationStructureKHR)getInstanceProcAddr(instance,"vkCopyAccelerationStructureKHR");
@@ -447,6 +503,8 @@ fn void loadExtensions(Instance instance) {
    extensions.vkGetImageOpaqueCaptureDescriptorDataEXT = (PFN_vkGetImageOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetImageOpaqueCaptureDescriptorDataEXT");
    extensions.vkGetImageViewOpaqueCaptureDescriptorDataEXT = (PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetImageViewOpaqueCaptureDescriptorDataEXT");
    extensions.vkGetSamplerOpaqueCaptureDescriptorDataEXT = (PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT)getInstanceProcAddr(instance,"vkGetSamplerOpaqueCaptureDescriptorDataEXT");
+   extensions.vkCmdBeginRenderingKHR = (PFN_vkCmdBeginRenderingKHR)getInstanceProcAddr(instance,"vkCmdBeginRenderingKHR");
+   extensions.vkCmdEndRenderingKHR = (PFN_vkCmdEndRenderingKHR)getInstanceProcAddr(instance,"vkCmdEndRenderingKHR");
 }
 
 fn void destroySurfaceKHR (Instance instance, SurfaceKHR surface, AllocationCallbacks* pAllocator) => extensions.vkDestroySurfaceKHR(instance, surface, pAllocator);
@@ -456,6 +514,12 @@ fn uint getPhysicalDeviceXlibPresentationSupportKHR (PhysicalDevice physicalDevi
 fn uint getPhysicalDeviceXcbPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, Connection* connection, Window visual_id) => extensions.vkGetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
 fn void destroyDebugReportCallbackEXT (Instance instance, DebugReportCallbackEXT callback, AllocationCallbacks* pAllocator) => extensions.vkDestroyDebugReportCallbackEXT(instance, callback, pAllocator);
 fn void debugReportMessageEXT (Instance instance, DebugReportFlagsEXT flags, DebugReportObjectTypeEXT objectType, ulong object, usz location, int messageCode, char* pLayerPrefix, char* pMessage) => extensions.vkDebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
+fn void getPhysicalDeviceFeatures2KHR (PhysicalDevice physicalDevice, PhysicalDeviceFeatures2* pFeatures) => extensions.vkGetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
+fn void getPhysicalDeviceProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceProperties2* pProperties) => extensions.vkGetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
+fn void getPhysicalDeviceFormatProperties2KHR (PhysicalDevice physicalDevice, Format format, FormatProperties2* pFormatProperties) => extensions.vkGetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
+fn void getPhysicalDeviceQueueFamilyProperties2KHR (PhysicalDevice physicalDevice, uint* pQueueFamilyPropertyCount, QueueFamilyProperties2* pQueueFamilyProperties) => extensions.vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+fn void getPhysicalDeviceMemoryProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceMemoryProperties2* pMemoryProperties) => extensions.vkGetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
+fn void getPhysicalDeviceSparseImageFormatProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint* pPropertyCount, SparseImageFormatProperties2* pProperties) => extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 fn void cmdPushDescriptorSetKHR (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set, uint descriptorWriteCount, WriteDescriptorSet* pDescriptorWrites) => extensions.vkCmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 fn void queueBeginDebugUtilsLabelEXT (Queue queue, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkQueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
 fn void queueEndDebugUtilsLabelEXT (Queue queue) => extensions.vkQueueEndDebugUtilsLabelEXT(queue);
@@ -465,6 +529,9 @@ fn void cmdEndDebugUtilsLabelEXT (CommandBuffer commandBuffer) => extensions.vkC
 fn void cmdInsertDebugUtilsLabelEXT (CommandBuffer commandBuffer, DebugUtilsLabelEXT* pLabelInfo) => extensions.vkCmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 fn void destroyDebugUtilsMessengerEXT (Instance instance, DebugUtilsMessengerEXT messenger, AllocationCallbacks* pAllocator) => extensions.vkDestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
 fn void submitDebugUtilsMessageEXT (Instance instance, DebugUtilsMessageSeverityFlagBitsEXT messageSeverity, DebugUtilsMessageTypeFlagsEXT messageTypes, DebugUtilsMessengerCallbackDataEXT* pCallbackData) => extensions.vkSubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
+fn void cmdBeginRenderPass2KHR (CommandBuffer commandBuffer, RenderPassBeginInfo* pRenderPassBegin, SubpassBeginInfo* pSubpassBeginInfo) => extensions.vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+fn void cmdNextSubpass2KHR (CommandBuffer commandBuffer, SubpassBeginInfo* pSubpassBeginInfo, SubpassEndInfo* pSubpassEndInfo) => extensions.vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+fn void cmdEndRenderPass2KHR (CommandBuffer commandBuffer, SubpassEndInfo* pSubpassEndInfo) => extensions.vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 fn void destroyAccelerationStructureKHR (Device device, AccelerationStructureKHR accelerationStructure, AllocationCallbacks* pAllocator) => extensions.vkDestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
 fn void cmdCopyAccelerationStructureKHR (CommandBuffer commandBuffer, CopyAccelerationStructureInfoKHR* pInfo) => extensions.vkCmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
 fn void cmdCopyAccelerationStructureToMemoryKHR (CommandBuffer commandBuffer, CopyAccelerationStructureToMemoryInfoKHR* pInfo) => extensions.vkCmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
@@ -491,6 +558,8 @@ fn void getDescriptorEXT (Device device, DescriptorGetInfoEXT* pDescriptorInfo, 
 fn void cmdBindDescriptorBuffersEXT (CommandBuffer commandBuffer, uint bufferCount, DescriptorBufferBindingInfoEXT* pBindingInfos) => extensions.vkCmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
 fn void cmdSetDescriptorBufferOffsetsEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint setCount, uint* pBufferIndices, DeviceSize* pOffsets) => extensions.vkCmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 fn void cmdBindDescriptorBufferEmbeddedSamplersEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set) => extensions.vkCmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
+fn void cmdBeginRenderingKHR (CommandBuffer commandBuffer, RenderingInfo* pRenderingInfo) => extensions.vkCmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
+fn void cmdEndRenderingKHR (CommandBuffer commandBuffer) => extensions.vkCmdEndRenderingKHR(commandBuffer);
 
 fn void! createInstance (InstanceCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, Instance* pInstance) {
   Result result = vkCreateInstance(pCreateInfo, pAllocator, pInstance);
@@ -1066,6 +1135,19 @@ fn void! getPhysicalDeviceImageFormatProperties2 (PhysicalDevice physicalDevice,
        case ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR?;
   }
 }
+fn void! getPhysicalDeviceImageFormatProperties2KHR (PhysicalDevice physicalDevice, PhysicalDeviceImageFormatInfo2* pImageFormatInfo, ImageFormatProperties2* pImageFormatProperties) {
+  Result result = extensions.vkGetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_FORMAT_NOT_SUPPORTED: return VkErrors.ERROR_FORMAT_NOT_SUPPORTED?;
+       case ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR: return VkErrors.ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR?;
+       case ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR?;
+       case ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR?;
+       case ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR?;
+       case ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR: return VkErrors.ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR?;
+  }
+}
 fn void! enumeratePhysicalDeviceGroups (Instance instance, uint* pPhysicalDeviceGroupCount, PhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
   Result result = vkEnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
   switch(result) { 
@@ -1133,6 +1215,13 @@ fn void! createDebugUtilsMessengerEXT (Instance instance, DebugUtilsMessengerCre
 }
 fn void! createRenderPass2 (Device device, RenderPassCreateInfo2* pCreateInfo, AllocationCallbacks* pAllocator, RenderPass* pRenderPass) {
   Result result = vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
+fn void! createRenderPass2KHR (Device device, RenderPassCreateInfo2* pCreateInfo, AllocationCallbacks* pAllocator, RenderPass* pRenderPass) {
+  Result result = extensions.vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
@@ -1229,6 +1318,42 @@ fn void! queueSubmit2 (Queue queue, uint submitCount, SubmitInfo2* pSubmits, Fen
        case ERROR_DEVICE_LOST: return VkErrors.ERROR_DEVICE_LOST?;
   }
 }
+fn void! copyMemoryToImage (Device device, CopyMemoryToImageInfo* pCopyMemoryToImageInfo) {
+  Result result = vkCopyMemoryToImage(device, pCopyMemoryToImageInfo);
+  switch(result) { 
+       case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
+  }
+}
+fn void! copyImageToMemory (Device device, CopyImageToMemoryInfo* pCopyImageToMemoryInfo) {
+  Result result = vkCopyImageToMemory(device, pCopyImageToMemoryInfo);
+  switch(result) { 
+       case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
+  }
+}
+fn void! copyImageToImage (Device device, CopyImageToImageInfo* pCopyImageToImageInfo) {
+  Result result = vkCopyImageToImage(device, pCopyImageToImageInfo);
+  switch(result) { 
+       case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
+  }
+}
+fn void! transitionImageLayout (Device device, uint transitionCount, HostImageLayoutTransitionInfo* pTransitions) {
+  Result result = vkTransitionImageLayout(device, transitionCount, pTransitions);
+  switch(result) { 
+       case ERROR_INITIALIZATION_FAILED: return VkErrors.ERROR_INITIALIZATION_FAILED?;
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
+  }
+}
 fn void! getBufferOpaqueCaptureDescriptorDataEXT (Device device, BufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
   Result result = extensions.vkGetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
   switch(result) { 
@@ -1255,6 +1380,20 @@ fn void! getSamplerOpaqueCaptureDescriptorDataEXT (Device device, SamplerCapture
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
        case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
+fn void! mapMemory2 (Device device, MemoryMapInfo* pMemoryMapInfo, void** ppData) {
+  Result result = vkMapMemory2(device, pMemoryMapInfo, ppData);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
+  }
+}
+fn void! unmapMemory2 (Device device, MemoryUnmapInfo* pMemoryUnmapInfo) {
+  Result result = vkUnmapMemory2(device, pMemoryUnmapInfo);
+  switch(result) { 
+       case ERROR_MEMORY_MAP_FAILED: return VkErrors.ERROR_MEMORY_MAP_FAILED?;
   }
 }
 

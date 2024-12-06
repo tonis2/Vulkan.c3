@@ -7,7 +7,7 @@ import std::collections::list;
 import std::collections::map;
 import xml;
 
-const MAX_VERSION = 1.3;
+const MAX_VERSION = 1.4;
 
 def TypeMap = HashMap(<String, String>);
 
@@ -34,7 +34,8 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_KHR_win32_surface",
   "VK_KHR_acceleration_structure",
   "VK_KHR_swapchain_mutable_format",
-  "VK_EXT_extended_dynamic_state3"
+  "VK_EXT_extended_dynamic_state3",
+  "VK_EXT_dynamic_rendering_unused_attachments"
 };
 
 fn void! main(String[] args) {
@@ -89,13 +90,10 @@ fn void! main(String[] args) {
 
     root_node.find(fn (node) => node.name == "feature" || node.name == "extension", &feature_nodes);
 
-    root_node.find(fn (node) => 
-        node.children.len() > 0 &&
-        (node.attributes.has_key("category") || node.attributes.has_key("type")), 
-    &types_nodes);
+    root_node.find(fn (node) => (node.attributes.has_key("category") || node.attributes.has_key("type")), &types_nodes);
 
     root_node.find(fn (node) => {|
-        if (node.name == "command" && node.children.len() > 0) {
+        if (node.name == "command") {
             if (node.attributes.has_key("api") && node.attributes["api"]!! == "vulkansc") {
                  return false;
             };
@@ -149,40 +147,69 @@ fn void! main(String[] args) {
         }
     }
 
-    foreach (node : types_nodes) {
+    foreach (usz i, node : types_nodes) {
         String! comment = node.attributes.get("comment");
         String! extends = node.attributes.get("structextends");
         String! name = node.attributes.get("name");
+        String! alias = node.attributes.get("alias");
         String category = node.attributes.get("category") ?? node.attributes.get("type")!;
 
-        switch (category) {
-            case "enum": {
-                if (try name) enums.push(VkEnum{}.from_node(node));
+        if (try alias && try name) {
+         
+            switch (category) {
+                 case "struct": {
+                    VkStruct value = VkStruct{}.from_node(types_nodes[i - 1]);
+                    value.name = name;
+                    value.alias = alias;
+                    if (value.values.len() > 0) structs.push(value);                   
+                }
             }
-            case "struct": {
-               structs.push(VkStruct{}.from_node(node));
-            }
-            case "union": {
-                unions.push(VkStruct{}.from_node(node));
-            }
-            case "handle": {
-                handles.push(VkValue{}.from_node(node));
-            }
-            case "bitmask": {
-               if (node.name == "type") {
-                    VkValue value = VkValue{}.from_node(node);
-                    if (!basetypes.contains_value(value.name)) basetypes.push(value);
-               };
-               if (node.name == "enums") enums.push(VkEnum{}.from_node(node));
-            }
-            case "basetype": {
-                basetypes.push(VkValue{}.from_node(node));
+        } 
+        
+        if (node.children.len() > 0) {
+            switch (category) {
+                case "enum": {
+                    if (try name) enums.push(VkEnum{}.from_node(node));
+                }
+                case "struct": {
+                    structs.push(VkStruct{}.from_node(node));
+                }
+                case "union": {
+                    unions.push(VkStruct{}.from_node(node));
+                }
+                case "handle": {
+                    handles.push(VkValue{}.from_node(node));
+                }
+                case "bitmask": {
+                    if (node.name == "type") {
+                            VkValue value = VkValue{}.from_node(node);
+                            if (!basetypes.contains_value(value.name)) basetypes.push(value);
+                    };
+                if (node.name == "enums") enums.push(VkEnum{}.from_node(node));
+                }
+                case "basetype": {
+                    basetypes.push(VkValue{}.from_node(node));
+                }
             }
         }
     }
 
     // Parse commands
-    foreach (node : command_nodes) commands.push(VkCommand{}.from_node(node));
+    foreach (usz i, node : command_nodes) {
+        String! alias = node.attributes.get("alias");
+        String! name = node.attributes.get("name");
+
+        if (node.children.len() > 0) {
+            VkCommand command = VkCommand{}.from_node(node);
+            commands.push(command);
+        }
+        
+        if (try alias && try name) {
+            VkCommand command = VkCommand{}.from_node(command_nodes[i - 1]);
+            command.name = name;
+            commands.push(command);
+        }
+    };
 
     // Enable correct features before writing C3 code
     foreach (feature : feature_nodes) {
@@ -375,7 +402,7 @@ fn void! main(String[] args) {
         defer text_body.free();
 
         if (has_struct_type) {
-            creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case().strip_end("KHR"), "() => ",
+            creator_functions.append(dstring::new_join({"fn ", name, " ", name.to_lower_case(), "() => ",
             name,
             " { .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, "", allocator: &allocator));
         }
@@ -486,13 +513,14 @@ fn void! main(String[] args) {
             extension_bind.append(dstring::new_join({"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, "", allocator: &allocator));
         }
 
-        if (create_command) {
+        if (create_command && entry.name != "vkCreateRenderPass2KHR") {
             String command_name = {|
                 foreach (value : entry.values) if (value.type.contains("CreateInfo")) return value.type;
                 return "";
             |};
+     
             String result_type = entry.values[entry.values.len() - 1].type;
-
+    
             create_commands.append(dstring::new_join({"fn ", result_type.remove_vk(), "! ", command_name.remove_vk(), ".build(&self, "}, "", allocator: &allocator));
 
             foreach (i, value : entry.values) {
