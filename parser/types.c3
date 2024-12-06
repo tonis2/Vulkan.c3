@@ -15,6 +15,7 @@ def EnumList = List(<VkEnum>);
 struct Base {
     String name;
     String comment;
+    String alias;
     List(<VkValue>) values;
     bool enabled;
 }
