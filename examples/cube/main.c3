@@ -85,11 +85,8 @@ fn void! main(String[] args)
             .y = 0
         },
         name: "Cube"
-    );
+    )!!;
     defer win.free();
-
-    // io::printfn("connection %p window %d", win.src.connection, win.src.window);
-    io::printfn("(Screen) width %d height %d", win.screen_info.width, win.screen_info.height);
     
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
@@ -535,22 +532,29 @@ fn void! main(String[] args)
     bool running = true;
     uint frame = 0;
 
-    MouseParams last_params;
-
+    Vec2f prev_mouse;
     while (running) {
         c3w::Event event = win.getEvent();
-        if (win.left_click) {
-           MouseParams params = c3w::getMousePos(win);
-           camera.rotate((float)params.x - last_params.x, -((float)params.y - last_params.y));
-           uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
-           last_params = params;
+
+        if (win.is_pressed(LEFT_MOUSE)) {
+            Vec2f mouse_pos = win.getMousePos();
+            camera.rotate(mouse_pos.x - prev_mouse.x, -(mouse_pos.y - prev_mouse.y));
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+            prev_mouse = mouse_pos;
         }
-        
-        switch (event.type) {
-            case c3w::MOUSE_RELEASED: {}
-            case c3w::KEY_PRESSED: {
-                if (event.value == c3w::ESCAPE) running = false;
-            }
+
+        if (win.is_pressed(MOUSE_SCROLL_UP)) {
+            camera.zoom(5);
+             uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+        }
+
+        if (win.is_pressed(MOUSE_SCROLL_DOWN)) {
+            camera.zoom(-5);
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+        }
+
+        if (win.is_pressed(ESCAPE)) {
+            running = false;
         }
 
         Fence frame_fence = frame_fences[frame];
