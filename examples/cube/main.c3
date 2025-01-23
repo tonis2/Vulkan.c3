@@ -314,47 +314,31 @@ fn void! main(String[] args)
         .size = 20_000_000
     }.build()!;
 
-    // Create buffers, using only memory of the allocator
-    MemoryBlock vertex_buffer = vk::bufferCreateInfo()
-               .setUsage(vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
-               .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-               .setSize(Vertex.sizeof * vertices.len)
-               .bind(&device_allocation)!;
+ 
+    Memory vertex_buffer = vk::new_buffer(
+        vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT,
+        &device_allocation,
+        vertices.ptr,
+        data_size: Vertex.sizeof * vertices.len,
+        stage_allocator: &local_allocation,
+        queue: &graphics_queue
+    )!!;
 
-    MemoryBlock index_buffer = vk::bufferCreateInfo()
-                .setUsage(vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT)
-                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                .setSize(indices.len * ushort.sizeof)
-                .bind(&device_allocation)!;
+    Memory index_buffer = vk::new_buffer(
+        vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT,
+        &device_allocation,
+        indices.ptr,
+        data_size: indices.len * ushort.sizeof,
+        stage_allocator: &local_allocation,
+        queue: &graphics_queue
+    )!!;
 
-    MemoryBlock uniform_buffer = vk::bufferCreateInfo()
-                .setUsage(vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT)
-                .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-                .setSize(UniformData.sizeof)
-                .bind(&local_allocation)!;
-
-
-    // Create stage buffers and then copy the data to GPU only buffers
-    usz buffer_size = Vertex.sizeof * vertices.len + ushort.sizeof * indices.len;
-    vk::@upload_from_stage(size: buffer_size, queue: graphics_queue, allocator: local_allocation; MemoryBlock stage_buffer, CommandBuffer command_buffer) {
-        stage_buffer.push(indices, ushort.sizeof * indices.len);
-        stage_buffer.push(vertices, Vertex.sizeof * vertices.len);
-
-        vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, index_buffer.buffer, 1, &&BufferCopy {
-             .srcOffset = 0,
-             .dstOffset = 0,
-             .size = ushort.sizeof * indices.len
-         });
-
-         vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, vertex_buffer.buffer, 1, &&BufferCopy {
-            .srcOffset = ushort.sizeof * indices.len,
-            .dstOffset = 0,
-            .size = Vertex.sizeof * vertices.len
-         });
-    }!;
-
-    // Add data for uniform buffer
-    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+    Memory uniform_buffer = vk::new_buffer(
+        vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        &local_allocation,
+        &&camera.matrix(),
+        data_size: UniformData.sizeof
+    )!!;   
 
     // Set-up descriptor info for uniform buffer usage
     DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()

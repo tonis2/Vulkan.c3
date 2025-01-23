@@ -6,7 +6,7 @@
 	"dependency-search-paths": ["libs"],
 	"dependencies": [],
 	"features": [],
-	"linked-libraries": ["vulkan"],
+	"linked-libraries": ["./libs/libvulkan.a"],
 	"script-dir": "./",
 	"targets": {
 		"shaders": {
@@ -14,6 +14,10 @@
 			"exec": [
 				"slangc examples/cube/shaders/shader.slang -profile glsl_450 -target spirv -o examples/cube/shaders/shader.spv"
 			]
+		},
+		"zip": {
+			"type": "prepare",
+			"exec": ["cd ./vk && zip ../vulkan.c3l ./*.c3 ./manifest.json"]
 		},
 		"cube": {
 			"type": "executable",
