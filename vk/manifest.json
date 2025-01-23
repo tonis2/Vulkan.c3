@@ -5,10 +5,13 @@
     "macos-x64" : {
       "linked-libraries" : []
     },
-    "linux-x64" : {
-      "linked-libraries" : ["vulkan"]
+    "macos-aarch64" : {
+      "linked-libraries" : []
     },
-    "windows-x64" : {
+    "linux-x64" : {
+      "linked-libraries" : []
+    },
+	  "windows-x64" : {
       "linked-libraries" : []
     }
   }
