@@ -2392,6 +2392,19 @@ fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setView(&self, void* pVie
    self.pView = pView;
    return *self;
 }
+fn MetalSurfaceCreateInfoEXT metalSurfaceCreateInfoEXT() => MetalSurfaceCreateInfoEXT { .sType = STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT, .pNext = null };
+fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setFlags(&self, MetalSurfaceCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setLayer(&self, CAMetalLayer* pLayer) {
+   self.pLayer = pLayer;
+   return *self;
+}
 fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfo() => RenderPassInputAttachmentAspectCreateInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
 fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;

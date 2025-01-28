@@ -35,7 +35,8 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_KHR_acceleration_structure",
   "VK_KHR_swapchain_mutable_format",
   "VK_EXT_extended_dynamic_state3",
-  "VK_EXT_dynamic_rendering_unused_attachments"
+  "VK_EXT_dynamic_rendering_unused_attachments",
+  "VK_EXT_metal_surface"
 };
 
 fn void! main(String[] args) {

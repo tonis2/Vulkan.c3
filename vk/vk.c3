@@ -6242,6 +6242,12 @@ struct MacOSSurfaceCreateInfoMVK {
    MacOSSurfaceCreateFlagsMVK flags;
    void* pView;
 }
+struct MetalSurfaceCreateInfoEXT {
+   StructureType sType;
+   void* pNext;
+   MetalSurfaceCreateFlagsEXT flags;
+   CAMetalLayer* pLayer;
+}
 struct InputAttachmentAspectReference {
    uint subpass;
    uint inputAttachmentIndex;

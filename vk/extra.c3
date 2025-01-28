@@ -8,7 +8,7 @@ distinct Window = inline ulong;
 distinct Hinstance = inline ulong;
 distinct Hwnd = inline void*;
 distinct VisualID = inline ulong;
-
+distinct CAMetalLayer = inline void*;
 
 def PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);
 def PFN_vkFreeFunction = fn void (void*, void*);
