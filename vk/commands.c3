@@ -270,6 +270,7 @@ def PFN_vkGetPhysicalDeviceMemoryProperties2KHR = fn void (PhysicalDevice, Physi
 def PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = fn void (PhysicalDevice, PhysicalDeviceSparseImageFormatInfo2*, uint*, SparseImageFormatProperties2*);
 def PFN_vkCmdPushDescriptorSetKHR = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, WriteDescriptorSet*);
 def PFN_vkCreateMacOSSurfaceMVK = fn Result (Instance, MacOSSurfaceCreateInfoMVK*, AllocationCallbacks*, SurfaceKHR*);
+def PFN_vkCreateMetalSurfaceEXT = fn Result (Instance, MetalSurfaceCreateInfoEXT*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkSetDebugUtilsObjectNameEXT = fn Result (Device, DebugUtilsObjectNameInfoEXT*);
 def PFN_vkSetDebugUtilsObjectTagEXT = fn Result (Device, DebugUtilsObjectTagInfoEXT*);
 def PFN_vkQueueBeginDebugUtilsLabelEXT = fn void (Queue, DebugUtilsLabelEXT*);
@@ -360,6 +361,7 @@ struct VK_extension_bindings {
   PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR;
   PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
   PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
+  PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
   PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
   PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT;
   PFN_vkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXT;
@@ -452,6 +454,7 @@ fn void loadExtensions(Instance instance) {
    extensions.vkGetPhysicalDeviceSparseImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceSparseImageFormatProperties2KHR");
    extensions.vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)getInstanceProcAddr(instance,"vkCmdPushDescriptorSetKHR");
    extensions.vkCreateMacOSSurfaceMVK = (PFN_vkCreateMacOSSurfaceMVK)getInstanceProcAddr(instance,"vkCreateMacOSSurfaceMVK");
+   extensions.vkCreateMetalSurfaceEXT = (PFN_vkCreateMetalSurfaceEXT)getInstanceProcAddr(instance,"vkCreateMetalSurfaceEXT");
    extensions.vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)getInstanceProcAddr(instance,"vkSetDebugUtilsObjectNameEXT");
    extensions.vkSetDebugUtilsObjectTagEXT = (PFN_vkSetDebugUtilsObjectTagEXT)getInstanceProcAddr(instance,"vkSetDebugUtilsObjectTagEXT");
    extensions.vkQueueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)getInstanceProcAddr(instance,"vkQueueBeginDebugUtilsLabelEXT");
@@ -1186,6 +1189,14 @@ fn void! createMacOSSurfaceMVK (Instance instance, MacOSSurfaceCreateInfoMVK* pC
        case ERROR_NATIVE_WINDOW_IN_USE_KHR: return VkErrors.ERROR_NATIVE_WINDOW_IN_USE_KHR?;
   }
 }
+fn void! createMetalSurfaceEXT (Instance instance, MetalSurfaceCreateInfoEXT* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
+  Result result = extensions.vkCreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+       case ERROR_NATIVE_WINDOW_IN_USE_KHR: return VkErrors.ERROR_NATIVE_WINDOW_IN_USE_KHR?;
+  }
+}
 fn void! createSamplerYcbcrConversion (Device device, SamplerYcbcrConversionCreateInfo* pCreateInfo, AllocationCallbacks* pAllocator, SamplerYcbcrConversion* pYcbcrConversion) {
   Result result = vkCreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
   switch(result) { 
@@ -1545,6 +1556,11 @@ fn DescriptorUpdateTemplate! DescriptorUpdateTemplateCreateInfo.build(&self, Dev
 fn SurfaceKHR! MacOSSurfaceCreateInfoMVK.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
    SurfaceKHR response;
    createMacOSSurfaceMVK(instance, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! MetalSurfaceCreateInfoEXT.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createMetalSurfaceEXT(instance, self, pAllocator, &response)!;
    return response;
 }
 fn SamplerYcbcrConversion! SamplerYcbcrConversionCreateInfo.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
