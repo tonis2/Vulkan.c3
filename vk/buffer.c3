@@ -202,7 +202,8 @@ fn Memory! create_image_buffer(
         .allocator_offset = offset,
         .allocator = allocator
     };
-
+    allocator.blocks.push(response);
+    
     return response;
 }
 
