@@ -3,7 +3,7 @@
 Vulkan bindings for C3 language
 
 ### Features
-* Vulkan API 1.0 - 1.3 bindings
+* Vulkan API 1.0 - 1.4 bindings
 * C3 error handling for Vulkan commands
 * Auto-generated build pattern for Vulkan struct creation
 
