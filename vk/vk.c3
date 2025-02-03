@@ -5797,6 +5797,13 @@ struct SurfaceCapabilitiesKHR {
    CompositeAlphaFlagsKHR supportedCompositeAlpha;
    ImageUsageFlags supportedUsageFlags;
 }
+struct WaylandSurfaceCreateInfoKHR {
+   StructureType sType;
+   void* pNext;
+   WaylandSurfaceCreateFlagsKHR flags;
+   Display* display;
+   WLSurface* surface;
+}
 struct Win32SurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;

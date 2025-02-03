@@ -36,7 +36,8 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_KHR_swapchain_mutable_format",
   "VK_EXT_extended_dynamic_state3",
   "VK_EXT_dynamic_rendering_unused_attachments",
-  "VK_EXT_metal_surface"
+  "VK_EXT_metal_surface",
+  "VK_KHR_wayland_surface"
 };
 
 fn void! main(String[] args) {
@@ -61,6 +62,7 @@ fn void! main(String[] args) {
         "wl_display", "Display",
         "zx_handle_t", "Display",
         "HINSTANCE", "Hinstance",
+        "wl_surface", "WLSurface",
         "HWND", "Hwnd",
         "(~0ULL)", "(~0UL)"
     );
