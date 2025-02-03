@@ -1387,6 +1387,23 @@ fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(&self,
    self.imageExtent = imageExtent;
    return *self;
 }
+fn WaylandSurfaceCreateInfoKHR waylandSurfaceCreateInfoKHR() => WaylandSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setFlags(&self, WaylandSurfaceCreateFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setIsplay(&self, Display* display) {
+   self.display = display;
+   return *self;
+}
+fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setUrface(&self, WLSurface* surface) {
+   self.surface = surface;
+   return *self;
+}
 fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfoKHR() => Win32SurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;

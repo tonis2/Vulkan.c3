@@ -252,6 +252,8 @@ def PFN_vkDestroySwapchainKHR = fn void (Device, SwapchainKHR, AllocationCallbac
 def PFN_vkGetSwapchainImagesKHR = fn Result (Device, SwapchainKHR, uint*, Image*);
 def PFN_vkAcquireNextImageKHR = fn Result (Device, SwapchainKHR, ulong, Semaphore, Fence, uint*);
 def PFN_vkQueuePresentKHR = fn Result (Queue, PresentInfoKHR*);
+def PFN_vkCreateWaylandSurfaceKHR = fn Result (Instance, WaylandSurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
+def PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = fn uint (PhysicalDevice, uint, Display*);
 def PFN_vkCreateWin32SurfaceKHR = fn Result (Instance, Win32SurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
 def PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR = fn uint (PhysicalDevice, uint);
 def PFN_vkCreateXlibSurfaceKHR = fn Result (Instance, XlibSurfaceCreateInfoKHR*, AllocationCallbacks*, SurfaceKHR*);
@@ -343,6 +345,8 @@ struct VK_extension_bindings {
   PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
   PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
   PFN_vkQueuePresentKHR vkQueuePresentKHR;
+  PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+  PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR;
   PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
   PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR;
   PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
@@ -436,6 +440,8 @@ fn void loadExtensions(Instance instance) {
    extensions.vkGetSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR)getInstanceProcAddr(instance,"vkGetSwapchainImagesKHR");
    extensions.vkAcquireNextImageKHR = (PFN_vkAcquireNextImageKHR)getInstanceProcAddr(instance,"vkAcquireNextImageKHR");
    extensions.vkQueuePresentKHR = (PFN_vkQueuePresentKHR)getInstanceProcAddr(instance,"vkQueuePresentKHR");
+   extensions.vkCreateWaylandSurfaceKHR = (PFN_vkCreateWaylandSurfaceKHR)getInstanceProcAddr(instance,"vkCreateWaylandSurfaceKHR");
+   extensions.vkGetPhysicalDeviceWaylandPresentationSupportKHR = (PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceWaylandPresentationSupportKHR");
    extensions.vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR)getInstanceProcAddr(instance,"vkCreateWin32SurfaceKHR");
    extensions.vkGetPhysicalDeviceWin32PresentationSupportKHR = (PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)getInstanceProcAddr(instance,"vkGetPhysicalDeviceWin32PresentationSupportKHR");
    extensions.vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR)getInstanceProcAddr(instance,"vkCreateXlibSurfaceKHR");
@@ -512,6 +518,7 @@ fn void loadExtensions(Instance instance) {
 
 fn void destroySurfaceKHR (Instance instance, SurfaceKHR surface, AllocationCallbacks* pAllocator) => extensions.vkDestroySurfaceKHR(instance, surface, pAllocator);
 fn void destroySwapchainKHR (Device device, SwapchainKHR swapchain, AllocationCallbacks* pAllocator) => extensions.vkDestroySwapchainKHR(device, swapchain, pAllocator);
+fn uint getPhysicalDeviceWaylandPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, Display* display) => extensions.vkGetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
 fn uint getPhysicalDeviceWin32PresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex) => extensions.vkGetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
 fn uint getPhysicalDeviceXlibPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, Display* dpy, VisualID visualID) => extensions.vkGetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
 fn uint getPhysicalDeviceXcbPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, Connection* connection, Window visual_id) => extensions.vkGetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
@@ -1098,6 +1105,13 @@ fn void! queuePresentKHR (Queue queue, PresentInfoKHR* pPresentInfo) {
        case ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT: return VkErrors.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT?;
   }
 }
+fn void! createWaylandSurfaceKHR (Instance instance, WaylandSurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
+  Result result = extensions.vkCreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+  switch(result) { 
+       case ERROR_OUT_OF_HOST_MEMORY: return VkErrors.ERROR_OUT_OF_HOST_MEMORY?;
+       case ERROR_OUT_OF_DEVICE_MEMORY: return VkErrors.ERROR_OUT_OF_DEVICE_MEMORY?;
+  }
+}
 fn void! createWin32SurfaceKHR (Instance instance, Win32SurfaceCreateInfoKHR* pCreateInfo, AllocationCallbacks* pAllocator, SurfaceKHR* pSurface) {
   Result result = extensions.vkCreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
   switch(result) { 
@@ -1526,6 +1540,11 @@ fn SurfaceKHR! DisplaySurfaceCreateInfoKHR.build(&self, Instance instance, Alloc
 fn SwapchainKHR! SwapchainCreateInfoKHR.build(&self, Device device, AllocationCallbacks* pAllocator = null) {
    SwapchainKHR response;
    createSwapchainKHR(device, self, pAllocator, &response)!;
+   return response;
+}
+fn SurfaceKHR! WaylandSurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
+   SurfaceKHR response;
+   createWaylandSurfaceKHR(instance, self, pAllocator, &response)!;
    return response;
 }
 fn SurfaceKHR! Win32SurfaceCreateInfoKHR.build(&self, Instance instance, AllocationCallbacks* pAllocator = null) {
