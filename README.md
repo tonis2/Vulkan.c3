@@ -7,14 +7,28 @@ Vulkan bindings for C3 language
 * C3 error handling for Vulkan commands
 * Auto-generated build pattern for Vulkan struct creation
 
+### Example
+Running example:
+Install [C3](https://c3-lang.org/), [VulkanSDK](https://vulkan.lunarg.com/sdk/home)
+Then run example with `c3c run cube`
 
-### Running example
+------
+### Running with vulkan on macOS
 
-Install C3 from https://c3-lang.org/
+Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac) and add vulkan lib file path as `rpath` to the run command.
+Its the folder with `vulkan.1.dylib` file
+````
+c3c run cube -z -rpath -z /Users/my_user/VulkanSDK/macOS/lib
+````
 
-Download VulkanSDK from https://vulkan.lunarg.com/sdk/home
+------
+### Running vulkan on linux
+Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac)
 
-Then run `c3c run cube` inside the cloned repository
+Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
+```
+"features": ["WAYLAND"]
+"features": ["X11"]
 
 GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
 
