@@ -127,7 +127,7 @@ fn void main(String[] args)
 
     DebugUtilsMessengerCreateInfoEXT debug_info = DebugUtilsMessengerCreateInfoEXT {
         .sType = vk::STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-        .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+        .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
         .messageType = vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
         .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback
     };
@@ -137,16 +137,14 @@ fn void main(String[] args)
         ValidationFeatureEnableEXT[] enables = {vk::VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT, vk::VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT};
         String[] validations = {"VK_LAYER_KHRONOS_validation"};
 
-        LayerSettingEXT layer_setting = {"VK_LAYER_KHRONOS_validation", "printf_verbose", vk::LAYER_SETTING_TYPE_STRING_EXT, 1, &&1};
-
-        LayerSettingsCreateInfoEXT layerSettings = {
-            .sType = vk::STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT,
-            .settingCount = 1,
-            .pSettings = &layer_setting
+        ValidationFeaturesEXT features = {
+            .sType = vk::STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+            .enabledValidationFeatureCount = enables.len,
+            .pEnabledValidationFeatures = enables.ptr,
         };
 
         vk::checkValidationLayersSupport(validations)!!;
-        instanceInfo.pNext = &layerSettings;
+        instanceInfo.pNext = &features;
         instanceInfo.enabledLayerCount = (uint)validations.len;
         instanceInfo.ppEnabledLayerNames = (char*)validations.ptr;
     }
