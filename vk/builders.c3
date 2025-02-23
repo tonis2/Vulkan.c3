@@ -1575,6 +1575,29 @@ fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setUserData
    self.pUserData = pUserData;
    return *self;
 }
+fn ValidationFeaturesEXT validationFeaturesEXT() => ValidationFeaturesEXT { .sType = STRUCTURE_TYPE_VALIDATION_FEATURES_EXT, .pNext = null };
+fn ValidationFeaturesEXT ValidationFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ValidationFeaturesEXT ValidationFeaturesEXT.setEnabledValidationFeatureCount(&self, uint enabledValidationFeatureCount) {
+   self.enabledValidationFeatureCount = enabledValidationFeatureCount;
+   return *self;
+}
+fn ValidationFeaturesEXT ValidationFeaturesEXT.setEnabledValidationFeatures(&self, ValidationFeatureEnableEXT[] pEnabledValidationFeatures) {
+   self.enabledValidationFeatureCount= (uint)pEnabledValidationFeatures.len;
+   self.pEnabledValidationFeatures = &pEnabledValidationFeatures[0];
+   return *self;
+}
+fn ValidationFeaturesEXT ValidationFeaturesEXT.setDisabledValidationFeatureCount(&self, uint disabledValidationFeatureCount) {
+   self.disabledValidationFeatureCount = disabledValidationFeatureCount;
+   return *self;
+}
+fn ValidationFeaturesEXT ValidationFeaturesEXT.setDisabledValidationFeatures(&self, ValidationFeatureDisableEXT[] pDisabledValidationFeatures) {
+   self.disabledValidationFeatureCount= (uint)pDisabledValidationFeatures.len;
+   self.pDisabledValidationFeatures = &pDisabledValidationFeatures[0];
+   return *self;
+}
 fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfo() => DevicePrivateDataCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
 fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;

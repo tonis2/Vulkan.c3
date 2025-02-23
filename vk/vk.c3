@@ -5866,6 +5866,14 @@ struct DebugReportCallbackCreateInfoEXT {
    PFN_vkDebugReportCallbackEXT pfnCallback;
    void* pUserData;
 }
+struct ValidationFeaturesEXT {
+   StructureType sType;
+   void* pNext;
+   uint enabledValidationFeatureCount;
+   ValidationFeatureEnableEXT* pEnabledValidationFeatures;
+   uint disabledValidationFeatureCount;
+   ValidationFeatureDisableEXT* pDisabledValidationFeatures;
+}
 struct DevicePrivateDataCreateInfo {
    StructureType sType;
    void* pNext;
