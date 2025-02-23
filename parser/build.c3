@@ -37,10 +37,11 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_EXT_extended_dynamic_state3",
   "VK_EXT_dynamic_rendering_unused_attachments",
   "VK_EXT_metal_surface",
-  "VK_KHR_wayland_surface"
+  "VK_KHR_wayland_surface",
+  "VK_EXT_validation_features"
 };
 
-fn void! main(String[] args) {
+fn void main(String[] args) {
 
     TypeMap type_values = *TypeMap{}.new_init_with_key_values(
         "uint16_t", "uint",
@@ -155,7 +156,7 @@ fn void! main(String[] args) {
         String! extends = node.attributes.get("structextends");
         String! name = node.attributes.get("name");
         String! alias = node.attributes.get("alias");
-        String category = node.attributes.get("category") ?? node.attributes.get("type")!;
+        String category = node.attributes.get("category") ?? node.attributes.get("type")!!;
 
         if (try alias && try name) {
          
