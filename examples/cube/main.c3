@@ -8,7 +8,7 @@ import camera;
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = false;
+const ENABLE_VALIDATION_LAYERS = true;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex {
@@ -90,7 +90,7 @@ fn void main(String[] args)
     
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
-    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor"});
+    device_extensions.add_array({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_shader_non_semantic_info"});
     extensions.add_array({"VK_KHR_surface", "VK_EXT_debug_utils"});
 
     if (env::OS_TYPE == MACOS) {
@@ -134,11 +134,21 @@ fn void main(String[] args)
 
     // Debug enabled
     if (ENABLE_VALIDATION_LAYERS) {
-      validations.add_array({"VK_LAYER_KHRONOS_validation"});
+        ValidationFeatureEnableEXT[] enables = {vk::VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT, vk::VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT};
+        String[] validations = {"VK_LAYER_KHRONOS_validation"};
 
-      vk::checkValidationLayersSupport(validations)!!;
-      instanceInfo.enabledLayerCount = (uint)validations.len();
-      instanceInfo.ppEnabledLayerNames = (char*)validations.entries;
+        LayerSettingEXT layer_setting = {"VK_LAYER_KHRONOS_validation", "printf_verbose", vk::LAYER_SETTING_TYPE_STRING_EXT, 1, &&1};
+
+        LayerSettingsCreateInfoEXT layerSettings = {
+            .sType = vk::STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT,
+            .settingCount = 1,
+            .pSettings = &layer_setting
+        };
+
+        vk::checkValidationLayersSupport(validations)!!;
+        instanceInfo.pNext = &layerSettings;
+        instanceInfo.enabledLayerCount = (uint)validations.len;
+        instanceInfo.ppEnabledLayerNames = (char*)validations.ptr;
     }
 
     if (catch err = vk::createInstance(&instanceInfo, null, &instance)) {

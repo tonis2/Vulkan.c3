@@ -38,7 +38,8 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_EXT_dynamic_rendering_unused_attachments",
   "VK_EXT_metal_surface",
   "VK_KHR_wayland_surface",
-  "VK_EXT_validation_features"
+  "VK_EXT_validation_features",
+  "VK_EXT_layer_settings"
 };
 
 fn void main(String[] args) {

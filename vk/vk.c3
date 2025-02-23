@@ -5874,6 +5874,19 @@ struct ValidationFeaturesEXT {
    uint disabledValidationFeatureCount;
    ValidationFeatureDisableEXT* pDisabledValidationFeatures;
 }
+struct LayerSettingsCreateInfoEXT {
+   StructureType sType;
+   void* pNext;
+   uint settingCount;
+   LayerSettingEXT* pSettings;
+}
+struct LayerSettingEXT {
+   char* pLayerName;
+   char* pSettingName;
+   LayerSettingTypeEXT type;
+   uint valueCount;
+   void* pValues;
+}
 struct DevicePrivateDataCreateInfo {
    StructureType sType;
    void* pNext;
