@@ -5,8 +5,8 @@
 	"version": "0.1.0",
 	"dependency-search-paths": ["libs"],
 	"dependencies": [],
-	"features": [],
-	"linked-libraries": ["./libs/libvulkan.a"],
+	"features": ["WAYLAND"],
+	"linked-libraries": ["vulkan"],
 	"script-dir": "./",
 	"targets": {
 		"shaders": {
