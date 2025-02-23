@@ -4,7 +4,6 @@ import std::io;
 import std::math;
 import std::core::env;
 import std::collections::list;
-import libc;
 
 def FenceList = List(<vk::Fence>);
 def SemaphoreList = List(<vk::Semaphore>);
@@ -340,13 +339,13 @@ fn StringList! getDeviceExtensions(PhysicalDevice device) {
 }
 
 // Check for validation support
-fn void! checkValidationLayersSupport(ZStringList requested_validations) {
+fn void! checkValidationLayersSupport(String[] requested_validations) {
     StringList validations = getValidationLayers()!;
     defer validations.free();
     foreach (value : requested_validations)
     {
-      if (!validations.contains(value.str_view())) {
-          io::printfn("Validation layer not supported %s", value.str_view());
+      if (!validations.contains(value)) {
+          io::printfn("Validation layer not supported %s", value);
           return ContextErrors.EXTENSION_NOT_SUPPORTED?;
       }
     }
@@ -527,13 +526,15 @@ fn bool debugCallback(
     void* userData
 ) {
     if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
+       io::printf("ERROR: %s \n", (ZString)data.pMessage);
     } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
+       io::printf("WARNING: %s \n", (ZString)data.pMessage);
     } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
+       io::printf("INFO: %s \n", (ZString)data.pMessage);
     } else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
-       libc::printf("%s \n", data.pMessage);
+       io::printf("%s \n", (ZString)data.pMessage);
+    } else {
+       io::printfn("%s \n", (ZString)data.pMessage);
     }
     return false;
 }

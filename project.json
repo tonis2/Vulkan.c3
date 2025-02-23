@@ -12,7 +12,7 @@
 		"shaders": {
 			"type": "static-lib",
 			"exec": [
-				"slangc examples/cube/shaders/shader.slang -profile glsl_450 -target spirv -o examples/cube/shaders/shader.spv"
+				"slangc examples/cube/shaders/shader.slang -target spirv -o examples/cube/shaders/shader.spv"
 			]
 		},
 		"zip": {

@@ -36,7 +36,7 @@ VertexOutPut vertexMain(VertexInput assembledVertex)
 
     float3 position = assembledVertex.position;
     float4x4 identity_matrix = float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-
+    printf("pos test");
     output.coarseVertex.color = assembledVertex.color;
     output.sv_position = mul(mul(mul(projection, view), identity_matrix), float4(position, 1.0));
 

@@ -1598,6 +1598,20 @@ fn ValidationFeaturesEXT ValidationFeaturesEXT.setDisabledValidationFeatures(&se
    self.pDisabledValidationFeatures = &pDisabledValidationFeatures[0];
    return *self;
 }
+fn LayerSettingsCreateInfoEXT layerSettingsCreateInfoEXT() => LayerSettingsCreateInfoEXT { .sType = STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, .pNext = null };
+fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setSettingCount(&self, uint settingCount) {
+   self.settingCount = settingCount;
+   return *self;
+}
+fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setSettings(&self, LayerSettingEXT[] pSettings) {
+   self.settingCount= (uint)pSettings.len;
+   self.pSettings = &pSettings[0];
+   return *self;
+}
 fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfo() => DevicePrivateDataCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
 fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
