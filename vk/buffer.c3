@@ -6,6 +6,15 @@ import std::collections::map;
 def BlockList = List(<Memory>);
 def AllocationList = List(<Allocation>);
 
+interface Allocator
+{
+    fn void push(void* data, usz size);
+    fn char* data();
+    fn void upload(void* data, usz size, usz offset);
+    fn usz usedSize();
+    fn void free();
+}
+
 fault BufferError
 {
     BUFFER_TOO_SMALL,
@@ -57,7 +66,7 @@ fn void Allocation.free(&self) {
     freeMemory(self.device, self.memory, null);
 }
 
-struct Memory
+struct Memory (Allocator)
 {
 	usz size;
     usz used_size;
@@ -208,10 +217,17 @@ fn Memory! create_image_buffer(
 }
 
 
-fn void Memory.upload(&self, void* data, ulong size, usz offset = 0)
+fn void Memory.upload(&self, void* data, ulong size, usz offset = 0) @dynamic
 {
     mem::copy(self.allocator.mapped + self.allocator_offset + offset, data, size);
 }
+
+fn char* Memory.data(&self) @dynamic
+{
+    return self.allocator.mapped + self.allocator_offset;
+}
+
+fn usz Memory.usedSize(&self) @dynamic => self.used_size;
 
 fn void! Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
 {
@@ -236,13 +252,13 @@ fn void! Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocati
     stage_buffer.free();
 }
 
-fn void Memory.push(&self, void* data, ulong size, usz offset = 0)
+fn void Memory.push(&self, void* data, ulong size) @dynamic
 {
-    mem::copy(self.allocator.mapped + self.allocator_offset + offset + self.used_size, data, size);
+    mem::copy(self.allocator.mapped + self.allocator_offset + self.used_size, data, size);
     self.used_size += size;
 }
 
-fn void Memory.free(&self)
+fn void Memory.free(&self) @dynamic
 {
     self.allocator.used_size -= self.size;
     if (self.buffer != null) {
