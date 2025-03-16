@@ -263,10 +263,13 @@ fn void Memory.free(&self) @dynamic
     self.allocator.used_size -= self.size;
     if (self.buffer != null) {
         vk::destroyBuffer(self.allocator.device, self.buffer, null);
+        self.buffer = null;
+        self.size = 0;
     }
 
     if (self.image != null) {
         vk::destroyImage(self.allocator.device, self.image, null);
+        self.image = null;
     }
 }
 
