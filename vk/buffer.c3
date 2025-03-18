@@ -6,13 +6,10 @@ import std::collections::map;
 def BlockList = List(<Memory>);
 def AllocationList = List(<Allocation>);
 
-interface Allocator
+enum GpuType : uint
 {
-    fn void push(void* data, usz size);
-    fn char* data();
-    fn void upload(void* data, usz size, usz offset);
-    fn usz usedSize();
-    fn void free();
+    HOST_VISIBLE,
+    DEVICE_ONLY
 }
 
 fault BufferError
@@ -66,11 +63,12 @@ fn void Allocation.free(&self) {
     freeMemory(self.device, self.memory, null);
 }
 
-struct Memory (Allocator)
+struct Memory 
 {
 	usz size;
     usz used_size;
     usz allocator_offset;
+    GpuType type;
     vk::Buffer buffer;
     vk::Image image;
 	vk::Allocation* allocator;
@@ -144,11 +142,18 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
         .allocator = allocator,
         .address = address,
     };
+
+    if ((MemoryPropertyFlagBits)allocator.properties & (vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT)) {
+        response.type = GpuType.HOST_VISIBLE;
+    } else {
+        response.type = GpuType.DEVICE_ONLY;
+    }
     
     // CPU & GPU
     if ((MemoryPropertyFlagBits)allocator.properties & (vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT) && data != null) {
         response.upload(data, data_size); 
     }
+
     // GPU only
     if ((MemoryPropertyFlagBits)allocator.properties & vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT && data != null) {
         if (stage_allocator == null) {
@@ -227,7 +232,14 @@ fn char* Memory.data(&self) @dynamic
     return self.allocator.mapped + self.allocator_offset;
 }
 
+fn ulong Memory.getAddress(&self) @dynamic
+{
+    return self.address;
+}
+
 fn usz Memory.usedSize(&self) @dynamic => self.used_size;
+fn uint Memory.getType(&self) @dynamic => self.type.ordinal;
+fn void* Memory.getBuffer(&self) @dynamic => self.buffer;
 
 fn void! Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
 {
@@ -265,6 +277,7 @@ fn void Memory.free(&self) @dynamic
         vk::destroyBuffer(self.allocator.device, self.buffer, null);
         self.buffer = null;
         self.size = 0;
+        self.used_size = 0;
     }
 
     if (self.image != null) {
