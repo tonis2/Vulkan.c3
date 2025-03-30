@@ -30,10 +30,12 @@ Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
 "features": ["WAYLAND"]
 "features": ["X11"]
 
-GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
-
+```
 
 ### Building bindings
 
 run `sh build.sh` 
 or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
+
+
+GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
