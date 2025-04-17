@@ -5,18 +5,18 @@ import std::math;
 import std::core::env;
 import std::collections::list;
 
-def FenceList = List(<vk::Fence>);
-def SemaphoreList = List(<vk::Semaphore>);
-def StringList = List(<String>);
-def ZStringList = List(<ZString>);
-def DeviceList = List(<PhysicalDevice>);
-def QueuePropertiesList = List(<QueueFamilyProperties>);
-def SurfaceFormatList = List(<SurfaceFormatKHR>);
-def PresentModeList = List(<PresentModeKHR>);
-def CommandBufferList = List(<CommandBuffer>);
-def ImageList = List(<vk::Image>);
-def ImageViewList = List(<vk::ImageView>);
-def FrameBufferList = List(<vk::Framebuffer>);
+alias FenceList = List{vk::Fence};
+alias SemaphoreList = List{vk::Semaphore};
+alias StringList = List{String};
+alias ZStringList = List{ZString};
+alias DeviceList = List{PhysicalDevice};
+alias QueuePropertiesList = List{QueueFamilyProperties};
+alias SurfaceFormatList = List{SurfaceFormatKHR};
+alias PresentModeList = List{PresentModeKHR};
+alias CommandBufferList = List{CommandBuffer};
+alias ImageList = List{vk::Image};
+alias ImageViewList = List{vk::ImageView};
+alias FrameBufferList = List{vk::Framebuffer};
 
 
 struct DeviceQueue {
@@ -24,70 +24,12 @@ struct DeviceQueue {
     uint index;
 }
 
-fault ContextErrors
-{
-    FAILED_GETTING_EXTENSIONS,
-    EXTENSION_NOT_SUPPORTED,
-    FAILED_GETTING_DEVICE
-}
+faultdef FAILED_GETTING_EXTENSIONS, EXTENSION_NOT_SUPPORTED, FAILED_GETTING_DEVICE;
 
-struct Shader {
-    ShaderModule vert_mod;
-    ShaderModule frag_mod;
-    PipelineShaderStageCreateInfo[2] stages;
-}
-
-fn Shader! Device.createShader(self, char[] vertex, char[] fragment) {
-    Shader shader;
-    createShaderModule(self, &&ShaderModuleCreateInfo{
-       .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .codeSize = vertex.len,
-       .pCode = (uint*)&vertex[0],
-    }, null, &shader.vert_mod)!;
-
-    createShaderModule(self, &&ShaderModuleCreateInfo{
-       .sType = vk::STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-       .pNext = null,
-       .flags = 0,
-       .codeSize = fragment.len,
-       .pCode = (uint*)&fragment[0],
-    }, null, &shader.frag_mod)!;
-
-    shader.stages = PipelineShaderStageCreateInfo[2] {
-        {
-            .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .stage = vk::SHADER_STAGE_VERTEX_BIT,
-            .mod = shader.vert_mod,
-            .pName = "main",
-            .pSpecializationInfo = null,
-        },
-        {
-            .sType = vk::STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-            .pNext = null,
-            .flags = 0,
-            .stage = vk::SHADER_STAGE_FRAGMENT_BIT,
-            .mod = shader.frag_mod,
-            .pName = "main",
-            .pSpecializationInfo = null,
-        }
-    };
-
-    return shader;
-}
-
-fn void Shader.free(self, Device device) {
-    destroyShaderModule(device, self.frag_mod, null);
-    destroyShaderModule(device, self.vert_mod, null);
-}
-
-fn CommandPool! Device.createCommandPool(self, CommandPoolCreateInfo* info = null, uint queue)
+fn CommandPool? Device.createCommandPool(self, CommandPoolCreateInfo* info = null, uint queue)
 {
     if (info == null) {
-        info = &&CommandPoolCreateInfo{
+        info = &&(CommandPoolCreateInfo){
             .sType = vk::STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             .pNext = null,
             .flags = vk::COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
@@ -100,7 +42,7 @@ fn CommandPool! Device.createCommandPool(self, CommandPoolCreateInfo* info = nul
    return pool;
 }
 
-fn CommandBufferList! Device.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
+fn CommandBufferList? Device.createCommandBuffers(self, CommandPool pool, uint count, CommandBufferLevel level = COMMAND_BUFFER_LEVEL_PRIMARY)
 {
     CommandBufferList buffers;
     CommandBuffer* command_buffers = mem::new_array(CommandBuffer, count);
@@ -131,7 +73,7 @@ fn vk::Queue Device.getQueue(self, uint index) {
     return response;
 }
 
-macro void! Device.@single_time_command(self, DeviceQueue queue; @body(CommandBuffer buffer))
+macro void? Device.@single_time_command(self, DeviceQueue queue; @body(CommandBuffer buffer))
 {
     CommandPool command_pool;
     CommandPoolCreateInfo pool_info = {
@@ -170,13 +112,13 @@ macro void! Device.@single_time_command(self, DeviceQueue queue; @body(CommandBu
 }
 
 
-fn bool! SurfaceKHR.checkSurfaceSupport(self, usz index, PhysicalDevice device) {
+fn bool? SurfaceKHR.checkSurfaceSupport(self, usz index, PhysicalDevice device) {
       uint response;
       getPhysicalDeviceSurfaceSupportKHR(device, (uint)index, self, &response)!;
       return response > 0;
 }
 
-fn SurfaceFormatList! SurfaceKHR.getFormats(self, PhysicalDevice device) {
+fn SurfaceFormatList? SurfaceKHR.getFormats(self, PhysicalDevice device) {
     uint format_count;
     SurfaceFormatList formatList;
     getPhysicalDeviceSurfaceFormatsKHR(device, self, &format_count, null)!;
@@ -191,13 +133,13 @@ fn SurfaceFormatList! SurfaceKHR.getFormats(self, PhysicalDevice device) {
     return formatList;
 }
 
-fn SurfaceCapabilitiesKHR! SurfaceKHR.deviceSurfaceCapabilities(self, PhysicalDevice device) {
+fn SurfaceCapabilitiesKHR? SurfaceKHR.deviceSurfaceCapabilities(self, PhysicalDevice device) {
     SurfaceCapabilitiesKHR response;
     getPhysicalDeviceSurfaceCapabilitiesKHR(device, self, &response)!;
     return response;
 }
 
-fn PresentModeList! SurfaceKHR.getPresentModes(self, PhysicalDevice device) {
+fn PresentModeList? SurfaceKHR.getPresentModes(self, PhysicalDevice device) {
     uint present_count;
     PresentModeList presentList;
     getPhysicalDeviceSurfacePresentModesKHR(device, self, &present_count, null)!;
@@ -212,7 +154,7 @@ fn PresentModeList! SurfaceKHR.getPresentModes(self, PhysicalDevice device) {
     return presentList;
 }
 
-fn DeviceList! Instance.getDevices(self) {
+fn DeviceList? Instance.getDevices(self) {
     uint deviceCount;
     DeviceList deviceList;
     vk::enumeratePhysicalDevices(self, &deviceCount, null)!;
@@ -240,7 +182,7 @@ fn DeviceList! Instance.getDevices(self) {
 //     return extensionList;
 // }
 
-fn bool! PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
+fn bool? PhysicalDevice.checkExtensionSupport(self, ZStringList extensions) {
     bool supports = true;
     StringList device_extensions = getDeviceExtensions(self)!;
     defer device_extensions.free();
@@ -285,7 +227,7 @@ fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.build(&self, PhysicalDevi
     return *self;
 }
 
-fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
+fn QueuePropertiesList? PhysicalDevice.getQueueProperties(self) {
     uint queueCount;
     QueuePropertiesList propertiesList;
     getPhysicalDeviceQueueFamilyProperties(self, &queueCount, null);
@@ -300,7 +242,7 @@ fn QueuePropertiesList! PhysicalDevice.getQueueProperties(self) {
     return propertiesList;
 }
 
-fn void! checkInstanceExtensionSupport(ZStringList requested_extensions) {
+fn void? checkInstanceExtensionSupport(ZStringList requested_extensions) {
     uint extensionCount;
     StringList extensions;
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)!;
@@ -310,7 +252,7 @@ fn void! checkInstanceExtensionSupport(ZStringList requested_extensions) {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensions.push(name.str_view().copy());
+        extensions.push(name.str_view().copy(allocator::heap()));
     };
  
    defer extensions.free();
@@ -318,12 +260,12 @@ fn void! checkInstanceExtensionSupport(ZStringList requested_extensions) {
    {
        if (!extensions.contains(value.str_view())) {
            io::printfn("Extension not supported %s", value.str_view());
-           return ContextErrors.EXTENSION_NOT_SUPPORTED?;
+           return EXTENSION_NOT_SUPPORTED?;
        }
    }
 }
 
-fn StringList! getDeviceExtensions(PhysicalDevice device) {
+fn StringList? getDeviceExtensions(PhysicalDevice device) {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, null)!;
@@ -333,25 +275,25 @@ fn StringList! getDeviceExtensions(PhysicalDevice device) {
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view().copy());
+        extensionList.push(name.str_view().copy(allocator::heap()));
     };
     return extensionList;
 }
 
 // Check for validation support
-fn void! checkValidationLayersSupport(String[] requested_validations) {
+fn void? checkValidationLayersSupport(String[] requested_validations) {
     StringList validations = getValidationLayers()!;
     defer validations.free();
     foreach (value : requested_validations)
     {
       if (!validations.contains(value)) {
           io::printfn("Validation layer not supported %s", value);
-          return ContextErrors.EXTENSION_NOT_SUPPORTED?;
+          return EXTENSION_NOT_SUPPORTED?;
       }
     }
 }
 
-fn StringList! getInstanceExtensions() {
+fn StringList? getInstanceExtensions() {
     uint extensionCount;
     StringList extensionList;
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, null)!;
@@ -361,12 +303,12 @@ fn StringList! getInstanceExtensions() {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view().copy());
+        extensionList.push(name.str_view().copy(allocator::heap()));
     };
     return extensionList;
 }
 
-fn StringList! getValidationLayers() {
+fn StringList? getValidationLayers() {
     uint layerCount;
     StringList layersList;
     vk::enumerateInstanceLayerProperties(&layerCount, null)!;
@@ -377,12 +319,12 @@ fn StringList! getValidationLayers() {
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
     for (uint i = 0; i < layerCount; ++i) {
         ZString name = (ZString)&layers[i].layerName;
-        layersList.push(name.str_view().copy());
+        layersList.push(name.str_view().copy(allocator::heap()));
     };
     return layersList;
 }
 
-def CompareFN = fn bool (usz index, QueueFamilyProperties flags);
+alias CompareFN = fn bool (usz index, QueueFamilyProperties flags);
 fn int QueuePropertiesList.find(self, CompareFN callback)
 {
     int response = -1;
@@ -406,7 +348,7 @@ fn vk::MemoryRequirements Image.getMemoryRequirements(self, Device device) {
     return mem_reqs;
 }
 
-fn vk::ImageList! SwapchainKHR.getImages(self, Device device, uint count) {
+fn vk::ImageList? SwapchainKHR.getImages(self, Device device, uint count) {
     vk::Image* images = mem::new_array(vk::Image, count);
     vk::getSwapchainImagesKHR(device, self, &count, images)!;
 
@@ -484,11 +426,11 @@ fn void SemaphoreList.release(self, vk::Device device) {
   self.free();
 }
 
-fn void! Fence.wait(&self, vk::Device device) {
+fn void? Fence.wait(&self, vk::Device device) {
   vk::waitForFences(device, 1, self, vk::TRUE, uint.max)!;
 }
 
-fn void! Fence.reset(&self, vk::Device device) {
+fn void? Fence.reset(&self, vk::Device device) {
   vk::resetFences(device, 1, self)!;
 }
 

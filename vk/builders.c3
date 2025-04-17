@@ -1,5 +1,5 @@
 module vk;
-fn ApplicationInfo applicationInfo() => ApplicationInfo { .sType = STRUCTURE_TYPE_APPLICATION_INFO, .pNext = null };
+fn ApplicationInfo applicationInfo() => { .sType = STRUCTURE_TYPE_APPLICATION_INFO, .pNext = null };
 fn ApplicationInfo ApplicationInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -24,7 +24,7 @@ fn ApplicationInfo ApplicationInfo.setApiVersion(&self, uint apiVersion) {
    self.apiVersion = apiVersion;
    return *self;
 }
-fn DeviceQueueCreateInfo deviceQueueCreateInfo() => DeviceQueueCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, .pNext = null };
+fn DeviceQueueCreateInfo deviceQueueCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, .pNext = null };
 fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -46,7 +46,7 @@ fn DeviceQueueCreateInfo DeviceQueueCreateInfo.setQueuePriorities(&self, float[]
    self.pQueuePriorities = &pQueuePriorities[0];
    return *self;
 }
-fn DeviceCreateInfo deviceCreateInfo() => DeviceCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_CREATE_INFO, .pNext = null };
+fn DeviceCreateInfo deviceCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_CREATE_INFO, .pNext = null };
 fn DeviceCreateInfo DeviceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -86,7 +86,7 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledFeatures(&self, PhysicalDeviceFea
    self.pEnabledFeatures = pEnabledFeatures;
    return *self;
 }
-fn InstanceCreateInfo instanceCreateInfo() => InstanceCreateInfo { .sType = STRUCTURE_TYPE_INSTANCE_CREATE_INFO, .pNext = null };
+fn InstanceCreateInfo instanceCreateInfo() => { .sType = STRUCTURE_TYPE_INSTANCE_CREATE_INFO, .pNext = null };
 fn InstanceCreateInfo InstanceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -117,7 +117,7 @@ fn InstanceCreateInfo InstanceCreateInfo.setEnabledExtensionNames(&self, ZString
    self.ppEnabledExtensionNames = (char*)&ppEnabledExtensionNames[0];
    return *self;
 }
-fn MemoryAllocateInfo memoryAllocateInfo() => MemoryAllocateInfo { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, .pNext = null };
+fn MemoryAllocateInfo memoryAllocateInfo() => { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, .pNext = null };
 fn MemoryAllocateInfo MemoryAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -130,7 +130,7 @@ fn MemoryAllocateInfo MemoryAllocateInfo.setMemoryTypeIndex(&self, uint memoryTy
    self.memoryTypeIndex = memoryTypeIndex;
    return *self;
 }
-fn MappedMemoryRange mappedMemoryRange() => MappedMemoryRange { .sType = STRUCTURE_TYPE_MAPPED_MEMORY_RANGE, .pNext = null };
+fn MappedMemoryRange mappedMemoryRange() => { .sType = STRUCTURE_TYPE_MAPPED_MEMORY_RANGE, .pNext = null };
 fn MappedMemoryRange MappedMemoryRange.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -147,7 +147,7 @@ fn MappedMemoryRange MappedMemoryRange.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
-fn WriteDescriptorSet writeDescriptorSet() => WriteDescriptorSet { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .pNext = null };
+fn WriteDescriptorSet writeDescriptorSet() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .pNext = null };
 fn WriteDescriptorSet WriteDescriptorSet.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -187,7 +187,7 @@ fn WriteDescriptorSet WriteDescriptorSet.setTexelBufferView(&self, BufferView[] 
    self.pTexelBufferView = &pTexelBufferView[0];
    return *self;
 }
-fn CopyDescriptorSet copyDescriptorSet() => CopyDescriptorSet { .sType = STRUCTURE_TYPE_COPY_DESCRIPTOR_SET, .pNext = null };
+fn CopyDescriptorSet copyDescriptorSet() => { .sType = STRUCTURE_TYPE_COPY_DESCRIPTOR_SET, .pNext = null };
 fn CopyDescriptorSet CopyDescriptorSet.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -220,7 +220,7 @@ fn CopyDescriptorSet CopyDescriptorSet.setDescriptorCount(&self, uint descriptor
    self.descriptorCount = descriptorCount;
    return *self;
 }
-fn BufferUsageFlags2CreateInfo bufferUsageFlags2CreateInfo() => BufferUsageFlags2CreateInfo { .sType = STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO, .pNext = null };
+fn BufferUsageFlags2CreateInfo bufferUsageFlags2CreateInfo() => { .sType = STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO, .pNext = null };
 fn BufferUsageFlags2CreateInfo BufferUsageFlags2CreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -229,7 +229,7 @@ fn BufferUsageFlags2CreateInfo BufferUsageFlags2CreateInfo.setUsage(&self, Buffe
    self.usage = usage;
    return *self;
 }
-fn BufferCreateInfo bufferCreateInfo() => BufferCreateInfo { .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO, .pNext = null };
+fn BufferCreateInfo bufferCreateInfo() => { .sType = STRUCTURE_TYPE_BUFFER_CREATE_INFO, .pNext = null };
 fn BufferCreateInfo BufferCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -259,7 +259,7 @@ fn BufferCreateInfo BufferCreateInfo.setQueueFamilyIndices(&self, uint[] pQueueF
    self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
    return *self;
 }
-fn BufferViewCreateInfo bufferViewCreateInfo() => BufferViewCreateInfo { .sType = STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO, .pNext = null };
+fn BufferViewCreateInfo bufferViewCreateInfo() => { .sType = STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO, .pNext = null };
 fn BufferViewCreateInfo BufferViewCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -284,7 +284,7 @@ fn BufferViewCreateInfo BufferViewCreateInfo.setRange(&self, DeviceSize range) {
    self.range = range;
    return *self;
 }
-fn MemoryBarrier memoryBarrier() => MemoryBarrier { .sType = STRUCTURE_TYPE_MEMORY_BARRIER, .pNext = null };
+fn MemoryBarrier memoryBarrier() => { .sType = STRUCTURE_TYPE_MEMORY_BARRIER, .pNext = null };
 fn MemoryBarrier MemoryBarrier.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -297,7 +297,7 @@ fn MemoryBarrier MemoryBarrier.setDstAccessMask(&self, AccessFlags dstAccessMask
    self.dstAccessMask = dstAccessMask;
    return *self;
 }
-fn BufferMemoryBarrier bufferMemoryBarrier() => BufferMemoryBarrier { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER, .pNext = null };
+fn BufferMemoryBarrier bufferMemoryBarrier() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER, .pNext = null };
 fn BufferMemoryBarrier BufferMemoryBarrier.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -330,7 +330,7 @@ fn BufferMemoryBarrier BufferMemoryBarrier.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
-fn ImageMemoryBarrier imageMemoryBarrier() => ImageMemoryBarrier { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER, .pNext = null };
+fn ImageMemoryBarrier imageMemoryBarrier() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER, .pNext = null };
 fn ImageMemoryBarrier ImageMemoryBarrier.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -367,7 +367,7 @@ fn ImageMemoryBarrier ImageMemoryBarrier.setSubresourceRange(&self, ImageSubreso
    self.subresourceRange = subresourceRange;
    return *self;
 }
-fn ImageCreateInfo imageCreateInfo() => ImageCreateInfo { .sType = STRUCTURE_TYPE_IMAGE_CREATE_INFO, .pNext = null };
+fn ImageCreateInfo imageCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_CREATE_INFO, .pNext = null };
 fn ImageCreateInfo ImageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -425,7 +425,7 @@ fn ImageCreateInfo ImageCreateInfo.setInitialLayout(&self, ImageLayout initialLa
    self.initialLayout = initialLayout;
    return *self;
 }
-fn ImageViewCreateInfo imageViewCreateInfo() => ImageViewCreateInfo { .sType = STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, .pNext = null };
+fn ImageViewCreateInfo imageViewCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, .pNext = null };
 fn ImageViewCreateInfo ImageViewCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -454,7 +454,7 @@ fn ImageViewCreateInfo ImageViewCreateInfo.setSubresourceRange(&self, ImageSubre
    self.subresourceRange = subresourceRange;
    return *self;
 }
-fn BindSparseInfo bindSparseInfo() => BindSparseInfo { .sType = STRUCTURE_TYPE_BIND_SPARSE_INFO, .pNext = null };
+fn BindSparseInfo bindSparseInfo() => { .sType = STRUCTURE_TYPE_BIND_SPARSE_INFO, .pNext = null };
 fn BindSparseInfo BindSparseInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -504,7 +504,7 @@ fn BindSparseInfo BindSparseInfo.setSignalSemaphores(&self, Semaphore[] pSignalS
    self.pSignalSemaphores = &pSignalSemaphores[0];
    return *self;
 }
-fn ShaderModuleCreateInfo shaderModuleCreateInfo() => ShaderModuleCreateInfo { .sType = STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, .pNext = null };
+fn ShaderModuleCreateInfo shaderModuleCreateInfo() => { .sType = STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, .pNext = null };
 fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -521,7 +521,7 @@ fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCode(&self, uint* pCode) {
    self.pCode = pCode;
    return *self;
 }
-fn DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo() => DescriptorSetLayoutCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, .pNext = null };
+fn DescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, .pNext = null };
 fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -539,7 +539,7 @@ fn DescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo.setBindings(&self
    self.pBindings = &pBindings[0];
    return *self;
 }
-fn DescriptorPoolCreateInfo descriptorPoolCreateInfo() => DescriptorPoolCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO, .pNext = null };
+fn DescriptorPoolCreateInfo descriptorPoolCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO, .pNext = null };
 fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -561,7 +561,7 @@ fn DescriptorPoolCreateInfo DescriptorPoolCreateInfo.setPoolSizes(&self, Descrip
    self.pPoolSizes = &pPoolSizes[0];
    return *self;
 }
-fn DescriptorSetAllocateInfo descriptorSetAllocateInfo() => DescriptorSetAllocateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO, .pNext = null };
+fn DescriptorSetAllocateInfo descriptorSetAllocateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO, .pNext = null };
 fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -579,7 +579,7 @@ fn DescriptorSetAllocateInfo DescriptorSetAllocateInfo.setSetLayouts(&self, Desc
    self.pSetLayouts = &pSetLayouts[0];
    return *self;
 }
-fn PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo() => PipelineShaderStageCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .pNext = null };
+fn PipelineShaderStageCreateInfo pipelineShaderStageCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .pNext = null };
 fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -604,7 +604,7 @@ fn PipelineShaderStageCreateInfo PipelineShaderStageCreateInfo.setSpecialization
    self.pSpecializationInfo = pSpecializationInfo;
    return *self;
 }
-fn ComputePipelineCreateInfo computePipelineCreateInfo() => ComputePipelineCreateInfo { .sType = STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, .pNext = null };
+fn ComputePipelineCreateInfo computePipelineCreateInfo() => { .sType = STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, .pNext = null };
 fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -629,7 +629,7 @@ fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setBasePipelineIndex(&sel
    self.basePipelineIndex = basePipelineIndex;
    return *self;
 }
-fn PipelineCreateFlags2CreateInfo pipelineCreateFlags2CreateInfo() => PipelineCreateFlags2CreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO, .pNext = null };
+fn PipelineCreateFlags2CreateInfo pipelineCreateFlags2CreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO, .pNext = null };
 fn PipelineCreateFlags2CreateInfo PipelineCreateFlags2CreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -638,7 +638,7 @@ fn PipelineCreateFlags2CreateInfo PipelineCreateFlags2CreateInfo.setFlags(&self,
    self.flags = flags;
    return *self;
 }
-fn PipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfo() => PipelineVertexInputStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO, .pNext = null };
+fn PipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO, .pNext = null };
 fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -665,7 +665,7 @@ fn PipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo.setVert
    self.pVertexAttributeDescriptions = &pVertexAttributeDescriptions[0];
    return *self;
 }
-fn PipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo() => PipelineInputAssemblyStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, .pNext = null };
+fn PipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, .pNext = null };
 fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -682,7 +682,7 @@ fn PipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo.set
    self.primitiveRestartEnable = primitiveRestartEnable;
    return *self;
 }
-fn PipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfo() => PipelineTessellationStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO, .pNext = null };
+fn PipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO, .pNext = null };
 fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -695,7 +695,7 @@ fn PipelineTessellationStateCreateInfo PipelineTessellationStateCreateInfo.setPa
    self.patchControlPoints = patchControlPoints;
    return *self;
 }
-fn PipelineViewportStateCreateInfo pipelineViewportStateCreateInfo() => PipelineViewportStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO, .pNext = null };
+fn PipelineViewportStateCreateInfo pipelineViewportStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO, .pNext = null };
 fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -722,7 +722,7 @@ fn PipelineViewportStateCreateInfo PipelineViewportStateCreateInfo.setScissors(&
    self.pScissors = &pScissors[0];
    return *self;
 }
-fn PipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo() => PipelineRasterizationStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, .pNext = null };
+fn PipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, .pNext = null };
 fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -771,7 +771,7 @@ fn PipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo.set
    self.lineWidth = lineWidth;
    return *self;
 }
-fn PipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo() => PipelineMultisampleStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, .pNext = null };
+fn PipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, .pNext = null };
 fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -804,7 +804,7 @@ fn PipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo.setAlph
    self.alphaToOneEnable = alphaToOneEnable;
    return *self;
 }
-fn PipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo() => PipelineColorBlendStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO, .pNext = null };
+fn PipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO, .pNext = null };
 fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -834,7 +834,7 @@ fn PipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo.setBlendC
    self.blendConstants = blendConstants;
    return *self;
 }
-fn PipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfo() => PipelineDynamicStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO, .pNext = null };
+fn PipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO, .pNext = null };
 fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -852,7 +852,7 @@ fn PipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo.setDynamicState
    self.pDynamicStates = &pDynamicStates[0];
    return *self;
 }
-fn PipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfo() => PipelineDepthStencilStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO, .pNext = null };
+fn PipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO, .pNext = null };
 fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -897,7 +897,7 @@ fn PipelineDepthStencilStateCreateInfo PipelineDepthStencilStateCreateInfo.setMa
    self.maxDepthBounds = maxDepthBounds;
    return *self;
 }
-fn GraphicsPipelineCreateInfo graphicsPipelineCreateInfo() => GraphicsPipelineCreateInfo { .sType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO, .pNext = null };
+fn GraphicsPipelineCreateInfo graphicsPipelineCreateInfo() => { .sType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO, .pNext = null };
 fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -971,7 +971,7 @@ fn GraphicsPipelineCreateInfo GraphicsPipelineCreateInfo.setBasePipelineIndex(&s
    self.basePipelineIndex = basePipelineIndex;
    return *self;
 }
-fn PipelineCacheCreateInfo pipelineCacheCreateInfo() => PipelineCacheCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO, .pNext = null };
+fn PipelineCacheCreateInfo pipelineCacheCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO, .pNext = null };
 fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -988,7 +988,7 @@ fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(&self, void* p
    self.pInitialData = pInitialData;
    return *self;
 }
-fn PipelineLayoutCreateInfo pipelineLayoutCreateInfo() => PipelineLayoutCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO, .pNext = null };
+fn PipelineLayoutCreateInfo pipelineLayoutCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO, .pNext = null };
 fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1015,7 +1015,7 @@ fn PipelineLayoutCreateInfo PipelineLayoutCreateInfo.setPushConstantRanges(&self
    self.pPushConstantRanges = &pPushConstantRanges[0];
    return *self;
 }
-fn SamplerCreateInfo samplerCreateInfo() => SamplerCreateInfo { .sType = STRUCTURE_TYPE_SAMPLER_CREATE_INFO, .pNext = null };
+fn SamplerCreateInfo samplerCreateInfo() => { .sType = STRUCTURE_TYPE_SAMPLER_CREATE_INFO, .pNext = null };
 fn SamplerCreateInfo SamplerCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1084,7 +1084,7 @@ fn SamplerCreateInfo SamplerCreateInfo.setUnnormalizedCoordinates(&self, uint un
    self.unnormalizedCoordinates = unnormalizedCoordinates;
    return *self;
 }
-fn CommandPoolCreateInfo commandPoolCreateInfo() => CommandPoolCreateInfo { .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO, .pNext = null };
+fn CommandPoolCreateInfo commandPoolCreateInfo() => { .sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO, .pNext = null };
 fn CommandPoolCreateInfo CommandPoolCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1097,7 +1097,7 @@ fn CommandPoolCreateInfo CommandPoolCreateInfo.setQueueFamilyIndex(&self, uint q
    self.queueFamilyIndex = queueFamilyIndex;
    return *self;
 }
-fn CommandBufferAllocateInfo commandBufferAllocateInfo() => CommandBufferAllocateInfo { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO, .pNext = null };
+fn CommandBufferAllocateInfo commandBufferAllocateInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO, .pNext = null };
 fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1114,7 +1114,7 @@ fn CommandBufferAllocateInfo CommandBufferAllocateInfo.setCommandBufferCount(&se
    self.commandBufferCount = commandBufferCount;
    return *self;
 }
-fn CommandBufferInheritanceInfo commandBufferInheritanceInfo() => CommandBufferInheritanceInfo { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO, .pNext = null };
+fn CommandBufferInheritanceInfo commandBufferInheritanceInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO, .pNext = null };
 fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1143,7 +1143,7 @@ fn CommandBufferInheritanceInfo CommandBufferInheritanceInfo.setPipelineStatisti
    self.pipelineStatistics = pipelineStatistics;
    return *self;
 }
-fn CommandBufferBeginInfo commandBufferBeginInfo() => CommandBufferBeginInfo { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
+fn CommandBufferBeginInfo commandBufferBeginInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
 fn CommandBufferBeginInfo CommandBufferBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1156,7 +1156,7 @@ fn CommandBufferBeginInfo CommandBufferBeginInfo.setInheritanceInfo(&self, Comma
    self.pInheritanceInfo = pInheritanceInfo;
    return *self;
 }
-fn RenderPassBeginInfo renderPassBeginInfo() => RenderPassBeginInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO, .pNext = null };
+fn RenderPassBeginInfo renderPassBeginInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO, .pNext = null };
 fn RenderPassBeginInfo RenderPassBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1182,7 +1182,7 @@ fn RenderPassBeginInfo RenderPassBeginInfo.setClearValues(&self, ClearValue[] pC
    self.pClearValues = &pClearValues[0];
    return *self;
 }
-fn RenderPassCreateInfo renderPassCreateInfo() => RenderPassCreateInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO, .pNext = null };
+fn RenderPassCreateInfo renderPassCreateInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO, .pNext = null };
 fn RenderPassCreateInfo RenderPassCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1218,7 +1218,7 @@ fn RenderPassCreateInfo RenderPassCreateInfo.setDependencies(&self, SubpassDepen
    self.pDependencies = &pDependencies[0];
    return *self;
 }
-fn EventCreateInfo eventCreateInfo() => EventCreateInfo { .sType = STRUCTURE_TYPE_EVENT_CREATE_INFO, .pNext = null };
+fn EventCreateInfo eventCreateInfo() => { .sType = STRUCTURE_TYPE_EVENT_CREATE_INFO, .pNext = null };
 fn EventCreateInfo EventCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1227,7 +1227,7 @@ fn EventCreateInfo EventCreateInfo.setFlags(&self, EventCreateFlags flags) {
    self.flags = flags;
    return *self;
 }
-fn FenceCreateInfo fenceCreateInfo() => FenceCreateInfo { .sType = STRUCTURE_TYPE_FENCE_CREATE_INFO, .pNext = null };
+fn FenceCreateInfo fenceCreateInfo() => { .sType = STRUCTURE_TYPE_FENCE_CREATE_INFO, .pNext = null };
 fn FenceCreateInfo FenceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1236,7 +1236,7 @@ fn FenceCreateInfo FenceCreateInfo.setFlags(&self, FenceCreateFlags flags) {
    self.flags = flags;
    return *self;
 }
-fn SemaphoreCreateInfo semaphoreCreateInfo() => SemaphoreCreateInfo { .sType = STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, .pNext = null };
+fn SemaphoreCreateInfo semaphoreCreateInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, .pNext = null };
 fn SemaphoreCreateInfo SemaphoreCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1245,7 +1245,7 @@ fn SemaphoreCreateInfo SemaphoreCreateInfo.setFlags(&self, SemaphoreCreateFlags 
    self.flags = flags;
    return *self;
 }
-fn QueryPoolCreateInfo queryPoolCreateInfo() => QueryPoolCreateInfo { .sType = STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO, .pNext = null };
+fn QueryPoolCreateInfo queryPoolCreateInfo() => { .sType = STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO, .pNext = null };
 fn QueryPoolCreateInfo QueryPoolCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1266,7 +1266,7 @@ fn QueryPoolCreateInfo QueryPoolCreateInfo.setPipelineStatistics(&self, QueryPip
    self.pipelineStatistics = pipelineStatistics;
    return *self;
 }
-fn FramebufferCreateInfo framebufferCreateInfo() => FramebufferCreateInfo { .sType = STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO, .pNext = null };
+fn FramebufferCreateInfo framebufferCreateInfo() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO, .pNext = null };
 fn FramebufferCreateInfo FramebufferCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1300,7 +1300,7 @@ fn FramebufferCreateInfo FramebufferCreateInfo.setLayers(&self, uint layers) {
    self.layers = layers;
    return *self;
 }
-fn SubmitInfo submitInfo() => SubmitInfo { .sType = STRUCTURE_TYPE_SUBMIT_INFO, .pNext = null };
+fn SubmitInfo submitInfo() => { .sType = STRUCTURE_TYPE_SUBMIT_INFO, .pNext = null };
 fn SubmitInfo SubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1337,7 +1337,7 @@ fn SubmitInfo SubmitInfo.setSignalSemaphores(&self, Semaphore[] pSignalSemaphore
    self.pSignalSemaphores = &pSignalSemaphores[0];
    return *self;
 }
-fn DisplayModeCreateInfoKHR displayModeCreateInfoKHR() => DisplayModeCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR, .pNext = null };
+fn DisplayModeCreateInfoKHR displayModeCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR, .pNext = null };
 fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1350,7 +1350,7 @@ fn DisplayModeCreateInfoKHR DisplayModeCreateInfoKHR.setParameters(&self, Displa
    self.parameters = parameters;
    return *self;
 }
-fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHR() => DisplaySurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn DisplaySurfaceCreateInfoKHR displaySurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1387,7 +1387,7 @@ fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(&self,
    self.imageExtent = imageExtent;
    return *self;
 }
-fn WaylandSurfaceCreateInfoKHR waylandSurfaceCreateInfoKHR() => WaylandSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn WaylandSurfaceCreateInfoKHR waylandSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1404,7 +1404,7 @@ fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setUrface(&self, WLSu
    self.surface = surface;
    return *self;
 }
-fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfoKHR() => Win32SurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn Win32SurfaceCreateInfoKHR win32SurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1421,7 +1421,7 @@ fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(&self, Hwnd hwnd)
    self.hwnd = hwnd;
    return *self;
 }
-fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfoKHR() => XlibSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1438,7 +1438,7 @@ fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(&self, Window win
    self.window = window;
    return *self;
 }
-fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHR() => XcbSurfaceCreateInfoKHR { .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR, .pNext = null };
+fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1455,7 +1455,7 @@ fn XcbSurfaceCreateInfoKHR XcbSurfaceCreateInfoKHR.setWindow(&self, Window windo
    self.window = window;
    return *self;
 }
-fn SwapchainCreateInfoKHR swapchainCreateInfoKHR() => SwapchainCreateInfoKHR { .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainCreateInfoKHR swapchainCreateInfoKHR() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
 fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1525,7 +1525,7 @@ fn SwapchainCreateInfoKHR SwapchainCreateInfoKHR.setOldSwapchain(&self, Swapchai
    self.oldSwapchain = oldSwapchain;
    return *self;
 }
-fn PresentInfoKHR presentInfoKHR() => PresentInfoKHR { .sType = STRUCTURE_TYPE_PRESENT_INFO_KHR, .pNext = null };
+fn PresentInfoKHR presentInfoKHR() => { .sType = STRUCTURE_TYPE_PRESENT_INFO_KHR, .pNext = null };
 fn PresentInfoKHR PresentInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1558,7 +1558,7 @@ fn PresentInfoKHR PresentInfoKHR.setResults(&self, Result[] pResults) {
    self.pResults = &pResults[0];
    return *self;
 }
-fn DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXT() => DebugReportCallbackCreateInfoEXT { .sType = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT, .pNext = null };
+fn DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT, .pNext = null };
 fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1575,7 +1575,7 @@ fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setUserData
    self.pUserData = pUserData;
    return *self;
 }
-fn ValidationFeaturesEXT validationFeaturesEXT() => ValidationFeaturesEXT { .sType = STRUCTURE_TYPE_VALIDATION_FEATURES_EXT, .pNext = null };
+fn ValidationFeaturesEXT validationFeaturesEXT() => { .sType = STRUCTURE_TYPE_VALIDATION_FEATURES_EXT, .pNext = null };
 fn ValidationFeaturesEXT ValidationFeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1598,7 +1598,7 @@ fn ValidationFeaturesEXT ValidationFeaturesEXT.setDisabledValidationFeatures(&se
    self.pDisabledValidationFeatures = &pDisabledValidationFeatures[0];
    return *self;
 }
-fn LayerSettingsCreateInfoEXT layerSettingsCreateInfoEXT() => LayerSettingsCreateInfoEXT { .sType = STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, .pNext = null };
+fn LayerSettingsCreateInfoEXT layerSettingsCreateInfoEXT() => { .sType = STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, .pNext = null };
 fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1612,7 +1612,7 @@ fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setSettings(&self, Laye
    self.pSettings = &pSettings[0];
    return *self;
 }
-fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfo() => DevicePrivateDataCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
+fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
 fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1621,7 +1621,7 @@ fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setPrivateDataSlotReq
    self.privateDataSlotRequestCount = privateDataSlotRequestCount;
    return *self;
 }
-fn PrivateDataSlotCreateInfo privateDataSlotCreateInfo() => PrivateDataSlotCreateInfo { .sType = STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO, .pNext = null };
+fn PrivateDataSlotCreateInfo privateDataSlotCreateInfo() => { .sType = STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO, .pNext = null };
 fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1630,7 +1630,7 @@ fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setFlags(&self, PrivateDa
    self.flags = flags;
    return *self;
 }
-fn PhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeatures() => PhysicalDevicePrivateDataFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES, .pNext = null };
+fn PhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES, .pNext = null };
 fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1639,7 +1639,7 @@ fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setPrivat
    self.privateData = privateData;
    return *self;
 }
-fn PhysicalDeviceFeatures2 physicalDeviceFeatures2() => PhysicalDeviceFeatures2 { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = null };
+fn PhysicalDeviceFeatures2 physicalDeviceFeatures2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = null };
 fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1648,7 +1648,7 @@ fn PhysicalDeviceFeatures2 PhysicalDeviceFeatures2.setFeatures(&self, PhysicalDe
    self.features = features;
    return *self;
 }
-fn PhysicalDeviceFeatures2KHR physicalDeviceFeatures2KHR() => PhysicalDeviceFeatures2KHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = null };
+fn PhysicalDeviceFeatures2KHR physicalDeviceFeatures2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = null };
 fn PhysicalDeviceFeatures2KHR PhysicalDeviceFeatures2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1657,7 +1657,7 @@ fn PhysicalDeviceFeatures2KHR PhysicalDeviceFeatures2KHR.setFeatures(&self, Phys
    self.features = features;
    return *self;
 }
-fn PhysicalDeviceProperties2 physicalDeviceProperties2() => PhysicalDeviceProperties2 { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2, .pNext = null };
+fn PhysicalDeviceProperties2 physicalDeviceProperties2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2, .pNext = null };
 fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1666,7 +1666,7 @@ fn PhysicalDeviceProperties2 PhysicalDeviceProperties2.setProperties(&self, Phys
    self.properties = properties;
    return *self;
 }
-fn PhysicalDeviceProperties2KHR physicalDeviceProperties2KHR() => PhysicalDeviceProperties2KHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2, .pNext = null };
+fn PhysicalDeviceProperties2KHR physicalDeviceProperties2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2, .pNext = null };
 fn PhysicalDeviceProperties2KHR PhysicalDeviceProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1675,7 +1675,7 @@ fn PhysicalDeviceProperties2KHR PhysicalDeviceProperties2KHR.setProperties(&self
    self.properties = properties;
    return *self;
 }
-fn FormatProperties2 formatProperties2() => FormatProperties2 { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2, .pNext = null };
+fn FormatProperties2 formatProperties2() => { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2, .pNext = null };
 fn FormatProperties2 FormatProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1684,7 +1684,7 @@ fn FormatProperties2 FormatProperties2.setFormatProperties(&self, FormatProperti
    self.formatProperties = formatProperties;
    return *self;
 }
-fn FormatProperties2KHR formatProperties2KHR() => FormatProperties2KHR { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2, .pNext = null };
+fn FormatProperties2KHR formatProperties2KHR() => { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2, .pNext = null };
 fn FormatProperties2KHR FormatProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1693,7 +1693,7 @@ fn FormatProperties2KHR FormatProperties2KHR.setFormatProperties(&self, FormatPr
    self.formatProperties = formatProperties;
    return *self;
 }
-fn ImageFormatProperties2 imageFormatProperties2() => ImageFormatProperties2 { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
+fn ImageFormatProperties2 imageFormatProperties2() => { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
 fn ImageFormatProperties2 ImageFormatProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1702,7 +1702,7 @@ fn ImageFormatProperties2 ImageFormatProperties2.setImageFormatProperties(&self,
    self.imageFormatProperties = imageFormatProperties;
    return *self;
 }
-fn ImageFormatProperties2KHR imageFormatProperties2KHR() => ImageFormatProperties2KHR { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
+fn ImageFormatProperties2KHR imageFormatProperties2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
 fn ImageFormatProperties2KHR ImageFormatProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1711,7 +1711,7 @@ fn ImageFormatProperties2KHR ImageFormatProperties2KHR.setImageFormatProperties(
    self.imageFormatProperties = imageFormatProperties;
    return *self;
 }
-fn PhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2() => PhysicalDeviceImageFormatInfo2 { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2, .pNext = null };
+fn PhysicalDeviceImageFormatInfo2 physicalDeviceImageFormatInfo2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2, .pNext = null };
 fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1736,7 +1736,7 @@ fn PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageFormatInfo2.setFlags(&self,
    self.flags = flags;
    return *self;
 }
-fn PhysicalDeviceImageFormatInfo2KHR physicalDeviceImageFormatInfo2KHR() => PhysicalDeviceImageFormatInfo2KHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2, .pNext = null };
+fn PhysicalDeviceImageFormatInfo2KHR physicalDeviceImageFormatInfo2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2, .pNext = null };
 fn PhysicalDeviceImageFormatInfo2KHR PhysicalDeviceImageFormatInfo2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1761,7 +1761,7 @@ fn PhysicalDeviceImageFormatInfo2KHR PhysicalDeviceImageFormatInfo2KHR.setFlags(
    self.flags = flags;
    return *self;
 }
-fn QueueFamilyProperties2 queueFamilyProperties2() => QueueFamilyProperties2 { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2, .pNext = null };
+fn QueueFamilyProperties2 queueFamilyProperties2() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2, .pNext = null };
 fn QueueFamilyProperties2 QueueFamilyProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1770,7 +1770,7 @@ fn QueueFamilyProperties2 QueueFamilyProperties2.setQueueFamilyProperties(&self,
    self.queueFamilyProperties = queueFamilyProperties;
    return *self;
 }
-fn QueueFamilyProperties2KHR queueFamilyProperties2KHR() => QueueFamilyProperties2KHR { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2, .pNext = null };
+fn QueueFamilyProperties2KHR queueFamilyProperties2KHR() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2, .pNext = null };
 fn QueueFamilyProperties2KHR QueueFamilyProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1779,7 +1779,7 @@ fn QueueFamilyProperties2KHR QueueFamilyProperties2KHR.setQueueFamilyProperties(
    self.queueFamilyProperties = queueFamilyProperties;
    return *self;
 }
-fn PhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2() => PhysicalDeviceMemoryProperties2 { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2, .pNext = null };
+fn PhysicalDeviceMemoryProperties2 physicalDeviceMemoryProperties2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2, .pNext = null };
 fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1788,7 +1788,7 @@ fn PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryProperties2.setMemoryProp
    self.memoryProperties = memoryProperties;
    return *self;
 }
-fn PhysicalDeviceMemoryProperties2KHR physicalDeviceMemoryProperties2KHR() => PhysicalDeviceMemoryProperties2KHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2, .pNext = null };
+fn PhysicalDeviceMemoryProperties2KHR physicalDeviceMemoryProperties2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2, .pNext = null };
 fn PhysicalDeviceMemoryProperties2KHR PhysicalDeviceMemoryProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1797,7 +1797,7 @@ fn PhysicalDeviceMemoryProperties2KHR PhysicalDeviceMemoryProperties2KHR.setMemo
    self.memoryProperties = memoryProperties;
    return *self;
 }
-fn SparseImageFormatProperties2 sparseImageFormatProperties2() => SparseImageFormatProperties2 { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
+fn SparseImageFormatProperties2 sparseImageFormatProperties2() => { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
 fn SparseImageFormatProperties2 SparseImageFormatProperties2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1806,7 +1806,7 @@ fn SparseImageFormatProperties2 SparseImageFormatProperties2.setProperties(&self
    self.properties = properties;
    return *self;
 }
-fn SparseImageFormatProperties2KHR sparseImageFormatProperties2KHR() => SparseImageFormatProperties2KHR { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
+fn SparseImageFormatProperties2KHR sparseImageFormatProperties2KHR() => { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2, .pNext = null };
 fn SparseImageFormatProperties2KHR SparseImageFormatProperties2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1815,7 +1815,7 @@ fn SparseImageFormatProperties2KHR SparseImageFormatProperties2KHR.setProperties
    self.properties = properties;
    return *self;
 }
-fn PhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2() => PhysicalDeviceSparseImageFormatInfo2 { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2, .pNext = null };
+fn PhysicalDeviceSparseImageFormatInfo2 physicalDeviceSparseImageFormatInfo2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2, .pNext = null };
 fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1840,7 +1840,7 @@ fn PhysicalDeviceSparseImageFormatInfo2 PhysicalDeviceSparseImageFormatInfo2.set
    self.tiling = tiling;
    return *self;
 }
-fn PhysicalDeviceSparseImageFormatInfo2KHR physicalDeviceSparseImageFormatInfo2KHR() => PhysicalDeviceSparseImageFormatInfo2KHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2, .pNext = null };
+fn PhysicalDeviceSparseImageFormatInfo2KHR physicalDeviceSparseImageFormatInfo2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2, .pNext = null };
 fn PhysicalDeviceSparseImageFormatInfo2KHR PhysicalDeviceSparseImageFormatInfo2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1865,7 +1865,7 @@ fn PhysicalDeviceSparseImageFormatInfo2KHR PhysicalDeviceSparseImageFormatInfo2K
    self.tiling = tiling;
    return *self;
 }
-fn PhysicalDevicePushDescriptorProperties physicalDevicePushDescriptorProperties() => PhysicalDevicePushDescriptorProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES, .pNext = null };
+fn PhysicalDevicePushDescriptorProperties physicalDevicePushDescriptorProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES, .pNext = null };
 fn PhysicalDevicePushDescriptorProperties PhysicalDevicePushDescriptorProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1874,7 +1874,7 @@ fn PhysicalDevicePushDescriptorProperties PhysicalDevicePushDescriptorProperties
    self.maxPushDescriptors = maxPushDescriptors;
    return *self;
 }
-fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHR() => PhysicalDevicePushDescriptorPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES, .pNext = null };
+fn PhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES, .pNext = null };
 fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1883,7 +1883,7 @@ fn PhysicalDevicePushDescriptorPropertiesKHR PhysicalDevicePushDescriptorPropert
    self.maxPushDescriptors = maxPushDescriptors;
    return *self;
 }
-fn PhysicalDeviceDriverProperties physicalDeviceDriverProperties() => PhysicalDeviceDriverProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDriverProperties physicalDeviceDriverProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES, .pNext = null };
 fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1904,7 +1904,7 @@ fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setConformanceV
    self.conformanceVersion = conformanceVersion;
    return *self;
 }
-fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeatures() => PhysicalDeviceVariablePointersFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
+fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
 fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1917,7 +1917,7 @@ fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures
    self.variablePointers = variablePointers;
    return *self;
 }
-fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfo() => PhysicalDeviceExternalImageFormatInfo { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO, .pNext = null };
+fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO, .pNext = null };
 fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1926,7 +1926,7 @@ fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.s
    self.handleType = handleType;
    return *self;
 }
-fn ExternalImageFormatProperties externalImageFormatProperties() => ExternalImageFormatProperties { .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES, .pNext = null };
+fn ExternalImageFormatProperties externalImageFormatProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES, .pNext = null };
 fn ExternalImageFormatProperties ExternalImageFormatProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1935,7 +1935,7 @@ fn ExternalImageFormatProperties ExternalImageFormatProperties.setExternalMemory
    self.externalMemoryProperties = externalMemoryProperties;
    return *self;
 }
-fn PhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfo() => PhysicalDeviceExternalBufferInfo { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO, .pNext = null };
+fn PhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO, .pNext = null };
 fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1952,7 +1952,7 @@ fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setHandleTy
    self.handleType = handleType;
    return *self;
 }
-fn ExternalBufferProperties externalBufferProperties() => ExternalBufferProperties { .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES, .pNext = null };
+fn ExternalBufferProperties externalBufferProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES, .pNext = null };
 fn ExternalBufferProperties ExternalBufferProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1961,7 +1961,7 @@ fn ExternalBufferProperties ExternalBufferProperties.setExternalMemoryProperties
    self.externalMemoryProperties = externalMemoryProperties;
    return *self;
 }
-fn PhysicalDeviceIDProperties physicalDeviceIDProperties() => PhysicalDeviceIDProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES, .pNext = null };
+fn PhysicalDeviceIDProperties physicalDeviceIDProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES, .pNext = null };
 fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1986,7 +1986,7 @@ fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUIDValid(&sel
    self.deviceLUIDValid = deviceLUIDValid;
    return *self;
 }
-fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfo() => ExternalMemoryImageCreateInfo { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO, .pNext = null };
+fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfo() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO, .pNext = null };
 fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -1995,7 +1995,7 @@ fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setHandleTypes(&s
    self.handleTypes = handleTypes;
    return *self;
 }
-fn ExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfo() => ExternalMemoryBufferCreateInfo { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO, .pNext = null };
+fn ExternalMemoryBufferCreateInfo externalMemoryBufferCreateInfo() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO, .pNext = null };
 fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2004,7 +2004,7 @@ fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setHandleTypes(
    self.handleTypes = handleTypes;
    return *self;
 }
-fn ExportMemoryAllocateInfo exportMemoryAllocateInfo() => ExportMemoryAllocateInfo { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO, .pNext = null };
+fn ExportMemoryAllocateInfo exportMemoryAllocateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO, .pNext = null };
 fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2013,7 +2013,7 @@ fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setHandleTypes(&self, Exter
    self.handleTypes = handleTypes;
    return *self;
 }
-fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfo() => PhysicalDeviceExternalSemaphoreInfo { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO, .pNext = null };
+fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO, .pNext = null };
 fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2022,7 +2022,7 @@ fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setHa
    self.handleType = handleType;
    return *self;
 }
-fn ExternalSemaphoreProperties externalSemaphoreProperties() => ExternalSemaphoreProperties { .sType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES, .pNext = null };
+fn ExternalSemaphoreProperties externalSemaphoreProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES, .pNext = null };
 fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2039,7 +2039,7 @@ fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExternalSemaphoreF
    self.externalSemaphoreFeatures = externalSemaphoreFeatures;
    return *self;
 }
-fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfo() => ExportSemaphoreCreateInfo { .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO, .pNext = null };
+fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO, .pNext = null };
 fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2048,7 +2048,7 @@ fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setHandleTypes(&self, Ext
    self.handleTypes = handleTypes;
    return *self;
 }
-fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfo() => PhysicalDeviceExternalFenceInfo { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO, .pNext = null };
+fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO, .pNext = null };
 fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2057,7 +2057,7 @@ fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setHandleType
    self.handleType = handleType;
    return *self;
 }
-fn ExternalFenceProperties externalFenceProperties() => ExternalFenceProperties { .sType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES, .pNext = null };
+fn ExternalFenceProperties externalFenceProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES, .pNext = null };
 fn ExternalFenceProperties ExternalFenceProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2074,7 +2074,7 @@ fn ExternalFenceProperties ExternalFenceProperties.setExternalFenceFeatures(&sel
    self.externalFenceFeatures = externalFenceFeatures;
    return *self;
 }
-fn ExportFenceCreateInfo exportFenceCreateInfo() => ExportFenceCreateInfo { .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO, .pNext = null };
+fn ExportFenceCreateInfo exportFenceCreateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO, .pNext = null };
 fn ExportFenceCreateInfo ExportFenceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2083,7 +2083,7 @@ fn ExportFenceCreateInfo ExportFenceCreateInfo.setHandleTypes(&self, ExternalFen
    self.handleTypes = handleTypes;
    return *self;
 }
-fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeatures() => PhysicalDeviceMultiviewFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES, .pNext = null };
+fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES, .pNext = null };
 fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2100,7 +2100,7 @@ fn PhysicalDeviceMultiviewFeatures PhysicalDeviceMultiviewFeatures.setMultiviewT
    self.multiviewTessellationShader = multiviewTessellationShader;
    return *self;
 }
-fn PhysicalDeviceMultiviewFeaturesKHR physicalDeviceMultiviewFeaturesKHR() => PhysicalDeviceMultiviewFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES, .pNext = null };
+fn PhysicalDeviceMultiviewFeaturesKHR physicalDeviceMultiviewFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES, .pNext = null };
 fn PhysicalDeviceMultiviewFeaturesKHR PhysicalDeviceMultiviewFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2117,7 +2117,7 @@ fn PhysicalDeviceMultiviewFeaturesKHR PhysicalDeviceMultiviewFeaturesKHR.setMult
    self.multiviewTessellationShader = multiviewTessellationShader;
    return *self;
 }
-fn PhysicalDeviceMultiviewProperties physicalDeviceMultiviewProperties() => PhysicalDeviceMultiviewProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMultiviewProperties physicalDeviceMultiviewProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2130,7 +2130,7 @@ fn PhysicalDeviceMultiviewProperties PhysicalDeviceMultiviewProperties.setMaxMul
    self.maxMultiviewInstanceIndex = maxMultiviewInstanceIndex;
    return *self;
 }
-fn PhysicalDeviceMultiviewPropertiesKHR physicalDeviceMultiviewPropertiesKHR() => PhysicalDeviceMultiviewPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMultiviewPropertiesKHR physicalDeviceMultiviewPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMultiviewPropertiesKHR PhysicalDeviceMultiviewPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2143,7 +2143,7 @@ fn PhysicalDeviceMultiviewPropertiesKHR PhysicalDeviceMultiviewPropertiesKHR.set
    self.maxMultiviewInstanceIndex = maxMultiviewInstanceIndex;
    return *self;
 }
-fn RenderPassMultiviewCreateInfo renderPassMultiviewCreateInfo() => RenderPassMultiviewCreateInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO, .pNext = null };
+fn RenderPassMultiviewCreateInfo renderPassMultiviewCreateInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO, .pNext = null };
 fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2175,7 +2175,7 @@ fn RenderPassMultiviewCreateInfo RenderPassMultiviewCreateInfo.setCorrelationMas
    self.pCorrelationMasks = &pCorrelationMasks[0];
    return *self;
 }
-fn RenderPassMultiviewCreateInfoKHR renderPassMultiviewCreateInfoKHR() => RenderPassMultiviewCreateInfoKHR { .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO, .pNext = null };
+fn RenderPassMultiviewCreateInfoKHR renderPassMultiviewCreateInfoKHR() => { .sType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO, .pNext = null };
 fn RenderPassMultiviewCreateInfoKHR RenderPassMultiviewCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2207,7 +2207,7 @@ fn RenderPassMultiviewCreateInfoKHR RenderPassMultiviewCreateInfoKHR.setCorrelat
    self.pCorrelationMasks = &pCorrelationMasks[0];
    return *self;
 }
-fn PhysicalDeviceGroupProperties physicalDeviceGroupProperties() => PhysicalDeviceGroupProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES, .pNext = null };
+fn PhysicalDeviceGroupProperties physicalDeviceGroupProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES, .pNext = null };
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2225,7 +2225,7 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocati
    self.subsetAllocation = subsetAllocation;
    return *self;
 }
-fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfo() => MemoryAllocateFlagsInfo { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .pNext = null };
+fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfo() => { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .pNext = null };
 fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2238,7 +2238,7 @@ fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setDeviceMask(&self, uint dev
    self.deviceMask = deviceMask;
    return *self;
 }
-fn BindBufferMemoryInfo bindBufferMemoryInfo() => BindBufferMemoryInfo { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO, .pNext = null };
+fn BindBufferMemoryInfo bindBufferMemoryInfo() => { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO, .pNext = null };
 fn BindBufferMemoryInfo BindBufferMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2255,7 +2255,7 @@ fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemoryOffset(&self, DeviceSize m
    self.memoryOffset = memoryOffset;
    return *self;
 }
-fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfo() => BindBufferMemoryDeviceGroupInfo { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
+fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfo() => { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
 fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2269,7 +2269,7 @@ fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndi
    self.pDeviceIndices = &pDeviceIndices[0];
    return *self;
 }
-fn BindImageMemoryInfo bindImageMemoryInfo() => BindImageMemoryInfo { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, .pNext = null };
+fn BindImageMemoryInfo bindImageMemoryInfo() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, .pNext = null };
 fn BindImageMemoryInfo BindImageMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2286,7 +2286,7 @@ fn BindImageMemoryInfo BindImageMemoryInfo.setMemoryOffset(&self, DeviceSize mem
    self.memoryOffset = memoryOffset;
    return *self;
 }
-fn BindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfo() => BindImageMemoryDeviceGroupInfo { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
+fn BindImageMemoryDeviceGroupInfo bindImageMemoryDeviceGroupInfo() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
 fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2309,7 +2309,7 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanc
    self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
    return *self;
 }
-fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfo() => DeviceGroupRenderPassBeginInfo { .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO, .pNext = null };
+fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO, .pNext = null };
 fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2327,7 +2327,7 @@ fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRender
    self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
    return *self;
 }
-fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfo() => DeviceGroupCommandBufferBeginInfo { .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
+fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
 fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2336,7 +2336,7 @@ fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setDevice
    self.deviceMask = deviceMask;
    return *self;
 }
-fn DeviceGroupSubmitInfo deviceGroupSubmitInfo() => DeviceGroupSubmitInfo { .sType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO, .pNext = null };
+fn DeviceGroupSubmitInfo deviceGroupSubmitInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO, .pNext = null };
 fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2368,7 +2368,7 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(&
    self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
    return *self;
 }
-fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfo() => DeviceGroupBindSparseInfo { .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO, .pNext = null };
+fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO, .pNext = null };
 fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2381,7 +2381,7 @@ fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setMemoryDeviceIndex(&sel
    self.memoryDeviceIndex = memoryDeviceIndex;
    return *self;
 }
-fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfo() => DeviceGroupDeviceCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO, .pNext = null };
+fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO, .pNext = null };
 fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2395,7 +2395,7 @@ fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDevices(&s
    self.pPhysicalDevices = &pPhysicalDevices[0];
    return *self;
 }
-fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfo() => DescriptorUpdateTemplateCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO, .pNext = null };
+fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO, .pNext = null };
 fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2433,7 +2433,7 @@ fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setSet(
    self.set = set;
    return *self;
 }
-fn MacOSSurfaceCreateInfoMVK macOSSurfaceCreateInfoMVK() => MacOSSurfaceCreateInfoMVK { .sType = STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK, .pNext = null };
+fn MacOSSurfaceCreateInfoMVK macOSSurfaceCreateInfoMVK() => { .sType = STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK, .pNext = null };
 fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2446,7 +2446,7 @@ fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setView(&self, void* pVie
    self.pView = pView;
    return *self;
 }
-fn MetalSurfaceCreateInfoEXT metalSurfaceCreateInfoEXT() => MetalSurfaceCreateInfoEXT { .sType = STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT, .pNext = null };
+fn MetalSurfaceCreateInfoEXT metalSurfaceCreateInfoEXT() => { .sType = STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT, .pNext = null };
 fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2459,7 +2459,7 @@ fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setLayer(&self, CAMetalLa
    self.pLayer = pLayer;
    return *self;
 }
-fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfo() => RenderPassInputAttachmentAspectCreateInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
+fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
 fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2473,7 +2473,7 @@ fn RenderPassInputAttachmentAspectCreateInfo RenderPassInputAttachmentAspectCrea
    self.pAspectReferences = &pAspectReferences[0];
    return *self;
 }
-fn RenderPassInputAttachmentAspectCreateInfoKHR renderPassInputAttachmentAspectCreateInfoKHR() => RenderPassInputAttachmentAspectCreateInfoKHR { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
+fn RenderPassInputAttachmentAspectCreateInfoKHR renderPassInputAttachmentAspectCreateInfoKHR() => { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
 fn RenderPassInputAttachmentAspectCreateInfoKHR RenderPassInputAttachmentAspectCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2487,7 +2487,7 @@ fn RenderPassInputAttachmentAspectCreateInfoKHR RenderPassInputAttachmentAspectC
    self.pAspectReferences = &pAspectReferences[0];
    return *self;
 }
-fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeatures() => PhysicalDevice16BitStorageFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES, .pNext = null };
+fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES, .pNext = null };
 fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2508,7 +2508,7 @@ fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStor
    self.storageInputOutput16 = storageInputOutput16;
    return *self;
 }
-fn PhysicalDeviceSubgroupProperties physicalDeviceSubgroupProperties() => PhysicalDeviceSubgroupProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES, .pNext = null };
+fn PhysicalDeviceSubgroupProperties physicalDeviceSubgroupProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES, .pNext = null };
 fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2529,7 +2529,7 @@ fn PhysicalDeviceSubgroupProperties PhysicalDeviceSubgroupProperties.setQuadOper
    self.quadOperationsInAllStages = quadOperationsInAllStages;
    return *self;
 }
-fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgroupExtendedTypesFeatures() => PhysicalDeviceShaderSubgroupExtendedTypesFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures physicalDeviceShaderSubgroupExtendedTypesFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgroupExtendedTypesFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2538,7 +2538,7 @@ fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgrou
    self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
    return *self;
 }
-fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2() => BufferMemoryRequirementsInfo2 { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2547,7 +2547,7 @@ fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setBuffer(&self, 
    self.buffer = buffer;
    return *self;
 }
-fn DeviceBufferMemoryRequirements deviceBufferMemoryRequirements() => DeviceBufferMemoryRequirements { .sType = STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS, .pNext = null };
+fn DeviceBufferMemoryRequirements deviceBufferMemoryRequirements() => { .sType = STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS, .pNext = null };
 fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2556,7 +2556,7 @@ fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setCreateInfo(&
    self.pCreateInfo = pCreateInfo;
    return *self;
 }
-fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2() => ImageMemoryRequirementsInfo2 { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2565,7 +2565,7 @@ fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setImage(&self, Ima
    self.image = image;
    return *self;
 }
-fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2() => ImageSparseMemoryRequirementsInfo2 { .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2574,7 +2574,7 @@ fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setImag
    self.image = image;
    return *self;
 }
-fn DeviceImageMemoryRequirements deviceImageMemoryRequirements() => DeviceImageMemoryRequirements { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS, .pNext = null };
+fn DeviceImageMemoryRequirements deviceImageMemoryRequirements() => { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS, .pNext = null };
 fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2587,7 +2587,7 @@ fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setPlaneAspect(&s
    self.planeAspect = planeAspect;
    return *self;
 }
-fn MemoryRequirements2 memoryRequirements2() => MemoryRequirements2 { .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2, .pNext = null };
+fn MemoryRequirements2 memoryRequirements2() => { .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2, .pNext = null };
 fn MemoryRequirements2 MemoryRequirements2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2596,7 +2596,7 @@ fn MemoryRequirements2 MemoryRequirements2.setMemoryRequirements(&self, MemoryRe
    self.memoryRequirements = memoryRequirements;
    return *self;
 }
-fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2() => SparseImageMemoryRequirements2 { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2, .pNext = null };
+fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2() => { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2, .pNext = null };
 fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2605,7 +2605,7 @@ fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setMemoryRequir
    self.memoryRequirements = memoryRequirements;
    return *self;
 }
-fn PhysicalDevicePointClippingProperties physicalDevicePointClippingProperties() => PhysicalDevicePointClippingProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES, .pNext = null };
+fn PhysicalDevicePointClippingProperties physicalDevicePointClippingProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES, .pNext = null };
 fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2614,7 +2614,7 @@ fn PhysicalDevicePointClippingProperties PhysicalDevicePointClippingProperties.s
    self.pointClippingBehavior = pointClippingBehavior;
    return *self;
 }
-fn PhysicalDevicePointClippingPropertiesKHR physicalDevicePointClippingPropertiesKHR() => PhysicalDevicePointClippingPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES, .pNext = null };
+fn PhysicalDevicePointClippingPropertiesKHR physicalDevicePointClippingPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES, .pNext = null };
 fn PhysicalDevicePointClippingPropertiesKHR PhysicalDevicePointClippingPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2623,7 +2623,7 @@ fn PhysicalDevicePointClippingPropertiesKHR PhysicalDevicePointClippingPropertie
    self.pointClippingBehavior = pointClippingBehavior;
    return *self;
 }
-fn MemoryDedicatedRequirements memoryDedicatedRequirements() => MemoryDedicatedRequirements { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS, .pNext = null };
+fn MemoryDedicatedRequirements memoryDedicatedRequirements() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS, .pNext = null };
 fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2636,7 +2636,7 @@ fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setRequiresDedicatedA
    self.requiresDedicatedAllocation = requiresDedicatedAllocation;
    return *self;
 }
-fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfo() => MemoryDedicatedAllocateInfo { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO, .pNext = null };
+fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfo() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO, .pNext = null };
 fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2649,7 +2649,7 @@ fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setBuffer(&self, Buff
    self.buffer = buffer;
    return *self;
 }
-fn ImageViewUsageCreateInfo imageViewUsageCreateInfo() => ImageViewUsageCreateInfo { .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, .pNext = null };
+fn ImageViewUsageCreateInfo imageViewUsageCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, .pNext = null };
 fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2658,7 +2658,7 @@ fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setUsage(&self, ImageUsageF
    self.usage = usage;
    return *self;
 }
-fn ImageViewUsageCreateInfoKHR imageViewUsageCreateInfoKHR() => ImageViewUsageCreateInfoKHR { .sType = STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT, .pNext = null };
+fn ImageViewUsageCreateInfoKHR imageViewUsageCreateInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT, .pNext = null };
 fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2671,7 +2671,7 @@ fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setSliceCount(&self, 
    self.sliceCount = sliceCount;
    return *self;
 }
-fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfo() => PipelineTessellationDomainOriginStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO, .pNext = null };
+fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO, .pNext = null };
 fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2680,7 +2680,7 @@ fn PipelineTessellationDomainOriginStateCreateInfo PipelineTessellationDomainOri
    self.domainOrigin = domainOrigin;
    return *self;
 }
-fn PipelineTessellationDomainOriginStateCreateInfoKHR pipelineTessellationDomainOriginStateCreateInfoKHR() => PipelineTessellationDomainOriginStateCreateInfoKHR { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO, .pNext = null };
+fn PipelineTessellationDomainOriginStateCreateInfoKHR pipelineTessellationDomainOriginStateCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO, .pNext = null };
 fn PipelineTessellationDomainOriginStateCreateInfoKHR PipelineTessellationDomainOriginStateCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2689,7 +2689,7 @@ fn PipelineTessellationDomainOriginStateCreateInfoKHR PipelineTessellationDomain
    self.domainOrigin = domainOrigin;
    return *self;
 }
-fn SamplerYcbcrConversionInfo samplerYcbcrConversionInfo() => SamplerYcbcrConversionInfo { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO, .pNext = null };
+fn SamplerYcbcrConversionInfo samplerYcbcrConversionInfo() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO, .pNext = null };
 fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2698,7 +2698,7 @@ fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setConversion(&self, Sa
    self.conversion = conversion;
    return *self;
 }
-fn SamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo() => SamplerYcbcrConversionCreateInfo { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO, .pNext = null };
+fn SamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO, .pNext = null };
 fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2735,7 +2735,7 @@ fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setForceExp
    self.forceExplicitReconstruction = forceExplicitReconstruction;
    return *self;
 }
-fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfo() => BindImagePlaneMemoryInfo { .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, .pNext = null };
+fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfo() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, .pNext = null };
 fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2744,7 +2744,7 @@ fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPlaneAspect(&self, Image
    self.planeAspect = planeAspect;
    return *self;
 }
-fn ImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo() => ImagePlaneMemoryRequirementsInfo { .sType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO, .pNext = null };
+fn ImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo() => { .sType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO, .pNext = null };
 fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2753,7 +2753,7 @@ fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPlaneAsp
    self.planeAspect = planeAspect;
    return *self;
 }
-fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeatures() => PhysicalDeviceSamplerYcbcrConversionFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES, .pNext = null };
+fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES, .pNext = null };
 fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2762,7 +2762,7 @@ fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConver
    self.samplerYcbcrConversion = samplerYcbcrConversion;
    return *self;
 }
-fn SamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties() => SamplerYcbcrConversionImageFormatProperties { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES, .pNext = null };
+fn SamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES, .pNext = null };
 fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2771,7 +2771,7 @@ fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormat
    self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
    return *self;
 }
-fn ProtectedSubmitInfo protectedSubmitInfo() => ProtectedSubmitInfo { .sType = STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO, .pNext = null };
+fn ProtectedSubmitInfo protectedSubmitInfo() => { .sType = STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO, .pNext = null };
 fn ProtectedSubmitInfo ProtectedSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2780,7 +2780,7 @@ fn ProtectedSubmitInfo ProtectedSubmitInfo.setProtectedSubmit(&self, uint protec
    self.protectedSubmit = protectedSubmit;
    return *self;
 }
-fn PhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeatures() => PhysicalDeviceProtectedMemoryFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES, .pNext = null };
+fn PhysicalDeviceProtectedMemoryFeatures physicalDeviceProtectedMemoryFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES, .pNext = null };
 fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2789,7 +2789,7 @@ fn PhysicalDeviceProtectedMemoryFeatures PhysicalDeviceProtectedMemoryFeatures.s
    self.protectedMemory = protectedMemory;
    return *self;
 }
-fn PhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryProperties() => PhysicalDeviceProtectedMemoryProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES, .pNext = null };
+fn PhysicalDeviceProtectedMemoryProperties physicalDeviceProtectedMemoryProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES, .pNext = null };
 fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2798,7 +2798,7 @@ fn PhysicalDeviceProtectedMemoryProperties PhysicalDeviceProtectedMemoryProperti
    self.protectedNoFault = protectedNoFault;
    return *self;
 }
-fn DeviceQueueInfo2 deviceQueueInfo2() => DeviceQueueInfo2 { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2, .pNext = null };
+fn DeviceQueueInfo2 deviceQueueInfo2() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2, .pNext = null };
 fn DeviceQueueInfo2 DeviceQueueInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2815,7 +2815,7 @@ fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueIndex(&self, uint queueIndex) {
    self.queueIndex = queueIndex;
    return *self;
 }
-fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxProperties() => PhysicalDeviceSamplerFilterMinmaxProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES, .pNext = null };
+fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES, .pNext = null };
 fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2828,7 +2828,7 @@ fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmax
    self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
    return *self;
 }
-fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfo() => SamplerReductionModeCreateInfo { .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO, .pNext = null };
+fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfo() => { .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO, .pNext = null };
 fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2837,7 +2837,7 @@ fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setReductionMod
    self.reductionMode = reductionMode;
    return *self;
 }
-fn PhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeatures() => PhysicalDeviceInlineUniformBlockFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES, .pNext = null };
+fn PhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES, .pNext = null };
 fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2850,7 +2850,7 @@ fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeat
    self.descriptorBindingInlineUniformBlockUpdateAfterBind = descriptorBindingInlineUniformBlockUpdateAfterBind;
    return *self;
 }
-fn PhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlockProperties() => PhysicalDeviceInlineUniformBlockProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES, .pNext = null };
+fn PhysicalDeviceInlineUniformBlockProperties physicalDeviceInlineUniformBlockProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES, .pNext = null };
 fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2875,7 +2875,7 @@ fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockPr
    self.maxDescriptorSetUpdateAfterBindInlineUniformBlocks = maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
    return *self;
 }
-fn WriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlock() => WriteDescriptorSetInlineUniformBlock { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK, .pNext = null };
+fn WriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlock() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK, .pNext = null };
 fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2888,7 +2888,7 @@ fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.set
    self.pData = pData;
    return *self;
 }
-fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfo() => DescriptorPoolInlineUniformBlockCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO, .pNext = null };
+fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO, .pNext = null };
 fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2897,7 +2897,7 @@ fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCr
    self.maxInlineUniformBlockBindings = maxInlineUniformBlockBindings;
    return *self;
 }
-fn ImageFormatListCreateInfo imageFormatListCreateInfo() => ImageFormatListCreateInfo { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO, .pNext = null };
+fn ImageFormatListCreateInfo imageFormatListCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO, .pNext = null };
 fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2911,7 +2911,7 @@ fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormats(&self, For
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
-fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3Properties() => PhysicalDeviceMaintenance3Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2924,7 +2924,7 @@ fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.set
    self.maxMemoryAllocationSize = maxMemoryAllocationSize;
    return *self;
 }
-fn PhysicalDeviceMaintenance4Features physicalDeviceMaintenance4Features() => PhysicalDeviceMaintenance4Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance4Features physicalDeviceMaintenance4Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2933,7 +2933,7 @@ fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setMain
    self.maintenance4 = maintenance4;
    return *self;
 }
-fn PhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4Properties() => PhysicalDeviceMaintenance4Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance4Properties physicalDeviceMaintenance4Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2942,7 +2942,7 @@ fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.set
    self.maxBufferSize = maxBufferSize;
    return *self;
 }
-fn PhysicalDeviceMaintenance5Features physicalDeviceMaintenance5Features() => PhysicalDeviceMaintenance5Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance5Features physicalDeviceMaintenance5Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance5Features PhysicalDeviceMaintenance5Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2951,7 +2951,7 @@ fn PhysicalDeviceMaintenance5Features PhysicalDeviceMaintenance5Features.setMain
    self.maintenance5 = maintenance5;
    return *self;
 }
-fn PhysicalDeviceMaintenance5Properties physicalDeviceMaintenance5Properties() => PhysicalDeviceMaintenance5Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance5Properties physicalDeviceMaintenance5Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMaintenance5Properties PhysicalDeviceMaintenance5Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2980,7 +2980,7 @@ fn PhysicalDeviceMaintenance5Properties PhysicalDeviceMaintenance5Properties.set
    self.nonStrictWideLinesUseParallelogram = nonStrictWideLinesUseParallelogram;
    return *self;
 }
-fn PhysicalDeviceMaintenance6Features physicalDeviceMaintenance6Features() => PhysicalDeviceMaintenance6Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance6Features physicalDeviceMaintenance6Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance6Features PhysicalDeviceMaintenance6Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -2989,7 +2989,7 @@ fn PhysicalDeviceMaintenance6Features PhysicalDeviceMaintenance6Features.setMain
    self.maintenance6 = maintenance6;
    return *self;
 }
-fn PhysicalDeviceMaintenance6Properties physicalDeviceMaintenance6Properties() => PhysicalDeviceMaintenance6Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance6Properties physicalDeviceMaintenance6Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMaintenance6Properties PhysicalDeviceMaintenance6Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3006,7 +3006,7 @@ fn PhysicalDeviceMaintenance6Properties PhysicalDeviceMaintenance6Properties.set
    self.fragmentShadingRateClampCombinerInputs = fragmentShadingRateClampCombinerInputs;
    return *self;
 }
-fn RenderingAreaInfo renderingAreaInfo() => RenderingAreaInfo { .sType = STRUCTURE_TYPE_RENDERING_AREA_INFO, .pNext = null };
+fn RenderingAreaInfo renderingAreaInfo() => { .sType = STRUCTURE_TYPE_RENDERING_AREA_INFO, .pNext = null };
 fn RenderingAreaInfo RenderingAreaInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3032,7 +3032,7 @@ fn RenderingAreaInfo RenderingAreaInfo.setStencilAttachmentFormat(&self, Format 
    self.stencilAttachmentFormat = stencilAttachmentFormat;
    return *self;
 }
-fn DescriptorSetLayoutSupport descriptorSetLayoutSupport() => DescriptorSetLayoutSupport { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT, .pNext = null };
+fn DescriptorSetLayoutSupport descriptorSetLayoutSupport() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT, .pNext = null };
 fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3041,7 +3041,7 @@ fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setSupported(&self, uin
    self.supported = supported;
    return *self;
 }
-fn PhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParametersFeatures() => PhysicalDeviceShaderDrawParametersFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderDrawParametersFeatures physicalDeviceShaderDrawParametersFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParametersFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3050,7 +3050,7 @@ fn PhysicalDeviceShaderDrawParametersFeatures PhysicalDeviceShaderDrawParameters
    self.shaderDrawParameters = shaderDrawParameters;
    return *self;
 }
-fn PhysicalDeviceShaderDrawParameterFeatures physicalDeviceShaderDrawParameterFeatures() => PhysicalDeviceShaderDrawParameterFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderDrawParameterFeatures physicalDeviceShaderDrawParameterFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderDrawParameterFeatures PhysicalDeviceShaderDrawParameterFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3059,7 +3059,7 @@ fn PhysicalDeviceShaderDrawParameterFeatures PhysicalDeviceShaderDrawParameterFe
    self.shaderDrawParameters = shaderDrawParameters;
    return *self;
 }
-fn PhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8Features() => PhysicalDeviceShaderFloat16Int8Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderFloat16Int8Features physicalDeviceShaderFloat16Int8Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3072,7 +3072,7 @@ fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Featur
    self.shaderInt8 = shaderInt8;
    return *self;
 }
-fn PhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsProperties() => PhysicalDeviceFloatControlsProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES, .pNext = null };
+fn PhysicalDeviceFloatControlsProperties physicalDeviceFloatControlsProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES, .pNext = null };
 fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3145,7 +3145,7 @@ fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.s
    self.shaderRoundingModeRTZFloat64 = shaderRoundingModeRTZFloat64;
    return *self;
 }
-fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeatures() => PhysicalDeviceHostQueryResetFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES, .pNext = null };
+fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES, .pNext = null };
 fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3154,7 +3154,7 @@ fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.set
    self.hostQueryReset = hostQueryReset;
    return *self;
 }
-fn DeviceQueueGlobalPriorityCreateInfo deviceQueueGlobalPriorityCreateInfo() => DeviceQueueGlobalPriorityCreateInfo { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO, .pNext = null };
+fn DeviceQueueGlobalPriorityCreateInfo deviceQueueGlobalPriorityCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO, .pNext = null };
 fn DeviceQueueGlobalPriorityCreateInfo DeviceQueueGlobalPriorityCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3163,7 +3163,7 @@ fn DeviceQueueGlobalPriorityCreateInfo DeviceQueueGlobalPriorityCreateInfo.setGl
    self.globalPriority = globalPriority;
    return *self;
 }
-fn PhysicalDeviceGlobalPriorityQueryFeatures physicalDeviceGlobalPriorityQueryFeatures() => PhysicalDeviceGlobalPriorityQueryFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES, .pNext = null };
+fn PhysicalDeviceGlobalPriorityQueryFeatures physicalDeviceGlobalPriorityQueryFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES, .pNext = null };
 fn PhysicalDeviceGlobalPriorityQueryFeatures PhysicalDeviceGlobalPriorityQueryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3172,7 +3172,7 @@ fn PhysicalDeviceGlobalPriorityQueryFeatures PhysicalDeviceGlobalPriorityQueryFe
    self.globalPriorityQuery = globalPriorityQuery;
    return *self;
 }
-fn QueueFamilyGlobalPriorityProperties queueFamilyGlobalPriorityProperties() => QueueFamilyGlobalPriorityProperties { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES, .pNext = null };
+fn QueueFamilyGlobalPriorityProperties queueFamilyGlobalPriorityProperties() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES, .pNext = null };
 fn QueueFamilyGlobalPriorityProperties QueueFamilyGlobalPriorityProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3186,7 +3186,7 @@ fn QueueFamilyGlobalPriorityProperties QueueFamilyGlobalPriorityProperties.setPr
    self.priorities = priorities;
    return *self;
 }
-fn DebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXT() => DebugUtilsObjectNameInfoEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, .pNext = null };
+fn DebugUtilsObjectNameInfoEXT debugUtilsObjectNameInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, .pNext = null };
 fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3203,7 +3203,7 @@ fn DebugUtilsObjectNameInfoEXT DebugUtilsObjectNameInfoEXT.setObjectName(&self, 
    self.pObjectName = pObjectName;
    return *self;
 }
-fn DebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXT() => DebugUtilsObjectTagInfoEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT, .pNext = null };
+fn DebugUtilsObjectTagInfoEXT debugUtilsObjectTagInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT, .pNext = null };
 fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3228,7 +3228,7 @@ fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTag(&self, void* pTa
    self.pTag = pTag;
    return *self;
 }
-fn DebugUtilsLabelEXT debugUtilsLabelEXT() => DebugUtilsLabelEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, .pNext = null };
+fn DebugUtilsLabelEXT debugUtilsLabelEXT() => { .sType = STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, .pNext = null };
 fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3241,7 +3241,7 @@ fn DebugUtilsLabelEXT DebugUtilsLabelEXT.setColor(&self, float[4] color) {
    self.color = color;
    return *self;
 }
-fn DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT() => DebugUtilsMessengerCreateInfoEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT, .pNext = null };
+fn DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT, .pNext = null };
 fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3266,7 +3266,7 @@ fn DebugUtilsMessengerCreateInfoEXT DebugUtilsMessengerCreateInfoEXT.setUserData
    self.pUserData = pUserData;
    return *self;
 }
-fn DebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXT() => DebugUtilsMessengerCallbackDataEXT { .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT, .pNext = null };
+fn DebugUtilsMessengerCallbackDataEXT debugUtilsMessengerCallbackDataEXT() => { .sType = STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT, .pNext = null };
 fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3314,7 +3314,7 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObje
    self.pObjects = &pObjects[0];
    return *self;
 }
-fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeatures() => PhysicalDeviceDescriptorIndexingFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES, .pNext = null };
+fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES, .pNext = null };
 fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3399,7 +3399,7 @@ fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeat
    self.runtimeDescriptorArray = runtimeDescriptorArray;
    return *self;
 }
-fn PhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingProperties() => PhysicalDeviceDescriptorIndexingProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDescriptorIndexingProperties physicalDeviceDescriptorIndexingProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES, .pNext = null };
 fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3496,7 +3496,7 @@ fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingPr
    self.maxDescriptorSetUpdateAfterBindInputAttachments = maxDescriptorSetUpdateAfterBindInputAttachments;
    return *self;
 }
-fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfo() => DescriptorSetLayoutBindingFlagsCreateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO, .pNext = null };
+fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO, .pNext = null };
 fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3510,7 +3510,7 @@ fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCrea
    self.pBindingFlags = &pBindingFlags[0];
    return *self;
 }
-fn DescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescriptorCountAllocateInfo() => DescriptorSetVariableDescriptorCountAllocateInfo { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO, .pNext = null };
+fn DescriptorSetVariableDescriptorCountAllocateInfo descriptorSetVariableDescriptorCountAllocateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO, .pNext = null };
 fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3524,7 +3524,7 @@ fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescrip
    self.pDescriptorCounts = &pDescriptorCounts[0];
    return *self;
 }
-fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupport() => DescriptorSetVariableDescriptorCountLayoutSupport { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT, .pNext = null };
+fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupport() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT, .pNext = null };
 fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3533,7 +3533,7 @@ fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescri
    self.maxVariableDescriptorCount = maxVariableDescriptorCount;
    return *self;
 }
-fn AttachmentDescription2 attachmentDescription2() => AttachmentDescription2 { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2, .pNext = null };
+fn AttachmentDescription2 attachmentDescription2() => { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2, .pNext = null };
 fn AttachmentDescription2 AttachmentDescription2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3574,7 +3574,7 @@ fn AttachmentDescription2 AttachmentDescription2.setFinalLayout(&self, ImageLayo
    self.finalLayout = finalLayout;
    return *self;
 }
-fn AttachmentDescription2KHR attachmentDescription2KHR() => AttachmentDescription2KHR { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2, .pNext = null };
+fn AttachmentDescription2KHR attachmentDescription2KHR() => { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2, .pNext = null };
 fn AttachmentDescription2KHR AttachmentDescription2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3615,7 +3615,7 @@ fn AttachmentDescription2KHR AttachmentDescription2KHR.setFinalLayout(&self, Ima
    self.finalLayout = finalLayout;
    return *self;
 }
-fn AttachmentReference2 attachmentReference2() => AttachmentReference2 { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, .pNext = null };
+fn AttachmentReference2 attachmentReference2() => { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, .pNext = null };
 fn AttachmentReference2 AttachmentReference2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3632,7 +3632,7 @@ fn AttachmentReference2 AttachmentReference2.setAspectMask(&self, ImageAspectFla
    self.aspectMask = aspectMask;
    return *self;
 }
-fn AttachmentReference2KHR attachmentReference2KHR() => AttachmentReference2KHR { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, .pNext = null };
+fn AttachmentReference2KHR attachmentReference2KHR() => { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, .pNext = null };
 fn AttachmentReference2KHR AttachmentReference2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3649,7 +3649,7 @@ fn AttachmentReference2KHR AttachmentReference2KHR.setAspectMask(&self, ImageAsp
    self.aspectMask = aspectMask;
    return *self;
 }
-fn SubpassDescription2 subpassDescription2() => SubpassDescription2 { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2, .pNext = null };
+fn SubpassDescription2 subpassDescription2() => { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2, .pNext = null };
 fn SubpassDescription2 SubpassDescription2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3702,7 +3702,7 @@ fn SubpassDescription2 SubpassDescription2.setPreserveAttachments(&self, uint[] 
    self.pPreserveAttachments = &pPreserveAttachments[0];
    return *self;
 }
-fn SubpassDescription2KHR subpassDescription2KHR() => SubpassDescription2KHR { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2, .pNext = null };
+fn SubpassDescription2KHR subpassDescription2KHR() => { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2, .pNext = null };
 fn SubpassDescription2KHR SubpassDescription2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3755,7 +3755,7 @@ fn SubpassDescription2KHR SubpassDescription2KHR.setPreserveAttachments(&self, u
    self.pPreserveAttachments = &pPreserveAttachments[0];
    return *self;
 }
-fn SubpassDependency2 subpassDependency2() => SubpassDependency2 { .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, .pNext = null };
+fn SubpassDependency2 subpassDependency2() => { .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, .pNext = null };
 fn SubpassDependency2 SubpassDependency2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3792,7 +3792,7 @@ fn SubpassDependency2 SubpassDependency2.setViewOffset(&self, int viewOffset) {
    self.viewOffset = viewOffset;
    return *self;
 }
-fn SubpassDependency2KHR subpassDependency2KHR() => SubpassDependency2KHR { .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, .pNext = null };
+fn SubpassDependency2KHR subpassDependency2KHR() => { .sType = STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, .pNext = null };
 fn SubpassDependency2KHR SubpassDependency2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3829,7 +3829,7 @@ fn SubpassDependency2KHR SubpassDependency2KHR.setViewOffset(&self, int viewOffs
    self.viewOffset = viewOffset;
    return *self;
 }
-fn RenderPassCreateInfo2 renderPassCreateInfo2() => RenderPassCreateInfo2 { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2, .pNext = null };
+fn RenderPassCreateInfo2 renderPassCreateInfo2() => { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2, .pNext = null };
 fn RenderPassCreateInfo2 RenderPassCreateInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3874,7 +3874,7 @@ fn RenderPassCreateInfo2 RenderPassCreateInfo2.setCorrelatedViewMasks(&self, uin
    self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
    return *self;
 }
-fn RenderPassCreateInfo2KHR renderPassCreateInfo2KHR() => RenderPassCreateInfo2KHR { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2, .pNext = null };
+fn RenderPassCreateInfo2KHR renderPassCreateInfo2KHR() => { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2, .pNext = null };
 fn RenderPassCreateInfo2KHR RenderPassCreateInfo2KHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3919,7 +3919,7 @@ fn RenderPassCreateInfo2KHR RenderPassCreateInfo2KHR.setCorrelatedViewMasks(&sel
    self.pCorrelatedViewMasks = &pCorrelatedViewMasks[0];
    return *self;
 }
-fn SubpassBeginInfo subpassBeginInfo() => SubpassBeginInfo { .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO, .pNext = null };
+fn SubpassBeginInfo subpassBeginInfo() => { .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO, .pNext = null };
 fn SubpassBeginInfo SubpassBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3928,7 +3928,7 @@ fn SubpassBeginInfo SubpassBeginInfo.setContents(&self, SubpassContents contents
    self.contents = contents;
    return *self;
 }
-fn SubpassBeginInfoKHR subpassBeginInfoKHR() => SubpassBeginInfoKHR { .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO, .pNext = null };
+fn SubpassBeginInfoKHR subpassBeginInfoKHR() => { .sType = STRUCTURE_TYPE_SUBPASS_BEGIN_INFO, .pNext = null };
 fn SubpassBeginInfoKHR SubpassBeginInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3937,17 +3937,17 @@ fn SubpassBeginInfoKHR SubpassBeginInfoKHR.setContents(&self, SubpassContents co
    self.contents = contents;
    return *self;
 }
-fn SubpassEndInfo subpassEndInfo() => SubpassEndInfo { .sType = STRUCTURE_TYPE_SUBPASS_END_INFO, .pNext = null };
+fn SubpassEndInfo subpassEndInfo() => { .sType = STRUCTURE_TYPE_SUBPASS_END_INFO, .pNext = null };
 fn SubpassEndInfo SubpassEndInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn SubpassEndInfoKHR subpassEndInfoKHR() => SubpassEndInfoKHR { .sType = STRUCTURE_TYPE_SUBPASS_END_INFO, .pNext = null };
+fn SubpassEndInfoKHR subpassEndInfoKHR() => { .sType = STRUCTURE_TYPE_SUBPASS_END_INFO, .pNext = null };
 fn SubpassEndInfoKHR SubpassEndInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeatures() => PhysicalDeviceTimelineSemaphoreFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES, .pNext = null };
+fn PhysicalDeviceTimelineSemaphoreFeatures physicalDeviceTimelineSemaphoreFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES, .pNext = null };
 fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3956,7 +3956,7 @@ fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatur
    self.timelineSemaphore = timelineSemaphore;
    return *self;
 }
-fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphoreProperties() => PhysicalDeviceTimelineSemaphoreProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES, .pNext = null };
+fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphoreProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES, .pNext = null };
 fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3965,7 +3965,7 @@ fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProp
    self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
    return *self;
 }
-fn SemaphoreTypeCreateInfo semaphoreTypeCreateInfo() => SemaphoreTypeCreateInfo { .sType = STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO, .pNext = null };
+fn SemaphoreTypeCreateInfo semaphoreTypeCreateInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO, .pNext = null };
 fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -3978,7 +3978,7 @@ fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setInitialValue(&self, ulong 
    self.initialValue = initialValue;
    return *self;
 }
-fn TimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfo() => TimelineSemaphoreSubmitInfo { .sType = STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
+fn TimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfo() => { .sType = STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
 fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4001,7 +4001,7 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreVal
    self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
    return *self;
 }
-fn SemaphoreWaitInfo semaphoreWaitInfo() => SemaphoreWaitInfo { .sType = STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO, .pNext = null };
+fn SemaphoreWaitInfo semaphoreWaitInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO, .pNext = null };
 fn SemaphoreWaitInfo SemaphoreWaitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4024,7 +4024,7 @@ fn SemaphoreWaitInfo SemaphoreWaitInfo.setValues(&self, ulong[] pValues) {
    self.pValues = &pValues[0];
    return *self;
 }
-fn SemaphoreSignalInfo semaphoreSignalInfo() => SemaphoreSignalInfo { .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO, .pNext = null };
+fn SemaphoreSignalInfo semaphoreSignalInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO, .pNext = null };
 fn SemaphoreSignalInfo SemaphoreSignalInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4037,7 +4037,7 @@ fn SemaphoreSignalInfo SemaphoreSignalInfo.setValue(&self, ulong value) {
    self.value = value;
    return *self;
 }
-fn PipelineVertexInputDivisorStateCreateInfo pipelineVertexInputDivisorStateCreateInfo() => PipelineVertexInputDivisorStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO, .pNext = null };
+fn PipelineVertexInputDivisorStateCreateInfo pipelineVertexInputDivisorStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO, .pNext = null };
 fn PipelineVertexInputDivisorStateCreateInfo PipelineVertexInputDivisorStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4051,7 +4051,7 @@ fn PipelineVertexInputDivisorStateCreateInfo PipelineVertexInputDivisorStateCrea
    self.pVertexBindingDivisors = &pVertexBindingDivisors[0];
    return *self;
 }
-fn PhysicalDeviceVertexAttributeDivisorProperties physicalDeviceVertexAttributeDivisorProperties() => PhysicalDeviceVertexAttributeDivisorProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorProperties physicalDeviceVertexAttributeDivisorProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVertexAttributeDivisorProperties PhysicalDeviceVertexAttributeDivisorProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4064,7 +4064,7 @@ fn PhysicalDeviceVertexAttributeDivisorProperties PhysicalDeviceVertexAttributeD
    self.supportsNonZeroFirstInstance = supportsNonZeroFirstInstance;
    return *self;
 }
-fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeatures() => PhysicalDevice8BitStorageFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES, .pNext = null };
+fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES, .pNext = null };
 fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4081,7 +4081,7 @@ fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStorag
    self.storagePushConstant8 = storagePushConstant8;
    return *self;
 }
-fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeatures() => PhysicalDeviceVulkanMemoryModelFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4098,7 +4098,7 @@ fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatur
    self.vulkanMemoryModelAvailabilityVisibilityChains = vulkanMemoryModelAvailabilityVisibilityChains;
    return *self;
 }
-fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64Features() => PhysicalDeviceShaderAtomicInt64Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4111,7 +4111,7 @@ fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Featur
    self.shaderSharedInt64Atomics = shaderSharedInt64Atomics;
    return *self;
 }
-fn PhysicalDeviceVertexAttributeDivisorFeatures physicalDeviceVertexAttributeDivisorFeatures() => PhysicalDeviceVertexAttributeDivisorFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorFeatures physicalDeviceVertexAttributeDivisorFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES, .pNext = null };
 fn PhysicalDeviceVertexAttributeDivisorFeatures PhysicalDeviceVertexAttributeDivisorFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4124,7 +4124,7 @@ fn PhysicalDeviceVertexAttributeDivisorFeatures PhysicalDeviceVertexAttributeDiv
    self.vertexAttributeInstanceRateZeroDivisor = vertexAttributeInstanceRateZeroDivisor;
    return *self;
 }
-fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolveProperties() => PhysicalDeviceDepthStencilResolveProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolveProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES, .pNext = null };
 fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolveProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4145,7 +4145,7 @@ fn PhysicalDeviceDepthStencilResolveProperties PhysicalDeviceDepthStencilResolve
    self.independentResolve = independentResolve;
    return *self;
 }
-fn PhysicalDeviceDepthStencilResolvePropertiesKHR physicalDeviceDepthStencilResolvePropertiesKHR() => PhysicalDeviceDepthStencilResolvePropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDepthStencilResolvePropertiesKHR physicalDeviceDepthStencilResolvePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES, .pNext = null };
 fn PhysicalDeviceDepthStencilResolvePropertiesKHR PhysicalDeviceDepthStencilResolvePropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4166,7 +4166,7 @@ fn PhysicalDeviceDepthStencilResolvePropertiesKHR PhysicalDeviceDepthStencilReso
    self.independentResolve = independentResolve;
    return *self;
 }
-fn SubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolve() => SubpassDescriptionDepthStencilResolve { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE, .pNext = null };
+fn SubpassDescriptionDepthStencilResolve subpassDescriptionDepthStencilResolve() => { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE, .pNext = null };
 fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4183,7 +4183,7 @@ fn SubpassDescriptionDepthStencilResolve SubpassDescriptionDepthStencilResolve.s
    self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
    return *self;
 }
-fn SubpassDescriptionDepthStencilResolveKHR subpassDescriptionDepthStencilResolveKHR() => SubpassDescriptionDepthStencilResolveKHR { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE, .pNext = null };
+fn SubpassDescriptionDepthStencilResolveKHR subpassDescriptionDepthStencilResolveKHR() => { .sType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE, .pNext = null };
 fn SubpassDescriptionDepthStencilResolveKHR SubpassDescriptionDepthStencilResolveKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4200,7 +4200,7 @@ fn SubpassDescriptionDepthStencilResolveKHR SubpassDescriptionDepthStencilResolv
    self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
    return *self;
 }
-fn WriteDescriptorSetAccelerationStructureKHR writeDescriptorSetAccelerationStructureKHR() => WriteDescriptorSetAccelerationStructureKHR { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR, .pNext = null };
+fn WriteDescriptorSetAccelerationStructureKHR writeDescriptorSetAccelerationStructureKHR() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR, .pNext = null };
 fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStructureKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4214,7 +4214,7 @@ fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStru
    self.pAccelerationStructures = &pAccelerationStructures[0];
    return *self;
 }
-fn PhysicalDeviceAccelerationStructureFeaturesKHR physicalDeviceAccelerationStructureFeaturesKHR() => PhysicalDeviceAccelerationStructureFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceAccelerationStructureFeaturesKHR physicalDeviceAccelerationStructureFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR, .pNext = null };
 fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStructureFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4239,7 +4239,7 @@ fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStru
    self.descriptorBindingAccelerationStructureUpdateAfterBind = descriptorBindingAccelerationStructureUpdateAfterBind;
    return *self;
 }
-fn PhysicalDeviceAccelerationStructurePropertiesKHR physicalDeviceAccelerationStructurePropertiesKHR() => PhysicalDeviceAccelerationStructurePropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceAccelerationStructurePropertiesKHR physicalDeviceAccelerationStructurePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR, .pNext = null };
 fn PhysicalDeviceAccelerationStructurePropertiesKHR PhysicalDeviceAccelerationStructurePropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4276,7 +4276,7 @@ fn PhysicalDeviceAccelerationStructurePropertiesKHR PhysicalDeviceAccelerationSt
    self.minAccelerationStructureScratchOffsetAlignment = minAccelerationStructureScratchOffsetAlignment;
    return *self;
 }
-fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfo() => ImageStencilUsageCreateInfo { .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO, .pNext = null };
+fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO, .pNext = null };
 fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4285,7 +4285,7 @@ fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setStencilUsage(&self
    self.stencilUsage = stencilUsage;
    return *self;
 }
-fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeatures() => PhysicalDeviceScalarBlockLayoutFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES, .pNext = null };
+fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES, .pNext = null };
 fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4294,7 +4294,7 @@ fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatur
    self.scalarBlockLayout = scalarBlockLayout;
    return *self;
 }
-fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeatures() => PhysicalDeviceUniformBufferStandardLayoutFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES, .pNext = null };
+fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES, .pNext = null };
 fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4303,7 +4303,7 @@ fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBuffer
    self.uniformBufferStandardLayout = uniformBufferStandardLayout;
    return *self;
 }
-fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeatures() => PhysicalDeviceBufferDeviceAddressFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES, .pNext = null };
+fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES, .pNext = null };
 fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4320,7 +4320,7 @@ fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFe
    self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
    return *self;
 }
-fn BufferDeviceAddressInfo bufferDeviceAddressInfo() => BufferDeviceAddressInfo { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .pNext = null };
+fn BufferDeviceAddressInfo bufferDeviceAddressInfo() => { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .pNext = null };
 fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4329,7 +4329,7 @@ fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setBuffer(&self, Buffer buffe
    self.buffer = buffer;
    return *self;
 }
-fn BufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfo() => BufferOpaqueCaptureAddressCreateInfo { .sType = STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO, .pNext = null };
+fn BufferOpaqueCaptureAddressCreateInfo bufferOpaqueCaptureAddressCreateInfo() => { .sType = STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO, .pNext = null };
 fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4338,7 +4338,7 @@ fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.set
    self.opaqueCaptureAddress = opaqueCaptureAddress;
    return *self;
 }
-fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeatures() => PhysicalDeviceImagelessFramebufferFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES, .pNext = null };
+fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES, .pNext = null };
 fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4347,7 +4347,7 @@ fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebuffer
    self.imagelessFramebuffer = imagelessFramebuffer;
    return *self;
 }
-fn FramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfo() => FramebufferAttachmentsCreateInfo { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO, .pNext = null };
+fn FramebufferAttachmentsCreateInfo framebufferAttachmentsCreateInfo() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO, .pNext = null };
 fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4361,7 +4361,7 @@ fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachme
    self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
    return *self;
 }
-fn FramebufferAttachmentImageInfo framebufferAttachmentImageInfo() => FramebufferAttachmentImageInfo { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO, .pNext = null };
+fn FramebufferAttachmentImageInfo framebufferAttachmentImageInfo() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO, .pNext = null };
 fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4395,7 +4395,7 @@ fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormats(
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
-fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfo() => RenderPassAttachmentBeginInfo { .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO, .pNext = null };
+fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO, .pNext = null };
 fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4409,7 +4409,7 @@ fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachments(&s
    self.pAttachments = &pAttachments[0];
    return *self;
 }
-fn PhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompressionASTCHDRFeatures() => PhysicalDeviceTextureCompressionASTCHDRFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES, .pNext = null };
+fn PhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompressionASTCHDRFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES, .pNext = null };
 fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4418,7 +4418,7 @@ fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompress
    self.textureCompressionASTC_HDR = textureCompressionASTC_HDR;
    return *self;
 }
-fn PipelineCreationFeedbackCreateInfo pipelineCreationFeedbackCreateInfo() => PipelineCreationFeedbackCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO, .pNext = null };
+fn PipelineCreationFeedbackCreateInfo pipelineCreationFeedbackCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO, .pNext = null };
 fn PipelineCreationFeedbackCreateInfo PipelineCreationFeedbackCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4436,7 +4436,7 @@ fn PipelineCreationFeedbackCreateInfo PipelineCreationFeedbackCreateInfo.setPipe
    self.pPipelineStageCreationFeedbacks = &pPipelineStageCreationFeedbacks[0];
    return *self;
 }
-fn PhysicalDeviceIndexTypeUint8Features physicalDeviceIndexTypeUint8Features() => PhysicalDeviceIndexTypeUint8Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES, .pNext = null };
+fn PhysicalDeviceIndexTypeUint8Features physicalDeviceIndexTypeUint8Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES, .pNext = null };
 fn PhysicalDeviceIndexTypeUint8Features PhysicalDeviceIndexTypeUint8Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4445,7 +4445,7 @@ fn PhysicalDeviceIndexTypeUint8Features PhysicalDeviceIndexTypeUint8Features.set
    self.indexTypeUint8 = indexTypeUint8;
    return *self;
 }
-fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeatures() => PhysicalDeviceSeparateDepthStencilLayoutsFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES, .pNext = null };
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES, .pNext = null };
 fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepthStencilLayoutsFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4454,7 +4454,7 @@ fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepth
    self.separateDepthStencilLayouts = separateDepthStencilLayouts;
    return *self;
 }
-fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayout() => AttachmentReferenceStencilLayout { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT, .pNext = null };
+fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayout() => { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT, .pNext = null };
 fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4463,7 +4463,7 @@ fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setStencilL
    self.stencilLayout = stencilLayout;
    return *self;
 }
-fn AttachmentDescriptionStencilLayout attachmentDescriptionStencilLayout() => AttachmentDescriptionStencilLayout { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT, .pNext = null };
+fn AttachmentDescriptionStencilLayout attachmentDescriptionStencilLayout() => { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT, .pNext = null };
 fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4476,7 +4476,7 @@ fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setSten
    self.stencilFinalLayout = stencilFinalLayout;
    return *self;
 }
-fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemoteToHelperInvocationFeatures() => PhysicalDeviceShaderDemoteToHelperInvocationFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemoteToHelperInvocationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4485,7 +4485,7 @@ fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemo
    self.shaderDemoteToHelperInvocation = shaderDemoteToHelperInvocation;
    return *self;
 }
-fn PhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignmentProperties() => PhysicalDeviceTexelBufferAlignmentProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES, .pNext = null };
+fn PhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignmentProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES, .pNext = null };
 fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignmentProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4506,7 +4506,7 @@ fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignme
    self.uniformTexelBufferOffsetSingleTexelAlignment = uniformTexelBufferOffsetSingleTexelAlignment;
    return *self;
 }
-fn PhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFeatures() => PhysicalDeviceSubgroupSizeControlFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES, .pNext = null };
+fn PhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES, .pNext = null };
 fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4519,7 +4519,7 @@ fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFe
    self.computeFullSubgroups = computeFullSubgroups;
    return *self;
 }
-fn PhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeControlProperties() => PhysicalDeviceSubgroupSizeControlProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES, .pNext = null };
+fn PhysicalDeviceSubgroupSizeControlProperties physicalDeviceSubgroupSizeControlProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES, .pNext = null };
 fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControlProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4540,7 +4540,7 @@ fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControl
    self.requiredSubgroupSizeStages = requiredSubgroupSizeStages;
    return *self;
 }
-fn PipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequiredSubgroupSizeCreateInfo() => PipelineShaderStageRequiredSubgroupSizeCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO, .pNext = null };
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequiredSubgroupSizeCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO, .pNext = null };
 fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4549,7 +4549,7 @@ fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequired
    self.requiredSubgroupSize = requiredSubgroupSize;
    return *self;
 }
-fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfo() => MemoryOpaqueCaptureAddressAllocateInfo { .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO, .pNext = null };
+fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfo() => { .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO, .pNext = null };
 fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4558,7 +4558,7 @@ fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo
    self.opaqueCaptureAddress = opaqueCaptureAddress;
    return *self;
 }
-fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfo() => DeviceMemoryOpaqueCaptureAddressInfo { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO, .pNext = null };
+fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfo() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO, .pNext = null };
 fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4567,7 +4567,7 @@ fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.set
    self.memory = memory;
    return *self;
 }
-fn PhysicalDeviceLineRasterizationFeatures physicalDeviceLineRasterizationFeatures() => PhysicalDeviceLineRasterizationFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES, .pNext = null };
+fn PhysicalDeviceLineRasterizationFeatures physicalDeviceLineRasterizationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES, .pNext = null };
 fn PhysicalDeviceLineRasterizationFeatures PhysicalDeviceLineRasterizationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4596,7 +4596,7 @@ fn PhysicalDeviceLineRasterizationFeatures PhysicalDeviceLineRasterizationFeatur
    self.stippledSmoothLines = stippledSmoothLines;
    return *self;
 }
-fn PhysicalDeviceLineRasterizationProperties physicalDeviceLineRasterizationProperties() => PhysicalDeviceLineRasterizationProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES, .pNext = null };
+fn PhysicalDeviceLineRasterizationProperties physicalDeviceLineRasterizationProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES, .pNext = null };
 fn PhysicalDeviceLineRasterizationProperties PhysicalDeviceLineRasterizationProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4605,7 +4605,7 @@ fn PhysicalDeviceLineRasterizationProperties PhysicalDeviceLineRasterizationProp
    self.lineSubPixelPrecisionBits = lineSubPixelPrecisionBits;
    return *self;
 }
-fn PipelineRasterizationLineStateCreateInfo pipelineRasterizationLineStateCreateInfo() => PipelineRasterizationLineStateCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO, .pNext = null };
+fn PipelineRasterizationLineStateCreateInfo pipelineRasterizationLineStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO, .pNext = null };
 fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4626,7 +4626,7 @@ fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreate
    self.lineStipplePattern = lineStipplePattern;
    return *self;
 }
-fn PhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCreationCacheControlFeatures() => PhysicalDevicePipelineCreationCacheControlFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCreationCacheControlFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4635,7 +4635,7 @@ fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCrea
    self.pipelineCreationCacheControl = pipelineCreationCacheControl;
    return *self;
 }
-fn PhysicalDeviceVulkan11Features physicalDeviceVulkan11Features() => PhysicalDeviceVulkan11Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkan11Features physicalDeviceVulkan11Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkan11Features PhysicalDeviceVulkan11Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4688,7 +4688,7 @@ fn PhysicalDeviceVulkan11Features PhysicalDeviceVulkan11Features.setShaderDrawPa
    self.shaderDrawParameters = shaderDrawParameters;
    return *self;
 }
-fn PhysicalDeviceVulkan11Properties physicalDeviceVulkan11Properties() => PhysicalDeviceVulkan11Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVulkan11Properties physicalDeviceVulkan11Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4753,7 +4753,7 @@ fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setMaxMemor
    self.maxMemoryAllocationSize = maxMemoryAllocationSize;
    return *self;
 }
-fn PhysicalDeviceVulkan12Features physicalDeviceVulkan12Features() => PhysicalDeviceVulkan12Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkan12Features physicalDeviceVulkan12Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkan12Features PhysicalDeviceVulkan12Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -4946,7 +4946,7 @@ fn PhysicalDeviceVulkan12Features PhysicalDeviceVulkan12Features.setSubgroupBroa
    self.subgroupBroadcastDynamicId = subgroupBroadcastDynamicId;
    return *self;
 }
-fn PhysicalDeviceVulkan12Properties physicalDeviceVulkan12Properties() => PhysicalDeviceVulkan12Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVulkan12Properties physicalDeviceVulkan12Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVulkan12Properties PhysicalDeviceVulkan12Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5159,7 +5159,7 @@ fn PhysicalDeviceVulkan12Properties PhysicalDeviceVulkan12Properties.setFramebuf
    self.framebufferIntegerColorSampleCounts = framebufferIntegerColorSampleCounts;
    return *self;
 }
-fn PhysicalDeviceVulkan13Features physicalDeviceVulkan13Features() => PhysicalDeviceVulkan13Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkan13Features physicalDeviceVulkan13Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkan13Features PhysicalDeviceVulkan13Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5224,7 +5224,7 @@ fn PhysicalDeviceVulkan13Features PhysicalDeviceVulkan13Features.setMaintenance4
    self.maintenance4 = maintenance4;
    return *self;
 }
-fn PhysicalDeviceVulkan13Properties physicalDeviceVulkan13Properties() => PhysicalDeviceVulkan13Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVulkan13Properties physicalDeviceVulkan13Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVulkan13Properties PhysicalDeviceVulkan13Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5409,7 +5409,7 @@ fn PhysicalDeviceVulkan13Properties PhysicalDeviceVulkan13Properties.setMaxBuffe
    self.maxBufferSize = maxBufferSize;
    return *self;
 }
-fn PhysicalDeviceVulkan14Features physicalDeviceVulkan14Features() => PhysicalDeviceVulkan14Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkan14Features physicalDeviceVulkan14Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkan14Features PhysicalDeviceVulkan14Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5498,7 +5498,7 @@ fn PhysicalDeviceVulkan14Features PhysicalDeviceVulkan14Features.setPushDescript
    self.pushDescriptor = pushDescriptor;
    return *self;
 }
-fn PhysicalDeviceVulkan14Properties physicalDeviceVulkan14Properties() => PhysicalDeviceVulkan14Properties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVulkan14Properties physicalDeviceVulkan14Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5605,7 +5605,7 @@ fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setIdentica
    self.identicalMemoryTypeRequirements = identicalMemoryTypeRequirements;
    return *self;
 }
-fn PhysicalDeviceToolProperties physicalDeviceToolProperties() => PhysicalDeviceToolProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES, .pNext = null };
+fn PhysicalDeviceToolProperties physicalDeviceToolProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES, .pNext = null };
 fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5630,7 +5630,7 @@ fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setLayer(&self, cha
    self.layer = layer;
    return *self;
 }
-fn AccelerationStructureGeometryTrianglesDataKHR accelerationStructureGeometryTrianglesDataKHR() => AccelerationStructureGeometryTrianglesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryTrianglesDataKHR accelerationStructureGeometryTrianglesDataKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryTrianglesDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5663,7 +5663,7 @@ fn AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryTr
    self.transformData = transformData;
    return *self;
 }
-fn AccelerationStructureGeometryAabbsDataKHR accelerationStructureGeometryAabbsDataKHR() => AccelerationStructureGeometryAabbsDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryAabbsDataKHR accelerationStructureGeometryAabbsDataKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryAabbsDataKHR AccelerationStructureGeometryAabbsDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5676,7 +5676,7 @@ fn AccelerationStructureGeometryAabbsDataKHR AccelerationStructureGeometryAabbsD
    self.stride = stride;
    return *self;
 }
-fn AccelerationStructureGeometryInstancesDataKHR accelerationStructureGeometryInstancesDataKHR() => AccelerationStructureGeometryInstancesDataKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR, .pNext = null };
+fn AccelerationStructureGeometryInstancesDataKHR accelerationStructureGeometryInstancesDataKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR, .pNext = null };
 fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryInstancesDataKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5689,7 +5689,7 @@ fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryIn
    self.data = data;
    return *self;
 }
-fn AccelerationStructureGeometryKHR accelerationStructureGeometryKHR() => AccelerationStructureGeometryKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR, .pNext = null };
+fn AccelerationStructureGeometryKHR accelerationStructureGeometryKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR, .pNext = null };
 fn AccelerationStructureGeometryKHR AccelerationStructureGeometryKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5706,7 +5706,7 @@ fn AccelerationStructureGeometryKHR AccelerationStructureGeometryKHR.setFlags(&s
    self.flags = flags;
    return *self;
 }
-fn AccelerationStructureBuildGeometryInfoKHR accelerationStructureBuildGeometryInfoKHR() => AccelerationStructureBuildGeometryInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR, .pNext = null };
+fn AccelerationStructureBuildGeometryInfoKHR accelerationStructureBuildGeometryInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR, .pNext = null };
 fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5748,7 +5748,7 @@ fn AccelerationStructureBuildGeometryInfoKHR AccelerationStructureBuildGeometryI
    self.scratchData = scratchData;
    return *self;
 }
-fn AccelerationStructureCreateInfoKHR accelerationStructureCreateInfoKHR() => AccelerationStructureCreateInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR, .pNext = null };
+fn AccelerationStructureCreateInfoKHR accelerationStructureCreateInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR, .pNext = null };
 fn AccelerationStructureCreateInfoKHR AccelerationStructureCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5777,7 +5777,7 @@ fn AccelerationStructureCreateInfoKHR AccelerationStructureCreateInfoKHR.setDevi
    self.deviceAddress = deviceAddress;
    return *self;
 }
-fn AccelerationStructureDeviceAddressInfoKHR accelerationStructureDeviceAddressInfoKHR() => AccelerationStructureDeviceAddressInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR, .pNext = null };
+fn AccelerationStructureDeviceAddressInfoKHR accelerationStructureDeviceAddressInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR, .pNext = null };
 fn AccelerationStructureDeviceAddressInfoKHR AccelerationStructureDeviceAddressInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5786,7 +5786,7 @@ fn AccelerationStructureDeviceAddressInfoKHR AccelerationStructureDeviceAddressI
    self.accelerationStructure = accelerationStructure;
    return *self;
 }
-fn AccelerationStructureVersionInfoKHR accelerationStructureVersionInfoKHR() => AccelerationStructureVersionInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR, .pNext = null };
+fn AccelerationStructureVersionInfoKHR accelerationStructureVersionInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR, .pNext = null };
 fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5795,7 +5795,7 @@ fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setVe
    self.pVersionData = pVersionData;
    return *self;
 }
-fn CopyAccelerationStructureInfoKHR copyAccelerationStructureInfoKHR() => CopyAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
+fn CopyAccelerationStructureInfoKHR copyAccelerationStructureInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
 fn CopyAccelerationStructureInfoKHR CopyAccelerationStructureInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5812,7 +5812,7 @@ fn CopyAccelerationStructureInfoKHR CopyAccelerationStructureInfoKHR.setMode(&se
    self.mode = mode;
    return *self;
 }
-fn CopyAccelerationStructureToMemoryInfoKHR copyAccelerationStructureToMemoryInfoKHR() => CopyAccelerationStructureToMemoryInfoKHR { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR, .pNext = null };
+fn CopyAccelerationStructureToMemoryInfoKHR copyAccelerationStructureToMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR, .pNext = null };
 fn CopyAccelerationStructureToMemoryInfoKHR CopyAccelerationStructureToMemoryInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5829,7 +5829,7 @@ fn CopyAccelerationStructureToMemoryInfoKHR CopyAccelerationStructureToMemoryInf
    self.mode = mode;
    return *self;
 }
-fn CopyMemoryToAccelerationStructureInfoKHR copyMemoryToAccelerationStructureInfoKHR() => CopyMemoryToAccelerationStructureInfoKHR { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
+fn CopyMemoryToAccelerationStructureInfoKHR copyMemoryToAccelerationStructureInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR, .pNext = null };
 fn CopyMemoryToAccelerationStructureInfoKHR CopyMemoryToAccelerationStructureInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5846,7 +5846,7 @@ fn CopyMemoryToAccelerationStructureInfoKHR CopyMemoryToAccelerationStructureInf
    self.mode = mode;
    return *self;
 }
-fn PhysicalDeviceExtendedDynamicState3FeaturesEXT physicalDeviceExtendedDynamicState3FeaturesEXT() => PhysicalDeviceExtendedDynamicState3FeaturesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicState3FeaturesEXT physicalDeviceExtendedDynamicState3FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT, .pNext = null };
 fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5975,7 +5975,7 @@ fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicS
    self.extendedDynamicState3ShadingRateImageEnable = extendedDynamicState3ShadingRateImageEnable;
    return *self;
 }
-fn PhysicalDeviceExtendedDynamicState3PropertiesEXT physicalDeviceExtendedDynamicState3PropertiesEXT() => PhysicalDeviceExtendedDynamicState3PropertiesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicState3PropertiesEXT physicalDeviceExtendedDynamicState3PropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT, .pNext = null };
 fn PhysicalDeviceExtendedDynamicState3PropertiesEXT PhysicalDeviceExtendedDynamicState3PropertiesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5984,7 +5984,7 @@ fn PhysicalDeviceExtendedDynamicState3PropertiesEXT PhysicalDeviceExtendedDynami
    self.dynamicPrimitiveTopologyUnrestricted = dynamicPrimitiveTopologyUnrestricted;
    return *self;
 }
-fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeatures() => PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES, .pNext = null };
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES, .pNext = null };
 fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -5993,7 +5993,7 @@ fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitial
    self.shaderZeroInitializeWorkgroupMemory = shaderZeroInitializeWorkgroupMemory;
    return *self;
 }
-fn PhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeatures() => PhysicalDeviceImageRobustnessFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES, .pNext = null };
+fn PhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES, .pNext = null };
 fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6002,7 +6002,7 @@ fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.s
    self.robustImageAccess = robustImageAccess;
    return *self;
 }
-fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHR() => PhysicalDevicePortabilitySubsetFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR, .pNext = null };
 fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6067,7 +6067,7 @@ fn PhysicalDevicePortabilitySubsetFeaturesKHR PhysicalDevicePortabilitySubsetFea
    self.vertexAttributeAccessBeyondStride = vertexAttributeAccessBeyondStride;
    return *self;
 }
-fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHR() => PhysicalDevicePortabilitySubsetPropertiesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDevicePortabilitySubsetPropertiesKHR physicalDevicePortabilitySubsetPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR, .pNext = null };
 fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetPropertiesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6076,7 +6076,7 @@ fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetP
    self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
    return *self;
 }
-fn BufferCopy2 bufferCopy2() => BufferCopy2 { .sType = STRUCTURE_TYPE_BUFFER_COPY_2, .pNext = null };
+fn BufferCopy2 bufferCopy2() => { .sType = STRUCTURE_TYPE_BUFFER_COPY_2, .pNext = null };
 fn BufferCopy2 BufferCopy2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6093,7 +6093,7 @@ fn BufferCopy2 BufferCopy2.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
-fn ImageCopy2 imageCopy2() => ImageCopy2 { .sType = STRUCTURE_TYPE_IMAGE_COPY_2, .pNext = null };
+fn ImageCopy2 imageCopy2() => { .sType = STRUCTURE_TYPE_IMAGE_COPY_2, .pNext = null };
 fn ImageCopy2 ImageCopy2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6118,7 +6118,7 @@ fn ImageCopy2 ImageCopy2.setExtent(&self, Extent3D extent) {
    self.extent = extent;
    return *self;
 }
-fn ImageBlit2 imageBlit2() => ImageBlit2 { .sType = STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = null };
+fn ImageBlit2 imageBlit2() => { .sType = STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = null };
 fn ImageBlit2 ImageBlit2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6139,7 +6139,7 @@ fn ImageBlit2 ImageBlit2.setDstOffsets(&self, Offset3D[2] dstOffsets) {
    self.dstOffsets = dstOffsets;
    return *self;
 }
-fn BufferImageCopy2 bufferImageCopy2() => BufferImageCopy2 { .sType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2, .pNext = null };
+fn BufferImageCopy2 bufferImageCopy2() => { .sType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2, .pNext = null };
 fn BufferImageCopy2 BufferImageCopy2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6168,7 +6168,7 @@ fn BufferImageCopy2 BufferImageCopy2.setImageExtent(&self, Extent3D imageExtent)
    self.imageExtent = imageExtent;
    return *self;
 }
-fn ImageResolve2 imageResolve2() => ImageResolve2 { .sType = STRUCTURE_TYPE_IMAGE_RESOLVE_2, .pNext = null };
+fn ImageResolve2 imageResolve2() => { .sType = STRUCTURE_TYPE_IMAGE_RESOLVE_2, .pNext = null };
 fn ImageResolve2 ImageResolve2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6193,7 +6193,7 @@ fn ImageResolve2 ImageResolve2.setExtent(&self, Extent3D extent) {
    self.extent = extent;
    return *self;
 }
-fn CopyBufferInfo2 copyBufferInfo2() => CopyBufferInfo2 { .sType = STRUCTURE_TYPE_COPY_BUFFER_INFO_2, .pNext = null };
+fn CopyBufferInfo2 copyBufferInfo2() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_INFO_2, .pNext = null };
 fn CopyBufferInfo2 CopyBufferInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6215,7 +6215,7 @@ fn CopyBufferInfo2 CopyBufferInfo2.setRegions(&self, BufferCopy2[] pRegions) {
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn CopyImageInfo2 copyImageInfo2() => CopyImageInfo2 { .sType = STRUCTURE_TYPE_COPY_IMAGE_INFO_2, .pNext = null };
+fn CopyImageInfo2 copyImageInfo2() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_INFO_2, .pNext = null };
 fn CopyImageInfo2 CopyImageInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6245,7 +6245,7 @@ fn CopyImageInfo2 CopyImageInfo2.setRegions(&self, ImageCopy2[] pRegions) {
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn BlitImageInfo2 blitImageInfo2() => BlitImageInfo2 { .sType = STRUCTURE_TYPE_BLIT_IMAGE_INFO_2, .pNext = null };
+fn BlitImageInfo2 blitImageInfo2() => { .sType = STRUCTURE_TYPE_BLIT_IMAGE_INFO_2, .pNext = null };
 fn BlitImageInfo2 BlitImageInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6279,7 +6279,7 @@ fn BlitImageInfo2 BlitImageInfo2.setFilter(&self, Filter filter) {
    self.filter = filter;
    return *self;
 }
-fn CopyBufferToImageInfo2 copyBufferToImageInfo2() => CopyBufferToImageInfo2 { .sType = STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2, .pNext = null };
+fn CopyBufferToImageInfo2 copyBufferToImageInfo2() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2, .pNext = null };
 fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6305,7 +6305,7 @@ fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegions(&self, BufferImageCo
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn CopyImageToBufferInfo2 copyImageToBufferInfo2() => CopyImageToBufferInfo2 { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2, .pNext = null };
+fn CopyImageToBufferInfo2 copyImageToBufferInfo2() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2, .pNext = null };
 fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6331,7 +6331,7 @@ fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegions(&self, BufferImageCo
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn ResolveImageInfo2 resolveImageInfo2() => ResolveImageInfo2 { .sType = STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2, .pNext = null };
+fn ResolveImageInfo2 resolveImageInfo2() => { .sType = STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2, .pNext = null };
 fn ResolveImageInfo2 ResolveImageInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6361,7 +6361,7 @@ fn ResolveImageInfo2 ResolveImageInfo2.setRegions(&self, ImageResolve2[] pRegion
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeatures() => PhysicalDeviceShaderTerminateInvocationFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6370,7 +6370,7 @@ fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminate
    self.shaderTerminateInvocation = shaderTerminateInvocation;
    return *self;
 }
-fn AccelerationStructureBuildSizesInfoKHR accelerationStructureBuildSizesInfoKHR() => AccelerationStructureBuildSizesInfoKHR { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR, .pNext = null };
+fn AccelerationStructureBuildSizesInfoKHR accelerationStructureBuildSizesInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR, .pNext = null };
 fn AccelerationStructureBuildSizesInfoKHR AccelerationStructureBuildSizesInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6387,7 +6387,7 @@ fn AccelerationStructureBuildSizesInfoKHR AccelerationStructureBuildSizesInfoKHR
    self.buildScratchSize = buildScratchSize;
    return *self;
 }
-fn MemoryBarrier2 memoryBarrier2() => MemoryBarrier2 { .sType = STRUCTURE_TYPE_MEMORY_BARRIER_2, .pNext = null };
+fn MemoryBarrier2 memoryBarrier2() => { .sType = STRUCTURE_TYPE_MEMORY_BARRIER_2, .pNext = null };
 fn MemoryBarrier2 MemoryBarrier2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6408,7 +6408,7 @@ fn MemoryBarrier2 MemoryBarrier2.setDstAccessMask(&self, AccessFlags2 dstAccessM
    self.dstAccessMask = dstAccessMask;
    return *self;
 }
-fn ImageMemoryBarrier2 imageMemoryBarrier2() => ImageMemoryBarrier2 { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2, .pNext = null };
+fn ImageMemoryBarrier2 imageMemoryBarrier2() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2, .pNext = null };
 fn ImageMemoryBarrier2 ImageMemoryBarrier2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6453,7 +6453,7 @@ fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSubresourceRange(&self, ImageSubre
    self.subresourceRange = subresourceRange;
    return *self;
 }
-fn BufferMemoryBarrier2 bufferMemoryBarrier2() => BufferMemoryBarrier2 { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2, .pNext = null };
+fn BufferMemoryBarrier2 bufferMemoryBarrier2() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2, .pNext = null };
 fn BufferMemoryBarrier2 BufferMemoryBarrier2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6494,7 +6494,7 @@ fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
-fn DependencyInfo dependencyInfo() => DependencyInfo { .sType = STRUCTURE_TYPE_DEPENDENCY_INFO, .pNext = null };
+fn DependencyInfo dependencyInfo() => { .sType = STRUCTURE_TYPE_DEPENDENCY_INFO, .pNext = null };
 fn DependencyInfo DependencyInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6530,7 +6530,7 @@ fn DependencyInfo DependencyInfo.setImageMemoryBarriers(&self, ImageMemoryBarrie
    self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
    return *self;
 }
-fn SemaphoreSubmitInfo semaphoreSubmitInfo() => SemaphoreSubmitInfo { .sType = STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
+fn SemaphoreSubmitInfo semaphoreSubmitInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
 fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6551,7 +6551,7 @@ fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setDeviceIndex(&self, uint deviceInde
    self.deviceIndex = deviceIndex;
    return *self;
 }
-fn CommandBufferSubmitInfo commandBufferSubmitInfo() => CommandBufferSubmitInfo { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO, .pNext = null };
+fn CommandBufferSubmitInfo commandBufferSubmitInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO, .pNext = null };
 fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6564,7 +6564,7 @@ fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setDeviceMask(&self, uint dev
    self.deviceMask = deviceMask;
    return *self;
 }
-fn SubmitInfo2 submitInfo2() => SubmitInfo2 { .sType = STRUCTURE_TYPE_SUBMIT_INFO_2, .pNext = null };
+fn SubmitInfo2 submitInfo2() => { .sType = STRUCTURE_TYPE_SUBMIT_INFO_2, .pNext = null };
 fn SubmitInfo2 SubmitInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6600,7 +6600,7 @@ fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfos(&self, SemaphoreSubmitInfo[] 
    self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
    return *self;
 }
-fn PhysicalDeviceSynchronization2Features physicalDeviceSynchronization2Features() => PhysicalDeviceSynchronization2Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, .pNext = null };
+fn PhysicalDeviceSynchronization2Features physicalDeviceSynchronization2Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, .pNext = null };
 fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6609,7 +6609,7 @@ fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features
    self.synchronization2 = synchronization2;
    return *self;
 }
-fn PhysicalDeviceHostImageCopyFeatures physicalDeviceHostImageCopyFeatures() => PhysicalDeviceHostImageCopyFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES, .pNext = null };
+fn PhysicalDeviceHostImageCopyFeatures physicalDeviceHostImageCopyFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES, .pNext = null };
 fn PhysicalDeviceHostImageCopyFeatures PhysicalDeviceHostImageCopyFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6618,7 +6618,7 @@ fn PhysicalDeviceHostImageCopyFeatures PhysicalDeviceHostImageCopyFeatures.setHo
    self.hostImageCopy = hostImageCopy;
    return *self;
 }
-fn PhysicalDeviceHostImageCopyProperties physicalDeviceHostImageCopyProperties() => PhysicalDeviceHostImageCopyProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES, .pNext = null };
+fn PhysicalDeviceHostImageCopyProperties physicalDeviceHostImageCopyProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES, .pNext = null };
 fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6649,7 +6649,7 @@ fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.s
    self.identicalMemoryTypeRequirements = identicalMemoryTypeRequirements;
    return *self;
 }
-fn MemoryToImageCopy memoryToImageCopy() => MemoryToImageCopy { .sType = STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY, .pNext = null };
+fn MemoryToImageCopy memoryToImageCopy() => { .sType = STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY, .pNext = null };
 fn MemoryToImageCopy MemoryToImageCopy.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6678,7 +6678,7 @@ fn MemoryToImageCopy MemoryToImageCopy.setImageExtent(&self, Extent3D imageExten
    self.imageExtent = imageExtent;
    return *self;
 }
-fn ImageToMemoryCopy imageToMemoryCopy() => ImageToMemoryCopy { .sType = STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY, .pNext = null };
+fn ImageToMemoryCopy imageToMemoryCopy() => { .sType = STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY, .pNext = null };
 fn ImageToMemoryCopy ImageToMemoryCopy.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6707,7 +6707,7 @@ fn ImageToMemoryCopy ImageToMemoryCopy.setImageExtent(&self, Extent3D imageExten
    self.imageExtent = imageExtent;
    return *self;
 }
-fn CopyMemoryToImageInfo copyMemoryToImageInfo() => CopyMemoryToImageInfo { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO, .pNext = null };
+fn CopyMemoryToImageInfo copyMemoryToImageInfo() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO, .pNext = null };
 fn CopyMemoryToImageInfo CopyMemoryToImageInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6733,7 +6733,7 @@ fn CopyMemoryToImageInfo CopyMemoryToImageInfo.setRegions(&self, MemoryToImageCo
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn CopyImageToMemoryInfo copyImageToMemoryInfo() => CopyImageToMemoryInfo { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO, .pNext = null };
+fn CopyImageToMemoryInfo copyImageToMemoryInfo() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO, .pNext = null };
 fn CopyImageToMemoryInfo CopyImageToMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6759,7 +6759,7 @@ fn CopyImageToMemoryInfo CopyImageToMemoryInfo.setRegions(&self, ImageToMemoryCo
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn CopyImageToImageInfo copyImageToImageInfo() => CopyImageToImageInfo { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO, .pNext = null };
+fn CopyImageToImageInfo copyImageToImageInfo() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO, .pNext = null };
 fn CopyImageToImageInfo CopyImageToImageInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6793,7 +6793,7 @@ fn CopyImageToImageInfo CopyImageToImageInfo.setRegions(&self, ImageCopy2[] pReg
    self.pRegions = &pRegions[0];
    return *self;
 }
-fn HostImageLayoutTransitionInfo hostImageLayoutTransitionInfo() => HostImageLayoutTransitionInfo { .sType = STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO, .pNext = null };
+fn HostImageLayoutTransitionInfo hostImageLayoutTransitionInfo() => { .sType = STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO, .pNext = null };
 fn HostImageLayoutTransitionInfo HostImageLayoutTransitionInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6814,7 +6814,7 @@ fn HostImageLayoutTransitionInfo HostImageLayoutTransitionInfo.setSubresourceRan
    self.subresourceRange = subresourceRange;
    return *self;
 }
-fn SubresourceHostMemcpySize subresourceHostMemcpySize() => SubresourceHostMemcpySize { .sType = STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE, .pNext = null };
+fn SubresourceHostMemcpySize subresourceHostMemcpySize() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE, .pNext = null };
 fn SubresourceHostMemcpySize SubresourceHostMemcpySize.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6823,7 +6823,7 @@ fn SubresourceHostMemcpySize SubresourceHostMemcpySize.setSize(&self, DeviceSize
    self.size = size;
    return *self;
 }
-fn HostImageCopyDevicePerformanceQuery hostImageCopyDevicePerformanceQuery() => HostImageCopyDevicePerformanceQuery { .sType = STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY, .pNext = null };
+fn HostImageCopyDevicePerformanceQuery hostImageCopyDevicePerformanceQuery() => { .sType = STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY, .pNext = null };
 fn HostImageCopyDevicePerformanceQuery HostImageCopyDevicePerformanceQuery.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6836,7 +6836,7 @@ fn HostImageCopyDevicePerformanceQuery HostImageCopyDevicePerformanceQuery.setId
    self.identicalMemoryLayout = identicalMemoryLayout;
    return *self;
 }
-fn PhysicalDevicePipelineProtectedAccessFeatures physicalDevicePipelineProtectedAccessFeatures() => PhysicalDevicePipelineProtectedAccessFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineProtectedAccessFeatures physicalDevicePipelineProtectedAccessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineProtectedAccessFeatures PhysicalDevicePipelineProtectedAccessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6845,7 +6845,7 @@ fn PhysicalDevicePipelineProtectedAccessFeatures PhysicalDevicePipelineProtected
    self.pipelineProtectedAccess = pipelineProtectedAccess;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferFeaturesEXT physicalDeviceDescriptorBufferFeaturesEXT() => PhysicalDeviceDescriptorBufferFeaturesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDescriptorBufferFeaturesEXT physicalDeviceDescriptorBufferFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT, .pNext = null };
 fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -6866,7 +6866,7 @@ fn PhysicalDeviceDescriptorBufferFeaturesEXT PhysicalDeviceDescriptorBufferFeatu
    self.descriptorBufferPushDescriptors = descriptorBufferPushDescriptors;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT physicalDeviceDescriptorBufferPropertiesEXT() => PhysicalDeviceDescriptorBufferPropertiesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDescriptorBufferPropertiesEXT physicalDeviceDescriptorBufferPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT, .pNext = null };
 fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7003,7 +7003,7 @@ fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPro
    self.descriptorBufferAddressSpaceSize = descriptorBufferAddressSpaceSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT physicalDeviceDescriptorBufferDensityMapPropertiesEXT() => PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT physicalDeviceDescriptorBufferDensityMapPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT, .pNext = null };
 fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7012,7 +7012,7 @@ fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescripto
    self.combinedImageSamplerDensityMapDescriptorSize = combinedImageSamplerDensityMapDescriptorSize;
    return *self;
 }
-fn DescriptorAddressInfoEXT descriptorAddressInfoEXT() => DescriptorAddressInfoEXT { .sType = STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT, .pNext = null };
+fn DescriptorAddressInfoEXT descriptorAddressInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT, .pNext = null };
 fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7029,7 +7029,7 @@ fn DescriptorAddressInfoEXT DescriptorAddressInfoEXT.setFormat(&self, Format for
    self.format = format;
    return *self;
 }
-fn DescriptorBufferBindingInfoEXT descriptorBufferBindingInfoEXT() => DescriptorBufferBindingInfoEXT { .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT, .pNext = null };
+fn DescriptorBufferBindingInfoEXT descriptorBufferBindingInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT, .pNext = null };
 fn DescriptorBufferBindingInfoEXT DescriptorBufferBindingInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7042,7 +7042,7 @@ fn DescriptorBufferBindingInfoEXT DescriptorBufferBindingInfoEXT.setUsage(&self,
    self.usage = usage;
    return *self;
 }
-fn DescriptorBufferBindingPushDescriptorBufferHandleEXT descriptorBufferBindingPushDescriptorBufferHandleEXT() => DescriptorBufferBindingPushDescriptorBufferHandleEXT { .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT, .pNext = null };
+fn DescriptorBufferBindingPushDescriptorBufferHandleEXT descriptorBufferBindingPushDescriptorBufferHandleEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT, .pNext = null };
 fn DescriptorBufferBindingPushDescriptorBufferHandleEXT DescriptorBufferBindingPushDescriptorBufferHandleEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7051,7 +7051,7 @@ fn DescriptorBufferBindingPushDescriptorBufferHandleEXT DescriptorBufferBindingP
    self.buffer = buffer;
    return *self;
 }
-fn DescriptorGetInfoEXT descriptorGetInfoEXT() => DescriptorGetInfoEXT { .sType = STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT, .pNext = null };
+fn DescriptorGetInfoEXT descriptorGetInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT, .pNext = null };
 fn DescriptorGetInfoEXT DescriptorGetInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7064,7 +7064,7 @@ fn DescriptorGetInfoEXT DescriptorGetInfoEXT.setData(&self, DescriptorDataEXT da
    self.data = data;
    return *self;
 }
-fn BufferCaptureDescriptorDataInfoEXT bufferCaptureDescriptorDataInfoEXT() => BufferCaptureDescriptorDataInfoEXT { .sType = STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
+fn BufferCaptureDescriptorDataInfoEXT bufferCaptureDescriptorDataInfoEXT() => { .sType = STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
 fn BufferCaptureDescriptorDataInfoEXT BufferCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7073,7 +7073,7 @@ fn BufferCaptureDescriptorDataInfoEXT BufferCaptureDescriptorDataInfoEXT.setBuff
    self.buffer = buffer;
    return *self;
 }
-fn ImageCaptureDescriptorDataInfoEXT imageCaptureDescriptorDataInfoEXT() => ImageCaptureDescriptorDataInfoEXT { .sType = STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
+fn ImageCaptureDescriptorDataInfoEXT imageCaptureDescriptorDataInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
 fn ImageCaptureDescriptorDataInfoEXT ImageCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7082,7 +7082,7 @@ fn ImageCaptureDescriptorDataInfoEXT ImageCaptureDescriptorDataInfoEXT.setImage(
    self.image = image;
    return *self;
 }
-fn ImageViewCaptureDescriptorDataInfoEXT imageViewCaptureDescriptorDataInfoEXT() => ImageViewCaptureDescriptorDataInfoEXT { .sType = STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
+fn ImageViewCaptureDescriptorDataInfoEXT imageViewCaptureDescriptorDataInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
 fn ImageViewCaptureDescriptorDataInfoEXT ImageViewCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7091,7 +7091,7 @@ fn ImageViewCaptureDescriptorDataInfoEXT ImageViewCaptureDescriptorDataInfoEXT.s
    self.imageView = imageView;
    return *self;
 }
-fn SamplerCaptureDescriptorDataInfoEXT samplerCaptureDescriptorDataInfoEXT() => SamplerCaptureDescriptorDataInfoEXT { .sType = STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
+fn SamplerCaptureDescriptorDataInfoEXT samplerCaptureDescriptorDataInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
 fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7100,7 +7100,7 @@ fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setSa
    self.sampler = sampler;
    return *self;
 }
-fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXT() => OpaqueCaptureDescriptorDataCreateInfoEXT { .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT, .pNext = null };
+fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXT() => { .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT, .pNext = null };
 fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7109,7 +7109,7 @@ fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInf
    self.opaqueCaptureDescriptorData = opaqueCaptureDescriptorData;
    return *self;
 }
-fn PhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDotProductFeatures() => PhysicalDeviceShaderIntegerDotProductFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderIntegerDotProductFeatures physicalDeviceShaderIntegerDotProductFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7118,7 +7118,7 @@ fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotP
    self.shaderIntegerDotProduct = shaderIntegerDotProduct;
    return *self;
 }
-fn PhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderIntegerDotProductProperties() => PhysicalDeviceShaderIntegerDotProductProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES, .pNext = null };
+fn PhysicalDeviceShaderIntegerDotProductProperties physicalDeviceShaderIntegerDotProductProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES, .pNext = null };
 fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDotProductProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7243,7 +7243,7 @@ fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDo
    self.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
    return *self;
 }
-fn FormatProperties3 formatProperties3() => FormatProperties3 { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3, .pNext = null };
+fn FormatProperties3 formatProperties3() => { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3, .pNext = null };
 fn FormatProperties3 FormatProperties3.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7260,7 +7260,7 @@ fn FormatProperties3 FormatProperties3.setBufferFeatures(&self, FormatFeatureFla
    self.bufferFeatures = bufferFeatures;
    return *self;
 }
-fn PipelineRenderingCreateInfo pipelineRenderingCreateInfo() => PipelineRenderingCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO, .pNext = null };
+fn PipelineRenderingCreateInfo pipelineRenderingCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO, .pNext = null };
 fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7286,7 +7286,7 @@ fn PipelineRenderingCreateInfo PipelineRenderingCreateInfo.setStencilAttachmentF
    self.stencilAttachmentFormat = stencilAttachmentFormat;
    return *self;
 }
-fn PipelineRenderingCreateInfoKHR pipelineRenderingCreateInfoKHR() => PipelineRenderingCreateInfoKHR { .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO, .pNext = null };
+fn PipelineRenderingCreateInfoKHR pipelineRenderingCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO, .pNext = null };
 fn PipelineRenderingCreateInfoKHR PipelineRenderingCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7312,7 +7312,7 @@ fn PipelineRenderingCreateInfoKHR PipelineRenderingCreateInfoKHR.setStencilAttac
    self.stencilAttachmentFormat = stencilAttachmentFormat;
    return *self;
 }
-fn RenderingInfo renderingInfo() => RenderingInfo { .sType = STRUCTURE_TYPE_RENDERING_INFO, .pNext = null };
+fn RenderingInfo renderingInfo() => { .sType = STRUCTURE_TYPE_RENDERING_INFO, .pNext = null };
 fn RenderingInfo RenderingInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7350,7 +7350,7 @@ fn RenderingInfo RenderingInfo.setStencilAttachment(&self, RenderingAttachmentIn
    self.pStencilAttachment = pStencilAttachment;
    return *self;
 }
-fn RenderingInfoKHR renderingInfoKHR() => RenderingInfoKHR { .sType = STRUCTURE_TYPE_RENDERING_INFO, .pNext = null };
+fn RenderingInfoKHR renderingInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_INFO, .pNext = null };
 fn RenderingInfoKHR RenderingInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7388,7 +7388,7 @@ fn RenderingInfoKHR RenderingInfoKHR.setStencilAttachment(&self, RenderingAttach
    self.pStencilAttachment = pStencilAttachment;
    return *self;
 }
-fn RenderingAttachmentInfo renderingAttachmentInfo() => RenderingAttachmentInfo { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO, .pNext = null };
+fn RenderingAttachmentInfo renderingAttachmentInfo() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO, .pNext = null };
 fn RenderingAttachmentInfo RenderingAttachmentInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7425,7 +7425,7 @@ fn RenderingAttachmentInfo RenderingAttachmentInfo.setClearValue(&self, ClearVal
    self.clearValue = clearValue;
    return *self;
 }
-fn RenderingAttachmentInfoKHR renderingAttachmentInfoKHR() => RenderingAttachmentInfoKHR { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO, .pNext = null };
+fn RenderingAttachmentInfoKHR renderingAttachmentInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO, .pNext = null };
 fn RenderingAttachmentInfoKHR RenderingAttachmentInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7462,7 +7462,7 @@ fn RenderingAttachmentInfoKHR RenderingAttachmentInfoKHR.setClearValue(&self, Cl
    self.clearValue = clearValue;
    return *self;
 }
-fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatures() => PhysicalDeviceDynamicRenderingFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
+fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
 fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7471,7 +7471,7 @@ fn PhysicalDeviceDynamicRenderingFeatures PhysicalDeviceDynamicRenderingFeatures
    self.dynamicRendering = dynamicRendering;
    return *self;
 }
-fn PhysicalDeviceDynamicRenderingFeaturesKHR physicalDeviceDynamicRenderingFeaturesKHR() => PhysicalDeviceDynamicRenderingFeaturesKHR { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
+fn PhysicalDeviceDynamicRenderingFeaturesKHR physicalDeviceDynamicRenderingFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
 fn PhysicalDeviceDynamicRenderingFeaturesKHR PhysicalDeviceDynamicRenderingFeaturesKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7480,7 +7480,7 @@ fn PhysicalDeviceDynamicRenderingFeaturesKHR PhysicalDeviceDynamicRenderingFeatu
    self.dynamicRendering = dynamicRendering;
    return *self;
 }
-fn CommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfo() => CommandBufferInheritanceRenderingInfo { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO, .pNext = null };
+fn CommandBufferInheritanceRenderingInfo commandBufferInheritanceRenderingInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO, .pNext = null };
 fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7514,7 +7514,7 @@ fn CommandBufferInheritanceRenderingInfo CommandBufferInheritanceRenderingInfo.s
    self.rasterizationSamples = rasterizationSamples;
    return *self;
 }
-fn CommandBufferInheritanceRenderingInfoKHR commandBufferInheritanceRenderingInfoKHR() => CommandBufferInheritanceRenderingInfoKHR { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO, .pNext = null };
+fn CommandBufferInheritanceRenderingInfoKHR commandBufferInheritanceRenderingInfoKHR() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO, .pNext = null };
 fn CommandBufferInheritanceRenderingInfoKHR CommandBufferInheritanceRenderingInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7548,7 +7548,7 @@ fn CommandBufferInheritanceRenderingInfoKHR CommandBufferInheritanceRenderingInf
    self.rasterizationSamples = rasterizationSamples;
    return *self;
 }
-fn ImageSubresource2 imageSubresource2() => ImageSubresource2 { .sType = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2, .pNext = null };
+fn ImageSubresource2 imageSubresource2() => { .sType = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2, .pNext = null };
 fn ImageSubresource2 ImageSubresource2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7557,7 +7557,7 @@ fn ImageSubresource2 ImageSubresource2.setImageSubresource(&self, ImageSubresour
    self.imageSubresource = imageSubresource;
    return *self;
 }
-fn SubresourceLayout2 subresourceLayout2() => SubresourceLayout2 { .sType = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2, .pNext = null };
+fn SubresourceLayout2 subresourceLayout2() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2, .pNext = null };
 fn SubresourceLayout2 SubresourceLayout2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7566,7 +7566,7 @@ fn SubresourceLayout2 SubresourceLayout2.setSubresourceLayout(&self, Subresource
    self.subresourceLayout = subresourceLayout;
    return *self;
 }
-fn PhysicalDevicePipelineRobustnessFeatures physicalDevicePipelineRobustnessFeatures() => PhysicalDevicePipelineRobustnessFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineRobustnessFeatures physicalDevicePipelineRobustnessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineRobustnessFeatures PhysicalDevicePipelineRobustnessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7575,7 +7575,7 @@ fn PhysicalDevicePipelineRobustnessFeatures PhysicalDevicePipelineRobustnessFeat
    self.pipelineRobustness = pipelineRobustness;
    return *self;
 }
-fn PipelineRobustnessCreateInfo pipelineRobustnessCreateInfo() => PipelineRobustnessCreateInfo { .sType = STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO, .pNext = null };
+fn PipelineRobustnessCreateInfo pipelineRobustnessCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO, .pNext = null };
 fn PipelineRobustnessCreateInfo PipelineRobustnessCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7596,7 +7596,7 @@ fn PipelineRobustnessCreateInfo PipelineRobustnessCreateInfo.setImages(&self, Pi
    self.images = images;
    return *self;
 }
-fn PhysicalDevicePipelineRobustnessProperties physicalDevicePipelineRobustnessProperties() => PhysicalDevicePipelineRobustnessProperties { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES, .pNext = null };
+fn PhysicalDevicePipelineRobustnessProperties physicalDevicePipelineRobustnessProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES, .pNext = null };
 fn PhysicalDevicePipelineRobustnessProperties PhysicalDevicePipelineRobustnessProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7617,7 +7617,7 @@ fn PhysicalDevicePipelineRobustnessProperties PhysicalDevicePipelineRobustnessPr
    self.defaultRobustnessImages = defaultRobustnessImages;
    return *self;
 }
-fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT physicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT() => PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT physicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT, .pNext = null };
 fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7626,7 +7626,7 @@ fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT PhysicalDeviceDyna
    self.dynamicRenderingUnusedAttachments = dynamicRenderingUnusedAttachments;
    return *self;
 }
-fn DeviceImageSubresourceInfo deviceImageSubresourceInfo() => DeviceImageSubresourceInfo { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO, .pNext = null };
+fn DeviceImageSubresourceInfo deviceImageSubresourceInfo() => { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO, .pNext = null };
 fn DeviceImageSubresourceInfo DeviceImageSubresourceInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7639,7 +7639,7 @@ fn DeviceImageSubresourceInfo DeviceImageSubresourceInfo.setSubresource(&self, I
    self.pSubresource = pSubresource;
    return *self;
 }
-fn MemoryMapInfo memoryMapInfo() => MemoryMapInfo { .sType = STRUCTURE_TYPE_MEMORY_MAP_INFO, .pNext = null };
+fn MemoryMapInfo memoryMapInfo() => { .sType = STRUCTURE_TYPE_MEMORY_MAP_INFO, .pNext = null };
 fn MemoryMapInfo MemoryMapInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7660,7 +7660,7 @@ fn MemoryMapInfo MemoryMapInfo.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
-fn MemoryUnmapInfo memoryUnmapInfo() => MemoryUnmapInfo { .sType = STRUCTURE_TYPE_MEMORY_UNMAP_INFO, .pNext = null };
+fn MemoryUnmapInfo memoryUnmapInfo() => { .sType = STRUCTURE_TYPE_MEMORY_UNMAP_INFO, .pNext = null };
 fn MemoryUnmapInfo MemoryUnmapInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7673,7 +7673,7 @@ fn MemoryUnmapInfo MemoryUnmapInfo.setMemory(&self, DeviceMemory memory) {
    self.memory = memory;
    return *self;
 }
-fn BindMemoryStatus bindMemoryStatus() => BindMemoryStatus { .sType = STRUCTURE_TYPE_BIND_MEMORY_STATUS, .pNext = null };
+fn BindMemoryStatus bindMemoryStatus() => { .sType = STRUCTURE_TYPE_BIND_MEMORY_STATUS, .pNext = null };
 fn BindMemoryStatus BindMemoryStatus.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7682,7 +7682,7 @@ fn BindMemoryStatus BindMemoryStatus.setResult(&self, Result* pResult) {
    self.pResult = pResult;
    return *self;
 }
-fn BindDescriptorSetsInfo bindDescriptorSetsInfo() => BindDescriptorSetsInfo { .sType = STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO, .pNext = null };
+fn BindDescriptorSetsInfo bindDescriptorSetsInfo() => { .sType = STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO, .pNext = null };
 fn BindDescriptorSetsInfo BindDescriptorSetsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7717,7 +7717,7 @@ fn BindDescriptorSetsInfo BindDescriptorSetsInfo.setDynamicOffsets(&self, uint[]
    self.pDynamicOffsets = &pDynamicOffsets[0];
    return *self;
 }
-fn PushConstantsInfo pushConstantsInfo() => PushConstantsInfo { .sType = STRUCTURE_TYPE_PUSH_CONSTANTS_INFO, .pNext = null };
+fn PushConstantsInfo pushConstantsInfo() => { .sType = STRUCTURE_TYPE_PUSH_CONSTANTS_INFO, .pNext = null };
 fn PushConstantsInfo PushConstantsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7742,7 +7742,7 @@ fn PushConstantsInfo PushConstantsInfo.setValues(&self, void* pValues) {
    self.pValues = pValues;
    return *self;
 }
-fn PushDescriptorSetInfo pushDescriptorSetInfo() => PushDescriptorSetInfo { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO, .pNext = null };
+fn PushDescriptorSetInfo pushDescriptorSetInfo() => { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO, .pNext = null };
 fn PushDescriptorSetInfo PushDescriptorSetInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7768,7 +7768,7 @@ fn PushDescriptorSetInfo PushDescriptorSetInfo.setDescriptorWrites(&self, WriteD
    self.pDescriptorWrites = &pDescriptorWrites[0];
    return *self;
 }
-fn PushDescriptorSetWithTemplateInfo pushDescriptorSetWithTemplateInfo() => PushDescriptorSetWithTemplateInfo { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO, .pNext = null };
+fn PushDescriptorSetWithTemplateInfo pushDescriptorSetWithTemplateInfo() => { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO, .pNext = null };
 fn PushDescriptorSetWithTemplateInfo PushDescriptorSetWithTemplateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7789,7 +7789,7 @@ fn PushDescriptorSetWithTemplateInfo PushDescriptorSetWithTemplateInfo.setData(&
    self.pData = pData;
    return *self;
 }
-fn PhysicalDeviceShaderSubgroupRotateFeatures physicalDeviceShaderSubgroupRotateFeatures() => PhysicalDeviceShaderSubgroupRotateFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderSubgroupRotateFeatures physicalDeviceShaderSubgroupRotateFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderSubgroupRotateFeatures PhysicalDeviceShaderSubgroupRotateFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7802,7 +7802,7 @@ fn PhysicalDeviceShaderSubgroupRotateFeatures PhysicalDeviceShaderSubgroupRotate
    self.shaderSubgroupRotateClustered = shaderSubgroupRotateClustered;
    return *self;
 }
-fn PhysicalDeviceShaderExpectAssumeFeatures physicalDeviceShaderExpectAssumeFeatures() => PhysicalDeviceShaderExpectAssumeFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderExpectAssumeFeatures physicalDeviceShaderExpectAssumeFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderExpectAssumeFeatures PhysicalDeviceShaderExpectAssumeFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7811,7 +7811,7 @@ fn PhysicalDeviceShaderExpectAssumeFeatures PhysicalDeviceShaderExpectAssumeFeat
    self.shaderExpectAssume = shaderExpectAssume;
    return *self;
 }
-fn PhysicalDeviceShaderFloatControls2Features physicalDeviceShaderFloatControls2Features() => PhysicalDeviceShaderFloatControls2Features { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderFloatControls2Features physicalDeviceShaderFloatControls2Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderFloatControls2Features PhysicalDeviceShaderFloatControls2Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7820,7 +7820,7 @@ fn PhysicalDeviceShaderFloatControls2Features PhysicalDeviceShaderFloatControls2
    self.shaderFloatControls2 = shaderFloatControls2;
    return *self;
 }
-fn PhysicalDeviceDynamicRenderingLocalReadFeatures physicalDeviceDynamicRenderingLocalReadFeatures() => PhysicalDeviceDynamicRenderingLocalReadFeatures { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES, .pNext = null };
+fn PhysicalDeviceDynamicRenderingLocalReadFeatures physicalDeviceDynamicRenderingLocalReadFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES, .pNext = null };
 fn PhysicalDeviceDynamicRenderingLocalReadFeatures PhysicalDeviceDynamicRenderingLocalReadFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7829,7 +7829,7 @@ fn PhysicalDeviceDynamicRenderingLocalReadFeatures PhysicalDeviceDynamicRenderin
    self.dynamicRenderingLocalRead = dynamicRenderingLocalRead;
    return *self;
 }
-fn RenderingAttachmentLocationInfo renderingAttachmentLocationInfo() => RenderingAttachmentLocationInfo { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO, .pNext = null };
+fn RenderingAttachmentLocationInfo renderingAttachmentLocationInfo() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO, .pNext = null };
 fn RenderingAttachmentLocationInfo RenderingAttachmentLocationInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7843,7 +7843,7 @@ fn RenderingAttachmentLocationInfo RenderingAttachmentLocationInfo.setColorAttac
    self.pColorAttachmentLocations = &pColorAttachmentLocations[0];
    return *self;
 }
-fn RenderingInputAttachmentIndexInfo renderingInputAttachmentIndexInfo() => RenderingInputAttachmentIndexInfo { .sType = STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO, .pNext = null };
+fn RenderingInputAttachmentIndexInfo renderingInputAttachmentIndexInfo() => { .sType = STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO, .pNext = null };
 fn RenderingInputAttachmentIndexInfo RenderingInputAttachmentIndexInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;

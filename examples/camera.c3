@@ -3,6 +3,10 @@ import std::math;
 import std::math::matrix;
 import std::io;
 
+alias Vec2f = float[<2>];
+alias Vec3f = float[<3>];
+alias Vec4f = float[<4>];
+
 fn float radians(float value) {
     return value * (float)math::PI / 180;
 }
@@ -24,11 +28,11 @@ struct Camera {
 }
 
 fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float aspect = 0.8, float view = 45, float min_zoom = 0.1, float max_zoom = 500) {
-    return Camera {
+    return {
         target,
         eye,
-        matrix::perspective(<float>)(radians(view), aspect, min_zoom, max_zoom),
-        matrix::look_at(<float>)(eye, target, {0.0, 1.0, 0.0}),
+        matrix::perspective{float}(radians(view), aspect, min_zoom, max_zoom),
+        matrix::look_at{float}(eye, target, {0.0, 1.0, 0.0}),
         0,
         0,
         -eye.z
@@ -42,11 +46,11 @@ fn void Camera.rotate (Camera* self, float x_offset, float y_offset) {
     if (self.pitch > 89.0) self.pitch = 89.0;
     if (self.pitch < -89.0) self.pitch = -89.0;
 
-    self.eye = Vec3f { math::cos(radians(self.yaw)) * math::cos(radians(self.pitch)),
-                       math::sin(radians(self.pitch)),
-                       math::sin(radians(self.yaw)) * math::cos(radians(self.pitch))};
+    self.eye = { math::cos(radians(self.yaw)) * math::cos(radians(self.pitch)),
+                 math::sin(radians(self.pitch)),
+                 math::sin(radians(self.yaw)) * math::cos(radians(self.pitch))};
 
-    self.view = matrix::look_at(<float>)(self.eye, self.target, {0.0, 1.0, 0.0});
+    self.view = matrix::look_at{float}(self.eye, self.target, {0.0, 1.0, 0.0});
     self.view.m23 = self.zoom_value;
 }
 
@@ -57,7 +61,7 @@ fn void Camera.zoom(Camera* self, float value) {
 }
 
 fn UniformData Camera.matrix(Camera self) {
-    return UniformData {
+    return {
         self.perspective.transpose(),
         self.view.transpose(),
         self.eye,
