@@ -17,35 +17,35 @@ struct Vertex {
 }
 
 Vertex[] vertices = {
-    Vertex {{-1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
-    Vertex {{1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
-    Vertex {{1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
-    Vertex {{-1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
+     {{-1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
+     {{1.0, -1.0, 1.0}, {1.0, 0, 0, 1.0}},
+     {{1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
+     {{-1.0, 1.0, 1.0}, {1.0, 0, 0, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
-    Vertex {{-1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
-    Vertex {{1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
-    Vertex {{1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
+     {{-1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
+     {{-1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
+     {{1.0, 1.0, -1.0}, {255, 255, 255, 1.0}},
+     {{1.0, -1.0, -1.0}, {255, 255, 255, 1.0}},
 
-    Vertex {{-1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
-    Vertex {{-1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
-    Vertex {{1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
-    Vertex {{1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
+     {{-1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
+     {{-1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
+     {{1.0, 1.0, 1.0}, {0.7, 0.8, 150, 1.0}},
+     {{1.0, 1.0, -1.0}, {0.7, 0.8, 150, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
-    Vertex {{1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
-    Vertex {{1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
-    Vertex {{-1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
+     {{-1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
+     {{1.0, -1.0, -1.0}, {0.0, 128, 255, 1.0}},
+     {{1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
+     {{-1.0, -1.0, 1.0}, {0.0, 128, 255, 1.0}},
 
-    Vertex {{1.0, -1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
-    Vertex {{1.0, 1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
-    Vertex {{1.0, 1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
-    Vertex {{1.0, -1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
+     {{1.0, -1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
+     {{1.0, 1.0, -1.0}, {0.0, 100.0, 0.0, 1.0}},
+     {{1.0, 1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
+     {{1.0, -1.0, 1.0}, {0.0, 100.0, 0.0, 1.0}},
 
-    Vertex {{-1.0, -1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
-    Vertex {{-1.0, -1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
-    Vertex {{-1.0, 1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
-    Vertex {{-1.0, 1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
+     {{-1.0, -1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
+     {{-1.0, -1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
+     {{-1.0, 1.0, 1.0}, {0.2, 0.2, 0.2, 1.0}},
+     {{-1.0, 1.0, -1.0}, {0.2, 0.2, 0.2, 1.0}},
 };
 
 ushort[] indices = {
@@ -114,18 +114,20 @@ fn void main(String[] args)
 
     vk::checkInstanceExtensionSupport(extensions)!!;
 
-    InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
-    .setApplicationInfo(&&ApplicationInfo{
+    ApplicationInfo info = {
       .pApplicationName = "TEST",
       .pEngineName = "Super engine",
       .applicationVersion = vk::@makeApiVersion(0,1,0,0),
       .engineVersion = vk::@makeApiVersion(0,1,0,0),
       .apiVersion = vk::@makeApiVersion(0,1,3,0)
-    })
+    };
+
+    InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
+    .setApplicationInfo(&info)
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
     .setEnabledExtensionNames(extensions.array_view());
 
-    DebugUtilsMessengerCreateInfoEXT debug_info = DebugUtilsMessengerCreateInfoEXT {
+    DebugUtilsMessengerCreateInfoEXT debug_info = {
         .sType = vk::STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
         .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
         .messageType = vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
@@ -160,15 +162,14 @@ fn void main(String[] args)
     }
 
     // Create surface
-    $switch(env::OS_TYPE)
-        $case MACOS: {
+    $switch(env::OS_TYPE):
+        $case MACOS:
             MetalSurfaceCreateInfoEXT createInfo = {
                 .sType = vk::STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT,
                 .pLayer = (CAMetalLayer*)win.src.layer.id
             };
 
             vk::createMetalSurfaceEXT(instance, &createInfo, null, &surface)!!;
-        }
         $case LINUX: {
             $if $feature(WAYLAND):
                 WaylandSurfaceCreateInfoKHR createInfo = {
@@ -285,10 +286,10 @@ fn void main(String[] args)
 	}
 
 	vk::Format depth_format = vk::findDepthFormat(features: vk::FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, device: physical_device);
-    SurfaceFormatKHR format = SurfaceFormatKHR {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
+    SurfaceFormatKHR format = {.format = vk::FORMAT_B8G8R8A8_UNORM, .colorSpace = vk::COLOR_SPACE_SRGB_NONLINEAR_KHR};
 
     uint min_images = capabilities.maxImageCount != 0 ? capabilities.maxImageCount : capabilities.minImageCount + 2;
-    Extent2D extent = Extent2D { WIDTH, HEIGHT};
+    Extent2D extent = { WIDTH, HEIGHT};
 
     SwapchainCreateInfoKHR swapchain_info = vk::swapchainCreateInfoKHR()
       .setMinImageCount(min_images)
@@ -334,7 +335,7 @@ fn void main(String[] args)
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!!;
 
     // Create allocator of 50MB - DEVICE_ONLY memory
-    vk::Allocation device_allocation = vk::Allocation {
+    vk::Allocation device_allocation = (vk::Allocation){
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -343,7 +344,7 @@ fn void main(String[] args)
     }.build()!!;
 
     // Allocation where data can be changed from CPU
-    vk::Allocation local_allocation = vk::Allocation {
+    vk::Allocation local_allocation = (vk::Allocation){
         .device = device,
         .pdevice = physical_device,
         .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
@@ -411,18 +412,19 @@ fn void main(String[] args)
 
     PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout }).build(device)!!;
 
+    AttachmentReference[] colorAttachments = {
+        { .attachment = 0, .layout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL }
+    };
+
     SubpassDescription subpass = {
             .pipelineBindPoint = vk::PIPELINE_BIND_POINT_GRAPHICS,
-            .colorAttachmentCount = 1,
-            .pColorAttachments = &&AttachmentReference{
-            .attachment = 0,
-            .layout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-        }
+            .colorAttachmentCount = colorAttachments.len,
+            .pColorAttachments = colorAttachments.ptr
     };
 
     RenderPass render_pass = vk::renderPassCreateInfo()
     .setAttachments({
-        AttachmentDescription {
+        {
             .format = swapchain_info.imageFormat,
             .samples = vk::SAMPLE_COUNT_1_BIT,
             .initialLayout = vk::IMAGE_LAYOUT_UNDEFINED,
@@ -596,7 +598,7 @@ fn void main(String[] args)
             .extent = extent
         })
         .setClearValues({
-            ClearValue {
+            {
                 .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 }}
             }
         });
@@ -606,13 +608,13 @@ fn void main(String[] args)
         vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!!;
 
         vk::cmdBeginRenderPass(command_buffer, &render_pass_info, vk::SUBPASS_CONTENTS_INLINE);
-        vk::cmdSetViewport(command_buffer, 0, 1, &&vk::Viewport{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 });
-        vk::cmdSetScissor(command_buffer, 0, 1, &&vk::Rect2D {.extent = swapchain_info.imageExtent, .offset = Offset2D{ .x = 0, .y = 0 }});
+        vk::cmdSetViewport(command_buffer, 0, 1, (Viewport[]){{.width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 }});
+        vk::cmdSetScissor(command_buffer, 0, 1,  (Rect2D[]){{.extent = swapchain_info.imageExtent, .offset = { .x = 0, .y = 0 }}});
 
         vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vk::cmdPushDescriptorSetKHR(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptorSets[0]);
 
-        vk::cmdBindVertexBuffers(command_buffer, 0, 1, &&vk::Buffer[1]{vertex_buffer.buffer}, &&vk::DeviceSize[1]{0});
+        vk::cmdBindVertexBuffers(command_buffer, 0, 1, (Buffer[]){vertex_buffer.buffer}, (DeviceSize[]){0});
         vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
         vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
         vk::cmdEndRenderPass(command_buffer);

@@ -3,8 +3,8 @@ import std::io;
 import std::collections::list;
 import std::collections::map;
 
-def BlockList = List(<Memory>);
-def AllocationList = List(<Allocation>);
+alias BlockList = List{Memory};
+alias AllocationList = List{Allocation};
 
 enum GpuType : uint
 {
@@ -12,12 +12,7 @@ enum GpuType : uint
     DEVICE_ONLY
 }
 
-fault BufferError
-{
-    BUFFER_TOO_SMALL,
-    ALLOCATION_NOT_FOUND,
-    ALLOCATION_HAS_NO_ROOM
-}
+faultdef BUFFER_TOO_SMALL, ALLOCATION_NOT_FOUND, ALLOCATION_HAS_NO_ROOM;
 
 fn usz alignUp(usz value, usz factor)  => value + factor - 1 - (value + factor - 1) % factor;
 
@@ -35,12 +30,13 @@ struct Allocation {
     uint memory_type;
 }
 
-fn Allocation! Allocation.build(&self) {
+fn Allocation? Allocation.build(&self) {
     DeviceMemory memory;
+    MemoryAllocateFlagsInfo flags = {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags};
 
     memory = memoryAllocateInfo()
                 .setAllocationSize(self.size)
-                .setNext(&&MemoryAllocateFlagsInfo {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags })
+                .setNext(&flags)
                 .setMemoryTypeIndex(self.pdevice.getMemoryType2(self.properties))
                 .build(self.device)!;
 
@@ -76,7 +72,7 @@ struct Memory
     DeviceAddress address;
 }
 
-fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, void* data = null, usz data_size, vk::Allocation* stage_allocator = null, DeviceQueue* queue = null)
+fn Memory? new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, void* data = null, usz data_size, vk::Allocation* stage_allocator = null, DeviceQueue* queue = null)
 {
     vk::Device device = allocator.device;
     vk::PhysicalDevice pdevice = allocator.pdevice;
@@ -94,20 +90,20 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
     usz offset = alignUp(allocator.used_size, mem_reqs.alignment);
 
     if ((MemoryPropertyFlagBits)usage & vk::BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
-        MemoryRequirements desc_mem_reqs = {|
-            PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
-                .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
-            };
+        MemoryRequirements desc_mem_reqs;
+        PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
+            .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+        };
 
-            PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2()
-            .setNext(&descriptorProperties)
-            .build(pdevice);
+        PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2()
+        .setNext(&descriptorProperties)
+        .build(pdevice);
 
-            return MemoryRequirements {
-                .size = alignUp(data_size, descriptorProperties.descriptorBufferOffsetAlignment),
-                .alignment = descriptorProperties.descriptorBufferOffsetAlignment
-            };
-        |};
+        desc_mem_reqs = {
+            .size = alignUp(data_size, descriptorProperties.descriptorBufferOffsetAlignment),
+            .alignment = descriptorProperties.descriptorBufferOffsetAlignment
+        };
+
         mem_reqs.size = desc_mem_reqs.size;
         mem_reqs.alignment = desc_mem_reqs.alignment;
     }
@@ -118,7 +114,7 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
 
     if ((allocator.size - allocator.used_size) < size) {
         io::printfn("Allocation has no enough free memory");
-        return BufferError.ALLOCATION_HAS_NO_ROOM?;
+        return ALLOCATION_HAS_NO_ROOM?;
     };
 
     vk::bindBufferMemory(allocator.device, buffer, allocator.memory, offset)!!;
@@ -158,7 +154,7 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
     if ((MemoryPropertyFlagBits)allocator.properties & vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT && data != null) {
         if (stage_allocator == null) {
             io::printfn("Add stage allocator for uploading to GPU");
-            return BufferError.ALLOCATION_HAS_NO_ROOM?;
+            return ALLOCATION_HAS_NO_ROOM?;
         }
 
         Memory stage_buffer = new_buffer(
@@ -169,10 +165,12 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
         )!;
 
         device.@single_time_command(queue: *queue; CommandBuffer command_buffer) {
-            vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, response.buffer, 1, &&BufferCopy {
-                .srcOffset = 0,
-                .dstOffset = 0,
-                .size = data_size
+            vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, response.buffer, 1, (BufferCopy[]){
+                {
+                    .srcOffset = 0,
+                    .dstOffset = 0,
+                    .size = data_size
+                }
             });
         }!;
 
@@ -187,10 +185,7 @@ fn Memory! new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
     return response;
 }
 
-fn Memory! create_image_buffer(
-    vk::Image image, 
-    vk::Allocation* allocator
-)
+fn Memory? create_image_buffer(vk::Image image, vk::Allocation* allocator)
 {
     vk::Device device = allocator.device;
     vk::PhysicalDevice pdevice = allocator.pdevice;
@@ -203,7 +198,7 @@ fn Memory! create_image_buffer(
 
     if (allocator.size - allocator.used_size < size) {
        io::printfn("Allocation has no enough free memory");
-       return BufferError.ALLOCATION_HAS_NO_ROOM?;
+       return ALLOCATION_HAS_NO_ROOM?;
     }
 
     vk::bindImageMemory(device, image, allocator.memory, offset)!;
@@ -241,7 +236,7 @@ fn usz Memory.usedSize(&self) @dynamic => self.used_size;
 fn uint Memory.getType(&self) @dynamic => self.type.ordinal;
 fn void* Memory.getBuffer(&self) @dynamic => self.buffer;
 
-fn void! Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
+fn void? Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
 {
     vk::Device device = self.allocator.device;
     vk::PhysicalDevice pdevice = self.allocator.pdevice;
@@ -254,10 +249,12 @@ fn void! Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocati
     )!;
 
     device.@single_time_command(queue: queue; CommandBuffer command_buffer) {
-        vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, self.buffer, 1, &&BufferCopy {
-            .srcOffset = 0,
-            .dstOffset = 0,
-            .size = data_size
+        vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, self.buffer, 1, (BufferCopy[]){
+            {
+                .srcOffset = 0,
+                .dstOffset = 0,
+                .size = data_size
+            }
         });
     }!;
 
@@ -302,7 +299,7 @@ fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, Physic
       .setNext(&descriptorProperties)
       .build(device);
 
-    return MemoryRequirements  {
+    return {
         .size = alignUp(self.size, descriptorProperties.descriptorBufferOffsetAlignment),
         .alignment = descriptorProperties.descriptorBufferOffsetAlignment
     };
@@ -323,7 +320,7 @@ fn vk::Format findDepthFormat(vk::Format[] formats = {FORMAT_D32_SFLOAT, FORMAT_
     return formats[0];
 }
 
-fn DeviceMemory! MemoryAllocateInfo.build(&self, Device device) {
+fn DeviceMemory? MemoryAllocateInfo.build(&self, Device device) {
     DeviceMemory memory;
     allocateMemory(device, self, null, &memory)!;
     return memory;

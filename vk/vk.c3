@@ -28,265 +28,265 @@ const MAX_PIPELINE_BINARY_KEY_SIZE_KHR = 32;
 const MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7;
 const SHADER_INDEX_UNUSED_AMDX = (~0U);
 
-distinct Instance = inline void*;
-distinct PhysicalDevice = inline void*;
-distinct Device = inline void*;
-distinct Queue = inline void*;
-distinct CommandBuffer = inline void*;
-distinct DeviceMemory = inline void*;
-distinct CommandPool = inline void*;
-distinct Buffer = inline void*;
-distinct BufferView = inline void*;
-distinct Image = inline void*;
-distinct ImageView = inline void*;
-distinct ShaderModule = inline void*;
-distinct Pipeline = inline void*;
-distinct PipelineLayout = inline void*;
-distinct Sampler = inline void*;
-distinct DescriptorSet = inline void*;
-distinct DescriptorSetLayout = inline void*;
-distinct DescriptorPool = inline void*;
-distinct Fence = inline void*;
-distinct Semaphore = inline void*;
-distinct Event = inline void*;
-distinct QueryPool = inline void*;
-distinct Framebuffer = inline void*;
-distinct RenderPass = inline void*;
-distinct PipelineCache = inline void*;
-distinct PipelineBinaryKHR = inline void*;
-distinct IndirectCommandsLayoutNV = inline void*;
-distinct IndirectCommandsLayoutEXT = inline void*;
-distinct IndirectExecutionSetEXT = inline void*;
-distinct DescriptorUpdateTemplate = inline void*;
-distinct SamplerYcbcrConversion = inline void*;
-distinct ValidationCacheEXT = inline void*;
-distinct AccelerationStructureKHR = inline void*;
-distinct AccelerationStructureNV = inline void*;
-distinct PerformanceConfigurationINTEL = inline void*;
-distinct BufferCollectionFUCHSIA = inline void*;
-distinct DeferredOperationKHR = inline void*;
-distinct PrivateDataSlot = inline void*;
-distinct CuModuleNVX = inline void*;
-distinct CuFunctionNVX = inline void*;
-distinct OpticalFlowSessionNV = inline void*;
-distinct MicromapEXT = inline void*;
-distinct ShaderEXT = inline void*;
-distinct DisplayKHR = inline void*;
-distinct DisplayModeKHR = inline void*;
-distinct SurfaceKHR = inline void*;
-distinct SwapchainKHR = inline void*;
-distinct DebugReportCallbackEXT = inline void*;
-distinct DebugUtilsMessengerEXT = inline void*;
-distinct VideoSessionKHR = inline void*;
-distinct VideoSessionParametersKHR = inline void*;
-distinct SemaphoreSciSyncPoolNV = inline void*;
-distinct CudaModuleNV = inline void*;
-distinct CudaFunctionNV = inline void*;
+typedef Instance = inline void*;
+typedef PhysicalDevice = inline void*;
+typedef Device = inline void*;
+typedef Queue = inline void*;
+typedef CommandBuffer = inline void*;
+typedef DeviceMemory = inline void*;
+typedef CommandPool = inline void*;
+typedef Buffer = inline void*;
+typedef BufferView = inline void*;
+typedef Image = inline void*;
+typedef ImageView = inline void*;
+typedef ShaderModule = inline void*;
+typedef Pipeline = inline void*;
+typedef PipelineLayout = inline void*;
+typedef Sampler = inline void*;
+typedef DescriptorSet = inline void*;
+typedef DescriptorSetLayout = inline void*;
+typedef DescriptorPool = inline void*;
+typedef Fence = inline void*;
+typedef Semaphore = inline void*;
+typedef Event = inline void*;
+typedef QueryPool = inline void*;
+typedef Framebuffer = inline void*;
+typedef RenderPass = inline void*;
+typedef PipelineCache = inline void*;
+typedef PipelineBinaryKHR = inline void*;
+typedef IndirectCommandsLayoutNV = inline void*;
+typedef IndirectCommandsLayoutEXT = inline void*;
+typedef IndirectExecutionSetEXT = inline void*;
+typedef DescriptorUpdateTemplate = inline void*;
+typedef SamplerYcbcrConversion = inline void*;
+typedef ValidationCacheEXT = inline void*;
+typedef AccelerationStructureKHR = inline void*;
+typedef AccelerationStructureNV = inline void*;
+typedef PerformanceConfigurationINTEL = inline void*;
+typedef BufferCollectionFUCHSIA = inline void*;
+typedef DeferredOperationKHR = inline void*;
+typedef PrivateDataSlot = inline void*;
+typedef CuModuleNVX = inline void*;
+typedef CuFunctionNVX = inline void*;
+typedef OpticalFlowSessionNV = inline void*;
+typedef MicromapEXT = inline void*;
+typedef ShaderEXT = inline void*;
+typedef DisplayKHR = inline void*;
+typedef DisplayModeKHR = inline void*;
+typedef SurfaceKHR = inline void*;
+typedef SwapchainKHR = inline void*;
+typedef DebugReportCallbackEXT = inline void*;
+typedef DebugUtilsMessengerEXT = inline void*;
+typedef VideoSessionKHR = inline void*;
+typedef VideoSessionParametersKHR = inline void*;
+typedef SemaphoreSciSyncPoolNV = inline void*;
+typedef CudaModuleNV = inline void*;
+typedef CudaFunctionNV = inline void*;
 
-def SampleMask = uint;
-def Bool32 = uint;
-def Flags = uint;
-def Flags64 = ulong;
-def DeviceSize = ulong;
-def DeviceAddress = ulong;
-def FramebufferCreateFlags = Flags;
-def QueryPoolCreateFlags = Flags;
-def RenderPassCreateFlags = Flags;
-def SamplerCreateFlags = Flags;
-def PipelineLayoutCreateFlags = Flags;
-def PipelineCacheCreateFlags = Flags;
-def PipelineDepthStencilStateCreateFlags = Flags;
-def PipelineDynamicStateCreateFlags = Flags;
-def PipelineColorBlendStateCreateFlags = Flags;
-def PipelineMultisampleStateCreateFlags = Flags;
-def PipelineRasterizationStateCreateFlags = Flags;
-def PipelineViewportStateCreateFlags = Flags;
-def PipelineTessellationStateCreateFlags = Flags;
-def PipelineInputAssemblyStateCreateFlags = Flags;
-def PipelineVertexInputStateCreateFlags = Flags;
-def PipelineShaderStageCreateFlags = Flags;
-def DescriptorSetLayoutCreateFlags = Flags;
-def BufferViewCreateFlags = Flags;
-def InstanceCreateFlags = Flags;
-def DeviceCreateFlags = Flags;
-def DeviceQueueCreateFlags = Flags;
-def QueueFlags = Flags;
-def MemoryPropertyFlags = Flags;
-def MemoryHeapFlags = Flags;
-def AccessFlags = Flags;
-def BufferUsageFlags = Flags;
-def BufferCreateFlags = Flags;
-def ShaderStageFlags = Flags;
-def ImageUsageFlags = Flags;
-def ImageCreateFlags = Flags;
-def ImageViewCreateFlags = Flags;
-def PipelineCreateFlags = Flags;
-def ColorComponentFlags = Flags;
-def FenceCreateFlags = Flags;
-def SemaphoreCreateFlags = Flags;
-def FormatFeatureFlags = Flags;
-def QueryControlFlags = Flags;
-def QueryResultFlags = Flags;
-def ShaderModuleCreateFlags = Flags;
-def EventCreateFlags = Flags;
-def CommandPoolCreateFlags = Flags;
-def CommandPoolResetFlags = Flags;
-def CommandBufferResetFlags = Flags;
-def CommandBufferUsageFlags = Flags;
-def QueryPipelineStatisticFlags = Flags;
-def MemoryMapFlags = Flags;
-def MemoryUnmapFlags = Flags;
-def ImageAspectFlags = Flags;
-def SparseMemoryBindFlags = Flags;
-def SparseImageFormatFlags = Flags;
-def SubpassDescriptionFlags = Flags;
-def PipelineStageFlags = Flags;
-def SampleCountFlags = Flags;
-def AttachmentDescriptionFlags = Flags;
-def StencilFaceFlags = Flags;
-def CullModeFlags = Flags;
-def DescriptorPoolCreateFlags = Flags;
-def DescriptorPoolResetFlags = Flags;
-def DependencyFlags = Flags;
-def SubgroupFeatureFlags = Flags;
-def IndirectCommandsLayoutUsageFlagsNV = Flags;
-def IndirectStateFlagsNV = Flags;
-def GeometryFlagsKHR = Flags;
-def GeometryInstanceFlagsKHR = Flags;
-def BuildAccelerationStructureFlagsKHR = Flags;
-def PrivateDataSlotCreateFlags = Flags;
-def AccelerationStructureCreateFlagsKHR = Flags;
-def DescriptorUpdateTemplateCreateFlags = Flags;
-def PipelineCreationFeedbackFlags = Flags;
-def PerformanceCounterDescriptionFlagsKHR = Flags;
-def AcquireProfilingLockFlagsKHR = Flags;
-def SemaphoreWaitFlags = Flags;
-def PipelineCompilerControlFlagsAMD = Flags;
-def ShaderCorePropertiesFlagsAMD = Flags;
-def DeviceDiagnosticsConfigFlagsNV = Flags;
-def RefreshObjectFlagsKHR = Flags;
-def AccessFlags2 = Flags64;
-def PipelineStageFlags2 = Flags64;
-def AccelerationStructureMotionInfoFlagsNV = Flags;
-def AccelerationStructureMotionInstanceFlagsNV = Flags;
-def FormatFeatureFlags2 = Flags64;
-def RenderingFlags = Flags;
-def MemoryDecompressionMethodFlagsNV = Flags64;
-def BuildMicromapFlagsEXT = Flags;
-def MicromapCreateFlagsEXT = Flags;
-def IndirectCommandsLayoutUsageFlagsEXT = Flags;
-def IndirectCommandsInputModeFlagsEXT = Flags;
-def DirectDriverLoadingFlagsLUNARG = Flags;
-def PipelineCreateFlags2 = Flags64;
-def BufferUsageFlags2 = Flags64;
-def CompositeAlphaFlagsKHR = Flags;
-def DisplayPlaneAlphaFlagsKHR = Flags;
-def SurfaceTransformFlagsKHR = Flags;
-def SwapchainCreateFlagsKHR = Flags;
-def DisplayModeCreateFlagsKHR = Flags;
-def DisplaySurfaceCreateFlagsKHR = Flags;
-def AndroidSurfaceCreateFlagsKHR = Flags;
-def ViSurfaceCreateFlagsNN = Flags;
-def WaylandSurfaceCreateFlagsKHR = Flags;
-def Win32SurfaceCreateFlagsKHR = Flags;
-def XlibSurfaceCreateFlagsKHR = Flags;
-def XcbSurfaceCreateFlagsKHR = Flags;
-def DirectFBSurfaceCreateFlagsEXT = Flags;
-def IOSSurfaceCreateFlagsMVK = Flags;
-def MacOSSurfaceCreateFlagsMVK = Flags;
-def MetalSurfaceCreateFlagsEXT = Flags;
-def ImagePipeSurfaceCreateFlagsFUCHSIA = Flags;
-def StreamDescriptorSurfaceCreateFlagsGGP = Flags;
-def HeadlessSurfaceCreateFlagsEXT = Flags;
-def ScreenSurfaceCreateFlagsQNX = Flags;
-def PeerMemoryFeatureFlags = Flags;
-def MemoryAllocateFlags = Flags;
-def DeviceGroupPresentModeFlagsKHR = Flags;
-def DebugReportFlagsEXT = Flags;
-def CommandPoolTrimFlags = Flags;
-def ExternalMemoryHandleTypeFlagsNV = Flags;
-def ExternalMemoryFeatureFlagsNV = Flags;
-def ExternalMemoryHandleTypeFlags = Flags;
-def ExternalMemoryFeatureFlags = Flags;
-def ExternalSemaphoreHandleTypeFlags = Flags;
-def ExternalSemaphoreFeatureFlags = Flags;
-def SemaphoreImportFlags = Flags;
-def ExternalFenceHandleTypeFlags = Flags;
-def ExternalFenceFeatureFlags = Flags;
-def FenceImportFlags = Flags;
-def SurfaceCounterFlagsEXT = Flags;
-def PipelineViewportSwizzleStateCreateFlagsNV = Flags;
-def PipelineDiscardRectangleStateCreateFlagsEXT = Flags;
-def PipelineCoverageToColorStateCreateFlagsNV = Flags;
-def PipelineCoverageModulationStateCreateFlagsNV = Flags;
-def PipelineCoverageReductionStateCreateFlagsNV = Flags;
-def ValidationCacheCreateFlagsEXT = Flags;
-def DebugUtilsMessageSeverityFlagsEXT = Flags;
-def DebugUtilsMessageTypeFlagsEXT = Flags;
-def DebugUtilsMessengerCreateFlagsEXT = Flags;
-def DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
-def DeviceMemoryReportFlagsEXT = Flags;
-def PipelineRasterizationConservativeStateCreateFlagsEXT = Flags;
-def DescriptorBindingFlags = Flags;
-def ConditionalRenderingFlagsEXT = Flags;
-def ResolveModeFlags = Flags;
-def PipelineRasterizationStateStreamCreateFlagsEXT = Flags;
-def PipelineRasterizationDepthClipStateCreateFlagsEXT = Flags;
-def SwapchainImageUsageFlagsANDROID = Flags;
-def ToolPurposeFlags = Flags;
-def SubmitFlags = Flags;
-def ImageFormatConstraintsFlagsFUCHSIA = Flags;
-def HostImageCopyFlags = Flags;
-def ImageConstraintsInfoFlagsFUCHSIA = Flags;
-def GraphicsPipelineLibraryFlagsEXT = Flags;
-def ImageCompressionFlagsEXT = Flags;
-def ImageCompressionFixedRateFlagsEXT = Flags;
-def ExportMetalObjectTypeFlagsEXT = Flags;
-def DeviceAddressBindingFlagsEXT = Flags;
-def OpticalFlowGridSizeFlagsNV = Flags;
-def OpticalFlowUsageFlagsNV = Flags;
-def OpticalFlowSessionCreateFlagsNV = Flags;
-def OpticalFlowExecuteFlagsNV = Flags;
-def FrameBoundaryFlagsEXT = Flags;
-def PresentScalingFlagsEXT = Flags;
-def PresentGravityFlagsEXT = Flags;
-def ShaderCreateFlagsEXT = Flags;
-def PhysicalDeviceSchedulingControlsFlagsARM = Flags64;
-def VideoCodecOperationFlagsKHR = Flags;
-def VideoCapabilityFlagsKHR = Flags;
-def VideoSessionCreateFlagsKHR = Flags;
-def VideoSessionParametersCreateFlagsKHR = Flags;
-def VideoBeginCodingFlagsKHR = Flags;
-def VideoEndCodingFlagsKHR = Flags;
-def VideoCodingControlFlagsKHR = Flags;
-def VideoDecodeUsageFlagsKHR = Flags;
-def VideoDecodeCapabilityFlagsKHR = Flags;
-def VideoDecodeFlagsKHR = Flags;
-def VideoDecodeH264PictureLayoutFlagsKHR = Flags;
-def VideoEncodeFlagsKHR = Flags;
-def VideoEncodeUsageFlagsKHR = Flags;
-def VideoEncodeContentFlagsKHR = Flags;
-def VideoEncodeCapabilityFlagsKHR = Flags;
-def VideoEncodeFeedbackFlagsKHR = Flags;
-def VideoEncodeRateControlFlagsKHR = Flags;
-def VideoEncodeRateControlModeFlagsKHR = Flags;
-def VideoChromaSubsamplingFlagsKHR = Flags;
-def VideoComponentBitDepthFlagsKHR = Flags;
-def VideoEncodeH264CapabilityFlagsKHR = Flags;
-def VideoEncodeH264StdFlagsKHR = Flags;
-def VideoEncodeH264RateControlFlagsKHR = Flags;
-def VideoEncodeH265CapabilityFlagsKHR = Flags;
-def VideoEncodeH265StdFlagsKHR = Flags;
-def VideoEncodeH265RateControlFlagsKHR = Flags;
-def VideoEncodeH265CtbSizeFlagsKHR = Flags;
-def VideoEncodeH265TransformBlockSizeFlagsKHR = Flags;
-def VideoEncodeAV1CapabilityFlagsKHR = Flags;
-def VideoEncodeAV1StdFlagsKHR = Flags;
-def VideoEncodeAV1RateControlFlagsKHR = Flags;
-def VideoEncodeAV1SuperblockSizeFlagsKHR = Flags;
-def RemoteAddressNV = void;
+alias SampleMask = uint;
+alias Bool32 = uint;
+alias Flags = uint;
+alias Flags64 = ulong;
+alias DeviceSize = ulong;
+alias DeviceAddress = ulong;
+alias FramebufferCreateFlags = Flags;
+alias QueryPoolCreateFlags = Flags;
+alias RenderPassCreateFlags = Flags;
+alias SamplerCreateFlags = Flags;
+alias PipelineLayoutCreateFlags = Flags;
+alias PipelineCacheCreateFlags = Flags;
+alias PipelineDepthStencilStateCreateFlags = Flags;
+alias PipelineDynamicStateCreateFlags = Flags;
+alias PipelineColorBlendStateCreateFlags = Flags;
+alias PipelineMultisampleStateCreateFlags = Flags;
+alias PipelineRasterizationStateCreateFlags = Flags;
+alias PipelineViewportStateCreateFlags = Flags;
+alias PipelineTessellationStateCreateFlags = Flags;
+alias PipelineInputAssemblyStateCreateFlags = Flags;
+alias PipelineVertexInputStateCreateFlags = Flags;
+alias PipelineShaderStageCreateFlags = Flags;
+alias DescriptorSetLayoutCreateFlags = Flags;
+alias BufferViewCreateFlags = Flags;
+alias InstanceCreateFlags = Flags;
+alias DeviceCreateFlags = Flags;
+alias DeviceQueueCreateFlags = Flags;
+alias QueueFlags = Flags;
+alias MemoryPropertyFlags = Flags;
+alias MemoryHeapFlags = Flags;
+alias AccessFlags = Flags;
+alias BufferUsageFlags = Flags;
+alias BufferCreateFlags = Flags;
+alias ShaderStageFlags = Flags;
+alias ImageUsageFlags = Flags;
+alias ImageCreateFlags = Flags;
+alias ImageViewCreateFlags = Flags;
+alias PipelineCreateFlags = Flags;
+alias ColorComponentFlags = Flags;
+alias FenceCreateFlags = Flags;
+alias SemaphoreCreateFlags = Flags;
+alias FormatFeatureFlags = Flags;
+alias QueryControlFlags = Flags;
+alias QueryResultFlags = Flags;
+alias ShaderModuleCreateFlags = Flags;
+alias EventCreateFlags = Flags;
+alias CommandPoolCreateFlags = Flags;
+alias CommandPoolResetFlags = Flags;
+alias CommandBufferResetFlags = Flags;
+alias CommandBufferUsageFlags = Flags;
+alias QueryPipelineStatisticFlags = Flags;
+alias MemoryMapFlags = Flags;
+alias MemoryUnmapFlags = Flags;
+alias ImageAspectFlags = Flags;
+alias SparseMemoryBindFlags = Flags;
+alias SparseImageFormatFlags = Flags;
+alias SubpassDescriptionFlags = Flags;
+alias PipelineStageFlags = Flags;
+alias SampleCountFlags = Flags;
+alias AttachmentDescriptionFlags = Flags;
+alias StencilFaceFlags = Flags;
+alias CullModeFlags = Flags;
+alias DescriptorPoolCreateFlags = Flags;
+alias DescriptorPoolResetFlags = Flags;
+alias DependencyFlags = Flags;
+alias SubgroupFeatureFlags = Flags;
+alias IndirectCommandsLayoutUsageFlagsNV = Flags;
+alias IndirectStateFlagsNV = Flags;
+alias GeometryFlagsKHR = Flags;
+alias GeometryInstanceFlagsKHR = Flags;
+alias BuildAccelerationStructureFlagsKHR = Flags;
+alias PrivateDataSlotCreateFlags = Flags;
+alias AccelerationStructureCreateFlagsKHR = Flags;
+alias DescriptorUpdateTemplateCreateFlags = Flags;
+alias PipelineCreationFeedbackFlags = Flags;
+alias PerformanceCounterDescriptionFlagsKHR = Flags;
+alias AcquireProfilingLockFlagsKHR = Flags;
+alias SemaphoreWaitFlags = Flags;
+alias PipelineCompilerControlFlagsAMD = Flags;
+alias ShaderCorePropertiesFlagsAMD = Flags;
+alias DeviceDiagnosticsConfigFlagsNV = Flags;
+alias RefreshObjectFlagsKHR = Flags;
+alias AccessFlags2 = Flags64;
+alias PipelineStageFlags2 = Flags64;
+alias AccelerationStructureMotionInfoFlagsNV = Flags;
+alias AccelerationStructureMotionInstanceFlagsNV = Flags;
+alias FormatFeatureFlags2 = Flags64;
+alias RenderingFlags = Flags;
+alias MemoryDecompressionMethodFlagsNV = Flags64;
+alias BuildMicromapFlagsEXT = Flags;
+alias MicromapCreateFlagsEXT = Flags;
+alias IndirectCommandsLayoutUsageFlagsEXT = Flags;
+alias IndirectCommandsInputModeFlagsEXT = Flags;
+alias DirectDriverLoadingFlagsLUNARG = Flags;
+alias PipelineCreateFlags2 = Flags64;
+alias BufferUsageFlags2 = Flags64;
+alias CompositeAlphaFlagsKHR = Flags;
+alias DisplayPlaneAlphaFlagsKHR = Flags;
+alias SurfaceTransformFlagsKHR = Flags;
+alias SwapchainCreateFlagsKHR = Flags;
+alias DisplayModeCreateFlagsKHR = Flags;
+alias DisplaySurfaceCreateFlagsKHR = Flags;
+alias AndroidSurfaceCreateFlagsKHR = Flags;
+alias ViSurfaceCreateFlagsNN = Flags;
+alias WaylandSurfaceCreateFlagsKHR = Flags;
+alias Win32SurfaceCreateFlagsKHR = Flags;
+alias XlibSurfaceCreateFlagsKHR = Flags;
+alias XcbSurfaceCreateFlagsKHR = Flags;
+alias DirectFBSurfaceCreateFlagsEXT = Flags;
+alias IOSSurfaceCreateFlagsMVK = Flags;
+alias MacOSSurfaceCreateFlagsMVK = Flags;
+alias MetalSurfaceCreateFlagsEXT = Flags;
+alias ImagePipeSurfaceCreateFlagsFUCHSIA = Flags;
+alias StreamDescriptorSurfaceCreateFlagsGGP = Flags;
+alias HeadlessSurfaceCreateFlagsEXT = Flags;
+alias ScreenSurfaceCreateFlagsQNX = Flags;
+alias PeerMemoryFeatureFlags = Flags;
+alias MemoryAllocateFlags = Flags;
+alias DeviceGroupPresentModeFlagsKHR = Flags;
+alias DebugReportFlagsEXT = Flags;
+alias CommandPoolTrimFlags = Flags;
+alias ExternalMemoryHandleTypeFlagsNV = Flags;
+alias ExternalMemoryFeatureFlagsNV = Flags;
+alias ExternalMemoryHandleTypeFlags = Flags;
+alias ExternalMemoryFeatureFlags = Flags;
+alias ExternalSemaphoreHandleTypeFlags = Flags;
+alias ExternalSemaphoreFeatureFlags = Flags;
+alias SemaphoreImportFlags = Flags;
+alias ExternalFenceHandleTypeFlags = Flags;
+alias ExternalFenceFeatureFlags = Flags;
+alias FenceImportFlags = Flags;
+alias SurfaceCounterFlagsEXT = Flags;
+alias PipelineViewportSwizzleStateCreateFlagsNV = Flags;
+alias PipelineDiscardRectangleStateCreateFlagsEXT = Flags;
+alias PipelineCoverageToColorStateCreateFlagsNV = Flags;
+alias PipelineCoverageModulationStateCreateFlagsNV = Flags;
+alias PipelineCoverageReductionStateCreateFlagsNV = Flags;
+alias ValidationCacheCreateFlagsEXT = Flags;
+alias DebugUtilsMessageSeverityFlagsEXT = Flags;
+alias DebugUtilsMessageTypeFlagsEXT = Flags;
+alias DebugUtilsMessengerCreateFlagsEXT = Flags;
+alias DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
+alias DeviceMemoryReportFlagsEXT = Flags;
+alias PipelineRasterizationConservativeStateCreateFlagsEXT = Flags;
+alias DescriptorBindingFlags = Flags;
+alias ConditionalRenderingFlagsEXT = Flags;
+alias ResolveModeFlags = Flags;
+alias PipelineRasterizationStateStreamCreateFlagsEXT = Flags;
+alias PipelineRasterizationDepthClipStateCreateFlagsEXT = Flags;
+alias SwapchainImageUsageFlagsANDROID = Flags;
+alias ToolPurposeFlags = Flags;
+alias SubmitFlags = Flags;
+alias ImageFormatConstraintsFlagsFUCHSIA = Flags;
+alias HostImageCopyFlags = Flags;
+alias ImageConstraintsInfoFlagsFUCHSIA = Flags;
+alias GraphicsPipelineLibraryFlagsEXT = Flags;
+alias ImageCompressionFlagsEXT = Flags;
+alias ImageCompressionFixedRateFlagsEXT = Flags;
+alias ExportMetalObjectTypeFlagsEXT = Flags;
+alias DeviceAddressBindingFlagsEXT = Flags;
+alias OpticalFlowGridSizeFlagsNV = Flags;
+alias OpticalFlowUsageFlagsNV = Flags;
+alias OpticalFlowSessionCreateFlagsNV = Flags;
+alias OpticalFlowExecuteFlagsNV = Flags;
+alias FrameBoundaryFlagsEXT = Flags;
+alias PresentScalingFlagsEXT = Flags;
+alias PresentGravityFlagsEXT = Flags;
+alias ShaderCreateFlagsEXT = Flags;
+alias PhysicalDeviceSchedulingControlsFlagsARM = Flags64;
+alias VideoCodecOperationFlagsKHR = Flags;
+alias VideoCapabilityFlagsKHR = Flags;
+alias VideoSessionCreateFlagsKHR = Flags;
+alias VideoSessionParametersCreateFlagsKHR = Flags;
+alias VideoBeginCodingFlagsKHR = Flags;
+alias VideoEndCodingFlagsKHR = Flags;
+alias VideoCodingControlFlagsKHR = Flags;
+alias VideoDecodeUsageFlagsKHR = Flags;
+alias VideoDecodeCapabilityFlagsKHR = Flags;
+alias VideoDecodeFlagsKHR = Flags;
+alias VideoDecodeH264PictureLayoutFlagsKHR = Flags;
+alias VideoEncodeFlagsKHR = Flags;
+alias VideoEncodeUsageFlagsKHR = Flags;
+alias VideoEncodeContentFlagsKHR = Flags;
+alias VideoEncodeCapabilityFlagsKHR = Flags;
+alias VideoEncodeFeedbackFlagsKHR = Flags;
+alias VideoEncodeRateControlFlagsKHR = Flags;
+alias VideoEncodeRateControlModeFlagsKHR = Flags;
+alias VideoChromaSubsamplingFlagsKHR = Flags;
+alias VideoComponentBitDepthFlagsKHR = Flags;
+alias VideoEncodeH264CapabilityFlagsKHR = Flags;
+alias VideoEncodeH264StdFlagsKHR = Flags;
+alias VideoEncodeH264RateControlFlagsKHR = Flags;
+alias VideoEncodeH265CapabilityFlagsKHR = Flags;
+alias VideoEncodeH265StdFlagsKHR = Flags;
+alias VideoEncodeH265RateControlFlagsKHR = Flags;
+alias VideoEncodeH265CtbSizeFlagsKHR = Flags;
+alias VideoEncodeH265TransformBlockSizeFlagsKHR = Flags;
+alias VideoEncodeAV1CapabilityFlagsKHR = Flags;
+alias VideoEncodeAV1StdFlagsKHR = Flags;
+alias VideoEncodeAV1RateControlFlagsKHR = Flags;
+alias VideoEncodeAV1SuperblockSizeFlagsKHR = Flags;
+alias RemoteAddressNV = void;
 
-distinct ImageLayout = inline uint;
+typedef ImageLayout = inline uint;
 const ImageLayout IMAGE_LAYOUT_UNDEFINED = 0;
 const ImageLayout IMAGE_LAYOUT_GENERAL = 1;
 const ImageLayout IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = 2;
@@ -327,7 +327,7 @@ const ImageLayout IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR = 1000314001;
 const ImageLayout IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT = 1000339000;
 const ImageLayout IMAGE_LAYOUT_VIDEO_ENCODE_QUANTIZATION_MAP_KHR = 1000553000;
 
-distinct AttachmentLoadOp = inline uint;
+typedef AttachmentLoadOp = inline uint;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_LOAD = 0;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_CLEAR = 1;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_DONT_CARE = 2;
@@ -335,7 +335,7 @@ const AttachmentLoadOp ATTACHMENT_LOAD_OP_NONE = 1000400000;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_NONE_EXT = 1000400000;
 const AttachmentLoadOp ATTACHMENT_LOAD_OP_NONE_KHR = 1000400000;
 
-distinct AttachmentStoreOp = inline uint;
+typedef AttachmentStoreOp = inline uint;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_STORE = 0;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_DONT_CARE = 1;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE = 1000301000;
@@ -343,17 +343,17 @@ const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE_KHR = 1000301000;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE_QCOM = 1000301000;
 const AttachmentStoreOp ATTACHMENT_STORE_OP_NONE_EXT = 1000301000;
 
-distinct ImageType = inline uint;
+typedef ImageType = inline uint;
 const ImageType IMAGE_TYPE_1D = 0;
 const ImageType IMAGE_TYPE_2D = 1;
 const ImageType IMAGE_TYPE_3D = 2;
 
-distinct ImageTiling = inline uint;
+typedef ImageTiling = inline uint;
 const ImageTiling IMAGE_TILING_OPTIMAL = 0;
 const ImageTiling IMAGE_TILING_LINEAR = 1;
 const ImageTiling IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = 1000158000;
 
-distinct ImageViewType = inline uint;
+typedef ImageViewType = inline uint;
 const ImageViewType IMAGE_VIEW_TYPE_1D = 0;
 const ImageViewType IMAGE_VIEW_TYPE_2D = 1;
 const ImageViewType IMAGE_VIEW_TYPE_3D = 2;
@@ -362,11 +362,11 @@ const ImageViewType IMAGE_VIEW_TYPE_1D_ARRAY = 4;
 const ImageViewType IMAGE_VIEW_TYPE_2D_ARRAY = 5;
 const ImageViewType IMAGE_VIEW_TYPE_CUBE_ARRAY = 6;
 
-distinct CommandBufferLevel = inline uint;
+typedef CommandBufferLevel = inline uint;
 const CommandBufferLevel COMMAND_BUFFER_LEVEL_PRIMARY = 0;
 const CommandBufferLevel COMMAND_BUFFER_LEVEL_SECONDARY = 1;
 
-distinct ComponentSwizzle = inline uint;
+typedef ComponentSwizzle = inline uint;
 const ComponentSwizzle COMPONENT_SWIZZLE_IDENTITY = 0;
 const ComponentSwizzle COMPONENT_SWIZZLE_ZERO = 1;
 const ComponentSwizzle COMPONENT_SWIZZLE_ONE = 2;
@@ -375,7 +375,7 @@ const ComponentSwizzle COMPONENT_SWIZZLE_G = 4;
 const ComponentSwizzle COMPONENT_SWIZZLE_B = 5;
 const ComponentSwizzle COMPONENT_SWIZZLE_A = 6;
 
-distinct DescriptorType = inline uint;
+typedef DescriptorType = inline uint;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLER = 0;
 const DescriptorType DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = 1;
 const DescriptorType DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2;
@@ -395,7 +395,7 @@ const DescriptorType DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM = 1000440000;
 const DescriptorType DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM = 1000440001;
 const DescriptorType DESCRIPTOR_TYPE_MUTABLE_EXT = 1000351000;
 
-distinct QueryType = inline uint;
+typedef QueryType = inline uint;
 const QueryType QUERY_TYPE_OCCLUSION = 0;
 const QueryType QUERY_TYPE_PIPELINE_STATISTICS = 1;
 const QueryType QUERY_TYPE_TIMESTAMP = 2;
@@ -414,7 +414,7 @@ const QueryType QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR = 1000386001;
 const QueryType QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT = 1000396000;
 const QueryType QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT = 1000396001;
 
-distinct BorderColor = inline uint;
+typedef BorderColor = inline uint;
 const BorderColor BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = 0;
 const BorderColor BORDER_COLOR_INT_TRANSPARENT_BLACK = 1;
 const BorderColor BORDER_COLOR_FLOAT_OPAQUE_BLACK = 2;
@@ -424,7 +424,7 @@ const BorderColor BORDER_COLOR_INT_OPAQUE_WHITE = 5;
 const BorderColor BORDER_COLOR_FLOAT_CUSTOM_EXT = 1000287003;
 const BorderColor BORDER_COLOR_INT_CUSTOM_EXT = 1000287004;
 
-distinct PipelineBindPoint = inline uint;
+typedef PipelineBindPoint = inline uint;
 const PipelineBindPoint PIPELINE_BIND_POINT_GRAPHICS = 0;
 const PipelineBindPoint PIPELINE_BIND_POINT_COMPUTE = 1;
 const PipelineBindPoint PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX = 1000134000;
@@ -432,10 +432,10 @@ const PipelineBindPoint PIPELINE_BIND_POINT_RAY_TRACING_KHR = 1000165000;
 const PipelineBindPoint PIPELINE_BIND_POINT_RAY_TRACING_NV = 1000165000;
 const PipelineBindPoint PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI = 1000369003;
 
-distinct PipelineCacheHeaderVersion = inline uint;
+typedef PipelineCacheHeaderVersion = inline uint;
 const PipelineCacheHeaderVersion PIPELINE_CACHE_HEADER_VERSION_ONE = 1;
 
-distinct PrimitiveTopology = inline uint;
+typedef PrimitiveTopology = inline uint;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_POINT_LIST = 0;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_LINE_LIST = 1;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_LINE_STRIP = 2;
@@ -448,11 +448,11 @@ const PrimitiveTopology PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = 8;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = 9;
 const PrimitiveTopology PRIMITIVE_TOPOLOGY_PATCH_LIST = 10;
 
-distinct SharingMode = inline uint;
+typedef SharingMode = inline uint;
 const SharingMode SHARING_MODE_EXCLUSIVE = 0;
 const SharingMode SHARING_MODE_CONCURRENT = 1;
 
-distinct IndexType = inline uint;
+typedef IndexType = inline uint;
 const IndexType INDEX_TYPE_UINT16 = 0;
 const IndexType INDEX_TYPE_UINT32 = 1;
 const IndexType INDEX_TYPE_UINT8 = 1000265000;
@@ -461,16 +461,16 @@ const IndexType INDEX_TYPE_NONE_NV = 1000165000;
 const IndexType INDEX_TYPE_UINT8_EXT = 1000265000;
 const IndexType INDEX_TYPE_UINT8_KHR = 1000265000;
 
-distinct Filter = inline uint;
+typedef Filter = inline uint;
 const Filter FILTER_NEAREST = 0;
 const Filter FILTER_LINEAR = 1;
 const Filter FILTER_CUBIC_EXT = 1000015000;
 
-distinct SamplerMipmapMode = inline uint;
+typedef SamplerMipmapMode = inline uint;
 const SamplerMipmapMode SAMPLER_MIPMAP_MODE_NEAREST = 0;
 const SamplerMipmapMode SAMPLER_MIPMAP_MODE_LINEAR = 1;
 
-distinct SamplerAddressMode = inline uint;
+typedef SamplerAddressMode = inline uint;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_REPEAT = 0;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2;
@@ -478,7 +478,7 @@ const SamplerAddressMode SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 const SamplerAddressMode SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR = 4;
 
-distinct CompareOp = inline uint;
+typedef CompareOp = inline uint;
 const CompareOp COMPARE_OP_NEVER = 0;
 const CompareOp COMPARE_OP_LESS = 1;
 const CompareOp COMPARE_OP_EQUAL = 2;
@@ -488,17 +488,17 @@ const CompareOp COMPARE_OP_NOT_EQUAL = 5;
 const CompareOp COMPARE_OP_GREATER_OR_EQUAL = 6;
 const CompareOp COMPARE_OP_ALWAYS = 7;
 
-distinct PolygonMode = inline uint;
+typedef PolygonMode = inline uint;
 const PolygonMode POLYGON_MODE_FILL = 0;
 const PolygonMode POLYGON_MODE_LINE = 1;
 const PolygonMode POLYGON_MODE_POINT = 2;
 const PolygonMode POLYGON_MODE_FILL_RECTANGLE_NV = 1000153000;
 
-distinct FrontFace = inline uint;
+typedef FrontFace = inline uint;
 const FrontFace FRONT_FACE_COUNTER_CLOCKWISE = 0;
 const FrontFace FRONT_FACE_CLOCKWISE = 1;
 
-distinct BlendFactor = inline uint;
+typedef BlendFactor = inline uint;
 const BlendFactor BLEND_FACTOR_ZERO = 0;
 const BlendFactor BLEND_FACTOR_ONE = 1;
 const BlendFactor BLEND_FACTOR_SRC_COLOR = 2;
@@ -519,7 +519,7 @@ const BlendFactor BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = 16;
 const BlendFactor BLEND_FACTOR_SRC1_ALPHA = 17;
 const BlendFactor BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = 18;
 
-distinct BlendOp = inline uint;
+typedef BlendOp = inline uint;
 const BlendOp BLEND_OP_ADD = 0;
 const BlendOp BLEND_OP_SUBTRACT = 1;
 const BlendOp BLEND_OP_REVERSE_SUBTRACT = 2;
@@ -572,7 +572,7 @@ const BlendOp BLEND_OP_RED_EXT = 1000148043;
 const BlendOp BLEND_OP_GREEN_EXT = 1000148044;
 const BlendOp BLEND_OP_BLUE_EXT = 1000148045;
 
-distinct StencilOp = inline uint;
+typedef StencilOp = inline uint;
 const StencilOp STENCIL_OP_KEEP = 0;
 const StencilOp STENCIL_OP_ZERO = 1;
 const StencilOp STENCIL_OP_REPLACE = 2;
@@ -582,7 +582,7 @@ const StencilOp STENCIL_OP_INVERT = 5;
 const StencilOp STENCIL_OP_INCREMENT_AND_WRAP = 6;
 const StencilOp STENCIL_OP_DECREMENT_AND_WRAP = 7;
 
-distinct LogicOp = inline uint;
+typedef LogicOp = inline uint;
 const LogicOp LOGIC_OP_CLEAR = 0;
 const LogicOp LOGIC_OP_AND = 1;
 const LogicOp LOGIC_OP_AND_REVERSE = 2;
@@ -600,28 +600,28 @@ const LogicOp LOGIC_OP_OR_INVERTED = 13;
 const LogicOp LOGIC_OP_NAND = 14;
 const LogicOp LOGIC_OP_SET = 15;
 
-distinct InternalAllocationType = inline uint;
+typedef InternalAllocationType = inline uint;
 const InternalAllocationType INTERNAL_ALLOCATION_TYPE_EXECUTABLE = 0;
 
-distinct SystemAllocationScope = inline uint;
+typedef SystemAllocationScope = inline uint;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_COMMAND = 0;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_OBJECT = 1;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_CACHE = 2;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_DEVICE = 3;
 const SystemAllocationScope SYSTEM_ALLOCATION_SCOPE_INSTANCE = 4;
 
-distinct PhysicalDeviceType = inline uint;
+typedef PhysicalDeviceType = inline uint;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_OTHER = 0;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = 2;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = 3;
 const PhysicalDeviceType PHYSICAL_DEVICE_TYPE_CPU = 4;
 
-distinct VertexInputRate = inline uint;
+typedef VertexInputRate = inline uint;
 const VertexInputRate VERTEX_INPUT_RATE_VERTEX = 0;
 const VertexInputRate VERTEX_INPUT_RATE_INSTANCE = 1;
 
-distinct Format = inline uint;
+typedef Format = inline uint;
 const Format FORMAT_UNDEFINED = 0;
 const Format FORMAT_R4G4_UNORM_PACK8 = 1;
 const Format FORMAT_R4G4B4A4_UNORM_PACK16 = 2;
@@ -960,7 +960,7 @@ const Format FORMAT_R16G16_S10_5_NV = 1000464000;
 const Format FORMAT_A1B5G5R5_UNORM_PACK16_KHR = 1000470000;
 const Format FORMAT_A8_UNORM_KHR = 1000470001;
 
-distinct StructureType = inline uint;
+typedef StructureType = inline uint;
 const StructureType STRUCTURE_TYPE_APPLICATION_INFO = 0;
 const StructureType STRUCTURE_TYPE_INSTANCE_CREATE_INFO = 1;
 const StructureType STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO = 2;
@@ -2183,12 +2183,12 @@ const StructureType STRUCTURE_TYPE_COOPERATIVE_MATRIX_FLEXIBLE_DIMENSIONS_PROPER
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV = 1000593002;
 const StructureType STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT = 1000608000;
 
-distinct SubpassContents = inline uint;
+typedef SubpassContents = inline uint;
 const SubpassContents SUBPASS_CONTENTS_INLINE = 0;
 const SubpassContents SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = 1;
 const SubpassContents SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR = 1000451000;
 
-distinct Result = inline int;
+typedef Result = inline int;
 const Result SUCCESS = 0;
 const Result NOT_READY = 1;
 const Result TIMEOUT = 2;
@@ -2249,7 +2249,7 @@ const Result ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = 1000482000;
 const Result PIPELINE_BINARY_MISSING_KHR = 1000483000;
 const Result ERROR_NOT_ENOUGH_SPACE_KHR = -1000483000;
 
-distinct DynamicState = inline uint;
+typedef DynamicState = inline uint;
 const DynamicState DYNAMIC_STATE_VIEWPORT = 0;
 const DynamicState DYNAMIC_STATE_SCISSOR = 1;
 const DynamicState DYNAMIC_STATE_LINE_WIDTH = 2;
@@ -2341,13 +2341,13 @@ const DynamicState DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT = 100052400
 const DynamicState DYNAMIC_STATE_LINE_STIPPLE_KHR = 1000259000;
 const DynamicState DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT = 1000582000;
 
-distinct DescriptorUpdateTemplateType = inline uint;
+typedef DescriptorUpdateTemplateType = inline uint;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS = 1;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = 1;
 const DescriptorUpdateTemplateType DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR = 0;
 
-distinct ObjectType = inline uint;
+typedef ObjectType = inline uint;
 const ObjectType OBJECT_TYPE_UNKNOWN = 0;
 const ObjectType OBJECT_TYPE_INSTANCE = 1;
 const ObjectType OBJECT_TYPE_PHYSICAL_DEVICE = 2;
@@ -2407,24 +2407,24 @@ const ObjectType OBJECT_TYPE_SEMAPHORE_SCI_SYNC_POOL_NV = 1000489000;
 const ObjectType OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT = 1000572000;
 const ObjectType OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT = 1000572001;
 
-distinct RayTracingInvocationReorderModeNV = inline uint;
+typedef RayTracingInvocationReorderModeNV = inline uint;
 const RayTracingInvocationReorderModeNV RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV = 0;
 const RayTracingInvocationReorderModeNV RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV = 1;
 
-distinct DirectDriverLoadingModeLUNARG = inline uint;
+typedef DirectDriverLoadingModeLUNARG = inline uint;
 const DirectDriverLoadingModeLUNARG DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG = 0;
 const DirectDriverLoadingModeLUNARG DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG = 1;
 
-distinct AntiLagModeAMD = inline uint;
+typedef AntiLagModeAMD = inline uint;
 const AntiLagModeAMD ANTI_LAG_MODE_DRIVER_CONTROL_AMD = 0;
 const AntiLagModeAMD ANTI_LAG_MODE_ON_AMD = 1;
 const AntiLagModeAMD ANTI_LAG_MODE_OFF_AMD = 2;
 
-distinct AntiLagStageAMD = inline uint;
+typedef AntiLagStageAMD = inline uint;
 const AntiLagStageAMD ANTI_LAG_STAGE_INPUT_AMD = 0;
 const AntiLagStageAMD ANTI_LAG_STAGE_PRESENT_AMD = 1;
 
-distinct QueueFlagBits = inline uint;
+typedef QueueFlagBits = inline uint;
 const QueueFlagBits QUEUE_GRAPHICS_BIT = 0x00000001;
 const QueueFlagBits QUEUE_COMPUTE_BIT = 0x00000002;
 const QueueFlagBits QUEUE_TRANSFER_BIT = 0x00000004;
@@ -2438,13 +2438,13 @@ const QueueFlagBits QUEUE_RESERVED_11_BIT_ARM = 0x00000800;
 const QueueFlagBits QUEUE_OPTICAL_FLOW_BIT_NV = 0x00000100;
 const QueueFlagBits QUEUE_RESERVED_10_BIT_EXT = 0x00000400;
 
-distinct CullModeFlagBits = inline uint;
+typedef CullModeFlagBits = inline uint;
 const CullModeFlagBits CULL_MODE_NONE = 0;
 const CullModeFlagBits CULL_MODE_FRONT_BIT = 0x00000001;
 const CullModeFlagBits CULL_MODE_BACK_BIT = 0x00000002;
 const CullModeFlagBits CULL_MODE_FRONT_AND_BACK = 0x00000003;
 
-distinct MemoryPropertyFlagBits = inline uint;
+typedef MemoryPropertyFlagBits = inline uint;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004;
@@ -2455,12 +2455,12 @@ const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = 0x0000004
 const MemoryPropertyFlagBits MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = 0x00000080;
 const MemoryPropertyFlagBits MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV = 0x00000100;
 
-distinct MemoryHeapFlagBits = inline uint;
+typedef MemoryHeapFlagBits = inline uint;
 const MemoryHeapFlagBits MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001;
 const MemoryHeapFlagBits MEMORY_HEAP_MULTI_INSTANCE_BIT = 0x00000002;
 const MemoryHeapFlagBits MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR = 0x00000002;
 
-distinct AccessFlagBits = inline uint;
+typedef AccessFlagBits = inline uint;
 const AccessFlagBits ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001;
 const AccessFlagBits ACCESS_INDEX_READ_BIT = 0x00000002;
 const AccessFlagBits ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004;
@@ -2496,7 +2496,7 @@ const AccessFlagBits ACCESS_NONE_KHR = 0;
 const AccessFlagBits ACCESS_COMMAND_PREPROCESS_READ_BIT_EXT = 0x00020000;
 const AccessFlagBits ACCESS_COMMAND_PREPROCESS_WRITE_BIT_EXT = 0x00040000;
 
-distinct BufferUsageFlagBits = inline uint;
+typedef BufferUsageFlagBits = inline uint;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const BufferUsageFlagBits BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const BufferUsageFlagBits BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004;
@@ -2529,7 +2529,7 @@ const BufferUsageFlagBits BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EX
 const BufferUsageFlagBits BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = 0x00800000;
 const BufferUsageFlagBits BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT = 0x01000000;
 
-distinct BufferUsageFlagBits2 = inline ulong;
+typedef BufferUsageFlagBits2 = inline ulong;
 const BufferUsageFlagBits2 BUFFER_USAGE_2_TRANSFER_SRC_BIT = 0x00000001;
 const BufferUsageFlagBits2 BUFFER_USAGE_2_TRANSFER_DST_BIT = 0x00000002;
 const BufferUsageFlagBits2 BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004;
@@ -2571,7 +2571,7 @@ const BufferUsageFlagBits2 BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
 const BufferUsageFlagBits2 BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = 0x01000000;
 const BufferUsageFlagBits2 BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT = 0x80000000;
 
-distinct BufferCreateFlagBits = inline uint;
+typedef BufferCreateFlagBits = inline uint;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const BufferCreateFlagBits BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
@@ -2582,7 +2582,7 @@ const BufferCreateFlagBits BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR =
 const BufferCreateFlagBits BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000020;
 const BufferCreateFlagBits BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = 0x00000040;
 
-distinct ShaderStageFlagBits = inline uint;
+typedef ShaderStageFlagBits = inline uint;
 const ShaderStageFlagBits SHADER_STAGE_VERTEX_BIT = 0x00000001;
 const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002;
 const ShaderStageFlagBits SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004;
@@ -2609,7 +2609,7 @@ const ShaderStageFlagBits SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI = 0x00004000;
 const ShaderStageFlagBits SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI = 0x00080000;
 const ShaderStageFlagBits SHADER_STAGE_RESERVED_15_BIT_NV = 0x00008000;
 
-distinct ImageUsageFlagBits = inline uint;
+typedef ImageUsageFlagBits = inline uint;
 const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001;
 const ImageUsageFlagBits IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002;
 const ImageUsageFlagBits IMAGE_USAGE_SAMPLED_BIT = 0x00000004;
@@ -2637,7 +2637,7 @@ const ImageUsageFlagBits IMAGE_USAGE_RESERVED_23_BIT_EXT = 0x00800000;
 const ImageUsageFlagBits IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR = 0x02000000;
 const ImageUsageFlagBits IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR = 0x04000000;
 
-distinct ImageCreateFlagBits = inline uint;
+typedef ImageCreateFlagBits = inline uint;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002;
 const ImageCreateFlagBits IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004;
@@ -2666,7 +2666,7 @@ const ImageCreateFlagBits IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT = 0x00020000;
 const ImageCreateFlagBits IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = 0x00008000;
 const ImageCreateFlagBits IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = 0x00100000;
 
-distinct PipelineCreateFlagBits = inline uint;
+typedef PipelineCreateFlagBits = inline uint;
 const PipelineCreateFlagBits PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const PipelineCreateFlagBits PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const PipelineCreateFlagBits PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004;
@@ -2708,7 +2708,7 @@ const PipelineCreateFlagBits PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_B
 const PipelineCreateFlagBits PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = 0x08000000;
 const PipelineCreateFlagBits PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = 0x40000000;
 
-distinct PipelineCreateFlagBits2 = inline ulong;
+typedef PipelineCreateFlagBits2 = inline ulong;
 const PipelineCreateFlagBits2 PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT = 0x00000001;
 const PipelineCreateFlagBits2 PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT = 0x00000002;
 const PipelineCreateFlagBits2 PIPELINE_CREATE_2_DERIVATIVE_BIT = 0x00000004;
@@ -2759,16 +2759,16 @@ const PipelineCreateFlagBits2 PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT = 0x40
 const PipelineCreateFlagBits2 PIPELINE_CREATE_2_RESERVED_35_BIT_KHR = 0x800000000;
 const PipelineCreateFlagBits2 PIPELINE_CREATE_2_RESERVED_37_BIT_ARM = 0x2000000000;
 
-distinct ColorComponentFlagBits = inline uint;
+typedef ColorComponentFlagBits = inline uint;
 const ColorComponentFlagBits COLOR_COMPONENT_R_BIT = 0x00000001;
 const ColorComponentFlagBits COLOR_COMPONENT_G_BIT = 0x00000002;
 const ColorComponentFlagBits COLOR_COMPONENT_B_BIT = 0x00000004;
 const ColorComponentFlagBits COLOR_COMPONENT_A_BIT = 0x00000008;
 
-distinct FenceCreateFlagBits = inline uint;
+typedef FenceCreateFlagBits = inline uint;
 const FenceCreateFlagBits FENCE_CREATE_SIGNALED_BIT = 0x00000001;
 
-distinct FormatFeatureFlagBits = inline uint;
+typedef FormatFeatureFlagBits = inline uint;
 const FormatFeatureFlagBits FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001;
 const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_BIT = 0x00000002;
 const FormatFeatureFlagBits FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
@@ -2811,22 +2811,22 @@ const FormatFeatureFlagBits FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_
 const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_ENCODE_INPUT_BIT_KHR = 0x08000000;
 const FormatFeatureFlagBits FORMAT_FEATURE_VIDEO_ENCODE_DPB_BIT_KHR = 0x10000000;
 
-distinct QueryControlFlagBits = inline uint;
+typedef QueryControlFlagBits = inline uint;
 const QueryControlFlagBits QUERY_CONTROL_PRECISE_BIT = 0x00000001;
 
-distinct QueryResultFlagBits = inline uint;
+typedef QueryResultFlagBits = inline uint;
 const QueryResultFlagBits QUERY_RESULT_64_BIT = 0x00000001;
 const QueryResultFlagBits QUERY_RESULT_WAIT_BIT = 0x00000002;
 const QueryResultFlagBits QUERY_RESULT_WITH_AVAILABILITY_BIT = 0x00000004;
 const QueryResultFlagBits QUERY_RESULT_PARTIAL_BIT = 0x00000008;
 const QueryResultFlagBits QUERY_RESULT_WITH_STATUS_BIT_KHR = 0x00000010;
 
-distinct CommandBufferUsageFlagBits = inline uint;
+typedef CommandBufferUsageFlagBits = inline uint;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002;
 const CommandBufferUsageFlagBits COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004;
 
-distinct QueryPipelineStatisticFlagBits = inline uint;
+typedef QueryPipelineStatisticFlagBits = inline uint;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = 0x00000001;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = 0x00000002;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = 0x00000004;
@@ -2842,7 +2842,7 @@ const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCA
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT = 0x00001000;
 const QueryPipelineStatisticFlagBits QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI = 0x00002000;
 
-distinct ImageAspectFlagBits = inline uint;
+typedef ImageAspectFlagBits = inline uint;
 const ImageAspectFlagBits IMAGE_ASPECT_COLOR_BIT = 0x00000001;
 const ImageAspectFlagBits IMAGE_ASPECT_DEPTH_BIT = 0x00000002;
 const ImageAspectFlagBits IMAGE_ASPECT_STENCIL_BIT = 0x00000004;
@@ -2860,15 +2860,15 @@ const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = 0x00000200;
 const ImageAspectFlagBits IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = 0x00000400;
 const ImageAspectFlagBits IMAGE_ASPECT_NONE_KHR = 0;
 
-distinct SparseImageFormatFlagBits = inline uint;
+typedef SparseImageFormatFlagBits = inline uint;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = 0x00000002;
 const SparseImageFormatFlagBits SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = 0x00000004;
 
-distinct SparseMemoryBindFlagBits = inline uint;
+typedef SparseMemoryBindFlagBits = inline uint;
 const SparseMemoryBindFlagBits SPARSE_MEMORY_BIND_METADATA_BIT = 0x00000001;
 
-distinct PipelineStageFlagBits = inline uint;
+typedef PipelineStageFlagBits = inline uint;
 const PipelineStageFlagBits PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001;
 const PipelineStageFlagBits PIPELINE_STAGE_DRAW_INDIRECT_BIT = 0x00000002;
 const PipelineStageFlagBits PIPELINE_STAGE_VERTEX_INPUT_BIT = 0x00000004;
@@ -2901,19 +2901,19 @@ const PipelineStageFlagBits PIPELINE_STAGE_TASK_SHADER_BIT_EXT = 0x00080000;
 const PipelineStageFlagBits PIPELINE_STAGE_MESH_SHADER_BIT_EXT = 0x00100000;
 const PipelineStageFlagBits PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT = 0x00020000;
 
-distinct CommandPoolCreateFlagBits = inline uint;
+typedef CommandPoolCreateFlagBits = inline uint;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002;
 const CommandPoolCreateFlagBits COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004;
 
-distinct CommandPoolResetFlagBits = inline uint;
+typedef CommandPoolResetFlagBits = inline uint;
 const CommandPoolResetFlagBits COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 const CommandPoolResetFlagBits COMMAND_POOL_RESET_RESERVED_1_BIT_COREAVI = 0x00000002;
 
-distinct CommandBufferResetFlagBits = inline uint;
+typedef CommandBufferResetFlagBits = inline uint;
 const CommandBufferResetFlagBits COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001;
 
-distinct SampleCountFlagBits = inline uint;
+typedef SampleCountFlagBits = inline uint;
 const SampleCountFlagBits SAMPLE_COUNT_1_BIT = 0x00000001;
 const SampleCountFlagBits SAMPLE_COUNT_2_BIT = 0x00000002;
 const SampleCountFlagBits SAMPLE_COUNT_4_BIT = 0x00000004;
@@ -2922,15 +2922,15 @@ const SampleCountFlagBits SAMPLE_COUNT_16_BIT = 0x00000010;
 const SampleCountFlagBits SAMPLE_COUNT_32_BIT = 0x00000020;
 const SampleCountFlagBits SAMPLE_COUNT_64_BIT = 0x00000040;
 
-distinct AttachmentDescriptionFlagBits = inline uint;
+typedef AttachmentDescriptionFlagBits = inline uint;
 const AttachmentDescriptionFlagBits ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001;
 
-distinct StencilFaceFlagBits = inline uint;
+typedef StencilFaceFlagBits = inline uint;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_BIT = 0x00000001;
 const StencilFaceFlagBits STENCIL_FACE_BACK_BIT = 0x00000002;
 const StencilFaceFlagBits STENCIL_FACE_FRONT_AND_BACK = 0x00000003;
 
-distinct DescriptorPoolCreateFlagBits = inline uint;
+typedef DescriptorPoolCreateFlagBits = inline uint;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = 0x00000002;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT = 0x00000002;
@@ -2938,7 +2938,7 @@ const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT = 0x
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV = 0x00000008;
 const DescriptorPoolCreateFlagBits DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV = 0x00000010;
 
-distinct DependencyFlagBits = inline uint;
+typedef DependencyFlagBits = inline uint;
 const DependencyFlagBits DEPENDENCY_BY_REGION_BIT = 0x00000001;
 const DependencyFlagBits DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004;
 const DependencyFlagBits DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002;
@@ -2948,17 +2948,17 @@ const DependencyFlagBits DEPENDENCY_FEEDBACK_LOOP_BIT_EXT = 0x00000008;
 const DependencyFlagBits DEPENDENCY_EXTENSION_575_BIT_KHR = 0x00000020;
 const DependencyFlagBits DEPENDENCY_EXTENSION_586_BIT_IMG = 0x00000010;
 
-distinct SemaphoreType = inline uint;
+typedef SemaphoreType = inline uint;
 const SemaphoreType SEMAPHORE_TYPE_BINARY = 0;
 const SemaphoreType SEMAPHORE_TYPE_TIMELINE = 1;
 const SemaphoreType SEMAPHORE_TYPE_BINARY_KHR = 0;
 const SemaphoreType SEMAPHORE_TYPE_TIMELINE_KHR = 1;
 
-distinct SemaphoreWaitFlagBits = inline uint;
+typedef SemaphoreWaitFlagBits = inline uint;
 const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT = 0x00000001;
 const SemaphoreWaitFlagBits SEMAPHORE_WAIT_ANY_BIT_KHR = 0x00000001;
 
-distinct PresentModeKHR = inline uint;
+typedef PresentModeKHR = inline uint;
 const PresentModeKHR PRESENT_MODE_IMMEDIATE_KHR = 0;
 const PresentModeKHR PRESENT_MODE_MAILBOX_KHR = 1;
 const PresentModeKHR PRESENT_MODE_FIFO_KHR = 2;
@@ -2967,7 +2967,7 @@ const PresentModeKHR PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = 1000111000;
 const PresentModeKHR PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = 1000111001;
 const PresentModeKHR PRESENT_MODE_FIFO_LATEST_READY_EXT = 1000361000;
 
-distinct ColorSpaceKHR = inline uint;
+typedef ColorSpaceKHR = inline uint;
 const ColorSpaceKHR COLOR_SPACE_SRGB_NONLINEAR_KHR = 0;
 const ColorSpaceKHR COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = 1000104001;
 const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = 1000104002;
@@ -2986,19 +2986,19 @@ const ColorSpaceKHR COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = 1000104014;
 const ColorSpaceKHR COLOR_SPACE_DCI_P3_LINEAR_EXT = 1000104003;
 const ColorSpaceKHR COLOR_SPACE_DISPLAY_NATIVE_AMD = 1000213000;
 
-distinct DisplayPlaneAlphaFlagBitsKHR = inline uint;
+typedef DisplayPlaneAlphaFlagBitsKHR = inline uint;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004;
 const DisplayPlaneAlphaFlagBitsKHR DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008;
 
-distinct CompositeAlphaFlagBitsKHR = inline uint;
+typedef CompositeAlphaFlagBitsKHR = inline uint;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004;
 const CompositeAlphaFlagBitsKHR COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008;
 
-distinct SurfaceTransformFlagBitsKHR = inline uint;
+typedef SurfaceTransformFlagBitsKHR = inline uint;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = 0x00000002;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = 0x00000004;
@@ -3009,16 +3009,16 @@ const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080;
 const SurfaceTransformFlagBitsKHR SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100;
 
-distinct DisplaySurfaceStereoTypeNV = inline uint;
+typedef DisplaySurfaceStereoTypeNV = inline uint;
 const DisplaySurfaceStereoTypeNV DISPLAY_SURFACE_STEREO_TYPE_NONE_NV = 0;
 const DisplaySurfaceStereoTypeNV DISPLAY_SURFACE_STEREO_TYPE_ONBOARD_DIN_NV = 1;
 const DisplaySurfaceStereoTypeNV DISPLAY_SURFACE_STEREO_TYPE_HDMI_3D_NV = 2;
 const DisplaySurfaceStereoTypeNV DISPLAY_SURFACE_STEREO_TYPE_INBAND_DISPLAYPORT_NV = 3;
 
-distinct SwapchainImageUsageFlagBitsANDROID = inline uint;
+typedef SwapchainImageUsageFlagBitsANDROID = inline uint;
 const SwapchainImageUsageFlagBitsANDROID SWAPCHAIN_IMAGE_USAGE_SHARED_BIT_ANDROID = 0x00000001;
 
-distinct TimeDomainKHR = inline uint;
+typedef TimeDomainKHR = inline uint;
 const TimeDomainKHR TIME_DOMAIN_DEVICE_KHR = 0;
 const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_KHR = 1;
 const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR = 2;
@@ -3028,14 +3028,14 @@ const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_EXT = 1;
 const TimeDomainKHR TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = 2;
 const TimeDomainKHR TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = 3;
 
-distinct DebugReportFlagBitsEXT = inline uint;
+typedef DebugReportFlagBitsEXT = inline uint;
 const DebugReportFlagBitsEXT DEBUG_REPORT_INFORMATION_BIT_EXT = 0x00000001;
 const DebugReportFlagBitsEXT DEBUG_REPORT_WARNING_BIT_EXT = 0x00000002;
 const DebugReportFlagBitsEXT DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = 0x00000004;
 const DebugReportFlagBitsEXT DEBUG_REPORT_ERROR_BIT_EXT = 0x00000008;
 const DebugReportFlagBitsEXT DEBUG_REPORT_DEBUG_BIT_EXT = 0x00000010;
 
-distinct DebugReportObjectTypeEXT = inline uint;
+typedef DebugReportObjectTypeEXT = inline uint;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = 0;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = 1;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = 2;
@@ -3080,40 +3080,40 @@ const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT = 100
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT = 1000307001;
 const DebugReportObjectTypeEXT DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT = 1000366000;
 
-distinct DeviceMemoryReportEventTypeEXT = inline uint;
+typedef DeviceMemoryReportEventTypeEXT = inline uint;
 const DeviceMemoryReportEventTypeEXT DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT = 0;
 const DeviceMemoryReportEventTypeEXT DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT = 1;
 const DeviceMemoryReportEventTypeEXT DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT = 2;
 const DeviceMemoryReportEventTypeEXT DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT = 3;
 const DeviceMemoryReportEventTypeEXT DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT = 4;
 
-distinct RasterizationOrderAMD = inline uint;
+typedef RasterizationOrderAMD = inline uint;
 const RasterizationOrderAMD RASTERIZATION_ORDER_STRICT_AMD = 0;
 const RasterizationOrderAMD RASTERIZATION_ORDER_RELAXED_AMD = 1;
 
-distinct ExternalMemoryHandleTypeFlagBitsNV = inline uint;
+typedef ExternalMemoryHandleTypeFlagBitsNV = inline uint;
 const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = 0x00000001;
 const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = 0x00000002;
 const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = 0x00000004;
 const ExternalMemoryHandleTypeFlagBitsNV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = 0x00000008;
 
-distinct ExternalMemoryFeatureFlagBitsNV = inline uint;
+typedef ExternalMemoryFeatureFlagBitsNV = inline uint;
 const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = 0x00000001;
 const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = 0x00000002;
 const ExternalMemoryFeatureFlagBitsNV EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = 0x00000004;
 
-distinct ValidationCheckEXT = inline uint;
+typedef ValidationCheckEXT = inline uint;
 const ValidationCheckEXT VALIDATION_CHECK_ALL_EXT = 0;
 const ValidationCheckEXT VALIDATION_CHECK_SHADERS_EXT = 1;
 
-distinct ValidationFeatureEnableEXT = inline uint;
+typedef ValidationFeatureEnableEXT = inline uint;
 const ValidationFeatureEnableEXT VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = 0;
 const ValidationFeatureEnableEXT VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = 1;
 const ValidationFeatureEnableEXT VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = 2;
 const ValidationFeatureEnableEXT VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = 3;
 const ValidationFeatureEnableEXT VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT = 4;
 
-distinct ValidationFeatureDisableEXT = inline uint;
+typedef ValidationFeatureDisableEXT = inline uint;
 const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_ALL_EXT = 0;
 const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_SHADERS_EXT = 1;
 const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = 2;
@@ -3123,7 +3123,7 @@ const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = 5
 const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = 6;
 const ValidationFeatureDisableEXT VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT = 7;
 
-distinct LayerSettingTypeEXT = inline uint;
+typedef LayerSettingTypeEXT = inline uint;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_BOOL32_EXT = 0;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_INT32_EXT = 1;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_INT64_EXT = 2;
@@ -3133,7 +3133,7 @@ const LayerSettingTypeEXT LAYER_SETTING_TYPE_FLOAT32_EXT = 5;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_FLOAT64_EXT = 6;
 const LayerSettingTypeEXT LAYER_SETTING_TYPE_STRING_EXT = 7;
 
-distinct SubgroupFeatureFlagBits = inline uint;
+typedef SubgroupFeatureFlagBits = inline uint;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_BASIC_BIT = 0x00000001;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_VOTE_BIT = 0x00000002;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ARITHMETIC_BIT = 0x00000004;
@@ -3148,15 +3148,15 @@ const SubgroupFeatureFlagBits SUBGROUP_FEATURE_PARTITIONED_BIT_NV = 0x00000100;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ROTATE_BIT_KHR = 0x00000200;
 const SubgroupFeatureFlagBits SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR = 0x00000400;
 
-distinct IndirectCommandsLayoutUsageFlagBitsNV = inline uint;
+typedef IndirectCommandsLayoutUsageFlagBitsNV = inline uint;
 const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = 0x00000001;
 const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = 0x00000002;
 const IndirectCommandsLayoutUsageFlagBitsNV INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV = 0x00000004;
 
-distinct IndirectStateFlagBitsNV = inline uint;
+typedef IndirectStateFlagBitsNV = inline uint;
 const IndirectStateFlagBitsNV INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV = 0x00000001;
 
-distinct IndirectCommandsTokenTypeNV = inline uint;
+typedef IndirectCommandsTokenTypeNV = inline uint;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV = 0;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV = 1;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV = 2;
@@ -3169,7 +3169,7 @@ const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_N
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NV = 1000428003;
 const IndirectCommandsTokenTypeNV INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NV = 1000428004;
 
-distinct ExternalMemoryHandleTypeFlagBits = inline uint;
+typedef ExternalMemoryHandleTypeFlagBits = inline uint;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
@@ -3196,7 +3196,7 @@ const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_590_BIT_HUAWE
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_603_BIT_EXT = 0x00010000;
 const ExternalMemoryHandleTypeFlagBits EXTERNAL_MEMORY_HANDLE_TYPE_603_BIT_2_EXT = 0x00020000;
 
-distinct ExternalMemoryFeatureFlagBits = inline uint;
+typedef ExternalMemoryFeatureFlagBits = inline uint;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = 0x00000001;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = 0x00000002;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = 0x00000004;
@@ -3204,7 +3204,7 @@ const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_K
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR = 0x00000002;
 const ExternalMemoryFeatureFlagBits EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR = 0x00000004;
 
-distinct ExternalSemaphoreHandleTypeFlagBits = inline uint;
+typedef ExternalSemaphoreHandleTypeFlagBits = inline uint;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
@@ -3218,17 +3218,17 @@ const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA = 0x00000080;
 const ExternalSemaphoreHandleTypeFlagBits EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = 0x00000020;
 
-distinct ExternalSemaphoreFeatureFlagBits = inline uint;
+typedef ExternalSemaphoreFeatureFlagBits = inline uint;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR = 0x00000001;
 const ExternalSemaphoreFeatureFlagBits EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR = 0x00000002;
 
-distinct SemaphoreImportFlagBits = inline uint;
+typedef SemaphoreImportFlagBits = inline uint;
 const SemaphoreImportFlagBits SEMAPHORE_IMPORT_TEMPORARY_BIT = 0x00000001;
 const SemaphoreImportFlagBits SEMAPHORE_IMPORT_TEMPORARY_BIT_KHR = 0x00000001;
 
-distinct ExternalFenceHandleTypeFlagBits = inline uint;
+typedef ExternalFenceHandleTypeFlagBits = inline uint;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004;
@@ -3240,31 +3240,31 @@ const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = 0x00000010;
 const ExternalFenceHandleTypeFlagBits EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV = 0x00000020;
 
-distinct ExternalFenceFeatureFlagBits = inline uint;
+typedef ExternalFenceFeatureFlagBits = inline uint;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = 0x00000001;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = 0x00000002;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT_KHR = 0x00000001;
 const ExternalFenceFeatureFlagBits EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT_KHR = 0x00000002;
 
-distinct FenceImportFlagBits = inline uint;
+typedef FenceImportFlagBits = inline uint;
 const FenceImportFlagBits FENCE_IMPORT_TEMPORARY_BIT = 0x00000001;
 const FenceImportFlagBits FENCE_IMPORT_TEMPORARY_BIT_KHR = 0x00000001;
 
-distinct SurfaceCounterFlagBitsEXT = inline uint;
+typedef SurfaceCounterFlagBitsEXT = inline uint;
 const SurfaceCounterFlagBitsEXT SURFACE_COUNTER_VBLANK_BIT_EXT = 0x00000001;
 
-distinct DisplayPowerStateEXT = inline uint;
+typedef DisplayPowerStateEXT = inline uint;
 const DisplayPowerStateEXT DISPLAY_POWER_STATE_OFF_EXT = 0;
 const DisplayPowerStateEXT DISPLAY_POWER_STATE_SUSPEND_EXT = 1;
 const DisplayPowerStateEXT DISPLAY_POWER_STATE_ON_EXT = 2;
 
-distinct DeviceEventTypeEXT = inline uint;
+typedef DeviceEventTypeEXT = inline uint;
 const DeviceEventTypeEXT DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = 0;
 
-distinct DisplayEventTypeEXT = inline uint;
+typedef DisplayEventTypeEXT = inline uint;
 const DisplayEventTypeEXT DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = 0;
 
-distinct PeerMemoryFeatureFlagBits = inline uint;
+typedef PeerMemoryFeatureFlagBits = inline uint;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_SRC_BIT = 0x00000001;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_DST_BIT = 0x00000002;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = 0x00000004;
@@ -3274,7 +3274,7 @@ const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_COPY_DST_BIT_KHR = 0x0000000
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_SRC_BIT_KHR = 0x00000004;
 const PeerMemoryFeatureFlagBits PEER_MEMORY_FEATURE_GENERIC_DST_BIT_KHR = 0x00000008;
 
-distinct MemoryAllocateFlagBits = inline uint;
+typedef MemoryAllocateFlagBits = inline uint;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = 0x00000002;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = 0x00000004;
@@ -3282,13 +3282,13 @@ const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_MASK_BIT_KHR = 0x00000001;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT_KHR = 0x00000002;
 const MemoryAllocateFlagBits MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = 0x00000004;
 
-distinct DeviceGroupPresentModeFlagBitsKHR = inline uint;
+typedef DeviceGroupPresentModeFlagBitsKHR = inline uint;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004;
 const DeviceGroupPresentModeFlagBitsKHR DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008;
 
-distinct ViewportCoordinateSwizzleNV = inline uint;
+typedef ViewportCoordinateSwizzleNV = inline uint;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = 0;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = 1;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = 2;
@@ -3298,17 +3298,17 @@ const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = 5;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = 6;
 const ViewportCoordinateSwizzleNV VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = 7;
 
-distinct DiscardRectangleModeEXT = inline uint;
+typedef DiscardRectangleModeEXT = inline uint;
 const DiscardRectangleModeEXT DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = 0;
 const DiscardRectangleModeEXT DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = 1;
 
-distinct PointClippingBehavior = inline uint;
+typedef PointClippingBehavior = inline uint;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = 0;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = 1;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR = 0;
 const PointClippingBehavior POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR = 1;
 
-distinct SamplerReductionMode = inline uint;
+typedef SamplerReductionMode = inline uint;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = 0;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_MIN = 1;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_MAX = 2;
@@ -3317,13 +3317,13 @@ const SamplerReductionMode SAMPLER_REDUCTION_MODE_MIN_EXT = 1;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_MAX_EXT = 2;
 const SamplerReductionMode SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM = 1000521000;
 
-distinct TessellationDomainOrigin = inline uint;
+typedef TessellationDomainOrigin = inline uint;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = 0;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = 1;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR = 0;
 const TessellationDomainOrigin TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR = 1;
 
-distinct SamplerYcbcrModelConversion = inline uint;
+typedef SamplerYcbcrModelConversion = inline uint;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = 0;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = 1;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = 2;
@@ -3335,42 +3335,42 @@ const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709_KHR =
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601_KHR = 3;
 const SamplerYcbcrModelConversion SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020_KHR = 4;
 
-distinct SamplerYcbcrRange = inline uint;
+typedef SamplerYcbcrRange = inline uint;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_FULL = 0;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_NARROW = 1;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_FULL_KHR = 0;
 const SamplerYcbcrRange SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR = 1;
 
-distinct ChromaLocation = inline uint;
+typedef ChromaLocation = inline uint;
 const ChromaLocation CHROMA_LOCATION_COSITED_EVEN = 0;
 const ChromaLocation CHROMA_LOCATION_MIDPOINT = 1;
 const ChromaLocation CHROMA_LOCATION_COSITED_EVEN_KHR = 0;
 const ChromaLocation CHROMA_LOCATION_MIDPOINT_KHR = 1;
 
-distinct BlendOverlapEXT = inline uint;
+typedef BlendOverlapEXT = inline uint;
 const BlendOverlapEXT BLEND_OVERLAP_UNCORRELATED_EXT = 0;
 const BlendOverlapEXT BLEND_OVERLAP_DISJOINT_EXT = 1;
 const BlendOverlapEXT BLEND_OVERLAP_CONJOINT_EXT = 2;
 
-distinct CoverageModulationModeNV = inline uint;
+typedef CoverageModulationModeNV = inline uint;
 const CoverageModulationModeNV COVERAGE_MODULATION_MODE_NONE_NV = 0;
 const CoverageModulationModeNV COVERAGE_MODULATION_MODE_RGB_NV = 1;
 const CoverageModulationModeNV COVERAGE_MODULATION_MODE_ALPHA_NV = 2;
 const CoverageModulationModeNV COVERAGE_MODULATION_MODE_RGBA_NV = 3;
 
-distinct CoverageReductionModeNV = inline uint;
+typedef CoverageReductionModeNV = inline uint;
 const CoverageReductionModeNV COVERAGE_REDUCTION_MODE_MERGE_NV = 0;
 const CoverageReductionModeNV COVERAGE_REDUCTION_MODE_TRUNCATE_NV = 1;
 
-distinct ValidationCacheHeaderVersionEXT = inline uint;
+typedef ValidationCacheHeaderVersionEXT = inline uint;
 const ValidationCacheHeaderVersionEXT VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = 1;
 
-distinct ShaderInfoTypeAMD = inline uint;
+typedef ShaderInfoTypeAMD = inline uint;
 const ShaderInfoTypeAMD SHADER_INFO_TYPE_STATISTICS_AMD = 0;
 const ShaderInfoTypeAMD SHADER_INFO_TYPE_BINARY_AMD = 1;
 const ShaderInfoTypeAMD SHADER_INFO_TYPE_DISASSEMBLY_AMD = 2;
 
-distinct QueueGlobalPriority = inline uint;
+typedef QueueGlobalPriority = inline uint;
 const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_LOW = 128;
 const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_MEDIUM = 256;
 const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_HIGH = 512;
@@ -3384,24 +3384,24 @@ const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR = 256;
 const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_HIGH_KHR = 512;
 const QueueGlobalPriority QUEUE_GLOBAL_PRIORITY_REALTIME_KHR = 1024;
 
-distinct DebugUtilsMessageSeverityFlagBitsEXT = inline uint;
+typedef DebugUtilsMessageSeverityFlagBitsEXT = inline uint;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = 0x00000001;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = 0x00000010;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = 0x00000100;
 const DebugUtilsMessageSeverityFlagBitsEXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = 0x00001000;
 
-distinct DebugUtilsMessageTypeFlagBitsEXT = inline uint;
+typedef DebugUtilsMessageTypeFlagBitsEXT = inline uint;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = 0x00000001;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = 0x00000002;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
 const DebugUtilsMessageTypeFlagBitsEXT DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT = 0x00000008;
 
-distinct ConservativeRasterizationModeEXT = inline uint;
+typedef ConservativeRasterizationModeEXT = inline uint;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = 0;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = 1;
 const ConservativeRasterizationModeEXT CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = 2;
 
-distinct DescriptorBindingFlagBits = inline uint;
+typedef DescriptorBindingFlagBits = inline uint;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = 0x00000001;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = 0x00000002;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = 0x00000004;
@@ -3412,7 +3412,7 @@ const DescriptorBindingFlagBits DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT = 0x0
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT = 0x00000008;
 const DescriptorBindingFlagBits DESCRIPTOR_BINDING_RESERVED_4_BIT_QCOM = 0x00000010;
 
-distinct VendorId = inline uint;
+typedef VendorId = inline uint;
 const VendorId VENDOR_ID_KHRONOS = 0x10000;
 const VendorId VENDOR_ID_VIV = 0x10001;
 const VendorId VENDOR_ID_VSI = 0x10002;
@@ -3422,7 +3422,7 @@ const VendorId VENDOR_ID_MESA = 0x10005;
 const VendorId VENDOR_ID_POCL = 0x10006;
 const VendorId VENDOR_ID_MOBILEYE = 0x10007;
 
-distinct DriverId = inline uint;
+typedef DriverId = inline uint;
 const DriverId DRIVER_ID_AMD_PROPRIETARY = 1;
 const DriverId DRIVER_ID_AMD_OPEN_SOURCE = 2;
 const DriverId DRIVER_ID_MESA_RADV = 3;
@@ -3463,10 +3463,10 @@ const DriverId DRIVER_ID_GOOGLE_SWIFTSHADER_KHR = 10;
 const DriverId DRIVER_ID_GGP_PROPRIETARY_KHR = 11;
 const DriverId DRIVER_ID_BROADCOM_PROPRIETARY_KHR = 12;
 
-distinct ConditionalRenderingFlagBitsEXT = inline uint;
+typedef ConditionalRenderingFlagBitsEXT = inline uint;
 const ConditionalRenderingFlagBitsEXT CONDITIONAL_RENDERING_INVERTED_BIT_EXT = 0x00000001;
 
-distinct ResolveModeFlagBits = inline uint;
+typedef ResolveModeFlagBits = inline uint;
 const ResolveModeFlagBits RESOLVE_MODE_NONE = 0;
 const ResolveModeFlagBits RESOLVE_MODE_SAMPLE_ZERO_BIT = 0x00000001;
 const ResolveModeFlagBits RESOLVE_MODE_AVERAGE_BIT = 0x00000002;
@@ -3479,7 +3479,7 @@ const ResolveModeFlagBits RESOLVE_MODE_MIN_BIT_KHR = 0x00000004;
 const ResolveModeFlagBits RESOLVE_MODE_MAX_BIT_KHR = 0x00000008;
 const ResolveModeFlagBits RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID = 0x00000010;
 
-distinct ShadingRatePaletteEntryNV = inline uint;
+typedef ShadingRatePaletteEntryNV = inline uint;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = 0;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV = 1;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV = 2;
@@ -3493,13 +3493,13 @@ const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV = 10;
 const ShadingRatePaletteEntryNV SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV = 11;
 
-distinct CoarseSampleOrderTypeNV = inline uint;
+typedef CoarseSampleOrderTypeNV = inline uint;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = 0;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = 1;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = 2;
 const CoarseSampleOrderTypeNV COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = 3;
 
-distinct GeometryInstanceFlagBitsKHR = inline uint;
+typedef GeometryInstanceFlagBitsKHR = inline uint;
 const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = 0x00000001;
 const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR = 0x00000002;
 const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = 0x00000004;
@@ -3510,13 +3510,13 @@ const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV = 0x0
 const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT = 0x00000010;
 const GeometryInstanceFlagBitsKHR GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT = 0x00000020;
 
-distinct GeometryFlagBitsKHR = inline uint;
+typedef GeometryFlagBitsKHR = inline uint;
 const GeometryFlagBitsKHR GEOMETRY_OPAQUE_BIT_KHR = 0x00000001;
 const GeometryFlagBitsKHR GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR = 0x00000002;
 const GeometryFlagBitsKHR GEOMETRY_OPAQUE_BIT_NV = 0x00000001;
 const GeometryFlagBitsKHR GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV = 0x00000002;
 
-distinct BuildAccelerationStructureFlagBitsKHR = inline uint;
+typedef BuildAccelerationStructureFlagBitsKHR = inline uint;
 const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = 0x00000001;
 const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR = 0x00000002;
 const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = 0x00000004;
@@ -3534,12 +3534,12 @@ const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_O
 const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV = 0x00000200;
 const BuildAccelerationStructureFlagBitsKHR BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR = 0x00000800;
 
-distinct AccelerationStructureCreateFlagBitsKHR = inline uint;
+typedef AccelerationStructureCreateFlagBitsKHR = inline uint;
 const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = 0x00000001;
 const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000008;
 const AccelerationStructureCreateFlagBitsKHR ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV = 0x00000004;
 
-distinct CopyAccelerationStructureModeKHR = inline uint;
+typedef CopyAccelerationStructureModeKHR = inline uint;
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR = 0;
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR = 1;
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR = 2;
@@ -3547,35 +3547,35 @@ const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_DESERIAL
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV = 0;
 const CopyAccelerationStructureModeKHR COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV = 1;
 
-distinct BuildAccelerationStructureModeKHR = inline uint;
+typedef BuildAccelerationStructureModeKHR = inline uint;
 const BuildAccelerationStructureModeKHR BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR = 0;
 const BuildAccelerationStructureModeKHR BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR = 1;
 
-distinct AccelerationStructureTypeKHR = inline uint;
+typedef AccelerationStructureTypeKHR = inline uint;
 const AccelerationStructureTypeKHR ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR = 0;
 const AccelerationStructureTypeKHR ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR = 1;
 const AccelerationStructureTypeKHR ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR = 2;
 const AccelerationStructureTypeKHR ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV = 0;
 const AccelerationStructureTypeKHR ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV = 1;
 
-distinct GeometryTypeKHR = inline uint;
+typedef GeometryTypeKHR = inline uint;
 const GeometryTypeKHR GEOMETRY_TYPE_TRIANGLES_KHR = 0;
 const GeometryTypeKHR GEOMETRY_TYPE_AABBS_KHR = 1;
 const GeometryTypeKHR GEOMETRY_TYPE_INSTANCES_KHR = 2;
 const GeometryTypeKHR GEOMETRY_TYPE_TRIANGLES_NV = 0;
 const GeometryTypeKHR GEOMETRY_TYPE_AABBS_NV = 1;
 
-distinct AccelerationStructureMemoryRequirementsTypeNV = inline uint;
+typedef AccelerationStructureMemoryRequirementsTypeNV = inline uint;
 const AccelerationStructureMemoryRequirementsTypeNV ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV = 0;
 const AccelerationStructureMemoryRequirementsTypeNV ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV = 1;
 const AccelerationStructureMemoryRequirementsTypeNV ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV = 2;
 
-distinct AccelerationStructureBuildTypeKHR = inline uint;
+typedef AccelerationStructureBuildTypeKHR = inline uint;
 const AccelerationStructureBuildTypeKHR ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR = 0;
 const AccelerationStructureBuildTypeKHR ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR = 1;
 const AccelerationStructureBuildTypeKHR ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR = 2;
 
-distinct RayTracingShaderGroupTypeKHR = inline uint;
+typedef RayTracingShaderGroupTypeKHR = inline uint;
 const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR = 0;
 const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR = 1;
 const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR = 2;
@@ -3583,28 +3583,28 @@ const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV = 0;
 const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV = 1;
 const RayTracingShaderGroupTypeKHR RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV = 2;
 
-distinct AccelerationStructureCompatibilityKHR = inline uint;
+typedef AccelerationStructureCompatibilityKHR = inline uint;
 const AccelerationStructureCompatibilityKHR ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR = 0;
 const AccelerationStructureCompatibilityKHR ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR = 1;
 
-distinct ShaderGroupShaderKHR = inline uint;
+typedef ShaderGroupShaderKHR = inline uint;
 const ShaderGroupShaderKHR SHADER_GROUP_SHADER_GENERAL_KHR = 0;
 const ShaderGroupShaderKHR SHADER_GROUP_SHADER_CLOSEST_HIT_KHR = 1;
 const ShaderGroupShaderKHR SHADER_GROUP_SHADER_ANY_HIT_KHR = 2;
 const ShaderGroupShaderKHR SHADER_GROUP_SHADER_INTERSECTION_KHR = 3;
 
-distinct MemoryOverallocationBehaviorAMD = inline uint;
+typedef MemoryOverallocationBehaviorAMD = inline uint;
 const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = 0;
 const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = 1;
 const MemoryOverallocationBehaviorAMD MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = 2;
 
-distinct DeviceDiagnosticsConfigFlagBitsNV = inline uint;
+typedef DeviceDiagnosticsConfigFlagBitsNV = inline uint;
 const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = 0x00000001;
 const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = 0x00000002;
 const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = 0x00000004;
 const DeviceDiagnosticsConfigFlagBitsNV DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = 0x00000008;
 
-distinct PipelineCreationFeedbackFlagBits = inline uint;
+typedef PipelineCreationFeedbackFlagBits = inline uint;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_VALID_BIT = 0x00000001;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = 0x00000002;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = 0x00000004;
@@ -3612,21 +3612,21 @@ const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT 
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = 0x00000002;
 const PipelineCreationFeedbackFlagBits PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = 0x00000004;
 
-distinct FullScreenExclusiveEXT = inline uint;
+typedef FullScreenExclusiveEXT = inline uint;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = 0;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = 1;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = 2;
 const FullScreenExclusiveEXT FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = 3;
 
-distinct PerformanceCounterScopeKHR = inline uint;
+typedef PerformanceCounterScopeKHR = inline uint;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = 0;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = 1;
 const PerformanceCounterScopeKHR PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = 2;
 
-distinct MemoryDecompressionMethodFlagBitsNV = inline ulong;
+typedef MemoryDecompressionMethodFlagBitsNV = inline ulong;
 const MemoryDecompressionMethodFlagBitsNV MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV = 0x00000001;
 
-distinct PerformanceCounterUnitKHR = inline uint;
+typedef PerformanceCounterUnitKHR = inline uint;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = 0;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR = 1;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR = 2;
@@ -3639,7 +3639,7 @@ const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_AMPS_KHR = 8;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_HERTZ_KHR = 9;
 const PerformanceCounterUnitKHR PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = 10;
 
-distinct PerformanceCounterStorageKHR = inline uint;
+typedef PerformanceCounterStorageKHR = inline uint;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_INT32_KHR = 0;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_INT64_KHR = 1;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = 2;
@@ -3647,32 +3647,32 @@ const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = 3;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = 4;
 const PerformanceCounterStorageKHR PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = 5;
 
-distinct PerformanceCounterDescriptionFlagBitsKHR = inline uint;
+typedef PerformanceCounterDescriptionFlagBitsKHR = inline uint;
 const PerformanceCounterDescriptionFlagBitsKHR PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = 0x00000001;
 const PerformanceCounterDescriptionFlagBitsKHR PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = 0x00000002;
 
-distinct PerformanceConfigurationTypeINTEL = inline uint;
+typedef PerformanceConfigurationTypeINTEL = inline uint;
 const PerformanceConfigurationTypeINTEL PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL = 0;
 
-distinct QueryPoolSamplingModeINTEL = inline uint;
+typedef QueryPoolSamplingModeINTEL = inline uint;
 const QueryPoolSamplingModeINTEL QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL = 0;
 
-distinct PerformanceOverrideTypeINTEL = inline uint;
+typedef PerformanceOverrideTypeINTEL = inline uint;
 const PerformanceOverrideTypeINTEL PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL = 0;
 const PerformanceOverrideTypeINTEL PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL = 1;
 
-distinct PerformanceParameterTypeINTEL = inline uint;
+typedef PerformanceParameterTypeINTEL = inline uint;
 const PerformanceParameterTypeINTEL PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL = 0;
 const PerformanceParameterTypeINTEL PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL = 1;
 
-distinct PerformanceValueTypeINTEL = inline uint;
+typedef PerformanceValueTypeINTEL = inline uint;
 const PerformanceValueTypeINTEL PERFORMANCE_VALUE_TYPE_UINT32_INTEL = 0;
 const PerformanceValueTypeINTEL PERFORMANCE_VALUE_TYPE_UINT64_INTEL = 1;
 const PerformanceValueTypeINTEL PERFORMANCE_VALUE_TYPE_FLOAT_INTEL = 2;
 const PerformanceValueTypeINTEL PERFORMANCE_VALUE_TYPE_BOOL_INTEL = 3;
 const PerformanceValueTypeINTEL PERFORMANCE_VALUE_TYPE_STRING_INTEL = 4;
 
-distinct ShaderFloatControlsIndependence = inline uint;
+typedef ShaderFloatControlsIndependence = inline uint;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = 0;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = 1;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = 2;
@@ -3680,13 +3680,13 @@ const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL_KHR = 1;
 const ShaderFloatControlsIndependence SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE_KHR = 2;
 
-distinct PipelineExecutableStatisticFormatKHR = inline uint;
+typedef PipelineExecutableStatisticFormatKHR = inline uint;
 const PipelineExecutableStatisticFormatKHR PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR = 0;
 const PipelineExecutableStatisticFormatKHR PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR = 1;
 const PipelineExecutableStatisticFormatKHR PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR = 2;
 const PipelineExecutableStatisticFormatKHR PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR = 3;
 
-distinct LineRasterizationMode = inline uint;
+typedef LineRasterizationMode = inline uint;
 const LineRasterizationMode LINE_RASTERIZATION_MODE_DEFAULT = 0;
 const LineRasterizationMode LINE_RASTERIZATION_MODE_RECTANGULAR = 1;
 const LineRasterizationMode LINE_RASTERIZATION_MODE_BRESENHAM = 2;
@@ -3700,13 +3700,13 @@ const LineRasterizationMode LINE_RASTERIZATION_MODE_RECTANGULAR_KHR = 1;
 const LineRasterizationMode LINE_RASTERIZATION_MODE_BRESENHAM_KHR = 2;
 const LineRasterizationMode LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR = 3;
 
-distinct FaultLevel = inline uint;
+typedef FaultLevel = inline uint;
 const FaultLevel FAULT_LEVEL_UNASSIGNED = 0;
 const FaultLevel FAULT_LEVEL_CRITICAL = 1;
 const FaultLevel FAULT_LEVEL_RECOVERABLE = 2;
 const FaultLevel FAULT_LEVEL_WARNING = 3;
 
-distinct FaultType = inline uint;
+typedef FaultType = inline uint;
 const FaultType FAULT_TYPE_INVALID = 0;
 const FaultType FAULT_TYPE_UNASSIGNED = 1;
 const FaultType FAULT_TYPE_IMPLEMENTATION = 2;
@@ -3715,10 +3715,10 @@ const FaultType FAULT_TYPE_PHYSICAL_DEVICE = 4;
 const FaultType FAULT_TYPE_COMMAND_BUFFER_FULL = 5;
 const FaultType FAULT_TYPE_INVALID_API_USAGE = 6;
 
-distinct FaultQueryBehavior = inline uint;
+typedef FaultQueryBehavior = inline uint;
 const FaultQueryBehavior FAULT_QUERY_BEHAVIOR_GET_AND_CLEAR_ALL_FAULTS = 0;
 
-distinct ToolPurposeFlagBits = inline uint;
+typedef ToolPurposeFlagBits = inline uint;
 const ToolPurposeFlagBits TOOL_PURPOSE_VALIDATION_BIT = 0x00000001;
 const ToolPurposeFlagBits TOOL_PURPOSE_PROFILING_BIT = 0x00000002;
 const ToolPurposeFlagBits TOOL_PURPOSE_TRACING_BIT = 0x00000004;
@@ -3732,17 +3732,17 @@ const ToolPurposeFlagBits TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT = 0x00000010;
 const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT = 0x00000020;
 const ToolPurposeFlagBits TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = 0x00000040;
 
-distinct PipelineMatchControl = inline uint;
+typedef PipelineMatchControl = inline uint;
 const PipelineMatchControl PIPELINE_MATCH_CONTROL_APPLICATION_UUID_EXACT_MATCH = 0;
 
-distinct FragmentShadingRateCombinerOpKHR = inline uint;
+typedef FragmentShadingRateCombinerOpKHR = inline uint;
 const FragmentShadingRateCombinerOpKHR FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR = 0;
 const FragmentShadingRateCombinerOpKHR FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR = 1;
 const FragmentShadingRateCombinerOpKHR FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR = 2;
 const FragmentShadingRateCombinerOpKHR FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR = 3;
 const FragmentShadingRateCombinerOpKHR FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR = 4;
 
-distinct FragmentShadingRateNV = inline uint;
+typedef FragmentShadingRateNV = inline uint;
 const FragmentShadingRateNV FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV = 0;
 const FragmentShadingRateNV FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV = 1;
 const FragmentShadingRateNV FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV = 4;
@@ -3756,11 +3756,11 @@ const FragmentShadingRateNV FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV = 1
 const FragmentShadingRateNV FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV = 14;
 const FragmentShadingRateNV FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV = 15;
 
-distinct FragmentShadingRateTypeNV = inline uint;
+typedef FragmentShadingRateTypeNV = inline uint;
 const FragmentShadingRateTypeNV FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV = 0;
 const FragmentShadingRateTypeNV FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV = 1;
 
-distinct SubpassMergeStatusEXT = inline uint;
+typedef SubpassMergeStatusEXT = inline uint;
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_MERGED_EXT = 0;
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_DISALLOWED_EXT = 1;
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT = 2;
@@ -3776,7 +3776,7 @@ const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_R
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT = 12;
 const SubpassMergeStatusEXT SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT = 13;
 
-distinct AccessFlagBits2 = inline ulong;
+typedef AccessFlagBits2 = inline ulong;
 const AccessFlagBits2 ACCESS_2_NONE = 0;
 const AccessFlagBits2 ACCESS_2_INDIRECT_COMMAND_READ_BIT = 0x00000001;
 const AccessFlagBits2 ACCESS_2_INDEX_READ_BIT = 0x00000002;
@@ -3861,7 +3861,7 @@ const AccessFlagBits2 ACCESS_2_RESERVED_48_BIT_EXT = 0x1000000000000;
 const AccessFlagBits2 ACCESS_2_RESERVED_55_BIT_NV = 0x80000000000000;
 const AccessFlagBits2 ACCESS_2_RESERVED_56_BIT_NV = 0x100000000000000;
 
-distinct PipelineStageFlagBits2 = inline ulong;
+typedef PipelineStageFlagBits2 = inline ulong;
 const PipelineStageFlagBits2 PIPELINE_STAGE_2_NONE = 0;
 const PipelineStageFlagBits2 PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = 0x00000001;
 const PipelineStageFlagBits2 PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = 0x00000002;
@@ -3941,61 +3941,61 @@ const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_42_BIT_EXT = 0x4000000000
 const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_46_BIT_NV = 0x400000000000;
 const PipelineStageFlagBits2 PIPELINE_STAGE_2_RESERVED_45_BIT_NV = 0x200000000000;
 
-distinct SubmitFlagBits = inline uint;
+typedef SubmitFlagBits = inline uint;
 const SubmitFlagBits SUBMIT_PROTECTED_BIT = 0x00000001;
 const SubmitFlagBits SUBMIT_PROTECTED_BIT_KHR = 0x00000001;
 
-distinct SciSyncClientTypeNV = inline uint;
+typedef SciSyncClientTypeNV = inline uint;
 const SciSyncClientTypeNV SCI_SYNC_CLIENT_TYPE_SIGNALER_NV = 0;
 const SciSyncClientTypeNV SCI_SYNC_CLIENT_TYPE_WAITER_NV = 1;
 const SciSyncClientTypeNV SCI_SYNC_CLIENT_TYPE_SIGNALER_WAITER_NV = 2;
 
-distinct SciSyncPrimitiveTypeNV = inline uint;
+typedef SciSyncPrimitiveTypeNV = inline uint;
 const SciSyncPrimitiveTypeNV SCI_SYNC_PRIMITIVE_TYPE_FENCE_NV = 0;
 const SciSyncPrimitiveTypeNV SCI_SYNC_PRIMITIVE_TYPE_SEMAPHORE_NV = 1;
 
-distinct ProvokingVertexModeEXT = inline uint;
+typedef ProvokingVertexModeEXT = inline uint;
 const ProvokingVertexModeEXT PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT = 0;
 const ProvokingVertexModeEXT PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT = 1;
 
-distinct PipelineCacheValidationVersion = inline uint;
+typedef PipelineCacheValidationVersion = inline uint;
 const PipelineCacheValidationVersion PIPELINE_CACHE_VALIDATION_VERSION_SAFETY_CRITICAL_ONE = 1;
 
-distinct AccelerationStructureMotionInstanceTypeNV = inline uint;
+typedef AccelerationStructureMotionInstanceTypeNV = inline uint;
 const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV = 0;
 const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV = 1;
 const AccelerationStructureMotionInstanceTypeNV ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV = 2;
 
-distinct GraphicsPipelineLibraryFlagBitsEXT = inline uint;
+typedef GraphicsPipelineLibraryFlagBitsEXT = inline uint;
 const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT = 0x00000001;
 const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT = 0x00000002;
 const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT = 0x00000004;
 const GraphicsPipelineLibraryFlagBitsEXT GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT = 0x00000008;
 
-distinct DeviceAddressBindingFlagBitsEXT = inline uint;
+typedef DeviceAddressBindingFlagBitsEXT = inline uint;
 const DeviceAddressBindingFlagBitsEXT DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT = 0x00000001;
 
-distinct DeviceAddressBindingTypeEXT = inline uint;
+typedef DeviceAddressBindingTypeEXT = inline uint;
 const DeviceAddressBindingTypeEXT DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT = 0;
 const DeviceAddressBindingTypeEXT DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT = 1;
 
-distinct FrameBoundaryFlagBitsEXT = inline uint;
+typedef FrameBoundaryFlagBitsEXT = inline uint;
 const FrameBoundaryFlagBitsEXT FRAME_BOUNDARY_FRAME_END_BIT_EXT = 0x00000001;
 
-distinct PresentScalingFlagBitsEXT = inline uint;
+typedef PresentScalingFlagBitsEXT = inline uint;
 const PresentScalingFlagBitsEXT PRESENT_SCALING_ONE_TO_ONE_BIT_EXT = 0x00000001;
 const PresentScalingFlagBitsEXT PRESENT_SCALING_ASPECT_RATIO_STRETCH_BIT_EXT = 0x00000002;
 const PresentScalingFlagBitsEXT PRESENT_SCALING_STRETCH_BIT_EXT = 0x00000004;
 
-distinct PresentGravityFlagBitsEXT = inline uint;
+typedef PresentGravityFlagBitsEXT = inline uint;
 const PresentGravityFlagBitsEXT PRESENT_GRAVITY_MIN_BIT_EXT = 0x00000001;
 const PresentGravityFlagBitsEXT PRESENT_GRAVITY_MAX_BIT_EXT = 0x00000002;
 const PresentGravityFlagBitsEXT PRESENT_GRAVITY_CENTERED_BIT_EXT = 0x00000004;
 
-distinct PhysicalDeviceSchedulingControlsFlagBitsARM = inline ulong;
+typedef PhysicalDeviceSchedulingControlsFlagBitsARM = inline ulong;
 const PhysicalDeviceSchedulingControlsFlagBitsARM PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM = 0x00000001;
 
-distinct VideoCodecOperationFlagBitsKHR = inline uint;
+typedef VideoCodecOperationFlagBitsKHR = inline uint;
 const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_NONE_KHR = 0;
 const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_KHR = 0x00010000;
 const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_ENCODE_H265_BIT_KHR = 0x00020000;
@@ -4004,24 +4004,24 @@ const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR =
 const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_KHR = 0x00000004;
 const VideoCodecOperationFlagBitsKHR VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR = 0x00040000;
 
-distinct VideoChromaSubsamplingFlagBitsKHR = inline uint;
+typedef VideoChromaSubsamplingFlagBitsKHR = inline uint;
 const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_INVALID_KHR = 0;
 const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_MONOCHROME_BIT_KHR = 0x00000001;
 const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_420_BIT_KHR = 0x00000002;
 const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_422_BIT_KHR = 0x00000004;
 const VideoChromaSubsamplingFlagBitsKHR VIDEO_CHROMA_SUBSAMPLING_444_BIT_KHR = 0x00000008;
 
-distinct VideoComponentBitDepthFlagBitsKHR = inline uint;
+typedef VideoComponentBitDepthFlagBitsKHR = inline uint;
 const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR = 0;
 const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_8_BIT_KHR = 0x00000001;
 const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_10_BIT_KHR = 0x00000004;
 const VideoComponentBitDepthFlagBitsKHR VIDEO_COMPONENT_BIT_DEPTH_12_BIT_KHR = 0x00000010;
 
-distinct VideoCapabilityFlagBitsKHR = inline uint;
+typedef VideoCapabilityFlagBitsKHR = inline uint;
 const VideoCapabilityFlagBitsKHR VIDEO_CAPABILITY_PROTECTED_CONTENT_BIT_KHR = 0x00000001;
 const VideoCapabilityFlagBitsKHR VIDEO_CAPABILITY_SEPARATE_REFERENCE_IMAGES_BIT_KHR = 0x00000002;
 
-distinct VideoSessionCreateFlagBitsKHR = inline uint;
+typedef VideoSessionCreateFlagBitsKHR = inline uint;
 const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_PROTECTED_CONTENT_BIT_KHR = 0x00000001;
 const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_ALLOW_ENCODE_PARAMETER_OPTIMIZATIONS_BIT_KHR = 0x00000002;
 const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_INLINE_QUERIES_BIT_KHR = 0x00000004;
@@ -4030,70 +4030,70 @@ const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_ALLOW_ENCODE_EMPHASIS_M
 const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_5_BIT_KHR = 0x00000020;
 const VideoSessionCreateFlagBitsKHR VIDEO_SESSION_CREATE_RESERVED_6_BIT_KHR = 0x00000040;
 
-distinct VideoDecodeH264PictureLayoutFlagBitsKHR = inline uint;
+typedef VideoDecodeH264PictureLayoutFlagBitsKHR = inline uint;
 const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_KHR = 0;
 const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_INTERLEAVED_LINES_BIT_KHR = 0x00000001;
 const VideoDecodeH264PictureLayoutFlagBitsKHR VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_SEPARATE_PLANES_BIT_KHR = 0x00000002;
 
-distinct VideoCodingControlFlagBitsKHR = inline uint;
+typedef VideoCodingControlFlagBitsKHR = inline uint;
 const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_RESET_BIT_KHR = 0x00000001;
 const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_ENCODE_RATE_CONTROL_BIT_KHR = 0x00000002;
 const VideoCodingControlFlagBitsKHR VIDEO_CODING_CONTROL_ENCODE_QUALITY_LEVEL_BIT_KHR = 0x00000004;
 
-distinct QueryResultStatusKHR = inline int;
+typedef QueryResultStatusKHR = inline int;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_ERROR_KHR = -1;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_NOT_READY_KHR = 0;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_COMPLETE_KHR = 1;
 const QueryResultStatusKHR QUERY_RESULT_STATUS_INSUFFICIENT_BITSTREAM_BUFFER_RANGE_KHR = -1000299000;
 
-distinct VideoDecodeUsageFlagBitsKHR = inline uint;
+typedef VideoDecodeUsageFlagBitsKHR = inline uint;
 const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_DEFAULT_KHR = 0;
 const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_TRANSCODING_BIT_KHR = 0x00000001;
 const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_OFFLINE_BIT_KHR = 0x00000002;
 const VideoDecodeUsageFlagBitsKHR VIDEO_DECODE_USAGE_STREAMING_BIT_KHR = 0x00000004;
 
-distinct VideoDecodeCapabilityFlagBitsKHR = inline uint;
+typedef VideoDecodeCapabilityFlagBitsKHR = inline uint;
 const VideoDecodeCapabilityFlagBitsKHR VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_COINCIDE_BIT_KHR = 0x00000001;
 const VideoDecodeCapabilityFlagBitsKHR VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_DISTINCT_BIT_KHR = 0x00000002;
 
-distinct VideoEncodeUsageFlagBitsKHR = inline uint;
+typedef VideoEncodeUsageFlagBitsKHR = inline uint;
 const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_DEFAULT_KHR = 0;
 const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_TRANSCODING_BIT_KHR = 0x00000001;
 const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_STREAMING_BIT_KHR = 0x00000002;
 const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_RECORDING_BIT_KHR = 0x00000004;
 const VideoEncodeUsageFlagBitsKHR VIDEO_ENCODE_USAGE_CONFERENCING_BIT_KHR = 0x00000008;
 
-distinct VideoEncodeContentFlagBitsKHR = inline uint;
+typedef VideoEncodeContentFlagBitsKHR = inline uint;
 const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_DEFAULT_KHR = 0;
 const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_CAMERA_BIT_KHR = 0x00000001;
 const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_DESKTOP_BIT_KHR = 0x00000002;
 const VideoEncodeContentFlagBitsKHR VIDEO_ENCODE_CONTENT_RENDERED_BIT_KHR = 0x00000004;
 
-distinct VideoEncodeTuningModeKHR = inline uint;
+typedef VideoEncodeTuningModeKHR = inline uint;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_DEFAULT_KHR = 0;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_HIGH_QUALITY_KHR = 1;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_LOW_LATENCY_KHR = 2;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_ULTRA_LOW_LATENCY_KHR = 3;
 const VideoEncodeTuningModeKHR VIDEO_ENCODE_TUNING_MODE_LOSSLESS_KHR = 4;
 
-distinct VideoEncodeCapabilityFlagBitsKHR = inline uint;
+typedef VideoEncodeCapabilityFlagBitsKHR = inline uint;
 const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_PRECEDING_EXTERNALLY_ENCODED_BYTES_BIT_KHR = 0x00000001;
 const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_INSUFFICIENT_BITSTREAM_BUFFER_RANGE_DETECTION_BIT_KHR = 0x00000002;
 const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_QUANTIZATION_DELTA_MAP_BIT_KHR = 0x00000004;
 const VideoEncodeCapabilityFlagBitsKHR VIDEO_ENCODE_CAPABILITY_EMPHASIS_MAP_BIT_KHR = 0x00000008;
 
-distinct VideoEncodeFeedbackFlagBitsKHR = inline uint;
+typedef VideoEncodeFeedbackFlagBitsKHR = inline uint;
 const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR = 0x00000001;
 const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR = 0x00000002;
 const VideoEncodeFeedbackFlagBitsKHR VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR = 0x00000004;
 
-distinct VideoEncodeRateControlModeFlagBitsKHR = inline uint;
+typedef VideoEncodeRateControlModeFlagBitsKHR = inline uint;
 const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_DEFAULT_KHR = 0;
 const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_DISABLED_BIT_KHR = 0x00000001;
 const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_CBR_BIT_KHR = 0x00000002;
 const VideoEncodeRateControlModeFlagBitsKHR VIDEO_ENCODE_RATE_CONTROL_MODE_VBR_BIT_KHR = 0x00000004;
 
-distinct VideoEncodeH264CapabilityFlagBitsKHR = inline uint;
+typedef VideoEncodeH264CapabilityFlagBitsKHR = inline uint;
 const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
 const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_KHR = 0x00000002;
 const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_ROW_UNALIGNED_SLICE_BIT_KHR = 0x00000004;
@@ -4105,7 +4105,7 @@ const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_PER_SLIC
 const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_GENERATE_PREFIX_NALU_BIT_KHR = 0x00000100;
 const VideoEncodeH264CapabilityFlagBitsKHR VIDEO_ENCODE_H264_CAPABILITY_MB_QP_DIFF_WRAPAROUND_BIT_KHR = 0x00000200;
 
-distinct VideoEncodeH264StdFlagBitsKHR = inline uint;
+typedef VideoEncodeH264StdFlagBitsKHR = inline uint;
 const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR = 0x00000001;
 const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG_SET_BIT_KHR = 0x00000002;
 const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SCALING_MATRIX_PRESENT_FLAG_SET_BIT_KHR = 0x00000004;
@@ -4127,25 +4127,25 @@ const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DEBLOCKING_FILTER_PART
 const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_SLICE_QP_DELTA_BIT_KHR = 0x00080000;
 const VideoEncodeH264StdFlagBitsKHR VIDEO_ENCODE_H264_STD_DIFFERENT_SLICE_QP_DELTA_BIT_KHR = 0x00100000;
 
-distinct VideoEncodeH264RateControlFlagBitsKHR = inline uint;
+typedef VideoEncodeH264RateControlFlagBitsKHR = inline uint;
 const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
 const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REGULAR_GOP_BIT_KHR = 0x00000002;
 const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_KHR = 0x00000004;
 const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_KHR = 0x00000008;
 const VideoEncodeH264RateControlFlagBitsKHR VIDEO_ENCODE_H264_RATE_CONTROL_TEMPORAL_LAYER_PATTERN_DYADIC_BIT_KHR = 0x00000010;
 
-distinct HostImageCopyFlagBits = inline uint;
+typedef HostImageCopyFlagBits = inline uint;
 const HostImageCopyFlagBits HOST_IMAGE_COPY_MEMCPY = 0x00000001;
 const HostImageCopyFlagBits HOST_IMAGE_COPY_MEMCPY_EXT = 0x00000001;
 
-distinct ImageConstraintsInfoFlagBitsFUCHSIA = inline uint;
+typedef ImageConstraintsInfoFlagBitsFUCHSIA = inline uint;
 const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA = 0x00000001;
 const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA = 0x00000002;
 const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA = 0x00000004;
 const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA = 0x00000008;
 const ImageConstraintsInfoFlagBitsFUCHSIA IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA = 0x00000010;
 
-distinct FormatFeatureFlagBits2 = inline ulong;
+typedef FormatFeatureFlagBits2 = inline ulong;
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = 0x00000001;
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = 0x00000002;
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004;
@@ -4226,7 +4226,7 @@ const FormatFeatureFlagBits2 FORMAT_FEATURE_2_RESERVED_48_BIT_EXT = 0x1000000000
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR = 0x2000000000000;
 const FormatFeatureFlagBits2 FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR = 0x4000000000000;
 
-distinct RenderingFlagBits = inline uint;
+typedef RenderingFlagBits = inline uint;
 const RenderingFlagBits RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = 0x00000001;
 const RenderingFlagBits RENDERING_SUSPENDING_BIT = 0x00000002;
 const RenderingFlagBits RENDERING_RESUMING_BIT = 0x00000004;
@@ -4237,7 +4237,7 @@ const RenderingFlagBits RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT = 0x00000008;
 const RenderingFlagBits RENDERING_EXTENSION_505_BIT_EXT = 0x00000020;
 const RenderingFlagBits RENDERING_CONTENTS_INLINE_BIT_KHR = 0x00000010;
 
-distinct VideoEncodeH265CapabilityFlagBitsKHR = inline uint;
+typedef VideoEncodeH265CapabilityFlagBitsKHR = inline uint;
 const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
 const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_PREDICTION_WEIGHT_TABLE_GENERATED_BIT_KHR = 0x00000002;
 const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_ROW_UNALIGNED_SLICE_SEGMENT_BIT_KHR = 0x00000004;
@@ -4250,7 +4250,7 @@ const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE
 const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_MULTIPLE_SLICE_SEGMENTS_PER_TILE_BIT_KHR = 0x00000200;
 const VideoEncodeH265CapabilityFlagBitsKHR VIDEO_ENCODE_H265_CAPABILITY_CU_QP_DIFF_WRAPAROUND_BIT_KHR = 0x00000400;
 
-distinct VideoEncodeH265StdFlagBitsKHR = inline uint;
+typedef VideoEncodeH265StdFlagBitsKHR = inline uint;
 const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR = 0x00000001;
 const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SAMPLE_ADAPTIVE_OFFSET_ENABLED_FLAG_SET_BIT_KHR = 0x00000002;
 const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SCALING_LIST_DATA_PRESENT_FLAG_SET_BIT_KHR = 0x00000004;
@@ -4273,59 +4273,59 @@ const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DEPENDENT_SLICE_SEGMEN
 const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_SLICE_QP_DELTA_BIT_KHR = 0x00080000;
 const VideoEncodeH265StdFlagBitsKHR VIDEO_ENCODE_H265_STD_DIFFERENT_SLICE_QP_DELTA_BIT_KHR = 0x00100000;
 
-distinct VideoEncodeH265RateControlFlagBitsKHR = inline uint;
+typedef VideoEncodeH265RateControlFlagBitsKHR = inline uint;
 const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR = 0x00000001;
 const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REGULAR_GOP_BIT_KHR = 0x00000002;
 const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_KHR = 0x00000004;
 const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_KHR = 0x00000008;
 const VideoEncodeH265RateControlFlagBitsKHR VIDEO_ENCODE_H265_RATE_CONTROL_TEMPORAL_SUB_LAYER_PATTERN_DYADIC_BIT_KHR = 0x00000010;
 
-distinct VideoEncodeH265CtbSizeFlagBitsKHR = inline uint;
+typedef VideoEncodeH265CtbSizeFlagBitsKHR = inline uint;
 const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_16_BIT_KHR = 0x00000001;
 const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_32_BIT_KHR = 0x00000002;
 const VideoEncodeH265CtbSizeFlagBitsKHR VIDEO_ENCODE_H265_CTB_SIZE_64_BIT_KHR = 0x00000004;
 
-distinct VideoEncodeH265TransformBlockSizeFlagBitsKHR = inline uint;
+typedef VideoEncodeH265TransformBlockSizeFlagBitsKHR = inline uint;
 const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_4_BIT_KHR = 0x00000001;
 const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_8_BIT_KHR = 0x00000002;
 const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_16_BIT_KHR = 0x00000004;
 const VideoEncodeH265TransformBlockSizeFlagBitsKHR VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_32_BIT_KHR = 0x00000008;
 
-distinct VideoEncodeAV1CapabilityFlagBitsKHR = inline uint;
+typedef VideoEncodeAV1CapabilityFlagBitsKHR = inline uint;
 const VideoEncodeAV1CapabilityFlagBitsKHR VIDEO_ENCODE_AV1_CAPABILITY_PER_RATE_CONTROL_GROUP_MIN_MAX_Q_INDEX_BIT_KHR = 0x00000001;
 const VideoEncodeAV1CapabilityFlagBitsKHR VIDEO_ENCODE_AV1_CAPABILITY_GENERATE_OBU_EXTENSION_HEADER_BIT_KHR = 0x00000002;
 const VideoEncodeAV1CapabilityFlagBitsKHR VIDEO_ENCODE_AV1_CAPABILITY_PRIMARY_REFERENCE_CDF_ONLY_BIT_KHR = 0x00000004;
 const VideoEncodeAV1CapabilityFlagBitsKHR VIDEO_ENCODE_AV1_CAPABILITY_FRAME_SIZE_OVERRIDE_BIT_KHR = 0x00000008;
 const VideoEncodeAV1CapabilityFlagBitsKHR VIDEO_ENCODE_AV1_CAPABILITY_MOTION_VECTOR_SCALING_BIT_KHR = 0x00000010;
 
-distinct VideoEncodeAV1StdFlagBitsKHR = inline uint;
+typedef VideoEncodeAV1StdFlagBitsKHR = inline uint;
 const VideoEncodeAV1StdFlagBitsKHR VIDEO_ENCODE_AV1_STD_UNIFORM_TILE_SPACING_FLAG_SET_BIT_KHR = 0x00000001;
 const VideoEncodeAV1StdFlagBitsKHR VIDEO_ENCODE_AV1_STD_SKIP_MODE_PRESENT_UNSET_BIT_KHR = 0x00000002;
 const VideoEncodeAV1StdFlagBitsKHR VIDEO_ENCODE_AV1_STD_PRIMARY_REF_FRAME_BIT_KHR = 0x00000004;
 const VideoEncodeAV1StdFlagBitsKHR VIDEO_ENCODE_AV1_STD_DELTA_Q_BIT_KHR = 0x00000008;
 
-distinct VideoEncodeAV1RateControlFlagBitsKHR = inline uint;
+typedef VideoEncodeAV1RateControlFlagBitsKHR = inline uint;
 const VideoEncodeAV1RateControlFlagBitsKHR VIDEO_ENCODE_AV1_RATE_CONTROL_REGULAR_GOP_BIT_KHR = 0x00000001;
 const VideoEncodeAV1RateControlFlagBitsKHR VIDEO_ENCODE_AV1_RATE_CONTROL_TEMPORAL_LAYER_PATTERN_DYADIC_BIT_KHR = 0x00000002;
 const VideoEncodeAV1RateControlFlagBitsKHR VIDEO_ENCODE_AV1_RATE_CONTROL_REFERENCE_PATTERN_FLAT_BIT_KHR = 0x00000004;
 const VideoEncodeAV1RateControlFlagBitsKHR VIDEO_ENCODE_AV1_RATE_CONTROL_REFERENCE_PATTERN_DYADIC_BIT_KHR = 0x00000008;
 
-distinct VideoEncodeAV1SuperblockSizeFlagBitsKHR = inline uint;
+typedef VideoEncodeAV1SuperblockSizeFlagBitsKHR = inline uint;
 const VideoEncodeAV1SuperblockSizeFlagBitsKHR VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_64_BIT_KHR = 0x00000001;
 const VideoEncodeAV1SuperblockSizeFlagBitsKHR VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_128_BIT_KHR = 0x00000002;
 
-distinct VideoEncodeAV1PredictionModeKHR = inline uint;
+typedef VideoEncodeAV1PredictionModeKHR = inline uint;
 const VideoEncodeAV1PredictionModeKHR VIDEO_ENCODE_AV1_PREDICTION_MODE_INTRA_ONLY_KHR = 0;
 const VideoEncodeAV1PredictionModeKHR VIDEO_ENCODE_AV1_PREDICTION_MODE_SINGLE_REFERENCE_KHR = 1;
 const VideoEncodeAV1PredictionModeKHR VIDEO_ENCODE_AV1_PREDICTION_MODE_UNIDIRECTIONAL_COMPOUND_KHR = 2;
 const VideoEncodeAV1PredictionModeKHR VIDEO_ENCODE_AV1_PREDICTION_MODE_BIDIRECTIONAL_COMPOUND_KHR = 3;
 
-distinct VideoEncodeAV1RateControlGroupKHR = inline uint;
+typedef VideoEncodeAV1RateControlGroupKHR = inline uint;
 const VideoEncodeAV1RateControlGroupKHR VIDEO_ENCODE_AV1_RATE_CONTROL_GROUP_INTRA_KHR = 0;
 const VideoEncodeAV1RateControlGroupKHR VIDEO_ENCODE_AV1_RATE_CONTROL_GROUP_PREDICTIVE_KHR = 1;
 const VideoEncodeAV1RateControlGroupKHR VIDEO_ENCODE_AV1_RATE_CONTROL_GROUP_BIPREDICTIVE_KHR = 2;
 
-distinct ExportMetalObjectTypeFlagBitsEXT = inline uint;
+typedef ExportMetalObjectTypeFlagBitsEXT = inline uint;
 const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = 0x00000001;
 const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = 0x00000002;
 const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = 0x00000004;
@@ -4333,13 +4333,13 @@ const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BI
 const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = 0x00000010;
 const ExportMetalObjectTypeFlagBitsEXT EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = 0x00000020;
 
-distinct ImageCompressionFlagBitsEXT = inline uint;
+typedef ImageCompressionFlagBitsEXT = inline uint;
 const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_DEFAULT_EXT = 0;
 const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT = 0x00000001;
 const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT = 0x00000002;
 const ImageCompressionFlagBitsEXT IMAGE_COMPRESSION_DISABLED_EXT = 0x00000004;
 
-distinct ImageCompressionFixedRateFlagBitsEXT = inline uint;
+typedef ImageCompressionFixedRateFlagBitsEXT = inline uint;
 const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT = 0;
 const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT = 0x00000001;
 const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT = 0x00000002;
@@ -4366,7 +4366,7 @@ const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_22BPC_BI
 const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT = 0x00400000;
 const ImageCompressionFixedRateFlagBitsEXT IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT = 0x00800000;
 
-distinct PipelineRobustnessBufferBehavior = inline uint;
+typedef PipelineRobustnessBufferBehavior = inline uint;
 const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT = 0;
 const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED = 1;
 const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS = 2;
@@ -4376,7 +4376,7 @@ const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISAB
 const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT = 2;
 const PipelineRobustnessBufferBehavior PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT = 3;
 
-distinct PipelineRobustnessImageBehavior = inline uint;
+typedef PipelineRobustnessImageBehavior = inline uint;
 const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT = 0;
 const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED = 1;
 const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS = 2;
@@ -4386,14 +4386,14 @@ const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLE
 const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT = 2;
 const PipelineRobustnessImageBehavior PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT = 3;
 
-distinct OpticalFlowGridSizeFlagBitsNV = inline uint;
+typedef OpticalFlowGridSizeFlagBitsNV = inline uint;
 const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV = 0;
 const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV = 0x00000001;
 const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV = 0x00000002;
 const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV = 0x00000004;
 const OpticalFlowGridSizeFlagBitsNV OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV = 0x00000008;
 
-distinct OpticalFlowUsageFlagBitsNV = inline uint;
+typedef OpticalFlowUsageFlagBitsNV = inline uint;
 const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_UNKNOWN_NV = 0;
 const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_INPUT_BIT_NV = 0x00000001;
 const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV = 0x00000002;
@@ -4401,13 +4401,13 @@ const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_HINT_BIT_NV = 0x00000004;
 const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_COST_BIT_NV = 0x00000008;
 const OpticalFlowUsageFlagBitsNV OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV = 0x00000010;
 
-distinct OpticalFlowPerformanceLevelNV = inline uint;
+typedef OpticalFlowPerformanceLevelNV = inline uint;
 const OpticalFlowPerformanceLevelNV OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_NV = 0;
 const OpticalFlowPerformanceLevelNV OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_NV = 1;
 const OpticalFlowPerformanceLevelNV OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_NV = 2;
 const OpticalFlowPerformanceLevelNV OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_NV = 3;
 
-distinct OpticalFlowSessionBindingPointNV = inline uint;
+typedef OpticalFlowSessionBindingPointNV = inline uint;
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_UNKNOWN_NV = 0;
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV = 1;
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV = 2;
@@ -4418,53 +4418,53 @@ const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_COST_N
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = 7;
 const OpticalFlowSessionBindingPointNV OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = 8;
 
-distinct OpticalFlowSessionCreateFlagBitsNV = inline uint;
+typedef OpticalFlowSessionCreateFlagBitsNV = inline uint;
 const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV = 0x00000001;
 const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV = 0x00000002;
 const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV = 0x00000004;
 const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV = 0x00000008;
 const OpticalFlowSessionCreateFlagBitsNV OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV = 0x00000010;
 
-distinct OpticalFlowExecuteFlagBitsNV = inline uint;
+typedef OpticalFlowExecuteFlagBitsNV = inline uint;
 const OpticalFlowExecuteFlagBitsNV OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV = 0x00000001;
 
-distinct MicromapTypeEXT = inline uint;
+typedef MicromapTypeEXT = inline uint;
 const MicromapTypeEXT MICROMAP_TYPE_OPACITY_MICROMAP_EXT = 0;
 const MicromapTypeEXT MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV = 1000397000;
 
-distinct BuildMicromapFlagBitsEXT = inline uint;
+typedef BuildMicromapFlagBitsEXT = inline uint;
 const BuildMicromapFlagBitsEXT BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT = 0x00000001;
 const BuildMicromapFlagBitsEXT BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT = 0x00000002;
 const BuildMicromapFlagBitsEXT BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT = 0x00000004;
 
-distinct MicromapCreateFlagBitsEXT = inline uint;
+typedef MicromapCreateFlagBitsEXT = inline uint;
 const MicromapCreateFlagBitsEXT MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = 0x00000001;
 
-distinct CopyMicromapModeEXT = inline uint;
+typedef CopyMicromapModeEXT = inline uint;
 const CopyMicromapModeEXT COPY_MICROMAP_MODE_CLONE_EXT = 0;
 const CopyMicromapModeEXT COPY_MICROMAP_MODE_SERIALIZE_EXT = 1;
 const CopyMicromapModeEXT COPY_MICROMAP_MODE_DESERIALIZE_EXT = 2;
 const CopyMicromapModeEXT COPY_MICROMAP_MODE_COMPACT_EXT = 3;
 
-distinct BuildMicromapModeEXT = inline uint;
+typedef BuildMicromapModeEXT = inline uint;
 const BuildMicromapModeEXT BUILD_MICROMAP_MODE_BUILD_EXT = 0;
 
-distinct OpacityMicromapFormatEXT = inline uint;
+typedef OpacityMicromapFormatEXT = inline uint;
 const OpacityMicromapFormatEXT OPACITY_MICROMAP_FORMAT_2_STATE_EXT = 1;
 const OpacityMicromapFormatEXT OPACITY_MICROMAP_FORMAT_4_STATE_EXT = 2;
 
-distinct OpacityMicromapSpecialIndexEXT = inline int;
+typedef OpacityMicromapSpecialIndexEXT = inline int;
 const OpacityMicromapSpecialIndexEXT OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT = -1;
 const OpacityMicromapSpecialIndexEXT OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT = -2;
 const OpacityMicromapSpecialIndexEXT OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT = -3;
 const OpacityMicromapSpecialIndexEXT OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT = -4;
 
-distinct DepthBiasRepresentationEXT = inline uint;
+typedef DepthBiasRepresentationEXT = inline uint;
 const DepthBiasRepresentationEXT DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT = 0;
 const DepthBiasRepresentationEXT DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT = 1;
 const DepthBiasRepresentationEXT DEPTH_BIAS_REPRESENTATION_FLOAT_EXT = 2;
 
-distinct DeviceFaultAddressTypeEXT = inline uint;
+typedef DeviceFaultAddressTypeEXT = inline uint;
 const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT = 0;
 const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT = 1;
 const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT = 2;
@@ -4473,22 +4473,22 @@ const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UN
 const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT = 5;
 const DeviceFaultAddressTypeEXT DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT = 6;
 
-distinct DeviceFaultVendorBinaryHeaderVersionEXT = inline uint;
+typedef DeviceFaultVendorBinaryHeaderVersionEXT = inline uint;
 const DeviceFaultVendorBinaryHeaderVersionEXT DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT = 1;
 
-distinct IndirectCommandsLayoutUsageFlagBitsEXT = inline uint;
+typedef IndirectCommandsLayoutUsageFlagBitsEXT = inline uint;
 const IndirectCommandsLayoutUsageFlagBitsEXT INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_EXT = 0x00000001;
 const IndirectCommandsLayoutUsageFlagBitsEXT INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_EXT = 0x00000002;
 
-distinct IndirectExecutionSetInfoTypeEXT = inline uint;
+typedef IndirectExecutionSetInfoTypeEXT = inline uint;
 const IndirectExecutionSetInfoTypeEXT INDIRECT_EXECUTION_SET_INFO_TYPE_PIPELINES_EXT = 0;
 const IndirectExecutionSetInfoTypeEXT INDIRECT_EXECUTION_SET_INFO_TYPE_SHADER_OBJECTS_EXT = 1;
 
-distinct IndirectCommandsInputModeFlagBitsEXT = inline uint;
+typedef IndirectCommandsInputModeFlagBitsEXT = inline uint;
 const IndirectCommandsInputModeFlagBitsEXT INDIRECT_COMMANDS_INPUT_MODE_VULKAN_INDEX_BUFFER_EXT = 0x00000001;
 const IndirectCommandsInputModeFlagBitsEXT INDIRECT_COMMANDS_INPUT_MODE_DXGI_INDEX_BUFFER_EXT = 0x00000002;
 
-distinct IndirectCommandsTokenTypeEXT = inline uint;
+typedef IndirectCommandsTokenTypeEXT = inline uint;
 const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_EXECUTION_SET_EXT = 0;
 const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_EXT = 1;
 const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_SEQUENCE_INDEX_EXT = 2;
@@ -4505,12 +4505,12 @@ const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_
 const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_COUNT_EXT = 1000328001;
 const IndirectCommandsTokenTypeEXT INDIRECT_COMMANDS_TOKEN_TYPE_TRACE_RAYS2_EXT = 1000386004;
 
-distinct DisplacementMicromapFormatNV = inline uint;
+typedef DisplacementMicromapFormatNV = inline uint;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV = 1;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV = 2;
 const DisplacementMicromapFormatNV DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV = 3;
 
-distinct ShaderCreateFlagBitsEXT = inline uint;
+typedef ShaderCreateFlagBitsEXT = inline uint;
 const ShaderCreateFlagBitsEXT SHADER_CREATE_LINK_STAGE_BIT_EXT = 0x00000001;
 const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_10_BIT_KHR = 0x00000400;
 const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_11_BIT_KHR = 0x00000800;
@@ -4524,11 +4524,11 @@ const ShaderCreateFlagBitsEXT SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT = 0x000000
 const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_8_BIT_EXT = 0x00000100;
 const ShaderCreateFlagBitsEXT SHADER_CREATE_RESERVED_9_BIT_EXT = 0x00000200;
 
-distinct ShaderCodeTypeEXT = inline uint;
+typedef ShaderCodeTypeEXT = inline uint;
 const ShaderCodeTypeEXT SHADER_CODE_TYPE_BINARY_EXT = 0;
 const ShaderCodeTypeEXT SHADER_CODE_TYPE_SPIRV_EXT = 1;
 
-distinct ScopeKHR = inline uint;
+typedef ScopeKHR = inline uint;
 const ScopeKHR SCOPE_DEVICE_KHR = 1;
 const ScopeKHR SCOPE_WORKGROUP_KHR = 2;
 const ScopeKHR SCOPE_SUBGROUP_KHR = 3;
@@ -4538,7 +4538,7 @@ const ScopeKHR SCOPE_WORKGROUP_NV = 2;
 const ScopeKHR SCOPE_SUBGROUP_NV = 3;
 const ScopeKHR SCOPE_QUEUE_FAMILY_NV = 5;
 
-distinct ComponentTypeKHR = inline uint;
+typedef ComponentTypeKHR = inline uint;
 const ComponentTypeKHR COMPONENT_TYPE_FLOAT16_KHR = 0;
 const ComponentTypeKHR COMPONENT_TYPE_FLOAT32_KHR = 1;
 const ComponentTypeKHR COMPONENT_TYPE_FLOAT64_KHR = 2;
@@ -4562,28 +4562,28 @@ const ComponentTypeKHR COMPONENT_TYPE_UINT16_NV = 8;
 const ComponentTypeKHR COMPONENT_TYPE_UINT32_NV = 9;
 const ComponentTypeKHR COMPONENT_TYPE_UINT64_NV = 10;
 
-distinct CubicFilterWeightsQCOM = inline uint;
+typedef CubicFilterWeightsQCOM = inline uint;
 const CubicFilterWeightsQCOM CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM = 0;
 const CubicFilterWeightsQCOM CUBIC_FILTER_WEIGHTS_ZERO_TANGENT_CARDINAL_QCOM = 1;
 const CubicFilterWeightsQCOM CUBIC_FILTER_WEIGHTS_B_SPLINE_QCOM = 2;
 const CubicFilterWeightsQCOM CUBIC_FILTER_WEIGHTS_MITCHELL_NETRAVALI_QCOM = 3;
 
-distinct BlockMatchWindowCompareModeQCOM = inline uint;
+typedef BlockMatchWindowCompareModeQCOM = inline uint;
 const BlockMatchWindowCompareModeQCOM BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM = 0;
 const BlockMatchWindowCompareModeQCOM BLOCK_MATCH_WINDOW_COMPARE_MODE_MAX_QCOM = 1;
 
-distinct PhysicalDeviceLayeredApiKHR = inline uint;
+typedef PhysicalDeviceLayeredApiKHR = inline uint;
 const PhysicalDeviceLayeredApiKHR PHYSICAL_DEVICE_LAYERED_API_VULKAN_KHR = 0;
 const PhysicalDeviceLayeredApiKHR PHYSICAL_DEVICE_LAYERED_API_D3D12_KHR = 1;
 const PhysicalDeviceLayeredApiKHR PHYSICAL_DEVICE_LAYERED_API_METAL_KHR = 2;
 const PhysicalDeviceLayeredApiKHR PHYSICAL_DEVICE_LAYERED_API_OPENGL_KHR = 3;
 const PhysicalDeviceLayeredApiKHR PHYSICAL_DEVICE_LAYERED_API_OPENGLES_KHR = 4;
 
-distinct LayeredDriverUnderlyingApiMSFT = inline uint;
+typedef LayeredDriverUnderlyingApiMSFT = inline uint;
 const LayeredDriverUnderlyingApiMSFT LAYERED_DRIVER_UNDERLYING_API_NONE_MSFT = 0;
 const LayeredDriverUnderlyingApiMSFT LAYERED_DRIVER_UNDERLYING_API_D3D12_MSFT = 1;
 
-distinct LatencyMarkerNV = inline uint;
+typedef LatencyMarkerNV = inline uint;
 const LatencyMarkerNV LATENCY_MARKER_SIMULATION_START_NV = 0;
 const LatencyMarkerNV LATENCY_MARKER_SIMULATION_END_NV = 1;
 const LatencyMarkerNV LATENCY_MARKER_RENDERSUBMIT_START_NV = 2;
@@ -4597,19 +4597,19 @@ const LatencyMarkerNV LATENCY_MARKER_OUT_OF_BAND_RENDERSUBMIT_END_NV = 9;
 const LatencyMarkerNV LATENCY_MARKER_OUT_OF_BAND_PRESENT_START_NV = 10;
 const LatencyMarkerNV LATENCY_MARKER_OUT_OF_BAND_PRESENT_END_NV = 11;
 
-distinct OutOfBandQueueTypeNV = inline uint;
+typedef OutOfBandQueueTypeNV = inline uint;
 const OutOfBandQueueTypeNV OUT_OF_BAND_QUEUE_TYPE_RENDER_NV = 0;
 const OutOfBandQueueTypeNV OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV = 1;
 
-distinct DepthClampModeEXT = inline uint;
+typedef DepthClampModeEXT = inline uint;
 const DepthClampModeEXT DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT = 0;
 const DepthClampModeEXT DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT = 1;
 
-distinct DeviceQueueCreateFlagBits = inline uint;
+typedef DeviceQueueCreateFlagBits = inline uint;
 const DeviceQueueCreateFlagBits DEVICE_QUEUE_CREATE_PROTECTED_BIT = 0x00000001;
 const DeviceQueueCreateFlagBits DEVICE_QUEUE_CREATE_RESERVED_1_BIT_QCOM = 0x00000002;
 
-distinct DescriptorSetLayoutCreateFlagBits = inline uint;
+typedef DescriptorSetLayoutCreateFlagBits = inline uint;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = 0x00000002;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT = 0x00000001;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = 0x00000001;
@@ -4621,33 +4621,33 @@ const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BI
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT = 0x00000004;
 const DescriptorSetLayoutCreateFlagBits DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV = 0x00000040;
 
-distinct FramebufferCreateFlagBits = inline uint;
+typedef FramebufferCreateFlagBits = inline uint;
 const FramebufferCreateFlagBits FRAMEBUFFER_CREATE_IMAGELESS_BIT = 0x00000001;
 const FramebufferCreateFlagBits FRAMEBUFFER_CREATE_IMAGELESS_BIT_KHR = 0x00000001;
 
-distinct PipelineCacheCreateFlagBits = inline uint;
+typedef PipelineCacheCreateFlagBits = inline uint;
 const PipelineCacheCreateFlagBits PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = 0x00000001;
 const PipelineCacheCreateFlagBits PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = 0x00000001;
 
-distinct EventCreateFlagBits = inline uint;
+typedef EventCreateFlagBits = inline uint;
 const EventCreateFlagBits EVENT_CREATE_DEVICE_ONLY_BIT = 0x00000001;
 const EventCreateFlagBits EVENT_CREATE_DEVICE_ONLY_BIT_KHR = 0x00000001;
 
-distinct PipelineShaderStageCreateFlagBits = inline uint;
+typedef PipelineShaderStageCreateFlagBits = inline uint;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT = 0x00000001;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT = 0x00000002;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT = 0x00000001;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT = 0x00000002;
 const PipelineShaderStageCreateFlagBits PIPELINE_SHADER_STAGE_CREATE_RESERVED_3_BIT_KHR = 0x00000008;
 
-distinct SwapchainCreateFlagBitsKHR = inline uint;
+typedef SwapchainCreateFlagBitsKHR = inline uint;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = 0x00000001;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = 0x00000002;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR = 0x00000004;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT = 0x00000008;
 const SwapchainCreateFlagBitsKHR SWAPCHAIN_CREATE_RESERVED_4_BIT_EXT = 0x00000010;
 
-distinct SubpassDescriptionFlagBits = inline uint;
+typedef SubpassDescriptionFlagBits = inline uint;
 const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX = 0x00000001;
 const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = 0x00000002;
 const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM = 0x00000004;
@@ -4657,99 +4657,98 @@ const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHM
 const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT = 0x00000040;
 const SubpassDescriptionFlagBits SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT = 0x00000080;
 
-distinct PrivateDataSlotCreateFlagBits = inline uint;
+typedef PrivateDataSlotCreateFlagBits = inline uint;
 const PrivateDataSlotCreateFlagBits PRIVATE_DATA_SLOT_CREATE_RESERVED_0_BIT_NV = 0x00000001;
 
-distinct ImageViewCreateFlagBits = inline uint;
+typedef ImageViewCreateFlagBits = inline uint;
 const ImageViewCreateFlagBits IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = 0x00000001;
 const ImageViewCreateFlagBits IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000004;
 const ImageViewCreateFlagBits IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = 0x00000002;
 
-distinct SamplerCreateFlagBits = inline uint;
+typedef SamplerCreateFlagBits = inline uint;
 const SamplerCreateFlagBits SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = 0x00000001;
 const SamplerCreateFlagBits SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = 0x00000002;
 const SamplerCreateFlagBits SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = 0x00000008;
 const SamplerCreateFlagBits SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT = 0x00000004;
 const SamplerCreateFlagBits SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM = 0x00000010;
 
-distinct RenderPassCreateFlagBits = inline uint;
+typedef RenderPassCreateFlagBits = inline uint;
 const RenderPassCreateFlagBits RENDER_PASS_CREATE_RESERVED_0_BIT_KHR = 0x00000001;
 const RenderPassCreateFlagBits RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM = 0x00000002;
 
-distinct MemoryMapFlagBits = inline uint;
+typedef MemoryMapFlagBits = inline uint;
 const MemoryMapFlagBits MEMORY_MAP_PLACED_BIT_EXT = 0x00000001;
 
-distinct MemoryUnmapFlagBits = inline uint;
+typedef MemoryUnmapFlagBits = inline uint;
 const MemoryUnmapFlagBits MEMORY_UNMAP_RESERVE_BIT_EXT = 0x00000001;
 
-distinct PipelineLayoutCreateFlagBits = inline uint;
+typedef PipelineLayoutCreateFlagBits = inline uint;
 const PipelineLayoutCreateFlagBits PIPELINE_LAYOUT_CREATE_RESERVED_0_BIT_AMD = 0x00000001;
 const PipelineLayoutCreateFlagBits PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT = 0x00000002;
 
-distinct PipelineColorBlendStateCreateFlagBits = inline uint;
+typedef PipelineColorBlendStateCreateFlagBits = inline uint;
 const PipelineColorBlendStateCreateFlagBits PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT = 0x00000001;
 
-distinct PipelineDepthStencilStateCreateFlagBits = inline uint;
+typedef PipelineDepthStencilStateCreateFlagBits = inline uint;
 const PipelineDepthStencilStateCreateFlagBits PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT = 0x00000001;
 const PipelineDepthStencilStateCreateFlagBits PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT = 0x00000002;
 
-distinct InstanceCreateFlagBits = inline uint;
+typedef InstanceCreateFlagBits = inline uint;
 const InstanceCreateFlagBits INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR = 0x00000001;
 
-distinct VideoSessionParametersCreateFlagBitsKHR = inline uint;
+typedef VideoSessionParametersCreateFlagBitsKHR = inline uint;
 const VideoSessionParametersCreateFlagBitsKHR VIDEO_SESSION_PARAMETERS_CREATE_QUANTIZATION_MAP_COMPATIBLE_BIT_KHR = 0x00000001;
 
-distinct VideoEncodeFlagBitsKHR = inline uint;
+typedef VideoEncodeFlagBitsKHR = inline uint;
 const VideoEncodeFlagBitsKHR VIDEO_ENCODE_WITH_QUANTIZATION_DELTA_MAP_BIT_KHR = 0x00000001;
 const VideoEncodeFlagBitsKHR VIDEO_ENCODE_WITH_EMPHASIS_MAP_BIT_KHR = 0x00000002;
 
-distinct WaylandSurfaceCreateFlagBitsKHR = inline uint;
+typedef WaylandSurfaceCreateFlagBitsKHR = inline uint;
 const WaylandSurfaceCreateFlagBitsKHR WAYLAND_SURFACE_CREATE_DISABLE_COLOR_MANAGEMENT = 0x00000001;
 
-fault VkErrors {
- ERROR_OUT_OF_HOST_MEMORY,
- ERROR_OUT_OF_DEVICE_MEMORY,
- ERROR_INITIALIZATION_FAILED,
- ERROR_DEVICE_LOST,
- ERROR_MEMORY_MAP_FAILED,
- ERROR_LAYER_NOT_PRESENT,
- ERROR_EXTENSION_NOT_PRESENT,
- ERROR_FEATURE_NOT_PRESENT,
- ERROR_INCOMPATIBLE_DRIVER,
- ERROR_TOO_MANY_OBJECTS,
- ERROR_FORMAT_NOT_SUPPORTED,
- ERROR_FRAGMENTED_POOL,
- ERROR_UNKNOWN,
- ERROR_OUT_OF_POOL_MEMORY,
- ERROR_INVALID_EXTERNAL_HANDLE,
- ERROR_FRAGMENTATION,
- ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
- ERROR_NOT_PERMITTED,
- ERROR_SURFACE_LOST_KHR,
- ERROR_NATIVE_WINDOW_IN_USE_KHR,
- ERROR_OUT_OF_DATE_KHR,
- ERROR_INCOMPATIBLE_DISPLAY_KHR,
- ERROR_VALIDATION_FAILED_EXT,
- ERROR_INVALID_SHADER_NV,
- ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR,
- ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR,
- ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR,
- ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR,
- ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR,
- ERROR_VIDEO_STD_VERSION_NOT_SUPPORTED_KHR,
- ERROR_OUT_OF_POOL_MEMORY_KHR,
- ERROR_INVALID_EXTERNAL_HANDLE_KHR,
- ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
- ERROR_FRAGMENTATION_EXT,
- ERROR_NOT_PERMITTED_EXT,
- ERROR_NOT_PERMITTED_KHR,
- ERROR_INVALID_DEVICE_ADDRESS_EXT,
- ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
- ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR,
- ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR,
- ERROR_COMPRESSION_EXHAUSTED_EXT,
- ERROR_NOT_ENOUGH_SPACE_KHR,
-}
+faultdef  E_ERROR_OUT_OF_HOST_MEMORY,
+ E_ERROR_OUT_OF_DEVICE_MEMORY,
+ E_ERROR_INITIALIZATION_FAILED,
+ E_ERROR_DEVICE_LOST,
+ E_ERROR_MEMORY_MAP_FAILED,
+ E_ERROR_LAYER_NOT_PRESENT,
+ E_ERROR_EXTENSION_NOT_PRESENT,
+ E_ERROR_FEATURE_NOT_PRESENT,
+ E_ERROR_INCOMPATIBLE_DRIVER,
+ E_ERROR_TOO_MANY_OBJECTS,
+ E_ERROR_FORMAT_NOT_SUPPORTED,
+ E_ERROR_FRAGMENTED_POOL,
+ E_ERROR_UNKNOWN,
+ E_ERROR_OUT_OF_POOL_MEMORY,
+ E_ERROR_INVALID_EXTERNAL_HANDLE,
+ E_ERROR_FRAGMENTATION,
+ E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+ E_ERROR_NOT_PERMITTED,
+ E_ERROR_SURFACE_LOST_KHR,
+ E_ERROR_NATIVE_WINDOW_IN_USE_KHR,
+ E_ERROR_OUT_OF_DATE_KHR,
+ E_ERROR_INCOMPATIBLE_DISPLAY_KHR,
+ E_ERROR_VALIDATION_FAILED_EXT,
+ E_ERROR_INVALID_SHADER_NV,
+ E_ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR,
+ E_ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR,
+ E_ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR,
+ E_ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR,
+ E_ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR,
+ E_ERROR_VIDEO_STD_VERSION_NOT_SUPPORTED_KHR,
+ E_ERROR_OUT_OF_POOL_MEMORY_KHR,
+ E_ERROR_INVALID_EXTERNAL_HANDLE_KHR,
+ E_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
+ E_ERROR_FRAGMENTATION_EXT,
+ E_ERROR_NOT_PERMITTED_EXT,
+ E_ERROR_NOT_PERMITTED_KHR,
+ E_ERROR_INVALID_DEVICE_ADDRESS_EXT,
+ E_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
+ E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR,
+ E_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR,
+ E_ERROR_COMPRESSION_EXHAUSTED_EXT,
+ E_ERROR_NOT_ENOUGH_SPACE_KHR,
+;
 
 struct BaseOutStructure {
    StructureType sType;
