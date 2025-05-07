@@ -235,6 +235,7 @@ fn ulong Memory.getAddress(&self) @dynamic
 fn usz Memory.usedSize(&self) @dynamic => self.used_size;
 fn uint Memory.getType(&self) @dynamic => self.type.ordinal;
 fn void* Memory.getBuffer(&self) @dynamic => self.buffer;
+fn void Memory.setUsedSize(&self, usz size) @dynamic => self.used_size = (uint)size;
 
 fn void? Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
 {
