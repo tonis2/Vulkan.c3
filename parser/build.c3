@@ -44,10 +44,14 @@ const String[*] ACTIVE_EXTENSIONS = {
 
 fn void main(String[] args) {
 
+    DynamicArenaAllocator allocator;
+    allocator.init(allocator: allocator::heap(), page_size: 256);
+    defer allocator.free();
+
     TypeMap type_values;
     
     type_values.init_with_key_values(
-        allocator::heap(),
+        &allocator,
         "uint16_t", "uint",
         "int16_t", "short",
         "uint32_t", "uint",
@@ -71,8 +75,6 @@ fn void main(String[] args) {
         "HWND", "Hwnd",
         "(~0ULL)", "(~0UL)"
     );
-
-    defer type_values.free();
     
     xml::Parser parser = xml::load_file("assets/vk.xml")!!;
     defer parser.free();
@@ -333,9 +335,7 @@ fn void main(String[] args) {
     command_file.write("module vk;\n")!!;
     builders_file.write("module vk;\n")!!;
 
-    DynamicArenaAllocator allocator;
-    allocator.init(allocator: allocator::heap(), page_size: 256);
-    defer allocator.free();
+
 
     // Constants
     foreach (value : constants) {
