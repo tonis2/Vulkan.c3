@@ -11,6 +11,8 @@ const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
 const ENABLE_VALIDATION_LAYERS = false;
 const MAX_FRAMES_IN_FLIGHT = 2;
 
+
+
 struct Vertex {
     Vec3f pos;
     Vec4f color;
@@ -557,28 +559,27 @@ fn void main(String[] args)
 
     Vec2f prev_mouse;
     while (running) {
-        EventMap[] event_map = win.getEvent();
+        EventMap event_map = win.getEvent();
 
-        foreach (event: event_map) {
-            switch {
-                case event.is_pressed(LEFT_MOUSE): {
-                    Vec2f mouse_pos = win.getMousePos();
-                    camera.rotate(mouse_pos.x - prev_mouse.x, (mouse_pos.y - prev_mouse.y));
-                    uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
-                    prev_mouse = mouse_pos;
-                }
-                case event.is_pressed(MOUSE_SCROLL_DOWN): {
-                    camera.zoom(5);
-                    uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
-                }
-                case event.is_pressed(MOUSE_SCROLL_UP): {
-                    camera.zoom(-5);
-                    uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
-                }
-                case event.is_pressed(ESCAPE): {
-                    running = false;
-                }
-            }
+        if (event_map.is_pressed(LEFT_MOUSE)) {
+            Vec2f mouse_pos = win.getMousePos();
+            camera.rotate(mouse_pos.x - prev_mouse.x, (mouse_pos.y - prev_mouse.y));
+            uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+            prev_mouse = mouse_pos;
+        }
+
+        if (event_map.is_pressed(MOUSE_SCROLL_UP)) {
+            camera.zoom(5);
+            uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
+        }
+
+        if (event_map.is_pressed(MOUSE_SCROLL_DOWN)) {
+            camera.zoom(-5);
+            uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
+        }
+
+        if (event_map.is_pressed(ESCAPE)) {
+            running = false;
         }
 
         Fence frame_fence = frame_fences[frame];
