@@ -227,15 +227,16 @@ fn char* Memory.data(&self) @dynamic
     return self.allocator.mapped + self.allocator_offset;
 }
 
-fn ulong Memory.getAddress(&self) @dynamic
+fn ulong Memory.get_address(&self) @dynamic
 {
     return self.address;
 }
 
-fn usz Memory.usedSize(&self) @dynamic => self.used_size;
-fn uint Memory.getType(&self) @dynamic => self.type.ordinal;
-fn void* Memory.getBuffer(&self) @dynamic => self.buffer;
-fn void Memory.setUsedSize(&self, usz size) @dynamic => self.used_size = (uint)size;
+fn usz Memory.total_size(&self) @dynamic => self.size;
+fn usz Memory.get_used_size(&self) @dynamic => self.used_size;
+fn uint Memory.get_type(&self) @dynamic => self.type.ordinal;
+fn void* Memory.get_buffer(&self) @dynamic => self.buffer;
+fn void Memory.set_used_size(&self, usz size) @dynamic => self.used_size = (uint)size;
 
 fn void? Memory.upload_from_stage(&self, void* data, usz data_size, vk::Allocation* stage_allocator, DeviceQueue queue)
 {
