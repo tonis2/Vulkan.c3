@@ -252,7 +252,7 @@ fn void? checkInstanceExtensionSupport(ZStringList requested_extensions) {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensions.push(name.str_view().copy(allocator::heap()));
+        extensions.push(name.str_view().copy(mem));
     };
  
    defer extensions.free();
@@ -275,7 +275,7 @@ fn StringList? getDeviceExtensions(PhysicalDevice device) {
     vk::enumerateDeviceExtensionProperties(device, null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view().copy(allocator::heap()));
+        extensionList.push(name.str_view().copy(mem));
     };
     return extensionList;
 }
@@ -303,7 +303,7 @@ fn StringList? getInstanceExtensions() {
     vk::enumerateInstanceExtensionProperties(null, &extensionCount, layers)!;
     for (uint i = 0; i < extensionCount; ++i) {
         ZString name = (ZString)&layers[i].extensionName;
-        extensionList.push(name.str_view().copy(allocator::heap()));
+        extensionList.push(name.str_view().copy(mem));
     };
     return extensionList;
 }
@@ -319,7 +319,7 @@ fn StringList? getValidationLayers() {
     vk::enumerateInstanceLayerProperties(&layerCount, layers)!;
     for (uint i = 0; i < layerCount; ++i) {
         ZString name = (ZString)&layers[i].layerName;
-        layersList.push(name.str_view().copy(allocator::heap()));
+        layersList.push(name.str_view().copy(mem));
     };
     return layersList;
 }
