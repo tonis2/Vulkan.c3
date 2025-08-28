@@ -36,5 +36,4 @@ Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
 run `sh build.sh` 
 or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
 
-
-GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
+The built files will be bundled into vulkan.c3l library file, that you can then use in your project.
