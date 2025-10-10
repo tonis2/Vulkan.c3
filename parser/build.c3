@@ -39,13 +39,15 @@ const String[*] ACTIVE_EXTENSIONS = {
   "VK_EXT_metal_surface",
   "VK_KHR_wayland_surface",
   "VK_EXT_validation_features",
-  "VK_EXT_layer_settings"
+  "VK_EXT_layer_settings",
+  "VK_EXT_fragment_density_map_offset",
+  "VK_EXT_sample_locations"
 };
 
 fn void main(String[] args) {
 
     DynamicArenaAllocator allocator;
-    allocator.init(allocator: allocator::heap(), page_size: 256);
+    allocator.init(allocator: mem, page_size: 256);
     defer allocator.free();
 
     TypeMap type_values;
@@ -658,24 +660,24 @@ macro bool String[*].contains(self, String key) {
 fn String String.from_bit_pos(&self) {
     char[32] buffer;
     String res = (String)io::bprintf(&buffer, "0x%08x", (ulong)1 << self.to_uint()!!)!!;
-    return res.copy(allocator::heap());
+    return res.copy(mem);
 }
 
 fn String String.to_lower_case(self) {
-    String new_value = self.copy(allocator::heap());
+    String new_value = self.copy(mem);
     new_value[0] = new_value[0].to_lower();
     return new_value;
 }
 
 fn String String.capitalize(self) {
-    String new_value = self.copy(allocator::heap());
+    String new_value = self.copy(mem);
     new_value[0] = new_value[0].to_upper();
     return new_value;
 }
 
 fn String String.remove_vk(self) {
     if (self[0..1] == "Vk" || self[0..1] == "vk") {
-         return self.copy(allocator::heap())[2..];
+         return self.copy(mem)[2..];
     }
     return self;
 }
@@ -694,7 +696,7 @@ fn String String.from_ext_value(&self, String offset, bool negative_value = fals
     value.append_repeat('0', 3 - offset.len);
     value.append_chars(offset);
 
-    String res = value.copy_str(allocator::heap());
+    String res = value.copy_str(mem);
     value.free();
     return res;
 }

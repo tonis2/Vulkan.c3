@@ -2828,6 +2828,98 @@ fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmax
    self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
    return *self;
 }
+fn SampleLocationsInfoEXT sampleLocationsInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT, .pNext = null };
+fn SampleLocationsInfoEXT SampleLocationsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SampleLocationsInfoEXT SampleLocationsInfoEXT.setSampleLocationsPerPixel(&self, SampleCountFlagBits sampleLocationsPerPixel) {
+   self.sampleLocationsPerPixel = sampleLocationsPerPixel;
+   return *self;
+}
+fn SampleLocationsInfoEXT SampleLocationsInfoEXT.setSampleLocationGridSize(&self, Extent2D sampleLocationGridSize) {
+   self.sampleLocationGridSize = sampleLocationGridSize;
+   return *self;
+}
+fn SampleLocationsInfoEXT SampleLocationsInfoEXT.setSampleLocationsCount(&self, uint sampleLocationsCount) {
+   self.sampleLocationsCount = sampleLocationsCount;
+   return *self;
+}
+fn SampleLocationsInfoEXT SampleLocationsInfoEXT.setSampleLocations(&self, SampleLocationEXT[] pSampleLocations) {
+   self.sampleLocationsCount= (uint)pSampleLocations.len;
+   self.pSampleLocations = &pSampleLocations[0];
+   return *self;
+}
+fn RenderPassSampleLocationsBeginInfoEXT renderPassSampleLocationsBeginInfoEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT, .pNext = null };
+fn RenderPassSampleLocationsBeginInfoEXT RenderPassSampleLocationsBeginInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassSampleLocationsBeginInfoEXT RenderPassSampleLocationsBeginInfoEXT.setAttachmentInitialSampleLocationsCount(&self, uint attachmentInitialSampleLocationsCount) {
+   self.attachmentInitialSampleLocationsCount = attachmentInitialSampleLocationsCount;
+   return *self;
+}
+fn RenderPassSampleLocationsBeginInfoEXT RenderPassSampleLocationsBeginInfoEXT.setAttachmentInitialSampleLocations(&self, AttachmentSampleLocationsEXT[] pAttachmentInitialSampleLocations) {
+   self.attachmentInitialSampleLocationsCount= (uint)pAttachmentInitialSampleLocations.len;
+   self.pAttachmentInitialSampleLocations = &pAttachmentInitialSampleLocations[0];
+   return *self;
+}
+fn RenderPassSampleLocationsBeginInfoEXT RenderPassSampleLocationsBeginInfoEXT.setPostSubpassSampleLocationsCount(&self, uint postSubpassSampleLocationsCount) {
+   self.postSubpassSampleLocationsCount = postSubpassSampleLocationsCount;
+   return *self;
+}
+fn RenderPassSampleLocationsBeginInfoEXT RenderPassSampleLocationsBeginInfoEXT.setPostSubpassSampleLocations(&self, SubpassSampleLocationsEXT[] pPostSubpassSampleLocations) {
+   self.postSubpassSampleLocationsCount= (uint)pPostSubpassSampleLocations.len;
+   self.pPostSubpassSampleLocations = &pPostSubpassSampleLocations[0];
+   return *self;
+}
+fn PipelineSampleLocationsStateCreateInfoEXT pipelineSampleLocationsStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineSampleLocationsStateCreateInfoEXT PipelineSampleLocationsStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineSampleLocationsStateCreateInfoEXT PipelineSampleLocationsStateCreateInfoEXT.setSampleLocationsEnable(&self, uint sampleLocationsEnable) {
+   self.sampleLocationsEnable = sampleLocationsEnable;
+   return *self;
+}
+fn PipelineSampleLocationsStateCreateInfoEXT PipelineSampleLocationsStateCreateInfoEXT.setSampleLocationsInfo(&self, SampleLocationsInfoEXT sampleLocationsInfo) {
+   self.sampleLocationsInfo = sampleLocationsInfo;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT physicalDeviceSampleLocationsPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setSampleLocationSampleCounts(&self, SampleCountFlags sampleLocationSampleCounts) {
+   self.sampleLocationSampleCounts = sampleLocationSampleCounts;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setMaxSampleLocationGridSize(&self, Extent2D maxSampleLocationGridSize) {
+   self.maxSampleLocationGridSize = maxSampleLocationGridSize;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setSampleLocationCoordinateRange(&self, float[2] sampleLocationCoordinateRange) {
+   self.sampleLocationCoordinateRange = sampleLocationCoordinateRange;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setSampleLocationSubPixelBits(&self, uint sampleLocationSubPixelBits) {
+   self.sampleLocationSubPixelBits = sampleLocationSubPixelBits;
+   return *self;
+}
+fn PhysicalDeviceSampleLocationsPropertiesEXT PhysicalDeviceSampleLocationsPropertiesEXT.setVariableSampleLocations(&self, uint variableSampleLocations) {
+   self.variableSampleLocations = variableSampleLocations;
+   return *self;
+}
+fn MultisamplePropertiesEXT multisamplePropertiesEXT() => { .sType = STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT, .pNext = null };
+fn MultisamplePropertiesEXT MultisamplePropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MultisamplePropertiesEXT MultisamplePropertiesEXT.setMaxSampleLocationGridSize(&self, Extent2D maxSampleLocationGridSize) {
+   self.maxSampleLocationGridSize = maxSampleLocationGridSize;
+   return *self;
+}
 fn SamplerReductionModeCreateInfo samplerReductionModeCreateInfo() => { .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO, .pNext = null };
 fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4283,6 +4375,47 @@ fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(&self, void* 
 }
 fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setStencilUsage(&self, ImageUsageFlags stencilUsage) {
    self.stencilUsage = stencilUsage;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT physicalDeviceFragmentDensityMapOffsetFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT.setFragmentDensityMapOffset(&self, uint fragmentDensityMapOffset) {
+   self.fragmentDensityMapOffset = fragmentDensityMapOffset;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT physicalDeviceFragmentDensityMapOffsetPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT.setFragmentDensityOffsetGranularity(&self, Extent2D fragmentDensityOffsetGranularity) {
+   self.fragmentDensityOffsetGranularity = fragmentDensityOffsetGranularity;
+   return *self;
+}
+fn RenderPassFragmentDensityMapCreateInfoEXT renderPassFragmentDensityMapCreateInfoEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT, .pNext = null };
+fn RenderPassFragmentDensityMapCreateInfoEXT RenderPassFragmentDensityMapCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassFragmentDensityMapCreateInfoEXT RenderPassFragmentDensityMapCreateInfoEXT.setFragmentDensityMapAttachment(&self, AttachmentReference fragmentDensityMapAttachment) {
+   self.fragmentDensityMapAttachment = fragmentDensityMapAttachment;
+   return *self;
+}
+fn RenderPassFragmentDensityMapOffsetEndInfoEXT renderPassFragmentDensityMapOffsetEndInfoEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT, .pNext = null };
+fn RenderPassFragmentDensityMapOffsetEndInfoEXT RenderPassFragmentDensityMapOffsetEndInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassFragmentDensityMapOffsetEndInfoEXT RenderPassFragmentDensityMapOffsetEndInfoEXT.setFragmentDensityOffsetCount(&self, uint fragmentDensityOffsetCount) {
+   self.fragmentDensityOffsetCount = fragmentDensityOffsetCount;
+   return *self;
+}
+fn RenderPassFragmentDensityMapOffsetEndInfoEXT RenderPassFragmentDensityMapOffsetEndInfoEXT.setFragmentDensityOffsets(&self, Offset2D[] pFragmentDensityOffsets) {
+   self.fragmentDensityOffsetCount= (uint)pFragmentDensityOffsets.len;
+   self.pFragmentDensityOffsets = &pFragmentDensityOffsets[0];
    return *self;
 }
 fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES, .pNext = null };
@@ -6361,6 +6494,19 @@ fn ResolveImageInfo2 ResolveImageInfo2.setRegions(&self, ImageResolve2[] pRegion
    self.pRegions = &pRegions[0];
    return *self;
 }
+fn FragmentShadingRateAttachmentInfoKHR fragmentShadingRateAttachmentInfoKHR() => { .sType = STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
+fn FragmentShadingRateAttachmentInfoKHR FragmentShadingRateAttachmentInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FragmentShadingRateAttachmentInfoKHR FragmentShadingRateAttachmentInfoKHR.setFragmentShadingRateAttachment(&self, AttachmentReference2* pFragmentShadingRateAttachment) {
+   self.pFragmentShadingRateAttachment = pFragmentShadingRateAttachment;
+   return *self;
+}
+fn FragmentShadingRateAttachmentInfoKHR FragmentShadingRateAttachmentInfoKHR.setShadingRateAttachmentTexelSize(&self, Extent2D shadingRateAttachmentTexelSize) {
+   self.shadingRateAttachmentTexelSize = shadingRateAttachmentTexelSize;
+   return *self;
+}
 fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7388,6 +7534,11 @@ fn RenderingInfoKHR RenderingInfoKHR.setStencilAttachment(&self, RenderingAttach
    self.pStencilAttachment = pStencilAttachment;
    return *self;
 }
+fn RenderingEndInfoEXT renderingEndInfoEXT() => { .sType = STRUCTURE_TYPE_RENDERING_END_INFO_EXT, .pNext = null };
+fn RenderingEndInfoEXT RenderingEndInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
 fn RenderingAttachmentInfo renderingAttachmentInfo() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO, .pNext = null };
 fn RenderingAttachmentInfo RenderingAttachmentInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7564,6 +7715,33 @@ fn SubresourceLayout2 SubresourceLayout2.setNext(&self, void* pNext) {
 }
 fn SubresourceLayout2 SubresourceLayout2.setSubresourceLayout(&self, SubresourceLayout subresourceLayout) {
    self.subresourceLayout = subresourceLayout;
+   return *self;
+}
+fn RenderPassCreationControlEXT renderPassCreationControlEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT, .pNext = null };
+fn RenderPassCreationControlEXT RenderPassCreationControlEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassCreationControlEXT RenderPassCreationControlEXT.setDisallowMerging(&self, uint disallowMerging) {
+   self.disallowMerging = disallowMerging;
+   return *self;
+}
+fn RenderPassCreationFeedbackCreateInfoEXT renderPassCreationFeedbackCreateInfoEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT, .pNext = null };
+fn RenderPassCreationFeedbackCreateInfoEXT RenderPassCreationFeedbackCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassCreationFeedbackCreateInfoEXT RenderPassCreationFeedbackCreateInfoEXT.setRenderPassFeedback(&self, RenderPassCreationFeedbackInfoEXT* pRenderPassFeedback) {
+   self.pRenderPassFeedback = pRenderPassFeedback;
+   return *self;
+}
+fn RenderPassSubpassFeedbackCreateInfoEXT renderPassSubpassFeedbackCreateInfoEXT() => { .sType = STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT, .pNext = null };
+fn RenderPassSubpassFeedbackCreateInfoEXT RenderPassSubpassFeedbackCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassSubpassFeedbackCreateInfoEXT RenderPassSubpassFeedbackCreateInfoEXT.setSubpassFeedback(&self, RenderPassSubpassFeedbackInfoEXT* pSubpassFeedback) {
+   self.pSubpassFeedback = pSubpassFeedback;
    return *self;
 }
 fn PhysicalDevicePipelineRobustnessFeatures physicalDevicePipelineRobustnessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES, .pNext = null };

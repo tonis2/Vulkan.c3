@@ -139,8 +139,8 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
         }
 
         if (value.size != "" && value.size != "null-terminated" && value.size[0] != '[') {
-            DString size_value = dstring::join(allocator::heap(), {"[", value.size[3..], "]"}, "");
-            value.size = size_value.copy_str(allocator::heap());
+            DString size_value = dstring::join(mem, {"[", value.size[3..], "]"}, "");
+            value.size = size_value.copy_str(mem);
             size_value.free();
         }
 
@@ -155,7 +155,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
     String? error_codes = node.attributes.get("errorcodes");
 
     if (try error_codes) {
-        String[] error_codes_list = error_codes.split(allocator::heap(), ",");
+        String[] error_codes_list = error_codes.split(mem, ",");
         foreach (code : error_codes_list) self.error_codes.push(code);
         free(error_codes_list);
     }
