@@ -12,8 +12,8 @@ Running example:
 Install [C3](https://c3-lang.org/), [VulkanSDK](https://vulkan.lunarg.com/sdk/home)
 Then run example with `c3c run cube`
 
-------
-### Running with vulkan on macOS
+
+##### Running example on macOS
 
 Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac) and add vulkan lib file path as `rpath` to the run command.
 Its the folder with `vulkan.1.dylib` file
@@ -21,8 +21,7 @@ Its the folder with `vulkan.1.dylib` file
 c3c run cube -z -rpath -z /Users/my_user/VulkanSDK/macOS/lib
 ````
 
-------
-### Running vulkan on linux
+##### Running example on linux
 Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac)
 
 Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
@@ -37,5 +36,4 @@ Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
 run `sh build.sh` 
 or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
 
-
-GLTF examples can be found [here](https://github.com/tonis2/vulkan-gltf)
+The built files will be bundled into `vulkan.c3l` library file, that you can then use in your project.
