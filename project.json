@@ -27,7 +27,7 @@
 		"build": {
 			"type": "executable",
 			"dependencies": ["xml"],
-			"sources": ["./parser/build.c3", "./parser/types.c3"]
+			"sources": ["./parser/*", "./parser/build.c3"]
 		}
 	},
 	"output": "./build"
