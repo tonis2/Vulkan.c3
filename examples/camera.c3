@@ -7,10 +7,6 @@ alias Vec2f = float[<2>];
 alias Vec3f = float[<3>];
 alias Vec4f = float[<4>];
 
-fn float radians(float value) {
-    return value * (float)math::PI / 180;
-}
-
 struct UniformData {
     Matrix4f projection;
     Matrix4f view;
@@ -31,7 +27,7 @@ fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float
     return {
         target,
         eye,
-        matrix::perspective{float}(radians(view), aspect, min_zoom, max_zoom),
+        matrix::perspective{float}((float)math::deg_to_rad(view), aspect, min_zoom, max_zoom),
         matrix::look_at{float}(eye, target, {0.0, 1.0, 0.0}),
         0,
         0,
@@ -46,9 +42,9 @@ fn void Camera.rotate (Camera* self, float x_offset, float y_offset) {
     if (self.pitch > 89.0) self.pitch = 89.0;
     if (self.pitch < -89.0) self.pitch = -89.0;
 
-    self.eye = { math::cos(radians(self.yaw)) * math::cos(radians(self.pitch)),
-                 math::sin(radians(self.pitch)),
-                 math::sin(radians(self.yaw)) * math::cos(radians(self.pitch))};
+    self.eye = { math::cos((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch)),
+                 math::sin((float)math::deg_to_rad(self.pitch)),
+                 math::sin((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch))};
 
     self.view = matrix::look_at{float}(self.eye, self.target, {0.0, 1.0, 0.0});
     self.view.m23 = self.zoom_value;
