@@ -60,7 +60,6 @@ ushort[] indices = {
 char[*] shader = $embed("./shaders/shader.spv");
 
 Instance instance;
-DebugUtilsMessengerEXT debug_messenger;
 PhysicalDevice physical_device;
 DeviceQueue graphics_queue;
 Device device;
@@ -90,7 +89,7 @@ fn void main(String[] args)
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
     
     device_extensions.push_all({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_shader_non_semantic_info"});
-    extensions.push_all({"VK_KHR_surface", "VK_EXT_debug_utils"});
+    extensions.push_all({"VK_KHR_surface"});
 
     if (env::OS_TYPE == MACOS) {
         extensions.push_all({"VK_EXT_metal_surface", "VK_KHR_portability_enumeration"});
@@ -323,7 +322,6 @@ fn void main(String[] args)
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
         .size = 20_000_000
     }.build()!!;
-
  
     Memory vertex_buffer = vk::new_buffer(
         vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT,
@@ -389,9 +387,9 @@ fn void main(String[] args)
     };
 
     SubpassDescription subpass = {
-            .pipelineBindPoint = vk::PIPELINE_BIND_POINT_GRAPHICS,
-            .colorAttachmentCount = colorAttachments.len,
-            .pColorAttachments = colorAttachments.ptr
+        .pipelineBindPoint = vk::PIPELINE_BIND_POINT_GRAPHICS,
+        .colorAttachmentCount = colorAttachments.len,
+        .pColorAttachments = colorAttachments.ptr
     };
 
     RenderPass render_pass = vk::renderPassCreateInfo()
