@@ -580,7 +580,7 @@ fn void main(String[] args) {
             }
             extension_definitions.append(dstring::join(&allocator, {");\n"}, ""));
         } else {
-            base_commands.append(dstring::join(&allocator, {")", " @extern(\"", entry.name, "\"); \n"}, ""));
+            base_commands.append(dstring::join(&allocator, {")", " @cname(\"", entry.name, "\"); \n"}, ""));
         }
     }
 

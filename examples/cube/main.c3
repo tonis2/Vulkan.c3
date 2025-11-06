@@ -8,10 +8,7 @@ import camera;
 const WIDTH = 800;
 const HEIGHT = 600;
 const VK_API_VERSION_1_3 = vk::@makeApiVersion(0,1,3,0);
-const ENABLE_VALIDATION_LAYERS = false;
 const MAX_FRAMES_IN_FLIGHT = 2;
-
-
 
 struct Vertex {
     Vec3f pos;
@@ -91,7 +88,7 @@ fn void main(String[] args)
     defer win.free();
     
     Camera camera = camera::new(eye: {0.0, 5.0, 10}, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
-
+    
     device_extensions.push_all({"VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_shader_non_semantic_info"});
     extensions.push_all({"VK_KHR_surface", "VK_EXT_debug_utils"});
 
@@ -129,39 +126,12 @@ fn void main(String[] args)
     .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
     .setEnabledExtensionNames(extensions.array_view());
 
-    DebugUtilsMessengerCreateInfoEXT debug_info = {
-        .sType = vk::STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-        .messageSeverity = vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT,
-        .messageType = vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-        .pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)&vk::debugCallback
-    };
-
-    // Debug enabled
-    if (ENABLE_VALIDATION_LAYERS) {
-        ValidationFeatureEnableEXT[] enables = {vk::VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT, vk::VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT};
-        String[] validations = {"VK_LAYER_KHRONOS_validation"};
-
-        ValidationFeaturesEXT features = {
-            .sType = vk::STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
-            .enabledValidationFeatureCount = enables.len,
-            .pEnabledValidationFeatures = enables.ptr,
-        };
-
-        vk::checkValidationLayersSupport(validations)!!;
-        instanceInfo.pNext = &features;
-        instanceInfo.enabledLayerCount = (uint)validations.len;
-        instanceInfo.ppEnabledLayerNames = (char*)validations.ptr;
-    }
-
     if (catch err = vk::createInstance(&instanceInfo, null, &instance)) {
         io::printfn("Extension error");
         return;
     }
-    vk::loadExtensions(instance);
 
-    if (ENABLE_VALIDATION_LAYERS) {
-        debug_messenger = debug_info.build(instance)!!;
-    }
+    vk::loadExtensions(instance);
 
     // Create surface
     $switch(env::OS_TYPE):
@@ -544,13 +514,13 @@ fn void main(String[] args)
     }
 
     // Create syncronisation stuff
-    SemaphoreList wait_semaphores;
-    SemaphoreList signal_semaphores;
+    SemaphoreList image_available;
+    SemaphoreList render_finished;
     FenceList frame_fences;
 
-    for (uint i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-        wait_semaphores.push(vk::semaphoreCreateInfo().build(device))!!;
-        signal_semaphores.push(vk::semaphoreCreateInfo().build(device))!!;
+    for (uint i = 0; i < swapchain_info.minImageCount; ++i) {
+        image_available.push(vk::semaphoreCreateInfo().build(device))!!;
+        render_finished.push(vk::semaphoreCreateInfo().build(device))!!;
         frame_fences.push(vk::fenceCreateInfo().setFlags(vk::FENCE_CREATE_SIGNALED_BIT).build(device))!!;
     }
     
@@ -583,13 +553,15 @@ fn void main(String[] args)
         }
 
         Fence frame_fence = frame_fences[frame];
-        Semaphore wait_semaphore = wait_semaphores[frame];
-        Semaphore signal_semaphore = signal_semaphores[frame];
+        Semaphore available_semaphore = image_available[frame];
+      
 
         frame_fence.wait(device)!!;
         frame_fence.reset(device)!!;
 
-        uint next_image = swapchain.getNextImage(device, wait_semaphore);
+        uint next_image = swapchain.getNextImage(device, available_semaphore);
+
+        Semaphore finished_semaphore = render_finished[next_image];
 
         RenderPassBeginInfo render_pass_info = vk::renderPassBeginInfo()
         .setFramebuffer(frame_buffers[next_image])
@@ -619,18 +591,28 @@ fn void main(String[] args)
         vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
         vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
         vk::cmdEndRenderPass(command_buffer);
+
+        CommandBufferSubmitInfo cmd_info = vk::commandBufferSubmitInfo()
+        .setCommandBuffer(command_buffer);
+
+        SemaphoreSubmitInfo wait_info = vk::semaphoreSubmitInfo()
+        .setSemaphore(available_semaphore)
+        .setStageMask(vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT);
+
+        SemaphoreSubmitInfo signal_info = vk::semaphoreSubmitInfo()
+        .setSemaphore(finished_semaphore)
+        .setStageMask(vk::PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
   
-        SubmitInfo submit_info = vk::submitInfo()
-        .setWaitSemaphores({ wait_semaphore })
-        .setCommandBuffers({ command_buffer })
-        .setSignalSemaphores({ signal_semaphore })
-        .setWaitDstStageMask({vk::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT});
+        SubmitInfo2 submit_info = vk::submitInfo2()
+        .setCommandBufferInfos({ cmd_info })
+        .setWaitSemaphoreInfos({ wait_info })
+        .setSignalSemaphoreInfos({ signal_info });
 
         vk::endCommandBuffer(command_buffer)!!;
-        vk::queueSubmit(graphics_queue.handle, 1, &submit_info, frame_fence)!!;
+        vk::queueSubmit2(graphics_queue.handle, 1, &submit_info, frame_fence)!!;
 
         PresentInfoKHR present_info = vk::presentInfoKHR()
-        .setWaitSemaphores({ signal_semaphore })
+        .setWaitSemaphores({ finished_semaphore })
         .setSwapchains({ swapchain })
         .setImageIndices({ next_image });
 
@@ -638,8 +620,8 @@ fn void main(String[] args)
         frame = (frame + 1) % 2;
     }
 
+    // Wait until Vulkan is finished, before freeing stuff
     device.waitIdle();
-    if (ENABLE_VALIDATION_LAYERS) debug_messenger.free(instance);
 
     swapchain.free(device);
 
@@ -658,8 +640,8 @@ fn void main(String[] args)
     pipeline.free(device);
     pipeline_layout.free(device);
 
-    wait_semaphores.release(device);
-    signal_semaphores.release(device);
+    image_available.release(device);
+    render_finished.release(device);
     frame_fences.release(device);
     surface.free(instance);
 }
