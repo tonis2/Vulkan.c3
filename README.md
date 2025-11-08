@@ -36,4 +36,13 @@ Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
 run `sh build.sh` 
 or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
 
-The built files will be bundled into `vulkan.c3l` library file, that you can then use in your project.
+The built bindings files will be bundled into `vulkan.c3l` library file, that you can then use in your C3 project, like below example.
+
+`dependency-search-paths` is where you put the `vulkan.c3l` file.
+
+```
+"dependency-search-paths": [ "./dependencies"],
+"dependencies": ["vk"],
+
+```
+
