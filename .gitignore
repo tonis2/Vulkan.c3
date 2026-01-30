@@ -11,7 +11,8 @@ tmp
 _c3l
 assets/
 
-.vscode/
+.vscode/*
+.claude/*
 
 # Linker output
 *.ilk

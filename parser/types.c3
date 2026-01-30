@@ -15,7 +15,7 @@ struct Base {
     String name;
     String comment;
     String alias_name;
-    List{VkValue} values;
+    ValueList values;
     bool enabled;
 }
 

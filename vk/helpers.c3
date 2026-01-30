@@ -260,7 +260,7 @@ fn void? checkInstanceExtensionSupport(ZStringList requested_extensions) {
    {
        if (!extensions.contains(value.str_view())) {
            io::printfn("Extension not supported %s", value.str_view());
-           return EXTENSION_NOT_SUPPORTED?;
+           return EXTENSION_NOT_SUPPORTED~;
        }
    }
 }
@@ -288,7 +288,7 @@ fn void? checkValidationLayersSupport(String[] requested_validations) {
     {
       if (!validations.contains(value)) {
           io::printfn("Validation layer not supported %s", value);
-          return EXTENSION_NOT_SUPPORTED?;
+          return EXTENSION_NOT_SUPPORTED~;
       }
     }
 }

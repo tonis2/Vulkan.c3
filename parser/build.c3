@@ -386,7 +386,7 @@ fn void main(String[] args) {
             text_body.append(dstring::join(&allocator, {"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, ""));
         }
         
-        text_body.append_chars("\n");
+        text_body.append_string("\n");
         main_file.write(text_body.str_view())!!;
     }
 
@@ -455,7 +455,7 @@ fn void main(String[] args) {
             }
         }
         
-        text_body.append_chars("}\n");
+        text_body.append_string("}\n");
         main_file.write(text_body.str_view())!!;
     }
 
@@ -479,7 +479,7 @@ fn void main(String[] args) {
             }
         }
         
-        text_body.append_chars("}\n");
+        text_body.append_string("}\n");
         main_file.write(text_body.str_view())!!;
     }
 
@@ -633,7 +633,7 @@ fn void main(String[] args) {
         if (entry.error_codes.len() > 0) {
             text_body.append("  switch(result) { \n");
             foreach (i, value : entry.error_codes) {
-                text_body.append(dstring::join(&allocator, {"       case ", value[3..], ": return E_", value[3..], "?;\n"}, ""));
+                text_body.append(dstring::join(&allocator, {"       case ", value[3..], ": return E_", value[3..], "~;\n"}, ""));
             }
             text_body.append("  }\n");
         } else {
@@ -689,12 +689,12 @@ fn String String.from_ext_value(&self, String offset, bool negative_value = fals
     uint ext_int = self.to_uint()!! - 1;
     uint offset_int = offset.to_uint()!!;
 
-    if (negative_value) value.append_chars("-");
-    value.append_chars("1");
+    if (negative_value) value.append_string("-");
+    value.append_string("1");
     value.append_repeat('0', 6 - self.len);
-    value.append_chars((String)io::bprintf(&buffer, "%s", ext_int)!!);
+    value.append_string((String)io::bprintf(&buffer, "%s", ext_int)!!);
     value.append_repeat('0', 3 - offset.len);
-    value.append_chars(offset);
+    value.append_string(offset);
 
     String res = value.copy_str(mem);
     value.free();
