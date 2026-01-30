@@ -409,95 +409,125 @@ fn void main(String[] args)
     .build(device)!!;
 
     // Create Renderpipeline info
-    Pipeline pipeline = vk::graphicsPipelineCreateInfo()
-    .setStages({
+    // Declare arrays as local variables to keep them in scope until build() is called
+    PipelineShaderStageCreateInfo[2] shader_stages = {
         vk::pipelineShaderStageCreateInfo()
-        .setStage(vk::SHADER_STAGE_VERTEX_BIT)
-        .setMod(shader_module)
-        .setName("main"),
-         vk::pipelineShaderStageCreateInfo()
-        .setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
-        .setMod(shader_module)
-        .setName("main")
-    })
-    .setLayout(pipeline_layout)
-     .setVertexInputState(&&vk::pipelineVertexInputStateCreateInfo()
-        .setVertexBindingDescriptions(
+            .setStage(vk::SHADER_STAGE_VERTEX_BIT)
+            .setMod(shader_module)
+            .setName("vertexMain"),
+        vk::pipelineShaderStageCreateInfo()
+            .setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
+            .setMod(shader_module)
+            .setName("fragmentMain")
+    };
+
+    VertexInputBindingDescription[1] binding_descriptions = {{
+        .binding = 0,
+        .stride = Vertex.sizeof,
+        .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
+    }};
+
+    VertexInputAttributeDescription[2] attribute_descriptions = {
         {
-            {
-             .binding = 0,
-             .stride = Vertex.sizeof,
-             .inputRate = vk::VERTEX_INPUT_RATE_VERTEX,
-            }
-        })
-        .setVertexAttributeDescriptions({
-            {
-               .binding = 0,
-               .location = 0,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.pos.offsetof
-            },
-            {
-               .binding = 0,
-               .location = 1,
-               .format = vk::FORMAT_R32G32B32_SFLOAT,
-               .offset = Vertex.color.offsetof
-            }
-        })
-    )
-    .setDynamicState(
-       &&vk::pipelineDynamicStateCreateInfo()
-        .setDynamicStates(
+            .binding = 0,
+            .location = 0,
+            .format = vk::FORMAT_R32G32B32_SFLOAT,
+            .offset = Vertex.pos.offsetof
+        },
         {
-            vk::DYNAMIC_STATE_VIEWPORT,
-            vk::DYNAMIC_STATE_LINE_WIDTH,
-        })
-    )
-    .setRasterizationState(
-        &&vk::pipelineRasterizationStateCreateInfo()
+            .binding = 0,
+            .location = 1,
+            .format = vk::FORMAT_R32G32B32_SFLOAT,
+            .offset = Vertex.color.offsetof
+        }
+    };
+
+    DynamicState[2] dynamic_states = {
+        vk::DYNAMIC_STATE_VIEWPORT,
+        vk::DYNAMIC_STATE_LINE_WIDTH,
+    };
+
+    Viewport[1] viewports = {{
+        .x = 0.0, .y = 0.0,
+        .width = swapchain_info.imageExtent.width,
+        .height = swapchain_info.imageExtent.height,
+        .minDepth = 0.0, .maxDepth = 1.0
+    }};
+
+    Rect2D[1] scissors = {{
+        .offset = { .x = 0, .y = 0 },
+        .extent = swapchain_info.imageExtent
+    }};
+
+    PipelineColorBlendAttachmentState[1] color_blend_attachments = {{
+        .colorWriteMask =
+            vk::COLOR_COMPONENT_R_BIT |
+            vk::COLOR_COMPONENT_G_BIT |
+            vk::COLOR_COMPONENT_B_BIT |
+            vk::COLOR_COMPONENT_A_BIT,
+        .blendEnable = vk::TRUE,
+        .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
+        .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .colorBlendOp = vk::BLEND_OP_ADD,
+        .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .alphaBlendOp = vk::BLEND_OP_ADD,
+    }};
+
+    PipelineVertexInputStateCreateInfo vertex_input_state = vk::pipelineVertexInputStateCreateInfo()
+        .setVertexBindingDescriptions(binding_descriptions[..])
+        .setVertexAttributeDescriptions(attribute_descriptions[..]);
+
+    PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
+        .setDynamicStates(dynamic_states[..]);
+
+    PipelineRasterizationStateCreateInfo rasterization_state = vk::pipelineRasterizationStateCreateInfo()
         .setDepthClampEnable(vk::FALSE)
         .setRasterizerDiscardEnable(vk::FALSE)
         .setPolygonMode(vk::POLYGON_MODE_FILL)
         .setLineWidth(1.0)
         .setCullMode(vk::CULL_MODE_FRONT_BIT)
         .setFrontFace(vk::FRONT_FACE_COUNTER_CLOCKWISE)
-        .setDepthBiasEnable(vk::FALSE)
-    )
-    .setInputAssemblyState(&&vk::pipelineInputAssemblyStateCreateInfo().setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST))
-    .setMultisampleState(&&vk::pipelineMultisampleStateCreateInfo()
-                      .setSampleShadingEnable(vk::FALSE)
-                      .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
-                      .setMinSampleShading(1.0)
-                      .setAlphaToCoverageEnable(vk::FALSE)
-                      .setAlphaToOneEnable(vk::FALSE))
-    .setDepthStencilState(&&vk::pipelineDepthStencilStateCreateInfo()
-                        .setDepthTestEnable(vk::FALSE)
-                        .setDepthWriteEnable(vk::FALSE)
-                        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
-                        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS}))
-    .setColorBlendState(&&vk::pipelineColorBlendStateCreateInfo()
-                    .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
-                    .setLogicOp(vk::LOGIC_OP_COPY)
-                    .setAttachments({
-                       {
-                           .colorWriteMask =
-                               vk::COLOR_COMPONENT_R_BIT |
-                               vk::COLOR_COMPONENT_G_BIT |
-                               vk::COLOR_COMPONENT_B_BIT |
-                               vk::COLOR_COMPONENT_A_BIT,
-                           .blendEnable = vk::TRUE,
-                           .srcColorBlendFactor = vk::BLEND_FACTOR_SRC_ALPHA,
-                           .dstColorBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .colorBlendOp = vk::BLEND_OP_ADD,
-                           .srcAlphaBlendFactor = vk::BLEND_FACTOR_ONE,
-                           .dstAlphaBlendFactor = vk::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                           .alphaBlendOp = vk::BLEND_OP_ADD,
-                       }}))
-    .setViewportState(&&vk::pipelineViewportStateCreateInfo()
-                   .setViewports({{ .x = 0.0, .y = 0.0, .width = swapchain_info.imageExtent.width, .height = swapchain_info.imageExtent.height, .minDepth = 0.0, .maxDepth = 1.0 }})
-                   .setScissors({{ .offset = { .x = 0, .y = 0 }, .extent = swapchain_info.imageExtent }}))
-    .setRenderPass(render_pass)
-    .build(device)!!;
+        .setDepthBiasEnable(vk::FALSE);
+
+    PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo()
+        .setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+
+    PipelineMultisampleStateCreateInfo multisample_state = vk::pipelineMultisampleStateCreateInfo()
+        .setSampleShadingEnable(vk::FALSE)
+        .setRasterizationSamples(vk::SAMPLE_COUNT_1_BIT)
+        .setMinSampleShading(1.0)
+        .setAlphaToCoverageEnable(vk::FALSE)
+        .setAlphaToOneEnable(vk::FALSE);
+
+    PipelineDepthStencilStateCreateInfo depth_stencil_state = vk::pipelineDepthStencilStateCreateInfo()
+        .setDepthTestEnable(vk::FALSE)
+        .setDepthWriteEnable(vk::FALSE)
+        .setDepthCompareOp(vk::COMPARE_OP_LESS_OR_EQUAL)
+        .setBack({.compareOp = vk::COMPARE_OP_ALWAYS});
+
+    PipelineColorBlendStateCreateInfo color_blend_state = vk::pipelineColorBlendStateCreateInfo()
+        .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+        .setLogicOp(vk::LOGIC_OP_COPY)
+        .setAttachments(color_blend_attachments[..]);
+
+    PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo()
+        .setViewports(viewports[..])
+        .setScissors(scissors[..]);
+
+    Pipeline pipeline = vk::graphicsPipelineCreateInfo()
+        .setStages(shader_stages[..])
+        .setLayout(pipeline_layout)
+        .setVertexInputState(&vertex_input_state)
+        .setDynamicState(&dynamic_state)
+        .setRasterizationState(&rasterization_state)
+        .setInputAssemblyState(&input_assembly_state)
+        .setMultisampleState(&multisample_state)
+        .setDepthStencilState(&depth_stencil_state)
+        .setColorBlendState(&color_blend_state)
+        .setViewportState(&viewport_state)
+        .setRenderPass(render_pass)
+        .build(device)!!;
 
     FrameBufferList frame_buffers;
     
