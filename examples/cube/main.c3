@@ -305,46 +305,35 @@ fn void main(String[] args)
     CommandPool command_pool = device.createCommandPool(queue: graphics_queue.index)!!;
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!!;
 
-    // Create allocator of 50MB - DEVICE_ONLY memory
-    vk::Allocation device_allocation = (vk::Allocation){
+    // Single allocator manages everything
+    vk::Allocator allocator = (vk::Allocator){
         .device = device,
         .pdevice = physical_device,
-        .properties = vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        .queue = &graphics_queue,
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 50_000_000
-    }.build()!!;
+    }.init()!!;
 
-    // Allocation where data can be changed from CPU
-    vk::Allocation local_allocation = (vk::Allocation){
-        .device = device,
-        .pdevice = physical_device,
-        .properties = vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
-        .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-        .size = 20_000_000
-    }.build()!!;
- 
     Memory vertex_buffer = vk::new_buffer(
-        vk::BUFFER_USAGE_VERTEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT,
-        &device_allocation,
-        vertices.ptr,
-        data_size: Vertex.sizeof * vertices.len,
-        stage_allocator: &local_allocation,
-        queue: &graphics_queue
+		allocator: &allocator,
+        usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        data: vertices.ptr,
+        data_size: Vertex.sizeof * vertices.len
     )!!;
 
     Memory index_buffer = vk::new_buffer(
-        vk::BUFFER_USAGE_INDEX_BUFFER_BIT | vk::BUFFER_USAGE_TRANSFER_DST_BIT,
-        &device_allocation,
-        indices.ptr,
-        data_size: indices.len * ushort.sizeof,
-        stage_allocator: &local_allocation,
-        queue: &graphics_queue
+		allocator: &allocator,
+        usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
+        properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        data: indices.ptr,
+        data_size: indices.len * ushort.sizeof
     )!!;
 
     Memory uniform_buffer = vk::new_buffer(
-        vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        &local_allocation,
-        &&camera.matrix(),
+		allocator: &allocator,
+        usage: vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+        data: &&camera.matrix(),
         data_size: UniformData.sizeof
     )!!;   
 
@@ -661,8 +650,7 @@ fn void main(String[] args)
     swapchain_views.free();
     command_pool.free(device);
 
-    device_allocation.free();
-    local_allocation.free();
+    allocator.free();
     
     descriptor_set_layout.free(device);
     pipeline.free(device);
