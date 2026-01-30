@@ -114,7 +114,7 @@ fn Memory? new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
 
     if ((allocator.size - allocator.used_size) < size) {
         io::printfn("Allocation has no enough free memory");
-        return ALLOCATION_HAS_NO_ROOM?;
+        return ALLOCATION_HAS_NO_ROOM~;
     };
 
     vk::bindBufferMemory(allocator.device, buffer, allocator.memory, offset)!!;
@@ -154,7 +154,7 @@ fn Memory? new_buffer(vk::BufferUsageFlagBits usage, vk::Allocation* allocator, 
     if ((MemoryPropertyFlagBits)allocator.properties & vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT && data != null) {
         if (stage_allocator == null) {
             io::printfn("Add stage allocator for uploading to GPU");
-            return ALLOCATION_HAS_NO_ROOM?;
+            return ALLOCATION_HAS_NO_ROOM~;
         }
 
         Memory stage_buffer = new_buffer(
@@ -198,7 +198,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::Allocation* allocator)
 
     if (allocator.size - allocator.used_size < size) {
        io::printfn("Allocation has no enough free memory");
-       return ALLOCATION_HAS_NO_ROOM?;
+       return ALLOCATION_HAS_NO_ROOM~;
     }
 
     vk::bindImageMemory(device, image, allocator.memory, offset)!;
