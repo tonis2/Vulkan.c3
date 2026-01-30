@@ -3,7 +3,8 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0, v0.2.1, etc.
+      - 'v*'    # v1.0.0, v0.2.1, etc.
+      - '[0-9]*'  # 1.0.0, 0.2.1, etc.
   workflow_dispatch:  # Manual trigger for testing
     inputs:
       version:
