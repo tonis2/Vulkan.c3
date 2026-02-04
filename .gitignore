@@ -12,7 +12,7 @@ _c3l
 assets/
 
 .vscode/*
-.claude
+.claude/*
 
 # Linker output
 *.ilk

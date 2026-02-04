@@ -1413,11 +1413,11 @@ fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setFlags(&self, Win32Surf
    self.flags = flags;
    return *self;
 }
-fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHinstance(&self, Hinstance hinstance) {
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHinstance(&self, HInstance hinstance) {
    self.hinstance = hinstance;
    return *self;
 }
-fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(&self, Hwnd hwnd) {
+fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(&self, HWnd hwnd) {
    self.hwnd = hwnd;
    return *self;
 }
