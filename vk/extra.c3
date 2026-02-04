@@ -1,12 +1,14 @@
 module vk;
 
+import std::os::win32;
+
 macro uint @makeApiVersion(uint $variant, uint $major, uint $minor, uint $patch) => (($variant << 29) | ($major << 22) | ($minor << 12) | $patch);
 
+alias HWnd = win32::Win32_HWND;
+alias HInstance = win32::Win32_HINSTANCE;
 typedef Display = inline void*;
 typedef Connection = inline void*;
 typedef Window = inline ulong;
-typedef Hinstance = inline ulong;
-typedef Hwnd = inline void*;
 typedef VisualID = inline ulong;
 typedef CAMetalLayer = inline void*;
 typedef WLSurface = inline void*;

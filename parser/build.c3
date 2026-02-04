@@ -72,9 +72,9 @@ fn void main(String[] args) {
         "xcb_window_t", "Window",
         "wl_display", "Display",
         "zx_handle_t", "Display",
-        "HINSTANCE", "Hinstance",
+        "HINSTANCE", "HInstance",
         "wl_surface", "WLSurface",
-        "HWND", "Hwnd",
+        "HWND", "HWnd",
         "(~0ULL)", "(~0UL)"
     );
     

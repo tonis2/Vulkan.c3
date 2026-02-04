@@ -6226,8 +6226,8 @@ struct Win32SurfaceCreateInfoKHR {
    StructureType sType;
    void* pNext;
    Win32SurfaceCreateFlagsKHR flags;
-   Hinstance hinstance;
-   Hwnd hwnd;
+   HInstance hinstance;
+   HWnd hwnd;
 }
 struct XlibSurfaceCreateInfoKHR {
    StructureType sType;
