@@ -11,6 +11,7 @@ tmp
 _c3l
 assets/
 
+.claude
 .vscode/*
 .claude/*
 

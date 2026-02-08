@@ -7,10 +7,26 @@ alias BlockList = List{Memory*};
 alias PageList = List{MemoryPage};
 alias FreeBlockList = List{FreeBlock};
 
-enum GpuType : uint
+enum GpuType : inline uint
 {
     HOST_VISIBLE,
-    DEVICE_ONLY
+    DEVICE_ONLY,
+    CPU_ONLY
+}
+
+interface Allocator
+{
+    fn usz total_size();
+    fn void set_used_size(usz size);
+    fn char* data();
+    fn void upload(void* data, usz size, usz offset);
+    fn ulong get_address();
+    fn usz get_used_size();
+    fn uint get_type();
+    fn void* get_buffer();
+    fn void free();
+    fn void mark_deleted();
+    fn bool is_deleted();
 }
 
 faultdef BUFFER_TOO_SMALL, ALLOCATION_NOT_FOUND, ALLOCATION_HAS_NO_ROOM;
@@ -33,7 +49,7 @@ struct MemoryPage {
     FreeBlockList free_blocks;  // Tracks holes from deleted allocations
 }
 
-struct Allocator {
+struct MemoryAllocator {
     Device device;
     PhysicalDevice pdevice;
     DeviceQueue* queue;
@@ -43,7 +59,7 @@ struct Allocator {
     BlockList pending_deletes;  // Allocations marked for deletion
 }
 
-fn Allocator? Allocator.init(&self) {
+fn MemoryAllocator? MemoryAllocator.init(&self) {
     if (self.default_page_size == 0) {
         self.default_page_size = 64_000_000;  // 64MB default
     }
@@ -124,7 +140,7 @@ fn void MemoryPage.merge_free_blocks(&self) @local {
     }
 }
 
-fn MemoryPage* Allocator.find_or_create_page(&self, MemoryPropertyFlags properties, usz required_size, uint memory_type_bits) @private {
+fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags properties, usz required_size, uint memory_type_bits) @private {
     uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
 
     // Search existing pages for matching properties + enough space
@@ -164,13 +180,13 @@ fn MemoryPage* Allocator.find_or_create_page(&self, MemoryPropertyFlags properti
 }
 
 // Mark a Memory allocation for deletion (will be freed on sync)
-fn void Allocator.mark_deleted(&self, Memory* mem) {
+fn void MemoryAllocator.mark_deleted(&self, Memory* mem) {
     if (mem.buffer == null && mem.image == null) return;  // Already freed
     self.pending_deletes.push(mem);
 }
 
 // Process all pending deletions - call this when GPU is idle
-fn void Allocator.sync(&self) {
+fn void MemoryAllocator.sync(&self) {
     foreach (mem : self.pending_deletes) {
         if (mem.buffer != null) {
             vk::destroyBuffer(self.device, mem.buffer, null);
@@ -196,7 +212,7 @@ fn void Allocator.sync(&self) {
 }
 
 // Get memory statistics
-fn usz Allocator.total_allocated(&self) {
+fn usz MemoryAllocator.total_allocated(&self) {
     usz total = 0;
     foreach (&page : self.pages) {
         total += page.size;
@@ -204,7 +220,7 @@ fn usz Allocator.total_allocated(&self) {
     return total;
 }
 
-fn usz Allocator.total_used(&self) {
+fn usz MemoryAllocator.total_used(&self) {
     usz total = 0;
     foreach (&page : self.pages) {
         total += page.used_size;
@@ -212,7 +228,7 @@ fn usz Allocator.total_used(&self) {
     return total;
 }
 
-fn usz Allocator.total_fragmented(&self) {
+fn usz MemoryAllocator.total_fragmented(&self) {
     usz total = 0;
     foreach (&page : self.pages) {
         foreach (&block : page.free_blocks) {
@@ -222,7 +238,7 @@ fn usz Allocator.total_fragmented(&self) {
     return total;
 }
 
-fn void Allocator.free(&self) {
+fn void MemoryAllocator.free(&self) {
     // First sync any pending deletions
     self.sync();
 
@@ -246,14 +262,14 @@ struct Memory
     vk::Buffer buffer;
     vk::Image image;
     vk::MemoryPage* page;
-    vk::Allocator* allocator;
+    vk::MemoryAllocator* allocator;
     vk::BufferUsageFlagBits usage;
     DeviceAddress address;
     bool deleted;  // Marked for deletion, will be freed on sync
 }
 
 fn Memory? new_buffer(
-	vk::Allocator* allocator,
+	vk::MemoryAllocator* allocator,
     vk::BufferUsageFlagBits usage,
     vk::MemoryPropertyFlags properties,
     void* data = null,
@@ -408,7 +424,7 @@ fn Memory? new_buffer(
     return response;
 }
 
-fn Memory? create_image_buffer(vk::Image image, vk::Allocator* allocator, vk::MemoryPropertyFlags properties)
+fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, vk::MemoryPropertyFlags properties)
 {
     vk::Device device = allocator.device;
     vk::PhysicalDevice pdevice = allocator.pdevice;
@@ -605,4 +621,203 @@ fn DeviceMemory? MemoryAllocateInfo.build(&self, Device device) {
     DeviceMemory memory;
     allocateMemory(device, self, null, &memory)!;
     return memory;
+}
+
+
+
+faultdef NO_KEY_FOUND, COMPONENT_BUFFER_OVERFLOW;
+
+struct Region {
+    uint size;
+    usz used_size;
+    usz offset;
+    uint buffer;
+    BufferManager* bm;
+}
+
+fn ulong Region.get_address(&self) => self.bm.buffers[self.buffer].get_address() + self.offset;
+fn void* Region.get_ref(&self) => (void*)(self.bm.buffers[self.buffer].data() + self.offset);
+fn char* Region.data(&self) => self.bm.buffers[self.buffer].data() + self.offset;
+fn void Region.reset(&self) => self.used_size = 0;
+
+<*
+ @require self.size > (self.used_size + size) : "Region total size is too small"
+*>
+macro void Region.@push(&self, #data, usz size = 0, usz offset = 0, bool auto_increase = true) {
+    usz data_size = size;
+    Allocator buffer = self.bm.buffers[self.buffer];
+    usz data_offset = self.offset + offset + (self.used_size * (auto_increase ? 1 : 0));
+
+    $if $kindof(#data) == POINTER: {
+        if (size == 0) data_size = $typeof(*#data).sizeof;
+    }
+    $else {
+        if (size == 0) data_size = $typeof(#data).sizeof;
+    }
+    $endif
+
+    $if $kindof(#data) == POINTER: {
+        if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
+            self.bm.uploadFN(buffer, #data, data_size, data_offset);
+        } else  {
+            buffer.upload(#data, data_size, data_offset);
+        }
+    }
+    $else {
+        if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
+            self.bm.uploadFN(buffer, &&#data, data_size, data_offset);
+        } else  {
+            buffer.upload(&&#data, data_size, data_offset);
+        }
+    }
+    $endif
+
+    self.used_size += data_size;
+}
+
+macro void @region_upload(Region region, #data, usz size = 0, usz offset = 0) {
+    usz data_size = size;
+    Allocator buffer = region.bm.buffers[region.buffer];
+    usz data_offset = region.offset + offset;
+
+    $if $kindof(#data) == POINTER: {
+        if (size == 0) data_size = $typeof(*#data).sizeof;
+    }
+    $else {
+        if (size == 0) data_size = $typeof(#data).sizeof;
+    }
+    $endif
+
+    $if $kindof(#data) == POINTER: {
+        if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
+            region.bm.uploadFN(buffer, #data, data_size, data_offset);
+        } else  {
+            buffer.upload(#data, data_size, data_offset);
+        }
+    }
+    $else {
+        if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
+            region.bm.uploadFN(buffer, &&#data, data_size, data_offset);
+        } else  {
+            buffer.upload(&&#data, data_size, data_offset);
+        }
+    }
+    $endif
+}
+
+// Buffer manager
+
+alias UploadFN = fn void (vk::Allocator buffer, void* data, usz data_size, usz offset);
+
+struct BufferManager {
+    List{Allocator} buffers;
+    List{Allocator} pending_deletes;
+    UploadFN uploadFN;
+}
+
+fn BufferManager create_buffer_manager(Allocator[] buffers, UploadFN uploadFN = null) {
+    BufferManager bm = {
+        .uploadFN = uploadFN,
+    };
+    foreach (buffer: buffers) bm.buffers.push(buffer);
+    return bm;
+}
+
+fn Region? BufferManager.alloc(&self, uint buffer_index, uint size, void* data = null) {
+    Allocator buffer = self.buffers[buffer_index];
+
+    if (!(buffer.total_size() > buffer.get_used_size() + size)) return COMPONENT_BUFFER_OVERFLOW~;
+
+    Region region = {
+        .size = size,
+        .buffer = buffer_index,
+        .offset = buffer.get_used_size(),
+        .bm = self,
+    };
+
+    if (data != null) {
+        if (buffer.get_type() == GpuType.DEVICE_ONLY) {
+            self.uploadFN(buffer, data, size, region.offset);
+        } else {
+            buffer.upload(data, size, region.offset);
+        }
+    }
+
+    buffer.set_used_size(buffer.get_used_size() + size);
+    return region;
+}
+
+fn void BufferManager.free(&self) {
+    self.sync();
+    foreach (buffer: self.buffers) {
+        buffer.free();
+    };
+    self.buffers.free();
+    self.pending_deletes.free();
+}
+
+fn void BufferManager.sync(&self) {
+    foreach (buffer: self.pending_deletes) {
+        buffer.free();
+    }
+    self.pending_deletes.clear();
+}
+
+fn void BufferManager.mark_deleted(&self, Allocator buffer) {
+    if (buffer.is_deleted()) return;
+    buffer.mark_deleted();
+    self.pending_deletes.push(buffer);
+}
+
+struct LocalBuffer (vk::Allocator) {
+    usz size;
+    usz used_size;
+    char* mapped;
+    bool deleted;
+}
+
+fn void LocalBuffer.push(&self, void* data, usz size) @dynamic {
+    self.ensure_size(self.used_size + size);
+    mem::copy(self.mapped + self.used_size, data, size);
+    self.used_size += size;
+}
+
+fn void LocalBuffer.ensure_size(&self, usz new_size) @dynamic {
+    if (new_size > self.size) {
+        usz grow_size = new_size > self.size * 2 ? new_size : self.size * 2;
+        self.mapped = mem::realloc(self.mapped, grow_size);
+        self.size = grow_size;
+    }
+}
+
+fn void LocalBuffer.upload(&self, void* data, usz size, usz offset) @dynamic {
+    self.ensure_size(offset + size);
+    mem::copy(self.mapped + offset, data, size);
+}
+
+fn void LocalBuffer.free(&self) @dynamic {
+    if (self.mapped != null) {
+        mem::free(self.mapped);
+        self.mapped = null;
+    }
+    self.size = 0;
+    self.used_size = 0;
+    self.deleted = true;
+}
+
+fn void LocalBuffer.mark_deleted(&self) @dynamic {
+    self.deleted = true;
+}
+
+fn bool LocalBuffer.is_deleted(&self) @dynamic => self.deleted;
+
+fn char* LocalBuffer.data(&self) @dynamic => self.mapped;
+fn usz LocalBuffer.total_size(&self) @dynamic => uint.max;
+fn usz LocalBuffer.get_used_size(&self) @dynamic => self.used_size;
+fn ulong LocalBuffer.get_address(&self) @dynamic => 0;
+fn uint LocalBuffer.get_type(&self) @dynamic => 2;
+fn void* LocalBuffer.get_buffer(&self) @dynamic => null;
+fn void LocalBuffer.set_used_size(&self, usz size) @dynamic {
+    if (size > self.size) self.ensure_size(size);
+    self.used_size = size;
 }
