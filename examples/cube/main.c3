@@ -306,7 +306,7 @@ fn void main(String[] args)
     CommandBufferList command_buffers = device.createCommandBuffers(command_pool, swapchain_info.minImageCount)!!;
 
     // Single allocator manages everything
-    vk::Allocator allocator = (vk::Allocator){
+    vk::MemoryAllocator allocator = (vk::MemoryAllocator){
         .device = device,
         .pdevice = physical_device,
         .queue = &graphics_queue,
