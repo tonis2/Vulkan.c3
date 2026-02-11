@@ -4,7 +4,7 @@ import std::collections::list;
 import std::collections::map;
 
 alias BlockList = List{Memory*};
-alias PageList = List{MemoryPage};
+alias PageList = List{MemoryPage*};
 alias FreeBlockList = List{FreeBlock};
 
 enum GpuType : inline uint
@@ -144,7 +144,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
     uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
 
     // Search existing pages for matching properties + enough space
-    foreach (&page : self.pages) {
+    foreach (page : self.pages) {
         if (page.memory_type == memory_type && (page.size - page.used_size) >= required_size) {
             return page;
         }
@@ -156,19 +156,18 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
     MemoryAllocateFlagsInfo flags_info = {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags};
 
     DeviceMemory memory = memoryAllocateInfo()
-        .setAllocationSize(page_size)
-        .setNext(&flags_info)
-        .setMemoryTypeIndex(memory_type)
-        .build(self.device)!!;
+	.setAllocationSize(page_size)
+	.setNext(&flags_info)
+	.setMemoryTypeIndex(memory_type)
+	.build(self.device)!!;
 
-    MemoryPage new_page = {
-        .memory = memory,
-        .size = page_size,
-        .used_size = 0,
-        .mapped = null,
-        .properties = properties,
-        .memory_type = memory_type
-    };
+	MemoryPage* new_page = mem::alloc(MemoryPage);
+
+	*new_page = {                                                                                                                                                           
+		.memory = memory,
+		.size = page_size,
+		.used_size = 0,
+	};
 
     // Map memory if host-visible
     if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
@@ -176,7 +175,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
     }
 
     self.pages.push(new_page);
-    return &self.pages[self.pages.len() - 1];
+    return new_page;
 }
 
 // Mark a Memory allocation for deletion (will be freed on sync)
@@ -214,7 +213,7 @@ fn void MemoryAllocator.sync(&self) {
 // Get memory statistics
 fn usz MemoryAllocator.total_allocated(&self) {
     usz total = 0;
-    foreach (&page : self.pages) {
+    foreach (page : self.pages) {
         total += page.size;
     }
     return total;
@@ -222,7 +221,7 @@ fn usz MemoryAllocator.total_allocated(&self) {
 
 fn usz MemoryAllocator.total_used(&self) {
     usz total = 0;
-    foreach (&page : self.pages) {
+    foreach (page : self.pages) {
         total += page.used_size;
     }
     return total;
@@ -230,7 +229,7 @@ fn usz MemoryAllocator.total_used(&self) {
 
 fn usz MemoryAllocator.total_fragmented(&self) {
     usz total = 0;
-    foreach (&page : self.pages) {
+    foreach (page : self.pages) {
         foreach (&block : page.free_blocks) {
             total += block.size;
         }
@@ -242,12 +241,13 @@ fn void MemoryAllocator.free(&self) {
     // First sync any pending deletions
     self.sync();
 
-    foreach (&page : self.pages) {
+    foreach (page : self.pages) {
         if (page.mapped != null) {
             vk::unmapMemory(self.device, page.memory);
         }
         page.free_blocks.free();
         freeMemory(self.device, page.memory, null);
+		mem::free(page);
     }
     self.pages.free();
     self.pending_deletes.free();
@@ -438,7 +438,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
     usz offset;
     bool used_free_block = false;
 
-    foreach (&p : allocator.pages) {
+    foreach (p : allocator.pages) {
         if (p.memory_type == memory_type) {
             FreeBlock* free_block = p.find_free_block(size, mem_reqs.alignment);
             if (free_block != null) {
