@@ -315,7 +315,7 @@ fn Memory? new_buffer(
     bool used_free_block = false;
 
     // First, try to find a free block in an existing page
-    foreach (&p : allocator.pages) {
+    foreach (p : allocator.pages) {
         if (p.memory_type == memory_type) {
             FreeBlock* free_block = p.find_free_block(size, mem_reqs.alignment);
             if (free_block != null) {
