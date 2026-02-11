@@ -198,9 +198,9 @@ fn void MemoryAllocator.sync(&self) {
         }
 
         // Add the freed region to the page's free list
+        // Note: do NOT decrement used_size — it's a high-water mark (see Memory.free)
         if (mem.page != null) {
             mem.page.add_free_block(mem.page_offset, mem.size);
-            mem.page.used_size -= mem.size;
         }
 
         mem.size = 0;
@@ -570,9 +570,10 @@ fn void Memory.free(&self) @dynamic
     }
 
     // Add freed region to page's free list for reuse
+    // Note: do NOT decrement used_size — it's a high-water mark for end-of-page allocation.
+    // Decrementing it causes underflow/overlap when allocations are freed out of order.
     if (self.page != null && self.size > 0) {
         self.page.add_free_block(self.page_offset, self.size);
-        self.page.used_size -= self.size;
     }
 
     self.size = 0;
