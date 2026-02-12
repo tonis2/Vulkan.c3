@@ -1,6 +1,7 @@
 
 { 
   "provides" : "vk",
+  "sources": ["vk/**"],
   "targets" : {
     "macos-x64" : {
       "linked-libraries" : []

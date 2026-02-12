@@ -17,7 +17,7 @@
 		},
 		"zip": {
 			"type": "prepare",
-			"exec": ["cd ./vk && zip ../vulkan.c3l ./*.c3 ./manifest.json"]
+			"exec": ["zip -r vulkan.c3l ./vk manifest.json"]
 		},
 		"cube": {
 			"type": "executable",
