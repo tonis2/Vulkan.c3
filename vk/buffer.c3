@@ -163,10 +163,12 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
 
 	MemoryPage* new_page = mem::alloc(MemoryPage);
 
-	*new_page = {                                                                                                                                                           
+	*new_page = {
 		.memory = memory,
 		.size = page_size,
 		.used_size = 0,
+		.memory_type = memory_type,
+		.properties = properties,
 	};
 
     // Map memory if host-visible
