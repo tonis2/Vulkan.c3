@@ -2,15 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'    # v1.0.0, v0.2.1, etc.
-      - '[0-9]*'  # 1.0.0, 0.2.1, etc.
-  workflow_dispatch:  # Manual trigger for testing
-    inputs:
-      version:
-        description: 'Version tag (e.g., v1.0.0)'
-        required: true
-        default: 'v0.0.0'
+      branches:
+        - "main"
 
 jobs:
   release:
@@ -33,12 +26,12 @@ jobs:
 
       - name: Build vulkan.c3l
         run: |
-          cd ./vk && zip ../vulkan.c3l ./*.c3 ./manifest.json
+          zip -r vulkan.c3l ./vk manifest.json
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          name: Release ${{ steps.version.outputs.version }}
+          tag_name: latest
+          name: latest
           files: vulkan.c3l
           generate_release_notes: true
