@@ -10,14 +10,17 @@ Vulkan bindings for C3 language
 ### Example
 Running example:
 Install [C3](https://c3-lang.org/), [VulkanSDK](https://vulkan.lunarg.com/sdk/home)
-Then run example with `c3c run cube`
+Then run example with 
+```sh
+c3c run cube
+```
 
 
 ##### Running example on macOS
 
 Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac) and add vulkan lib file path as `rpath` to the run command.
 Its the folder with `vulkan.1.dylib` file
-````
+````sh
 c3c run cube -z -rpath -z /Users/my_user/VulkanSDK/macOS/lib
 ````
 
