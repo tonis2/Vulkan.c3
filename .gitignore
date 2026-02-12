@@ -10,7 +10,7 @@ build
 tmp
 _c3l
 assets/
-
+.DS_Store
 .claude
 .vscode/*
 .claude/*
