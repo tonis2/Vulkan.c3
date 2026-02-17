@@ -120,12 +120,19 @@ c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
    
    fn void main() {
        // Create Vulkan instance with error handling
-       Instance instance;
-       vk::Result result = vk::createInstance(&instance_info, null, &instance);
-       if (result != vk::SUCCESS) {
-           io::print("Failed to create Vulkan instance");
-           return;
-       }
+       ApplicationInfo info = {
+         .pApplicationName = "TEST",
+         .pEngineName = "Super engine",
+         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
+         .engineVersion = vk::@makeApiVersion(0,1,0,0),
+         .apiVersion = vk::@makeApiVersion(0,1,3,0)
+       };
+   
+       InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
+       .setApplicationInfo(&info)
+       .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
+       .setEnabledExtensionNames(extensions.array_view());
+      }
    }
    ```
 
