@@ -27,11 +27,6 @@ git@github.com:tonis2/Vulkan.c3.git && cd Vulkan.c3
 c3c run cube
 ```
 
-## Installation
-
-First install C3 compiler, follow the [official C3 installation guide](https://c3-lang.org/getting-started/installation/)
-
-
 ## Running the Example
 
 ```bash
