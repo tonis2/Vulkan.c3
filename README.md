@@ -154,6 +154,7 @@ This project is licensed under the terms found in the [LICENSE](LICENSE) file.
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## Resources
+- [Window library](https://github.com/tonis2/Window.c3)
 - [Example game code](https://github.com/tonis2/game.c3)
 - [C3 Language Documentation](https://c3-lang.org/)
 - [Vulkan Tutorial](https://vulkan-tutorial.com/)
