@@ -119,7 +119,7 @@ c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
    import vk;
    
    fn void main() {
-       // Create Vulkan instance with error handling
+       // Create Vulkan instance
        ApplicationInfo info = {
          .pApplicationName = "TEST",
          .pEngineName = "Super engine",
