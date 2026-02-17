@@ -21,7 +21,7 @@ Before using this library, you need:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/Vulkan.c3.git
+git@github.com:tonis2/Vulkan.c3.git
 cd Vulkan.c3
 
 # Build and run the example
