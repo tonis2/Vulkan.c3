@@ -29,7 +29,7 @@ c3c run cube
 
 ## Installation
 
-1. **Install C3**: Follow the [official C3 installation guide](https://c3-lang.org/getting-started/installation/)
+First install C3 compiler, follow the [official C3 installation guide](https://c3-lang.org/getting-started/installation/)
 
 
 ## Running the Example
