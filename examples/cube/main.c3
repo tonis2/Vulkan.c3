@@ -313,6 +313,8 @@ fn void main(String[] args)
         .flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
     }.init()!!;
 
+	// If you set data for the buffer, it gets uploaded automatically, if you want to create empty buffer, only use the data_size value and dont set the data.
+
     Memory vertex_buffer = vk::new_buffer(
 		allocator: &allocator,
         usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
