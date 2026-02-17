@@ -21,8 +21,7 @@ Before using this library, you need:
 
 ```bash
 # Clone the repository
-git@github.com:tonis2/Vulkan.c3.git
-cd Vulkan.c3
+git@github.com:tonis2/Vulkan.c3.git && cd Vulkan.c3
 
 # Build and run the example
 c3c run cube
