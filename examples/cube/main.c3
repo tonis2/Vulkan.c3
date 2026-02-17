@@ -165,12 +165,12 @@ fn void main(String[] args)
             $endif
         }
         $case WIN32: {
-            Win32SurfaceCreateInfoKHR createInfo = {
+			Win32SurfaceCreateInfoKHR createInfo = {
                 vk::STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
                 null,
                 0,
                 win.src.instance,
-                win.src.window
+                win.src.hwnd
             };
             vk::createWin32SurfaceKHR(instance, &createInfo, null, &surface)!!;
         }
