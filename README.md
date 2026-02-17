@@ -1,55 +1,154 @@
 # Vulkan.c3
 
-Vulkan bindings for C3 language
+Vulkan bindings for the C3 programming language with idiomatic C3 error handling and builder patterns for easy Vulkan development.
 
-### Features
-* Vulkan API 1.0 - 1.4 bindings
-* C3 error handling for Vulkan commands
-* Auto-generated build pattern for Vulkan struct creation
+## Features
 
-### Example
-Running example:
-Install [C3](https://c3-lang.org/), [VulkanSDK](https://vulkan.lunarg.com/sdk/home)
-Then run example with 
-```sh
+- **Complete Vulkan API Coverage** - Bindings for Vulkan API versions 1.0 through 1.4
+- **Idiomatic C3 Error Handling** - Vulkan commands use C3's error handling mechanisms
+- **Builder Pattern** - Auto-generated builder pattern for easy Vulkan struct creation
+- **Cross-Platform** - Supports Windows, Linux (Wayland/X11), and macOS
+- **Working Example** - Includes a complete 3D cube example to get you started
+
+## Prerequisites
+
+Before using this library, you need:
+
+1. **[C3 Compiler](https://c3-lang.org/)** - Install the latest version of the C3 compiler
+2. **[Vulkan SDK](https://vulkan.lunarg.com/sdk/home)** - Download and install the Vulkan SDK for your platform
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/Vulkan.c3.git
+cd Vulkan.c3
+
+# Build and run the example
 c3c run cube
 ```
-##### Running example on Windows
-On windows try running with 
-```sh
+
+## Installation
+
+1. **Install C3**: Follow the [official C3 installation guide](https://c3-lang.org/getting-started/installation/)
+
+
+## Running the Example
+
+```bash
+# Linux
+c3c run cube
+
+# Windows
 c3c run cube-win
+
+# macOS (adjust path as needed)
+c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
 ```
 
-##### Running example on macOS
+### Linux
 
-Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac) and add vulkan lib file path as `rpath` to the run command.
-Its the folder with `vulkan.1.dylib` file
-````sh
-c3c run cube -z -rpath -z /Users/my_user/VulkanSDK/macOS/lib
-````
+1. **Install Vulkan SDK**:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt install vulkan-tools vulkan-validationlayers-dev spirv-tools
+   
+   # Or download from LunarG website and follow their instructions
+   ```
 
-##### Running example on linux
-Install [VulkanSDK](https://vulkan.lunarg.com/sdk/home#mac)
+2. **Choose Display Server** (Wayland or X11):
+   Edit `project.json` and set the appropriate feature:
+   ```json
+   "features": ["WAYLAND"]  // For Wayland
+   // or
+   "features": ["X11"]      // For X11
+   ```
 
-Choosing wayland or X11 can be done with feature tag inside C3 `project.json`
-```
-"features": ["WAYLAND"]
-"features": ["X11"]
+### Windows
 
-```
+1. **Install Vulkan SDK**: Download from [LunarG Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
 
-### Building bindings
+2. **Add Vulkan to PATH**: Ensure `VULKAN_SDK` environment variable is set
 
-run `sh build.sh` 
-or just `c3c run build` and manually download Vulkan specs from [here](https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml)
+3. **Cross-compilation from Linux**: If developing on Linux but targeting Windows, the `cube-win` target includes the necessary Windows SDK configuration.
 
-The built bindings files will be bundled into `vulkan.c3l` library file, that you can then use in your C3 project, like below example.
+### macOS
 
-`dependency-search-paths` is where you put the `vulkan.c3l` file.
+1. **Install C3**: Follow the [macOS installation guide](https://c3-lang.org/getting-started/installation/)
 
-```
-"dependency-search-paths": [ "./dependencies"],
-"dependencies": ["vk"],
+2. **Install Vulkan SDK**: Download [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac)
 
-```
+3. **Run the example** with the Vulkan library path:
+   ```bash
+   # Replace /path/to/VulkanSDK with your actual SDK path
+   c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
+   ```
 
+
+**Controls**:
+- **Mouse**: Click and drag to rotate the camera
+- **Scroll**: Zoom in/out
+
+## Using the Library in Your Project
+
+### Option 1: Using the Pre-built Library
+
+1. Build the library file:
+
+   Download the prebuilt library from [here](https://github.com/tonis2/Vulkan.c3/releases/download/latest/vulkan.c3l)
+
+   Or build manually.
+
+   ```bash
+   c3c build zip --trust=full
+   ```
+   This creates `vulkan.c3l` in the project root.
+
+2. Copy `vulkan.c3l` to your project's library directory (e.g., `./libs/`)
+
+3. Update your `project.json`:
+   ```json
+   {
+     "dependency-search-paths": ["./libs"],
+     "dependencies": ["vulkan"]
+   }
+   ```
+
+4. Use in your code:
+   ```c3
+   import vk;
+   
+   fn void main() {
+       // Create Vulkan instance with error handling
+       Instance instance;
+       vk::Result result = vk::createInstance(&instance_info, null, &instance);
+       if (result != vk::SUCCESS) {
+           io::print("Failed to create Vulkan instance");
+           return;
+       }
+   }
+   ```
+
+## Building the Bindings
+
+If you want to regenerate the Vulkan bindings from the official XML specification:
+
+1. **Run the build script**:
+   ```bash
+   sh build.sh
+   ```
+
+## License
+
+This project is licensed under the terms found in the [LICENSE](LICENSE) file.
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## Resources
+
+- [C3 Language Documentation](https://c3-lang.org/)
+- [Vulkan Tutorial](https://vulkan-tutorial.com/)
+- [Vulkan Specification](https://www.khronos.org/registry/vulkan/)
+- [LunarG Vulkan SDK](https://vulkan.lunarg.com/)
