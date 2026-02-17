@@ -14,7 +14,11 @@ Then run example with
 ```sh
 c3c run cube
 ```
-
+##### Running example on Windows
+On windows try running with 
+```sh
+c3c run cube-win
+```
 
 ##### Running example on macOS
 
