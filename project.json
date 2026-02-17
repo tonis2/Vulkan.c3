@@ -6,7 +6,6 @@
 	"dependency-search-paths": ["libs"],
 	"dependencies": [],
 	"features": ["WAYLAND"],
-	"linked-libraries": ["vulkan"],
 	"script-dir": "./",
 	"targets": {
 		"shaders": {
@@ -22,7 +21,17 @@
 		"cube": {
 			"type": "executable",
 			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
-			"dependencies": ["c3w"]
+			"dependencies": ["c3w"],
+			"linked-libraries": ["vulkan"]
+		},
+		"cube-win": {
+			"target": "windows-x64",
+			// "winsdk": "/home/tonis/.xwin/lib", // You need to change this to your winSDK path
+			"linker-search-paths": ["./libs"],	
+			"linked-libraries": ["vulkan-1"],
+			"dependencies": ["c3w"],
+			"type": "executable",
+			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"]
 		},
 		"build": {
 			"type": "executable",
