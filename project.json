@@ -26,7 +26,7 @@
 		},
 		"cube-win": {
 			"target": "windows-x64",
-			// "winsdk": "/home/tonis/.xwin/lib", // You need to change this to your winSDK path
+			// "winsdk": "/home/tonis/.xwin/lib", // You need to change this to your winSDK path, if cross building from other platform
 			"linker-search-paths": ["./libs"],	
 			"linked-libraries": ["vulkan-1"],
 			"dependencies": ["c3w"],
