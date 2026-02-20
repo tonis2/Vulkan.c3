@@ -34,4 +34,4 @@ jobs:
           tag_name: latest
           name: latest
           files: vulkan.c3l
-          generate_release_notes: true
+          generate_release_notes: false
