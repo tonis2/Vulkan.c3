@@ -67,7 +67,7 @@ fn MemoryAllocator? MemoryAllocator.init(&self) {
 }
 
 // Try to find a free block that fits the required size
-fn FreeBlock* MemoryPage.find_free_block(&self, usz required_size, usz alignment) @local {
+fn FreeBlock* MemoryPage.find_free_block(&self, usz required_size, usz alignment) {
     foreach (&block : self.free_blocks) {
         usz aligned_offset = alignUp(block.offset, alignment);
         usz padding = aligned_offset - block.offset;
@@ -79,7 +79,7 @@ fn FreeBlock* MemoryPage.find_free_block(&self, usz required_size, usz alignment
 }
 
 // Remove a free block from the list (after using it)
-fn void MemoryPage.remove_free_block(&self, FreeBlock* block) @local {
+fn void MemoryPage.remove_free_block(&self, FreeBlock* block) {
     for (usz i = 0; i < self.free_blocks.len(); i++) {
         if (&self.free_blocks[i] == block) {
             self.free_blocks.remove_at(i);
@@ -89,7 +89,7 @@ fn void MemoryPage.remove_free_block(&self, FreeBlock* block) @local {
 }
 
 // Add a free block, merging with adjacent blocks if possible
-fn void MemoryPage.add_free_block(&self, usz offset, usz size) @local {
+fn void MemoryPage.add_free_block(&self, usz offset, usz size) {
     // Try to merge with existing adjacent blocks
     foreach (&block : self.free_blocks) {
         // Check if new block is immediately after existing block
@@ -112,7 +112,7 @@ fn void MemoryPage.add_free_block(&self, usz offset, usz size) @local {
 }
 
 // Merge adjacent free blocks
-fn void MemoryPage.merge_free_blocks(&self) @local {
+fn void MemoryPage.merge_free_blocks(&self) {
     if (self.free_blocks.len() < 2) return;
 
     // Sort by offset (simple bubble sort, lists are typically small)
@@ -140,7 +140,7 @@ fn void MemoryPage.merge_free_blocks(&self) @local {
     }
 }
 
-fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags properties, usz required_size, uint memory_type_bits) @private {
+fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags properties, usz required_size, uint memory_type_bits) {
     uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
 
     // Search existing pages for matching properties + enough space
@@ -590,7 +590,7 @@ fn MemoryRequirements Buffer.memoryRequirements(self, Device device) {
     return mem_reqs;
 }
 
-fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, PhysicalDevice device) @private {
+fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, PhysicalDevice device) {
     PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
         .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
     };
