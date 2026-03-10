@@ -40,14 +40,6 @@ c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
    # Or download from LunarG website and follow their instructions
    ```
 
-2. **Choose Display Server** (Wayland or X11):
-   Edit `project.json` and set the appropriate feature:
-   ```json
-   "features": ["WAYLAND"]  // For Wayland
-   // or
-   "features": ["X11"]      // For X11
-   ```
-
 ### Windows
 
 1. **Install Vulkan SDK**: Download from [LunarG Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
