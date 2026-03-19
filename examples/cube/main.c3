@@ -123,31 +123,26 @@ fn void main(String[] args)
 	);
 	extensions.push_all({ "VK_KHR_surface" });
 
-	if (env::OS_TYPE == MACOS)
-	{
-		extensions.push_all(
-			{ "VK_EXT_metal_surface", "VK_KHR_portability_enumeration" }
-		);
-		device_extensions.push("VK_KHR_portability_subset");
-	}
-
-	if (env::OS_TYPE == WIN32)
-	{
-		extensions.push_all({ "VK_KHR_win32_surface" });
-	}
-
-	if (env::OS_TYPE == LINUX)
-	{
-		BackendType backend = win.getBackend();
-		switch (backend)
-		{
-			case WAYLAND:
-				extensions.push_all({ "VK_KHR_wayland_surface" });
-			case X11:
-				extensions.push_all({ "VK_KHR_xcb_surface" });
-			default:
-		}
-	}
+	$switch (env::OS_TYPE):
+		$case MACOS:
+			extensions.push_all(
+				{ "VK_EXT_metal_surface", "VK_KHR_portability_enumeration" }
+			);
+			device_extensions.push("VK_KHR_portability_subset");
+		$case WIN32:
+			extensions.push_all({ "VK_KHR_win32_surface" });
+		$case LINUX:
+			BackendType backend = win.getBackend();
+			switch (backend)
+			{
+				case WAYLAND:
+					extensions.push_all({ "VK_KHR_wayland_surface" });
+				case X11:
+					extensions.push_all({ "VK_KHR_xcb_surface" });
+				default:
+			}
+		$default:
+	$endswitch
 
 	vk::checkInstanceExtensionSupport(extensions)!!;
 
