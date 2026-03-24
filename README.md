@@ -52,10 +52,13 @@ c3c run cube -z -rpath -z /path/to/VulkanSDK/macOS/lib
 **Linux** — install Vulkan packages for your distro:
 ```bash
 # Ubuntu/Debian
-sudo apt install vulkan-tools vulkan-validationlayers-dev spirv-tools
+sudo apt install libvulkan-dev vulkan-tools vulkan-validationlayers-dev spirv-tools
 
 # Fedora
-sudo dnf install vulkan-tools vulkan-validation-layers-devel spirv-tools
+sudo dnf install vulkan-loader-devel vulkan-tools vulkan-validation-layers-devel spirv-tools
+
+# Arch
+sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-tools
 ```
 
 **Windows** — download and install the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home). Make sure `VULKAN_SDK` is set. The `cube-win` target includes Windows SDK configuration for cross-compilation from Linux.

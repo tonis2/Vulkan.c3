@@ -307,9 +307,9 @@ fn void main(String[] args)
 	)!!;
 
 	// --- Descriptors ---
-	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
-	.setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-	.setBindings(
+	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo().setFlags(
+		vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+	).setBindings(
 		{
 			{
 				.binding = 0,
@@ -321,28 +321,26 @@ fn void main(String[] args)
 	).build(device)!!;
 
 	WriteDescriptorSet[] descriptorSets = {
-		vk::writeDescriptorSet()
-		.setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-		.setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData.sizeof, }, })
+		vk::writeDescriptorSet().setDescriptorType(
+			vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER
+		).setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData.sizeof, }, })
 	};
 
 	// --- Shader & pipeline ---
 	ShaderModule shader_module = vk::loadShaderModule(device, shader[..])!!;
 	defer shader_module.free(device);
 
-	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo()
-	.setSetLayouts({ descriptor_set_layout })
-	.build(device)!!;
+	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts(
+		{ descriptor_set_layout }
+	).build(device)!!;
 
 	PipelineShaderStageCreateInfo[2] shader_stages = {
-		vk::pipelineShaderStageCreateInfo()
-		.setStage(vk::SHADER_STAGE_VERTEX_BIT)
-		.setMod(shader_module)
-		.setName("vertexMain"),
-		vk::pipelineShaderStageCreateInfo()
-		.setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
-		.setMod(shader_module)
-		.setName("fragmentMain")
+		vk::pipelineShaderStageCreateInfo().setStage(
+			vk::SHADER_STAGE_VERTEX_BIT
+		).setMod(shader_module).setName("vertexMain"),
+		vk::pipelineShaderStageCreateInfo().setStage(
+			vk::SHADER_STAGE_FRAGMENT_BIT
+		).setMod(shader_module).setName("fragmentMain")
 	};
 
 	VertexInputBindingDescription[1] binding_descriptions = {
@@ -355,15 +353,17 @@ fn void main(String[] args)
 	};
 
 	PipelineVertexInputStateCreateInfo vertex_input_state = vk::pipelineVertexInputStateCreateInfo()
-		.setVertexBindingDescriptions(binding_descriptions[..])
-		.setVertexAttributeDescriptions(attribute_descriptions[..]);
+		.setVertexBindingDescriptions(
+		binding_descriptions[..]
+	).setVertexAttributeDescriptions(attribute_descriptions[..]);
 
 	// Use default pipeline states — caller owns array data to avoid dangling pointers
 	PipelineRasterizationStateCreateInfo rasterization_state = vk::defaultRasterizationState().setCullMode(
 		vk::CULL_MODE_FRONT_BIT
 	);
-	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo()
-	.setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo().setTopology(
+		vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+	);
 
 	PipelineMultisampleStateCreateInfo multisample_state = vk::defaultMultisampleState();
 	PipelineDepthStencilStateCreateInfo depth_stencil_state = vk::defaultDepthStencilState();
@@ -372,38 +372,35 @@ fn void main(String[] args)
 	PipelineColorBlendStateCreateInfo color_blend_state = vk::defaultColorBlendState(blend_attachments[..]);
 
 	DynamicState[2] dynamic_states = { vk::DYNAMIC_STATE_VIEWPORT, vk::DYNAMIC_STATE_LINE_WIDTH };
-	
-	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
-	.setDynamicStates(dynamic_states[..]);
+
+	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo().setDynamicStates(
+		dynamic_states[..]
+	);
 
 	Viewport[1] viewports = {
 		{ .width = sc.extent.width, .height = sc.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }
 	};
 	Rect2D[1] scissors = { { .extent = sc.extent, .offset = { 0, 0 } } };
 
-	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo()
-	.setViewports(viewports[..])
-	.setScissors(scissors[..]);
+	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo().setViewports(
+		viewports[..]
+	).setScissors(scissors[..]);
 
-	Pipeline pipeline = vk::graphicsPipelineCreateInfo().setStages(
+	Pipeline pipeline = vk::graphicsPipelineCreateInfo()
+	.setStages(
 		shader_stages[..]
-	).setLayout(
-		pipeline_layout
-	).setVertexInputState(
-		&vertex_input_state
-	).setDynamicState(
-		&dynamic_state
-	).setRasterizationState(
-		&rasterization_state
-	).setInputAssemblyState(
-		&input_assembly_state
-	).setMultisampleState(
-		&multisample_state
-	).setDepthStencilState(
-		&depth_stencil_state
-	).setColorBlendState(
-		&color_blend_state
-	).setViewportState(&viewport_state).setRenderPass(render_pass).build(device)!!;
+	)
+	.setLayout(pipeline_layout)
+	.setVertexInputState(&vertex_input_state)
+	.setDynamicState(&dynamic_state)
+	.setRasterizationState(&rasterization_state)
+	.setInputAssemblyState(&input_assembly_state)
+	.setMultisampleState(&multisample_state)
+	.setDepthStencilState(&depth_stencil_state)
+	.setColorBlendState(&color_blend_state)
+	.setViewportState(&viewport_state)
+	.setRenderPass(render_pass)
+	.build(device)!!;
 
 	// --- Frame sync ---
 	vk::FrameSync frame_sync;
