@@ -481,3 +481,450 @@ fn bool debugCallback(
     }
     return false;
 }
+
+// ============================================================================
+// Convenience helpers — high-level wrappers to reduce Vulkan boilerplate
+// ============================================================================
+
+
+
+
+// Create PipelineRasterizationStateCreateInfo struct with some prefilled options
+fn PipelineRasterizationStateCreateInfo defaultRasterizationState() {
+    return pipelineRasterizationStateCreateInfo()
+        .setDepthClampEnable(FALSE)
+        .setRasterizerDiscardEnable(FALSE)
+        .setPolygonMode(POLYGON_MODE_FILL)
+        .setLineWidth(1.0)
+        .setCullMode(CULL_MODE_BACK_BIT)
+        .setFrontFace(FRONT_FACE_COUNTER_CLOCKWISE)
+        .setDepthBiasEnable(FALSE);
+}
+
+// Create PipelineMultisampleStateCreateInfo struct with some prefilled options
+fn PipelineMultisampleStateCreateInfo defaultMultisampleState() {
+    return pipelineMultisampleStateCreateInfo()
+        .setSampleShadingEnable(FALSE)
+        .setRasterizationSamples(SAMPLE_COUNT_1_BIT)
+        .setMinSampleShading(1.0)
+        .setAlphaToCoverageEnable(FALSE)
+        .setAlphaToOneEnable(FALSE);
+}
+
+// Create PipelineColorBlendAttachmentState struct with some prefilled options
+fn PipelineColorBlendAttachmentState defaultColorBlendAttachment() {
+    return {
+        .colorWriteMask = COLOR_COMPONENT_R_BIT | COLOR_COMPONENT_G_BIT
+            | COLOR_COMPONENT_B_BIT | COLOR_COMPONENT_A_BIT,
+        .blendEnable = TRUE,
+        .srcColorBlendFactor = BLEND_FACTOR_SRC_ALPHA,
+        .dstColorBlendFactor = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .colorBlendOp = BLEND_OP_ADD,
+        .srcAlphaBlendFactor = BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .alphaBlendOp = BLEND_OP_ADD,
+    };
+}
+
+// Create PipelineColorBlendStateCreateInfo struct with some prefilled options
+fn PipelineColorBlendStateCreateInfo defaultColorBlendState(PipelineColorBlendAttachmentState[] attachments) {
+    return pipelineColorBlendStateCreateInfo()
+        .setBlendConstants({ 0.0, 0.0, 0.0, 0.0 })
+        .setLogicOp(LOGIC_OP_COPY)
+        .setAttachments(attachments);
+}
+
+// Create PipelineDepthStencilStateCreateInfo struct with some prefilled options
+fn PipelineDepthStencilStateCreateInfo defaultDepthStencilState() {
+    return pipelineDepthStencilStateCreateInfo()
+        .setDepthTestEnable(FALSE)
+        .setDepthWriteEnable(FALSE)
+        .setDepthCompareOp(COMPARE_OP_LESS_OR_EQUAL)
+        .setBack({ .compareOp = COMPARE_OP_ALWAYS });
+}
+// --- 2. Swapchain helper ---------------------------------------------------
+
+struct Swapchain {
+    SwapchainKHR handle;
+    SurfaceFormatKHR format;
+    Extent2D extent;
+    ImageList images;
+    ImageViewList views;
+    FrameBufferList framebuffers;
+    uint image_count;
+}
+
+faultdef NO_SUITABLE_FORMAT;
+
+fn Swapchain? Swapchain.init(
+    &self,
+    Device device,
+    PhysicalDevice pdevice,
+    SurfaceKHR surface,
+    uint width,
+    uint height,
+    RenderPass render_pass = null,
+    Format preferred_format = FORMAT_B8G8R8A8_UNORM,
+    PresentModeKHR preferred_mode = PRESENT_MODE_FIFO_KHR
+) {
+    SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(pdevice)!;
+    SurfaceFormatList surface_formats = surface.getFormats(pdevice)!;
+    defer surface_formats.free();
+
+    // Pick format
+    SurfaceFormatKHR chosen_format = { .format = preferred_format, .colorSpace = COLOR_SPACE_SRGB_NONLINEAR_KHR };
+    bool found_format = false;
+    foreach (sf : surface_formats) {
+        if (sf.format == preferred_format && sf.colorSpace == COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            chosen_format = sf;
+            found_format = true;
+            break;
+        }
+    }
+    if (!found_format && surface_formats.len() > 0) {
+        chosen_format = surface_formats[0];
+    }
+
+    // Pick image count
+    uint min_images = capabilities.minImageCount + 1;
+    if (capabilities.maxImageCount != 0 && min_images > capabilities.maxImageCount) {
+        min_images = capabilities.maxImageCount;
+    }
+
+    Extent2D extent = { width, height };
+
+    SwapchainCreateInfoKHR swapchain_info = swapchainCreateInfoKHR()
+        .setMinImageCount(min_images)
+        .setImageUsage(IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+        .setImageSharingMode(SHARING_MODE_EXCLUSIVE)
+        .setCompositeAlpha(COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+        .setPresentMode(preferred_mode)
+        .setPreTransform(capabilities.currentTransform)
+        .setImageColorSpace(chosen_format.colorSpace)
+        .setImageFormat(chosen_format.format)
+        .setSurface(surface)
+        .setImageArrayLayers(1)
+        .setImageExtent(extent)
+        .setOldSwapchain(self.handle);
+
+    self.handle = swapchain_info.build(device)!;
+    self.format = chosen_format;
+    self.extent = extent;
+    self.image_count = min_images;
+    self.images = self.handle.getImages(device, min_images)!;
+
+    // Create image views
+    for (uint i = 0; i < min_images; ++i) {
+        ImageView view = imageViewCreateInfo()
+            .setViewType(IMAGE_VIEW_TYPE_2D)
+            .setFormat(chosen_format.format)
+            .setComponents({
+                .r = COMPONENT_SWIZZLE_IDENTITY,
+                .g = COMPONENT_SWIZZLE_IDENTITY,
+                .b = COMPONENT_SWIZZLE_IDENTITY,
+                .a = COMPONENT_SWIZZLE_IDENTITY,
+            })
+            .setSubresourceRange({
+                .aspectMask = IMAGE_ASPECT_COLOR_BIT,
+                .baseMipLevel = 0,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+                .levelCount = 1,
+            })
+            .setImage(self.images[i])
+            .build(device)!;
+        self.views.push(view);
+    }
+
+    // Optionally create framebuffers
+    if (render_pass != null) {
+        for (uint i = 0; i < min_images; ++i) {
+            Framebuffer fb = framebufferCreateInfo()
+                .setRenderPass(render_pass)
+                .setWidth(width)
+                .setHeight(height)
+                .setLayers(1)
+                .setAttachments({ self.views[i] })
+                .build(device)!;
+            self.framebuffers.push(fb);
+        }
+    }
+
+    return *self;
+}
+
+fn Swapchain? Swapchain.recreate(
+    &self,
+    Device device,
+    PhysicalDevice pdevice,
+    SurfaceKHR surface,
+    uint width,
+    uint height,
+    RenderPass render_pass = null
+) {
+    device.waitIdle();
+
+    // Clean up old views and framebuffers
+    foreach (view : self.views) view.free(device);
+    self.views = {};
+    self.framebuffers.release(device);
+    self.framebuffers = {};
+    self.images.free();
+    self.images = {};
+
+    // init() will use self.handle as oldSwapchain
+    Format fmt = self.format.format;
+    self.init(
+        device, pdevice, surface, width, height,
+        render_pass: render_pass,
+        preferred_format: fmt,
+        preferred_mode: PRESENT_MODE_FIFO_KHR,
+    )!;
+
+    return *self;
+}
+
+fn void Swapchain.free(&self, Device device) {
+    foreach (view : self.views) view.free(device);
+    self.views.free();
+    self.framebuffers.release(device);
+    self.images.free();
+    if (self.handle != null) self.handle.free(device);
+}
+
+// --- 3. Physical device selector -------------------------------------------
+
+struct DeviceSelection {
+    PhysicalDevice device;
+    uint graphics_queue_index;
+    uint present_queue_index;
+    uint transfer_queue_index;
+}
+
+faultdef NO_SUITABLE_DEVICE;
+
+fn DeviceSelection? selectPhysicalDevice(
+    Instance instance,
+    SurfaceKHR surface,
+    ZStringList required_extensions = {},
+    bool prefer_discrete = true
+) {
+    DeviceList devices = instance.getDevices()!;
+    defer devices.free();
+
+    DeviceSelection best;
+    bool found = false;
+    bool found_discrete = false;
+
+    foreach (entry : devices) {
+        // Check extension support
+        if (required_extensions.len() > 0) {
+            bool supports = entry.checkExtensionSupport(required_extensions)!;
+            if (!supports) continue;
+        }
+
+        QueuePropertiesList queue_properties = entry.getQueueProperties()!;
+        defer queue_properties.free();
+
+        // Find graphics + transfer queue
+        int graphics_index = queue_properties.find(
+            fn (usz index, QueueFamilyProperties props) =>
+                (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT != 0
+        );
+        if (graphics_index < 0) continue;
+
+        // Check surface support
+        bool surface_ok = surface.checkSurfaceSupport((usz)graphics_index, entry)!;
+        if (!surface_ok) continue;
+
+        // Find transfer queue (prefer dedicated)
+        int transfer_index = queue_properties.find(
+            fn (usz index, QueueFamilyProperties props) =>
+                (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
+                && (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT == 0
+        );
+        if (transfer_index < 0) {
+            transfer_index = queue_properties.find(
+                fn (usz index, QueueFamilyProperties props) =>
+                    (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
+            );
+        }
+
+        PhysicalDeviceProperties properties;
+        getPhysicalDeviceProperties(entry, &properties);
+
+        bool is_discrete = properties.deviceType == PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+
+        // Prefer discrete GPU if requested
+        if (!found || (prefer_discrete && is_discrete && !found_discrete)) {
+            best = {
+                .device = entry,
+                .graphics_queue_index = (uint)graphics_index,
+                .present_queue_index = (uint)graphics_index,
+                .transfer_queue_index = transfer_index >= 0 ? (uint)transfer_index : (uint)graphics_index,
+            };
+            found = true;
+            found_discrete = is_discrete;
+            io::printfn("Device selected %s", (ZString)properties.deviceName[0..]);
+        }
+    }
+
+    if (!found) return NO_SUITABLE_DEVICE~;
+    return best;
+}
+
+// --- 4. Frame manager -------------------------------------------------------
+
+struct FrameSync {
+    SemaphoreList image_available;
+    SemaphoreList render_finished;
+    FenceList fences;
+    uint frame_count;
+    uint current_frame;
+}
+
+fn FrameSync? FrameSync.init(&self, Device device, uint frame_count = 2) {
+    self.frame_count = frame_count;
+    self.current_frame = 0;
+
+    for (uint i = 0; i < frame_count; ++i) {
+        self.image_available.push(semaphoreCreateInfo().build(device))!;
+        self.render_finished.push(semaphoreCreateInfo().build(device))!;
+        self.fences.push(fenceCreateInfo().setFlags(FENCE_CREATE_SIGNALED_BIT).build(device))!;
+    }
+
+    return *self;
+}
+
+fn uint? FrameSync.beginFrame(&self, Device device, SwapchainKHR swapchain) {
+    Fence frame_fence = self.fences[self.current_frame];
+    Semaphore available_semaphore = self.image_available[self.current_frame];
+
+    frame_fence.wait(device)!;
+    frame_fence.reset(device)!;
+
+    uint next_image = swapchain.getNextImage(device, available_semaphore);
+    return next_image;
+}
+
+fn void? FrameSync.endFrame(&self, Queue queue, CommandBuffer cmd, SwapchainKHR swapchain, uint image_index) {
+    Semaphore available_semaphore = self.image_available[self.current_frame];
+    Semaphore finished_semaphore = self.render_finished[image_index];
+
+    CommandBufferSubmitInfo cmd_info = commandBufferSubmitInfo().setCommandBuffer(cmd);
+    SemaphoreSubmitInfo wait_info = semaphoreSubmitInfo()
+        .setSemaphore(available_semaphore)
+        .setStageMask(PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT);
+    SemaphoreSubmitInfo signal_info = semaphoreSubmitInfo()
+        .setSemaphore(finished_semaphore)
+        .setStageMask(PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
+
+    SubmitInfo2 submit_info = submitInfo2()
+        .setCommandBufferInfos({ cmd_info })
+        .setWaitSemaphoreInfos({ wait_info })
+        .setSignalSemaphoreInfos({ signal_info });
+
+    Fence frame_fence = self.fences[self.current_frame];
+    endCommandBuffer(cmd)!;
+    queueSubmit2(queue, 1, &submit_info, frame_fence)!;
+
+    PresentInfoKHR present_info = presentInfoKHR()
+        .setWaitSemaphores({ finished_semaphore })
+        .setSwapchains({ swapchain })
+        .setImageIndices({ image_index });
+
+    queuePresentKHR(queue, &present_info)!;
+    self.current_frame = (self.current_frame + 1) % self.frame_count;
+}
+
+fn void FrameSync.free(&self, Device device) {
+    self.image_available.release(device);
+    self.render_finished.release(device);
+    self.fences.release(device);
+}
+
+// --- 5. Shader loading helper -----------------------------------------------
+
+fn ShaderModule? loadShaderModule(Device device, char[] spirv_data) {
+    return shaderModuleCreateInfo()
+        .setCodeSize(spirv_data.len)
+        .setCode((uint*)spirv_data.ptr)
+        .build(device);
+}
+
+// --- 6. Instance creation with platform defaults ----------------------------
+
+struct InstanceConfig {
+    ZString app_name;
+    uint api_version;
+    bool enable_validation;
+    ZString[] extra_extensions;
+}
+
+fn Instance? createDefaultInstance(InstanceConfig config = {}) {
+    ZString app_name = config.app_name != null ? config.app_name : "Vulkan App";
+    uint api_version = config.api_version != 0 ? config.api_version : @makeApiVersion(0, 1, 3, 0);
+
+    ZStringList exts;
+    defer exts.free();
+    exts.push("VK_KHR_surface");
+
+    $switch (env::OS_TYPE):
+        $case MACOS:
+            exts.push_all({ "VK_EXT_metal_surface", "VK_KHR_portability_enumeration" });
+        $case WIN32:
+            exts.push("VK_KHR_win32_surface");
+        $case LINUX:
+            // Add both — the driver will only use the one that matches
+            exts.push_all({ "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" });
+        $default:
+    $endswitch
+
+    if (config.enable_validation) {
+        exts.push("VK_EXT_debug_utils");
+    }
+
+    foreach (ext : config.extra_extensions) {
+        exts.push(ext);
+    }
+
+    checkInstanceExtensionSupport(exts)!;
+
+    ApplicationInfo app_info = {
+        .pApplicationName = app_name,
+        .pEngineName = app_name,
+        .applicationVersion = @makeApiVersion(0, 1, 0, 0),
+        .engineVersion = @makeApiVersion(0, 1, 0, 0),
+        .apiVersion = api_version,
+    };
+
+    InstanceCreateInfo instance_info = instanceCreateInfo()
+        .setApplicationInfo(&app_info)
+        .setFlags(env::os_is_darwin() ? INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
+        .setEnabledExtensionNames(exts.array_view());
+
+    if (config.enable_validation) {
+        ZStringList validations;
+        defer validations.free();
+        validations.push("VK_LAYER_KHRONOS_validation");
+        instance_info = instance_info.setEnabledLayerNames(validations.array_view());
+    }
+
+    return instance_info.build();
+}
+
+fn DebugUtilsMessengerEXT? setupDebugMessenger(Instance instance) {
+    return debugUtilsMessengerCreateInfoEXT()
+        .setMessageSeverity(
+            DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+            | DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+            | DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+        )
+        .setMessageType(
+            DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+            | DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+            | DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+        )
+        .setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback)
+        .build(instance);
+}
