@@ -13,7 +13,7 @@ assets/
 .DS_Store
 .claude
 .vscode/*
-.claude/*
+.claude/
 
 # Linker output
 *.ilk

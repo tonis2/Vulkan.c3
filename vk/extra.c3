@@ -13,6 +13,11 @@ typedef VisualID = inline ulong;
 typedef CAMetalLayer = inline void*;
 typedef WLSurface = inline void*;
 
+alias DWord = uint;
+alias HMonitor = void*;
+alias LpcWstr = void*;
+alias SecurityAttributes = void;
+
 alias PFN_vkAllocationFunction = fn void* (void*, usz, usz, SystemAllocationScope);
 alias PFN_vkFreeFunction = fn void (void*, void*);
 alias PFN_vkInternalAllocationNotification = fn void (void*, usz, InternalAllocationType, SystemAllocationScope);
