@@ -21,7 +21,6 @@ parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
   types.c3           # XML parsing types
 examples/
   cube/              # 3D rotating cube with camera controls
-  camera.c3          # Orbit camera shared by examples
 ```
 
 ## Quick start
