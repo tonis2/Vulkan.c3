@@ -685,6 +685,9 @@ fn void main(String[] args) {
             create_commands.append(dstring::join(&allocator, {name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, ""));
         }
 
+        if (result_type == "VkInstance") {
+            create_commands.append("   loadExtensions(response);\n");
+        }
         create_commands.append("   return response;\n}\n");
     }
 

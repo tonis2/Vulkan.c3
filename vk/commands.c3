@@ -4977,6 +4977,7 @@ fn void? createAccelerationStructure2KHR (Device device, AccelerationStructureCr
 fn Instance? InstanceCreateInfo.build(&self, AllocationCallbacks* pAllocator = null) {
    Instance response;
    createInstance(self, pAllocator, &response)!;
+   loadExtensions(response);
    return response;
 }
 fn Device? DeviceCreateInfo.build(&self, PhysicalDevice physicalDevice, AllocationCallbacks* pAllocator = null) {
