@@ -21,4 +21,3 @@ alias PFN_vkReallocationFunction = fn void* (void*, void*, usz, usz, SystemAlloc
 alias PFN_vkVoidFunction = fn void ();
 alias PFN_vkDebugReportCallbackEXT = fn uint (DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, usz, int, char, char, void*);
 alias PFN_vkDebugUtilsMessengerCallbackEXT = fn uint (DebugUtilsMessageSeverityFlagBitsEXT, DebugUtilsMessageTypeFlagsEXT, DebugUtilsMessengerCallbackDataEXT, void*);
-

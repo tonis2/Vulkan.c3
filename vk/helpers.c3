@@ -255,7 +255,7 @@ fn void? checkInstanceExtensionSupport(ZStringList requested_extensions) {
         ZString name = (ZString)&layers[i].extensionName;
         extensions.push(name.str_view().copy(mem));
     };
- 
+
    defer extensions.free();
    foreach (i, value : requested_extensions)
    {
@@ -481,4 +481,3 @@ fn bool debugCallback(
     }
     return false;
 }
-
