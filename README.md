@@ -1,138 +1,141 @@
 # Vulkan.c3
 
-Vulkan bindings for the C3 programming language with idiomatic C3 error handling and builder patterns for easy Vulkan development.
+Vulkan bindings for [C3](https://c3-lang.org/), auto-generated from the official Vulkan XML specification. Covers Vulkan 1.0 through 1.4 with all platform-compatible extensions included.
 
-## Features
+- Idiomatic C3 error handling — Vulkan error codes map to C3 faults
+- Builder pattern — auto-generated `.set*()` and `.build()` methods for Vulkan structs
+- Cross-platform — Windows, Linux (X11/Wayland), and macOS
 
-- **Complete Vulkan API Coverage** - Bindings for Vulkan API versions 1.0 through 1.4
-- **Idiomatic C3 Error Handling** - Vulkan commands use C3's error handling mechanisms
-- **Builder Pattern** - Auto-generated builder pattern for easy Vulkan struct creation
-- **Cross-Platform** - Supports Windows, Linux (Wayland/X11), and macOS
-- **Working Example** - Includes a complete 3D cube example to get you started
+## Project structure
 
-## Prerequisites
-
-Before using this library, you need:
-
-1. **[C3 Compiler](https://c3-lang.org/)** - Install the latest version of the C3 compiler
-2. **[Vulkan SDK](https://vulkan.lunarg.com/sdk/home)** - Download and install the Vulkan SDK for your platform
-
-## Running the Example
-
-```bash
-# Linux
-c3c run cube
-
-# Windows
-c3c run cube-win
-
-# macOS (adjust path as needed)
-c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
+```
+vk/                  # Generated + hand-written bindings (this is the library)
+  vk.c3              # Types, enums, structs, unions
+  commands.c3        # Function declarations and extension loading
+  builders.c3        # Auto-generated builder/setter methods
+  extra.c3           # Hand-written type aliases (platform types, function pointers)
+  helpers.c3         # Convenience wrappers (swapchain, device queries, etc.)
+  buffer.c3          # Memory allocator and buffer helpers
+parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
+  build.c3           # Main generator logic
+  types.c3           # XML parsing types
+examples/
+  cube/              # 3D rotating cube with camera controls
+  camera.c3          # Orbit camera shared by examples
 ```
 
-### Linux
+## Quick start
 
-1. **Install Vulkan SDK**:
-   ```bash
-   # Ubuntu/Debian
-   sudo apt install vulkan-tools vulkan-validationlayers-dev spirv-tools
-   
-   # Or download from LunarG website and follow their instructions
-   ```
+### Prerequisites
 
-### Windows
+1. [C3 compiler](https://c3-lang.org/) (latest version)
+2. Vulkan drivers installed for your GPU
 
-1. **Install Vulkan SDK**: Download from [LunarG Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
+### Running the cube example
 
-2. **Add Vulkan to PATH**: Ensure `VULKAN_SDK` environment variable is set
+**Linux:**
+```bash
+c3c run cube
+```
 
-3. **Cross-compilation from Linux**: If developing on Linux but targeting Windows, the `cube-win` target includes the necessary Windows SDK configuration.
+**Windows:**
+```bash
+c3c run cube-win
+```
 
-### macOS
+**macOS** (needs Vulkan SDK rpath):
+```bash
+c3c run cube -z -rpath -z /path/to/VulkanSDK/macOS/lib
+```
 
-1. **Install C3**: Follow the [macOS installation guide](https://c3-lang.org/getting-started/installation/)
+### Platform setup
 
-2. **Install Vulkan SDK**: Download [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac)
+**Linux** — install Vulkan packages for your distro:
+```bash
+# Ubuntu/Debian
+sudo apt install vulkan-tools vulkan-validationlayers-dev spirv-tools
 
-3. **Run the example** with the Vulkan library path:
-   ```bash
-   # Replace /path/to/VulkanSDK with your actual SDK path
-   c3c run cube -z -rpath -z /Users/yourusername/VulkanSDK/macOS/lib
-   ```
+# Fedora
+sudo dnf install vulkan-tools vulkan-validation-layers-devel spirv-tools
+```
 
+**Windows** — download and install the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home). Make sure `VULKAN_SDK` is set. The `cube-win` target includes Windows SDK configuration for cross-compilation from Linux.
 
-**Controls**:
-- **Mouse**: Click and drag to rotate the camera
-- **Scroll**: Zoom in/out
+**macOS** — download the [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac) and pass the library path when building (see above).
 
-## Using the Library in Your Project
+## Using the library in your project
 
-### Option 1: Using the Pre-built Library
+### Option 1: Download the pre-built library
 
-1. Build the library file:
+Download `vulkan.c3l` from [releases](https://github.com/tonis2/Vulkan.c3/releases/download/latest/vulkan.c3l), place it in your project (e.g. `./libs/`), and add it to your `project.json`:
 
-   Download the prebuilt library from [here](https://github.com/tonis2/Vulkan.c3/releases/download/latest/vulkan.c3l)
+```json
+{
+  "dependency-search-paths": ["./libs"],
+  "dependencies": ["vulkan"],
+  "linked-libraries": ["vulkan"]
+}
+```
 
-   Or build manually.
+### Option 2: Build from source
 
-   ```bash
-   c3c build zip --trust=full
-   ```
-   This creates `vulkan.c3l` in the project root.
+```bash
+c3c build zip --trust=full
+```
 
-2. Copy `vulkan.c3l` to your project's library directory (e.g., `./libs/`)
+This creates `vulkan.c3l` in the project root.
 
-3. Update your `project.json`:
-   ```json
-   {
-     "dependency-search-paths": ["./libs"],
-     "dependencies": ["vulkan"]
-   }
-   ```
+### Example usage
 
-4. Use in your code:
-   ```c3
-   import vk;
-   
-   fn void main() {
-       // Create Vulkan instance
-       ApplicationInfo info = {
-         .pApplicationName = "TEST",
-         .pEngineName = "Super engine",
-         .applicationVersion = vk::@makeApiVersion(0,1,0,0),
-         .engineVersion = vk::@makeApiVersion(0,1,0,0),
-         .apiVersion = vk::@makeApiVersion(0,1,3,0)
-       };
-   
-       InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
-       .setApplicationInfo(&info)
-       .setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
-       .setEnabledExtensionNames(extensions.array_view());
-      }
-   }
-   ```
+```c3
+import vk;
 
-## Building the Bindings
+fn void! main() {
+    ApplicationInfo info = {
+        .pApplicationName = "My App",
+        .pEngineName = "My Engine",
+        .applicationVersion = vk::@makeApiVersion(0, 1, 0, 0),
+        .engineVersion = vk::@makeApiVersion(0, 1, 0, 0),
+        .apiVersion = vk::@makeApiVersion(0, 1, 3, 0)
+    };
 
-If you want to regenerate the Vulkan bindings from the official XML specification:
+    InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
+        .setApplicationInfo(&info)
+        .setEnabledExtensionNames(extensions.array_view());
 
-1. **Run the build script**:
-   ```bash
-   sh build.sh
-   ```
+    vk::Instance instance;
+    vk::createInstance(&instanceInfo, null, &instance)!;
+}
+```
+
+The builder pattern lets you chain `.set*()` calls, then call `.build()` on create-info structs:
+
+```c3
+vk::Pipeline pipeline = vk::graphicsPipelineCreateInfo()
+    .setStages(shader_stages)
+    .setLayout(pipeline_layout)
+    .setRenderPass(render_pass)
+    .build(device)!;
+```
+
+## Regenerating bindings
+
+To regenerate the bindings from the latest Vulkan XML specification:
+
+```bash
+sh build.sh
+```
+
+This downloads `vk.xml` from the Khronos repository and runs the parser. All extensions compatible with supported platforms (Win32, X11, XCB, Wayland, macOS/Metal, iOS) are included. Extensions referencing undefined types are automatically skipped.
+
+## Resources
+
+- [Window library (c3w)](https://github.com/tonis2/Window.c3) — windowing dependency used by the examples
+- [Example game](https://github.com/tonis2/game.c3) — a larger project using these bindings
+- [C3 documentation](https://c3-lang.org/)
+- [Vulkan Tutorial](https://vulkan-tutorial.com/)
+- [Vulkan Specification](https://www.khronos.org/registry/vulkan/)
 
 ## License
 
-This project is licensed under the terms found in the [LICENSE](LICENSE) file.
-
-## Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
-## Resources
-- [Window library](https://github.com/tonis2/Window.c3)
-- [Example game code](https://github.com/tonis2/game.c3)
-- [C3 Language Documentation](https://c3-lang.org/)
-- [Vulkan Tutorial](https://vulkan-tutorial.com/)
-- [Vulkan Specification](https://www.khronos.org/registry/vulkan/)
-- [LunarG Vulkan SDK](https://vulkan.lunarg.com/)
+See [LICENSE](LICENSE).
