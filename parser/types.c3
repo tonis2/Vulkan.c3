@@ -135,6 +135,10 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
             if (entry.name == "name") {
                 value.name = entry.value;
                 if (value.name == "module") value.name = "mod";
+                if (value.name.len > 0 && value.name[0] >= 'A' && value.name[0] <= 'Z') {
+                    value.name = value.name.copy(mem);
+                    value.name[0] = value.name[0].to_lower();
+                }
             };
         }
 
@@ -174,7 +178,10 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
                 if (entry.name == "type") self.returnType = entry.value;
             } else if (!is_vulkansc) {
                 if (entry.name == "type") value.type = entry.value;
-                if (entry.name == "name") value.name = entry.value;
+                if (entry.name == "name") {
+                    value.name = entry.value;
+                    if (value.name == "module") value.name = "mod";
+                }
             }
         }
         if (member.name == "param" && !is_vulkansc) self.values.push(value);

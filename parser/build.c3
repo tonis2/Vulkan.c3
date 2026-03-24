@@ -11,37 +11,8 @@ const MAX_VERSION = 1.4;
 
 alias TypeMap = HashMap{String, String};
 
-const String[*] ACTIVE_EXTENSIONS = {
-  "VK_KHR_portability_enumeration",
-  "VK_KHR_portability_subset",
-  "VK_KHR_push_descriptor",
-  "VK_KHR_surface",
-  "VK_KHR_xcb_surface",
-  "VK_KHR_swapchain",
-  "VK_KHR_display",
-  "VK_EXT_debug_report",
-  "VK_EXT_debug_utils",
-  "VK_EXT_swapchain_colorspace",
-  "VK_KHR_get_physical_device_properties2",
-  "VK_KHR_depth_stencil_resolve",
-  "VK_KHR_create_renderpass2",
-  "VK_KHR_maintenance2",
-  "VK_KHR_multiview",
-  "VK_KHR_dynamic_rendering",
-  "VK_EXT_descriptor_buffer",
-  "VK_KHR_xlib_surface",
-  "VK_MVK_macos_surface",
-  "VK_KHR_win32_surface",
-  "VK_KHR_acceleration_structure",
-  "VK_KHR_swapchain_mutable_format",
-  "VK_EXT_extended_dynamic_state3",
-  "VK_EXT_dynamic_rendering_unused_attachments",
-  "VK_EXT_metal_surface",
-  "VK_KHR_wayland_surface",
-  "VK_EXT_validation_features",
-  "VK_EXT_layer_settings",
-  "VK_EXT_fragment_density_map_offset",
-  "VK_EXT_sample_locations"
+const String[*] ALLOWED_PLATFORMS = {
+    "win32", "xlib", "xcb", "wayland", "macos", "metal", "ios", "xlib_xrandr", "provisional"
 };
 
 fn void main(String[] args) {
@@ -75,6 +46,16 @@ fn void main(String[] args) {
         "HINSTANCE", "HInstance",
         "wl_surface", "WLSurface",
         "HWND", "HWnd",
+        "DWORD", "DWord",
+        "HMONITOR", "HMonitor",
+        "MTLDevice_id", "void*",
+        "MTLCommandQueue_id", "void*",
+        "MTLBuffer_id", "void*",
+        "MTLTexture_id", "void*",
+        "MTLSharedEvent_id", "void*",
+        "IOSurfaceRef", "void*",
+        "LPCWSTR", "LpcWstr",
+        "SECURITY_ATTRIBUTES", "SecurityAttributes",
         "(~0ULL)", "(~0UL)"
     );
     
@@ -171,13 +152,20 @@ fn void main(String[] args) {
         String category = node.attributes.get("category") ?? node.attributes.get("type")!!;
 
         if (try alias_name && try name) {
-         
+
             switch (category) {
                  case "struct": {
-                    VkStruct value = (VkStruct){}.from_node(types_nodes[i - 1]);
-                    value.name = name;
-                    value.alias_name = alias_name;
-                    if (value.values.len() > 0) structs.push(value);                   
+                    // Find the source struct by alias name instead of assuming it's the previous node
+                    foreach (&src : structs) {
+                        if (src.name == alias_name) {
+                            VkStruct value;
+                            value.name = name;
+                            value.alias_name = alias_name;
+                            foreach (v : src.values) value.values.push(v);
+                            if (value.values.len() > 0) structs.push(value);
+                            break;
+                        }
+                    }
                 }
             }
         } 
@@ -219,11 +207,22 @@ fn void main(String[] args) {
             VkCommand command = (VkCommand){}.from_node(node);
             commands.push(command);
         }
-        
+
         if (try alias_name && try name) {
-            VkCommand command = (VkCommand){}.from_node(command_nodes[i - 1]);
-            command.name = name;
-            commands.push(command);
+            // Find the source command by alias name instead of assuming it's the previous node
+            foreach (&src : commands) {
+                if (src.name == alias_name) {
+                    VkCommand command;
+                    command.returnType = src.returnType;
+                    command.extension = src.extension;
+                    foreach (v : src.values) command.values.push(v);
+                    foreach (c : src.error_codes) command.error_codes.push(c);
+                    foreach (c : src.success_codes) command.success_codes.push(c);
+                    command.name = name;
+                    commands.push(command);
+                    break;
+                }
+            }
         }
     };
 
@@ -235,7 +234,13 @@ fn void main(String[] args) {
 
         if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
 
+        String? supported = feature.attributes.get("supported");
+        if (try supported && (supported == "disabled" || supported == "vulkansc")) continue;
+
         bool is_extension = feature.name == "extension";
+
+        String? platform = feature.attributes.get("platform");
+        bool enabled = is_extension ? (!@ok(platform) || ALLOWED_PLATFORMS.contains(platform!!)) : true;
 
         // Get only up-to required vulkan version
         if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || is_extension)) {
@@ -249,12 +254,9 @@ fn void main(String[] args) {
 
                     if (catch err = name) continue;
 
-                    foreach (&node: unions) if (node.name == name && ACTIVE_EXTENSIONS.contains(extension_name!!) || node.name == name && is_extension == false) {
+                    foreach (&node: unions) if (node.name == name && enabled) {
                         node.enabled = true;
                     }
-
-                    bool enabled = is_extension ? ACTIVE_EXTENSIONS.contains(extension_name!!) : true;
-                    if (try depends && is_extension && !ACTIVE_EXTENSIONS.contains(depends)) enabled = false;
 
                     switch (entry.name) {
                         case "type": {
@@ -407,9 +409,65 @@ fn void main(String[] args) {
     DString creator_functions;
     defer creator_functions.free();
 
+    // Collect all known type names so we can skip structs/commands referencing undefined types
+    HashMap{String, bool} known_types;
+    known_types.init_with_key_values(&allocator,
+        "void", true, "int", true, "uint", true, "long", true, "ulong", true,
+        "short", true, "usz", true, "isz", true, "char", true, "float", true, "double", true,
+        // Types defined in extra.c3
+        "PFN_vkAllocationFunction", true, "PFN_vkFreeFunction", true,
+        "PFN_vkInternalAllocationNotification", true, "PFN_vkInternalFreeNotification", true,
+        "PFN_vkReallocationFunction", true, "PFN_vkVoidFunction", true,
+        "PFN_vkDebugReportCallbackEXT", true, "PFN_vkDebugUtilsMessengerCallbackEXT", true
+    );
+    foreach (entry : structs) if (entry.enabled) known_types.set(entry.name, true);
+    foreach (entry : unions) if (entry.enabled) known_types.set(entry.name, true);
+    foreach (entry : enums) known_types.set(entry.name, true);
+    foreach (entry : handles) known_types.set(entry.name, true);
+    foreach (entry : basetypes) known_types.set(entry.name, true);
+
+    // Iteratively remove structs/unions with unresolvable member types
+    bool changed = true;
+    while (changed) {
+        changed = false;
+        foreach (&entry : structs) {
+            if (!entry.enabled) continue;
+            foreach (value : entry.values) {
+                if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
+                    entry.enabled = false;
+                    known_types.remove(entry.name);
+                    changed = true;
+                    break;
+                }
+            }
+        }
+        foreach (&entry : unions) {
+            if (!entry.enabled) continue;
+            foreach (value : entry.values) {
+                if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
+                    entry.enabled = false;
+                    known_types.remove(entry.name);
+                    changed = true;
+                    break;
+                }
+            }
+        }
+    }
+
     // Structs
     foreach (entry : structs) {
         if (!entry.enabled) continue;
+
+        // Skip structs referencing undefined types
+        bool has_missing_type = false;
+        foreach (value : entry.values) {
+            if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
+                has_missing_type = true;
+                break;
+            }
+        }
+        if (has_missing_type) continue;
+
         bool has_struct_type = entry.values[0].type == "VkStructureType" && entry.values[0].defaultValue != "";
 
         String name = entry.name.remove_vk();
@@ -465,6 +523,16 @@ fn void main(String[] args) {
     // Unions
     foreach (entry : unions) {
         if (!entry.enabled) continue;
+
+        bool has_missing_type = false;
+        foreach (value : entry.values) {
+            if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
+                has_missing_type = true;
+                break;
+            }
+        }
+        if (has_missing_type) continue;
+
         DString text_body = dstring::join(&allocator, {"union ", entry.name[2..], " { \n"}, "");
         defer text_body.free();
 
@@ -504,13 +572,27 @@ fn void main(String[] args) {
 
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
-    
+
+    HashMap{String, usz} builder_types;
+    builder_types.init_with_key_values(&allocator);
+
     foreach (entry : commands) {
         if (entry.enabled == false) continue;
 
+        // Skip commands that reference types we haven't generated
+        bool has_missing_type = false;
+        foreach (value : entry.values) {
+            String raw_type = value.type;
+            if (raw_type.len > 0 && !type_values.has_key(raw_type) && !known_types.has_key(raw_type)) {
+                has_missing_type = true;
+                break;
+            }
+        }
+        if (has_missing_type) continue;
+
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         bool no_result = return_type != "Result";
-        bool create_command = entry.name.contains("Create");
+        bool create_command = entry.name[2..].starts_with("Create");
 
         String extension_def = dstring::join(&allocator, {"PFN_", entry.name}, "").str_view();
 
@@ -533,31 +615,12 @@ fn void main(String[] args) {
             {
                 foreach (value : entry.values) if (value.type.contains("CreateInfo")) command_name = value.type;
             }
-     
-            String result_type = entry.values[entry.values.len() - 1].type;
-    
-            create_commands.append(dstring::join(&allocator, {"fn ", result_type.remove_vk(), "? ", command_name.remove_vk(), ".build(&self, "}, ""));
-
-            foreach (i, value : entry.values) {
-                if (value.type == command_name || value.type == result_type) continue;
-                String type = type_values[value.type] ?? value.type.remove_vk();
-                String default_value = "";
-                if (value.optional) default_value = " = null";
-                if (type == "uint") default_value = " = 1";
-                
-                create_commands.append(dstring::join(&allocator, {type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
+            // Pick the command with fewest params as the canonical builder for each CreateInfo type
+            if (command_name.len > 0) {
+                if (!builder_types.has_key(command_name) || entry.values.len() < builder_types[command_name]!!) {
+                    builder_types.set(command_name, (usz)entry.values.len());
+                }
             }
-
-            create_commands.append(dstring::join(&allocator, {"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
-
-            foreach (i, value : entry.values) {
-                String name = value.name;
-                if (value.type == command_name) name = "self";
-                if (value.type == result_type) name = "&response";
-                create_commands.append(dstring::join(&allocator, {name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, ""));
-            }
-
-            create_commands.append("   return response;\n}\n");
         }
       
         // Add values
@@ -584,6 +647,47 @@ fn void main(String[] args) {
         }
     }
 
+    // Generate .build() methods for create commands (second pass, using best command per CreateInfo)
+    foreach (entry : commands) {
+        if (entry.enabled == false) continue;
+        if (!entry.name[2..].starts_with("Create") || entry.name == "vkCreateRenderPass2KHR") continue;
+
+        String command_name;
+        {
+            foreach (value : entry.values) if (value.type.contains("CreateInfo")) command_name = value.type;
+        }
+        if (command_name.len == 0) continue;
+        // Only generate if this command was selected as the best (fewest params) for this CreateInfo
+        if (!builder_types.has_key(command_name) || builder_types[command_name]!! != (usz)entry.values.len()) continue;
+        // Remove from map so we don't generate twice for same param count
+        builder_types.remove(command_name);
+
+        String result_type = entry.values[entry.values.len() - 1].type;
+
+        create_commands.append(dstring::join(&allocator, {"fn ", result_type.remove_vk(), "? ", command_name.remove_vk(), ".build(&self, "}, ""));
+
+        foreach (i, value : entry.values) {
+            if (value.type == command_name || value.type == result_type) continue;
+            String type = type_values[value.type] ?? value.type.remove_vk();
+            String default_value = "";
+            if (value.optional) default_value = " = null";
+            if (type == "uint") default_value = " = 1";
+
+            create_commands.append(dstring::join(&allocator, {type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
+        }
+
+        create_commands.append(dstring::join(&allocator, {"   ", result_type.remove_vk(), " response;\n", "   ", entry.name.remove_vk().to_lower_case(), "("}, ""));
+
+        foreach (i, value : entry.values) {
+            String name = value.name;
+            if (value.type == command_name) name = "self";
+            if (value.type == result_type) name = "&response";
+            create_commands.append(dstring::join(&allocator, {name, i == entry.values.len() - 1 ? ")!;\n" : ", "}, ""));
+        }
+
+        create_commands.append("   return response;\n}\n");
+    }
+
     extension_pointers.append("}\nVK_extension_bindings extensions;\n");
     extension_bind.append("}\n");
 
@@ -603,6 +707,18 @@ fn void main(String[] args) {
     // Commands with error handling
     foreach (entry : commands) {
         if (!entry.enabled || entry.returnType != "VkResult") continue;
+
+        // Skip commands that reference types we haven't generated
+        bool has_missing_type = false;
+        foreach (value : entry.values) {
+            String raw_type = value.type;
+            if (raw_type.len > 0 && !type_values.has_key(raw_type) && !known_types.has_key(raw_type)) {
+                has_missing_type = true;
+                break;
+            }
+        }
+        if (has_missing_type) continue;
+
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
 
         DString text_body;
@@ -633,6 +749,7 @@ fn void main(String[] args) {
         if (entry.error_codes.len() > 0) {
             text_body.append("  switch(result) { \n");
             foreach (i, value : entry.error_codes) {
+                if (!value.starts_with("VK_ERROR")) continue;
                 text_body.append(dstring::join(&allocator, {"       case ", value[3..], ": return E_", value[3..], "~;\n"}, ""));
             }
             text_body.append("  }\n");
@@ -664,18 +781,21 @@ fn String String.from_bit_pos(&self) {
 }
 
 fn String String.to_lower_case(self) {
+    if (self.len == 0) return self;
     String new_value = self.copy(mem);
     new_value[0] = new_value[0].to_lower();
     return new_value;
 }
 
 fn String String.capitalize(self) {
+    if (self.len == 0) return self;
     String new_value = self.copy(mem);
     new_value[0] = new_value[0].to_upper();
     return new_value;
 }
 
 fn String String.remove_vk(self) {
+    if (self.len < 2) return self;
     if (self[0..1] == "Vk" || self[0..1] == "vk") {
          return self.copy(mem)[2..];
     }

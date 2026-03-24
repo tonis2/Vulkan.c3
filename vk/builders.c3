@@ -68,9 +68,8 @@ fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerCount(&self, uint enabledLay
    self.enabledLayerCount = enabledLayerCount;
    return *self;
 }
-fn DeviceCreateInfo DeviceCreateInfo.setEnabledLayerNames(&self, ZString[] ppEnabledLayerNames) {
-   self.enabledLayerCount= (uint)ppEnabledLayerNames.len;
-   self.ppEnabledLayerNames = (char*)&ppEnabledLayerNames[0];
+fn DeviceCreateInfo DeviceCreateInfo.setPEnabledLayerNames(&self, char* ppEnabledLayerNames) {
+   self.ppEnabledLayerNames = ppEnabledLayerNames;
    return *self;
 }
 fn DeviceCreateInfo DeviceCreateInfo.setEnabledExtensionCount(&self, uint enabledExtensionCount) {
@@ -226,6 +225,15 @@ fn BufferUsageFlags2CreateInfo BufferUsageFlags2CreateInfo.setNext(&self, void* 
    return *self;
 }
 fn BufferUsageFlags2CreateInfo BufferUsageFlags2CreateInfo.setUsage(&self, BufferUsageFlags2 usage) {
+   self.usage = usage;
+   return *self;
+}
+fn BufferUsageFlags2CreateInfoKHR bufferUsageFlags2CreateInfoKHR() => { .sType = STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO, .pNext = null };
+fn BufferUsageFlags2CreateInfoKHR BufferUsageFlags2CreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferUsageFlags2CreateInfoKHR BufferUsageFlags2CreateInfoKHR.setUsage(&self, BufferUsageFlags2 usage) {
    self.usage = usage;
    return *self;
 }
@@ -504,6 +512,57 @@ fn BindSparseInfo BindSparseInfo.setSignalSemaphores(&self, Semaphore[] pSignalS
    self.pSignalSemaphores = &pSignalSemaphores[0];
    return *self;
 }
+fn CopyMemoryIndirectInfoKHR copyMemoryIndirectInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR, .pNext = null };
+fn CopyMemoryIndirectInfoKHR CopyMemoryIndirectInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMemoryIndirectInfoKHR CopyMemoryIndirectInfoKHR.setSrcCopyFlags(&self, AddressCopyFlagsKHR srcCopyFlags) {
+   self.srcCopyFlags = srcCopyFlags;
+   return *self;
+}
+fn CopyMemoryIndirectInfoKHR CopyMemoryIndirectInfoKHR.setDstCopyFlags(&self, AddressCopyFlagsKHR dstCopyFlags) {
+   self.dstCopyFlags = dstCopyFlags;
+   return *self;
+}
+fn CopyMemoryIndirectInfoKHR CopyMemoryIndirectInfoKHR.setCopyCount(&self, uint copyCount) {
+   self.copyCount = copyCount;
+   return *self;
+}
+fn CopyMemoryIndirectInfoKHR CopyMemoryIndirectInfoKHR.setCopyAddressRange(&self, StridedDeviceAddressRangeKHR copyAddressRange) {
+   self.copyAddressRange = copyAddressRange;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR copyMemoryToImageIndirectInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR, .pNext = null };
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setSrcCopyFlags(&self, AddressCopyFlagsKHR srcCopyFlags) {
+   self.srcCopyFlags = srcCopyFlags;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setCopyCount(&self, uint copyCount) {
+   self.copyCount = copyCount;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setCopyAddressRange(&self, StridedDeviceAddressRangeKHR copyAddressRange) {
+   self.copyAddressRange = copyAddressRange;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn CopyMemoryToImageIndirectInfoKHR CopyMemoryToImageIndirectInfoKHR.setImageSubresources(&self, ImageSubresourceLayers[] pImageSubresources) {
+   self.copyCount= (uint)pImageSubresources.len;
+   self.pImageSubresources = &pImageSubresources[0];
+   return *self;
+}
 fn ShaderModuleCreateInfo shaderModuleCreateInfo() => { .sType = STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, .pNext = null };
 fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -629,12 +688,38 @@ fn ComputePipelineCreateInfo ComputePipelineCreateInfo.setBasePipelineIndex(&sel
    self.basePipelineIndex = basePipelineIndex;
    return *self;
 }
+fn ComputePipelineIndirectBufferInfoNV computePipelineIndirectBufferInfoNV() => { .sType = STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV, .pNext = null };
+fn ComputePipelineIndirectBufferInfoNV ComputePipelineIndirectBufferInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ComputePipelineIndirectBufferInfoNV ComputePipelineIndirectBufferInfoNV.setDeviceAddress(&self, DeviceAddress deviceAddress) {
+   self.deviceAddress = deviceAddress;
+   return *self;
+}
+fn ComputePipelineIndirectBufferInfoNV ComputePipelineIndirectBufferInfoNV.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn ComputePipelineIndirectBufferInfoNV ComputePipelineIndirectBufferInfoNV.setPipelineDeviceAddressCaptureReplay(&self, DeviceAddress pipelineDeviceAddressCaptureReplay) {
+   self.pipelineDeviceAddressCaptureReplay = pipelineDeviceAddressCaptureReplay;
+   return *self;
+}
 fn PipelineCreateFlags2CreateInfo pipelineCreateFlags2CreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO, .pNext = null };
 fn PipelineCreateFlags2CreateInfo PipelineCreateFlags2CreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PipelineCreateFlags2CreateInfo PipelineCreateFlags2CreateInfo.setFlags(&self, PipelineCreateFlags2 flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineCreateFlags2CreateInfoKHR pipelineCreateFlags2CreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO, .pNext = null };
+fn PipelineCreateFlags2CreateInfoKHR PipelineCreateFlags2CreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCreateFlags2CreateInfoKHR PipelineCreateFlags2CreateInfoKHR.setFlags(&self, PipelineCreateFlags2 flags) {
    self.flags = flags;
    return *self;
 }
@@ -986,6 +1071,87 @@ fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(&self, usz
 }
 fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialData(&self, void* pInitialData) {
    self.pInitialData = pInitialData;
+   return *self;
+}
+fn PipelineBinaryCreateInfoKHR pipelineBinaryCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_BINARY_CREATE_INFO_KHR, .pNext = null };
+fn PipelineBinaryCreateInfoKHR PipelineBinaryCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineBinaryCreateInfoKHR PipelineBinaryCreateInfoKHR.setKeysAndDataInfo(&self, PipelineBinaryKeysAndDataKHR* pKeysAndDataInfo) {
+   self.pKeysAndDataInfo = pKeysAndDataInfo;
+   return *self;
+}
+fn PipelineBinaryCreateInfoKHR PipelineBinaryCreateInfoKHR.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn PipelineBinaryCreateInfoKHR PipelineBinaryCreateInfoKHR.setPipelineCreateInfo(&self, PipelineCreateInfoKHR* pPipelineCreateInfo) {
+   self.pPipelineCreateInfo = pPipelineCreateInfo;
+   return *self;
+}
+fn PipelineBinaryHandlesInfoKHR pipelineBinaryHandlesInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_BINARY_HANDLES_INFO_KHR, .pNext = null };
+fn PipelineBinaryHandlesInfoKHR PipelineBinaryHandlesInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineBinaryHandlesInfoKHR PipelineBinaryHandlesInfoKHR.setPipelineBinaryCount(&self, uint pipelineBinaryCount) {
+   self.pipelineBinaryCount = pipelineBinaryCount;
+   return *self;
+}
+fn PipelineBinaryHandlesInfoKHR PipelineBinaryHandlesInfoKHR.setPipelineBinaries(&self, PipelineBinaryKHR[] pPipelineBinaries) {
+   self.pipelineBinaryCount= (uint)pPipelineBinaries.len;
+   self.pPipelineBinaries = &pPipelineBinaries[0];
+   return *self;
+}
+fn PipelineBinaryKeyKHR pipelineBinaryKeyKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_BINARY_KEY_KHR, .pNext = null };
+fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setKeySize(&self, uint keySize) {
+   self.keySize = keySize;
+   return *self;
+}
+fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setKey(&self, uint[MAX_PIPELINE_BINARY_KEY_SIZE_KHR] key) {
+   self.key = key;
+   return *self;
+}
+fn PipelineBinaryInfoKHR pipelineBinaryInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_BINARY_INFO_KHR, .pNext = null };
+fn PipelineBinaryInfoKHR PipelineBinaryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineBinaryInfoKHR PipelineBinaryInfoKHR.setBinaryCount(&self, uint binaryCount) {
+   self.binaryCount = binaryCount;
+   return *self;
+}
+fn PipelineBinaryInfoKHR PipelineBinaryInfoKHR.setPipelineBinaries(&self, PipelineBinaryKHR[] pPipelineBinaries) {
+   self.binaryCount= (uint)pPipelineBinaries.len;
+   self.pPipelineBinaries = &pPipelineBinaries[0];
+   return *self;
+}
+fn ReleaseCapturedPipelineDataInfoKHR releaseCapturedPipelineDataInfoKHR() => { .sType = STRUCTURE_TYPE_RELEASE_CAPTURED_PIPELINE_DATA_INFO_KHR, .pNext = null };
+fn ReleaseCapturedPipelineDataInfoKHR ReleaseCapturedPipelineDataInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ReleaseCapturedPipelineDataInfoKHR ReleaseCapturedPipelineDataInfoKHR.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn PipelineBinaryDataInfoKHR pipelineBinaryDataInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_BINARY_DATA_INFO_KHR, .pNext = null };
+fn PipelineBinaryDataInfoKHR PipelineBinaryDataInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineBinaryDataInfoKHR PipelineBinaryDataInfoKHR.setPipelineBinary(&self, PipelineBinaryKHR pipelineBinary) {
+   self.pipelineBinary = pipelineBinary;
+   return *self;
+}
+fn PipelineCreateInfoKHR pipelineCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATE_INFO_KHR, .pNext = null };
+fn PipelineCreateInfoKHR PipelineCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
    return *self;
 }
 fn PipelineLayoutCreateInfo pipelineLayoutCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO, .pNext = null };
@@ -1387,6 +1553,32 @@ fn DisplaySurfaceCreateInfoKHR DisplaySurfaceCreateInfoKHR.setImageExtent(&self,
    self.imageExtent = imageExtent;
    return *self;
 }
+fn DisplaySurfaceStereoCreateInfoNV displaySurfaceStereoCreateInfoNV() => { .sType = STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV, .pNext = null };
+fn DisplaySurfaceStereoCreateInfoNV DisplaySurfaceStereoCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplaySurfaceStereoCreateInfoNV DisplaySurfaceStereoCreateInfoNV.setStereoType(&self, DisplaySurfaceStereoTypeNV stereoType) {
+   self.stereoType = stereoType;
+   return *self;
+}
+fn DisplayPresentInfoKHR displayPresentInfoKHR() => { .sType = STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR, .pNext = null };
+fn DisplayPresentInfoKHR DisplayPresentInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayPresentInfoKHR DisplayPresentInfoKHR.setSrcRect(&self, Rect2D srcRect) {
+   self.srcRect = srcRect;
+   return *self;
+}
+fn DisplayPresentInfoKHR DisplayPresentInfoKHR.setDstRect(&self, Rect2D dstRect) {
+   self.dstRect = dstRect;
+   return *self;
+}
+fn DisplayPresentInfoKHR DisplayPresentInfoKHR.setPersistent(&self, uint persistent) {
+   self.persistent = persistent;
+   return *self;
+}
 fn WaylandSurfaceCreateInfoKHR waylandSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR, .pNext = null };
 fn WaylandSurfaceCreateInfoKHR WaylandSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -1419,23 +1611,6 @@ fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHinstance(&self, HInst
 }
 fn Win32SurfaceCreateInfoKHR Win32SurfaceCreateInfoKHR.setHwnd(&self, HWnd hwnd) {
    self.hwnd = hwnd;
-   return *self;
-}
-fn XlibSurfaceCreateInfoKHR xlibSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR, .pNext = null };
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setNext(&self, void* pNext) {
-   self.pNext = pNext;
-   return *self;
-}
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setFlags(&self, XlibSurfaceCreateFlagsKHR flags) {
-   self.flags = flags;
-   return *self;
-}
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setPy(&self, Display* dpy) {
-   self.dpy = dpy;
-   return *self;
-}
-fn XlibSurfaceCreateInfoKHR XlibSurfaceCreateInfoKHR.setWindow(&self, Window window) {
-   self.window = window;
    return *self;
 }
 fn XcbSurfaceCreateInfoKHR xcbSurfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR, .pNext = null };
@@ -1575,6 +1750,20 @@ fn DebugReportCallbackCreateInfoEXT DebugReportCallbackCreateInfoEXT.setUserData
    self.pUserData = pUserData;
    return *self;
 }
+fn ValidationFlagsEXT validationFlagsEXT() => { .sType = STRUCTURE_TYPE_VALIDATION_FLAGS_EXT, .pNext = null };
+fn ValidationFlagsEXT ValidationFlagsEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ValidationFlagsEXT ValidationFlagsEXT.setDisabledValidationCheckCount(&self, uint disabledValidationCheckCount) {
+   self.disabledValidationCheckCount = disabledValidationCheckCount;
+   return *self;
+}
+fn ValidationFlagsEXT ValidationFlagsEXT.setDisabledValidationChecks(&self, ValidationCheckEXT[] pDisabledValidationChecks) {
+   self.disabledValidationCheckCount= (uint)pDisabledValidationChecks.len;
+   self.pDisabledValidationChecks = &pDisabledValidationChecks[0];
+   return *self;
+}
 fn ValidationFeaturesEXT validationFeaturesEXT() => { .sType = STRUCTURE_TYPE_VALIDATION_FEATURES_EXT, .pNext = null };
 fn ValidationFeaturesEXT ValidationFeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -1612,12 +1801,263 @@ fn LayerSettingsCreateInfoEXT LayerSettingsCreateInfoEXT.setSettings(&self, Laye
    self.pSettings = &pSettings[0];
    return *self;
 }
+fn PipelineRasterizationStateRasterizationOrderAMD pipelineRasterizationStateRasterizationOrderAMD() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD, .pNext = null };
+fn PipelineRasterizationStateRasterizationOrderAMD PipelineRasterizationStateRasterizationOrderAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationStateRasterizationOrderAMD PipelineRasterizationStateRasterizationOrderAMD.setRasterizationOrder(&self, RasterizationOrderAMD rasterizationOrder) {
+   self.rasterizationOrder = rasterizationOrder;
+   return *self;
+}
+fn DebugMarkerObjectNameInfoEXT debugMarkerObjectNameInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT, .pNext = null };
+fn DebugMarkerObjectNameInfoEXT DebugMarkerObjectNameInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DebugMarkerObjectNameInfoEXT DebugMarkerObjectNameInfoEXT.setObjectType(&self, DebugReportObjectTypeEXT objectType) {
+   self.objectType = objectType;
+   return *self;
+}
+fn DebugMarkerObjectNameInfoEXT DebugMarkerObjectNameInfoEXT.setObject(&self, ulong object) {
+   self.object = object;
+   return *self;
+}
+fn DebugMarkerObjectNameInfoEXT DebugMarkerObjectNameInfoEXT.setObjectName(&self, char* pObjectName) {
+   self.pObjectName = pObjectName;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT debugMarkerObjectTagInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT, .pNext = null };
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setObjectType(&self, DebugReportObjectTypeEXT objectType) {
+   self.objectType = objectType;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setObject(&self, ulong object) {
+   self.object = object;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTagName(&self, ulong tagName) {
+   self.tagName = tagName;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTagSize(&self, usz tagSize) {
+   self.tagSize = tagSize;
+   return *self;
+}
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTag(&self, void* pTag) {
+   self.pTag = pTag;
+   return *self;
+}
+fn DebugMarkerMarkerInfoEXT debugMarkerMarkerInfoEXT() => { .sType = STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT, .pNext = null };
+fn DebugMarkerMarkerInfoEXT DebugMarkerMarkerInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DebugMarkerMarkerInfoEXT DebugMarkerMarkerInfoEXT.setMarkerName(&self, char* pMarkerName) {
+   self.pMarkerName = pMarkerName;
+   return *self;
+}
+fn DebugMarkerMarkerInfoEXT DebugMarkerMarkerInfoEXT.setColor(&self, float[4] color) {
+   self.color = color;
+   return *self;
+}
+fn DedicatedAllocationImageCreateInfoNV dedicatedAllocationImageCreateInfoNV() => { .sType = STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV, .pNext = null };
+fn DedicatedAllocationImageCreateInfoNV DedicatedAllocationImageCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DedicatedAllocationImageCreateInfoNV DedicatedAllocationImageCreateInfoNV.setDedicatedAllocation(&self, uint dedicatedAllocation) {
+   self.dedicatedAllocation = dedicatedAllocation;
+   return *self;
+}
+fn DedicatedAllocationBufferCreateInfoNV dedicatedAllocationBufferCreateInfoNV() => { .sType = STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV, .pNext = null };
+fn DedicatedAllocationBufferCreateInfoNV DedicatedAllocationBufferCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DedicatedAllocationBufferCreateInfoNV DedicatedAllocationBufferCreateInfoNV.setDedicatedAllocation(&self, uint dedicatedAllocation) {
+   self.dedicatedAllocation = dedicatedAllocation;
+   return *self;
+}
+fn DedicatedAllocationMemoryAllocateInfoNV dedicatedAllocationMemoryAllocateInfoNV() => { .sType = STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV, .pNext = null };
+fn DedicatedAllocationMemoryAllocateInfoNV DedicatedAllocationMemoryAllocateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DedicatedAllocationMemoryAllocateInfoNV DedicatedAllocationMemoryAllocateInfoNV.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn DedicatedAllocationMemoryAllocateInfoNV DedicatedAllocationMemoryAllocateInfoNV.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn ExternalMemoryImageCreateInfoNV externalMemoryImageCreateInfoNV() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV, .pNext = null };
+fn ExternalMemoryImageCreateInfoNV ExternalMemoryImageCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalMemoryImageCreateInfoNV ExternalMemoryImageCreateInfoNV.setHandleTypes(&self, ExternalMemoryHandleTypeFlagsNV handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ExportMemoryAllocateInfoNV exportMemoryAllocateInfoNV() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV, .pNext = null };
+fn ExportMemoryAllocateInfoNV ExportMemoryAllocateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMemoryAllocateInfoNV ExportMemoryAllocateInfoNV.setHandleTypes(&self, ExternalMemoryHandleTypeFlagsNV handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoNV importMemoryWin32HandleInfoNV() => { .sType = STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV, .pNext = null };
+fn ImportMemoryWin32HandleInfoNV ImportMemoryWin32HandleInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoNV ImportMemoryWin32HandleInfoNV.setHandleType(&self, ExternalMemoryHandleTypeFlagsNV handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoNV ImportMemoryWin32HandleInfoNV.setHandle(&self, void* handle) {
+   self.handle = handle;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoNV exportMemoryWin32HandleInfoNV() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV, .pNext = null };
+fn ExportMemoryWin32HandleInfoNV ExportMemoryWin32HandleInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoNV ExportMemoryWin32HandleInfoNV.setAttributes(&self, SecurityAttributes* pAttributes) {
+   self.pAttributes = pAttributes;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoNV ExportMemoryWin32HandleInfoNV.setDwAccess(&self, DWord dwAccess) {
+   self.dwAccess = dwAccess;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV win32KeyedMutexAcquireReleaseInfoNV() => { .sType = STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV, .pNext = null };
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setAcquireCount(&self, uint acquireCount) {
+   self.acquireCount = acquireCount;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setAcquireSyncs(&self, DeviceMemory[] pAcquireSyncs) {
+   self.acquireCount= (uint)pAcquireSyncs.len;
+   self.pAcquireSyncs = &pAcquireSyncs[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setAcquireKeys(&self, ulong[] pAcquireKeys) {
+   self.acquireCount= (uint)pAcquireKeys.len;
+   self.pAcquireKeys = &pAcquireKeys[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setAcquireTimeoutMilliseconds(&self, uint[] pAcquireTimeoutMilliseconds) {
+   self.acquireCount= (uint)pAcquireTimeoutMilliseconds.len;
+   self.pAcquireTimeoutMilliseconds = &pAcquireTimeoutMilliseconds[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setReleaseCount(&self, uint releaseCount) {
+   self.releaseCount = releaseCount;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setReleaseSyncs(&self, DeviceMemory[] pReleaseSyncs) {
+   self.releaseCount= (uint)pReleaseSyncs.len;
+   self.pReleaseSyncs = &pReleaseSyncs[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoNV Win32KeyedMutexAcquireReleaseInfoNV.setReleaseKeys(&self, ulong[] pReleaseKeys) {
+   self.releaseCount= (uint)pReleaseKeys.len;
+   self.pReleaseKeys = &pReleaseKeys[0];
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesNV physicalDeviceDeviceGeneratedCommandsFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesNV PhysicalDeviceDeviceGeneratedCommandsFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesNV PhysicalDeviceDeviceGeneratedCommandsFeaturesNV.setDeviceGeneratedCommands(&self, uint deviceGeneratedCommands) {
+   self.deviceGeneratedCommands = deviceGeneratedCommands;
+   return *self;
+}
+fn PushConstantBankInfoNV pushConstantBankInfoNV() => { .sType = STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV, .pNext = null };
+fn PushConstantBankInfoNV PushConstantBankInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PushConstantBankInfoNV PushConstantBankInfoNV.setBank(&self, uint bank) {
+   self.bank = bank;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankFeaturesNV physicalDevicePushConstantBankFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV, .pNext = null };
+fn PhysicalDevicePushConstantBankFeaturesNV PhysicalDevicePushConstantBankFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankFeaturesNV PhysicalDevicePushConstantBankFeaturesNV.setPushConstantBank(&self, uint pushConstantBank) {
+   self.pushConstantBank = pushConstantBank;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankPropertiesNV physicalDevicePushConstantBankPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV, .pNext = null };
+fn PhysicalDevicePushConstantBankPropertiesNV PhysicalDevicePushConstantBankPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankPropertiesNV PhysicalDevicePushConstantBankPropertiesNV.setMaxGraphicsPushConstantBanks(&self, uint maxGraphicsPushConstantBanks) {
+   self.maxGraphicsPushConstantBanks = maxGraphicsPushConstantBanks;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankPropertiesNV PhysicalDevicePushConstantBankPropertiesNV.setMaxComputePushConstantBanks(&self, uint maxComputePushConstantBanks) {
+   self.maxComputePushConstantBanks = maxComputePushConstantBanks;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankPropertiesNV PhysicalDevicePushConstantBankPropertiesNV.setMaxGraphicsPushDataBanks(&self, uint maxGraphicsPushDataBanks) {
+   self.maxGraphicsPushDataBanks = maxGraphicsPushDataBanks;
+   return *self;
+}
+fn PhysicalDevicePushConstantBankPropertiesNV PhysicalDevicePushConstantBankPropertiesNV.setMaxComputePushDataBanks(&self, uint maxComputePushDataBanks) {
+   self.maxComputePushDataBanks = maxComputePushDataBanks;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV physicalDeviceDeviceGeneratedCommandsComputeFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV.setDeviceGeneratedCompute(&self, uint deviceGeneratedCompute) {
+   self.deviceGeneratedCompute = deviceGeneratedCompute;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV.setDeviceGeneratedComputePipelines(&self, uint deviceGeneratedComputePipelines) {
+   self.deviceGeneratedComputePipelines = deviceGeneratedComputePipelines;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV.setDeviceGeneratedComputeCaptureReplay(&self, uint deviceGeneratedComputeCaptureReplay) {
+   self.deviceGeneratedComputeCaptureReplay = deviceGeneratedComputeCaptureReplay;
+   return *self;
+}
 fn DevicePrivateDataCreateInfo devicePrivateDataCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
 fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn DevicePrivateDataCreateInfo DevicePrivateDataCreateInfo.setPrivateDataSlotRequestCount(&self, uint privateDataSlotRequestCount) {
+   self.privateDataSlotRequestCount = privateDataSlotRequestCount;
+   return *self;
+}
+fn DevicePrivateDataCreateInfoEXT devicePrivateDataCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO, .pNext = null };
+fn DevicePrivateDataCreateInfoEXT DevicePrivateDataCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DevicePrivateDataCreateInfoEXT DevicePrivateDataCreateInfoEXT.setPrivateDataSlotRequestCount(&self, uint privateDataSlotRequestCount) {
    self.privateDataSlotRequestCount = privateDataSlotRequestCount;
    return *self;
 }
@@ -1630,6 +2070,15 @@ fn PrivateDataSlotCreateInfo PrivateDataSlotCreateInfo.setFlags(&self, PrivateDa
    self.flags = flags;
    return *self;
 }
+fn PrivateDataSlotCreateInfoEXT privateDataSlotCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO, .pNext = null };
+fn PrivateDataSlotCreateInfoEXT PrivateDataSlotCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PrivateDataSlotCreateInfoEXT PrivateDataSlotCreateInfoEXT.setFlags(&self, PrivateDataSlotCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
 fn PhysicalDevicePrivateDataFeatures physicalDevicePrivateDataFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES, .pNext = null };
 fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -1637,6 +2086,476 @@ fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setNext(&
 }
 fn PhysicalDevicePrivateDataFeatures PhysicalDevicePrivateDataFeatures.setPrivateData(&self, uint privateData) {
    self.privateData = privateData;
+   return *self;
+}
+fn PhysicalDevicePrivateDataFeaturesEXT physicalDevicePrivateDataFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES, .pNext = null };
+fn PhysicalDevicePrivateDataFeaturesEXT PhysicalDevicePrivateDataFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePrivateDataFeaturesEXT PhysicalDevicePrivateDataFeaturesEXT.setPrivateData(&self, uint privateData) {
+   self.privateData = privateData;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV physicalDeviceDeviceGeneratedCommandsPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxGraphicsShaderGroupCount(&self, uint maxGraphicsShaderGroupCount) {
+   self.maxGraphicsShaderGroupCount = maxGraphicsShaderGroupCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxIndirectSequenceCount(&self, uint maxIndirectSequenceCount) {
+   self.maxIndirectSequenceCount = maxIndirectSequenceCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxIndirectCommandsTokenCount(&self, uint maxIndirectCommandsTokenCount) {
+   self.maxIndirectCommandsTokenCount = maxIndirectCommandsTokenCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxIndirectCommandsStreamCount(&self, uint maxIndirectCommandsStreamCount) {
+   self.maxIndirectCommandsStreamCount = maxIndirectCommandsStreamCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxIndirectCommandsTokenOffset(&self, uint maxIndirectCommandsTokenOffset) {
+   self.maxIndirectCommandsTokenOffset = maxIndirectCommandsTokenOffset;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMaxIndirectCommandsStreamStride(&self, uint maxIndirectCommandsStreamStride) {
+   self.maxIndirectCommandsStreamStride = maxIndirectCommandsStreamStride;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMinSequencesCountBufferOffsetAlignment(&self, uint minSequencesCountBufferOffsetAlignment) {
+   self.minSequencesCountBufferOffsetAlignment = minSequencesCountBufferOffsetAlignment;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMinSequencesIndexBufferOffsetAlignment(&self, uint minSequencesIndexBufferOffsetAlignment) {
+   self.minSequencesIndexBufferOffsetAlignment = minSequencesIndexBufferOffsetAlignment;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesNV PhysicalDeviceDeviceGeneratedCommandsPropertiesNV.setMinIndirectCommandsBufferOffsetAlignment(&self, uint minIndirectCommandsBufferOffsetAlignment) {
+   self.minIndirectCommandsBufferOffsetAlignment = minIndirectCommandsBufferOffsetAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructureFeaturesNV physicalDeviceClusterAccelerationStructureFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_ACCELERATION_STRUCTURE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceClusterAccelerationStructureFeaturesNV PhysicalDeviceClusterAccelerationStructureFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructureFeaturesNV PhysicalDeviceClusterAccelerationStructureFeaturesNV.setClusterAccelerationStructure(&self, uint clusterAccelerationStructure) {
+   self.clusterAccelerationStructure = clusterAccelerationStructure;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV physicalDeviceClusterAccelerationStructurePropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_ACCELERATION_STRUCTURE_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setMaxVerticesPerCluster(&self, uint maxVerticesPerCluster) {
+   self.maxVerticesPerCluster = maxVerticesPerCluster;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setMaxTrianglesPerCluster(&self, uint maxTrianglesPerCluster) {
+   self.maxTrianglesPerCluster = maxTrianglesPerCluster;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setClusterScratchByteAlignment(&self, uint clusterScratchByteAlignment) {
+   self.clusterScratchByteAlignment = clusterScratchByteAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setClusterByteAlignment(&self, uint clusterByteAlignment) {
+   self.clusterByteAlignment = clusterByteAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setClusterTemplateByteAlignment(&self, uint clusterTemplateByteAlignment) {
+   self.clusterTemplateByteAlignment = clusterTemplateByteAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setClusterBottomLevelByteAlignment(&self, uint clusterBottomLevelByteAlignment) {
+   self.clusterBottomLevelByteAlignment = clusterBottomLevelByteAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setClusterTemplateBoundsByteAlignment(&self, uint clusterTemplateBoundsByteAlignment) {
+   self.clusterTemplateBoundsByteAlignment = clusterTemplateBoundsByteAlignment;
+   return *self;
+}
+fn PhysicalDeviceClusterAccelerationStructurePropertiesNV PhysicalDeviceClusterAccelerationStructurePropertiesNV.setMaxClusterGeometryIndex(&self, uint maxClusterGeometryIndex) {
+   self.maxClusterGeometryIndex = maxClusterGeometryIndex;
+   return *self;
+}
+fn RayTracingPipelineClusterAccelerationStructureCreateInfoNV rayTracingPipelineClusterAccelerationStructureCreateInfoNV() => { .sType = STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CLUSTER_ACCELERATION_STRUCTURE_CREATE_INFO_NV, .pNext = null };
+fn RayTracingPipelineClusterAccelerationStructureCreateInfoNV RayTracingPipelineClusterAccelerationStructureCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingPipelineClusterAccelerationStructureCreateInfoNV RayTracingPipelineClusterAccelerationStructureCreateInfoNV.setAllowClusterAccelerationStructure(&self, uint allowClusterAccelerationStructure) {
+   self.allowClusterAccelerationStructure = allowClusterAccelerationStructure;
+   return *self;
+}
+fn ClusterAccelerationStructureClustersBottomLevelInputNV clusterAccelerationStructureClustersBottomLevelInputNV() => { .sType = STRUCTURE_TYPE_CLUSTER_ACCELERATION_STRUCTURE_CLUSTERS_BOTTOM_LEVEL_INPUT_NV, .pNext = null };
+fn ClusterAccelerationStructureClustersBottomLevelInputNV ClusterAccelerationStructureClustersBottomLevelInputNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ClusterAccelerationStructureClustersBottomLevelInputNV ClusterAccelerationStructureClustersBottomLevelInputNV.setMaxTotalClusterCount(&self, uint maxTotalClusterCount) {
+   self.maxTotalClusterCount = maxTotalClusterCount;
+   return *self;
+}
+fn ClusterAccelerationStructureClustersBottomLevelInputNV ClusterAccelerationStructureClustersBottomLevelInputNV.setMaxClusterCountPerAccelerationStructure(&self, uint maxClusterCountPerAccelerationStructure) {
+   self.maxClusterCountPerAccelerationStructure = maxClusterCountPerAccelerationStructure;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV clusterAccelerationStructureTriangleClusterInputNV() => { .sType = STRUCTURE_TYPE_CLUSTER_ACCELERATION_STRUCTURE_TRIANGLE_CLUSTER_INPUT_NV, .pNext = null };
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setVertexFormat(&self, Format vertexFormat) {
+   self.vertexFormat = vertexFormat;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxGeometryIndexValue(&self, uint maxGeometryIndexValue) {
+   self.maxGeometryIndexValue = maxGeometryIndexValue;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxClusterUniqueGeometryCount(&self, uint maxClusterUniqueGeometryCount) {
+   self.maxClusterUniqueGeometryCount = maxClusterUniqueGeometryCount;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxClusterTriangleCount(&self, uint maxClusterTriangleCount) {
+   self.maxClusterTriangleCount = maxClusterTriangleCount;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxClusterVertexCount(&self, uint maxClusterVertexCount) {
+   self.maxClusterVertexCount = maxClusterVertexCount;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxTotalTriangleCount(&self, uint maxTotalTriangleCount) {
+   self.maxTotalTriangleCount = maxTotalTriangleCount;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMaxTotalVertexCount(&self, uint maxTotalVertexCount) {
+   self.maxTotalVertexCount = maxTotalVertexCount;
+   return *self;
+}
+fn ClusterAccelerationStructureTriangleClusterInputNV ClusterAccelerationStructureTriangleClusterInputNV.setMinPositionTruncateBitCount(&self, uint minPositionTruncateBitCount) {
+   self.minPositionTruncateBitCount = minPositionTruncateBitCount;
+   return *self;
+}
+fn ClusterAccelerationStructureMoveObjectsInputNV clusterAccelerationStructureMoveObjectsInputNV() => { .sType = STRUCTURE_TYPE_CLUSTER_ACCELERATION_STRUCTURE_MOVE_OBJECTS_INPUT_NV, .pNext = null };
+fn ClusterAccelerationStructureMoveObjectsInputNV ClusterAccelerationStructureMoveObjectsInputNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ClusterAccelerationStructureMoveObjectsInputNV ClusterAccelerationStructureMoveObjectsInputNV.setType(&self, ClusterAccelerationStructureTypeNV type) {
+   self.type = type;
+   return *self;
+}
+fn ClusterAccelerationStructureMoveObjectsInputNV ClusterAccelerationStructureMoveObjectsInputNV.setNoMoveOverlap(&self, uint noMoveOverlap) {
+   self.noMoveOverlap = noMoveOverlap;
+   return *self;
+}
+fn ClusterAccelerationStructureMoveObjectsInputNV ClusterAccelerationStructureMoveObjectsInputNV.setMaxMovedBytes(&self, DeviceSize maxMovedBytes) {
+   self.maxMovedBytes = maxMovedBytes;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV clusterAccelerationStructureInputInfoNV() => { .sType = STRUCTURE_TYPE_CLUSTER_ACCELERATION_STRUCTURE_INPUT_INFO_NV, .pNext = null };
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setMaxAccelerationStructureCount(&self, uint maxAccelerationStructureCount) {
+   self.maxAccelerationStructureCount = maxAccelerationStructureCount;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setFlags(&self, BuildAccelerationStructureFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setOpType(&self, ClusterAccelerationStructureOpTypeNV opType) {
+   self.opType = opType;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setOpMode(&self, ClusterAccelerationStructureOpModeNV opMode) {
+   self.opMode = opMode;
+   return *self;
+}
+fn ClusterAccelerationStructureInputInfoNV ClusterAccelerationStructureInputInfoNV.setOpInput(&self, ClusterAccelerationStructureOpInputNV opInput) {
+   self.opInput = opInput;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV clusterAccelerationStructureCommandsInfoNV() => { .sType = STRUCTURE_TYPE_CLUSTER_ACCELERATION_STRUCTURE_COMMANDS_INFO_NV, .pNext = null };
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setInput(&self, ClusterAccelerationStructureInputInfoNV input) {
+   self.input = input;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setDstImplicitData(&self, DeviceAddress dstImplicitData) {
+   self.dstImplicitData = dstImplicitData;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setScratchData(&self, DeviceAddress scratchData) {
+   self.scratchData = scratchData;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setDstAddressesArray(&self, StridedDeviceAddressRegionKHR dstAddressesArray) {
+   self.dstAddressesArray = dstAddressesArray;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setDstSizesArray(&self, StridedDeviceAddressRegionKHR dstSizesArray) {
+   self.dstSizesArray = dstSizesArray;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setSrcInfosArray(&self, StridedDeviceAddressRegionKHR srcInfosArray) {
+   self.srcInfosArray = srcInfosArray;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setSrcInfosCount(&self, DeviceAddress srcInfosCount) {
+   self.srcInfosCount = srcInfosCount;
+   return *self;
+}
+fn ClusterAccelerationStructureCommandsInfoNV ClusterAccelerationStructureCommandsInfoNV.setAddressResolutionFlags(&self, ClusterAccelerationStructureAddressResolutionFlagsNV addressResolutionFlags) {
+   self.addressResolutionFlags = addressResolutionFlags;
+   return *self;
+}
+fn PhysicalDeviceMultiDrawPropertiesEXT physicalDeviceMultiDrawPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMultiDrawPropertiesEXT PhysicalDeviceMultiDrawPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultiDrawPropertiesEXT PhysicalDeviceMultiDrawPropertiesEXT.setMaxMultiDrawCount(&self, uint maxMultiDrawCount) {
+   self.maxMultiDrawCount = maxMultiDrawCount;
+   return *self;
+}
+fn GraphicsShaderGroupCreateInfoNV graphicsShaderGroupCreateInfoNV() => { .sType = STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV, .pNext = null };
+fn GraphicsShaderGroupCreateInfoNV GraphicsShaderGroupCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GraphicsShaderGroupCreateInfoNV GraphicsShaderGroupCreateInfoNV.setStageCount(&self, uint stageCount) {
+   self.stageCount = stageCount;
+   return *self;
+}
+fn GraphicsShaderGroupCreateInfoNV GraphicsShaderGroupCreateInfoNV.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
+   self.stageCount= (uint)pStages.len;
+   self.pStages = &pStages[0];
+   return *self;
+}
+fn GraphicsShaderGroupCreateInfoNV GraphicsShaderGroupCreateInfoNV.setVertexInputState(&self, PipelineVertexInputStateCreateInfo* pVertexInputState) {
+   self.pVertexInputState = pVertexInputState;
+   return *self;
+}
+fn GraphicsShaderGroupCreateInfoNV GraphicsShaderGroupCreateInfoNV.setTessellationState(&self, PipelineTessellationStateCreateInfo* pTessellationState) {
+   self.pTessellationState = pTessellationState;
+   return *self;
+}
+fn GraphicsPipelineShaderGroupsCreateInfoNV graphicsPipelineShaderGroupsCreateInfoNV() => { .sType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV, .pNext = null };
+fn GraphicsPipelineShaderGroupsCreateInfoNV GraphicsPipelineShaderGroupsCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GraphicsPipelineShaderGroupsCreateInfoNV GraphicsPipelineShaderGroupsCreateInfoNV.setGroupCount(&self, uint groupCount) {
+   self.groupCount = groupCount;
+   return *self;
+}
+fn GraphicsPipelineShaderGroupsCreateInfoNV GraphicsPipelineShaderGroupsCreateInfoNV.setGroups(&self, GraphicsShaderGroupCreateInfoNV[] pGroups) {
+   self.groupCount= (uint)pGroups.len;
+   self.pGroups = &pGroups[0];
+   return *self;
+}
+fn GraphicsPipelineShaderGroupsCreateInfoNV GraphicsPipelineShaderGroupsCreateInfoNV.setPipelineCount(&self, uint pipelineCount) {
+   self.pipelineCount = pipelineCount;
+   return *self;
+}
+fn GraphicsPipelineShaderGroupsCreateInfoNV GraphicsPipelineShaderGroupsCreateInfoNV.setPipelines(&self, Pipeline[] pPipelines) {
+   self.pipelineCount= (uint)pPipelines.len;
+   self.pPipelines = &pPipelines[0];
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV indirectCommandsLayoutTokenNV() => { .sType = STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV, .pNext = null };
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setTokenType(&self, IndirectCommandsTokenTypeNV tokenType) {
+   self.tokenType = tokenType;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setStream(&self, uint stream) {
+   self.stream = stream;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setOffset(&self, uint offset) {
+   self.offset = offset;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setVertexBindingUnit(&self, uint vertexBindingUnit) {
+   self.vertexBindingUnit = vertexBindingUnit;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setVertexDynamicStride(&self, uint vertexDynamicStride) {
+   self.vertexDynamicStride = vertexDynamicStride;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setPushconstantPipelineLayout(&self, PipelineLayout pushconstantPipelineLayout) {
+   self.pushconstantPipelineLayout = pushconstantPipelineLayout;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setPushconstantShaderStageFlags(&self, ShaderStageFlags pushconstantShaderStageFlags) {
+   self.pushconstantShaderStageFlags = pushconstantShaderStageFlags;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setPushconstantOffset(&self, uint pushconstantOffset) {
+   self.pushconstantOffset = pushconstantOffset;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setPushconstantSize(&self, uint pushconstantSize) {
+   self.pushconstantSize = pushconstantSize;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setIndirectStateFlags(&self, IndirectStateFlagsNV indirectStateFlags) {
+   self.indirectStateFlags = indirectStateFlags;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setIndexTypeCount(&self, uint indexTypeCount) {
+   self.indexTypeCount = indexTypeCount;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setIndexTypes(&self, IndexType[] pIndexTypes) {
+   self.indexTypeCount= (uint)pIndexTypes.len;
+   self.pIndexTypes = &pIndexTypes[0];
+   return *self;
+}
+fn IndirectCommandsLayoutTokenNV IndirectCommandsLayoutTokenNV.setIndexTypeValues(&self, uint[] pIndexTypeValues) {
+   self.indexTypeCount= (uint)pIndexTypeValues.len;
+   self.pIndexTypeValues = &pIndexTypeValues[0];
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV indirectCommandsLayoutCreateInfoNV() => { .sType = STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV, .pNext = null };
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setFlags(&self, IndirectCommandsLayoutUsageFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setPipelineBindPoint(&self, PipelineBindPoint pipelineBindPoint) {
+   self.pipelineBindPoint = pipelineBindPoint;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setTokenCount(&self, uint tokenCount) {
+   self.tokenCount = tokenCount;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setTokens(&self, IndirectCommandsLayoutTokenNV[] pTokens) {
+   self.tokenCount= (uint)pTokens.len;
+   self.pTokens = &pTokens[0];
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setStreamCount(&self, uint streamCount) {
+   self.streamCount = streamCount;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoNV IndirectCommandsLayoutCreateInfoNV.setStreamStrides(&self, uint[] pStreamStrides) {
+   self.streamCount= (uint)pStreamStrides.len;
+   self.pStreamStrides = &pStreamStrides[0];
+   return *self;
+}
+fn GeneratedCommandsInfoNV generatedCommandsInfoNV() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV, .pNext = null };
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setPipelineBindPoint(&self, PipelineBindPoint pipelineBindPoint) {
+   self.pipelineBindPoint = pipelineBindPoint;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setIndirectCommandsLayout(&self, IndirectCommandsLayoutNV indirectCommandsLayout) {
+   self.indirectCommandsLayout = indirectCommandsLayout;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setStreamCount(&self, uint streamCount) {
+   self.streamCount = streamCount;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setStreams(&self, IndirectCommandsStreamNV[] pStreams) {
+   self.streamCount= (uint)pStreams.len;
+   self.pStreams = &pStreams[0];
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setSequencesCount(&self, uint sequencesCount) {
+   self.sequencesCount = sequencesCount;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setPreprocessBuffer(&self, Buffer preprocessBuffer) {
+   self.preprocessBuffer = preprocessBuffer;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setPreprocessOffset(&self, DeviceSize preprocessOffset) {
+   self.preprocessOffset = preprocessOffset;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setPreprocessSize(&self, DeviceSize preprocessSize) {
+   self.preprocessSize = preprocessSize;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setSequencesCountBuffer(&self, Buffer sequencesCountBuffer) {
+   self.sequencesCountBuffer = sequencesCountBuffer;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setSequencesCountOffset(&self, DeviceSize sequencesCountOffset) {
+   self.sequencesCountOffset = sequencesCountOffset;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setSequencesIndexBuffer(&self, Buffer sequencesIndexBuffer) {
+   self.sequencesIndexBuffer = sequencesIndexBuffer;
+   return *self;
+}
+fn GeneratedCommandsInfoNV GeneratedCommandsInfoNV.setSequencesIndexOffset(&self, DeviceSize sequencesIndexOffset) {
+   self.sequencesIndexOffset = sequencesIndexOffset;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoNV generatedCommandsMemoryRequirementsInfoNV() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV, .pNext = null };
+fn GeneratedCommandsMemoryRequirementsInfoNV GeneratedCommandsMemoryRequirementsInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoNV GeneratedCommandsMemoryRequirementsInfoNV.setPipelineBindPoint(&self, PipelineBindPoint pipelineBindPoint) {
+   self.pipelineBindPoint = pipelineBindPoint;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoNV GeneratedCommandsMemoryRequirementsInfoNV.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoNV GeneratedCommandsMemoryRequirementsInfoNV.setIndirectCommandsLayout(&self, IndirectCommandsLayoutNV indirectCommandsLayout) {
+   self.indirectCommandsLayout = indirectCommandsLayout;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoNV GeneratedCommandsMemoryRequirementsInfoNV.setMaxSequencesCount(&self, uint maxSequencesCount) {
+   self.maxSequencesCount = maxSequencesCount;
+   return *self;
+}
+fn PipelineIndirectDeviceAddressInfoNV pipelineIndirectDeviceAddressInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV, .pNext = null };
+fn PipelineIndirectDeviceAddressInfoNV PipelineIndirectDeviceAddressInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineIndirectDeviceAddressInfoNV PipelineIndirectDeviceAddressInfoNV.setPipelineBindPoint(&self, PipelineBindPoint pipelineBindPoint) {
+   self.pipelineBindPoint = pipelineBindPoint;
+   return *self;
+}
+fn PipelineIndirectDeviceAddressInfoNV PipelineIndirectDeviceAddressInfoNV.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
    return *self;
 }
 fn PhysicalDeviceFeatures2 physicalDeviceFeatures2() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = null };
@@ -1904,6 +2823,41 @@ fn PhysicalDeviceDriverProperties PhysicalDeviceDriverProperties.setConformanceV
    self.conformanceVersion = conformanceVersion;
    return *self;
 }
+fn PhysicalDeviceDriverPropertiesKHR physicalDeviceDriverPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDriverPropertiesKHR PhysicalDeviceDriverPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDriverPropertiesKHR PhysicalDeviceDriverPropertiesKHR.setDriverID(&self, DriverId driverID) {
+   self.driverID = driverID;
+   return *self;
+}
+fn PhysicalDeviceDriverPropertiesKHR PhysicalDeviceDriverPropertiesKHR.setDriverName(&self, char[MAX_DRIVER_NAME_SIZE] driverName) {
+   self.driverName = driverName;
+   return *self;
+}
+fn PhysicalDeviceDriverPropertiesKHR PhysicalDeviceDriverPropertiesKHR.setDriverInfo(&self, char[MAX_DRIVER_INFO_SIZE] driverInfo) {
+   self.driverInfo = driverInfo;
+   return *self;
+}
+fn PhysicalDeviceDriverPropertiesKHR PhysicalDeviceDriverPropertiesKHR.setConformanceVersion(&self, ConformanceVersion conformanceVersion) {
+   self.conformanceVersion = conformanceVersion;
+   return *self;
+}
+fn PresentRegionsKHR presentRegionsKHR() => { .sType = STRUCTURE_TYPE_PRESENT_REGIONS_KHR, .pNext = null };
+fn PresentRegionsKHR PresentRegionsKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentRegionsKHR PresentRegionsKHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn PresentRegionsKHR PresentRegionsKHR.setRegions(&self, PresentRegionKHR[] pRegions) {
+   self.swapchainCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
 fn PhysicalDeviceVariablePointersFeatures physicalDeviceVariablePointersFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
 fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -1917,6 +2871,45 @@ fn PhysicalDeviceVariablePointersFeatures PhysicalDeviceVariablePointersFeatures
    self.variablePointers = variablePointers;
    return *self;
 }
+fn PhysicalDeviceVariablePointersFeaturesKHR physicalDeviceVariablePointersFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
+fn PhysicalDeviceVariablePointersFeaturesKHR PhysicalDeviceVariablePointersFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVariablePointersFeaturesKHR PhysicalDeviceVariablePointersFeaturesKHR.setVariablePointersStorageBuffer(&self, uint variablePointersStorageBuffer) {
+   self.variablePointersStorageBuffer = variablePointersStorageBuffer;
+   return *self;
+}
+fn PhysicalDeviceVariablePointersFeaturesKHR PhysicalDeviceVariablePointersFeaturesKHR.setVariablePointers(&self, uint variablePointers) {
+   self.variablePointers = variablePointers;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeaturesKHR physicalDeviceVariablePointerFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
+fn PhysicalDeviceVariablePointerFeaturesKHR PhysicalDeviceVariablePointerFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeaturesKHR PhysicalDeviceVariablePointerFeaturesKHR.setVariablePointersStorageBuffer(&self, uint variablePointersStorageBuffer) {
+   self.variablePointersStorageBuffer = variablePointersStorageBuffer;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeaturesKHR PhysicalDeviceVariablePointerFeaturesKHR.setVariablePointers(&self, uint variablePointers) {
+   self.variablePointers = variablePointers;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeatures physicalDeviceVariablePointerFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES, .pNext = null };
+fn PhysicalDeviceVariablePointerFeatures PhysicalDeviceVariablePointerFeatures.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeatures PhysicalDeviceVariablePointerFeatures.setVariablePointersStorageBuffer(&self, uint variablePointersStorageBuffer) {
+   self.variablePointersStorageBuffer = variablePointersStorageBuffer;
+   return *self;
+}
+fn PhysicalDeviceVariablePointerFeatures PhysicalDeviceVariablePointerFeatures.setVariablePointers(&self, uint variablePointers) {
+   self.variablePointers = variablePointers;
+   return *self;
+}
 fn PhysicalDeviceExternalImageFormatInfo physicalDeviceExternalImageFormatInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO, .pNext = null };
 fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -1926,12 +2919,30 @@ fn PhysicalDeviceExternalImageFormatInfo PhysicalDeviceExternalImageFormatInfo.s
    self.handleType = handleType;
    return *self;
 }
+fn PhysicalDeviceExternalImageFormatInfoKHR physicalDeviceExternalImageFormatInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO, .pNext = null };
+fn PhysicalDeviceExternalImageFormatInfoKHR PhysicalDeviceExternalImageFormatInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalImageFormatInfoKHR PhysicalDeviceExternalImageFormatInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
 fn ExternalImageFormatProperties externalImageFormatProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES, .pNext = null };
 fn ExternalImageFormatProperties ExternalImageFormatProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn ExternalImageFormatProperties ExternalImageFormatProperties.setExternalMemoryProperties(&self, ExternalMemoryProperties externalMemoryProperties) {
+   self.externalMemoryProperties = externalMemoryProperties;
+   return *self;
+}
+fn ExternalImageFormatPropertiesKHR externalImageFormatPropertiesKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES, .pNext = null };
+fn ExternalImageFormatPropertiesKHR ExternalImageFormatPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalImageFormatPropertiesKHR ExternalImageFormatPropertiesKHR.setExternalMemoryProperties(&self, ExternalMemoryProperties externalMemoryProperties) {
    self.externalMemoryProperties = externalMemoryProperties;
    return *self;
 }
@@ -1952,12 +2963,38 @@ fn PhysicalDeviceExternalBufferInfo PhysicalDeviceExternalBufferInfo.setHandleTy
    self.handleType = handleType;
    return *self;
 }
+fn PhysicalDeviceExternalBufferInfoKHR physicalDeviceExternalBufferInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO, .pNext = null };
+fn PhysicalDeviceExternalBufferInfoKHR PhysicalDeviceExternalBufferInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalBufferInfoKHR PhysicalDeviceExternalBufferInfoKHR.setFlags(&self, BufferCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PhysicalDeviceExternalBufferInfoKHR PhysicalDeviceExternalBufferInfoKHR.setUsage(&self, BufferUsageFlags usage) {
+   self.usage = usage;
+   return *self;
+}
+fn PhysicalDeviceExternalBufferInfoKHR PhysicalDeviceExternalBufferInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
 fn ExternalBufferProperties externalBufferProperties() => { .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES, .pNext = null };
 fn ExternalBufferProperties ExternalBufferProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn ExternalBufferProperties ExternalBufferProperties.setExternalMemoryProperties(&self, ExternalMemoryProperties externalMemoryProperties) {
+   self.externalMemoryProperties = externalMemoryProperties;
+   return *self;
+}
+fn ExternalBufferPropertiesKHR externalBufferPropertiesKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES, .pNext = null };
+fn ExternalBufferPropertiesKHR ExternalBufferPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalBufferPropertiesKHR ExternalBufferPropertiesKHR.setExternalMemoryProperties(&self, ExternalMemoryProperties externalMemoryProperties) {
    self.externalMemoryProperties = externalMemoryProperties;
    return *self;
 }
@@ -1986,12 +3023,46 @@ fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUIDValid(&sel
    self.deviceLUIDValid = deviceLUIDValid;
    return *self;
 }
+fn PhysicalDeviceIDPropertiesKHR physicalDeviceIDPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES, .pNext = null };
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceUUID(&self, uint[UUID_SIZE] deviceUUID) {
+   self.deviceUUID = deviceUUID;
+   return *self;
+}
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDriverUUID(&self, uint[UUID_SIZE] driverUUID) {
+   self.driverUUID = driverUUID;
+   return *self;
+}
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceLUID(&self, uint[LUID_SIZE] deviceLUID) {
+   self.deviceLUID = deviceLUID;
+   return *self;
+}
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceNodeMask(&self, uint deviceNodeMask) {
+   self.deviceNodeMask = deviceNodeMask;
+   return *self;
+}
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceLUIDValid(&self, uint deviceLUIDValid) {
+   self.deviceLUIDValid = deviceLUIDValid;
+   return *self;
+}
 fn ExternalMemoryImageCreateInfo externalMemoryImageCreateInfo() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO, .pNext = null };
 fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn ExternalMemoryImageCreateInfo ExternalMemoryImageCreateInfo.setHandleTypes(&self, ExternalMemoryHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ExternalMemoryImageCreateInfoKHR externalMemoryImageCreateInfoKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO, .pNext = null };
+fn ExternalMemoryImageCreateInfoKHR ExternalMemoryImageCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalMemoryImageCreateInfoKHR ExternalMemoryImageCreateInfoKHR.setHandleTypes(&self, ExternalMemoryHandleTypeFlags handleTypes) {
    self.handleTypes = handleTypes;
    return *self;
 }
@@ -2004,6 +3075,15 @@ fn ExternalMemoryBufferCreateInfo ExternalMemoryBufferCreateInfo.setHandleTypes(
    self.handleTypes = handleTypes;
    return *self;
 }
+fn ExternalMemoryBufferCreateInfoKHR externalMemoryBufferCreateInfoKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO, .pNext = null };
+fn ExternalMemoryBufferCreateInfoKHR ExternalMemoryBufferCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalMemoryBufferCreateInfoKHR ExternalMemoryBufferCreateInfoKHR.setHandleTypes(&self, ExternalMemoryHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
 fn ExportMemoryAllocateInfo exportMemoryAllocateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO, .pNext = null };
 fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2013,12 +3093,194 @@ fn ExportMemoryAllocateInfo ExportMemoryAllocateInfo.setHandleTypes(&self, Exter
    self.handleTypes = handleTypes;
    return *self;
 }
+fn ExportMemoryAllocateInfoKHR exportMemoryAllocateInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO, .pNext = null };
+fn ExportMemoryAllocateInfoKHR ExportMemoryAllocateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMemoryAllocateInfoKHR ExportMemoryAllocateInfoKHR.setHandleTypes(&self, ExternalMemoryHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoKHR importMemoryWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ImportMemoryWin32HandleInfoKHR ImportMemoryWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoKHR ImportMemoryWin32HandleInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoKHR ImportMemoryWin32HandleInfoKHR.setHandle(&self, void* handle) {
+   self.handle = handle;
+   return *self;
+}
+fn ImportMemoryWin32HandleInfoKHR ImportMemoryWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoKHR exportMemoryWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ExportMemoryWin32HandleInfoKHR ExportMemoryWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoKHR ExportMemoryWin32HandleInfoKHR.setAttributes(&self, SecurityAttributes* pAttributes) {
+   self.pAttributes = pAttributes;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoKHR ExportMemoryWin32HandleInfoKHR.setDwAccess(&self, DWord dwAccess) {
+   self.dwAccess = dwAccess;
+   return *self;
+}
+fn ExportMemoryWin32HandleInfoKHR ExportMemoryWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn MemoryWin32HandlePropertiesKHR memoryWin32HandlePropertiesKHR() => { .sType = STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR, .pNext = null };
+fn MemoryWin32HandlePropertiesKHR MemoryWin32HandlePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryWin32HandlePropertiesKHR MemoryWin32HandlePropertiesKHR.setMemoryTypeBits(&self, uint memoryTypeBits) {
+   self.memoryTypeBits = memoryTypeBits;
+   return *self;
+}
+fn MemoryGetWin32HandleInfoKHR memoryGetWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn MemoryGetWin32HandleInfoKHR MemoryGetWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryGetWin32HandleInfoKHR MemoryGetWin32HandleInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn MemoryGetWin32HandleInfoKHR MemoryGetWin32HandleInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryFdInfoKHR importMemoryFdInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR, .pNext = null };
+fn ImportMemoryFdInfoKHR ImportMemoryFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMemoryFdInfoKHR ImportMemoryFdInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryFdInfoKHR ImportMemoryFdInfoKHR.setFd(&self, int fd) {
+   self.fd = fd;
+   return *self;
+}
+fn MemoryFdPropertiesKHR memoryFdPropertiesKHR() => { .sType = STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR, .pNext = null };
+fn MemoryFdPropertiesKHR MemoryFdPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryFdPropertiesKHR MemoryFdPropertiesKHR.setMemoryTypeBits(&self, uint memoryTypeBits) {
+   self.memoryTypeBits = memoryTypeBits;
+   return *self;
+}
+fn MemoryGetFdInfoKHR memoryGetFdInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR, .pNext = null };
+fn MemoryGetFdInfoKHR MemoryGetFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryGetFdInfoKHR MemoryGetFdInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn MemoryGetFdInfoKHR MemoryGetFdInfoKHR.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR win32KeyedMutexAcquireReleaseInfoKHR() => { .sType = STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR, .pNext = null };
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setAcquireCount(&self, uint acquireCount) {
+   self.acquireCount = acquireCount;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setAcquireSyncs(&self, DeviceMemory[] pAcquireSyncs) {
+   self.acquireCount= (uint)pAcquireSyncs.len;
+   self.pAcquireSyncs = &pAcquireSyncs[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setAcquireKeys(&self, ulong[] pAcquireKeys) {
+   self.acquireCount= (uint)pAcquireKeys.len;
+   self.pAcquireKeys = &pAcquireKeys[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setAcquireTimeouts(&self, uint[] pAcquireTimeouts) {
+   self.acquireCount= (uint)pAcquireTimeouts.len;
+   self.pAcquireTimeouts = &pAcquireTimeouts[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setReleaseCount(&self, uint releaseCount) {
+   self.releaseCount = releaseCount;
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setReleaseSyncs(&self, DeviceMemory[] pReleaseSyncs) {
+   self.releaseCount= (uint)pReleaseSyncs.len;
+   self.pReleaseSyncs = &pReleaseSyncs[0];
+   return *self;
+}
+fn Win32KeyedMutexAcquireReleaseInfoKHR Win32KeyedMutexAcquireReleaseInfoKHR.setReleaseKeys(&self, ulong[] pReleaseKeys) {
+   self.releaseCount= (uint)pReleaseKeys.len;
+   self.pReleaseKeys = &pReleaseKeys[0];
+   return *self;
+}
+fn ImportMemoryMetalHandleInfoEXT importMemoryMetalHandleInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT, .pNext = null };
+fn ImportMemoryMetalHandleInfoEXT ImportMemoryMetalHandleInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMemoryMetalHandleInfoEXT ImportMemoryMetalHandleInfoEXT.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryMetalHandleInfoEXT ImportMemoryMetalHandleInfoEXT.setAndle(&self, void* handle) {
+   self.handle = handle;
+   return *self;
+}
+fn MemoryMetalHandlePropertiesEXT memoryMetalHandlePropertiesEXT() => { .sType = STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT, .pNext = null };
+fn MemoryMetalHandlePropertiesEXT MemoryMetalHandlePropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryMetalHandlePropertiesEXT MemoryMetalHandlePropertiesEXT.setMemoryTypeBits(&self, uint memoryTypeBits) {
+   self.memoryTypeBits = memoryTypeBits;
+   return *self;
+}
+fn MemoryGetMetalHandleInfoEXT memoryGetMetalHandleInfoEXT() => { .sType = STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT, .pNext = null };
+fn MemoryGetMetalHandleInfoEXT MemoryGetMetalHandleInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryGetMetalHandleInfoEXT MemoryGetMetalHandleInfoEXT.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn MemoryGetMetalHandleInfoEXT MemoryGetMetalHandleInfoEXT.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
 fn PhysicalDeviceExternalSemaphoreInfo physicalDeviceExternalSemaphoreInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO, .pNext = null };
 fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceExternalSemaphoreInfo PhysicalDeviceExternalSemaphoreInfo.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn PhysicalDeviceExternalSemaphoreInfoKHR physicalDeviceExternalSemaphoreInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO, .pNext = null };
+fn PhysicalDeviceExternalSemaphoreInfoKHR PhysicalDeviceExternalSemaphoreInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalSemaphoreInfoKHR PhysicalDeviceExternalSemaphoreInfoKHR.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
    self.handleType = handleType;
    return *self;
 }
@@ -2039,6 +3301,23 @@ fn ExternalSemaphoreProperties ExternalSemaphoreProperties.setExternalSemaphoreF
    self.externalSemaphoreFeatures = externalSemaphoreFeatures;
    return *self;
 }
+fn ExternalSemaphorePropertiesKHR externalSemaphorePropertiesKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES, .pNext = null };
+fn ExternalSemaphorePropertiesKHR ExternalSemaphorePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalSemaphorePropertiesKHR ExternalSemaphorePropertiesKHR.setExportFromImportedHandleTypes(&self, ExternalSemaphoreHandleTypeFlags exportFromImportedHandleTypes) {
+   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
+   return *self;
+}
+fn ExternalSemaphorePropertiesKHR ExternalSemaphorePropertiesKHR.setCompatibleHandleTypes(&self, ExternalSemaphoreHandleTypeFlags compatibleHandleTypes) {
+   self.compatibleHandleTypes = compatibleHandleTypes;
+   return *self;
+}
+fn ExternalSemaphorePropertiesKHR ExternalSemaphorePropertiesKHR.setExternalSemaphoreFeatures(&self, ExternalSemaphoreFeatureFlags externalSemaphoreFeatures) {
+   self.externalSemaphoreFeatures = externalSemaphoreFeatures;
+   return *self;
+}
 fn ExportSemaphoreCreateInfo exportSemaphoreCreateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO, .pNext = null };
 fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2048,12 +3327,142 @@ fn ExportSemaphoreCreateInfo ExportSemaphoreCreateInfo.setHandleTypes(&self, Ext
    self.handleTypes = handleTypes;
    return *self;
 }
+fn ExportSemaphoreCreateInfoKHR exportSemaphoreCreateInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO, .pNext = null };
+fn ExportSemaphoreCreateInfoKHR ExportSemaphoreCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportSemaphoreCreateInfoKHR ExportSemaphoreCreateInfoKHR.setHandleTypes(&self, ExternalSemaphoreHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR importSemaphoreWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setFlags(&self, SemaphoreImportFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setHandle(&self, void* handle) {
+   self.handle = handle;
+   return *self;
+}
+fn ImportSemaphoreWin32HandleInfoKHR ImportSemaphoreWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn ExportSemaphoreWin32HandleInfoKHR exportSemaphoreWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ExportSemaphoreWin32HandleInfoKHR ExportSemaphoreWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportSemaphoreWin32HandleInfoKHR ExportSemaphoreWin32HandleInfoKHR.setAttributes(&self, SecurityAttributes* pAttributes) {
+   self.pAttributes = pAttributes;
+   return *self;
+}
+fn ExportSemaphoreWin32HandleInfoKHR ExportSemaphoreWin32HandleInfoKHR.setDwAccess(&self, DWord dwAccess) {
+   self.dwAccess = dwAccess;
+   return *self;
+}
+fn ExportSemaphoreWin32HandleInfoKHR ExportSemaphoreWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn D3D12FenceSubmitInfoKHR d3D12FenceSubmitInfoKHR() => { .sType = STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR, .pNext = null };
+fn D3D12FenceSubmitInfoKHR D3D12FenceSubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn D3D12FenceSubmitInfoKHR D3D12FenceSubmitInfoKHR.setWaitSemaphoreValuesCount(&self, uint waitSemaphoreValuesCount) {
+   self.waitSemaphoreValuesCount = waitSemaphoreValuesCount;
+   return *self;
+}
+fn D3D12FenceSubmitInfoKHR D3D12FenceSubmitInfoKHR.setWaitSemaphoreValues(&self, ulong[] pWaitSemaphoreValues) {
+   self.waitSemaphoreValuesCount= (uint)pWaitSemaphoreValues.len;
+   self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
+   return *self;
+}
+fn D3D12FenceSubmitInfoKHR D3D12FenceSubmitInfoKHR.setSignalSemaphoreValuesCount(&self, uint signalSemaphoreValuesCount) {
+   self.signalSemaphoreValuesCount = signalSemaphoreValuesCount;
+   return *self;
+}
+fn D3D12FenceSubmitInfoKHR D3D12FenceSubmitInfoKHR.setSignalSemaphoreValues(&self, ulong[] pSignalSemaphoreValues) {
+   self.signalSemaphoreValuesCount= (uint)pSignalSemaphoreValues.len;
+   self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
+   return *self;
+}
+fn SemaphoreGetWin32HandleInfoKHR semaphoreGetWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn SemaphoreGetWin32HandleInfoKHR SemaphoreGetWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreGetWin32HandleInfoKHR SemaphoreGetWin32HandleInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn SemaphoreGetWin32HandleInfoKHR SemaphoreGetWin32HandleInfoKHR.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportSemaphoreFdInfoKHR importSemaphoreFdInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR, .pNext = null };
+fn ImportSemaphoreFdInfoKHR ImportSemaphoreFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportSemaphoreFdInfoKHR ImportSemaphoreFdInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn ImportSemaphoreFdInfoKHR ImportSemaphoreFdInfoKHR.setFlags(&self, SemaphoreImportFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ImportSemaphoreFdInfoKHR ImportSemaphoreFdInfoKHR.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportSemaphoreFdInfoKHR ImportSemaphoreFdInfoKHR.setFd(&self, int fd) {
+   self.fd = fd;
+   return *self;
+}
+fn SemaphoreGetFdInfoKHR semaphoreGetFdInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR, .pNext = null };
+fn SemaphoreGetFdInfoKHR SemaphoreGetFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreGetFdInfoKHR SemaphoreGetFdInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn SemaphoreGetFdInfoKHR SemaphoreGetFdInfoKHR.setHandleType(&self, ExternalSemaphoreHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
 fn PhysicalDeviceExternalFenceInfo physicalDeviceExternalFenceInfo() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO, .pNext = null };
 fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceExternalFenceInfo PhysicalDeviceExternalFenceInfo.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn PhysicalDeviceExternalFenceInfoKHR physicalDeviceExternalFenceInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO, .pNext = null };
+fn PhysicalDeviceExternalFenceInfoKHR PhysicalDeviceExternalFenceInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalFenceInfoKHR PhysicalDeviceExternalFenceInfoKHR.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
    self.handleType = handleType;
    return *self;
 }
@@ -2074,6 +3483,23 @@ fn ExternalFenceProperties ExternalFenceProperties.setExternalFenceFeatures(&sel
    self.externalFenceFeatures = externalFenceFeatures;
    return *self;
 }
+fn ExternalFencePropertiesKHR externalFencePropertiesKHR() => { .sType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES, .pNext = null };
+fn ExternalFencePropertiesKHR ExternalFencePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalFencePropertiesKHR ExternalFencePropertiesKHR.setExportFromImportedHandleTypes(&self, ExternalFenceHandleTypeFlags exportFromImportedHandleTypes) {
+   self.exportFromImportedHandleTypes = exportFromImportedHandleTypes;
+   return *self;
+}
+fn ExternalFencePropertiesKHR ExternalFencePropertiesKHR.setCompatibleHandleTypes(&self, ExternalFenceHandleTypeFlags compatibleHandleTypes) {
+   self.compatibleHandleTypes = compatibleHandleTypes;
+   return *self;
+}
+fn ExternalFencePropertiesKHR ExternalFencePropertiesKHR.setExternalFenceFeatures(&self, ExternalFenceFeatureFlags externalFenceFeatures) {
+   self.externalFenceFeatures = externalFenceFeatures;
+   return *self;
+}
 fn ExportFenceCreateInfo exportFenceCreateInfo() => { .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO, .pNext = null };
 fn ExportFenceCreateInfo ExportFenceCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2081,6 +3507,104 @@ fn ExportFenceCreateInfo ExportFenceCreateInfo.setNext(&self, void* pNext) {
 }
 fn ExportFenceCreateInfo ExportFenceCreateInfo.setHandleTypes(&self, ExternalFenceHandleTypeFlags handleTypes) {
    self.handleTypes = handleTypes;
+   return *self;
+}
+fn ExportFenceCreateInfoKHR exportFenceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO, .pNext = null };
+fn ExportFenceCreateInfoKHR ExportFenceCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportFenceCreateInfoKHR ExportFenceCreateInfoKHR.setHandleTypes(&self, ExternalFenceHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR importFenceWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setFence(&self, Fence fence) {
+   self.fence = fence;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setFlags(&self, FenceImportFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setHandle(&self, void* handle) {
+   self.handle = handle;
+   return *self;
+}
+fn ImportFenceWin32HandleInfoKHR ImportFenceWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn ExportFenceWin32HandleInfoKHR exportFenceWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn ExportFenceWin32HandleInfoKHR ExportFenceWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportFenceWin32HandleInfoKHR ExportFenceWin32HandleInfoKHR.setAttributes(&self, SecurityAttributes* pAttributes) {
+   self.pAttributes = pAttributes;
+   return *self;
+}
+fn ExportFenceWin32HandleInfoKHR ExportFenceWin32HandleInfoKHR.setDwAccess(&self, DWord dwAccess) {
+   self.dwAccess = dwAccess;
+   return *self;
+}
+fn ExportFenceWin32HandleInfoKHR ExportFenceWin32HandleInfoKHR.setName(&self, LpcWstr name) {
+   self.name = name;
+   return *self;
+}
+fn FenceGetWin32HandleInfoKHR fenceGetWin32HandleInfoKHR() => { .sType = STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR, .pNext = null };
+fn FenceGetWin32HandleInfoKHR FenceGetWin32HandleInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FenceGetWin32HandleInfoKHR FenceGetWin32HandleInfoKHR.setFence(&self, Fence fence) {
+   self.fence = fence;
+   return *self;
+}
+fn FenceGetWin32HandleInfoKHR FenceGetWin32HandleInfoKHR.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportFenceFdInfoKHR importFenceFdInfoKHR() => { .sType = STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR, .pNext = null };
+fn ImportFenceFdInfoKHR ImportFenceFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportFenceFdInfoKHR ImportFenceFdInfoKHR.setFence(&self, Fence fence) {
+   self.fence = fence;
+   return *self;
+}
+fn ImportFenceFdInfoKHR ImportFenceFdInfoKHR.setFlags(&self, FenceImportFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ImportFenceFdInfoKHR ImportFenceFdInfoKHR.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportFenceFdInfoKHR ImportFenceFdInfoKHR.setFd(&self, int fd) {
+   self.fd = fd;
+   return *self;
+}
+fn FenceGetFdInfoKHR fenceGetFdInfoKHR() => { .sType = STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR, .pNext = null };
+fn FenceGetFdInfoKHR FenceGetFdInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FenceGetFdInfoKHR FenceGetFdInfoKHR.setFence(&self, Fence fence) {
+   self.fence = fence;
+   return *self;
+}
+fn FenceGetFdInfoKHR FenceGetFdInfoKHR.setHandleType(&self, ExternalFenceHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
    return *self;
 }
 fn PhysicalDeviceMultiviewFeatures physicalDeviceMultiviewFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES, .pNext = null };
@@ -2207,6 +3731,91 @@ fn RenderPassMultiviewCreateInfoKHR RenderPassMultiviewCreateInfoKHR.setCorrelat
    self.pCorrelationMasks = &pCorrelationMasks[0];
    return *self;
 }
+fn SurfaceCapabilities2EXT surfaceCapabilities2EXT() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT, .pNext = null };
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setMinImageCount(&self, uint minImageCount) {
+   self.minImageCount = minImageCount;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setMaxImageCount(&self, uint maxImageCount) {
+   self.maxImageCount = maxImageCount;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setCurrentExtent(&self, Extent2D currentExtent) {
+   self.currentExtent = currentExtent;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setMinImageExtent(&self, Extent2D minImageExtent) {
+   self.minImageExtent = minImageExtent;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setMaxImageExtent(&self, Extent2D maxImageExtent) {
+   self.maxImageExtent = maxImageExtent;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setMaxImageArrayLayers(&self, uint maxImageArrayLayers) {
+   self.maxImageArrayLayers = maxImageArrayLayers;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setSupportedTransforms(&self, SurfaceTransformFlagsKHR supportedTransforms) {
+   self.supportedTransforms = supportedTransforms;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setCurrentTransform(&self, SurfaceTransformFlagBitsKHR currentTransform) {
+   self.currentTransform = currentTransform;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setSupportedCompositeAlpha(&self, CompositeAlphaFlagsKHR supportedCompositeAlpha) {
+   self.supportedCompositeAlpha = supportedCompositeAlpha;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setSupportedUsageFlags(&self, ImageUsageFlags supportedUsageFlags) {
+   self.supportedUsageFlags = supportedUsageFlags;
+   return *self;
+}
+fn SurfaceCapabilities2EXT SurfaceCapabilities2EXT.setSupportedSurfaceCounters(&self, SurfaceCounterFlagsEXT supportedSurfaceCounters) {
+   self.supportedSurfaceCounters = supportedSurfaceCounters;
+   return *self;
+}
+fn DisplayPowerInfoEXT displayPowerInfoEXT() => { .sType = STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT, .pNext = null };
+fn DisplayPowerInfoEXT DisplayPowerInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayPowerInfoEXT DisplayPowerInfoEXT.setPowerState(&self, DisplayPowerStateEXT powerState) {
+   self.powerState = powerState;
+   return *self;
+}
+fn DeviceEventInfoEXT deviceEventInfoEXT() => { .sType = STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT, .pNext = null };
+fn DeviceEventInfoEXT DeviceEventInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceEventInfoEXT DeviceEventInfoEXT.setDeviceEvent(&self, DeviceEventTypeEXT deviceEvent) {
+   self.deviceEvent = deviceEvent;
+   return *self;
+}
+fn DisplayEventInfoEXT displayEventInfoEXT() => { .sType = STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT, .pNext = null };
+fn DisplayEventInfoEXT DisplayEventInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayEventInfoEXT DisplayEventInfoEXT.setDisplayEvent(&self, DisplayEventTypeEXT displayEvent) {
+   self.displayEvent = displayEvent;
+   return *self;
+}
+fn SwapchainCounterCreateInfoEXT swapchainCounterCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT, .pNext = null };
+fn SwapchainCounterCreateInfoEXT SwapchainCounterCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainCounterCreateInfoEXT SwapchainCounterCreateInfoEXT.setSurfaceCounters(&self, SurfaceCounterFlagsEXT surfaceCounters) {
+   self.surfaceCounters = surfaceCounters;
+   return *self;
+}
 fn PhysicalDeviceGroupProperties physicalDeviceGroupProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES, .pNext = null };
 fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2225,6 +3834,24 @@ fn PhysicalDeviceGroupProperties PhysicalDeviceGroupProperties.setSubsetAllocati
    self.subsetAllocation = subsetAllocation;
    return *self;
 }
+fn PhysicalDeviceGroupPropertiesKHR physicalDeviceGroupPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES, .pNext = null };
+fn PhysicalDeviceGroupPropertiesKHR PhysicalDeviceGroupPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceGroupPropertiesKHR PhysicalDeviceGroupPropertiesKHR.setPhysicalDeviceCount(&self, uint physicalDeviceCount) {
+   self.physicalDeviceCount = physicalDeviceCount;
+   return *self;
+}
+fn PhysicalDeviceGroupPropertiesKHR PhysicalDeviceGroupPropertiesKHR.setPhysicalDevices(&self, PhysicalDevice[MAX_DEVICE_GROUP_SIZE] physicalDevices) {
+   self.physicalDeviceCount= (uint)physicalDevices.len;
+   self.physicalDevices = physicalDevices;
+   return *self;
+}
+fn PhysicalDeviceGroupPropertiesKHR PhysicalDeviceGroupPropertiesKHR.setSubsetAllocation(&self, uint subsetAllocation) {
+   self.subsetAllocation = subsetAllocation;
+   return *self;
+}
 fn MemoryAllocateFlagsInfo memoryAllocateFlagsInfo() => { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .pNext = null };
 fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2235,6 +3862,19 @@ fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setFlags(&self, MemoryAllocat
    return *self;
 }
 fn MemoryAllocateFlagsInfo MemoryAllocateFlagsInfo.setDeviceMask(&self, uint deviceMask) {
+   self.deviceMask = deviceMask;
+   return *self;
+}
+fn MemoryAllocateFlagsInfoKHR memoryAllocateFlagsInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .pNext = null };
+fn MemoryAllocateFlagsInfoKHR MemoryAllocateFlagsInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryAllocateFlagsInfoKHR MemoryAllocateFlagsInfoKHR.setFlags(&self, MemoryAllocateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MemoryAllocateFlagsInfoKHR MemoryAllocateFlagsInfoKHR.setDeviceMask(&self, uint deviceMask) {
    self.deviceMask = deviceMask;
    return *self;
 }
@@ -2255,6 +3895,23 @@ fn BindBufferMemoryInfo BindBufferMemoryInfo.setMemoryOffset(&self, DeviceSize m
    self.memoryOffset = memoryOffset;
    return *self;
 }
+fn BindBufferMemoryInfoKHR bindBufferMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO, .pNext = null };
+fn BindBufferMemoryInfoKHR BindBufferMemoryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindBufferMemoryInfoKHR BindBufferMemoryInfoKHR.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn BindBufferMemoryInfoKHR BindBufferMemoryInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindBufferMemoryInfoKHR BindBufferMemoryInfoKHR.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
 fn BindBufferMemoryDeviceGroupInfo bindBufferMemoryDeviceGroupInfo() => { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
 fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2265,6 +3922,20 @@ fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceInde
    return *self;
 }
 fn BindBufferMemoryDeviceGroupInfo BindBufferMemoryDeviceGroupInfo.setDeviceIndices(&self, uint[] pDeviceIndices) {
+   self.deviceIndexCount= (uint)pDeviceIndices.len;
+   self.pDeviceIndices = &pDeviceIndices[0];
+   return *self;
+}
+fn BindBufferMemoryDeviceGroupInfoKHR bindBufferMemoryDeviceGroupInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
+fn BindBufferMemoryDeviceGroupInfoKHR BindBufferMemoryDeviceGroupInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindBufferMemoryDeviceGroupInfoKHR BindBufferMemoryDeviceGroupInfoKHR.setDeviceIndexCount(&self, uint deviceIndexCount) {
+   self.deviceIndexCount = deviceIndexCount;
+   return *self;
+}
+fn BindBufferMemoryDeviceGroupInfoKHR BindBufferMemoryDeviceGroupInfoKHR.setDeviceIndices(&self, uint[] pDeviceIndices) {
    self.deviceIndexCount= (uint)pDeviceIndices.len;
    self.pDeviceIndices = &pDeviceIndices[0];
    return *self;
@@ -2283,6 +3954,23 @@ fn BindImageMemoryInfo BindImageMemoryInfo.setMemory(&self, DeviceMemory memory)
    return *self;
 }
 fn BindImageMemoryInfo BindImageMemoryInfo.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
+fn BindImageMemoryInfoKHR bindImageMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, .pNext = null };
+fn BindImageMemoryInfoKHR BindImageMemoryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindImageMemoryInfoKHR BindImageMemoryInfoKHR.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn BindImageMemoryInfoKHR BindImageMemoryInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindImageMemoryInfoKHR BindImageMemoryInfoKHR.setMemoryOffset(&self, DeviceSize memoryOffset) {
    self.memoryOffset = memoryOffset;
    return *self;
 }
@@ -2309,6 +3997,29 @@ fn BindImageMemoryDeviceGroupInfo BindImageMemoryDeviceGroupInfo.setSplitInstanc
    self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
    return *self;
 }
+fn BindImageMemoryDeviceGroupInfoKHR bindImageMemoryDeviceGroupInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO, .pNext = null };
+fn BindImageMemoryDeviceGroupInfoKHR BindImageMemoryDeviceGroupInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindImageMemoryDeviceGroupInfoKHR BindImageMemoryDeviceGroupInfoKHR.setDeviceIndexCount(&self, uint deviceIndexCount) {
+   self.deviceIndexCount = deviceIndexCount;
+   return *self;
+}
+fn BindImageMemoryDeviceGroupInfoKHR BindImageMemoryDeviceGroupInfoKHR.setDeviceIndices(&self, uint[] pDeviceIndices) {
+   self.deviceIndexCount= (uint)pDeviceIndices.len;
+   self.pDeviceIndices = &pDeviceIndices[0];
+   return *self;
+}
+fn BindImageMemoryDeviceGroupInfoKHR BindImageMemoryDeviceGroupInfoKHR.setSplitInstanceBindRegionCount(&self, uint splitInstanceBindRegionCount) {
+   self.splitInstanceBindRegionCount = splitInstanceBindRegionCount;
+   return *self;
+}
+fn BindImageMemoryDeviceGroupInfoKHR BindImageMemoryDeviceGroupInfoKHR.setSplitInstanceBindRegions(&self, Rect2D[] pSplitInstanceBindRegions) {
+   self.splitInstanceBindRegionCount= (uint)pSplitInstanceBindRegions.len;
+   self.pSplitInstanceBindRegions = &pSplitInstanceBindRegions[0];
+   return *self;
+}
 fn DeviceGroupRenderPassBeginInfo deviceGroupRenderPassBeginInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO, .pNext = null };
 fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2327,12 +4038,39 @@ fn DeviceGroupRenderPassBeginInfo DeviceGroupRenderPassBeginInfo.setDeviceRender
    self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
    return *self;
 }
+fn DeviceGroupRenderPassBeginInfoKHR deviceGroupRenderPassBeginInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO, .pNext = null };
+fn DeviceGroupRenderPassBeginInfoKHR DeviceGroupRenderPassBeginInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupRenderPassBeginInfoKHR DeviceGroupRenderPassBeginInfoKHR.setDeviceMask(&self, uint deviceMask) {
+   self.deviceMask = deviceMask;
+   return *self;
+}
+fn DeviceGroupRenderPassBeginInfoKHR DeviceGroupRenderPassBeginInfoKHR.setDeviceRenderAreaCount(&self, uint deviceRenderAreaCount) {
+   self.deviceRenderAreaCount = deviceRenderAreaCount;
+   return *self;
+}
+fn DeviceGroupRenderPassBeginInfoKHR DeviceGroupRenderPassBeginInfoKHR.setDeviceRenderAreas(&self, Rect2D[] pDeviceRenderAreas) {
+   self.deviceRenderAreaCount= (uint)pDeviceRenderAreas.len;
+   self.pDeviceRenderAreas = &pDeviceRenderAreas[0];
+   return *self;
+}
 fn DeviceGroupCommandBufferBeginInfo deviceGroupCommandBufferBeginInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
 fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn DeviceGroupCommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo.setDeviceMask(&self, uint deviceMask) {
+   self.deviceMask = deviceMask;
+   return *self;
+}
+fn DeviceGroupCommandBufferBeginInfoKHR deviceGroupCommandBufferBeginInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO, .pNext = null };
+fn DeviceGroupCommandBufferBeginInfoKHR DeviceGroupCommandBufferBeginInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupCommandBufferBeginInfoKHR DeviceGroupCommandBufferBeginInfoKHR.setDeviceMask(&self, uint deviceMask) {
    self.deviceMask = deviceMask;
    return *self;
 }
@@ -2368,6 +4106,38 @@ fn DeviceGroupSubmitInfo DeviceGroupSubmitInfo.setSignalSemaphoreDeviceIndices(&
    self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
    return *self;
 }
+fn DeviceGroupSubmitInfoKHR deviceGroupSubmitInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO, .pNext = null };
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setWaitSemaphoreCount(&self, uint waitSemaphoreCount) {
+   self.waitSemaphoreCount = waitSemaphoreCount;
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setWaitSemaphoreDeviceIndices(&self, uint[] pWaitSemaphoreDeviceIndices) {
+   self.waitSemaphoreCount= (uint)pWaitSemaphoreDeviceIndices.len;
+   self.pWaitSemaphoreDeviceIndices = &pWaitSemaphoreDeviceIndices[0];
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setCommandBufferCount(&self, uint commandBufferCount) {
+   self.commandBufferCount = commandBufferCount;
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setCommandBufferDeviceMasks(&self, uint[] pCommandBufferDeviceMasks) {
+   self.commandBufferCount= (uint)pCommandBufferDeviceMasks.len;
+   self.pCommandBufferDeviceMasks = &pCommandBufferDeviceMasks[0];
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setSignalSemaphoreCount(&self, uint signalSemaphoreCount) {
+   self.signalSemaphoreCount = signalSemaphoreCount;
+   return *self;
+}
+fn DeviceGroupSubmitInfoKHR DeviceGroupSubmitInfoKHR.setSignalSemaphoreDeviceIndices(&self, uint[] pSignalSemaphoreDeviceIndices) {
+   self.signalSemaphoreCount= (uint)pSignalSemaphoreDeviceIndices.len;
+   self.pSignalSemaphoreDeviceIndices = &pSignalSemaphoreDeviceIndices[0];
+   return *self;
+}
 fn DeviceGroupBindSparseInfo deviceGroupBindSparseInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO, .pNext = null };
 fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2379,6 +4149,97 @@ fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setResourceDeviceIndex(&s
 }
 fn DeviceGroupBindSparseInfo DeviceGroupBindSparseInfo.setMemoryDeviceIndex(&self, uint memoryDeviceIndex) {
    self.memoryDeviceIndex = memoryDeviceIndex;
+   return *self;
+}
+fn DeviceGroupBindSparseInfoKHR deviceGroupBindSparseInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO, .pNext = null };
+fn DeviceGroupBindSparseInfoKHR DeviceGroupBindSparseInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupBindSparseInfoKHR DeviceGroupBindSparseInfoKHR.setResourceDeviceIndex(&self, uint resourceDeviceIndex) {
+   self.resourceDeviceIndex = resourceDeviceIndex;
+   return *self;
+}
+fn DeviceGroupBindSparseInfoKHR DeviceGroupBindSparseInfoKHR.setMemoryDeviceIndex(&self, uint memoryDeviceIndex) {
+   self.memoryDeviceIndex = memoryDeviceIndex;
+   return *self;
+}
+fn DeviceGroupPresentCapabilitiesKHR deviceGroupPresentCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR, .pNext = null };
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setPresentMask(&self, uint[MAX_DEVICE_GROUP_SIZE] presentMask) {
+   self.presentMask = presentMask;
+   return *self;
+}
+fn DeviceGroupPresentCapabilitiesKHR DeviceGroupPresentCapabilitiesKHR.setModes(&self, DeviceGroupPresentModeFlagsKHR modes) {
+   self.modes = modes;
+   return *self;
+}
+fn ImageSwapchainCreateInfoKHR imageSwapchainCreateInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
+fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageSwapchainCreateInfoKHR ImageSwapchainCreateInfoKHR.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn BindImageMemorySwapchainInfoKHR bindImageMemorySwapchainInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR, .pNext = null };
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn BindImageMemorySwapchainInfoKHR BindImageMemorySwapchainInfoKHR.setImageIndex(&self, uint imageIndex) {
+   self.imageIndex = imageIndex;
+   return *self;
+}
+fn AcquireNextImageInfoKHR acquireNextImageInfoKHR() => { .sType = STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR, .pNext = null };
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setTimeout(&self, ulong timeout) {
+   self.timeout = timeout;
+   return *self;
+}
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setFence(&self, Fence fence) {
+   self.fence = fence;
+   return *self;
+}
+fn AcquireNextImageInfoKHR AcquireNextImageInfoKHR.setDeviceMask(&self, uint deviceMask) {
+   self.deviceMask = deviceMask;
+   return *self;
+}
+fn DeviceGroupPresentInfoKHR deviceGroupPresentInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR, .pNext = null };
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setDeviceMasks(&self, uint[] pDeviceMasks) {
+   self.swapchainCount= (uint)pDeviceMasks.len;
+   self.pDeviceMasks = &pDeviceMasks[0];
+   return *self;
+}
+fn DeviceGroupPresentInfoKHR DeviceGroupPresentInfoKHR.setMode(&self, DeviceGroupPresentModeFlagBitsKHR mode) {
+   self.mode = mode;
    return *self;
 }
 fn DeviceGroupDeviceCreateInfo deviceGroupDeviceCreateInfo() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO, .pNext = null };
@@ -2393,6 +4254,29 @@ fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDeviceCoun
 fn DeviceGroupDeviceCreateInfo DeviceGroupDeviceCreateInfo.setPhysicalDevices(&self, PhysicalDevice[] pPhysicalDevices) {
    self.physicalDeviceCount= (uint)pPhysicalDevices.len;
    self.pPhysicalDevices = &pPhysicalDevices[0];
+   return *self;
+}
+fn DeviceGroupDeviceCreateInfoKHR deviceGroupDeviceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO, .pNext = null };
+fn DeviceGroupDeviceCreateInfoKHR DeviceGroupDeviceCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupDeviceCreateInfoKHR DeviceGroupDeviceCreateInfoKHR.setPhysicalDeviceCount(&self, uint physicalDeviceCount) {
+   self.physicalDeviceCount = physicalDeviceCount;
+   return *self;
+}
+fn DeviceGroupDeviceCreateInfoKHR DeviceGroupDeviceCreateInfoKHR.setPhysicalDevices(&self, PhysicalDevice[] pPhysicalDevices) {
+   self.physicalDeviceCount= (uint)pPhysicalDevices.len;
+   self.pPhysicalDevices = &pPhysicalDevices[0];
+   return *self;
+}
+fn DeviceGroupSwapchainCreateInfoKHR deviceGroupSwapchainCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR, .pNext = null };
+fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceGroupSwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR.setModes(&self, DeviceGroupPresentModeFlagsKHR modes) {
+   self.modes = modes;
    return *self;
 }
 fn DescriptorUpdateTemplateCreateInfo descriptorUpdateTemplateCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO, .pNext = null };
@@ -2433,6 +4317,411 @@ fn DescriptorUpdateTemplateCreateInfo DescriptorUpdateTemplateCreateInfo.setSet(
    self.set = set;
    return *self;
 }
+fn DescriptorUpdateTemplateCreateInfoKHR descriptorUpdateTemplateCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO, .pNext = null };
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setFlags(&self, DescriptorUpdateTemplateCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setDescriptorUpdateEntryCount(&self, uint descriptorUpdateEntryCount) {
+   self.descriptorUpdateEntryCount = descriptorUpdateEntryCount;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setDescriptorUpdateEntries(&self, DescriptorUpdateTemplateEntry[] pDescriptorUpdateEntries) {
+   self.descriptorUpdateEntryCount= (uint)pDescriptorUpdateEntries.len;
+   self.pDescriptorUpdateEntries = &pDescriptorUpdateEntries[0];
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setTemplateType(&self, DescriptorUpdateTemplateType templateType) {
+   self.templateType = templateType;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setDescriptorSetLayout(&self, DescriptorSetLayout descriptorSetLayout) {
+   self.descriptorSetLayout = descriptorSetLayout;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setPipelineBindPoint(&self, PipelineBindPoint pipelineBindPoint) {
+   self.pipelineBindPoint = pipelineBindPoint;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setPipelineLayout(&self, PipelineLayout pipelineLayout) {
+   self.pipelineLayout = pipelineLayout;
+   return *self;
+}
+fn DescriptorUpdateTemplateCreateInfoKHR DescriptorUpdateTemplateCreateInfoKHR.setSet(&self, uint set) {
+   self.set = set;
+   return *self;
+}
+fn PhysicalDevicePresentIdFeaturesKHR physicalDevicePresentIdFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePresentIdFeaturesKHR PhysicalDevicePresentIdFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentIdFeaturesKHR PhysicalDevicePresentIdFeaturesKHR.setPresentId(&self, uint presentId) {
+   self.presentId = presentId;
+   return *self;
+}
+fn PresentIdKHR presentIdKHR() => { .sType = STRUCTURE_TYPE_PRESENT_ID_KHR, .pNext = null };
+fn PresentIdKHR PresentIdKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentIdKHR PresentIdKHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn PresentIdKHR PresentIdKHR.setPresentIds(&self, ulong[] pPresentIds) {
+   self.swapchainCount= (uint)pPresentIds.len;
+   self.pPresentIds = &pPresentIds[0];
+   return *self;
+}
+fn PhysicalDevicePresentId2FeaturesKHR physicalDevicePresentId2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePresentId2FeaturesKHR PhysicalDevicePresentId2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentId2FeaturesKHR PhysicalDevicePresentId2FeaturesKHR.setPresentId2(&self, uint presentId2) {
+   self.presentId2 = presentId2;
+   return *self;
+}
+fn PresentId2KHR presentId2KHR() => { .sType = STRUCTURE_TYPE_PRESENT_ID_2_KHR, .pNext = null };
+fn PresentId2KHR PresentId2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentId2KHR PresentId2KHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn PresentId2KHR PresentId2KHR.setPresentIds(&self, ulong[] pPresentIds) {
+   self.swapchainCount= (uint)pPresentIds.len;
+   self.pPresentIds = &pPresentIds[0];
+   return *self;
+}
+fn PresentWait2InfoKHR presentWait2InfoKHR() => { .sType = STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR, .pNext = null };
+fn PresentWait2InfoKHR PresentWait2InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentWait2InfoKHR PresentWait2InfoKHR.setPresentId(&self, ulong presentId) {
+   self.presentId = presentId;
+   return *self;
+}
+fn PresentWait2InfoKHR PresentWait2InfoKHR.setTimeout(&self, ulong timeout) {
+   self.timeout = timeout;
+   return *self;
+}
+fn PhysicalDevicePresentWaitFeaturesKHR physicalDevicePresentWaitFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePresentWaitFeaturesKHR PhysicalDevicePresentWaitFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentWaitFeaturesKHR PhysicalDevicePresentWaitFeaturesKHR.setPresentWait(&self, uint presentWait) {
+   self.presentWait = presentWait;
+   return *self;
+}
+fn PhysicalDevicePresentWait2FeaturesKHR physicalDevicePresentWait2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePresentWait2FeaturesKHR PhysicalDevicePresentWait2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentWait2FeaturesKHR PhysicalDevicePresentWait2FeaturesKHR.setPresentWait2(&self, uint presentWait2) {
+   self.presentWait2 = presentWait2;
+   return *self;
+}
+fn PhysicalDevicePresentTimingFeaturesEXT physicalDevicePresentTimingFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePresentTimingFeaturesEXT PhysicalDevicePresentTimingFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentTimingFeaturesEXT PhysicalDevicePresentTimingFeaturesEXT.setPresentTiming(&self, uint presentTiming) {
+   self.presentTiming = presentTiming;
+   return *self;
+}
+fn PhysicalDevicePresentTimingFeaturesEXT PhysicalDevicePresentTimingFeaturesEXT.setPresentAtAbsoluteTime(&self, uint presentAtAbsoluteTime) {
+   self.presentAtAbsoluteTime = presentAtAbsoluteTime;
+   return *self;
+}
+fn PhysicalDevicePresentTimingFeaturesEXT PhysicalDevicePresentTimingFeaturesEXT.setPresentAtRelativeTime(&self, uint presentAtRelativeTime) {
+   self.presentAtRelativeTime = presentAtRelativeTime;
+   return *self;
+}
+fn PresentTimingSurfaceCapabilitiesEXT presentTimingSurfaceCapabilitiesEXT() => { .sType = STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT, .pNext = null };
+fn PresentTimingSurfaceCapabilitiesEXT PresentTimingSurfaceCapabilitiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentTimingSurfaceCapabilitiesEXT PresentTimingSurfaceCapabilitiesEXT.setPresentTimingSupported(&self, uint presentTimingSupported) {
+   self.presentTimingSupported = presentTimingSupported;
+   return *self;
+}
+fn PresentTimingSurfaceCapabilitiesEXT PresentTimingSurfaceCapabilitiesEXT.setPresentAtAbsoluteTimeSupported(&self, uint presentAtAbsoluteTimeSupported) {
+   self.presentAtAbsoluteTimeSupported = presentAtAbsoluteTimeSupported;
+   return *self;
+}
+fn PresentTimingSurfaceCapabilitiesEXT PresentTimingSurfaceCapabilitiesEXT.setPresentAtRelativeTimeSupported(&self, uint presentAtRelativeTimeSupported) {
+   self.presentAtRelativeTimeSupported = presentAtRelativeTimeSupported;
+   return *self;
+}
+fn PresentTimingSurfaceCapabilitiesEXT PresentTimingSurfaceCapabilitiesEXT.setPresentStageQueries(&self, PresentStageFlagsEXT presentStageQueries) {
+   self.presentStageQueries = presentStageQueries;
+   return *self;
+}
+fn SwapchainTimingPropertiesEXT swapchainTimingPropertiesEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT, .pNext = null };
+fn SwapchainTimingPropertiesEXT SwapchainTimingPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainTimingPropertiesEXT SwapchainTimingPropertiesEXT.setRefreshDuration(&self, ulong refreshDuration) {
+   self.refreshDuration = refreshDuration;
+   return *self;
+}
+fn SwapchainTimingPropertiesEXT SwapchainTimingPropertiesEXT.setRefreshInterval(&self, ulong refreshInterval) {
+   self.refreshInterval = refreshInterval;
+   return *self;
+}
+fn SwapchainTimeDomainPropertiesEXT swapchainTimeDomainPropertiesEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT, .pNext = null };
+fn SwapchainTimeDomainPropertiesEXT SwapchainTimeDomainPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainTimeDomainPropertiesEXT SwapchainTimeDomainPropertiesEXT.setTimeDomainCount(&self, uint timeDomainCount) {
+   self.timeDomainCount = timeDomainCount;
+   return *self;
+}
+fn SwapchainTimeDomainPropertiesEXT SwapchainTimeDomainPropertiesEXT.setTimeDomains(&self, TimeDomainKHR[] pTimeDomains) {
+   self.timeDomainCount= (uint)pTimeDomains.len;
+   self.pTimeDomains = &pTimeDomains[0];
+   return *self;
+}
+fn SwapchainTimeDomainPropertiesEXT SwapchainTimeDomainPropertiesEXT.setTimeDomainIds(&self, ulong[] pTimeDomainIds) {
+   self.timeDomainCount= (uint)pTimeDomainIds.len;
+   self.pTimeDomainIds = &pTimeDomainIds[0];
+   return *self;
+}
+fn PastPresentationTimingInfoEXT pastPresentationTimingInfoEXT() => { .sType = STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT, .pNext = null };
+fn PastPresentationTimingInfoEXT PastPresentationTimingInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PastPresentationTimingInfoEXT PastPresentationTimingInfoEXT.setFlags(&self, PastPresentationTimingFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PastPresentationTimingInfoEXT PastPresentationTimingInfoEXT.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn PastPresentationTimingPropertiesEXT pastPresentationTimingPropertiesEXT() => { .sType = STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT, .pNext = null };
+fn PastPresentationTimingPropertiesEXT PastPresentationTimingPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PastPresentationTimingPropertiesEXT PastPresentationTimingPropertiesEXT.setTimingPropertiesCounter(&self, ulong timingPropertiesCounter) {
+   self.timingPropertiesCounter = timingPropertiesCounter;
+   return *self;
+}
+fn PastPresentationTimingPropertiesEXT PastPresentationTimingPropertiesEXT.setTimeDomainsCounter(&self, ulong timeDomainsCounter) {
+   self.timeDomainsCounter = timeDomainsCounter;
+   return *self;
+}
+fn PastPresentationTimingPropertiesEXT PastPresentationTimingPropertiesEXT.setPresentationTimingCount(&self, uint presentationTimingCount) {
+   self.presentationTimingCount = presentationTimingCount;
+   return *self;
+}
+fn PastPresentationTimingPropertiesEXT PastPresentationTimingPropertiesEXT.setPresentationTimings(&self, PastPresentationTimingEXT[] pPresentationTimings) {
+   self.presentationTimingCount= (uint)pPresentationTimings.len;
+   self.pPresentationTimings = &pPresentationTimings[0];
+   return *self;
+}
+fn PastPresentationTimingEXT pastPresentationTimingEXT() => { .sType = STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT, .pNext = null };
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setPresentId(&self, ulong presentId) {
+   self.presentId = presentId;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setTargetTime(&self, ulong targetTime) {
+   self.targetTime = targetTime;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setPresentStageCount(&self, uint presentStageCount) {
+   self.presentStageCount = presentStageCount;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setPresentStages(&self, PresentStageTimeEXT[] pPresentStages) {
+   self.presentStageCount= (uint)pPresentStages.len;
+   self.pPresentStages = &pPresentStages[0];
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setTimeDomain(&self, TimeDomainKHR timeDomain) {
+   self.timeDomain = timeDomain;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setTimeDomainId(&self, ulong timeDomainId) {
+   self.timeDomainId = timeDomainId;
+   return *self;
+}
+fn PastPresentationTimingEXT PastPresentationTimingEXT.setReportComplete(&self, uint reportComplete) {
+   self.reportComplete = reportComplete;
+   return *self;
+}
+fn PresentTimingsInfoEXT presentTimingsInfoEXT() => { .sType = STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT, .pNext = null };
+fn PresentTimingsInfoEXT PresentTimingsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentTimingsInfoEXT PresentTimingsInfoEXT.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn PresentTimingsInfoEXT PresentTimingsInfoEXT.setTimingInfos(&self, PresentTimingInfoEXT[] pTimingInfos) {
+   self.swapchainCount= (uint)pTimingInfos.len;
+   self.pTimingInfos = &pTimingInfos[0];
+   return *self;
+}
+fn PresentTimingInfoEXT presentTimingInfoEXT() => { .sType = STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT, .pNext = null };
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setFlags(&self, PresentTimingInfoFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setTargetTime(&self, ulong targetTime) {
+   self.targetTime = targetTime;
+   return *self;
+}
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setTimeDomainId(&self, ulong timeDomainId) {
+   self.timeDomainId = timeDomainId;
+   return *self;
+}
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setPresentStageQueries(&self, PresentStageFlagsEXT presentStageQueries) {
+   self.presentStageQueries = presentStageQueries;
+   return *self;
+}
+fn PresentTimingInfoEXT PresentTimingInfoEXT.setTargetTimeDomainPresentStage(&self, PresentStageFlagsEXT targetTimeDomainPresentStage) {
+   self.targetTimeDomainPresentStage = targetTimeDomainPresentStage;
+   return *self;
+}
+fn SwapchainCalibratedTimestampInfoEXT swapchainCalibratedTimestampInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT, .pNext = null };
+fn SwapchainCalibratedTimestampInfoEXT SwapchainCalibratedTimestampInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainCalibratedTimestampInfoEXT SwapchainCalibratedTimestampInfoEXT.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn SwapchainCalibratedTimestampInfoEXT SwapchainCalibratedTimestampInfoEXT.setPresentStage(&self, PresentStageFlagsEXT presentStage) {
+   self.presentStage = presentStage;
+   return *self;
+}
+fn SwapchainCalibratedTimestampInfoEXT SwapchainCalibratedTimestampInfoEXT.setTimeDomainId(&self, ulong timeDomainId) {
+   self.timeDomainId = timeDomainId;
+   return *self;
+}
+fn HdrMetadataEXT hdrMetadataEXT() => { .sType = STRUCTURE_TYPE_HDR_METADATA_EXT, .pNext = null };
+fn HdrMetadataEXT HdrMetadataEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setDisplayPrimaryRed(&self, XYColorEXT displayPrimaryRed) {
+   self.displayPrimaryRed = displayPrimaryRed;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setDisplayPrimaryGreen(&self, XYColorEXT displayPrimaryGreen) {
+   self.displayPrimaryGreen = displayPrimaryGreen;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setDisplayPrimaryBlue(&self, XYColorEXT displayPrimaryBlue) {
+   self.displayPrimaryBlue = displayPrimaryBlue;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setWhitePoint(&self, XYColorEXT whitePoint) {
+   self.whitePoint = whitePoint;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setMaxLuminance(&self, float maxLuminance) {
+   self.maxLuminance = maxLuminance;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setMinLuminance(&self, float minLuminance) {
+   self.minLuminance = minLuminance;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setMaxContentLightLevel(&self, float maxContentLightLevel) {
+   self.maxContentLightLevel = maxContentLightLevel;
+   return *self;
+}
+fn HdrMetadataEXT HdrMetadataEXT.setMaxFrameAverageLightLevel(&self, float maxFrameAverageLightLevel) {
+   self.maxFrameAverageLightLevel = maxFrameAverageLightLevel;
+   return *self;
+}
+fn HdrVividDynamicMetadataHUAWEI hdrVividDynamicMetadataHUAWEI() => { .sType = STRUCTURE_TYPE_HDR_VIVID_DYNAMIC_METADATA_HUAWEI, .pNext = null };
+fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setDynamicMetadataSize(&self, usz dynamicMetadataSize) {
+   self.dynamicMetadataSize = dynamicMetadataSize;
+   return *self;
+}
+fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setDynamicMetadata(&self, void* pDynamicMetadata) {
+   self.pDynamicMetadata = pDynamicMetadata;
+   return *self;
+}
+fn DisplayNativeHdrSurfaceCapabilitiesAMD displayNativeHdrSurfaceCapabilitiesAMD() => { .sType = STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD, .pNext = null };
+fn DisplayNativeHdrSurfaceCapabilitiesAMD DisplayNativeHdrSurfaceCapabilitiesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayNativeHdrSurfaceCapabilitiesAMD DisplayNativeHdrSurfaceCapabilitiesAMD.setLocalDimmingSupport(&self, uint localDimmingSupport) {
+   self.localDimmingSupport = localDimmingSupport;
+   return *self;
+}
+fn SwapchainDisplayNativeHdrCreateInfoAMD swapchainDisplayNativeHdrCreateInfoAMD() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD, .pNext = null };
+fn SwapchainDisplayNativeHdrCreateInfoAMD SwapchainDisplayNativeHdrCreateInfoAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainDisplayNativeHdrCreateInfoAMD SwapchainDisplayNativeHdrCreateInfoAMD.setLocalDimmingEnable(&self, uint localDimmingEnable) {
+   self.localDimmingEnable = localDimmingEnable;
+   return *self;
+}
+fn PresentTimesInfoGOOGLE presentTimesInfoGOOGLE() => { .sType = STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE, .pNext = null };
+fn PresentTimesInfoGOOGLE PresentTimesInfoGOOGLE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PresentTimesInfoGOOGLE PresentTimesInfoGOOGLE.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn PresentTimesInfoGOOGLE PresentTimesInfoGOOGLE.setTimes(&self, PresentTimeGOOGLE[] pTimes) {
+   self.swapchainCount= (uint)pTimes.len;
+   self.pTimes = &pTimes[0];
+   return *self;
+}
+fn IOSSurfaceCreateInfoMVK iOSSurfaceCreateInfoMVK() => { .sType = STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK, .pNext = null };
+fn IOSSurfaceCreateInfoMVK IOSSurfaceCreateInfoMVK.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IOSSurfaceCreateInfoMVK IOSSurfaceCreateInfoMVK.setFlags(&self, IOSSurfaceCreateFlagsMVK flags) {
+   self.flags = flags;
+   return *self;
+}
+fn IOSSurfaceCreateInfoMVK IOSSurfaceCreateInfoMVK.setView(&self, void* pView) {
+   self.pView = pView;
+   return *self;
+}
 fn MacOSSurfaceCreateInfoMVK macOSSurfaceCreateInfoMVK() => { .sType = STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK, .pNext = null };
 fn MacOSSurfaceCreateInfoMVK MacOSSurfaceCreateInfoMVK.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2457,6 +4746,82 @@ fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setFlags(&self, MetalSurf
 }
 fn MetalSurfaceCreateInfoEXT MetalSurfaceCreateInfoEXT.setLayer(&self, CAMetalLayer* pLayer) {
    self.pLayer = pLayer;
+   return *self;
+}
+fn PipelineViewportWScalingStateCreateInfoNV pipelineViewportWScalingStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineViewportWScalingStateCreateInfoNV PipelineViewportWScalingStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportWScalingStateCreateInfoNV PipelineViewportWScalingStateCreateInfoNV.setViewportWScalingEnable(&self, uint viewportWScalingEnable) {
+   self.viewportWScalingEnable = viewportWScalingEnable;
+   return *self;
+}
+fn PipelineViewportWScalingStateCreateInfoNV PipelineViewportWScalingStateCreateInfoNV.setViewportCount(&self, uint viewportCount) {
+   self.viewportCount = viewportCount;
+   return *self;
+}
+fn PipelineViewportWScalingStateCreateInfoNV PipelineViewportWScalingStateCreateInfoNV.setViewportWScalings(&self, ViewportWScalingNV[] pViewportWScalings) {
+   self.viewportCount= (uint)pViewportWScalings.len;
+   self.pViewportWScalings = &pViewportWScalings[0];
+   return *self;
+}
+fn PipelineViewportSwizzleStateCreateInfoNV pipelineViewportSwizzleStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineViewportSwizzleStateCreateInfoNV PipelineViewportSwizzleStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportSwizzleStateCreateInfoNV PipelineViewportSwizzleStateCreateInfoNV.setFlags(&self, PipelineViewportSwizzleStateCreateFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineViewportSwizzleStateCreateInfoNV PipelineViewportSwizzleStateCreateInfoNV.setViewportCount(&self, uint viewportCount) {
+   self.viewportCount = viewportCount;
+   return *self;
+}
+fn PipelineViewportSwizzleStateCreateInfoNV PipelineViewportSwizzleStateCreateInfoNV.setViewportSwizzles(&self, ViewportSwizzleNV[] pViewportSwizzles) {
+   self.viewportCount= (uint)pViewportSwizzles.len;
+   self.pViewportSwizzles = &pViewportSwizzles[0];
+   return *self;
+}
+fn PhysicalDeviceDiscardRectanglePropertiesEXT physicalDeviceDiscardRectanglePropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDiscardRectanglePropertiesEXT PhysicalDeviceDiscardRectanglePropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDiscardRectanglePropertiesEXT PhysicalDeviceDiscardRectanglePropertiesEXT.setMaxDiscardRectangles(&self, uint maxDiscardRectangles) {
+   self.maxDiscardRectangles = maxDiscardRectangles;
+   return *self;
+}
+fn PipelineDiscardRectangleStateCreateInfoEXT pipelineDiscardRectangleStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineDiscardRectangleStateCreateInfoEXT PipelineDiscardRectangleStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineDiscardRectangleStateCreateInfoEXT PipelineDiscardRectangleStateCreateInfoEXT.setFlags(&self, PipelineDiscardRectangleStateCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineDiscardRectangleStateCreateInfoEXT PipelineDiscardRectangleStateCreateInfoEXT.setDiscardRectangleMode(&self, DiscardRectangleModeEXT discardRectangleMode) {
+   self.discardRectangleMode = discardRectangleMode;
+   return *self;
+}
+fn PipelineDiscardRectangleStateCreateInfoEXT PipelineDiscardRectangleStateCreateInfoEXT.setDiscardRectangleCount(&self, uint discardRectangleCount) {
+   self.discardRectangleCount = discardRectangleCount;
+   return *self;
+}
+fn PipelineDiscardRectangleStateCreateInfoEXT PipelineDiscardRectangleStateCreateInfoEXT.setDiscardRectangles(&self, Rect2D[] pDiscardRectangles) {
+   self.discardRectangleCount= (uint)pDiscardRectangles.len;
+   self.pDiscardRectangles = &pDiscardRectangles[0];
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX physicalDeviceMultiviewPerViewAttributesPropertiesNVX() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX, .pNext = null };
+fn PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX.setPerViewPositionAllComponents(&self, uint perViewPositionAllComponents) {
+   self.perViewPositionAllComponents = perViewPositionAllComponents;
    return *self;
 }
 fn RenderPassInputAttachmentAspectCreateInfo renderPassInputAttachmentAspectCreateInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO, .pNext = null };
@@ -2487,6 +4852,100 @@ fn RenderPassInputAttachmentAspectCreateInfoKHR RenderPassInputAttachmentAspectC
    self.pAspectReferences = &pAspectReferences[0];
    return *self;
 }
+fn PhysicalDeviceSurfaceInfo2KHR physicalDeviceSurfaceInfo2KHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR, .pNext = null };
+fn PhysicalDeviceSurfaceInfo2KHR PhysicalDeviceSurfaceInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSurfaceInfo2KHR PhysicalDeviceSurfaceInfo2KHR.setSurface(&self, SurfaceKHR surface) {
+   self.surface = surface;
+   return *self;
+}
+fn SurfaceCapabilities2KHR surfaceCapabilities2KHR() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR, .pNext = null };
+fn SurfaceCapabilities2KHR SurfaceCapabilities2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilities2KHR SurfaceCapabilities2KHR.setSurfaceCapabilities(&self, SurfaceCapabilitiesKHR surfaceCapabilities) {
+   self.surfaceCapabilities = surfaceCapabilities;
+   return *self;
+}
+fn SurfaceFormat2KHR surfaceFormat2KHR() => { .sType = STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR, .pNext = null };
+fn SurfaceFormat2KHR SurfaceFormat2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceFormat2KHR SurfaceFormat2KHR.setSurfaceFormat(&self, SurfaceFormatKHR surfaceFormat) {
+   self.surfaceFormat = surfaceFormat;
+   return *self;
+}
+fn DisplayProperties2KHR displayProperties2KHR() => { .sType = STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR, .pNext = null };
+fn DisplayProperties2KHR DisplayProperties2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayProperties2KHR DisplayProperties2KHR.setDisplayProperties(&self, DisplayPropertiesKHR displayProperties) {
+   self.displayProperties = displayProperties;
+   return *self;
+}
+fn DisplayPlaneProperties2KHR displayPlaneProperties2KHR() => { .sType = STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR, .pNext = null };
+fn DisplayPlaneProperties2KHR DisplayPlaneProperties2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayPlaneProperties2KHR DisplayPlaneProperties2KHR.setDisplayPlaneProperties(&self, DisplayPlanePropertiesKHR displayPlaneProperties) {
+   self.displayPlaneProperties = displayPlaneProperties;
+   return *self;
+}
+fn DisplayModeProperties2KHR displayModeProperties2KHR() => { .sType = STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR, .pNext = null };
+fn DisplayModeProperties2KHR DisplayModeProperties2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayModeProperties2KHR DisplayModeProperties2KHR.setDisplayModeProperties(&self, DisplayModePropertiesKHR displayModeProperties) {
+   self.displayModeProperties = displayModeProperties;
+   return *self;
+}
+fn DisplayModeStereoPropertiesNV displayModeStereoPropertiesNV() => { .sType = STRUCTURE_TYPE_DISPLAY_MODE_STEREO_PROPERTIES_NV, .pNext = null };
+fn DisplayModeStereoPropertiesNV DisplayModeStereoPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayModeStereoPropertiesNV DisplayModeStereoPropertiesNV.setHdmi3DSupported(&self, uint hdmi3DSupported) {
+   self.hdmi3DSupported = hdmi3DSupported;
+   return *self;
+}
+fn DisplayPlaneInfo2KHR displayPlaneInfo2KHR() => { .sType = STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR, .pNext = null };
+fn DisplayPlaneInfo2KHR DisplayPlaneInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayPlaneInfo2KHR DisplayPlaneInfo2KHR.setMode(&self, DisplayModeKHR mode) {
+   self.mode = mode;
+   return *self;
+}
+fn DisplayPlaneInfo2KHR DisplayPlaneInfo2KHR.setPlaneIndex(&self, uint planeIndex) {
+   self.planeIndex = planeIndex;
+   return *self;
+}
+fn DisplayPlaneCapabilities2KHR displayPlaneCapabilities2KHR() => { .sType = STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR, .pNext = null };
+fn DisplayPlaneCapabilities2KHR DisplayPlaneCapabilities2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DisplayPlaneCapabilities2KHR DisplayPlaneCapabilities2KHR.setCapabilities(&self, DisplayPlaneCapabilitiesKHR capabilities) {
+   self.capabilities = capabilities;
+   return *self;
+}
+fn SharedPresentSurfaceCapabilitiesKHR sharedPresentSurfaceCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR, .pNext = null };
+fn SharedPresentSurfaceCapabilitiesKHR SharedPresentSurfaceCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SharedPresentSurfaceCapabilitiesKHR SharedPresentSurfaceCapabilitiesKHR.setSharedPresentSupportedUsageFlags(&self, ImageUsageFlags sharedPresentSupportedUsageFlags) {
+   self.sharedPresentSupportedUsageFlags = sharedPresentSupportedUsageFlags;
+   return *self;
+}
 fn PhysicalDevice16BitStorageFeatures physicalDevice16BitStorageFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES, .pNext = null };
 fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2505,6 +4964,27 @@ fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStor
    return *self;
 }
 fn PhysicalDevice16BitStorageFeatures PhysicalDevice16BitStorageFeatures.setStorageInputOutput16(&self, uint storageInputOutput16) {
+   self.storageInputOutput16 = storageInputOutput16;
+   return *self;
+}
+fn PhysicalDevice16BitStorageFeaturesKHR physicalDevice16BitStorageFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES, .pNext = null };
+fn PhysicalDevice16BitStorageFeaturesKHR PhysicalDevice16BitStorageFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevice16BitStorageFeaturesKHR PhysicalDevice16BitStorageFeaturesKHR.setStorageBuffer16BitAccess(&self, uint storageBuffer16BitAccess) {
+   self.storageBuffer16BitAccess = storageBuffer16BitAccess;
+   return *self;
+}
+fn PhysicalDevice16BitStorageFeaturesKHR PhysicalDevice16BitStorageFeaturesKHR.setUniformAndStorageBuffer16BitAccess(&self, uint uniformAndStorageBuffer16BitAccess) {
+   self.uniformAndStorageBuffer16BitAccess = uniformAndStorageBuffer16BitAccess;
+   return *self;
+}
+fn PhysicalDevice16BitStorageFeaturesKHR PhysicalDevice16BitStorageFeaturesKHR.setStoragePushConstant16(&self, uint storagePushConstant16) {
+   self.storagePushConstant16 = storagePushConstant16;
+   return *self;
+}
+fn PhysicalDevice16BitStorageFeaturesKHR PhysicalDevice16BitStorageFeaturesKHR.setStorageInputOutput16(&self, uint storageInputOutput16) {
    self.storageInputOutput16 = storageInputOutput16;
    return *self;
 }
@@ -2538,12 +5018,30 @@ fn PhysicalDeviceShaderSubgroupExtendedTypesFeatures PhysicalDeviceShaderSubgrou
    self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
    return *self;
 }
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR physicalDeviceShaderSubgroupExtendedTypesFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR.setShaderSubgroupExtendedTypes(&self, uint shaderSubgroupExtendedTypes) {
+   self.shaderSubgroupExtendedTypes = shaderSubgroupExtendedTypes;
+   return *self;
+}
 fn BufferMemoryRequirementsInfo2 bufferMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn BufferMemoryRequirementsInfo2 BufferMemoryRequirementsInfo2.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn BufferMemoryRequirementsInfo2KHR bufferMemoryRequirementsInfo2KHR() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn BufferMemoryRequirementsInfo2KHR BufferMemoryRequirementsInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferMemoryRequirementsInfo2KHR BufferMemoryRequirementsInfo2KHR.setBuffer(&self, Buffer buffer) {
    self.buffer = buffer;
    return *self;
 }
@@ -2556,6 +5054,15 @@ fn DeviceBufferMemoryRequirements DeviceBufferMemoryRequirements.setCreateInfo(&
    self.pCreateInfo = pCreateInfo;
    return *self;
 }
+fn DeviceBufferMemoryRequirementsKHR deviceBufferMemoryRequirementsKHR() => { .sType = STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS, .pNext = null };
+fn DeviceBufferMemoryRequirementsKHR DeviceBufferMemoryRequirementsKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceBufferMemoryRequirementsKHR DeviceBufferMemoryRequirementsKHR.setCreateInfo(&self, BufferCreateInfo* pCreateInfo) {
+   self.pCreateInfo = pCreateInfo;
+   return *self;
+}
 fn ImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2565,12 +5072,30 @@ fn ImageMemoryRequirementsInfo2 ImageMemoryRequirementsInfo2.setImage(&self, Ima
    self.image = image;
    return *self;
 }
+fn ImageMemoryRequirementsInfo2KHR imageMemoryRequirementsInfo2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn ImageMemoryRequirementsInfo2KHR ImageMemoryRequirementsInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageMemoryRequirementsInfo2KHR ImageMemoryRequirementsInfo2KHR.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
 fn ImageSparseMemoryRequirementsInfo2 imageSparseMemoryRequirementsInfo2() => { .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
 fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn ImageSparseMemoryRequirementsInfo2 ImageSparseMemoryRequirementsInfo2.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn ImageSparseMemoryRequirementsInfo2KHR imageSparseMemoryRequirementsInfo2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2, .pNext = null };
+fn ImageSparseMemoryRequirementsInfo2KHR ImageSparseMemoryRequirementsInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageSparseMemoryRequirementsInfo2KHR ImageSparseMemoryRequirementsInfo2KHR.setImage(&self, Image image) {
    self.image = image;
    return *self;
 }
@@ -2587,6 +5112,19 @@ fn DeviceImageMemoryRequirements DeviceImageMemoryRequirements.setPlaneAspect(&s
    self.planeAspect = planeAspect;
    return *self;
 }
+fn DeviceImageMemoryRequirementsKHR deviceImageMemoryRequirementsKHR() => { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS, .pNext = null };
+fn DeviceImageMemoryRequirementsKHR DeviceImageMemoryRequirementsKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceImageMemoryRequirementsKHR DeviceImageMemoryRequirementsKHR.setCreateInfo(&self, ImageCreateInfo* pCreateInfo) {
+   self.pCreateInfo = pCreateInfo;
+   return *self;
+}
+fn DeviceImageMemoryRequirementsKHR DeviceImageMemoryRequirementsKHR.setPlaneAspect(&self, ImageAspectFlagBits planeAspect) {
+   self.planeAspect = planeAspect;
+   return *self;
+}
 fn MemoryRequirements2 memoryRequirements2() => { .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2, .pNext = null };
 fn MemoryRequirements2 MemoryRequirements2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2596,12 +5134,30 @@ fn MemoryRequirements2 MemoryRequirements2.setMemoryRequirements(&self, MemoryRe
    self.memoryRequirements = memoryRequirements;
    return *self;
 }
+fn MemoryRequirements2KHR memoryRequirements2KHR() => { .sType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2, .pNext = null };
+fn MemoryRequirements2KHR MemoryRequirements2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryRequirements2KHR MemoryRequirements2KHR.setMemoryRequirements(&self, MemoryRequirements memoryRequirements) {
+   self.memoryRequirements = memoryRequirements;
+   return *self;
+}
 fn SparseImageMemoryRequirements2 sparseImageMemoryRequirements2() => { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2, .pNext = null };
 fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn SparseImageMemoryRequirements2 SparseImageMemoryRequirements2.setMemoryRequirements(&self, SparseImageMemoryRequirements memoryRequirements) {
+   self.memoryRequirements = memoryRequirements;
+   return *self;
+}
+fn SparseImageMemoryRequirements2KHR sparseImageMemoryRequirements2KHR() => { .sType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2, .pNext = null };
+fn SparseImageMemoryRequirements2KHR SparseImageMemoryRequirements2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SparseImageMemoryRequirements2KHR SparseImageMemoryRequirements2KHR.setMemoryRequirements(&self, SparseImageMemoryRequirements memoryRequirements) {
    self.memoryRequirements = memoryRequirements;
    return *self;
 }
@@ -2636,6 +5192,19 @@ fn MemoryDedicatedRequirements MemoryDedicatedRequirements.setRequiresDedicatedA
    self.requiresDedicatedAllocation = requiresDedicatedAllocation;
    return *self;
 }
+fn MemoryDedicatedRequirementsKHR memoryDedicatedRequirementsKHR() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS, .pNext = null };
+fn MemoryDedicatedRequirementsKHR MemoryDedicatedRequirementsKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryDedicatedRequirementsKHR MemoryDedicatedRequirementsKHR.setPrefersDedicatedAllocation(&self, uint prefersDedicatedAllocation) {
+   self.prefersDedicatedAllocation = prefersDedicatedAllocation;
+   return *self;
+}
+fn MemoryDedicatedRequirementsKHR MemoryDedicatedRequirementsKHR.setRequiresDedicatedAllocation(&self, uint requiresDedicatedAllocation) {
+   self.requiresDedicatedAllocation = requiresDedicatedAllocation;
+   return *self;
+}
 fn MemoryDedicatedAllocateInfo memoryDedicatedAllocateInfo() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO, .pNext = null };
 fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2649,6 +5218,19 @@ fn MemoryDedicatedAllocateInfo MemoryDedicatedAllocateInfo.setBuffer(&self, Buff
    self.buffer = buffer;
    return *self;
 }
+fn MemoryDedicatedAllocateInfoKHR memoryDedicatedAllocateInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO, .pNext = null };
+fn MemoryDedicatedAllocateInfoKHR MemoryDedicatedAllocateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryDedicatedAllocateInfoKHR MemoryDedicatedAllocateInfoKHR.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn MemoryDedicatedAllocateInfoKHR MemoryDedicatedAllocateInfoKHR.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
 fn ImageViewUsageCreateInfo imageViewUsageCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, .pNext = null };
 fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2658,17 +5240,26 @@ fn ImageViewUsageCreateInfo ImageViewUsageCreateInfo.setUsage(&self, ImageUsageF
    self.usage = usage;
    return *self;
 }
-fn ImageViewUsageCreateInfoKHR imageViewUsageCreateInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT, .pNext = null };
+fn ImageViewSlicedCreateInfoEXT imageViewSlicedCreateInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT, .pNext = null };
+fn ImageViewSlicedCreateInfoEXT ImageViewSlicedCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewSlicedCreateInfoEXT ImageViewSlicedCreateInfoEXT.setSliceOffset(&self, uint sliceOffset) {
+   self.sliceOffset = sliceOffset;
+   return *self;
+}
+fn ImageViewSlicedCreateInfoEXT ImageViewSlicedCreateInfoEXT.setSliceCount(&self, uint sliceCount) {
+   self.sliceCount = sliceCount;
+   return *self;
+}
+fn ImageViewUsageCreateInfoKHR imageViewUsageCreateInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, .pNext = null };
 fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setSliceOffset(&self, uint sliceOffset) {
-   self.sliceOffset = sliceOffset;
-   return *self;
-}
-fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setSliceCount(&self, uint sliceCount) {
-   self.sliceCount = sliceCount;
+fn ImageViewUsageCreateInfoKHR ImageViewUsageCreateInfoKHR.setUsage(&self, ImageUsageFlags usage) {
+   self.usage = usage;
    return *self;
 }
 fn PipelineTessellationDomainOriginStateCreateInfo pipelineTessellationDomainOriginStateCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO, .pNext = null };
@@ -2695,6 +5286,15 @@ fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setNext(&self, void* pN
    return *self;
 }
 fn SamplerYcbcrConversionInfo SamplerYcbcrConversionInfo.setConversion(&self, SamplerYcbcrConversion conversion) {
+   self.conversion = conversion;
+   return *self;
+}
+fn SamplerYcbcrConversionInfoKHR samplerYcbcrConversionInfoKHR() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO, .pNext = null };
+fn SamplerYcbcrConversionInfoKHR SamplerYcbcrConversionInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerYcbcrConversionInfoKHR SamplerYcbcrConversionInfoKHR.setConversion(&self, SamplerYcbcrConversion conversion) {
    self.conversion = conversion;
    return *self;
 }
@@ -2735,12 +5335,58 @@ fn SamplerYcbcrConversionCreateInfo SamplerYcbcrConversionCreateInfo.setForceExp
    self.forceExplicitReconstruction = forceExplicitReconstruction;
    return *self;
 }
+fn SamplerYcbcrConversionCreateInfoKHR samplerYcbcrConversionCreateInfoKHR() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO, .pNext = null };
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setYcbcrModel(&self, SamplerYcbcrModelConversion ycbcrModel) {
+   self.ycbcrModel = ycbcrModel;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setYcbcrRange(&self, SamplerYcbcrRange ycbcrRange) {
+   self.ycbcrRange = ycbcrRange;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setComponents(&self, ComponentMapping components) {
+   self.components = components;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setXChromaOffset(&self, ChromaLocation xChromaOffset) {
+   self.xChromaOffset = xChromaOffset;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setYChromaOffset(&self, ChromaLocation yChromaOffset) {
+   self.yChromaOffset = yChromaOffset;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setChromaFilter(&self, Filter chromaFilter) {
+   self.chromaFilter = chromaFilter;
+   return *self;
+}
+fn SamplerYcbcrConversionCreateInfoKHR SamplerYcbcrConversionCreateInfoKHR.setForceExplicitReconstruction(&self, uint forceExplicitReconstruction) {
+   self.forceExplicitReconstruction = forceExplicitReconstruction;
+   return *self;
+}
 fn BindImagePlaneMemoryInfo bindImagePlaneMemoryInfo() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, .pNext = null };
 fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn BindImagePlaneMemoryInfo BindImagePlaneMemoryInfo.setPlaneAspect(&self, ImageAspectFlagBits planeAspect) {
+   self.planeAspect = planeAspect;
+   return *self;
+}
+fn BindImagePlaneMemoryInfoKHR bindImagePlaneMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, .pNext = null };
+fn BindImagePlaneMemoryInfoKHR BindImagePlaneMemoryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindImagePlaneMemoryInfoKHR BindImagePlaneMemoryInfoKHR.setPlaneAspect(&self, ImageAspectFlagBits planeAspect) {
    self.planeAspect = planeAspect;
    return *self;
 }
@@ -2753,12 +5399,30 @@ fn ImagePlaneMemoryRequirementsInfo ImagePlaneMemoryRequirementsInfo.setPlaneAsp
    self.planeAspect = planeAspect;
    return *self;
 }
+fn ImagePlaneMemoryRequirementsInfoKHR imagePlaneMemoryRequirementsInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO, .pNext = null };
+fn ImagePlaneMemoryRequirementsInfoKHR ImagePlaneMemoryRequirementsInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImagePlaneMemoryRequirementsInfoKHR ImagePlaneMemoryRequirementsInfoKHR.setPlaneAspect(&self, ImageAspectFlagBits planeAspect) {
+   self.planeAspect = planeAspect;
+   return *self;
+}
 fn PhysicalDeviceSamplerYcbcrConversionFeatures physicalDeviceSamplerYcbcrConversionFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES, .pNext = null };
 fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceSamplerYcbcrConversionFeatures PhysicalDeviceSamplerYcbcrConversionFeatures.setSamplerYcbcrConversion(&self, uint samplerYcbcrConversion) {
+   self.samplerYcbcrConversion = samplerYcbcrConversion;
+   return *self;
+}
+fn PhysicalDeviceSamplerYcbcrConversionFeaturesKHR physicalDeviceSamplerYcbcrConversionFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES, .pNext = null };
+fn PhysicalDeviceSamplerYcbcrConversionFeaturesKHR PhysicalDeviceSamplerYcbcrConversionFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSamplerYcbcrConversionFeaturesKHR PhysicalDeviceSamplerYcbcrConversionFeaturesKHR.setSamplerYcbcrConversion(&self, uint samplerYcbcrConversion) {
    self.samplerYcbcrConversion = samplerYcbcrConversion;
    return *self;
 }
@@ -2769,6 +5433,41 @@ fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormat
 }
 fn SamplerYcbcrConversionImageFormatProperties SamplerYcbcrConversionImageFormatProperties.setCombinedImageSamplerDescriptorCount(&self, uint combinedImageSamplerDescriptorCount) {
    self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
+   return *self;
+}
+fn SamplerYcbcrConversionImageFormatPropertiesKHR samplerYcbcrConversionImageFormatPropertiesKHR() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES, .pNext = null };
+fn SamplerYcbcrConversionImageFormatPropertiesKHR SamplerYcbcrConversionImageFormatPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerYcbcrConversionImageFormatPropertiesKHR SamplerYcbcrConversionImageFormatPropertiesKHR.setCombinedImageSamplerDescriptorCount(&self, uint combinedImageSamplerDescriptorCount) {
+   self.combinedImageSamplerDescriptorCount = combinedImageSamplerDescriptorCount;
+   return *self;
+}
+fn TextureLODGatherFormatPropertiesAMD textureLODGatherFormatPropertiesAMD() => { .sType = STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD, .pNext = null };
+fn TextureLODGatherFormatPropertiesAMD TextureLODGatherFormatPropertiesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TextureLODGatherFormatPropertiesAMD TextureLODGatherFormatPropertiesAMD.setSupportsTextureGatherLODBiasAMD(&self, uint supportsTextureGatherLODBiasAMD) {
+   self.supportsTextureGatherLODBiasAMD = supportsTextureGatherLODBiasAMD;
+   return *self;
+}
+fn ConditionalRenderingBeginInfoEXT conditionalRenderingBeginInfoEXT() => { .sType = STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT, .pNext = null };
+fn ConditionalRenderingBeginInfoEXT ConditionalRenderingBeginInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ConditionalRenderingBeginInfoEXT ConditionalRenderingBeginInfoEXT.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn ConditionalRenderingBeginInfoEXT ConditionalRenderingBeginInfoEXT.setOffset(&self, DeviceSize offset) {
+   self.offset = offset;
+   return *self;
+}
+fn ConditionalRenderingBeginInfoEXT ConditionalRenderingBeginInfoEXT.setFlags(&self, ConditionalRenderingFlagsEXT flags) {
+   self.flags = flags;
    return *self;
 }
 fn ProtectedSubmitInfo protectedSubmitInfo() => { .sType = STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO, .pNext = null };
@@ -2815,6 +5514,23 @@ fn DeviceQueueInfo2 DeviceQueueInfo2.setQueueIndex(&self, uint queueIndex) {
    self.queueIndex = queueIndex;
    return *self;
 }
+fn PipelineCoverageToColorStateCreateInfoNV pipelineCoverageToColorStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineCoverageToColorStateCreateInfoNV PipelineCoverageToColorStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCoverageToColorStateCreateInfoNV PipelineCoverageToColorStateCreateInfoNV.setFlags(&self, PipelineCoverageToColorStateCreateFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineCoverageToColorStateCreateInfoNV PipelineCoverageToColorStateCreateInfoNV.setCoverageToColorEnable(&self, uint coverageToColorEnable) {
+   self.coverageToColorEnable = coverageToColorEnable;
+   return *self;
+}
+fn PipelineCoverageToColorStateCreateInfoNV PipelineCoverageToColorStateCreateInfoNV.setCoverageToColorLocation(&self, uint coverageToColorLocation) {
+   self.coverageToColorLocation = coverageToColorLocation;
+   return *self;
+}
 fn PhysicalDeviceSamplerFilterMinmaxProperties physicalDeviceSamplerFilterMinmaxProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES, .pNext = null };
 fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2825,6 +5541,19 @@ fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmax
    return *self;
 }
 fn PhysicalDeviceSamplerFilterMinmaxProperties PhysicalDeviceSamplerFilterMinmaxProperties.setFilterMinmaxImageComponentMapping(&self, uint filterMinmaxImageComponentMapping) {
+   self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
+   return *self;
+}
+fn PhysicalDeviceSamplerFilterMinmaxPropertiesEXT physicalDeviceSamplerFilterMinmaxPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES, .pNext = null };
+fn PhysicalDeviceSamplerFilterMinmaxPropertiesEXT PhysicalDeviceSamplerFilterMinmaxPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSamplerFilterMinmaxPropertiesEXT PhysicalDeviceSamplerFilterMinmaxPropertiesEXT.setFilterMinmaxSingleComponentFormats(&self, uint filterMinmaxSingleComponentFormats) {
+   self.filterMinmaxSingleComponentFormats = filterMinmaxSingleComponentFormats;
+   return *self;
+}
+fn PhysicalDeviceSamplerFilterMinmaxPropertiesEXT PhysicalDeviceSamplerFilterMinmaxPropertiesEXT.setFilterMinmaxImageComponentMapping(&self, uint filterMinmaxImageComponentMapping) {
    self.filterMinmaxImageComponentMapping = filterMinmaxImageComponentMapping;
    return *self;
 }
@@ -2929,6 +5658,79 @@ fn SamplerReductionModeCreateInfo SamplerReductionModeCreateInfo.setReductionMod
    self.reductionMode = reductionMode;
    return *self;
 }
+fn SamplerReductionModeCreateInfoEXT samplerReductionModeCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO, .pNext = null };
+fn SamplerReductionModeCreateInfoEXT SamplerReductionModeCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerReductionModeCreateInfoEXT SamplerReductionModeCreateInfoEXT.setReductionMode(&self, SamplerReductionMode reductionMode) {
+   self.reductionMode = reductionMode;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedFeaturesEXT physicalDeviceBlendOperationAdvancedFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceBlendOperationAdvancedFeaturesEXT PhysicalDeviceBlendOperationAdvancedFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedFeaturesEXT PhysicalDeviceBlendOperationAdvancedFeaturesEXT.setAdvancedBlendCoherentOperations(&self, uint advancedBlendCoherentOperations) {
+   self.advancedBlendCoherentOperations = advancedBlendCoherentOperations;
+   return *self;
+}
+fn PhysicalDeviceMultiDrawFeaturesEXT physicalDeviceMultiDrawFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMultiDrawFeaturesEXT PhysicalDeviceMultiDrawFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultiDrawFeaturesEXT PhysicalDeviceMultiDrawFeaturesEXT.setMultiDraw(&self, uint multiDraw) {
+   self.multiDraw = multiDraw;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT physicalDeviceBlendOperationAdvancedPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendMaxColorAttachments(&self, uint advancedBlendMaxColorAttachments) {
+   self.advancedBlendMaxColorAttachments = advancedBlendMaxColorAttachments;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendIndependentBlend(&self, uint advancedBlendIndependentBlend) {
+   self.advancedBlendIndependentBlend = advancedBlendIndependentBlend;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendNonPremultipliedSrcColor(&self, uint advancedBlendNonPremultipliedSrcColor) {
+   self.advancedBlendNonPremultipliedSrcColor = advancedBlendNonPremultipliedSrcColor;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendNonPremultipliedDstColor(&self, uint advancedBlendNonPremultipliedDstColor) {
+   self.advancedBlendNonPremultipliedDstColor = advancedBlendNonPremultipliedDstColor;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendCorrelatedOverlap(&self, uint advancedBlendCorrelatedOverlap) {
+   self.advancedBlendCorrelatedOverlap = advancedBlendCorrelatedOverlap;
+   return *self;
+}
+fn PhysicalDeviceBlendOperationAdvancedPropertiesEXT PhysicalDeviceBlendOperationAdvancedPropertiesEXT.setAdvancedBlendAllOperations(&self, uint advancedBlendAllOperations) {
+   self.advancedBlendAllOperations = advancedBlendAllOperations;
+   return *self;
+}
+fn PipelineColorBlendAdvancedStateCreateInfoEXT pipelineColorBlendAdvancedStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineColorBlendAdvancedStateCreateInfoEXT PipelineColorBlendAdvancedStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineColorBlendAdvancedStateCreateInfoEXT PipelineColorBlendAdvancedStateCreateInfoEXT.setSrcPremultiplied(&self, uint srcPremultiplied) {
+   self.srcPremultiplied = srcPremultiplied;
+   return *self;
+}
+fn PipelineColorBlendAdvancedStateCreateInfoEXT PipelineColorBlendAdvancedStateCreateInfoEXT.setDstPremultiplied(&self, uint dstPremultiplied) {
+   self.dstPremultiplied = dstPremultiplied;
+   return *self;
+}
+fn PipelineColorBlendAdvancedStateCreateInfoEXT PipelineColorBlendAdvancedStateCreateInfoEXT.setBlendOverlap(&self, BlendOverlapEXT blendOverlap) {
+   self.blendOverlap = blendOverlap;
+   return *self;
+}
 fn PhysicalDeviceInlineUniformBlockFeatures physicalDeviceInlineUniformBlockFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES, .pNext = null };
 fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2939,6 +5741,19 @@ fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeat
    return *self;
 }
 fn PhysicalDeviceInlineUniformBlockFeatures PhysicalDeviceInlineUniformBlockFeatures.setDescriptorBindingInlineUniformBlockUpdateAfterBind(&self, uint descriptorBindingInlineUniformBlockUpdateAfterBind) {
+   self.descriptorBindingInlineUniformBlockUpdateAfterBind = descriptorBindingInlineUniformBlockUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockFeaturesEXT physicalDeviceInlineUniformBlockFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES, .pNext = null };
+fn PhysicalDeviceInlineUniformBlockFeaturesEXT PhysicalDeviceInlineUniformBlockFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockFeaturesEXT PhysicalDeviceInlineUniformBlockFeaturesEXT.setInlineUniformBlock(&self, uint inlineUniformBlock) {
+   self.inlineUniformBlock = inlineUniformBlock;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockFeaturesEXT PhysicalDeviceInlineUniformBlockFeaturesEXT.setDescriptorBindingInlineUniformBlockUpdateAfterBind(&self, uint descriptorBindingInlineUniformBlockUpdateAfterBind) {
    self.descriptorBindingInlineUniformBlockUpdateAfterBind = descriptorBindingInlineUniformBlockUpdateAfterBind;
    return *self;
 }
@@ -2967,6 +5782,31 @@ fn PhysicalDeviceInlineUniformBlockProperties PhysicalDeviceInlineUniformBlockPr
    self.maxDescriptorSetUpdateAfterBindInlineUniformBlocks = maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
    return *self;
 }
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT physicalDeviceInlineUniformBlockPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES, .pNext = null };
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setMaxInlineUniformBlockSize(&self, uint maxInlineUniformBlockSize) {
+   self.maxInlineUniformBlockSize = maxInlineUniformBlockSize;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setMaxPerStageDescriptorInlineUniformBlocks(&self, uint maxPerStageDescriptorInlineUniformBlocks) {
+   self.maxPerStageDescriptorInlineUniformBlocks = maxPerStageDescriptorInlineUniformBlocks;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks(&self, uint maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks) {
+   self.maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks = maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setMaxDescriptorSetInlineUniformBlocks(&self, uint maxDescriptorSetInlineUniformBlocks) {
+   self.maxDescriptorSetInlineUniformBlocks = maxDescriptorSetInlineUniformBlocks;
+   return *self;
+}
+fn PhysicalDeviceInlineUniformBlockPropertiesEXT PhysicalDeviceInlineUniformBlockPropertiesEXT.setMaxDescriptorSetUpdateAfterBindInlineUniformBlocks(&self, uint maxDescriptorSetUpdateAfterBindInlineUniformBlocks) {
+   self.maxDescriptorSetUpdateAfterBindInlineUniformBlocks = maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+   return *self;
+}
 fn WriteDescriptorSetInlineUniformBlock writeDescriptorSetInlineUniformBlock() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK, .pNext = null };
 fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2980,6 +5820,19 @@ fn WriteDescriptorSetInlineUniformBlock WriteDescriptorSetInlineUniformBlock.set
    self.pData = pData;
    return *self;
 }
+fn WriteDescriptorSetInlineUniformBlockEXT writeDescriptorSetInlineUniformBlockEXT() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK, .pNext = null };
+fn WriteDescriptorSetInlineUniformBlockEXT WriteDescriptorSetInlineUniformBlockEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteDescriptorSetInlineUniformBlockEXT WriteDescriptorSetInlineUniformBlockEXT.setDataSize(&self, uint dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn WriteDescriptorSetInlineUniformBlockEXT WriteDescriptorSetInlineUniformBlockEXT.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
 fn DescriptorPoolInlineUniformBlockCreateInfo descriptorPoolInlineUniformBlockCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO, .pNext = null };
 fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -2987,6 +5840,41 @@ fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCr
 }
 fn DescriptorPoolInlineUniformBlockCreateInfo DescriptorPoolInlineUniformBlockCreateInfo.setMaxInlineUniformBlockBindings(&self, uint maxInlineUniformBlockBindings) {
    self.maxInlineUniformBlockBindings = maxInlineUniformBlockBindings;
+   return *self;
+}
+fn DescriptorPoolInlineUniformBlockCreateInfoEXT descriptorPoolInlineUniformBlockCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO, .pNext = null };
+fn DescriptorPoolInlineUniformBlockCreateInfoEXT DescriptorPoolInlineUniformBlockCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorPoolInlineUniformBlockCreateInfoEXT DescriptorPoolInlineUniformBlockCreateInfoEXT.setMaxInlineUniformBlockBindings(&self, uint maxInlineUniformBlockBindings) {
+   self.maxInlineUniformBlockBindings = maxInlineUniformBlockBindings;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV pipelineCoverageModulationStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setFlags(&self, PipelineCoverageModulationStateCreateFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setCoverageModulationMode(&self, CoverageModulationModeNV coverageModulationMode) {
+   self.coverageModulationMode = coverageModulationMode;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setCoverageModulationTableEnable(&self, uint coverageModulationTableEnable) {
+   self.coverageModulationTableEnable = coverageModulationTableEnable;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setCoverageModulationTableCount(&self, uint coverageModulationTableCount) {
+   self.coverageModulationTableCount = coverageModulationTableCount;
+   return *self;
+}
+fn PipelineCoverageModulationStateCreateInfoNV PipelineCoverageModulationStateCreateInfoNV.setCoverageModulationTable(&self, float[] pCoverageModulationTable) {
+   self.coverageModulationTableCount= (uint)pCoverageModulationTable.len;
+   self.pCoverageModulationTable = &pCoverageModulationTable[0];
    return *self;
 }
 fn ImageFormatListCreateInfo imageFormatListCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO, .pNext = null };
@@ -3003,6 +5891,46 @@ fn ImageFormatListCreateInfo ImageFormatListCreateInfo.setViewFormats(&self, For
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
+fn ImageFormatListCreateInfoKHR imageFormatListCreateInfoKHR() => { .sType = STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO, .pNext = null };
+fn ImageFormatListCreateInfoKHR ImageFormatListCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageFormatListCreateInfoKHR ImageFormatListCreateInfoKHR.setViewFormatCount(&self, uint viewFormatCount) {
+   self.viewFormatCount = viewFormatCount;
+   return *self;
+}
+fn ImageFormatListCreateInfoKHR ImageFormatListCreateInfoKHR.setViewFormats(&self, Format[] pViewFormats) {
+   self.viewFormatCount= (uint)pViewFormats.len;
+   self.pViewFormats = &pViewFormats[0];
+   return *self;
+}
+fn ValidationCacheCreateInfoEXT validationCacheCreateInfoEXT() => { .sType = STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT, .pNext = null };
+fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setFlags(&self, ValidationCacheCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setInitialDataSize(&self, usz initialDataSize) {
+   self.initialDataSize = initialDataSize;
+   return *self;
+}
+fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setInitialData(&self, void* pInitialData) {
+   self.pInitialData = pInitialData;
+   return *self;
+}
+fn ShaderModuleValidationCacheCreateInfoEXT shaderModuleValidationCacheCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT, .pNext = null };
+fn ShaderModuleValidationCacheCreateInfoEXT ShaderModuleValidationCacheCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderModuleValidationCacheCreateInfoEXT ShaderModuleValidationCacheCreateInfoEXT.setValidationCache(&self, ValidationCacheEXT validationCache) {
+   self.validationCache = validationCache;
+   return *self;
+}
 fn PhysicalDeviceMaintenance3Properties physicalDeviceMaintenance3Properties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES, .pNext = null };
 fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -3016,12 +5944,34 @@ fn PhysicalDeviceMaintenance3Properties PhysicalDeviceMaintenance3Properties.set
    self.maxMemoryAllocationSize = maxMemoryAllocationSize;
    return *self;
 }
+fn PhysicalDeviceMaintenance3PropertiesKHR physicalDeviceMaintenance3PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance3PropertiesKHR PhysicalDeviceMaintenance3PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance3PropertiesKHR PhysicalDeviceMaintenance3PropertiesKHR.setMaxPerSetDescriptors(&self, uint maxPerSetDescriptors) {
+   self.maxPerSetDescriptors = maxPerSetDescriptors;
+   return *self;
+}
+fn PhysicalDeviceMaintenance3PropertiesKHR PhysicalDeviceMaintenance3PropertiesKHR.setMaxMemoryAllocationSize(&self, DeviceSize maxMemoryAllocationSize) {
+   self.maxMemoryAllocationSize = maxMemoryAllocationSize;
+   return *self;
+}
 fn PhysicalDeviceMaintenance4Features physicalDeviceMaintenance4Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceMaintenance4Features PhysicalDeviceMaintenance4Features.setMaintenance4(&self, uint maintenance4) {
+   self.maintenance4 = maintenance4;
+   return *self;
+}
+fn PhysicalDeviceMaintenance4FeaturesKHR physicalDeviceMaintenance4FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance4FeaturesKHR PhysicalDeviceMaintenance4FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance4FeaturesKHR PhysicalDeviceMaintenance4FeaturesKHR.setMaintenance4(&self, uint maintenance4) {
    self.maintenance4 = maintenance4;
    return *self;
 }
@@ -3034,12 +5984,30 @@ fn PhysicalDeviceMaintenance4Properties PhysicalDeviceMaintenance4Properties.set
    self.maxBufferSize = maxBufferSize;
    return *self;
 }
+fn PhysicalDeviceMaintenance4PropertiesKHR physicalDeviceMaintenance4PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance4PropertiesKHR PhysicalDeviceMaintenance4PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance4PropertiesKHR PhysicalDeviceMaintenance4PropertiesKHR.setMaxBufferSize(&self, DeviceSize maxBufferSize) {
+   self.maxBufferSize = maxBufferSize;
+   return *self;
+}
 fn PhysicalDeviceMaintenance5Features physicalDeviceMaintenance5Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance5Features PhysicalDeviceMaintenance5Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceMaintenance5Features PhysicalDeviceMaintenance5Features.setMaintenance5(&self, uint maintenance5) {
+   self.maintenance5 = maintenance5;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5FeaturesKHR physicalDeviceMaintenance5FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance5FeaturesKHR PhysicalDeviceMaintenance5FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5FeaturesKHR PhysicalDeviceMaintenance5FeaturesKHR.setMaintenance5(&self, uint maintenance5) {
    self.maintenance5 = maintenance5;
    return *self;
 }
@@ -3072,12 +6040,50 @@ fn PhysicalDeviceMaintenance5Properties PhysicalDeviceMaintenance5Properties.set
    self.nonStrictWideLinesUseParallelogram = nonStrictWideLinesUseParallelogram;
    return *self;
 }
+fn PhysicalDeviceMaintenance5PropertiesKHR physicalDeviceMaintenance5PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setEarlyFragmentMultisampleCoverageAfterSampleCounting(&self, uint earlyFragmentMultisampleCoverageAfterSampleCounting) {
+   self.earlyFragmentMultisampleCoverageAfterSampleCounting = earlyFragmentMultisampleCoverageAfterSampleCounting;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setEarlyFragmentSampleMaskTestBeforeSampleCounting(&self, uint earlyFragmentSampleMaskTestBeforeSampleCounting) {
+   self.earlyFragmentSampleMaskTestBeforeSampleCounting = earlyFragmentSampleMaskTestBeforeSampleCounting;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setDepthStencilSwizzleOneSupport(&self, uint depthStencilSwizzleOneSupport) {
+   self.depthStencilSwizzleOneSupport = depthStencilSwizzleOneSupport;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setPolygonModePointSize(&self, uint polygonModePointSize) {
+   self.polygonModePointSize = polygonModePointSize;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setNonStrictSinglePixelWideLinesUseParallelogram(&self, uint nonStrictSinglePixelWideLinesUseParallelogram) {
+   self.nonStrictSinglePixelWideLinesUseParallelogram = nonStrictSinglePixelWideLinesUseParallelogram;
+   return *self;
+}
+fn PhysicalDeviceMaintenance5PropertiesKHR PhysicalDeviceMaintenance5PropertiesKHR.setNonStrictWideLinesUseParallelogram(&self, uint nonStrictWideLinesUseParallelogram) {
+   self.nonStrictWideLinesUseParallelogram = nonStrictWideLinesUseParallelogram;
+   return *self;
+}
 fn PhysicalDeviceMaintenance6Features physicalDeviceMaintenance6Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES, .pNext = null };
 fn PhysicalDeviceMaintenance6Features PhysicalDeviceMaintenance6Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceMaintenance6Features PhysicalDeviceMaintenance6Features.setMaintenance6(&self, uint maintenance6) {
+   self.maintenance6 = maintenance6;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6FeaturesKHR physicalDeviceMaintenance6FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES, .pNext = null };
+fn PhysicalDeviceMaintenance6FeaturesKHR PhysicalDeviceMaintenance6FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6FeaturesKHR PhysicalDeviceMaintenance6FeaturesKHR.setMaintenance6(&self, uint maintenance6) {
    self.maintenance6 = maintenance6;
    return *self;
 }
@@ -3096,6 +6102,179 @@ fn PhysicalDeviceMaintenance6Properties PhysicalDeviceMaintenance6Properties.set
 }
 fn PhysicalDeviceMaintenance6Properties PhysicalDeviceMaintenance6Properties.setFragmentShadingRateClampCombinerInputs(&self, uint fragmentShadingRateClampCombinerInputs) {
    self.fragmentShadingRateClampCombinerInputs = fragmentShadingRateClampCombinerInputs;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6PropertiesKHR physicalDeviceMaintenance6PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES, .pNext = null };
+fn PhysicalDeviceMaintenance6PropertiesKHR PhysicalDeviceMaintenance6PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6PropertiesKHR PhysicalDeviceMaintenance6PropertiesKHR.setBlockTexelViewCompatibleMultipleLayers(&self, uint blockTexelViewCompatibleMultipleLayers) {
+   self.blockTexelViewCompatibleMultipleLayers = blockTexelViewCompatibleMultipleLayers;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6PropertiesKHR PhysicalDeviceMaintenance6PropertiesKHR.setMaxCombinedImageSamplerDescriptorCount(&self, uint maxCombinedImageSamplerDescriptorCount) {
+   self.maxCombinedImageSamplerDescriptorCount = maxCombinedImageSamplerDescriptorCount;
+   return *self;
+}
+fn PhysicalDeviceMaintenance6PropertiesKHR PhysicalDeviceMaintenance6PropertiesKHR.setFragmentShadingRateClampCombinerInputs(&self, uint fragmentShadingRateClampCombinerInputs) {
+   self.fragmentShadingRateClampCombinerInputs = fragmentShadingRateClampCombinerInputs;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7FeaturesKHR physicalDeviceMaintenance7FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance7FeaturesKHR PhysicalDeviceMaintenance7FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7FeaturesKHR PhysicalDeviceMaintenance7FeaturesKHR.setMaintenance7(&self, uint maintenance7) {
+   self.maintenance7 = maintenance7;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR physicalDeviceMaintenance7PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setRobustFragmentShadingRateAttachmentAccess(&self, uint robustFragmentShadingRateAttachmentAccess) {
+   self.robustFragmentShadingRateAttachmentAccess = robustFragmentShadingRateAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setSeparateDepthStencilAttachmentAccess(&self, uint separateDepthStencilAttachmentAccess) {
+   self.separateDepthStencilAttachmentAccess = separateDepthStencilAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetTotalUniformBuffersDynamic(&self, uint maxDescriptorSetTotalUniformBuffersDynamic) {
+   self.maxDescriptorSetTotalUniformBuffersDynamic = maxDescriptorSetTotalUniformBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetTotalStorageBuffersDynamic(&self, uint maxDescriptorSetTotalStorageBuffersDynamic) {
+   self.maxDescriptorSetTotalStorageBuffersDynamic = maxDescriptorSetTotalStorageBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetTotalBuffersDynamic(&self, uint maxDescriptorSetTotalBuffersDynamic) {
+   self.maxDescriptorSetTotalBuffersDynamic = maxDescriptorSetTotalBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic(&self, uint maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic) {
+   self.maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic = maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic(&self, uint maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic) {
+   self.maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic = maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceMaintenance7PropertiesKHR PhysicalDeviceMaintenance7PropertiesKHR.setMaxDescriptorSetUpdateAfterBindTotalBuffersDynamic(&self, uint maxDescriptorSetUpdateAfterBindTotalBuffersDynamic) {
+   self.maxDescriptorSetUpdateAfterBindTotalBuffersDynamic = maxDescriptorSetUpdateAfterBindTotalBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesListKHR physicalDeviceLayeredApiPropertiesListKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_PROPERTIES_LIST_KHR, .pNext = null };
+fn PhysicalDeviceLayeredApiPropertiesListKHR PhysicalDeviceLayeredApiPropertiesListKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesListKHR PhysicalDeviceLayeredApiPropertiesListKHR.setLayeredApiCount(&self, uint layeredApiCount) {
+   self.layeredApiCount = layeredApiCount;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesListKHR PhysicalDeviceLayeredApiPropertiesListKHR.setLayeredApis(&self, PhysicalDeviceLayeredApiPropertiesKHR[] pLayeredApis) {
+   self.layeredApiCount= (uint)pLayeredApis.len;
+   self.pLayeredApis = &pLayeredApis[0];
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesKHR physicalDeviceLayeredApiPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceLayeredApiPropertiesKHR PhysicalDeviceLayeredApiPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesKHR PhysicalDeviceLayeredApiPropertiesKHR.setVendorID(&self, uint vendorID) {
+   self.vendorID = vendorID;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesKHR PhysicalDeviceLayeredApiPropertiesKHR.setDeviceID(&self, uint deviceID) {
+   self.deviceID = deviceID;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesKHR PhysicalDeviceLayeredApiPropertiesKHR.setLayeredAPI(&self, PhysicalDeviceLayeredApiKHR layeredAPI) {
+   self.layeredAPI = layeredAPI;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiPropertiesKHR PhysicalDeviceLayeredApiPropertiesKHR.setDeviceName(&self, char[MAX_PHYSICAL_DEVICE_NAME_SIZE] deviceName) {
+   self.deviceName = deviceName;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiVulkanPropertiesKHR physicalDeviceLayeredApiVulkanPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_VULKAN_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceLayeredApiVulkanPropertiesKHR PhysicalDeviceLayeredApiVulkanPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLayeredApiVulkanPropertiesKHR PhysicalDeviceLayeredApiVulkanPropertiesKHR.setProperties(&self, PhysicalDeviceProperties2 properties) {
+   self.properties = properties;
+   return *self;
+}
+fn PhysicalDeviceMaintenance8FeaturesKHR physicalDeviceMaintenance8FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance8FeaturesKHR PhysicalDeviceMaintenance8FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance8FeaturesKHR PhysicalDeviceMaintenance8FeaturesKHR.setMaintenance8(&self, uint maintenance8) {
+   self.maintenance8 = maintenance8;
+   return *self;
+}
+fn PhysicalDeviceMaintenance9FeaturesKHR physicalDeviceMaintenance9FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance9FeaturesKHR PhysicalDeviceMaintenance9FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance9FeaturesKHR PhysicalDeviceMaintenance9FeaturesKHR.setMaintenance9(&self, uint maintenance9) {
+   self.maintenance9 = maintenance9;
+   return *self;
+}
+fn PhysicalDeviceMaintenance9PropertiesKHR physicalDeviceMaintenance9PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance9PropertiesKHR PhysicalDeviceMaintenance9PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance9PropertiesKHR PhysicalDeviceMaintenance9PropertiesKHR.setImage2DViewOf3DSparse(&self, uint image2DViewOf3DSparse) {
+   self.image2DViewOf3DSparse = image2DViewOf3DSparse;
+   return *self;
+}
+fn PhysicalDeviceMaintenance9PropertiesKHR PhysicalDeviceMaintenance9PropertiesKHR.setDefaultVertexAttributeValue(&self, DefaultVertexAttributeValueKHR defaultVertexAttributeValue) {
+   self.defaultVertexAttributeValue = defaultVertexAttributeValue;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10PropertiesKHR physicalDeviceMaintenance10PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance10PropertiesKHR PhysicalDeviceMaintenance10PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10PropertiesKHR PhysicalDeviceMaintenance10PropertiesKHR.setRgba4OpaqueBlackSwizzled(&self, uint rgba4OpaqueBlackSwizzled) {
+   self.rgba4OpaqueBlackSwizzled = rgba4OpaqueBlackSwizzled;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10PropertiesKHR PhysicalDeviceMaintenance10PropertiesKHR.setResolveSrgbFormatAppliesTransferFunction(&self, uint resolveSrgbFormatAppliesTransferFunction) {
+   self.resolveSrgbFormatAppliesTransferFunction = resolveSrgbFormatAppliesTransferFunction;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10PropertiesKHR PhysicalDeviceMaintenance10PropertiesKHR.setResolveSrgbFormatSupportsTransferFunctionControl(&self, uint resolveSrgbFormatSupportsTransferFunctionControl) {
+   self.resolveSrgbFormatSupportsTransferFunctionControl = resolveSrgbFormatSupportsTransferFunctionControl;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10FeaturesKHR physicalDeviceMaintenance10FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceMaintenance10FeaturesKHR PhysicalDeviceMaintenance10FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMaintenance10FeaturesKHR PhysicalDeviceMaintenance10FeaturesKHR.setMaintenance10(&self, uint maintenance10) {
+   self.maintenance10 = maintenance10;
+   return *self;
+}
+fn QueueFamilyOwnershipTransferPropertiesKHR queueFamilyOwnershipTransferPropertiesKHR() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR, .pNext = null };
+fn QueueFamilyOwnershipTransferPropertiesKHR QueueFamilyOwnershipTransferPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyOwnershipTransferPropertiesKHR QueueFamilyOwnershipTransferPropertiesKHR.setOptimalImageTransferToQueueFamilies(&self, uint optimalImageTransferToQueueFamilies) {
+   self.optimalImageTransferToQueueFamilies = optimalImageTransferToQueueFamilies;
    return *self;
 }
 fn RenderingAreaInfo renderingAreaInfo() => { .sType = STRUCTURE_TYPE_RENDERING_AREA_INFO, .pNext = null };
@@ -3124,12 +6303,47 @@ fn RenderingAreaInfo RenderingAreaInfo.setStencilAttachmentFormat(&self, Format 
    self.stencilAttachmentFormat = stencilAttachmentFormat;
    return *self;
 }
+fn RenderingAreaInfoKHR renderingAreaInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_AREA_INFO, .pNext = null };
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setViewMask(&self, uint viewMask) {
+   self.viewMask = viewMask;
+   return *self;
+}
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setColorAttachmentFormats(&self, Format[] pColorAttachmentFormats) {
+   self.colorAttachmentCount= (uint)pColorAttachmentFormats.len;
+   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
+   return *self;
+}
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setDepthAttachmentFormat(&self, Format depthAttachmentFormat) {
+   self.depthAttachmentFormat = depthAttachmentFormat;
+   return *self;
+}
+fn RenderingAreaInfoKHR RenderingAreaInfoKHR.setStencilAttachmentFormat(&self, Format stencilAttachmentFormat) {
+   self.stencilAttachmentFormat = stencilAttachmentFormat;
+   return *self;
+}
 fn DescriptorSetLayoutSupport descriptorSetLayoutSupport() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT, .pNext = null };
 fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn DescriptorSetLayoutSupport DescriptorSetLayoutSupport.setSupported(&self, uint supported) {
+   self.supported = supported;
+   return *self;
+}
+fn DescriptorSetLayoutSupportKHR descriptorSetLayoutSupportKHR() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT, .pNext = null };
+fn DescriptorSetLayoutSupportKHR DescriptorSetLayoutSupportKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetLayoutSupportKHR DescriptorSetLayoutSupportKHR.setSupported(&self, uint supported) {
    self.supported = supported;
    return *self;
 }
@@ -3161,6 +6375,32 @@ fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Featur
    return *self;
 }
 fn PhysicalDeviceShaderFloat16Int8Features PhysicalDeviceShaderFloat16Int8Features.setShaderInt8(&self, uint shaderInt8) {
+   self.shaderInt8 = shaderInt8;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat16Int8FeaturesKHR physicalDeviceShaderFloat16Int8FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderFloat16Int8FeaturesKHR PhysicalDeviceShaderFloat16Int8FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat16Int8FeaturesKHR PhysicalDeviceShaderFloat16Int8FeaturesKHR.setShaderFloat16(&self, uint shaderFloat16) {
+   self.shaderFloat16 = shaderFloat16;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat16Int8FeaturesKHR PhysicalDeviceShaderFloat16Int8FeaturesKHR.setShaderInt8(&self, uint shaderInt8) {
+   self.shaderInt8 = shaderInt8;
+   return *self;
+}
+fn PhysicalDeviceFloat16Int8FeaturesKHR physicalDeviceFloat16Int8FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES, .pNext = null };
+fn PhysicalDeviceFloat16Int8FeaturesKHR PhysicalDeviceFloat16Int8FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFloat16Int8FeaturesKHR PhysicalDeviceFloat16Int8FeaturesKHR.setShaderFloat16(&self, uint shaderFloat16) {
+   self.shaderFloat16 = shaderFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloat16Int8FeaturesKHR PhysicalDeviceFloat16Int8FeaturesKHR.setShaderInt8(&self, uint shaderInt8) {
    self.shaderInt8 = shaderInt8;
    return *self;
 }
@@ -3237,12 +6477,94 @@ fn PhysicalDeviceFloatControlsProperties PhysicalDeviceFloatControlsProperties.s
    self.shaderRoundingModeRTZFloat64 = shaderRoundingModeRTZFloat64;
    return *self;
 }
+fn PhysicalDeviceFloatControlsPropertiesKHR physicalDeviceFloatControlsPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES, .pNext = null };
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setDenormBehaviorIndependence(&self, ShaderFloatControlsIndependence denormBehaviorIndependence) {
+   self.denormBehaviorIndependence = denormBehaviorIndependence;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setRoundingModeIndependence(&self, ShaderFloatControlsIndependence roundingModeIndependence) {
+   self.roundingModeIndependence = roundingModeIndependence;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderSignedZeroInfNanPreserveFloat16(&self, uint shaderSignedZeroInfNanPreserveFloat16) {
+   self.shaderSignedZeroInfNanPreserveFloat16 = shaderSignedZeroInfNanPreserveFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderSignedZeroInfNanPreserveFloat32(&self, uint shaderSignedZeroInfNanPreserveFloat32) {
+   self.shaderSignedZeroInfNanPreserveFloat32 = shaderSignedZeroInfNanPreserveFloat32;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderSignedZeroInfNanPreserveFloat64(&self, uint shaderSignedZeroInfNanPreserveFloat64) {
+   self.shaderSignedZeroInfNanPreserveFloat64 = shaderSignedZeroInfNanPreserveFloat64;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormPreserveFloat16(&self, uint shaderDenormPreserveFloat16) {
+   self.shaderDenormPreserveFloat16 = shaderDenormPreserveFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormPreserveFloat32(&self, uint shaderDenormPreserveFloat32) {
+   self.shaderDenormPreserveFloat32 = shaderDenormPreserveFloat32;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormPreserveFloat64(&self, uint shaderDenormPreserveFloat64) {
+   self.shaderDenormPreserveFloat64 = shaderDenormPreserveFloat64;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormFlushToZeroFloat16(&self, uint shaderDenormFlushToZeroFloat16) {
+   self.shaderDenormFlushToZeroFloat16 = shaderDenormFlushToZeroFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormFlushToZeroFloat32(&self, uint shaderDenormFlushToZeroFloat32) {
+   self.shaderDenormFlushToZeroFloat32 = shaderDenormFlushToZeroFloat32;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderDenormFlushToZeroFloat64(&self, uint shaderDenormFlushToZeroFloat64) {
+   self.shaderDenormFlushToZeroFloat64 = shaderDenormFlushToZeroFloat64;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTEFloat16(&self, uint shaderRoundingModeRTEFloat16) {
+   self.shaderRoundingModeRTEFloat16 = shaderRoundingModeRTEFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTEFloat32(&self, uint shaderRoundingModeRTEFloat32) {
+   self.shaderRoundingModeRTEFloat32 = shaderRoundingModeRTEFloat32;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTEFloat64(&self, uint shaderRoundingModeRTEFloat64) {
+   self.shaderRoundingModeRTEFloat64 = shaderRoundingModeRTEFloat64;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTZFloat16(&self, uint shaderRoundingModeRTZFloat16) {
+   self.shaderRoundingModeRTZFloat16 = shaderRoundingModeRTZFloat16;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTZFloat32(&self, uint shaderRoundingModeRTZFloat32) {
+   self.shaderRoundingModeRTZFloat32 = shaderRoundingModeRTZFloat32;
+   return *self;
+}
+fn PhysicalDeviceFloatControlsPropertiesKHR PhysicalDeviceFloatControlsPropertiesKHR.setShaderRoundingModeRTZFloat64(&self, uint shaderRoundingModeRTZFloat64) {
+   self.shaderRoundingModeRTZFloat64 = shaderRoundingModeRTZFloat64;
+   return *self;
+}
 fn PhysicalDeviceHostQueryResetFeatures physicalDeviceHostQueryResetFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES, .pNext = null };
 fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceHostQueryResetFeatures PhysicalDeviceHostQueryResetFeatures.setHostQueryReset(&self, uint hostQueryReset) {
+   self.hostQueryReset = hostQueryReset;
+   return *self;
+}
+fn PhysicalDeviceHostQueryResetFeaturesEXT physicalDeviceHostQueryResetFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES, .pNext = null };
+fn PhysicalDeviceHostQueryResetFeaturesEXT PhysicalDeviceHostQueryResetFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceHostQueryResetFeaturesEXT PhysicalDeviceHostQueryResetFeaturesEXT.setHostQueryReset(&self, uint hostQueryReset) {
    self.hostQueryReset = hostQueryReset;
    return *self;
 }
@@ -3255,12 +6577,48 @@ fn DeviceQueueGlobalPriorityCreateInfo DeviceQueueGlobalPriorityCreateInfo.setGl
    self.globalPriority = globalPriority;
    return *self;
 }
+fn DeviceQueueGlobalPriorityCreateInfoKHR deviceQueueGlobalPriorityCreateInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO, .pNext = null };
+fn DeviceQueueGlobalPriorityCreateInfoKHR DeviceQueueGlobalPriorityCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceQueueGlobalPriorityCreateInfoKHR DeviceQueueGlobalPriorityCreateInfoKHR.setGlobalPriority(&self, QueueGlobalPriority globalPriority) {
+   self.globalPriority = globalPriority;
+   return *self;
+}
+fn DeviceQueueGlobalPriorityCreateInfoEXT deviceQueueGlobalPriorityCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO, .pNext = null };
+fn DeviceQueueGlobalPriorityCreateInfoEXT DeviceQueueGlobalPriorityCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceQueueGlobalPriorityCreateInfoEXT DeviceQueueGlobalPriorityCreateInfoEXT.setGlobalPriority(&self, QueueGlobalPriority globalPriority) {
+   self.globalPriority = globalPriority;
+   return *self;
+}
 fn PhysicalDeviceGlobalPriorityQueryFeatures physicalDeviceGlobalPriorityQueryFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES, .pNext = null };
 fn PhysicalDeviceGlobalPriorityQueryFeatures PhysicalDeviceGlobalPriorityQueryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceGlobalPriorityQueryFeatures PhysicalDeviceGlobalPriorityQueryFeatures.setGlobalPriorityQuery(&self, uint globalPriorityQuery) {
+   self.globalPriorityQuery = globalPriorityQuery;
+   return *self;
+}
+fn PhysicalDeviceGlobalPriorityQueryFeaturesKHR physicalDeviceGlobalPriorityQueryFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES, .pNext = null };
+fn PhysicalDeviceGlobalPriorityQueryFeaturesKHR PhysicalDeviceGlobalPriorityQueryFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceGlobalPriorityQueryFeaturesKHR PhysicalDeviceGlobalPriorityQueryFeaturesKHR.setGlobalPriorityQuery(&self, uint globalPriorityQuery) {
+   self.globalPriorityQuery = globalPriorityQuery;
+   return *self;
+}
+fn PhysicalDeviceGlobalPriorityQueryFeaturesEXT physicalDeviceGlobalPriorityQueryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES, .pNext = null };
+fn PhysicalDeviceGlobalPriorityQueryFeaturesEXT PhysicalDeviceGlobalPriorityQueryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceGlobalPriorityQueryFeaturesEXT PhysicalDeviceGlobalPriorityQueryFeaturesEXT.setGlobalPriorityQuery(&self, uint globalPriorityQuery) {
    self.globalPriorityQuery = globalPriorityQuery;
    return *self;
 }
@@ -3274,6 +6632,34 @@ fn QueueFamilyGlobalPriorityProperties QueueFamilyGlobalPriorityProperties.setPr
    return *self;
 }
 fn QueueFamilyGlobalPriorityProperties QueueFamilyGlobalPriorityProperties.setPriorities(&self, QueueGlobalPriority[MAX_GLOBAL_PRIORITY_SIZE] priorities) {
+   self.priorityCount= (uint)priorities.len;
+   self.priorities = priorities;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesKHR queueFamilyGlobalPriorityPropertiesKHR() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES, .pNext = null };
+fn QueueFamilyGlobalPriorityPropertiesKHR QueueFamilyGlobalPriorityPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesKHR QueueFamilyGlobalPriorityPropertiesKHR.setPriorityCount(&self, uint priorityCount) {
+   self.priorityCount = priorityCount;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesKHR QueueFamilyGlobalPriorityPropertiesKHR.setPriorities(&self, QueueGlobalPriority[MAX_GLOBAL_PRIORITY_SIZE] priorities) {
+   self.priorityCount= (uint)priorities.len;
+   self.priorities = priorities;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesEXT queueFamilyGlobalPriorityPropertiesEXT() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES, .pNext = null };
+fn QueueFamilyGlobalPriorityPropertiesEXT QueueFamilyGlobalPriorityPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesEXT QueueFamilyGlobalPriorityPropertiesEXT.setPriorityCount(&self, uint priorityCount) {
+   self.priorityCount = priorityCount;
+   return *self;
+}
+fn QueueFamilyGlobalPriorityPropertiesEXT QueueFamilyGlobalPriorityPropertiesEXT.setPriorities(&self, QueueGlobalPriority[MAX_GLOBAL_PRIORITY_SIZE] priorities) {
    self.priorityCount= (uint)priorities.len;
    self.priorities = priorities;
    return *self;
@@ -3406,6 +6792,229 @@ fn DebugUtilsMessengerCallbackDataEXT DebugUtilsMessengerCallbackDataEXT.setObje
    self.pObjects = &pObjects[0];
    return *self;
 }
+fn PhysicalDeviceDeviceMemoryReportFeaturesEXT physicalDeviceDeviceMemoryReportFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDeviceMemoryReportFeaturesEXT PhysicalDeviceDeviceMemoryReportFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceMemoryReportFeaturesEXT PhysicalDeviceDeviceMemoryReportFeaturesEXT.setDeviceMemoryReport(&self, uint deviceMemoryReport) {
+   self.deviceMemoryReport = deviceMemoryReport;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT deviceMemoryReportCallbackDataEXT() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT, .pNext = null };
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setFlags(&self, DeviceMemoryReportFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setType(&self, DeviceMemoryReportEventTypeEXT type) {
+   self.type = type;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setMemoryObjectId(&self, ulong memoryObjectId) {
+   self.memoryObjectId = memoryObjectId;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setObjectType(&self, ObjectType objectType) {
+   self.objectType = objectType;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setObjectHandle(&self, ulong objectHandle) {
+   self.objectHandle = objectHandle;
+   return *self;
+}
+fn DeviceMemoryReportCallbackDataEXT DeviceMemoryReportCallbackDataEXT.setHeapIndex(&self, uint heapIndex) {
+   self.heapIndex = heapIndex;
+   return *self;
+}
+fn ImportMemoryHostPointerInfoEXT importMemoryHostPointerInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT, .pNext = null };
+fn ImportMemoryHostPointerInfoEXT ImportMemoryHostPointerInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMemoryHostPointerInfoEXT ImportMemoryHostPointerInfoEXT.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ImportMemoryHostPointerInfoEXT ImportMemoryHostPointerInfoEXT.setHostPointer(&self, void* pHostPointer) {
+   self.pHostPointer = pHostPointer;
+   return *self;
+}
+fn MemoryHostPointerPropertiesEXT memoryHostPointerPropertiesEXT() => { .sType = STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT, .pNext = null };
+fn MemoryHostPointerPropertiesEXT MemoryHostPointerPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryHostPointerPropertiesEXT MemoryHostPointerPropertiesEXT.setMemoryTypeBits(&self, uint memoryTypeBits) {
+   self.memoryTypeBits = memoryTypeBits;
+   return *self;
+}
+fn PhysicalDeviceExternalMemoryHostPropertiesEXT physicalDeviceExternalMemoryHostPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceExternalMemoryHostPropertiesEXT PhysicalDeviceExternalMemoryHostPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalMemoryHostPropertiesEXT PhysicalDeviceExternalMemoryHostPropertiesEXT.setMinImportedHostPointerAlignment(&self, DeviceSize minImportedHostPointerAlignment) {
+   self.minImportedHostPointerAlignment = minImportedHostPointerAlignment;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT physicalDeviceConservativeRasterizationPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setPrimitiveOverestimationSize(&self, float primitiveOverestimationSize) {
+   self.primitiveOverestimationSize = primitiveOverestimationSize;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setMaxExtraPrimitiveOverestimationSize(&self, float maxExtraPrimitiveOverestimationSize) {
+   self.maxExtraPrimitiveOverestimationSize = maxExtraPrimitiveOverestimationSize;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setExtraPrimitiveOverestimationSizeGranularity(&self, float extraPrimitiveOverestimationSizeGranularity) {
+   self.extraPrimitiveOverestimationSizeGranularity = extraPrimitiveOverestimationSizeGranularity;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setPrimitiveUnderestimation(&self, uint primitiveUnderestimation) {
+   self.primitiveUnderestimation = primitiveUnderestimation;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setConservativePointAndLineRasterization(&self, uint conservativePointAndLineRasterization) {
+   self.conservativePointAndLineRasterization = conservativePointAndLineRasterization;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setDegenerateTrianglesRasterized(&self, uint degenerateTrianglesRasterized) {
+   self.degenerateTrianglesRasterized = degenerateTrianglesRasterized;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setDegenerateLinesRasterized(&self, uint degenerateLinesRasterized) {
+   self.degenerateLinesRasterized = degenerateLinesRasterized;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setFullyCoveredFragmentShaderInputVariable(&self, uint fullyCoveredFragmentShaderInputVariable) {
+   self.fullyCoveredFragmentShaderInputVariable = fullyCoveredFragmentShaderInputVariable;
+   return *self;
+}
+fn PhysicalDeviceConservativeRasterizationPropertiesEXT PhysicalDeviceConservativeRasterizationPropertiesEXT.setConservativeRasterizationPostDepthCoverage(&self, uint conservativeRasterizationPostDepthCoverage) {
+   self.conservativeRasterizationPostDepthCoverage = conservativeRasterizationPostDepthCoverage;
+   return *self;
+}
+fn CalibratedTimestampInfoKHR calibratedTimestampInfoKHR() => { .sType = STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR, .pNext = null };
+fn CalibratedTimestampInfoKHR CalibratedTimestampInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CalibratedTimestampInfoKHR CalibratedTimestampInfoKHR.setTimeDomain(&self, TimeDomainKHR timeDomain) {
+   self.timeDomain = timeDomain;
+   return *self;
+}
+fn CalibratedTimestampInfoEXT calibratedTimestampInfoEXT() => { .sType = STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR, .pNext = null };
+fn CalibratedTimestampInfoEXT CalibratedTimestampInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CalibratedTimestampInfoEXT CalibratedTimestampInfoEXT.setTimeDomain(&self, TimeDomainKHR timeDomain) {
+   self.timeDomain = timeDomain;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD physicalDeviceShaderCorePropertiesAMD() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD, .pNext = null };
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setShaderEngineCount(&self, uint shaderEngineCount) {
+   self.shaderEngineCount = shaderEngineCount;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setShaderArraysPerEngineCount(&self, uint shaderArraysPerEngineCount) {
+   self.shaderArraysPerEngineCount = shaderArraysPerEngineCount;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setComputeUnitsPerShaderArray(&self, uint computeUnitsPerShaderArray) {
+   self.computeUnitsPerShaderArray = computeUnitsPerShaderArray;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setSimdPerComputeUnit(&self, uint simdPerComputeUnit) {
+   self.simdPerComputeUnit = simdPerComputeUnit;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setWavefrontsPerSimd(&self, uint wavefrontsPerSimd) {
+   self.wavefrontsPerSimd = wavefrontsPerSimd;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setWavefrontSize(&self, uint wavefrontSize) {
+   self.wavefrontSize = wavefrontSize;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setSgprsPerSimd(&self, uint sgprsPerSimd) {
+   self.sgprsPerSimd = sgprsPerSimd;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setMinSgprAllocation(&self, uint minSgprAllocation) {
+   self.minSgprAllocation = minSgprAllocation;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setMaxSgprAllocation(&self, uint maxSgprAllocation) {
+   self.maxSgprAllocation = maxSgprAllocation;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setSgprAllocationGranularity(&self, uint sgprAllocationGranularity) {
+   self.sgprAllocationGranularity = sgprAllocationGranularity;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setVgprsPerSimd(&self, uint vgprsPerSimd) {
+   self.vgprsPerSimd = vgprsPerSimd;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setMinVgprAllocation(&self, uint minVgprAllocation) {
+   self.minVgprAllocation = minVgprAllocation;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setMaxVgprAllocation(&self, uint maxVgprAllocation) {
+   self.maxVgprAllocation = maxVgprAllocation;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesAMD PhysicalDeviceShaderCorePropertiesAMD.setVgprAllocationGranularity(&self, uint vgprAllocationGranularity) {
+   self.vgprAllocationGranularity = vgprAllocationGranularity;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreProperties2AMD physicalDeviceShaderCoreProperties2AMD() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD, .pNext = null };
+fn PhysicalDeviceShaderCoreProperties2AMD PhysicalDeviceShaderCoreProperties2AMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreProperties2AMD PhysicalDeviceShaderCoreProperties2AMD.setShaderCoreFeatures(&self, ShaderCorePropertiesFlagsAMD shaderCoreFeatures) {
+   self.shaderCoreFeatures = shaderCoreFeatures;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreProperties2AMD PhysicalDeviceShaderCoreProperties2AMD.setActiveComputeUnitCount(&self, uint activeComputeUnitCount) {
+   self.activeComputeUnitCount = activeComputeUnitCount;
+   return *self;
+}
+fn PipelineRasterizationConservativeStateCreateInfoEXT pipelineRasterizationConservativeStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineRasterizationConservativeStateCreateInfoEXT PipelineRasterizationConservativeStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationConservativeStateCreateInfoEXT PipelineRasterizationConservativeStateCreateInfoEXT.setFlags(&self, PipelineRasterizationConservativeStateCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineRasterizationConservativeStateCreateInfoEXT PipelineRasterizationConservativeStateCreateInfoEXT.setConservativeRasterizationMode(&self, ConservativeRasterizationModeEXT conservativeRasterizationMode) {
+   self.conservativeRasterizationMode = conservativeRasterizationMode;
+   return *self;
+}
+fn PipelineRasterizationConservativeStateCreateInfoEXT PipelineRasterizationConservativeStateCreateInfoEXT.setExtraPrimitiveOverestimationSize(&self, float extraPrimitiveOverestimationSize) {
+   self.extraPrimitiveOverestimationSize = extraPrimitiveOverestimationSize;
+   return *self;
+}
 fn PhysicalDeviceDescriptorIndexingFeatures physicalDeviceDescriptorIndexingFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES, .pNext = null };
 fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -3488,6 +7097,91 @@ fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeat
    return *self;
 }
 fn PhysicalDeviceDescriptorIndexingFeatures PhysicalDeviceDescriptorIndexingFeatures.setRuntimeDescriptorArray(&self, uint runtimeDescriptorArray) {
+   self.runtimeDescriptorArray = runtimeDescriptorArray;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT physicalDeviceDescriptorIndexingFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES, .pNext = null };
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderInputAttachmentArrayDynamicIndexing(&self, uint shaderInputAttachmentArrayDynamicIndexing) {
+   self.shaderInputAttachmentArrayDynamicIndexing = shaderInputAttachmentArrayDynamicIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderUniformTexelBufferArrayDynamicIndexing(&self, uint shaderUniformTexelBufferArrayDynamicIndexing) {
+   self.shaderUniformTexelBufferArrayDynamicIndexing = shaderUniformTexelBufferArrayDynamicIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderStorageTexelBufferArrayDynamicIndexing(&self, uint shaderStorageTexelBufferArrayDynamicIndexing) {
+   self.shaderStorageTexelBufferArrayDynamicIndexing = shaderStorageTexelBufferArrayDynamicIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderUniformBufferArrayNonUniformIndexing(&self, uint shaderUniformBufferArrayNonUniformIndexing) {
+   self.shaderUniformBufferArrayNonUniformIndexing = shaderUniformBufferArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderSampledImageArrayNonUniformIndexing(&self, uint shaderSampledImageArrayNonUniformIndexing) {
+   self.shaderSampledImageArrayNonUniformIndexing = shaderSampledImageArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderStorageBufferArrayNonUniformIndexing(&self, uint shaderStorageBufferArrayNonUniformIndexing) {
+   self.shaderStorageBufferArrayNonUniformIndexing = shaderStorageBufferArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderStorageImageArrayNonUniformIndexing(&self, uint shaderStorageImageArrayNonUniformIndexing) {
+   self.shaderStorageImageArrayNonUniformIndexing = shaderStorageImageArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderInputAttachmentArrayNonUniformIndexing(&self, uint shaderInputAttachmentArrayNonUniformIndexing) {
+   self.shaderInputAttachmentArrayNonUniformIndexing = shaderInputAttachmentArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderUniformTexelBufferArrayNonUniformIndexing(&self, uint shaderUniformTexelBufferArrayNonUniformIndexing) {
+   self.shaderUniformTexelBufferArrayNonUniformIndexing = shaderUniformTexelBufferArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setShaderStorageTexelBufferArrayNonUniformIndexing(&self, uint shaderStorageTexelBufferArrayNonUniformIndexing) {
+   self.shaderStorageTexelBufferArrayNonUniformIndexing = shaderStorageTexelBufferArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingUniformBufferUpdateAfterBind(&self, uint descriptorBindingUniformBufferUpdateAfterBind) {
+   self.descriptorBindingUniformBufferUpdateAfterBind = descriptorBindingUniformBufferUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingSampledImageUpdateAfterBind(&self, uint descriptorBindingSampledImageUpdateAfterBind) {
+   self.descriptorBindingSampledImageUpdateAfterBind = descriptorBindingSampledImageUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingStorageImageUpdateAfterBind(&self, uint descriptorBindingStorageImageUpdateAfterBind) {
+   self.descriptorBindingStorageImageUpdateAfterBind = descriptorBindingStorageImageUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingStorageBufferUpdateAfterBind(&self, uint descriptorBindingStorageBufferUpdateAfterBind) {
+   self.descriptorBindingStorageBufferUpdateAfterBind = descriptorBindingStorageBufferUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingUniformTexelBufferUpdateAfterBind(&self, uint descriptorBindingUniformTexelBufferUpdateAfterBind) {
+   self.descriptorBindingUniformTexelBufferUpdateAfterBind = descriptorBindingUniformTexelBufferUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingStorageTexelBufferUpdateAfterBind(&self, uint descriptorBindingStorageTexelBufferUpdateAfterBind) {
+   self.descriptorBindingStorageTexelBufferUpdateAfterBind = descriptorBindingStorageTexelBufferUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingUpdateUnusedWhilePending(&self, uint descriptorBindingUpdateUnusedWhilePending) {
+   self.descriptorBindingUpdateUnusedWhilePending = descriptorBindingUpdateUnusedWhilePending;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingPartiallyBound(&self, uint descriptorBindingPartiallyBound) {
+   self.descriptorBindingPartiallyBound = descriptorBindingPartiallyBound;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setDescriptorBindingVariableDescriptorCount(&self, uint descriptorBindingVariableDescriptorCount) {
+   self.descriptorBindingVariableDescriptorCount = descriptorBindingVariableDescriptorCount;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingFeaturesEXT PhysicalDeviceDescriptorIndexingFeaturesEXT.setRuntimeDescriptorArray(&self, uint runtimeDescriptorArray) {
    self.runtimeDescriptorArray = runtimeDescriptorArray;
    return *self;
 }
@@ -3588,6 +7282,103 @@ fn PhysicalDeviceDescriptorIndexingProperties PhysicalDeviceDescriptorIndexingPr
    self.maxDescriptorSetUpdateAfterBindInputAttachments = maxDescriptorSetUpdateAfterBindInputAttachments;
    return *self;
 }
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT physicalDeviceDescriptorIndexingPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES, .pNext = null };
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxUpdateAfterBindDescriptorsInAllPools(&self, uint maxUpdateAfterBindDescriptorsInAllPools) {
+   self.maxUpdateAfterBindDescriptorsInAllPools = maxUpdateAfterBindDescriptorsInAllPools;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setShaderUniformBufferArrayNonUniformIndexingNative(&self, uint shaderUniformBufferArrayNonUniformIndexingNative) {
+   self.shaderUniformBufferArrayNonUniformIndexingNative = shaderUniformBufferArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setShaderSampledImageArrayNonUniformIndexingNative(&self, uint shaderSampledImageArrayNonUniformIndexingNative) {
+   self.shaderSampledImageArrayNonUniformIndexingNative = shaderSampledImageArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setShaderStorageBufferArrayNonUniformIndexingNative(&self, uint shaderStorageBufferArrayNonUniformIndexingNative) {
+   self.shaderStorageBufferArrayNonUniformIndexingNative = shaderStorageBufferArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setShaderStorageImageArrayNonUniformIndexingNative(&self, uint shaderStorageImageArrayNonUniformIndexingNative) {
+   self.shaderStorageImageArrayNonUniformIndexingNative = shaderStorageImageArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setShaderInputAttachmentArrayNonUniformIndexingNative(&self, uint shaderInputAttachmentArrayNonUniformIndexingNative) {
+   self.shaderInputAttachmentArrayNonUniformIndexingNative = shaderInputAttachmentArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setRobustBufferAccessUpdateAfterBind(&self, uint robustBufferAccessUpdateAfterBind) {
+   self.robustBufferAccessUpdateAfterBind = robustBufferAccessUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setQuadDivergentImplicitLod(&self, uint quadDivergentImplicitLod) {
+   self.quadDivergentImplicitLod = quadDivergentImplicitLod;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindSamplers(&self, uint maxPerStageDescriptorUpdateAfterBindSamplers) {
+   self.maxPerStageDescriptorUpdateAfterBindSamplers = maxPerStageDescriptorUpdateAfterBindSamplers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindUniformBuffers(&self, uint maxPerStageDescriptorUpdateAfterBindUniformBuffers) {
+   self.maxPerStageDescriptorUpdateAfterBindUniformBuffers = maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindStorageBuffers(&self, uint maxPerStageDescriptorUpdateAfterBindStorageBuffers) {
+   self.maxPerStageDescriptorUpdateAfterBindStorageBuffers = maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindSampledImages(&self, uint maxPerStageDescriptorUpdateAfterBindSampledImages) {
+   self.maxPerStageDescriptorUpdateAfterBindSampledImages = maxPerStageDescriptorUpdateAfterBindSampledImages;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindStorageImages(&self, uint maxPerStageDescriptorUpdateAfterBindStorageImages) {
+   self.maxPerStageDescriptorUpdateAfterBindStorageImages = maxPerStageDescriptorUpdateAfterBindStorageImages;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageDescriptorUpdateAfterBindInputAttachments(&self, uint maxPerStageDescriptorUpdateAfterBindInputAttachments) {
+   self.maxPerStageDescriptorUpdateAfterBindInputAttachments = maxPerStageDescriptorUpdateAfterBindInputAttachments;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxPerStageUpdateAfterBindResources(&self, uint maxPerStageUpdateAfterBindResources) {
+   self.maxPerStageUpdateAfterBindResources = maxPerStageUpdateAfterBindResources;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindSamplers(&self, uint maxDescriptorSetUpdateAfterBindSamplers) {
+   self.maxDescriptorSetUpdateAfterBindSamplers = maxDescriptorSetUpdateAfterBindSamplers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindUniformBuffers(&self, uint maxDescriptorSetUpdateAfterBindUniformBuffers) {
+   self.maxDescriptorSetUpdateAfterBindUniformBuffers = maxDescriptorSetUpdateAfterBindUniformBuffers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic(&self, uint maxDescriptorSetUpdateAfterBindUniformBuffersDynamic) {
+   self.maxDescriptorSetUpdateAfterBindUniformBuffersDynamic = maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindStorageBuffers(&self, uint maxDescriptorSetUpdateAfterBindStorageBuffers) {
+   self.maxDescriptorSetUpdateAfterBindStorageBuffers = maxDescriptorSetUpdateAfterBindStorageBuffers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic(&self, uint maxDescriptorSetUpdateAfterBindStorageBuffersDynamic) {
+   self.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic = maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindSampledImages(&self, uint maxDescriptorSetUpdateAfterBindSampledImages) {
+   self.maxDescriptorSetUpdateAfterBindSampledImages = maxDescriptorSetUpdateAfterBindSampledImages;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindStorageImages(&self, uint maxDescriptorSetUpdateAfterBindStorageImages) {
+   self.maxDescriptorSetUpdateAfterBindStorageImages = maxDescriptorSetUpdateAfterBindStorageImages;
+   return *self;
+}
+fn PhysicalDeviceDescriptorIndexingPropertiesEXT PhysicalDeviceDescriptorIndexingPropertiesEXT.setMaxDescriptorSetUpdateAfterBindInputAttachments(&self, uint maxDescriptorSetUpdateAfterBindInputAttachments) {
+   self.maxDescriptorSetUpdateAfterBindInputAttachments = maxDescriptorSetUpdateAfterBindInputAttachments;
+   return *self;
+}
 fn DescriptorSetLayoutBindingFlagsCreateInfo descriptorSetLayoutBindingFlagsCreateInfo() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO, .pNext = null };
 fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -3598,6 +7389,20 @@ fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCrea
    return *self;
 }
 fn DescriptorSetLayoutBindingFlagsCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo.setBindingFlags(&self, DescriptorBindingFlags[] pBindingFlags) {
+   self.bindingCount= (uint)pBindingFlags.len;
+   self.pBindingFlags = &pBindingFlags[0];
+   return *self;
+}
+fn DescriptorSetLayoutBindingFlagsCreateInfoEXT descriptorSetLayoutBindingFlagsCreateInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO, .pNext = null };
+fn DescriptorSetLayoutBindingFlagsCreateInfoEXT DescriptorSetLayoutBindingFlagsCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetLayoutBindingFlagsCreateInfoEXT DescriptorSetLayoutBindingFlagsCreateInfoEXT.setBindingCount(&self, uint bindingCount) {
+   self.bindingCount = bindingCount;
+   return *self;
+}
+fn DescriptorSetLayoutBindingFlagsCreateInfoEXT DescriptorSetLayoutBindingFlagsCreateInfoEXT.setBindingFlags(&self, DescriptorBindingFlags[] pBindingFlags) {
    self.bindingCount= (uint)pBindingFlags.len;
    self.pBindingFlags = &pBindingFlags[0];
    return *self;
@@ -3616,12 +7421,35 @@ fn DescriptorSetVariableDescriptorCountAllocateInfo DescriptorSetVariableDescrip
    self.pDescriptorCounts = &pDescriptorCounts[0];
    return *self;
 }
+fn DescriptorSetVariableDescriptorCountAllocateInfoEXT descriptorSetVariableDescriptorCountAllocateInfoEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO, .pNext = null };
+fn DescriptorSetVariableDescriptorCountAllocateInfoEXT DescriptorSetVariableDescriptorCountAllocateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetVariableDescriptorCountAllocateInfoEXT DescriptorSetVariableDescriptorCountAllocateInfoEXT.setDescriptorSetCount(&self, uint descriptorSetCount) {
+   self.descriptorSetCount = descriptorSetCount;
+   return *self;
+}
+fn DescriptorSetVariableDescriptorCountAllocateInfoEXT DescriptorSetVariableDescriptorCountAllocateInfoEXT.setDescriptorCounts(&self, uint[] pDescriptorCounts) {
+   self.descriptorSetCount= (uint)pDescriptorCounts.len;
+   self.pDescriptorCounts = &pDescriptorCounts[0];
+   return *self;
+}
 fn DescriptorSetVariableDescriptorCountLayoutSupport descriptorSetVariableDescriptorCountLayoutSupport() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT, .pNext = null };
 fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn DescriptorSetVariableDescriptorCountLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport.setMaxVariableDescriptorCount(&self, uint maxVariableDescriptorCount) {
+   self.maxVariableDescriptorCount = maxVariableDescriptorCount;
+   return *self;
+}
+fn DescriptorSetVariableDescriptorCountLayoutSupportEXT descriptorSetVariableDescriptorCountLayoutSupportEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT, .pNext = null };
+fn DescriptorSetVariableDescriptorCountLayoutSupportEXT DescriptorSetVariableDescriptorCountLayoutSupportEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetVariableDescriptorCountLayoutSupportEXT DescriptorSetVariableDescriptorCountLayoutSupportEXT.setMaxVariableDescriptorCount(&self, uint maxVariableDescriptorCount) {
    self.maxVariableDescriptorCount = maxVariableDescriptorCount;
    return *self;
 }
@@ -4048,12 +7876,30 @@ fn PhysicalDeviceTimelineSemaphoreFeatures PhysicalDeviceTimelineSemaphoreFeatur
    self.timelineSemaphore = timelineSemaphore;
    return *self;
 }
+fn PhysicalDeviceTimelineSemaphoreFeaturesKHR physicalDeviceTimelineSemaphoreFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES, .pNext = null };
+fn PhysicalDeviceTimelineSemaphoreFeaturesKHR PhysicalDeviceTimelineSemaphoreFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTimelineSemaphoreFeaturesKHR PhysicalDeviceTimelineSemaphoreFeaturesKHR.setTimelineSemaphore(&self, uint timelineSemaphore) {
+   self.timelineSemaphore = timelineSemaphore;
+   return *self;
+}
 fn PhysicalDeviceTimelineSemaphoreProperties physicalDeviceTimelineSemaphoreProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES, .pNext = null };
 fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceTimelineSemaphoreProperties PhysicalDeviceTimelineSemaphoreProperties.setMaxTimelineSemaphoreValueDifference(&self, ulong maxTimelineSemaphoreValueDifference) {
+   self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
+   return *self;
+}
+fn PhysicalDeviceTimelineSemaphorePropertiesKHR physicalDeviceTimelineSemaphorePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES, .pNext = null };
+fn PhysicalDeviceTimelineSemaphorePropertiesKHR PhysicalDeviceTimelineSemaphorePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTimelineSemaphorePropertiesKHR PhysicalDeviceTimelineSemaphorePropertiesKHR.setMaxTimelineSemaphoreValueDifference(&self, ulong maxTimelineSemaphoreValueDifference) {
    self.maxTimelineSemaphoreValueDifference = maxTimelineSemaphoreValueDifference;
    return *self;
 }
@@ -4067,6 +7913,19 @@ fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setSemaphoreType(&self, Semap
    return *self;
 }
 fn SemaphoreTypeCreateInfo SemaphoreTypeCreateInfo.setInitialValue(&self, ulong initialValue) {
+   self.initialValue = initialValue;
+   return *self;
+}
+fn SemaphoreTypeCreateInfoKHR semaphoreTypeCreateInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO, .pNext = null };
+fn SemaphoreTypeCreateInfoKHR SemaphoreTypeCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreTypeCreateInfoKHR SemaphoreTypeCreateInfoKHR.setSemaphoreType(&self, SemaphoreType semaphoreType) {
+   self.semaphoreType = semaphoreType;
+   return *self;
+}
+fn SemaphoreTypeCreateInfoKHR SemaphoreTypeCreateInfoKHR.setInitialValue(&self, ulong initialValue) {
    self.initialValue = initialValue;
    return *self;
 }
@@ -4089,6 +7948,29 @@ fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreVal
    return *self;
 }
 fn TimelineSemaphoreSubmitInfo TimelineSemaphoreSubmitInfo.setSignalSemaphoreValues(&self, ulong[] pSignalSemaphoreValues) {
+   self.signalSemaphoreValueCount= (uint)pSignalSemaphoreValues.len;
+   self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
+   return *self;
+}
+fn TimelineSemaphoreSubmitInfoKHR timelineSemaphoreSubmitInfoKHR() => { .sType = STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
+fn TimelineSemaphoreSubmitInfoKHR TimelineSemaphoreSubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TimelineSemaphoreSubmitInfoKHR TimelineSemaphoreSubmitInfoKHR.setWaitSemaphoreValueCount(&self, uint waitSemaphoreValueCount) {
+   self.waitSemaphoreValueCount = waitSemaphoreValueCount;
+   return *self;
+}
+fn TimelineSemaphoreSubmitInfoKHR TimelineSemaphoreSubmitInfoKHR.setWaitSemaphoreValues(&self, ulong[] pWaitSemaphoreValues) {
+   self.waitSemaphoreValueCount= (uint)pWaitSemaphoreValues.len;
+   self.pWaitSemaphoreValues = &pWaitSemaphoreValues[0];
+   return *self;
+}
+fn TimelineSemaphoreSubmitInfoKHR TimelineSemaphoreSubmitInfoKHR.setSignalSemaphoreValueCount(&self, uint signalSemaphoreValueCount) {
+   self.signalSemaphoreValueCount = signalSemaphoreValueCount;
+   return *self;
+}
+fn TimelineSemaphoreSubmitInfoKHR TimelineSemaphoreSubmitInfoKHR.setSignalSemaphoreValues(&self, ulong[] pSignalSemaphoreValues) {
    self.signalSemaphoreValueCount= (uint)pSignalSemaphoreValues.len;
    self.pSignalSemaphoreValues = &pSignalSemaphoreValues[0];
    return *self;
@@ -4116,6 +7998,29 @@ fn SemaphoreWaitInfo SemaphoreWaitInfo.setValues(&self, ulong[] pValues) {
    self.pValues = &pValues[0];
    return *self;
 }
+fn SemaphoreWaitInfoKHR semaphoreWaitInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO, .pNext = null };
+fn SemaphoreWaitInfoKHR SemaphoreWaitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreWaitInfoKHR SemaphoreWaitInfoKHR.setFlags(&self, SemaphoreWaitFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn SemaphoreWaitInfoKHR SemaphoreWaitInfoKHR.setSemaphoreCount(&self, uint semaphoreCount) {
+   self.semaphoreCount = semaphoreCount;
+   return *self;
+}
+fn SemaphoreWaitInfoKHR SemaphoreWaitInfoKHR.setSemaphores(&self, Semaphore[] pSemaphores) {
+   self.semaphoreCount= (uint)pSemaphores.len;
+   self.pSemaphores = &pSemaphores[0];
+   return *self;
+}
+fn SemaphoreWaitInfoKHR SemaphoreWaitInfoKHR.setValues(&self, ulong[] pValues) {
+   self.semaphoreCount= (uint)pValues.len;
+   self.pValues = &pValues[0];
+   return *self;
+}
 fn SemaphoreSignalInfo semaphoreSignalInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO, .pNext = null };
 fn SemaphoreSignalInfo SemaphoreSignalInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4126,6 +8031,19 @@ fn SemaphoreSignalInfo SemaphoreSignalInfo.setSemaphore(&self, Semaphore semapho
    return *self;
 }
 fn SemaphoreSignalInfo SemaphoreSignalInfo.setValue(&self, ulong value) {
+   self.value = value;
+   return *self;
+}
+fn SemaphoreSignalInfoKHR semaphoreSignalInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO, .pNext = null };
+fn SemaphoreSignalInfoKHR SemaphoreSignalInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreSignalInfoKHR SemaphoreSignalInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn SemaphoreSignalInfoKHR SemaphoreSignalInfoKHR.setValue(&self, ulong value) {
    self.value = value;
    return *self;
 }
@@ -4143,6 +8061,43 @@ fn PipelineVertexInputDivisorStateCreateInfo PipelineVertexInputDivisorStateCrea
    self.pVertexBindingDivisors = &pVertexBindingDivisors[0];
    return *self;
 }
+fn PipelineVertexInputDivisorStateCreateInfoKHR pipelineVertexInputDivisorStateCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO, .pNext = null };
+fn PipelineVertexInputDivisorStateCreateInfoKHR PipelineVertexInputDivisorStateCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineVertexInputDivisorStateCreateInfoKHR PipelineVertexInputDivisorStateCreateInfoKHR.setVertexBindingDivisorCount(&self, uint vertexBindingDivisorCount) {
+   self.vertexBindingDivisorCount = vertexBindingDivisorCount;
+   return *self;
+}
+fn PipelineVertexInputDivisorStateCreateInfoKHR PipelineVertexInputDivisorStateCreateInfoKHR.setVertexBindingDivisors(&self, VertexInputBindingDivisorDescription[] pVertexBindingDivisors) {
+   self.vertexBindingDivisorCount= (uint)pVertexBindingDivisors.len;
+   self.pVertexBindingDivisors = &pVertexBindingDivisors[0];
+   return *self;
+}
+fn PipelineVertexInputDivisorStateCreateInfoEXT pipelineVertexInputDivisorStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO, .pNext = null };
+fn PipelineVertexInputDivisorStateCreateInfoEXT PipelineVertexInputDivisorStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineVertexInputDivisorStateCreateInfoEXT PipelineVertexInputDivisorStateCreateInfoEXT.setVertexBindingDivisorCount(&self, uint vertexBindingDivisorCount) {
+   self.vertexBindingDivisorCount = vertexBindingDivisorCount;
+   return *self;
+}
+fn PipelineVertexInputDivisorStateCreateInfoEXT PipelineVertexInputDivisorStateCreateInfoEXT.setVertexBindingDivisors(&self, VertexInputBindingDivisorDescription[] pVertexBindingDivisors) {
+   self.vertexBindingDivisorCount= (uint)pVertexBindingDivisors.len;
+   self.pVertexBindingDivisors = &pVertexBindingDivisors[0];
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorPropertiesEXT physicalDeviceVertexAttributeDivisorPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorPropertiesEXT PhysicalDeviceVertexAttributeDivisorPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorPropertiesEXT PhysicalDeviceVertexAttributeDivisorPropertiesEXT.setMaxVertexAttribDivisor(&self, uint maxVertexAttribDivisor) {
+   self.maxVertexAttribDivisor = maxVertexAttribDivisor;
+   return *self;
+}
 fn PhysicalDeviceVertexAttributeDivisorProperties physicalDeviceVertexAttributeDivisorProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES, .pNext = null };
 fn PhysicalDeviceVertexAttributeDivisorProperties PhysicalDeviceVertexAttributeDivisorProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4154,6 +8109,49 @@ fn PhysicalDeviceVertexAttributeDivisorProperties PhysicalDeviceVertexAttributeD
 }
 fn PhysicalDeviceVertexAttributeDivisorProperties PhysicalDeviceVertexAttributeDivisorProperties.setSupportsNonZeroFirstInstance(&self, uint supportsNonZeroFirstInstance) {
    self.supportsNonZeroFirstInstance = supportsNonZeroFirstInstance;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorPropertiesKHR physicalDeviceVertexAttributeDivisorPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorPropertiesKHR PhysicalDeviceVertexAttributeDivisorPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorPropertiesKHR PhysicalDeviceVertexAttributeDivisorPropertiesKHR.setMaxVertexAttribDivisor(&self, uint maxVertexAttribDivisor) {
+   self.maxVertexAttribDivisor = maxVertexAttribDivisor;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorPropertiesKHR PhysicalDeviceVertexAttributeDivisorPropertiesKHR.setSupportsNonZeroFirstInstance(&self, uint supportsNonZeroFirstInstance) {
+   self.supportsNonZeroFirstInstance = supportsNonZeroFirstInstance;
+   return *self;
+}
+fn PhysicalDevicePCIBusInfoPropertiesEXT physicalDevicePCIBusInfoPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDevicePCIBusInfoPropertiesEXT PhysicalDevicePCIBusInfoPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePCIBusInfoPropertiesEXT PhysicalDevicePCIBusInfoPropertiesEXT.setPciDomain(&self, uint pciDomain) {
+   self.pciDomain = pciDomain;
+   return *self;
+}
+fn PhysicalDevicePCIBusInfoPropertiesEXT PhysicalDevicePCIBusInfoPropertiesEXT.setPciBus(&self, uint pciBus) {
+   self.pciBus = pciBus;
+   return *self;
+}
+fn PhysicalDevicePCIBusInfoPropertiesEXT PhysicalDevicePCIBusInfoPropertiesEXT.setPciDevice(&self, uint pciDevice) {
+   self.pciDevice = pciDevice;
+   return *self;
+}
+fn PhysicalDevicePCIBusInfoPropertiesEXT PhysicalDevicePCIBusInfoPropertiesEXT.setPciFunction(&self, uint pciFunction) {
+   self.pciFunction = pciFunction;
+   return *self;
+}
+fn CommandBufferInheritanceConditionalRenderingInfoEXT commandBufferInheritanceConditionalRenderingInfoEXT() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT, .pNext = null };
+fn CommandBufferInheritanceConditionalRenderingInfoEXT CommandBufferInheritanceConditionalRenderingInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CommandBufferInheritanceConditionalRenderingInfoEXT CommandBufferInheritanceConditionalRenderingInfoEXT.setConditionalRenderingEnable(&self, uint conditionalRenderingEnable) {
+   self.conditionalRenderingEnable = conditionalRenderingEnable;
    return *self;
 }
 fn PhysicalDevice8BitStorageFeatures physicalDevice8BitStorageFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES, .pNext = null };
@@ -4173,6 +8171,36 @@ fn PhysicalDevice8BitStorageFeatures PhysicalDevice8BitStorageFeatures.setStorag
    self.storagePushConstant8 = storagePushConstant8;
    return *self;
 }
+fn PhysicalDevice8BitStorageFeaturesKHR physicalDevice8BitStorageFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES, .pNext = null };
+fn PhysicalDevice8BitStorageFeaturesKHR PhysicalDevice8BitStorageFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevice8BitStorageFeaturesKHR PhysicalDevice8BitStorageFeaturesKHR.setStorageBuffer8BitAccess(&self, uint storageBuffer8BitAccess) {
+   self.storageBuffer8BitAccess = storageBuffer8BitAccess;
+   return *self;
+}
+fn PhysicalDevice8BitStorageFeaturesKHR PhysicalDevice8BitStorageFeaturesKHR.setUniformAndStorageBuffer8BitAccess(&self, uint uniformAndStorageBuffer8BitAccess) {
+   self.uniformAndStorageBuffer8BitAccess = uniformAndStorageBuffer8BitAccess;
+   return *self;
+}
+fn PhysicalDevice8BitStorageFeaturesKHR PhysicalDevice8BitStorageFeaturesKHR.setStoragePushConstant8(&self, uint storagePushConstant8) {
+   self.storagePushConstant8 = storagePushConstant8;
+   return *self;
+}
+fn PhysicalDeviceConditionalRenderingFeaturesEXT physicalDeviceConditionalRenderingFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceConditionalRenderingFeaturesEXT PhysicalDeviceConditionalRenderingFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceConditionalRenderingFeaturesEXT PhysicalDeviceConditionalRenderingFeaturesEXT.setConditionalRendering(&self, uint conditionalRendering) {
+   self.conditionalRendering = conditionalRendering;
+   return *self;
+}
+fn PhysicalDeviceConditionalRenderingFeaturesEXT PhysicalDeviceConditionalRenderingFeaturesEXT.setInheritedConditionalRendering(&self, uint inheritedConditionalRendering) {
+   self.inheritedConditionalRendering = inheritedConditionalRendering;
+   return *self;
+}
 fn PhysicalDeviceVulkanMemoryModelFeatures physicalDeviceVulkanMemoryModelFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES, .pNext = null };
 fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4190,6 +8218,23 @@ fn PhysicalDeviceVulkanMemoryModelFeatures PhysicalDeviceVulkanMemoryModelFeatur
    self.vulkanMemoryModelAvailabilityVisibilityChains = vulkanMemoryModelAvailabilityVisibilityChains;
    return *self;
 }
+fn PhysicalDeviceVulkanMemoryModelFeaturesKHR physicalDeviceVulkanMemoryModelFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES, .pNext = null };
+fn PhysicalDeviceVulkanMemoryModelFeaturesKHR PhysicalDeviceVulkanMemoryModelFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVulkanMemoryModelFeaturesKHR PhysicalDeviceVulkanMemoryModelFeaturesKHR.setVulkanMemoryModel(&self, uint vulkanMemoryModel) {
+   self.vulkanMemoryModel = vulkanMemoryModel;
+   return *self;
+}
+fn PhysicalDeviceVulkanMemoryModelFeaturesKHR PhysicalDeviceVulkanMemoryModelFeaturesKHR.setVulkanMemoryModelDeviceScope(&self, uint vulkanMemoryModelDeviceScope) {
+   self.vulkanMemoryModelDeviceScope = vulkanMemoryModelDeviceScope;
+   return *self;
+}
+fn PhysicalDeviceVulkanMemoryModelFeaturesKHR PhysicalDeviceVulkanMemoryModelFeaturesKHR.setVulkanMemoryModelAvailabilityVisibilityChains(&self, uint vulkanMemoryModelAvailabilityVisibilityChains) {
+   self.vulkanMemoryModelAvailabilityVisibilityChains = vulkanMemoryModelAvailabilityVisibilityChains;
+   return *self;
+}
 fn PhysicalDeviceShaderAtomicInt64Features physicalDeviceShaderAtomicInt64Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4203,6 +8248,125 @@ fn PhysicalDeviceShaderAtomicInt64Features PhysicalDeviceShaderAtomicInt64Featur
    self.shaderSharedInt64Atomics = shaderSharedInt64Atomics;
    return *self;
 }
+fn PhysicalDeviceShaderAtomicInt64FeaturesKHR physicalDeviceShaderAtomicInt64FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderAtomicInt64FeaturesKHR PhysicalDeviceShaderAtomicInt64FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicInt64FeaturesKHR PhysicalDeviceShaderAtomicInt64FeaturesKHR.setShaderBufferInt64Atomics(&self, uint shaderBufferInt64Atomics) {
+   self.shaderBufferInt64Atomics = shaderBufferInt64Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicInt64FeaturesKHR PhysicalDeviceShaderAtomicInt64FeaturesKHR.setShaderSharedInt64Atomics(&self, uint shaderSharedInt64Atomics) {
+   self.shaderSharedInt64Atomics = shaderSharedInt64Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT physicalDeviceShaderAtomicFloatFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderBufferFloat32Atomics(&self, uint shaderBufferFloat32Atomics) {
+   self.shaderBufferFloat32Atomics = shaderBufferFloat32Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderBufferFloat32AtomicAdd(&self, uint shaderBufferFloat32AtomicAdd) {
+   self.shaderBufferFloat32AtomicAdd = shaderBufferFloat32AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderBufferFloat64Atomics(&self, uint shaderBufferFloat64Atomics) {
+   self.shaderBufferFloat64Atomics = shaderBufferFloat64Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderBufferFloat64AtomicAdd(&self, uint shaderBufferFloat64AtomicAdd) {
+   self.shaderBufferFloat64AtomicAdd = shaderBufferFloat64AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderSharedFloat32Atomics(&self, uint shaderSharedFloat32Atomics) {
+   self.shaderSharedFloat32Atomics = shaderSharedFloat32Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderSharedFloat32AtomicAdd(&self, uint shaderSharedFloat32AtomicAdd) {
+   self.shaderSharedFloat32AtomicAdd = shaderSharedFloat32AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderSharedFloat64Atomics(&self, uint shaderSharedFloat64Atomics) {
+   self.shaderSharedFloat64Atomics = shaderSharedFloat64Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderSharedFloat64AtomicAdd(&self, uint shaderSharedFloat64AtomicAdd) {
+   self.shaderSharedFloat64AtomicAdd = shaderSharedFloat64AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderImageFloat32Atomics(&self, uint shaderImageFloat32Atomics) {
+   self.shaderImageFloat32Atomics = shaderImageFloat32Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setShaderImageFloat32AtomicAdd(&self, uint shaderImageFloat32AtomicAdd) {
+   self.shaderImageFloat32AtomicAdd = shaderImageFloat32AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setSparseImageFloat32Atomics(&self, uint sparseImageFloat32Atomics) {
+   self.sparseImageFloat32Atomics = sparseImageFloat32Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloatFeaturesEXT PhysicalDeviceShaderAtomicFloatFeaturesEXT.setSparseImageFloat32AtomicAdd(&self, uint sparseImageFloat32AtomicAdd) {
+   self.sparseImageFloat32AtomicAdd = sparseImageFloat32AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT physicalDeviceShaderAtomicFloat2FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderBufferFloat16Atomics(&self, uint shaderBufferFloat16Atomics) {
+   self.shaderBufferFloat16Atomics = shaderBufferFloat16Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderBufferFloat16AtomicAdd(&self, uint shaderBufferFloat16AtomicAdd) {
+   self.shaderBufferFloat16AtomicAdd = shaderBufferFloat16AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderBufferFloat16AtomicMinMax(&self, uint shaderBufferFloat16AtomicMinMax) {
+   self.shaderBufferFloat16AtomicMinMax = shaderBufferFloat16AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderBufferFloat32AtomicMinMax(&self, uint shaderBufferFloat32AtomicMinMax) {
+   self.shaderBufferFloat32AtomicMinMax = shaderBufferFloat32AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderBufferFloat64AtomicMinMax(&self, uint shaderBufferFloat64AtomicMinMax) {
+   self.shaderBufferFloat64AtomicMinMax = shaderBufferFloat64AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderSharedFloat16Atomics(&self, uint shaderSharedFloat16Atomics) {
+   self.shaderSharedFloat16Atomics = shaderSharedFloat16Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderSharedFloat16AtomicAdd(&self, uint shaderSharedFloat16AtomicAdd) {
+   self.shaderSharedFloat16AtomicAdd = shaderSharedFloat16AtomicAdd;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderSharedFloat16AtomicMinMax(&self, uint shaderSharedFloat16AtomicMinMax) {
+   self.shaderSharedFloat16AtomicMinMax = shaderSharedFloat16AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderSharedFloat32AtomicMinMax(&self, uint shaderSharedFloat32AtomicMinMax) {
+   self.shaderSharedFloat32AtomicMinMax = shaderSharedFloat32AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderSharedFloat64AtomicMinMax(&self, uint shaderSharedFloat64AtomicMinMax) {
+   self.shaderSharedFloat64AtomicMinMax = shaderSharedFloat64AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setShaderImageFloat32AtomicMinMax(&self, uint shaderImageFloat32AtomicMinMax) {
+   self.shaderImageFloat32AtomicMinMax = shaderImageFloat32AtomicMinMax;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat2FeaturesEXT PhysicalDeviceShaderAtomicFloat2FeaturesEXT.setSparseImageFloat32AtomicMinMax(&self, uint sparseImageFloat32AtomicMinMax) {
+   self.sparseImageFloat32AtomicMinMax = sparseImageFloat32AtomicMinMax;
+   return *self;
+}
 fn PhysicalDeviceVertexAttributeDivisorFeatures physicalDeviceVertexAttributeDivisorFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES, .pNext = null };
 fn PhysicalDeviceVertexAttributeDivisorFeatures PhysicalDeviceVertexAttributeDivisorFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4214,6 +8378,54 @@ fn PhysicalDeviceVertexAttributeDivisorFeatures PhysicalDeviceVertexAttributeDiv
 }
 fn PhysicalDeviceVertexAttributeDivisorFeatures PhysicalDeviceVertexAttributeDivisorFeatures.setVertexAttributeInstanceRateZeroDivisor(&self, uint vertexAttributeInstanceRateZeroDivisor) {
    self.vertexAttributeInstanceRateZeroDivisor = vertexAttributeInstanceRateZeroDivisor;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesKHR physicalDeviceVertexAttributeDivisorFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorFeaturesKHR PhysicalDeviceVertexAttributeDivisorFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesKHR PhysicalDeviceVertexAttributeDivisorFeaturesKHR.setVertexAttributeInstanceRateDivisor(&self, uint vertexAttributeInstanceRateDivisor) {
+   self.vertexAttributeInstanceRateDivisor = vertexAttributeInstanceRateDivisor;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesKHR PhysicalDeviceVertexAttributeDivisorFeaturesKHR.setVertexAttributeInstanceRateZeroDivisor(&self, uint vertexAttributeInstanceRateZeroDivisor) {
+   self.vertexAttributeInstanceRateZeroDivisor = vertexAttributeInstanceRateZeroDivisor;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesEXT physicalDeviceVertexAttributeDivisorFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES, .pNext = null };
+fn PhysicalDeviceVertexAttributeDivisorFeaturesEXT PhysicalDeviceVertexAttributeDivisorFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesEXT PhysicalDeviceVertexAttributeDivisorFeaturesEXT.setVertexAttributeInstanceRateDivisor(&self, uint vertexAttributeInstanceRateDivisor) {
+   self.vertexAttributeInstanceRateDivisor = vertexAttributeInstanceRateDivisor;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeDivisorFeaturesEXT PhysicalDeviceVertexAttributeDivisorFeaturesEXT.setVertexAttributeInstanceRateZeroDivisor(&self, uint vertexAttributeInstanceRateZeroDivisor) {
+   self.vertexAttributeInstanceRateZeroDivisor = vertexAttributeInstanceRateZeroDivisor;
+   return *self;
+}
+fn QueueFamilyCheckpointPropertiesNV queueFamilyCheckpointPropertiesNV() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV, .pNext = null };
+fn QueueFamilyCheckpointPropertiesNV QueueFamilyCheckpointPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyCheckpointPropertiesNV QueueFamilyCheckpointPropertiesNV.setCheckpointExecutionStageMask(&self, PipelineStageFlags checkpointExecutionStageMask) {
+   self.checkpointExecutionStageMask = checkpointExecutionStageMask;
+   return *self;
+}
+fn CheckpointDataNV checkpointDataNV() => { .sType = STRUCTURE_TYPE_CHECKPOINT_DATA_NV, .pNext = null };
+fn CheckpointDataNV CheckpointDataNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CheckpointDataNV CheckpointDataNV.setStage(&self, PipelineStageFlagBits stage) {
+   self.stage = stage;
+   return *self;
+}
+fn CheckpointDataNV CheckpointDataNV.setCheckpointMarker(&self, void* pCheckpointMarker) {
+   self.pCheckpointMarker = pCheckpointMarker;
    return *self;
 }
 fn PhysicalDeviceDepthStencilResolveProperties physicalDeviceDepthStencilResolveProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES, .pNext = null };
@@ -4292,6 +8504,834 @@ fn SubpassDescriptionDepthStencilResolveKHR SubpassDescriptionDepthStencilResolv
    self.pDepthStencilResolveAttachment = pDepthStencilResolveAttachment;
    return *self;
 }
+fn ImageViewASTCDecodeModeEXT imageViewASTCDecodeModeEXT() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT, .pNext = null };
+fn ImageViewASTCDecodeModeEXT ImageViewASTCDecodeModeEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewASTCDecodeModeEXT ImageViewASTCDecodeModeEXT.setDecodeMode(&self, Format decodeMode) {
+   self.decodeMode = decodeMode;
+   return *self;
+}
+fn PhysicalDeviceASTCDecodeFeaturesEXT physicalDeviceASTCDecodeFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceASTCDecodeFeaturesEXT PhysicalDeviceASTCDecodeFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceASTCDecodeFeaturesEXT PhysicalDeviceASTCDecodeFeaturesEXT.setDecodeModeSharedExponent(&self, uint decodeModeSharedExponent) {
+   self.decodeModeSharedExponent = decodeModeSharedExponent;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackFeaturesEXT physicalDeviceTransformFeedbackFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceTransformFeedbackFeaturesEXT PhysicalDeviceTransformFeedbackFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackFeaturesEXT PhysicalDeviceTransformFeedbackFeaturesEXT.setTransformFeedback(&self, uint transformFeedback) {
+   self.transformFeedback = transformFeedback;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackFeaturesEXT PhysicalDeviceTransformFeedbackFeaturesEXT.setGeometryStreams(&self, uint geometryStreams) {
+   self.geometryStreams = geometryStreams;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT physicalDeviceTransformFeedbackPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackStreams(&self, uint maxTransformFeedbackStreams) {
+   self.maxTransformFeedbackStreams = maxTransformFeedbackStreams;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackBuffers(&self, uint maxTransformFeedbackBuffers) {
+   self.maxTransformFeedbackBuffers = maxTransformFeedbackBuffers;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackBufferSize(&self, DeviceSize maxTransformFeedbackBufferSize) {
+   self.maxTransformFeedbackBufferSize = maxTransformFeedbackBufferSize;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackStreamDataSize(&self, uint maxTransformFeedbackStreamDataSize) {
+   self.maxTransformFeedbackStreamDataSize = maxTransformFeedbackStreamDataSize;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackBufferDataSize(&self, uint maxTransformFeedbackBufferDataSize) {
+   self.maxTransformFeedbackBufferDataSize = maxTransformFeedbackBufferDataSize;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setMaxTransformFeedbackBufferDataStride(&self, uint maxTransformFeedbackBufferDataStride) {
+   self.maxTransformFeedbackBufferDataStride = maxTransformFeedbackBufferDataStride;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setTransformFeedbackQueries(&self, uint transformFeedbackQueries) {
+   self.transformFeedbackQueries = transformFeedbackQueries;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setTransformFeedbackStreamsLinesTriangles(&self, uint transformFeedbackStreamsLinesTriangles) {
+   self.transformFeedbackStreamsLinesTriangles = transformFeedbackStreamsLinesTriangles;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setTransformFeedbackRasterizationStreamSelect(&self, uint transformFeedbackRasterizationStreamSelect) {
+   self.transformFeedbackRasterizationStreamSelect = transformFeedbackRasterizationStreamSelect;
+   return *self;
+}
+fn PhysicalDeviceTransformFeedbackPropertiesEXT PhysicalDeviceTransformFeedbackPropertiesEXT.setTransformFeedbackDraw(&self, uint transformFeedbackDraw) {
+   self.transformFeedbackDraw = transformFeedbackDraw;
+   return *self;
+}
+fn PipelineRasterizationStateStreamCreateInfoEXT pipelineRasterizationStateStreamCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT, .pNext = null };
+fn PipelineRasterizationStateStreamCreateInfoEXT PipelineRasterizationStateStreamCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationStateStreamCreateInfoEXT PipelineRasterizationStateStreamCreateInfoEXT.setFlags(&self, PipelineRasterizationStateStreamCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineRasterizationStateStreamCreateInfoEXT PipelineRasterizationStateStreamCreateInfoEXT.setRasterizationStream(&self, uint rasterizationStream) {
+   self.rasterizationStream = rasterizationStream;
+   return *self;
+}
+fn PhysicalDeviceRepresentativeFragmentTestFeaturesNV physicalDeviceRepresentativeFragmentTestFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRepresentativeFragmentTestFeaturesNV PhysicalDeviceRepresentativeFragmentTestFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRepresentativeFragmentTestFeaturesNV PhysicalDeviceRepresentativeFragmentTestFeaturesNV.setRepresentativeFragmentTest(&self, uint representativeFragmentTest) {
+   self.representativeFragmentTest = representativeFragmentTest;
+   return *self;
+}
+fn PipelineRepresentativeFragmentTestStateCreateInfoNV pipelineRepresentativeFragmentTestStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineRepresentativeFragmentTestStateCreateInfoNV PipelineRepresentativeFragmentTestStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRepresentativeFragmentTestStateCreateInfoNV PipelineRepresentativeFragmentTestStateCreateInfoNV.setRepresentativeFragmentTestEnable(&self, uint representativeFragmentTestEnable) {
+   self.representativeFragmentTestEnable = representativeFragmentTestEnable;
+   return *self;
+}
+fn PhysicalDeviceExclusiveScissorFeaturesNV physicalDeviceExclusiveScissorFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceExclusiveScissorFeaturesNV PhysicalDeviceExclusiveScissorFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExclusiveScissorFeaturesNV PhysicalDeviceExclusiveScissorFeaturesNV.setExclusiveScissor(&self, uint exclusiveScissor) {
+   self.exclusiveScissor = exclusiveScissor;
+   return *self;
+}
+fn PipelineViewportExclusiveScissorStateCreateInfoNV pipelineViewportExclusiveScissorStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineViewportExclusiveScissorStateCreateInfoNV PipelineViewportExclusiveScissorStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportExclusiveScissorStateCreateInfoNV PipelineViewportExclusiveScissorStateCreateInfoNV.setExclusiveScissorCount(&self, uint exclusiveScissorCount) {
+   self.exclusiveScissorCount = exclusiveScissorCount;
+   return *self;
+}
+fn PipelineViewportExclusiveScissorStateCreateInfoNV PipelineViewportExclusiveScissorStateCreateInfoNV.setExclusiveScissors(&self, Rect2D[] pExclusiveScissors) {
+   self.exclusiveScissorCount= (uint)pExclusiveScissors.len;
+   self.pExclusiveScissors = &pExclusiveScissors[0];
+   return *self;
+}
+fn PhysicalDeviceCornerSampledImageFeaturesNV physicalDeviceCornerSampledImageFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCornerSampledImageFeaturesNV PhysicalDeviceCornerSampledImageFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCornerSampledImageFeaturesNV PhysicalDeviceCornerSampledImageFeaturesNV.setCornerSampledImage(&self, uint cornerSampledImage) {
+   self.cornerSampledImage = cornerSampledImage;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesKHR physicalDeviceComputeShaderDerivativesFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceComputeShaderDerivativesFeaturesKHR PhysicalDeviceComputeShaderDerivativesFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesKHR PhysicalDeviceComputeShaderDerivativesFeaturesKHR.setComputeDerivativeGroupQuads(&self, uint computeDerivativeGroupQuads) {
+   self.computeDerivativeGroupQuads = computeDerivativeGroupQuads;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesKHR PhysicalDeviceComputeShaderDerivativesFeaturesKHR.setComputeDerivativeGroupLinear(&self, uint computeDerivativeGroupLinear) {
+   self.computeDerivativeGroupLinear = computeDerivativeGroupLinear;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesNV physicalDeviceComputeShaderDerivativesFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceComputeShaderDerivativesFeaturesNV PhysicalDeviceComputeShaderDerivativesFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesNV PhysicalDeviceComputeShaderDerivativesFeaturesNV.setComputeDerivativeGroupQuads(&self, uint computeDerivativeGroupQuads) {
+   self.computeDerivativeGroupQuads = computeDerivativeGroupQuads;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesFeaturesNV PhysicalDeviceComputeShaderDerivativesFeaturesNV.setComputeDerivativeGroupLinear(&self, uint computeDerivativeGroupLinear) {
+   self.computeDerivativeGroupLinear = computeDerivativeGroupLinear;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesPropertiesKHR physicalDeviceComputeShaderDerivativesPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceComputeShaderDerivativesPropertiesKHR PhysicalDeviceComputeShaderDerivativesPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceComputeShaderDerivativesPropertiesKHR PhysicalDeviceComputeShaderDerivativesPropertiesKHR.setMeshAndTaskShaderDerivatives(&self, uint meshAndTaskShaderDerivatives) {
+   self.meshAndTaskShaderDerivatives = meshAndTaskShaderDerivatives;
+   return *self;
+}
+fn PhysicalDeviceShaderImageFootprintFeaturesNV physicalDeviceShaderImageFootprintFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceShaderImageFootprintFeaturesNV PhysicalDeviceShaderImageFootprintFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderImageFootprintFeaturesNV PhysicalDeviceShaderImageFootprintFeaturesNV.setImageFootprint(&self, uint imageFootprint) {
+   self.imageFootprint = imageFootprint;
+   return *self;
+}
+fn PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV physicalDeviceDedicatedAllocationImageAliasingFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.setDedicatedAllocationImageAliasing(&self, uint dedicatedAllocationImageAliasing) {
+   self.dedicatedAllocationImageAliasing = dedicatedAllocationImageAliasing;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectFeaturesKHR physicalDeviceCopyMemoryIndirectFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceCopyMemoryIndirectFeaturesKHR PhysicalDeviceCopyMemoryIndirectFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectFeaturesKHR PhysicalDeviceCopyMemoryIndirectFeaturesKHR.setIndirectMemoryCopy(&self, uint indirectMemoryCopy) {
+   self.indirectMemoryCopy = indirectMemoryCopy;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectFeaturesKHR PhysicalDeviceCopyMemoryIndirectFeaturesKHR.setIndirectMemoryToImageCopy(&self, uint indirectMemoryToImageCopy) {
+   self.indirectMemoryToImageCopy = indirectMemoryToImageCopy;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectFeaturesNV physicalDeviceCopyMemoryIndirectFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCopyMemoryIndirectFeaturesNV PhysicalDeviceCopyMemoryIndirectFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectFeaturesNV PhysicalDeviceCopyMemoryIndirectFeaturesNV.setIndirectCopy(&self, uint indirectCopy) {
+   self.indirectCopy = indirectCopy;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectPropertiesKHR physicalDeviceCopyMemoryIndirectPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceCopyMemoryIndirectPropertiesKHR PhysicalDeviceCopyMemoryIndirectPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectPropertiesKHR PhysicalDeviceCopyMemoryIndirectPropertiesKHR.setSupportedQueues(&self, QueueFlags supportedQueues) {
+   self.supportedQueues = supportedQueues;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectPropertiesNV physicalDeviceCopyMemoryIndirectPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceCopyMemoryIndirectPropertiesNV PhysicalDeviceCopyMemoryIndirectPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCopyMemoryIndirectPropertiesNV PhysicalDeviceCopyMemoryIndirectPropertiesNV.setSupportedQueues(&self, QueueFlags supportedQueues) {
+   self.supportedQueues = supportedQueues;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionFeaturesEXT physicalDeviceMemoryDecompressionFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryDecompressionFeaturesEXT PhysicalDeviceMemoryDecompressionFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionFeaturesEXT PhysicalDeviceMemoryDecompressionFeaturesEXT.setMemoryDecompression(&self, uint memoryDecompression) {
+   self.memoryDecompression = memoryDecompression;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionFeaturesNV physicalDeviceMemoryDecompressionFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryDecompressionFeaturesNV PhysicalDeviceMemoryDecompressionFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionFeaturesNV PhysicalDeviceMemoryDecompressionFeaturesNV.setMemoryDecompression(&self, uint memoryDecompression) {
+   self.memoryDecompression = memoryDecompression;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesEXT physicalDeviceMemoryDecompressionPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryDecompressionPropertiesEXT PhysicalDeviceMemoryDecompressionPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesEXT PhysicalDeviceMemoryDecompressionPropertiesEXT.setDecompressionMethods(&self, MemoryDecompressionMethodFlagsEXT decompressionMethods) {
+   self.decompressionMethods = decompressionMethods;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesEXT PhysicalDeviceMemoryDecompressionPropertiesEXT.setMaxDecompressionIndirectCount(&self, ulong maxDecompressionIndirectCount) {
+   self.maxDecompressionIndirectCount = maxDecompressionIndirectCount;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesNV physicalDeviceMemoryDecompressionPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryDecompressionPropertiesNV PhysicalDeviceMemoryDecompressionPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesNV PhysicalDeviceMemoryDecompressionPropertiesNV.setDecompressionMethods(&self, MemoryDecompressionMethodFlagsEXT decompressionMethods) {
+   self.decompressionMethods = decompressionMethods;
+   return *self;
+}
+fn PhysicalDeviceMemoryDecompressionPropertiesNV PhysicalDeviceMemoryDecompressionPropertiesNV.setMaxDecompressionIndirectCount(&self, ulong maxDecompressionIndirectCount) {
+   self.maxDecompressionIndirectCount = maxDecompressionIndirectCount;
+   return *self;
+}
+fn PipelineViewportShadingRateImageStateCreateInfoNV pipelineViewportShadingRateImageStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineViewportShadingRateImageStateCreateInfoNV PipelineViewportShadingRateImageStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportShadingRateImageStateCreateInfoNV PipelineViewportShadingRateImageStateCreateInfoNV.setShadingRateImageEnable(&self, uint shadingRateImageEnable) {
+   self.shadingRateImageEnable = shadingRateImageEnable;
+   return *self;
+}
+fn PipelineViewportShadingRateImageStateCreateInfoNV PipelineViewportShadingRateImageStateCreateInfoNV.setViewportCount(&self, uint viewportCount) {
+   self.viewportCount = viewportCount;
+   return *self;
+}
+fn PipelineViewportShadingRateImageStateCreateInfoNV PipelineViewportShadingRateImageStateCreateInfoNV.setShadingRatePalettes(&self, ShadingRatePaletteNV[] pShadingRatePalettes) {
+   self.viewportCount= (uint)pShadingRatePalettes.len;
+   self.pShadingRatePalettes = &pShadingRatePalettes[0];
+   return *self;
+}
+fn PhysicalDeviceShadingRateImageFeaturesNV physicalDeviceShadingRateImageFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceShadingRateImageFeaturesNV PhysicalDeviceShadingRateImageFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImageFeaturesNV PhysicalDeviceShadingRateImageFeaturesNV.setShadingRateImage(&self, uint shadingRateImage) {
+   self.shadingRateImage = shadingRateImage;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImageFeaturesNV PhysicalDeviceShadingRateImageFeaturesNV.setShadingRateCoarseSampleOrder(&self, uint shadingRateCoarseSampleOrder) {
+   self.shadingRateCoarseSampleOrder = shadingRateCoarseSampleOrder;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImagePropertiesNV physicalDeviceShadingRateImagePropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceShadingRateImagePropertiesNV PhysicalDeviceShadingRateImagePropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImagePropertiesNV PhysicalDeviceShadingRateImagePropertiesNV.setShadingRateTexelSize(&self, Extent2D shadingRateTexelSize) {
+   self.shadingRateTexelSize = shadingRateTexelSize;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImagePropertiesNV PhysicalDeviceShadingRateImagePropertiesNV.setShadingRatePaletteSize(&self, uint shadingRatePaletteSize) {
+   self.shadingRatePaletteSize = shadingRatePaletteSize;
+   return *self;
+}
+fn PhysicalDeviceShadingRateImagePropertiesNV PhysicalDeviceShadingRateImagePropertiesNV.setShadingRateMaxCoarseSamples(&self, uint shadingRateMaxCoarseSamples) {
+   self.shadingRateMaxCoarseSamples = shadingRateMaxCoarseSamples;
+   return *self;
+}
+fn PhysicalDeviceInvocationMaskFeaturesHUAWEI physicalDeviceInvocationMaskFeaturesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INVOCATION_MASK_FEATURES_HUAWEI, .pNext = null };
+fn PhysicalDeviceInvocationMaskFeaturesHUAWEI PhysicalDeviceInvocationMaskFeaturesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceInvocationMaskFeaturesHUAWEI PhysicalDeviceInvocationMaskFeaturesHUAWEI.setInvocationMask(&self, uint invocationMask) {
+   self.invocationMask = invocationMask;
+   return *self;
+}
+fn PipelineViewportCoarseSampleOrderStateCreateInfoNV pipelineViewportCoarseSampleOrderStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineViewportCoarseSampleOrderStateCreateInfoNV PipelineViewportCoarseSampleOrderStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportCoarseSampleOrderStateCreateInfoNV PipelineViewportCoarseSampleOrderStateCreateInfoNV.setSampleOrderType(&self, CoarseSampleOrderTypeNV sampleOrderType) {
+   self.sampleOrderType = sampleOrderType;
+   return *self;
+}
+fn PipelineViewportCoarseSampleOrderStateCreateInfoNV PipelineViewportCoarseSampleOrderStateCreateInfoNV.setCustomSampleOrderCount(&self, uint customSampleOrderCount) {
+   self.customSampleOrderCount = customSampleOrderCount;
+   return *self;
+}
+fn PipelineViewportCoarseSampleOrderStateCreateInfoNV PipelineViewportCoarseSampleOrderStateCreateInfoNV.setCustomSampleOrders(&self, CoarseSampleOrderCustomNV[] pCustomSampleOrders) {
+   self.customSampleOrderCount= (uint)pCustomSampleOrders.len;
+   self.pCustomSampleOrders = &pCustomSampleOrders[0];
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesNV physicalDeviceMeshShaderFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceMeshShaderFeaturesNV PhysicalDeviceMeshShaderFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesNV PhysicalDeviceMeshShaderFeaturesNV.setTaskShader(&self, uint taskShader) {
+   self.taskShader = taskShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesNV PhysicalDeviceMeshShaderFeaturesNV.setMeshShader(&self, uint meshShader) {
+   self.meshShader = meshShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV physicalDeviceMeshShaderPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxDrawMeshTasksCount(&self, uint maxDrawMeshTasksCount) {
+   self.maxDrawMeshTasksCount = maxDrawMeshTasksCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxTaskWorkGroupInvocations(&self, uint maxTaskWorkGroupInvocations) {
+   self.maxTaskWorkGroupInvocations = maxTaskWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxTaskWorkGroupSize(&self, uint[3] maxTaskWorkGroupSize) {
+   self.maxTaskWorkGroupSize = maxTaskWorkGroupSize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxTaskTotalMemorySize(&self, uint maxTaskTotalMemorySize) {
+   self.maxTaskTotalMemorySize = maxTaskTotalMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxTaskOutputCount(&self, uint maxTaskOutputCount) {
+   self.maxTaskOutputCount = maxTaskOutputCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshWorkGroupInvocations(&self, uint maxMeshWorkGroupInvocations) {
+   self.maxMeshWorkGroupInvocations = maxMeshWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshWorkGroupSize(&self, uint[3] maxMeshWorkGroupSize) {
+   self.maxMeshWorkGroupSize = maxMeshWorkGroupSize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshTotalMemorySize(&self, uint maxMeshTotalMemorySize) {
+   self.maxMeshTotalMemorySize = maxMeshTotalMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshOutputVertices(&self, uint maxMeshOutputVertices) {
+   self.maxMeshOutputVertices = maxMeshOutputVertices;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshOutputPrimitives(&self, uint maxMeshOutputPrimitives) {
+   self.maxMeshOutputPrimitives = maxMeshOutputPrimitives;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMaxMeshMultiviewViewCount(&self, uint maxMeshMultiviewViewCount) {
+   self.maxMeshMultiviewViewCount = maxMeshMultiviewViewCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMeshOutputPerVertexGranularity(&self, uint meshOutputPerVertexGranularity) {
+   self.meshOutputPerVertexGranularity = meshOutputPerVertexGranularity;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesNV PhysicalDeviceMeshShaderPropertiesNV.setMeshOutputPerPrimitiveGranularity(&self, uint meshOutputPerPrimitiveGranularity) {
+   self.meshOutputPerPrimitiveGranularity = meshOutputPerPrimitiveGranularity;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT physicalDeviceMeshShaderFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setTaskShader(&self, uint taskShader) {
+   self.taskShader = taskShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setMeshShader(&self, uint meshShader) {
+   self.meshShader = meshShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setMultiviewMeshShader(&self, uint multiviewMeshShader) {
+   self.multiviewMeshShader = multiviewMeshShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setPrimitiveFragmentShadingRateMeshShader(&self, uint primitiveFragmentShadingRateMeshShader) {
+   self.primitiveFragmentShadingRateMeshShader = primitiveFragmentShadingRateMeshShader;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderFeaturesEXT PhysicalDeviceMeshShaderFeaturesEXT.setMeshShaderQueries(&self, uint meshShaderQueries) {
+   self.meshShaderQueries = meshShaderQueries;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT physicalDeviceMeshShaderPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskWorkGroupTotalCount(&self, uint maxTaskWorkGroupTotalCount) {
+   self.maxTaskWorkGroupTotalCount = maxTaskWorkGroupTotalCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskWorkGroupCount(&self, uint[3] maxTaskWorkGroupCount) {
+   self.maxTaskWorkGroupCount = maxTaskWorkGroupCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskWorkGroupInvocations(&self, uint maxTaskWorkGroupInvocations) {
+   self.maxTaskWorkGroupInvocations = maxTaskWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskWorkGroupSize(&self, uint[3] maxTaskWorkGroupSize) {
+   self.maxTaskWorkGroupSize = maxTaskWorkGroupSize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskPayloadSize(&self, uint maxTaskPayloadSize) {
+   self.maxTaskPayloadSize = maxTaskPayloadSize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskSharedMemorySize(&self, uint maxTaskSharedMemorySize) {
+   self.maxTaskSharedMemorySize = maxTaskSharedMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxTaskPayloadAndSharedMemorySize(&self, uint maxTaskPayloadAndSharedMemorySize) {
+   self.maxTaskPayloadAndSharedMemorySize = maxTaskPayloadAndSharedMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshWorkGroupTotalCount(&self, uint maxMeshWorkGroupTotalCount) {
+   self.maxMeshWorkGroupTotalCount = maxMeshWorkGroupTotalCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshWorkGroupCount(&self, uint[3] maxMeshWorkGroupCount) {
+   self.maxMeshWorkGroupCount = maxMeshWorkGroupCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshWorkGroupInvocations(&self, uint maxMeshWorkGroupInvocations) {
+   self.maxMeshWorkGroupInvocations = maxMeshWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshWorkGroupSize(&self, uint[3] maxMeshWorkGroupSize) {
+   self.maxMeshWorkGroupSize = maxMeshWorkGroupSize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshSharedMemorySize(&self, uint maxMeshSharedMemorySize) {
+   self.maxMeshSharedMemorySize = maxMeshSharedMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshPayloadAndSharedMemorySize(&self, uint maxMeshPayloadAndSharedMemorySize) {
+   self.maxMeshPayloadAndSharedMemorySize = maxMeshPayloadAndSharedMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshOutputMemorySize(&self, uint maxMeshOutputMemorySize) {
+   self.maxMeshOutputMemorySize = maxMeshOutputMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshPayloadAndOutputMemorySize(&self, uint maxMeshPayloadAndOutputMemorySize) {
+   self.maxMeshPayloadAndOutputMemorySize = maxMeshPayloadAndOutputMemorySize;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshOutputComponents(&self, uint maxMeshOutputComponents) {
+   self.maxMeshOutputComponents = maxMeshOutputComponents;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshOutputVertices(&self, uint maxMeshOutputVertices) {
+   self.maxMeshOutputVertices = maxMeshOutputVertices;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshOutputPrimitives(&self, uint maxMeshOutputPrimitives) {
+   self.maxMeshOutputPrimitives = maxMeshOutputPrimitives;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshOutputLayers(&self, uint maxMeshOutputLayers) {
+   self.maxMeshOutputLayers = maxMeshOutputLayers;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxMeshMultiviewViewCount(&self, uint maxMeshMultiviewViewCount) {
+   self.maxMeshMultiviewViewCount = maxMeshMultiviewViewCount;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMeshOutputPerVertexGranularity(&self, uint meshOutputPerVertexGranularity) {
+   self.meshOutputPerVertexGranularity = meshOutputPerVertexGranularity;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMeshOutputPerPrimitiveGranularity(&self, uint meshOutputPerPrimitiveGranularity) {
+   self.meshOutputPerPrimitiveGranularity = meshOutputPerPrimitiveGranularity;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxPreferredTaskWorkGroupInvocations(&self, uint maxPreferredTaskWorkGroupInvocations) {
+   self.maxPreferredTaskWorkGroupInvocations = maxPreferredTaskWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setMaxPreferredMeshWorkGroupInvocations(&self, uint maxPreferredMeshWorkGroupInvocations) {
+   self.maxPreferredMeshWorkGroupInvocations = maxPreferredMeshWorkGroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setPrefersLocalInvocationVertexOutput(&self, uint prefersLocalInvocationVertexOutput) {
+   self.prefersLocalInvocationVertexOutput = prefersLocalInvocationVertexOutput;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setPrefersLocalInvocationPrimitiveOutput(&self, uint prefersLocalInvocationPrimitiveOutput) {
+   self.prefersLocalInvocationPrimitiveOutput = prefersLocalInvocationPrimitiveOutput;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setPrefersCompactVertexOutput(&self, uint prefersCompactVertexOutput) {
+   self.prefersCompactVertexOutput = prefersCompactVertexOutput;
+   return *self;
+}
+fn PhysicalDeviceMeshShaderPropertiesEXT PhysicalDeviceMeshShaderPropertiesEXT.setPrefersCompactPrimitiveOutput(&self, uint prefersCompactPrimitiveOutput) {
+   self.prefersCompactPrimitiveOutput = prefersCompactPrimitiveOutput;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV rayTracingShaderGroupCreateInfoNV() => { .sType = STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV, .pNext = null };
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setType(&self, RayTracingShaderGroupTypeKHR type) {
+   self.type = type;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setGeneralShader(&self, uint generalShader) {
+   self.generalShader = generalShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setClosestHitShader(&self, uint closestHitShader) {
+   self.closestHitShader = closestHitShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setAnyHitShader(&self, uint anyHitShader) {
+   self.anyHitShader = anyHitShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoNV RayTracingShaderGroupCreateInfoNV.setIntersectionShader(&self, uint intersectionShader) {
+   self.intersectionShader = intersectionShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR rayTracingShaderGroupCreateInfoKHR() => { .sType = STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR, .pNext = null };
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setType(&self, RayTracingShaderGroupTypeKHR type) {
+   self.type = type;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setGeneralShader(&self, uint generalShader) {
+   self.generalShader = generalShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setClosestHitShader(&self, uint closestHitShader) {
+   self.closestHitShader = closestHitShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setAnyHitShader(&self, uint anyHitShader) {
+   self.anyHitShader = anyHitShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setIntersectionShader(&self, uint intersectionShader) {
+   self.intersectionShader = intersectionShader;
+   return *self;
+}
+fn RayTracingShaderGroupCreateInfoKHR RayTracingShaderGroupCreateInfoKHR.setShaderGroupCaptureReplayHandle(&self, void* pShaderGroupCaptureReplayHandle) {
+   self.pShaderGroupCaptureReplayHandle = pShaderGroupCaptureReplayHandle;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV rayTracingPipelineCreateInfoNV() => { .sType = STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV, .pNext = null };
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setFlags(&self, PipelineCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setStageCount(&self, uint stageCount) {
+   self.stageCount = stageCount;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
+   self.stageCount= (uint)pStages.len;
+   self.pStages = &pStages[0];
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setGroupCount(&self, uint groupCount) {
+   self.groupCount = groupCount;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setGroups(&self, RayTracingShaderGroupCreateInfoNV[] pGroups) {
+   self.groupCount= (uint)pGroups.len;
+   self.pGroups = &pGroups[0];
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setMaxRecursionDepth(&self, uint maxRecursionDepth) {
+   self.maxRecursionDepth = maxRecursionDepth;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setBasePipelineHandle(&self, Pipeline basePipelineHandle) {
+   self.basePipelineHandle = basePipelineHandle;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoNV RayTracingPipelineCreateInfoNV.setBasePipelineIndex(&self, int basePipelineIndex) {
+   self.basePipelineIndex = basePipelineIndex;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR rayTracingPipelineCreateInfoKHR() => { .sType = STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR, .pNext = null };
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setFlags(&self, PipelineCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setStageCount(&self, uint stageCount) {
+   self.stageCount = stageCount;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
+   self.stageCount= (uint)pStages.len;
+   self.pStages = &pStages[0];
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setGroupCount(&self, uint groupCount) {
+   self.groupCount = groupCount;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setGroups(&self, RayTracingShaderGroupCreateInfoKHR[] pGroups) {
+   self.groupCount= (uint)pGroups.len;
+   self.pGroups = &pGroups[0];
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setMaxPipelineRayRecursionDepth(&self, uint maxPipelineRayRecursionDepth) {
+   self.maxPipelineRayRecursionDepth = maxPipelineRayRecursionDepth;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setLibraryInfo(&self, PipelineLibraryCreateInfoKHR* pLibraryInfo) {
+   self.pLibraryInfo = pLibraryInfo;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setLibraryInterface(&self, RayTracingPipelineInterfaceCreateInfoKHR* pLibraryInterface) {
+   self.pLibraryInterface = pLibraryInterface;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setDynamicState(&self, PipelineDynamicStateCreateInfo* pDynamicState) {
+   self.pDynamicState = pDynamicState;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setBasePipelineHandle(&self, Pipeline basePipelineHandle) {
+   self.basePipelineHandle = basePipelineHandle;
+   return *self;
+}
+fn RayTracingPipelineCreateInfoKHR RayTracingPipelineCreateInfoKHR.setBasePipelineIndex(&self, int basePipelineIndex) {
+   self.basePipelineIndex = basePipelineIndex;
+   return *self;
+}
+fn GeometryTrianglesNV geometryTrianglesNV() => { .sType = STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV, .pNext = null };
+fn GeometryTrianglesNV GeometryTrianglesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setVertexData(&self, Buffer vertexData) {
+   self.vertexData = vertexData;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setVertexOffset(&self, DeviceSize vertexOffset) {
+   self.vertexOffset = vertexOffset;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setVertexCount(&self, uint vertexCount) {
+   self.vertexCount = vertexCount;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setVertexStride(&self, DeviceSize vertexStride) {
+   self.vertexStride = vertexStride;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setVertexFormat(&self, Format vertexFormat) {
+   self.vertexFormat = vertexFormat;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setIndexData(&self, Buffer indexData) {
+   self.indexData = indexData;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setIndexOffset(&self, DeviceSize indexOffset) {
+   self.indexOffset = indexOffset;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setIndexCount(&self, uint indexCount) {
+   self.indexCount = indexCount;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setTransformData(&self, Buffer transformData) {
+   self.transformData = transformData;
+   return *self;
+}
+fn GeometryTrianglesNV GeometryTrianglesNV.setTransformOffset(&self, DeviceSize transformOffset) {
+   self.transformOffset = transformOffset;
+   return *self;
+}
+fn GeometryAABBNV geometryAABBNV() => { .sType = STRUCTURE_TYPE_GEOMETRY_AABB_NV, .pNext = null };
+fn GeometryAABBNV GeometryAABBNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeometryAABBNV GeometryAABBNV.setAabbData(&self, Buffer aabbData) {
+   self.aabbData = aabbData;
+   return *self;
+}
+fn GeometryAABBNV GeometryAABBNV.setNumAABBs(&self, uint numAABBs) {
+   self.numAABBs = numAABBs;
+   return *self;
+}
+fn GeometryAABBNV GeometryAABBNV.setStride(&self, uint stride) {
+   self.stride = stride;
+   return *self;
+}
+fn GeometryAABBNV GeometryAABBNV.setOffset(&self, DeviceSize offset) {
+   self.offset = offset;
+   return *self;
+}
+fn GeometryNV geometryNV() => { .sType = STRUCTURE_TYPE_GEOMETRY_NV, .pNext = null };
+fn GeometryNV GeometryNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeometryNV GeometryNV.setGeometryType(&self, GeometryTypeKHR geometryType) {
+   self.geometryType = geometryType;
+   return *self;
+}
+fn GeometryNV GeometryNV.setGeometry(&self, GeometryDataNV geometry) {
+   self.geometry = geometry;
+   return *self;
+}
+fn GeometryNV GeometryNV.setFlags(&self, GeometryFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV bindAccelerationStructureMemoryInfoNV() => { .sType = STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV, .pNext = null };
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setAccelerationStructure(&self, AccelerationStructureNV accelerationStructure) {
+   self.accelerationStructure = accelerationStructure;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setDeviceIndexCount(&self, uint deviceIndexCount) {
+   self.deviceIndexCount = deviceIndexCount;
+   return *self;
+}
+fn BindAccelerationStructureMemoryInfoNV BindAccelerationStructureMemoryInfoNV.setDeviceIndices(&self, uint[] pDeviceIndices) {
+   self.deviceIndexCount= (uint)pDeviceIndices.len;
+   self.pDeviceIndices = &pDeviceIndices[0];
+   return *self;
+}
 fn WriteDescriptorSetAccelerationStructureKHR writeDescriptorSetAccelerationStructureKHR() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR, .pNext = null };
 fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStructureKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4304,6 +9344,33 @@ fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStru
 fn WriteDescriptorSetAccelerationStructureKHR WriteDescriptorSetAccelerationStructureKHR.setAccelerationStructures(&self, AccelerationStructureKHR[] pAccelerationStructures) {
    self.accelerationStructureCount= (uint)pAccelerationStructures.len;
    self.pAccelerationStructures = &pAccelerationStructures[0];
+   return *self;
+}
+fn WriteDescriptorSetAccelerationStructureNV writeDescriptorSetAccelerationStructureNV() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV, .pNext = null };
+fn WriteDescriptorSetAccelerationStructureNV WriteDescriptorSetAccelerationStructureNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteDescriptorSetAccelerationStructureNV WriteDescriptorSetAccelerationStructureNV.setAccelerationStructureCount(&self, uint accelerationStructureCount) {
+   self.accelerationStructureCount = accelerationStructureCount;
+   return *self;
+}
+fn WriteDescriptorSetAccelerationStructureNV WriteDescriptorSetAccelerationStructureNV.setAccelerationStructures(&self, AccelerationStructureNV[] pAccelerationStructures) {
+   self.accelerationStructureCount= (uint)pAccelerationStructures.len;
+   self.pAccelerationStructures = &pAccelerationStructures[0];
+   return *self;
+}
+fn AccelerationStructureMemoryRequirementsInfoNV accelerationStructureMemoryRequirementsInfoNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV, .pNext = null };
+fn AccelerationStructureMemoryRequirementsInfoNV AccelerationStructureMemoryRequirementsInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureMemoryRequirementsInfoNV AccelerationStructureMemoryRequirementsInfoNV.setType(&self, AccelerationStructureMemoryRequirementsTypeNV type) {
+   self.type = type;
+   return *self;
+}
+fn AccelerationStructureMemoryRequirementsInfoNV AccelerationStructureMemoryRequirementsInfoNV.setAccelerationStructure(&self, AccelerationStructureNV accelerationStructure) {
+   self.accelerationStructure = accelerationStructure;
    return *self;
 }
 fn PhysicalDeviceAccelerationStructureFeaturesKHR physicalDeviceAccelerationStructureFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR, .pNext = null };
@@ -4329,6 +9396,40 @@ fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStru
 }
 fn PhysicalDeviceAccelerationStructureFeaturesKHR PhysicalDeviceAccelerationStructureFeaturesKHR.setDescriptorBindingAccelerationStructureUpdateAfterBind(&self, uint descriptorBindingAccelerationStructureUpdateAfterBind) {
    self.descriptorBindingAccelerationStructureUpdateAfterBind = descriptorBindingAccelerationStructureUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR physicalDeviceRayTracingPipelineFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setRayTracingPipeline(&self, uint rayTracingPipeline) {
+   self.rayTracingPipeline = rayTracingPipeline;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setRayTracingPipelineShaderGroupHandleCaptureReplay(&self, uint rayTracingPipelineShaderGroupHandleCaptureReplay) {
+   self.rayTracingPipelineShaderGroupHandleCaptureReplay = rayTracingPipelineShaderGroupHandleCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setRayTracingPipelineShaderGroupHandleCaptureReplayMixed(&self, uint rayTracingPipelineShaderGroupHandleCaptureReplayMixed) {
+   self.rayTracingPipelineShaderGroupHandleCaptureReplayMixed = rayTracingPipelineShaderGroupHandleCaptureReplayMixed;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setRayTracingPipelineTraceRaysIndirect(&self, uint rayTracingPipelineTraceRaysIndirect) {
+   self.rayTracingPipelineTraceRaysIndirect = rayTracingPipelineTraceRaysIndirect;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelineFeaturesKHR PhysicalDeviceRayTracingPipelineFeaturesKHR.setRayTraversalPrimitiveCulling(&self, uint rayTraversalPrimitiveCulling) {
+   self.rayTraversalPrimitiveCulling = rayTraversalPrimitiveCulling;
+   return *self;
+}
+fn PhysicalDeviceRayQueryFeaturesKHR physicalDeviceRayQueryFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRayQueryFeaturesKHR PhysicalDeviceRayQueryFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayQueryFeaturesKHR PhysicalDeviceRayQueryFeaturesKHR.setRayQuery(&self, uint rayQuery) {
+   self.rayQuery = rayQuery;
    return *self;
 }
 fn PhysicalDeviceAccelerationStructurePropertiesKHR physicalDeviceAccelerationStructurePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR, .pNext = null };
@@ -4368,6 +9469,170 @@ fn PhysicalDeviceAccelerationStructurePropertiesKHR PhysicalDeviceAccelerationSt
    self.minAccelerationStructureScratchOffsetAlignment = minAccelerationStructureScratchOffsetAlignment;
    return *self;
 }
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR physicalDeviceRayTracingPipelinePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setShaderGroupHandleSize(&self, uint shaderGroupHandleSize) {
+   self.shaderGroupHandleSize = shaderGroupHandleSize;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setMaxRayRecursionDepth(&self, uint maxRayRecursionDepth) {
+   self.maxRayRecursionDepth = maxRayRecursionDepth;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setMaxShaderGroupStride(&self, uint maxShaderGroupStride) {
+   self.maxShaderGroupStride = maxShaderGroupStride;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setShaderGroupBaseAlignment(&self, uint shaderGroupBaseAlignment) {
+   self.shaderGroupBaseAlignment = shaderGroupBaseAlignment;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setShaderGroupHandleCaptureReplaySize(&self, uint shaderGroupHandleCaptureReplaySize) {
+   self.shaderGroupHandleCaptureReplaySize = shaderGroupHandleCaptureReplaySize;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setMaxRayDispatchInvocationCount(&self, uint maxRayDispatchInvocationCount) {
+   self.maxRayDispatchInvocationCount = maxRayDispatchInvocationCount;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setShaderGroupHandleAlignment(&self, uint shaderGroupHandleAlignment) {
+   self.shaderGroupHandleAlignment = shaderGroupHandleAlignment;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPipelinePropertiesKHR PhysicalDeviceRayTracingPipelinePropertiesKHR.setMaxRayHitAttributeSize(&self, uint maxRayHitAttributeSize) {
+   self.maxRayHitAttributeSize = maxRayHitAttributeSize;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV physicalDeviceRayTracingPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setShaderGroupHandleSize(&self, uint shaderGroupHandleSize) {
+   self.shaderGroupHandleSize = shaderGroupHandleSize;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxRecursionDepth(&self, uint maxRecursionDepth) {
+   self.maxRecursionDepth = maxRecursionDepth;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxShaderGroupStride(&self, uint maxShaderGroupStride) {
+   self.maxShaderGroupStride = maxShaderGroupStride;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setShaderGroupBaseAlignment(&self, uint shaderGroupBaseAlignment) {
+   self.shaderGroupBaseAlignment = shaderGroupBaseAlignment;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxGeometryCount(&self, ulong maxGeometryCount) {
+   self.maxGeometryCount = maxGeometryCount;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxInstanceCount(&self, ulong maxInstanceCount) {
+   self.maxInstanceCount = maxInstanceCount;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxTriangleCount(&self, ulong maxTriangleCount) {
+   self.maxTriangleCount = maxTriangleCount;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPropertiesNV PhysicalDeviceRayTracingPropertiesNV.setMaxDescriptorSetAccelerationStructures(&self, uint maxDescriptorSetAccelerationStructures) {
+   self.maxDescriptorSetAccelerationStructures = maxDescriptorSetAccelerationStructures;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMaintenance1FeaturesKHR physicalDeviceRayTracingMaintenance1FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRayTracingMaintenance1FeaturesKHR PhysicalDeviceRayTracingMaintenance1FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMaintenance1FeaturesKHR PhysicalDeviceRayTracingMaintenance1FeaturesKHR.setRayTracingMaintenance1(&self, uint rayTracingMaintenance1) {
+   self.rayTracingMaintenance1 = rayTracingMaintenance1;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMaintenance1FeaturesKHR PhysicalDeviceRayTracingMaintenance1FeaturesKHR.setRayTracingPipelineTraceRaysIndirect2(&self, uint rayTracingPipelineTraceRaysIndirect2) {
+   self.rayTracingPipelineTraceRaysIndirect2 = rayTracingPipelineTraceRaysIndirect2;
+   return *self;
+}
+fn DrmFormatModifierPropertiesListEXT drmFormatModifierPropertiesListEXT() => { .sType = STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT, .pNext = null };
+fn DrmFormatModifierPropertiesListEXT DrmFormatModifierPropertiesListEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DrmFormatModifierPropertiesListEXT DrmFormatModifierPropertiesListEXT.setDrmFormatModifierCount(&self, uint drmFormatModifierCount) {
+   self.drmFormatModifierCount = drmFormatModifierCount;
+   return *self;
+}
+fn DrmFormatModifierPropertiesListEXT DrmFormatModifierPropertiesListEXT.setDrmFormatModifierProperties(&self, DrmFormatModifierPropertiesEXT[] pDrmFormatModifierProperties) {
+   self.drmFormatModifierCount= (uint)pDrmFormatModifierProperties.len;
+   self.pDrmFormatModifierProperties = &pDrmFormatModifierProperties[0];
+   return *self;
+}
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT physicalDeviceImageDrmFormatModifierInfoEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT, .pNext = null };
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT PhysicalDeviceImageDrmFormatModifierInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT PhysicalDeviceImageDrmFormatModifierInfoEXT.setDrmFormatModifier(&self, ulong drmFormatModifier) {
+   self.drmFormatModifier = drmFormatModifier;
+   return *self;
+}
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT PhysicalDeviceImageDrmFormatModifierInfoEXT.setSharingMode(&self, SharingMode sharingMode) {
+   self.sharingMode = sharingMode;
+   return *self;
+}
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT PhysicalDeviceImageDrmFormatModifierInfoEXT.setQueueFamilyIndexCount(&self, uint queueFamilyIndexCount) {
+   self.queueFamilyIndexCount = queueFamilyIndexCount;
+   return *self;
+}
+fn PhysicalDeviceImageDrmFormatModifierInfoEXT PhysicalDeviceImageDrmFormatModifierInfoEXT.setQueueFamilyIndices(&self, uint[] pQueueFamilyIndices) {
+   self.queueFamilyIndexCount= (uint)pQueueFamilyIndices.len;
+   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
+   return *self;
+}
+fn ImageDrmFormatModifierListCreateInfoEXT imageDrmFormatModifierListCreateInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT, .pNext = null };
+fn ImageDrmFormatModifierListCreateInfoEXT ImageDrmFormatModifierListCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageDrmFormatModifierListCreateInfoEXT ImageDrmFormatModifierListCreateInfoEXT.setDrmFormatModifierCount(&self, uint drmFormatModifierCount) {
+   self.drmFormatModifierCount = drmFormatModifierCount;
+   return *self;
+}
+fn ImageDrmFormatModifierListCreateInfoEXT ImageDrmFormatModifierListCreateInfoEXT.setDrmFormatModifiers(&self, ulong[] pDrmFormatModifiers) {
+   self.drmFormatModifierCount= (uint)pDrmFormatModifiers.len;
+   self.pDrmFormatModifiers = &pDrmFormatModifiers[0];
+   return *self;
+}
+fn ImageDrmFormatModifierExplicitCreateInfoEXT imageDrmFormatModifierExplicitCreateInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT, .pNext = null };
+fn ImageDrmFormatModifierExplicitCreateInfoEXT ImageDrmFormatModifierExplicitCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageDrmFormatModifierExplicitCreateInfoEXT ImageDrmFormatModifierExplicitCreateInfoEXT.setDrmFormatModifier(&self, ulong drmFormatModifier) {
+   self.drmFormatModifier = drmFormatModifier;
+   return *self;
+}
+fn ImageDrmFormatModifierExplicitCreateInfoEXT ImageDrmFormatModifierExplicitCreateInfoEXT.setDrmFormatModifierPlaneCount(&self, uint drmFormatModifierPlaneCount) {
+   self.drmFormatModifierPlaneCount = drmFormatModifierPlaneCount;
+   return *self;
+}
+fn ImageDrmFormatModifierExplicitCreateInfoEXT ImageDrmFormatModifierExplicitCreateInfoEXT.setPlaneLayouts(&self, SubresourceLayout[] pPlaneLayouts) {
+   self.drmFormatModifierPlaneCount= (uint)pPlaneLayouts.len;
+   self.pPlaneLayouts = &pPlaneLayouts[0];
+   return *self;
+}
+fn ImageDrmFormatModifierPropertiesEXT imageDrmFormatModifierPropertiesEXT() => { .sType = STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT, .pNext = null };
+fn ImageDrmFormatModifierPropertiesEXT ImageDrmFormatModifierPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageDrmFormatModifierPropertiesEXT ImageDrmFormatModifierPropertiesEXT.setDrmFormatModifier(&self, ulong drmFormatModifier) {
+   self.drmFormatModifier = drmFormatModifier;
+   return *self;
+}
 fn ImageStencilUsageCreateInfo imageStencilUsageCreateInfo() => { .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO, .pNext = null };
 fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4375,6 +9640,50 @@ fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setNext(&self, void* 
 }
 fn ImageStencilUsageCreateInfo ImageStencilUsageCreateInfo.setStencilUsage(&self, ImageUsageFlags stencilUsage) {
    self.stencilUsage = stencilUsage;
+   return *self;
+}
+fn ImageStencilUsageCreateInfoEXT imageStencilUsageCreateInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO, .pNext = null };
+fn ImageStencilUsageCreateInfoEXT ImageStencilUsageCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageStencilUsageCreateInfoEXT ImageStencilUsageCreateInfoEXT.setStencilUsage(&self, ImageUsageFlags stencilUsage) {
+   self.stencilUsage = stencilUsage;
+   return *self;
+}
+fn DeviceMemoryOverallocationCreateInfoAMD deviceMemoryOverallocationCreateInfoAMD() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD, .pNext = null };
+fn DeviceMemoryOverallocationCreateInfoAMD DeviceMemoryOverallocationCreateInfoAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceMemoryOverallocationCreateInfoAMD DeviceMemoryOverallocationCreateInfoAMD.setOverallocationBehavior(&self, MemoryOverallocationBehaviorAMD overallocationBehavior) {
+   self.overallocationBehavior = overallocationBehavior;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapFeaturesEXT physicalDeviceFragmentDensityMapFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapFeaturesEXT PhysicalDeviceFragmentDensityMapFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapFeaturesEXT PhysicalDeviceFragmentDensityMapFeaturesEXT.setFragmentDensityMap(&self, uint fragmentDensityMap) {
+   self.fragmentDensityMap = fragmentDensityMap;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapFeaturesEXT PhysicalDeviceFragmentDensityMapFeaturesEXT.setFragmentDensityMapDynamic(&self, uint fragmentDensityMapDynamic) {
+   self.fragmentDensityMapDynamic = fragmentDensityMapDynamic;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapFeaturesEXT PhysicalDeviceFragmentDensityMapFeaturesEXT.setFragmentDensityMapNonSubsampledImages(&self, uint fragmentDensityMapNonSubsampledImages) {
+   self.fragmentDensityMapNonSubsampledImages = fragmentDensityMapNonSubsampledImages;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2FeaturesEXT physicalDeviceFragmentDensityMap2FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMap2FeaturesEXT PhysicalDeviceFragmentDensityMap2FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2FeaturesEXT PhysicalDeviceFragmentDensityMap2FeaturesEXT.setFragmentDensityMapDeferred(&self, uint fragmentDensityMapDeferred) {
+   self.fragmentDensityMapDeferred = fragmentDensityMapDeferred;
    return *self;
 }
 fn PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT physicalDeviceFragmentDensityMapOffsetFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT, .pNext = null };
@@ -4386,12 +9695,68 @@ fn PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT PhysicalDeviceFragmentDensi
    self.fragmentDensityMapOffset = fragmentDensityMapOffset;
    return *self;
 }
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM physicalDeviceFragmentDensityMapOffsetFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM.setFragmentDensityMapOffset(&self, uint fragmentDensityMapOffset) {
+   self.fragmentDensityMapOffset = fragmentDensityMapOffset;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapPropertiesEXT physicalDeviceFragmentDensityMapPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapPropertiesEXT PhysicalDeviceFragmentDensityMapPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapPropertiesEXT PhysicalDeviceFragmentDensityMapPropertiesEXT.setMinFragmentDensityTexelSize(&self, Extent2D minFragmentDensityTexelSize) {
+   self.minFragmentDensityTexelSize = minFragmentDensityTexelSize;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapPropertiesEXT PhysicalDeviceFragmentDensityMapPropertiesEXT.setMaxFragmentDensityTexelSize(&self, Extent2D maxFragmentDensityTexelSize) {
+   self.maxFragmentDensityTexelSize = maxFragmentDensityTexelSize;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapPropertiesEXT PhysicalDeviceFragmentDensityMapPropertiesEXT.setFragmentDensityInvocations(&self, uint fragmentDensityInvocations) {
+   self.fragmentDensityInvocations = fragmentDensityInvocations;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT physicalDeviceFragmentDensityMap2PropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT PhysicalDeviceFragmentDensityMap2PropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT PhysicalDeviceFragmentDensityMap2PropertiesEXT.setSubsampledLoads(&self, uint subsampledLoads) {
+   self.subsampledLoads = subsampledLoads;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT PhysicalDeviceFragmentDensityMap2PropertiesEXT.setSubsampledCoarseReconstructionEarlyAccess(&self, uint subsampledCoarseReconstructionEarlyAccess) {
+   self.subsampledCoarseReconstructionEarlyAccess = subsampledCoarseReconstructionEarlyAccess;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT PhysicalDeviceFragmentDensityMap2PropertiesEXT.setMaxSubsampledArrayLayers(&self, uint maxSubsampledArrayLayers) {
+   self.maxSubsampledArrayLayers = maxSubsampledArrayLayers;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMap2PropertiesEXT PhysicalDeviceFragmentDensityMap2PropertiesEXT.setMaxDescriptorSetSubsampledSamplers(&self, uint maxDescriptorSetSubsampledSamplers) {
+   self.maxDescriptorSetSubsampledSamplers = maxDescriptorSetSubsampledSamplers;
+   return *self;
+}
 fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT physicalDeviceFragmentDensityMapOffsetPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT, .pNext = null };
 fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT.setFragmentDensityOffsetGranularity(&self, Extent2D fragmentDensityOffsetGranularity) {
+   self.fragmentDensityOffsetGranularity = fragmentDensityOffsetGranularity;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM physicalDeviceFragmentDensityMapOffsetPropertiesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM.setFragmentDensityOffsetGranularity(&self, Extent2D fragmentDensityOffsetGranularity) {
    self.fragmentDensityOffsetGranularity = fragmentDensityOffsetGranularity;
    return *self;
 }
@@ -4418,6 +9783,20 @@ fn RenderPassFragmentDensityMapOffsetEndInfoEXT RenderPassFragmentDensityMapOffs
    self.pFragmentDensityOffsets = &pFragmentDensityOffsets[0];
    return *self;
 }
+fn SubpassFragmentDensityMapOffsetEndInfoQCOM subpassFragmentDensityMapOffsetEndInfoQCOM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT, .pNext = null };
+fn SubpassFragmentDensityMapOffsetEndInfoQCOM SubpassFragmentDensityMapOffsetEndInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubpassFragmentDensityMapOffsetEndInfoQCOM SubpassFragmentDensityMapOffsetEndInfoQCOM.setFragmentDensityOffsetCount(&self, uint fragmentDensityOffsetCount) {
+   self.fragmentDensityOffsetCount = fragmentDensityOffsetCount;
+   return *self;
+}
+fn SubpassFragmentDensityMapOffsetEndInfoQCOM SubpassFragmentDensityMapOffsetEndInfoQCOM.setFragmentDensityOffsets(&self, Offset2D[] pFragmentDensityOffsets) {
+   self.fragmentDensityOffsetCount= (uint)pFragmentDensityOffsets.len;
+   self.pFragmentDensityOffsets = &pFragmentDensityOffsets[0];
+   return *self;
+}
 fn PhysicalDeviceScalarBlockLayoutFeatures physicalDeviceScalarBlockLayoutFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES, .pNext = null };
 fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4427,6 +9806,24 @@ fn PhysicalDeviceScalarBlockLayoutFeatures PhysicalDeviceScalarBlockLayoutFeatur
    self.scalarBlockLayout = scalarBlockLayout;
    return *self;
 }
+fn PhysicalDeviceScalarBlockLayoutFeaturesEXT physicalDeviceScalarBlockLayoutFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES, .pNext = null };
+fn PhysicalDeviceScalarBlockLayoutFeaturesEXT PhysicalDeviceScalarBlockLayoutFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceScalarBlockLayoutFeaturesEXT PhysicalDeviceScalarBlockLayoutFeaturesEXT.setScalarBlockLayout(&self, uint scalarBlockLayout) {
+   self.scalarBlockLayout = scalarBlockLayout;
+   return *self;
+}
+fn SurfaceProtectedCapabilitiesKHR surfaceProtectedCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR, .pNext = null };
+fn SurfaceProtectedCapabilitiesKHR SurfaceProtectedCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceProtectedCapabilitiesKHR SurfaceProtectedCapabilitiesKHR.setSupportsProtected(&self, uint supportsProtected) {
+   self.supportsProtected = supportsProtected;
+   return *self;
+}
 fn PhysicalDeviceUniformBufferStandardLayoutFeatures physicalDeviceUniformBufferStandardLayoutFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES, .pNext = null };
 fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4434,6 +9831,77 @@ fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBuffer
 }
 fn PhysicalDeviceUniformBufferStandardLayoutFeatures PhysicalDeviceUniformBufferStandardLayoutFeatures.setUniformBufferStandardLayout(&self, uint uniformBufferStandardLayout) {
    self.uniformBufferStandardLayout = uniformBufferStandardLayout;
+   return *self;
+}
+fn PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR physicalDeviceUniformBufferStandardLayoutFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES, .pNext = null };
+fn PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR.setUniformBufferStandardLayout(&self, uint uniformBufferStandardLayout) {
+   self.uniformBufferStandardLayout = uniformBufferStandardLayout;
+   return *self;
+}
+fn PhysicalDeviceDepthClipEnableFeaturesEXT physicalDeviceDepthClipEnableFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDepthClipEnableFeaturesEXT PhysicalDeviceDepthClipEnableFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDepthClipEnableFeaturesEXT PhysicalDeviceDepthClipEnableFeaturesEXT.setDepthClipEnable(&self, uint depthClipEnable) {
+   self.depthClipEnable = depthClipEnable;
+   return *self;
+}
+fn PipelineRasterizationDepthClipStateCreateInfoEXT pipelineRasterizationDepthClipStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineRasterizationDepthClipStateCreateInfoEXT PipelineRasterizationDepthClipStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationDepthClipStateCreateInfoEXT PipelineRasterizationDepthClipStateCreateInfoEXT.setFlags(&self, PipelineRasterizationDepthClipStateCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineRasterizationDepthClipStateCreateInfoEXT PipelineRasterizationDepthClipStateCreateInfoEXT.setDepthClipEnable(&self, uint depthClipEnable) {
+   self.depthClipEnable = depthClipEnable;
+   return *self;
+}
+fn PhysicalDeviceMemoryBudgetPropertiesEXT physicalDeviceMemoryBudgetPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryBudgetPropertiesEXT PhysicalDeviceMemoryBudgetPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryBudgetPropertiesEXT PhysicalDeviceMemoryBudgetPropertiesEXT.setHeapBudget(&self, DeviceSize[MAX_MEMORY_HEAPS] heapBudget) {
+   self.heapBudget = heapBudget;
+   return *self;
+}
+fn PhysicalDeviceMemoryBudgetPropertiesEXT PhysicalDeviceMemoryBudgetPropertiesEXT.setHeapUsage(&self, DeviceSize[MAX_MEMORY_HEAPS] heapUsage) {
+   self.heapUsage = heapUsage;
+   return *self;
+}
+fn PhysicalDeviceMemoryPriorityFeaturesEXT physicalDeviceMemoryPriorityFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMemoryPriorityFeaturesEXT PhysicalDeviceMemoryPriorityFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMemoryPriorityFeaturesEXT PhysicalDeviceMemoryPriorityFeaturesEXT.setMemoryPriority(&self, uint memoryPriority) {
+   self.memoryPriority = memoryPriority;
+   return *self;
+}
+fn MemoryPriorityAllocateInfoEXT memoryPriorityAllocateInfoEXT() => { .sType = STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT, .pNext = null };
+fn MemoryPriorityAllocateInfoEXT MemoryPriorityAllocateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryPriorityAllocateInfoEXT MemoryPriorityAllocateInfoEXT.setPriority(&self, float priority) {
+   self.priority = priority;
+   return *self;
+}
+fn PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT physicalDevicePageableDeviceLocalMemoryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT.setPageableDeviceLocalMemory(&self, uint pageableDeviceLocalMemory) {
+   self.pageableDeviceLocalMemory = pageableDeviceLocalMemory;
    return *self;
 }
 fn PhysicalDeviceBufferDeviceAddressFeatures physicalDeviceBufferDeviceAddressFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES, .pNext = null };
@@ -4453,12 +9921,81 @@ fn PhysicalDeviceBufferDeviceAddressFeatures PhysicalDeviceBufferDeviceAddressFe
    self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
    return *self;
 }
+fn PhysicalDeviceBufferDeviceAddressFeaturesKHR physicalDeviceBufferDeviceAddressFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES, .pNext = null };
+fn PhysicalDeviceBufferDeviceAddressFeaturesKHR PhysicalDeviceBufferDeviceAddressFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesKHR PhysicalDeviceBufferDeviceAddressFeaturesKHR.setBufferDeviceAddress(&self, uint bufferDeviceAddress) {
+   self.bufferDeviceAddress = bufferDeviceAddress;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesKHR PhysicalDeviceBufferDeviceAddressFeaturesKHR.setBufferDeviceAddressCaptureReplay(&self, uint bufferDeviceAddressCaptureReplay) {
+   self.bufferDeviceAddressCaptureReplay = bufferDeviceAddressCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesKHR PhysicalDeviceBufferDeviceAddressFeaturesKHR.setBufferDeviceAddressMultiDevice(&self, uint bufferDeviceAddressMultiDevice) {
+   self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesEXT physicalDeviceBufferDeviceAddressFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceBufferDeviceAddressFeaturesEXT PhysicalDeviceBufferDeviceAddressFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesEXT PhysicalDeviceBufferDeviceAddressFeaturesEXT.setBufferDeviceAddress(&self, uint bufferDeviceAddress) {
+   self.bufferDeviceAddress = bufferDeviceAddress;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesEXT PhysicalDeviceBufferDeviceAddressFeaturesEXT.setBufferDeviceAddressCaptureReplay(&self, uint bufferDeviceAddressCaptureReplay) {
+   self.bufferDeviceAddressCaptureReplay = bufferDeviceAddressCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceBufferDeviceAddressFeaturesEXT PhysicalDeviceBufferDeviceAddressFeaturesEXT.setBufferDeviceAddressMultiDevice(&self, uint bufferDeviceAddressMultiDevice) {
+   self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
+   return *self;
+}
+fn PhysicalDeviceBufferAddressFeaturesEXT physicalDeviceBufferAddressFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceBufferAddressFeaturesEXT PhysicalDeviceBufferAddressFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBufferAddressFeaturesEXT PhysicalDeviceBufferAddressFeaturesEXT.setBufferDeviceAddress(&self, uint bufferDeviceAddress) {
+   self.bufferDeviceAddress = bufferDeviceAddress;
+   return *self;
+}
+fn PhysicalDeviceBufferAddressFeaturesEXT PhysicalDeviceBufferAddressFeaturesEXT.setBufferDeviceAddressCaptureReplay(&self, uint bufferDeviceAddressCaptureReplay) {
+   self.bufferDeviceAddressCaptureReplay = bufferDeviceAddressCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceBufferAddressFeaturesEXT PhysicalDeviceBufferAddressFeaturesEXT.setBufferDeviceAddressMultiDevice(&self, uint bufferDeviceAddressMultiDevice) {
+   self.bufferDeviceAddressMultiDevice = bufferDeviceAddressMultiDevice;
+   return *self;
+}
 fn BufferDeviceAddressInfo bufferDeviceAddressInfo() => { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .pNext = null };
 fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn BufferDeviceAddressInfo BufferDeviceAddressInfo.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn BufferDeviceAddressInfoKHR bufferDeviceAddressInfoKHR() => { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .pNext = null };
+fn BufferDeviceAddressInfoKHR BufferDeviceAddressInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferDeviceAddressInfoKHR BufferDeviceAddressInfoKHR.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn BufferDeviceAddressInfoEXT bufferDeviceAddressInfoEXT() => { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .pNext = null };
+fn BufferDeviceAddressInfoEXT BufferDeviceAddressInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferDeviceAddressInfoEXT BufferDeviceAddressInfoEXT.setBuffer(&self, Buffer buffer) {
    self.buffer = buffer;
    return *self;
 }
@@ -4471,12 +10008,61 @@ fn BufferOpaqueCaptureAddressCreateInfo BufferOpaqueCaptureAddressCreateInfo.set
    self.opaqueCaptureAddress = opaqueCaptureAddress;
    return *self;
 }
+fn BufferOpaqueCaptureAddressCreateInfoKHR bufferOpaqueCaptureAddressCreateInfoKHR() => { .sType = STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO, .pNext = null };
+fn BufferOpaqueCaptureAddressCreateInfoKHR BufferOpaqueCaptureAddressCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferOpaqueCaptureAddressCreateInfoKHR BufferOpaqueCaptureAddressCreateInfoKHR.setOpaqueCaptureAddress(&self, ulong opaqueCaptureAddress) {
+   self.opaqueCaptureAddress = opaqueCaptureAddress;
+   return *self;
+}
+fn BufferDeviceAddressCreateInfoEXT bufferDeviceAddressCreateInfoEXT() => { .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT, .pNext = null };
+fn BufferDeviceAddressCreateInfoEXT BufferDeviceAddressCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferDeviceAddressCreateInfoEXT BufferDeviceAddressCreateInfoEXT.setDeviceAddress(&self, DeviceAddress deviceAddress) {
+   self.deviceAddress = deviceAddress;
+   return *self;
+}
+fn PhysicalDeviceImageViewImageFormatInfoEXT physicalDeviceImageViewImageFormatInfoEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT, .pNext = null };
+fn PhysicalDeviceImageViewImageFormatInfoEXT PhysicalDeviceImageViewImageFormatInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageViewImageFormatInfoEXT PhysicalDeviceImageViewImageFormatInfoEXT.setImageViewType(&self, ImageViewType imageViewType) {
+   self.imageViewType = imageViewType;
+   return *self;
+}
+fn FilterCubicImageViewImageFormatPropertiesEXT filterCubicImageViewImageFormatPropertiesEXT() => { .sType = STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT, .pNext = null };
+fn FilterCubicImageViewImageFormatPropertiesEXT FilterCubicImageViewImageFormatPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FilterCubicImageViewImageFormatPropertiesEXT FilterCubicImageViewImageFormatPropertiesEXT.setFilterCubic(&self, uint filterCubic) {
+   self.filterCubic = filterCubic;
+   return *self;
+}
+fn FilterCubicImageViewImageFormatPropertiesEXT FilterCubicImageViewImageFormatPropertiesEXT.setFilterCubicMinmax(&self, uint filterCubicMinmax) {
+   self.filterCubicMinmax = filterCubicMinmax;
+   return *self;
+}
 fn PhysicalDeviceImagelessFramebufferFeatures physicalDeviceImagelessFramebufferFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES, .pNext = null };
 fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceImagelessFramebufferFeatures PhysicalDeviceImagelessFramebufferFeatures.setImagelessFramebuffer(&self, uint imagelessFramebuffer) {
+   self.imagelessFramebuffer = imagelessFramebuffer;
+   return *self;
+}
+fn PhysicalDeviceImagelessFramebufferFeaturesKHR physicalDeviceImagelessFramebufferFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES, .pNext = null };
+fn PhysicalDeviceImagelessFramebufferFeaturesKHR PhysicalDeviceImagelessFramebufferFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImagelessFramebufferFeaturesKHR PhysicalDeviceImagelessFramebufferFeaturesKHR.setImagelessFramebuffer(&self, uint imagelessFramebuffer) {
    self.imagelessFramebuffer = imagelessFramebuffer;
    return *self;
 }
@@ -4490,6 +10076,20 @@ fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachme
    return *self;
 }
 fn FramebufferAttachmentsCreateInfo FramebufferAttachmentsCreateInfo.setAttachmentImageInfos(&self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
+   self.attachmentImageInfoCount= (uint)pAttachmentImageInfos.len;
+   self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
+   return *self;
+}
+fn FramebufferAttachmentsCreateInfoKHR framebufferAttachmentsCreateInfoKHR() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO, .pNext = null };
+fn FramebufferAttachmentsCreateInfoKHR FramebufferAttachmentsCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FramebufferAttachmentsCreateInfoKHR FramebufferAttachmentsCreateInfoKHR.setAttachmentImageInfoCount(&self, uint attachmentImageInfoCount) {
+   self.attachmentImageInfoCount = attachmentImageInfoCount;
+   return *self;
+}
+fn FramebufferAttachmentsCreateInfoKHR FramebufferAttachmentsCreateInfoKHR.setAttachmentImageInfos(&self, FramebufferAttachmentImageInfo[] pAttachmentImageInfos) {
    self.attachmentImageInfoCount= (uint)pAttachmentImageInfos.len;
    self.pAttachmentImageInfos = &pAttachmentImageInfos[0];
    return *self;
@@ -4528,6 +10128,40 @@ fn FramebufferAttachmentImageInfo FramebufferAttachmentImageInfo.setViewFormats(
    self.pViewFormats = &pViewFormats[0];
    return *self;
 }
+fn FramebufferAttachmentImageInfoKHR framebufferAttachmentImageInfoKHR() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO, .pNext = null };
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setFlags(&self, ImageCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setUsage(&self, ImageUsageFlags usage) {
+   self.usage = usage;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setWidth(&self, uint width) {
+   self.width = width;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setHeight(&self, uint height) {
+   self.height = height;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setLayerCount(&self, uint layerCount) {
+   self.layerCount = layerCount;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setViewFormatCount(&self, uint viewFormatCount) {
+   self.viewFormatCount = viewFormatCount;
+   return *self;
+}
+fn FramebufferAttachmentImageInfoKHR FramebufferAttachmentImageInfoKHR.setViewFormats(&self, Format[] pViewFormats) {
+   self.viewFormatCount= (uint)pViewFormats.len;
+   self.pViewFormats = &pViewFormats[0];
+   return *self;
+}
 fn RenderPassAttachmentBeginInfo renderPassAttachmentBeginInfo() => { .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO, .pNext = null };
 fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4542,6 +10176,20 @@ fn RenderPassAttachmentBeginInfo RenderPassAttachmentBeginInfo.setAttachments(&s
    self.pAttachments = &pAttachments[0];
    return *self;
 }
+fn RenderPassAttachmentBeginInfoKHR renderPassAttachmentBeginInfoKHR() => { .sType = STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO, .pNext = null };
+fn RenderPassAttachmentBeginInfoKHR RenderPassAttachmentBeginInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassAttachmentBeginInfoKHR RenderPassAttachmentBeginInfoKHR.setAttachmentCount(&self, uint attachmentCount) {
+   self.attachmentCount = attachmentCount;
+   return *self;
+}
+fn RenderPassAttachmentBeginInfoKHR RenderPassAttachmentBeginInfoKHR.setAttachments(&self, ImageView[] pAttachments) {
+   self.attachmentCount= (uint)pAttachments.len;
+   self.pAttachments = &pAttachments[0];
+   return *self;
+}
 fn PhysicalDeviceTextureCompressionASTCHDRFeatures physicalDeviceTextureCompressionASTCHDRFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES, .pNext = null };
 fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4549,6 +10197,76 @@ fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompress
 }
 fn PhysicalDeviceTextureCompressionASTCHDRFeatures PhysicalDeviceTextureCompressionASTCHDRFeatures.setTextureCompressionASTC_HDR(&self, uint textureCompressionASTC_HDR) {
    self.textureCompressionASTC_HDR = textureCompressionASTC_HDR;
+   return *self;
+}
+fn PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT physicalDeviceTextureCompressionASTCHDRFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES, .pNext = null };
+fn PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT.setTextureCompressionASTC_HDR(&self, uint textureCompressionASTC_HDR) {
+   self.textureCompressionASTC_HDR = textureCompressionASTC_HDR;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesNV physicalDeviceCooperativeMatrixFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeMatrixFeaturesNV PhysicalDeviceCooperativeMatrixFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesNV PhysicalDeviceCooperativeMatrixFeaturesNV.setCooperativeMatrix(&self, uint cooperativeMatrix) {
+   self.cooperativeMatrix = cooperativeMatrix;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesNV PhysicalDeviceCooperativeMatrixFeaturesNV.setCooperativeMatrixRobustBufferAccess(&self, uint cooperativeMatrixRobustBufferAccess) {
+   self.cooperativeMatrixRobustBufferAccess = cooperativeMatrixRobustBufferAccess;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixPropertiesNV physicalDeviceCooperativeMatrixPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeMatrixPropertiesNV PhysicalDeviceCooperativeMatrixPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixPropertiesNV PhysicalDeviceCooperativeMatrixPropertiesNV.setCooperativeMatrixSupportedStages(&self, ShaderStageFlags cooperativeMatrixSupportedStages) {
+   self.cooperativeMatrixSupportedStages = cooperativeMatrixSupportedStages;
+   return *self;
+}
+fn PhysicalDeviceYcbcrImageArraysFeaturesEXT physicalDeviceYcbcrImageArraysFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceYcbcrImageArraysFeaturesEXT PhysicalDeviceYcbcrImageArraysFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceYcbcrImageArraysFeaturesEXT PhysicalDeviceYcbcrImageArraysFeaturesEXT.setYcbcrImageArrays(&self, uint ycbcrImageArrays) {
+   self.ycbcrImageArrays = ycbcrImageArrays;
+   return *self;
+}
+fn ImageViewHandleInfoNVX imageViewHandleInfoNVX() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX, .pNext = null };
+fn ImageViewHandleInfoNVX ImageViewHandleInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewHandleInfoNVX ImageViewHandleInfoNVX.setImageView(&self, ImageView imageView) {
+   self.imageView = imageView;
+   return *self;
+}
+fn ImageViewHandleInfoNVX ImageViewHandleInfoNVX.setDescriptorType(&self, DescriptorType descriptorType) {
+   self.descriptorType = descriptorType;
+   return *self;
+}
+fn ImageViewHandleInfoNVX ImageViewHandleInfoNVX.setSampler(&self, Sampler sampler) {
+   self.sampler = sampler;
+   return *self;
+}
+fn ImageViewAddressPropertiesNVX imageViewAddressPropertiesNVX() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX, .pNext = null };
+fn ImageViewAddressPropertiesNVX ImageViewAddressPropertiesNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewAddressPropertiesNVX ImageViewAddressPropertiesNVX.setDeviceAddress(&self, DeviceAddress deviceAddress) {
+   self.deviceAddress = deviceAddress;
+   return *self;
+}
+fn ImageViewAddressPropertiesNVX ImageViewAddressPropertiesNVX.setSize(&self, DeviceSize size) {
+   self.size = size;
    return *self;
 }
 fn PipelineCreationFeedbackCreateInfo pipelineCreationFeedbackCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO, .pNext = null };
@@ -4569,6 +10287,336 @@ fn PipelineCreationFeedbackCreateInfo PipelineCreationFeedbackCreateInfo.setPipe
    self.pPipelineStageCreationFeedbacks = &pPipelineStageCreationFeedbacks[0];
    return *self;
 }
+fn PipelineCreationFeedbackCreateInfoEXT pipelineCreationFeedbackCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO, .pNext = null };
+fn PipelineCreationFeedbackCreateInfoEXT PipelineCreationFeedbackCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCreationFeedbackCreateInfoEXT PipelineCreationFeedbackCreateInfoEXT.setPipelineCreationFeedback(&self, PipelineCreationFeedback* pPipelineCreationFeedback) {
+   self.pPipelineCreationFeedback = pPipelineCreationFeedback;
+   return *self;
+}
+fn PipelineCreationFeedbackCreateInfoEXT PipelineCreationFeedbackCreateInfoEXT.setPipelineStageCreationFeedbackCount(&self, uint pipelineStageCreationFeedbackCount) {
+   self.pipelineStageCreationFeedbackCount = pipelineStageCreationFeedbackCount;
+   return *self;
+}
+fn PipelineCreationFeedbackCreateInfoEXT PipelineCreationFeedbackCreateInfoEXT.setPipelineStageCreationFeedbacks(&self, PipelineCreationFeedback[] pPipelineStageCreationFeedbacks) {
+   self.pipelineStageCreationFeedbackCount= (uint)pPipelineStageCreationFeedbacks.len;
+   self.pPipelineStageCreationFeedbacks = &pPipelineStageCreationFeedbacks[0];
+   return *self;
+}
+fn SurfaceFullScreenExclusiveInfoEXT surfaceFullScreenExclusiveInfoEXT() => { .sType = STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT, .pNext = null };
+fn SurfaceFullScreenExclusiveInfoEXT SurfaceFullScreenExclusiveInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceFullScreenExclusiveInfoEXT SurfaceFullScreenExclusiveInfoEXT.setFullScreenExclusive(&self, FullScreenExclusiveEXT fullScreenExclusive) {
+   self.fullScreenExclusive = fullScreenExclusive;
+   return *self;
+}
+fn SurfaceFullScreenExclusiveWin32InfoEXT surfaceFullScreenExclusiveWin32InfoEXT() => { .sType = STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT, .pNext = null };
+fn SurfaceFullScreenExclusiveWin32InfoEXT SurfaceFullScreenExclusiveWin32InfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceFullScreenExclusiveWin32InfoEXT SurfaceFullScreenExclusiveWin32InfoEXT.setHmonitor(&self, HMonitor hmonitor) {
+   self.hmonitor = hmonitor;
+   return *self;
+}
+fn SurfaceCapabilitiesFullScreenExclusiveEXT surfaceCapabilitiesFullScreenExclusiveEXT() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT, .pNext = null };
+fn SurfaceCapabilitiesFullScreenExclusiveEXT SurfaceCapabilitiesFullScreenExclusiveEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilitiesFullScreenExclusiveEXT SurfaceCapabilitiesFullScreenExclusiveEXT.setFullScreenExclusiveSupported(&self, uint fullScreenExclusiveSupported) {
+   self.fullScreenExclusiveSupported = fullScreenExclusiveSupported;
+   return *self;
+}
+fn PhysicalDevicePresentBarrierFeaturesNV physicalDevicePresentBarrierFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_BARRIER_FEATURES_NV, .pNext = null };
+fn PhysicalDevicePresentBarrierFeaturesNV PhysicalDevicePresentBarrierFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentBarrierFeaturesNV PhysicalDevicePresentBarrierFeaturesNV.setPresentBarrier(&self, uint presentBarrier) {
+   self.presentBarrier = presentBarrier;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentBarrierNV surfaceCapabilitiesPresentBarrierNV() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_BARRIER_NV, .pNext = null };
+fn SurfaceCapabilitiesPresentBarrierNV SurfaceCapabilitiesPresentBarrierNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentBarrierNV SurfaceCapabilitiesPresentBarrierNV.setPresentBarrierSupported(&self, uint presentBarrierSupported) {
+   self.presentBarrierSupported = presentBarrierSupported;
+   return *self;
+}
+fn SwapchainPresentBarrierCreateInfoNV swapchainPresentBarrierCreateInfoNV() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_BARRIER_CREATE_INFO_NV, .pNext = null };
+fn SwapchainPresentBarrierCreateInfoNV SwapchainPresentBarrierCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentBarrierCreateInfoNV SwapchainPresentBarrierCreateInfoNV.setPresentBarrierEnable(&self, uint presentBarrierEnable) {
+   self.presentBarrierEnable = presentBarrierEnable;
+   return *self;
+}
+fn PhysicalDevicePerformanceQueryFeaturesKHR physicalDevicePerformanceQueryFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePerformanceQueryFeaturesKHR PhysicalDevicePerformanceQueryFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePerformanceQueryFeaturesKHR PhysicalDevicePerformanceQueryFeaturesKHR.setPerformanceCounterQueryPools(&self, uint performanceCounterQueryPools) {
+   self.performanceCounterQueryPools = performanceCounterQueryPools;
+   return *self;
+}
+fn PhysicalDevicePerformanceQueryFeaturesKHR PhysicalDevicePerformanceQueryFeaturesKHR.setPerformanceCounterMultipleQueryPools(&self, uint performanceCounterMultipleQueryPools) {
+   self.performanceCounterMultipleQueryPools = performanceCounterMultipleQueryPools;
+   return *self;
+}
+fn PhysicalDevicePerformanceQueryPropertiesKHR physicalDevicePerformanceQueryPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDevicePerformanceQueryPropertiesKHR PhysicalDevicePerformanceQueryPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePerformanceQueryPropertiesKHR PhysicalDevicePerformanceQueryPropertiesKHR.setAllowCommandBufferQueryCopies(&self, uint allowCommandBufferQueryCopies) {
+   self.allowCommandBufferQueryCopies = allowCommandBufferQueryCopies;
+   return *self;
+}
+fn PerformanceCounterKHR performanceCounterKHR() => { .sType = STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR, .pNext = null };
+fn PerformanceCounterKHR PerformanceCounterKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceCounterKHR PerformanceCounterKHR.setUnit(&self, PerformanceCounterUnitKHR unit) {
+   self.unit = unit;
+   return *self;
+}
+fn PerformanceCounterKHR PerformanceCounterKHR.setScope(&self, PerformanceCounterScopeKHR scope) {
+   self.scope = scope;
+   return *self;
+}
+fn PerformanceCounterKHR PerformanceCounterKHR.setStorage(&self, PerformanceCounterStorageKHR storage) {
+   self.storage = storage;
+   return *self;
+}
+fn PerformanceCounterKHR PerformanceCounterKHR.setUuid(&self, uint[UUID_SIZE] uuid) {
+   self.uuid = uuid;
+   return *self;
+}
+fn PerformanceCounterDescriptionKHR performanceCounterDescriptionKHR() => { .sType = STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR, .pNext = null };
+fn PerformanceCounterDescriptionKHR PerformanceCounterDescriptionKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceCounterDescriptionKHR PerformanceCounterDescriptionKHR.setFlags(&self, PerformanceCounterDescriptionFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PerformanceCounterDescriptionKHR PerformanceCounterDescriptionKHR.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn PerformanceCounterDescriptionKHR PerformanceCounterDescriptionKHR.setCategory(&self, char[MAX_DESCRIPTION_SIZE] category) {
+   self.category = category;
+   return *self;
+}
+fn PerformanceCounterDescriptionKHR PerformanceCounterDescriptionKHR.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn QueryPoolPerformanceCreateInfoKHR queryPoolPerformanceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR, .pNext = null };
+fn QueryPoolPerformanceCreateInfoKHR QueryPoolPerformanceCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueryPoolPerformanceCreateInfoKHR QueryPoolPerformanceCreateInfoKHR.setQueueFamilyIndex(&self, uint queueFamilyIndex) {
+   self.queueFamilyIndex = queueFamilyIndex;
+   return *self;
+}
+fn QueryPoolPerformanceCreateInfoKHR QueryPoolPerformanceCreateInfoKHR.setCounterIndexCount(&self, uint counterIndexCount) {
+   self.counterIndexCount = counterIndexCount;
+   return *self;
+}
+fn QueryPoolPerformanceCreateInfoKHR QueryPoolPerformanceCreateInfoKHR.setCounterIndices(&self, uint[] pCounterIndices) {
+   self.counterIndexCount= (uint)pCounterIndices.len;
+   self.pCounterIndices = &pCounterIndices[0];
+   return *self;
+}
+fn AcquireProfilingLockInfoKHR acquireProfilingLockInfoKHR() => { .sType = STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR, .pNext = null };
+fn AcquireProfilingLockInfoKHR AcquireProfilingLockInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AcquireProfilingLockInfoKHR AcquireProfilingLockInfoKHR.setFlags(&self, AcquireProfilingLockFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn AcquireProfilingLockInfoKHR AcquireProfilingLockInfoKHR.setTimeout(&self, ulong timeout) {
+   self.timeout = timeout;
+   return *self;
+}
+fn PerformanceQuerySubmitInfoKHR performanceQuerySubmitInfoKHR() => { .sType = STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR, .pNext = null };
+fn PerformanceQuerySubmitInfoKHR PerformanceQuerySubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceQuerySubmitInfoKHR PerformanceQuerySubmitInfoKHR.setCounterPassIndex(&self, uint counterPassIndex) {
+   self.counterPassIndex = counterPassIndex;
+   return *self;
+}
+fn PerformanceQueryReservationInfoKHR performanceQueryReservationInfoKHR() => { .sType = STRUCTURE_TYPE_PERFORMANCE_QUERY_RESERVATION_INFO_KHR, .pNext = null };
+fn PerformanceQueryReservationInfoKHR PerformanceQueryReservationInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceQueryReservationInfoKHR PerformanceQueryReservationInfoKHR.setMaxPerformanceQueriesPerPool(&self, uint maxPerformanceQueriesPerPool) {
+   self.maxPerformanceQueriesPerPool = maxPerformanceQueriesPerPool;
+   return *self;
+}
+fn HeadlessSurfaceCreateInfoEXT headlessSurfaceCreateInfoEXT() => { .sType = STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT, .pNext = null };
+fn HeadlessSurfaceCreateInfoEXT HeadlessSurfaceCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn HeadlessSurfaceCreateInfoEXT HeadlessSurfaceCreateInfoEXT.setFlags(&self, HeadlessSurfaceCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PhysicalDeviceCoverageReductionModeFeaturesNV physicalDeviceCoverageReductionModeFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCoverageReductionModeFeaturesNV PhysicalDeviceCoverageReductionModeFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCoverageReductionModeFeaturesNV PhysicalDeviceCoverageReductionModeFeaturesNV.setCoverageReductionMode(&self, uint coverageReductionMode) {
+   self.coverageReductionMode = coverageReductionMode;
+   return *self;
+}
+fn PipelineCoverageReductionStateCreateInfoNV pipelineCoverageReductionStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineCoverageReductionStateCreateInfoNV PipelineCoverageReductionStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCoverageReductionStateCreateInfoNV PipelineCoverageReductionStateCreateInfoNV.setFlags(&self, PipelineCoverageReductionStateCreateFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PipelineCoverageReductionStateCreateInfoNV PipelineCoverageReductionStateCreateInfoNV.setCoverageReductionMode(&self, CoverageReductionModeNV coverageReductionMode) {
+   self.coverageReductionMode = coverageReductionMode;
+   return *self;
+}
+fn FramebufferMixedSamplesCombinationNV framebufferMixedSamplesCombinationNV() => { .sType = STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV, .pNext = null };
+fn FramebufferMixedSamplesCombinationNV FramebufferMixedSamplesCombinationNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FramebufferMixedSamplesCombinationNV FramebufferMixedSamplesCombinationNV.setCoverageReductionMode(&self, CoverageReductionModeNV coverageReductionMode) {
+   self.coverageReductionMode = coverageReductionMode;
+   return *self;
+}
+fn FramebufferMixedSamplesCombinationNV FramebufferMixedSamplesCombinationNV.setRasterizationSamples(&self, SampleCountFlagBits rasterizationSamples) {
+   self.rasterizationSamples = rasterizationSamples;
+   return *self;
+}
+fn FramebufferMixedSamplesCombinationNV FramebufferMixedSamplesCombinationNV.setDepthStencilSamples(&self, SampleCountFlags depthStencilSamples) {
+   self.depthStencilSamples = depthStencilSamples;
+   return *self;
+}
+fn FramebufferMixedSamplesCombinationNV FramebufferMixedSamplesCombinationNV.setColorSamples(&self, SampleCountFlags colorSamples) {
+   self.colorSamples = colorSamples;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL physicalDeviceShaderIntegerFunctions2FeaturesINTEL() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL, .pNext = null };
+fn PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL.setShaderIntegerFunctions2(&self, uint shaderIntegerFunctions2) {
+   self.shaderIntegerFunctions2 = shaderIntegerFunctions2;
+   return *self;
+}
+fn InitializePerformanceApiInfoINTEL initializePerformanceApiInfoINTEL() => { .sType = STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL, .pNext = null };
+fn InitializePerformanceApiInfoINTEL InitializePerformanceApiInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn InitializePerformanceApiInfoINTEL InitializePerformanceApiInfoINTEL.setUserData(&self, void* pUserData) {
+   self.pUserData = pUserData;
+   return *self;
+}
+fn QueryPoolPerformanceQueryCreateInfoINTEL queryPoolPerformanceQueryCreateInfoINTEL() => { .sType = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL, .pNext = null };
+fn QueryPoolPerformanceQueryCreateInfoINTEL QueryPoolPerformanceQueryCreateInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueryPoolPerformanceQueryCreateInfoINTEL QueryPoolPerformanceQueryCreateInfoINTEL.setPerformanceCountersSampling(&self, QueryPoolSamplingModeINTEL performanceCountersSampling) {
+   self.performanceCountersSampling = performanceCountersSampling;
+   return *self;
+}
+fn QueryPoolCreateInfoINTEL queryPoolCreateInfoINTEL() => { .sType = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL, .pNext = null };
+fn QueryPoolCreateInfoINTEL QueryPoolCreateInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueryPoolCreateInfoINTEL QueryPoolCreateInfoINTEL.setPerformanceCountersSampling(&self, QueryPoolSamplingModeINTEL performanceCountersSampling) {
+   self.performanceCountersSampling = performanceCountersSampling;
+   return *self;
+}
+fn PerformanceMarkerInfoINTEL performanceMarkerInfoINTEL() => { .sType = STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL, .pNext = null };
+fn PerformanceMarkerInfoINTEL PerformanceMarkerInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceMarkerInfoINTEL PerformanceMarkerInfoINTEL.setMarker(&self, ulong marker) {
+   self.marker = marker;
+   return *self;
+}
+fn PerformanceStreamMarkerInfoINTEL performanceStreamMarkerInfoINTEL() => { .sType = STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL, .pNext = null };
+fn PerformanceStreamMarkerInfoINTEL PerformanceStreamMarkerInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceStreamMarkerInfoINTEL PerformanceStreamMarkerInfoINTEL.setMarker(&self, uint marker) {
+   self.marker = marker;
+   return *self;
+}
+fn PerformanceOverrideInfoINTEL performanceOverrideInfoINTEL() => { .sType = STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL, .pNext = null };
+fn PerformanceOverrideInfoINTEL PerformanceOverrideInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceOverrideInfoINTEL PerformanceOverrideInfoINTEL.setType(&self, PerformanceOverrideTypeINTEL type) {
+   self.type = type;
+   return *self;
+}
+fn PerformanceOverrideInfoINTEL PerformanceOverrideInfoINTEL.setEnable(&self, uint enable) {
+   self.enable = enable;
+   return *self;
+}
+fn PerformanceOverrideInfoINTEL PerformanceOverrideInfoINTEL.setParameter(&self, ulong parameter) {
+   self.parameter = parameter;
+   return *self;
+}
+fn PerformanceConfigurationAcquireInfoINTEL performanceConfigurationAcquireInfoINTEL() => { .sType = STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL, .pNext = null };
+fn PerformanceConfigurationAcquireInfoINTEL PerformanceConfigurationAcquireInfoINTEL.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceConfigurationAcquireInfoINTEL PerformanceConfigurationAcquireInfoINTEL.setType(&self, PerformanceConfigurationTypeINTEL type) {
+   self.type = type;
+   return *self;
+}
+fn PhysicalDeviceShaderClockFeaturesKHR physicalDeviceShaderClockFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderClockFeaturesKHR PhysicalDeviceShaderClockFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderClockFeaturesKHR PhysicalDeviceShaderClockFeaturesKHR.setShaderSubgroupClock(&self, uint shaderSubgroupClock) {
+   self.shaderSubgroupClock = shaderSubgroupClock;
+   return *self;
+}
+fn PhysicalDeviceShaderClockFeaturesKHR PhysicalDeviceShaderClockFeaturesKHR.setShaderDeviceClock(&self, uint shaderDeviceClock) {
+   self.shaderDeviceClock = shaderDeviceClock;
+   return *self;
+}
 fn PhysicalDeviceIndexTypeUint8Features physicalDeviceIndexTypeUint8Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES, .pNext = null };
 fn PhysicalDeviceIndexTypeUint8Features PhysicalDeviceIndexTypeUint8Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4576,6 +10624,63 @@ fn PhysicalDeviceIndexTypeUint8Features PhysicalDeviceIndexTypeUint8Features.set
 }
 fn PhysicalDeviceIndexTypeUint8Features PhysicalDeviceIndexTypeUint8Features.setIndexTypeUint8(&self, uint indexTypeUint8) {
    self.indexTypeUint8 = indexTypeUint8;
+   return *self;
+}
+fn PhysicalDeviceIndexTypeUint8FeaturesKHR physicalDeviceIndexTypeUint8FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES, .pNext = null };
+fn PhysicalDeviceIndexTypeUint8FeaturesKHR PhysicalDeviceIndexTypeUint8FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceIndexTypeUint8FeaturesKHR PhysicalDeviceIndexTypeUint8FeaturesKHR.setIndexTypeUint8(&self, uint indexTypeUint8) {
+   self.indexTypeUint8 = indexTypeUint8;
+   return *self;
+}
+fn PhysicalDeviceIndexTypeUint8FeaturesEXT physicalDeviceIndexTypeUint8FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES, .pNext = null };
+fn PhysicalDeviceIndexTypeUint8FeaturesEXT PhysicalDeviceIndexTypeUint8FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceIndexTypeUint8FeaturesEXT PhysicalDeviceIndexTypeUint8FeaturesEXT.setIndexTypeUint8(&self, uint indexTypeUint8) {
+   self.indexTypeUint8 = indexTypeUint8;
+   return *self;
+}
+fn PhysicalDeviceShaderSMBuiltinsPropertiesNV physicalDeviceShaderSMBuiltinsPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceShaderSMBuiltinsPropertiesNV PhysicalDeviceShaderSMBuiltinsPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSMBuiltinsPropertiesNV PhysicalDeviceShaderSMBuiltinsPropertiesNV.setShaderSMCount(&self, uint shaderSMCount) {
+   self.shaderSMCount = shaderSMCount;
+   return *self;
+}
+fn PhysicalDeviceShaderSMBuiltinsPropertiesNV PhysicalDeviceShaderSMBuiltinsPropertiesNV.setShaderWarpsPerSM(&self, uint shaderWarpsPerSM) {
+   self.shaderWarpsPerSM = shaderWarpsPerSM;
+   return *self;
+}
+fn PhysicalDeviceShaderSMBuiltinsFeaturesNV physicalDeviceShaderSMBuiltinsFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceShaderSMBuiltinsFeaturesNV PhysicalDeviceShaderSMBuiltinsFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSMBuiltinsFeaturesNV PhysicalDeviceShaderSMBuiltinsFeaturesNV.setShaderSMBuiltins(&self, uint shaderSMBuiltins) {
+   self.shaderSMBuiltins = shaderSMBuiltins;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderInterlockFeaturesEXT physicalDeviceFragmentShaderInterlockFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_INTERLOCK_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFragmentShaderInterlockFeaturesEXT PhysicalDeviceFragmentShaderInterlockFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderInterlockFeaturesEXT PhysicalDeviceFragmentShaderInterlockFeaturesEXT.setFragmentShaderSampleInterlock(&self, uint fragmentShaderSampleInterlock) {
+   self.fragmentShaderSampleInterlock = fragmentShaderSampleInterlock;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderInterlockFeaturesEXT PhysicalDeviceFragmentShaderInterlockFeaturesEXT.setFragmentShaderPixelInterlock(&self, uint fragmentShaderPixelInterlock) {
+   self.fragmentShaderPixelInterlock = fragmentShaderPixelInterlock;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderInterlockFeaturesEXT PhysicalDeviceFragmentShaderInterlockFeaturesEXT.setFragmentShaderShadingRateInterlock(&self, uint fragmentShaderShadingRateInterlock) {
+   self.fragmentShaderShadingRateInterlock = fragmentShaderShadingRateInterlock;
    return *self;
 }
 fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures physicalDeviceSeparateDepthStencilLayoutsFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES, .pNext = null };
@@ -4587,12 +10692,43 @@ fn PhysicalDeviceSeparateDepthStencilLayoutsFeatures PhysicalDeviceSeparateDepth
    self.separateDepthStencilLayouts = separateDepthStencilLayouts;
    return *self;
 }
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR physicalDeviceSeparateDepthStencilLayoutsFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES, .pNext = null };
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR.setSeparateDepthStencilLayouts(&self, uint separateDepthStencilLayouts) {
+   self.separateDepthStencilLayouts = separateDepthStencilLayouts;
+   return *self;
+}
 fn AttachmentReferenceStencilLayout attachmentReferenceStencilLayout() => { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT, .pNext = null };
 fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn AttachmentReferenceStencilLayout AttachmentReferenceStencilLayout.setStencilLayout(&self, ImageLayout stencilLayout) {
+   self.stencilLayout = stencilLayout;
+   return *self;
+}
+fn PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT physicalDevicePrimitiveTopologyListRestartFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT.setPrimitiveTopologyListRestart(&self, uint primitiveTopologyListRestart) {
+   self.primitiveTopologyListRestart = primitiveTopologyListRestart;
+   return *self;
+}
+fn PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT.setPrimitiveTopologyPatchListRestart(&self, uint primitiveTopologyPatchListRestart) {
+   self.primitiveTopologyPatchListRestart = primitiveTopologyPatchListRestart;
+   return *self;
+}
+fn AttachmentReferenceStencilLayoutKHR attachmentReferenceStencilLayoutKHR() => { .sType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT, .pNext = null };
+fn AttachmentReferenceStencilLayoutKHR AttachmentReferenceStencilLayoutKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AttachmentReferenceStencilLayoutKHR AttachmentReferenceStencilLayoutKHR.setStencilLayout(&self, ImageLayout stencilLayout) {
    self.stencilLayout = stencilLayout;
    return *self;
 }
@@ -4609,6 +10745,126 @@ fn AttachmentDescriptionStencilLayout AttachmentDescriptionStencilLayout.setSten
    self.stencilFinalLayout = stencilFinalLayout;
    return *self;
 }
+fn AttachmentDescriptionStencilLayoutKHR attachmentDescriptionStencilLayoutKHR() => { .sType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT, .pNext = null };
+fn AttachmentDescriptionStencilLayoutKHR AttachmentDescriptionStencilLayoutKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AttachmentDescriptionStencilLayoutKHR AttachmentDescriptionStencilLayoutKHR.setStencilInitialLayout(&self, ImageLayout stencilInitialLayout) {
+   self.stencilInitialLayout = stencilInitialLayout;
+   return *self;
+}
+fn AttachmentDescriptionStencilLayoutKHR AttachmentDescriptionStencilLayoutKHR.setStencilFinalLayout(&self, ImageLayout stencilFinalLayout) {
+   self.stencilFinalLayout = stencilFinalLayout;
+   return *self;
+}
+fn PhysicalDevicePipelineExecutablePropertiesFeaturesKHR physicalDevicePipelineExecutablePropertiesFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePipelineExecutablePropertiesFeaturesKHR PhysicalDevicePipelineExecutablePropertiesFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineExecutablePropertiesFeaturesKHR PhysicalDevicePipelineExecutablePropertiesFeaturesKHR.setPipelineExecutableInfo(&self, uint pipelineExecutableInfo) {
+   self.pipelineExecutableInfo = pipelineExecutableInfo;
+   return *self;
+}
+fn PipelineInfoKHR pipelineInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_INFO_KHR, .pNext = null };
+fn PipelineInfoKHR PipelineInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineInfoKHR PipelineInfoKHR.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn PipelineInfoEXT pipelineInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_INFO_KHR, .pNext = null };
+fn PipelineInfoEXT PipelineInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineInfoEXT PipelineInfoEXT.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn PipelineExecutablePropertiesKHR pipelineExecutablePropertiesKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR, .pNext = null };
+fn PipelineExecutablePropertiesKHR PipelineExecutablePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineExecutablePropertiesKHR PipelineExecutablePropertiesKHR.setStages(&self, ShaderStageFlags stages) {
+   self.stages = stages;
+   return *self;
+}
+fn PipelineExecutablePropertiesKHR PipelineExecutablePropertiesKHR.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn PipelineExecutablePropertiesKHR PipelineExecutablePropertiesKHR.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn PipelineExecutablePropertiesKHR PipelineExecutablePropertiesKHR.setSubgroupSize(&self, uint subgroupSize) {
+   self.subgroupSize = subgroupSize;
+   return *self;
+}
+fn PipelineExecutableInfoKHR pipelineExecutableInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR, .pNext = null };
+fn PipelineExecutableInfoKHR PipelineExecutableInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineExecutableInfoKHR PipelineExecutableInfoKHR.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn PipelineExecutableInfoKHR PipelineExecutableInfoKHR.setExecutableIndex(&self, uint executableIndex) {
+   self.executableIndex = executableIndex;
+   return *self;
+}
+fn PipelineExecutableStatisticKHR pipelineExecutableStatisticKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR, .pNext = null };
+fn PipelineExecutableStatisticKHR PipelineExecutableStatisticKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineExecutableStatisticKHR PipelineExecutableStatisticKHR.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn PipelineExecutableStatisticKHR PipelineExecutableStatisticKHR.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn PipelineExecutableStatisticKHR PipelineExecutableStatisticKHR.setFormat(&self, PipelineExecutableStatisticFormatKHR format) {
+   self.format = format;
+   return *self;
+}
+fn PipelineExecutableStatisticKHR PipelineExecutableStatisticKHR.setValue(&self, PipelineExecutableStatisticValueKHR value) {
+   self.value = value;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR pipelineExecutableInternalRepresentationKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR, .pNext = null };
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setIsText(&self, uint isText) {
+   self.isText = isText;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setDataSize(&self, usz dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
 fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures physicalDeviceShaderDemoteToHelperInvocationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4616,6 +10872,24 @@ fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemo
 }
 fn PhysicalDeviceShaderDemoteToHelperInvocationFeatures PhysicalDeviceShaderDemoteToHelperInvocationFeatures.setShaderDemoteToHelperInvocation(&self, uint shaderDemoteToHelperInvocation) {
    self.shaderDemoteToHelperInvocation = shaderDemoteToHelperInvocation;
+   return *self;
+}
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT physicalDeviceShaderDemoteToHelperInvocationFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT.setShaderDemoteToHelperInvocation(&self, uint shaderDemoteToHelperInvocation) {
+   self.shaderDemoteToHelperInvocation = shaderDemoteToHelperInvocation;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentFeaturesEXT physicalDeviceTexelBufferAlignmentFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceTexelBufferAlignmentFeaturesEXT PhysicalDeviceTexelBufferAlignmentFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentFeaturesEXT PhysicalDeviceTexelBufferAlignmentFeaturesEXT.setTexelBufferAlignment(&self, uint texelBufferAlignment) {
+   self.texelBufferAlignment = texelBufferAlignment;
    return *self;
 }
 fn PhysicalDeviceTexelBufferAlignmentProperties physicalDeviceTexelBufferAlignmentProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES, .pNext = null };
@@ -4639,6 +10913,27 @@ fn PhysicalDeviceTexelBufferAlignmentProperties PhysicalDeviceTexelBufferAlignme
    self.uniformTexelBufferOffsetSingleTexelAlignment = uniformTexelBufferOffsetSingleTexelAlignment;
    return *self;
 }
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT physicalDeviceTexelBufferAlignmentPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES, .pNext = null };
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT PhysicalDeviceTexelBufferAlignmentPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT PhysicalDeviceTexelBufferAlignmentPropertiesEXT.setStorageTexelBufferOffsetAlignmentBytes(&self, DeviceSize storageTexelBufferOffsetAlignmentBytes) {
+   self.storageTexelBufferOffsetAlignmentBytes = storageTexelBufferOffsetAlignmentBytes;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT PhysicalDeviceTexelBufferAlignmentPropertiesEXT.setStorageTexelBufferOffsetSingleTexelAlignment(&self, uint storageTexelBufferOffsetSingleTexelAlignment) {
+   self.storageTexelBufferOffsetSingleTexelAlignment = storageTexelBufferOffsetSingleTexelAlignment;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT PhysicalDeviceTexelBufferAlignmentPropertiesEXT.setUniformTexelBufferOffsetAlignmentBytes(&self, DeviceSize uniformTexelBufferOffsetAlignmentBytes) {
+   self.uniformTexelBufferOffsetAlignmentBytes = uniformTexelBufferOffsetAlignmentBytes;
+   return *self;
+}
+fn PhysicalDeviceTexelBufferAlignmentPropertiesEXT PhysicalDeviceTexelBufferAlignmentPropertiesEXT.setUniformTexelBufferOffsetSingleTexelAlignment(&self, uint uniformTexelBufferOffsetSingleTexelAlignment) {
+   self.uniformTexelBufferOffsetSingleTexelAlignment = uniformTexelBufferOffsetSingleTexelAlignment;
+   return *self;
+}
 fn PhysicalDeviceSubgroupSizeControlFeatures physicalDeviceSubgroupSizeControlFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES, .pNext = null };
 fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4649,6 +10944,19 @@ fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFe
    return *self;
 }
 fn PhysicalDeviceSubgroupSizeControlFeatures PhysicalDeviceSubgroupSizeControlFeatures.setComputeFullSubgroups(&self, uint computeFullSubgroups) {
+   self.computeFullSubgroups = computeFullSubgroups;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlFeaturesEXT physicalDeviceSubgroupSizeControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES, .pNext = null };
+fn PhysicalDeviceSubgroupSizeControlFeaturesEXT PhysicalDeviceSubgroupSizeControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlFeaturesEXT PhysicalDeviceSubgroupSizeControlFeaturesEXT.setSubgroupSizeControl(&self, uint subgroupSizeControl) {
+   self.subgroupSizeControl = subgroupSizeControl;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlFeaturesEXT PhysicalDeviceSubgroupSizeControlFeaturesEXT.setComputeFullSubgroups(&self, uint computeFullSubgroups) {
    self.computeFullSubgroups = computeFullSubgroups;
    return *self;
 }
@@ -4673,6 +10981,27 @@ fn PhysicalDeviceSubgroupSizeControlProperties PhysicalDeviceSubgroupSizeControl
    self.requiredSubgroupSizeStages = requiredSubgroupSizeStages;
    return *self;
 }
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT physicalDeviceSubgroupSizeControlPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES, .pNext = null };
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT PhysicalDeviceSubgroupSizeControlPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT PhysicalDeviceSubgroupSizeControlPropertiesEXT.setMinSubgroupSize(&self, uint minSubgroupSize) {
+   self.minSubgroupSize = minSubgroupSize;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT PhysicalDeviceSubgroupSizeControlPropertiesEXT.setMaxSubgroupSize(&self, uint maxSubgroupSize) {
+   self.maxSubgroupSize = maxSubgroupSize;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT PhysicalDeviceSubgroupSizeControlPropertiesEXT.setMaxComputeWorkgroupSubgroups(&self, uint maxComputeWorkgroupSubgroups) {
+   self.maxComputeWorkgroupSubgroups = maxComputeWorkgroupSubgroups;
+   return *self;
+}
+fn PhysicalDeviceSubgroupSizeControlPropertiesEXT PhysicalDeviceSubgroupSizeControlPropertiesEXT.setRequiredSubgroupSizeStages(&self, ShaderStageFlags requiredSubgroupSizeStages) {
+   self.requiredSubgroupSizeStages = requiredSubgroupSizeStages;
+   return *self;
+}
 fn PipelineShaderStageRequiredSubgroupSizeCreateInfo pipelineShaderStageRequiredSubgroupSizeCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO, .pNext = null };
 fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -4680,6 +11009,67 @@ fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequired
 }
 fn PipelineShaderStageRequiredSubgroupSizeCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo.setRequiredSubgroupSize(&self, uint requiredSubgroupSize) {
    self.requiredSubgroupSize = requiredSubgroupSize;
+   return *self;
+}
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT pipelineShaderStageRequiredSubgroupSizeCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO, .pNext = null };
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT.setRequiredSubgroupSize(&self, uint requiredSubgroupSize) {
+   self.requiredSubgroupSize = requiredSubgroupSize;
+   return *self;
+}
+fn ShaderRequiredSubgroupSizeCreateInfoEXT shaderRequiredSubgroupSizeCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO, .pNext = null };
+fn ShaderRequiredSubgroupSizeCreateInfoEXT ShaderRequiredSubgroupSizeCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderRequiredSubgroupSizeCreateInfoEXT ShaderRequiredSubgroupSizeCreateInfoEXT.setRequiredSubgroupSize(&self, uint requiredSubgroupSize) {
+   self.requiredSubgroupSize = requiredSubgroupSize;
+   return *self;
+}
+fn SubpassShadingPipelineCreateInfoHUAWEI subpassShadingPipelineCreateInfoHUAWEI() => { .sType = STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI, .pNext = null };
+fn SubpassShadingPipelineCreateInfoHUAWEI SubpassShadingPipelineCreateInfoHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubpassShadingPipelineCreateInfoHUAWEI SubpassShadingPipelineCreateInfoHUAWEI.setRenderPass(&self, RenderPass renderPass) {
+   self.renderPass = renderPass;
+   return *self;
+}
+fn SubpassShadingPipelineCreateInfoHUAWEI SubpassShadingPipelineCreateInfoHUAWEI.setSubpass(&self, uint subpass) {
+   self.subpass = subpass;
+   return *self;
+}
+fn PhysicalDeviceSubpassShadingPropertiesHUAWEI physicalDeviceSubpassShadingPropertiesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI, .pNext = null };
+fn PhysicalDeviceSubpassShadingPropertiesHUAWEI PhysicalDeviceSubpassShadingPropertiesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSubpassShadingPropertiesHUAWEI PhysicalDeviceSubpassShadingPropertiesHUAWEI.setMaxSubpassShadingWorkgroupSizeAspectRatio(&self, uint maxSubpassShadingWorkgroupSizeAspectRatio) {
+   self.maxSubpassShadingWorkgroupSizeAspectRatio = maxSubpassShadingWorkgroupSizeAspectRatio;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI physicalDeviceClusterCullingShaderPropertiesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI, .pNext = null };
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI PhysicalDeviceClusterCullingShaderPropertiesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI PhysicalDeviceClusterCullingShaderPropertiesHUAWEI.setMaxWorkGroupCount(&self, uint[3] maxWorkGroupCount) {
+   self.maxWorkGroupCount = maxWorkGroupCount;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI PhysicalDeviceClusterCullingShaderPropertiesHUAWEI.setMaxWorkGroupSize(&self, uint[3] maxWorkGroupSize) {
+   self.maxWorkGroupSize = maxWorkGroupSize;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI PhysicalDeviceClusterCullingShaderPropertiesHUAWEI.setMaxOutputClusterCount(&self, uint maxOutputClusterCount) {
+   self.maxOutputClusterCount = maxOutputClusterCount;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderPropertiesHUAWEI PhysicalDeviceClusterCullingShaderPropertiesHUAWEI.setIndirectBufferOffsetAlignment(&self, DeviceSize indirectBufferOffsetAlignment) {
+   self.indirectBufferOffsetAlignment = indirectBufferOffsetAlignment;
    return *self;
 }
 fn MemoryOpaqueCaptureAddressAllocateInfo memoryOpaqueCaptureAddressAllocateInfo() => { .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO, .pNext = null };
@@ -4691,12 +11081,30 @@ fn MemoryOpaqueCaptureAddressAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo
    self.opaqueCaptureAddress = opaqueCaptureAddress;
    return *self;
 }
+fn MemoryOpaqueCaptureAddressAllocateInfoKHR memoryOpaqueCaptureAddressAllocateInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO, .pNext = null };
+fn MemoryOpaqueCaptureAddressAllocateInfoKHR MemoryOpaqueCaptureAddressAllocateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryOpaqueCaptureAddressAllocateInfoKHR MemoryOpaqueCaptureAddressAllocateInfoKHR.setOpaqueCaptureAddress(&self, ulong opaqueCaptureAddress) {
+   self.opaqueCaptureAddress = opaqueCaptureAddress;
+   return *self;
+}
 fn DeviceMemoryOpaqueCaptureAddressInfo deviceMemoryOpaqueCaptureAddressInfo() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO, .pNext = null };
 fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn DeviceMemoryOpaqueCaptureAddressInfo DeviceMemoryOpaqueCaptureAddressInfo.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn DeviceMemoryOpaqueCaptureAddressInfoKHR deviceMemoryOpaqueCaptureAddressInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO, .pNext = null };
+fn DeviceMemoryOpaqueCaptureAddressInfoKHR DeviceMemoryOpaqueCaptureAddressInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceMemoryOpaqueCaptureAddressInfoKHR DeviceMemoryOpaqueCaptureAddressInfoKHR.setMemory(&self, DeviceMemory memory) {
    self.memory = memory;
    return *self;
 }
@@ -4729,12 +11137,88 @@ fn PhysicalDeviceLineRasterizationFeatures PhysicalDeviceLineRasterizationFeatur
    self.stippledSmoothLines = stippledSmoothLines;
    return *self;
 }
+fn PhysicalDeviceLineRasterizationFeaturesKHR physicalDeviceLineRasterizationFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES, .pNext = null };
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setRectangularLines(&self, uint rectangularLines) {
+   self.rectangularLines = rectangularLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setBresenhamLines(&self, uint bresenhamLines) {
+   self.bresenhamLines = bresenhamLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setSmoothLines(&self, uint smoothLines) {
+   self.smoothLines = smoothLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setStippledRectangularLines(&self, uint stippledRectangularLines) {
+   self.stippledRectangularLines = stippledRectangularLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setStippledBresenhamLines(&self, uint stippledBresenhamLines) {
+   self.stippledBresenhamLines = stippledBresenhamLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesKHR PhysicalDeviceLineRasterizationFeaturesKHR.setStippledSmoothLines(&self, uint stippledSmoothLines) {
+   self.stippledSmoothLines = stippledSmoothLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT physicalDeviceLineRasterizationFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES, .pNext = null };
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setRectangularLines(&self, uint rectangularLines) {
+   self.rectangularLines = rectangularLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setBresenhamLines(&self, uint bresenhamLines) {
+   self.bresenhamLines = bresenhamLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setSmoothLines(&self, uint smoothLines) {
+   self.smoothLines = smoothLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setStippledRectangularLines(&self, uint stippledRectangularLines) {
+   self.stippledRectangularLines = stippledRectangularLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setStippledBresenhamLines(&self, uint stippledBresenhamLines) {
+   self.stippledBresenhamLines = stippledBresenhamLines;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationFeaturesEXT PhysicalDeviceLineRasterizationFeaturesEXT.setStippledSmoothLines(&self, uint stippledSmoothLines) {
+   self.stippledSmoothLines = stippledSmoothLines;
+   return *self;
+}
 fn PhysicalDeviceLineRasterizationProperties physicalDeviceLineRasterizationProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES, .pNext = null };
 fn PhysicalDeviceLineRasterizationProperties PhysicalDeviceLineRasterizationProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceLineRasterizationProperties PhysicalDeviceLineRasterizationProperties.setLineSubPixelPrecisionBits(&self, uint lineSubPixelPrecisionBits) {
+   self.lineSubPixelPrecisionBits = lineSubPixelPrecisionBits;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationPropertiesKHR physicalDeviceLineRasterizationPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES, .pNext = null };
+fn PhysicalDeviceLineRasterizationPropertiesKHR PhysicalDeviceLineRasterizationPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationPropertiesKHR PhysicalDeviceLineRasterizationPropertiesKHR.setLineSubPixelPrecisionBits(&self, uint lineSubPixelPrecisionBits) {
+   self.lineSubPixelPrecisionBits = lineSubPixelPrecisionBits;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationPropertiesEXT physicalDeviceLineRasterizationPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES, .pNext = null };
+fn PhysicalDeviceLineRasterizationPropertiesEXT PhysicalDeviceLineRasterizationPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLineRasterizationPropertiesEXT PhysicalDeviceLineRasterizationPropertiesEXT.setLineSubPixelPrecisionBits(&self, uint lineSubPixelPrecisionBits) {
    self.lineSubPixelPrecisionBits = lineSubPixelPrecisionBits;
    return *self;
 }
@@ -4759,12 +11243,63 @@ fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreate
    self.lineStipplePattern = lineStipplePattern;
    return *self;
 }
+fn PipelineRasterizationLineStateCreateInfoKHR pipelineRasterizationLineStateCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO, .pNext = null };
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setLineRasterizationMode(&self, LineRasterizationMode lineRasterizationMode) {
+   self.lineRasterizationMode = lineRasterizationMode;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setStippledLineEnable(&self, uint stippledLineEnable) {
+   self.stippledLineEnable = stippledLineEnable;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setLineStippleFactor(&self, uint lineStippleFactor) {
+   self.lineStippleFactor = lineStippleFactor;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setLineStipplePattern(&self, uint lineStipplePattern) {
+   self.lineStipplePattern = lineStipplePattern;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoEXT pipelineRasterizationLineStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO, .pNext = null };
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setLineRasterizationMode(&self, LineRasterizationMode lineRasterizationMode) {
+   self.lineRasterizationMode = lineRasterizationMode;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setStippledLineEnable(&self, uint stippledLineEnable) {
+   self.stippledLineEnable = stippledLineEnable;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setLineStippleFactor(&self, uint lineStippleFactor) {
+   self.lineStippleFactor = lineStippleFactor;
+   return *self;
+}
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setLineStipplePattern(&self, uint lineStipplePattern) {
+   self.lineStipplePattern = lineStipplePattern;
+   return *self;
+}
 fn PhysicalDevicePipelineCreationCacheControlFeatures physicalDevicePipelineCreationCacheControlFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDevicePipelineCreationCacheControlFeatures PhysicalDevicePipelineCreationCacheControlFeatures.setPipelineCreationCacheControl(&self, uint pipelineCreationCacheControl) {
+   self.pipelineCreationCacheControl = pipelineCreationCacheControl;
+   return *self;
+}
+fn PhysicalDevicePipelineCreationCacheControlFeaturesEXT physicalDevicePipelineCreationCacheControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineCreationCacheControlFeaturesEXT PhysicalDevicePipelineCreationCacheControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineCreationCacheControlFeaturesEXT PhysicalDevicePipelineCreationCacheControlFeaturesEXT.setPipelineCreationCacheControl(&self, uint pipelineCreationCacheControl) {
    self.pipelineCreationCacheControl = pipelineCreationCacheControl;
    return *self;
 }
@@ -5738,6 +12273,24 @@ fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setIdentica
    self.identicalMemoryTypeRequirements = identicalMemoryTypeRequirements;
    return *self;
 }
+fn PipelineCompilerControlCreateInfoAMD pipelineCompilerControlCreateInfoAMD() => { .sType = STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD, .pNext = null };
+fn PipelineCompilerControlCreateInfoAMD PipelineCompilerControlCreateInfoAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineCompilerControlCreateInfoAMD PipelineCompilerControlCreateInfoAMD.setCompilerControlFlags(&self, PipelineCompilerControlFlagsAMD compilerControlFlags) {
+   self.compilerControlFlags = compilerControlFlags;
+   return *self;
+}
+fn PhysicalDeviceCoherentMemoryFeaturesAMD physicalDeviceCoherentMemoryFeaturesAMD() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD, .pNext = null };
+fn PhysicalDeviceCoherentMemoryFeaturesAMD PhysicalDeviceCoherentMemoryFeaturesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCoherentMemoryFeaturesAMD PhysicalDeviceCoherentMemoryFeaturesAMD.setDeviceCoherentMemory(&self, uint deviceCoherentMemory) {
+   self.deviceCoherentMemory = deviceCoherentMemory;
+   return *self;
+}
 fn PhysicalDeviceToolProperties physicalDeviceToolProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES, .pNext = null };
 fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -5761,6 +12314,92 @@ fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setDescription(&sel
 }
 fn PhysicalDeviceToolProperties PhysicalDeviceToolProperties.setLayer(&self, char[MAX_EXTENSION_NAME_SIZE] layer) {
    self.layer = layer;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT physicalDeviceToolPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES, .pNext = null };
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setName(&self, char[MAX_EXTENSION_NAME_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setVersion(&self, char[MAX_EXTENSION_NAME_SIZE] version) {
+   self.version = version;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setPurposes(&self, ToolPurposeFlags purposes) {
+   self.purposes = purposes;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn PhysicalDeviceToolPropertiesEXT PhysicalDeviceToolPropertiesEXT.setLayer(&self, char[MAX_EXTENSION_NAME_SIZE] layer) {
+   self.layer = layer;
+   return *self;
+}
+fn SamplerCustomBorderColorCreateInfoEXT samplerCustomBorderColorCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT, .pNext = null };
+fn SamplerCustomBorderColorCreateInfoEXT SamplerCustomBorderColorCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerCustomBorderColorCreateInfoEXT SamplerCustomBorderColorCreateInfoEXT.setCustomBorderColor(&self, ClearColorValue customBorderColor) {
+   self.customBorderColor = customBorderColor;
+   return *self;
+}
+fn SamplerCustomBorderColorCreateInfoEXT SamplerCustomBorderColorCreateInfoEXT.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn PhysicalDeviceCustomBorderColorPropertiesEXT physicalDeviceCustomBorderColorPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceCustomBorderColorPropertiesEXT PhysicalDeviceCustomBorderColorPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCustomBorderColorPropertiesEXT PhysicalDeviceCustomBorderColorPropertiesEXT.setMaxCustomBorderColorSamplers(&self, uint maxCustomBorderColorSamplers) {
+   self.maxCustomBorderColorSamplers = maxCustomBorderColorSamplers;
+   return *self;
+}
+fn PhysicalDeviceCustomBorderColorFeaturesEXT physicalDeviceCustomBorderColorFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceCustomBorderColorFeaturesEXT PhysicalDeviceCustomBorderColorFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCustomBorderColorFeaturesEXT PhysicalDeviceCustomBorderColorFeaturesEXT.setCustomBorderColors(&self, uint customBorderColors) {
+   self.customBorderColors = customBorderColors;
+   return *self;
+}
+fn PhysicalDeviceCustomBorderColorFeaturesEXT PhysicalDeviceCustomBorderColorFeaturesEXT.setCustomBorderColorWithoutFormat(&self, uint customBorderColorWithoutFormat) {
+   self.customBorderColorWithoutFormat = customBorderColorWithoutFormat;
+   return *self;
+}
+fn SamplerBorderColorComponentMappingCreateInfoEXT samplerBorderColorComponentMappingCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT, .pNext = null };
+fn SamplerBorderColorComponentMappingCreateInfoEXT SamplerBorderColorComponentMappingCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerBorderColorComponentMappingCreateInfoEXT SamplerBorderColorComponentMappingCreateInfoEXT.setComponents(&self, ComponentMapping components) {
+   self.components = components;
+   return *self;
+}
+fn SamplerBorderColorComponentMappingCreateInfoEXT SamplerBorderColorComponentMappingCreateInfoEXT.setSrgb(&self, uint srgb) {
+   self.srgb = srgb;
+   return *self;
+}
+fn PhysicalDeviceBorderColorSwizzleFeaturesEXT physicalDeviceBorderColorSwizzleFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceBorderColorSwizzleFeaturesEXT PhysicalDeviceBorderColorSwizzleFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceBorderColorSwizzleFeaturesEXT PhysicalDeviceBorderColorSwizzleFeaturesEXT.setBorderColorSwizzle(&self, uint borderColorSwizzle) {
+   self.borderColorSwizzle = borderColorSwizzle;
+   return *self;
+}
+fn PhysicalDeviceBorderColorSwizzleFeaturesEXT PhysicalDeviceBorderColorSwizzleFeaturesEXT.setBorderColorSwizzleFromImage(&self, uint borderColorSwizzleFromImage) {
+   self.borderColorSwizzleFromImage = borderColorSwizzleFromImage;
    return *self;
 }
 fn AccelerationStructureGeometryTrianglesDataKHR accelerationStructureGeometryTrianglesDataKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR, .pNext = null };
@@ -5820,6 +12459,96 @@ fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryIn
 }
 fn AccelerationStructureGeometryInstancesDataKHR AccelerationStructureGeometryInstancesDataKHR.setData(&self, DeviceOrHostAddressConstKHR data) {
    self.data = data;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV accelerationStructureGeometryLinearSweptSpheresDataNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV, .pNext = null };
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setVertexFormat(&self, Format vertexFormat) {
+   self.vertexFormat = vertexFormat;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setVertexData(&self, DeviceOrHostAddressConstKHR vertexData) {
+   self.vertexData = vertexData;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setVertexStride(&self, DeviceSize vertexStride) {
+   self.vertexStride = vertexStride;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setRadiusFormat(&self, Format radiusFormat) {
+   self.radiusFormat = radiusFormat;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setRadiusData(&self, DeviceOrHostAddressConstKHR radiusData) {
+   self.radiusData = radiusData;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setRadiusStride(&self, DeviceSize radiusStride) {
+   self.radiusStride = radiusStride;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setIndexData(&self, DeviceOrHostAddressConstKHR indexData) {
+   self.indexData = indexData;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setIndexStride(&self, DeviceSize indexStride) {
+   self.indexStride = indexStride;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setIndexingMode(&self, RayTracingLssIndexingModeNV indexingMode) {
+   self.indexingMode = indexingMode;
+   return *self;
+}
+fn AccelerationStructureGeometryLinearSweptSpheresDataNV AccelerationStructureGeometryLinearSweptSpheresDataNV.setEndCapsMode(&self, RayTracingLssPrimitiveEndCapsModeNV endCapsMode) {
+   self.endCapsMode = endCapsMode;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV accelerationStructureGeometrySpheresDataNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV, .pNext = null };
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setVertexFormat(&self, Format vertexFormat) {
+   self.vertexFormat = vertexFormat;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setVertexData(&self, DeviceOrHostAddressConstKHR vertexData) {
+   self.vertexData = vertexData;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setVertexStride(&self, DeviceSize vertexStride) {
+   self.vertexStride = vertexStride;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setRadiusFormat(&self, Format radiusFormat) {
+   self.radiusFormat = radiusFormat;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setRadiusData(&self, DeviceOrHostAddressConstKHR radiusData) {
+   self.radiusData = radiusData;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setRadiusStride(&self, DeviceSize radiusStride) {
+   self.radiusStride = radiusStride;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setIndexData(&self, DeviceOrHostAddressConstKHR indexData) {
+   self.indexData = indexData;
+   return *self;
+}
+fn AccelerationStructureGeometrySpheresDataNV AccelerationStructureGeometrySpheresDataNV.setIndexStride(&self, DeviceSize indexStride) {
+   self.indexStride = indexStride;
    return *self;
 }
 fn AccelerationStructureGeometryKHR accelerationStructureGeometryKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR, .pNext = null };
@@ -5979,6 +12708,59 @@ fn CopyMemoryToAccelerationStructureInfoKHR CopyMemoryToAccelerationStructureInf
    self.mode = mode;
    return *self;
 }
+fn RayTracingPipelineInterfaceCreateInfoKHR rayTracingPipelineInterfaceCreateInfoKHR() => { .sType = STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR, .pNext = null };
+fn RayTracingPipelineInterfaceCreateInfoKHR RayTracingPipelineInterfaceCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RayTracingPipelineInterfaceCreateInfoKHR RayTracingPipelineInterfaceCreateInfoKHR.setMaxPipelineRayPayloadSize(&self, uint maxPipelineRayPayloadSize) {
+   self.maxPipelineRayPayloadSize = maxPipelineRayPayloadSize;
+   return *self;
+}
+fn RayTracingPipelineInterfaceCreateInfoKHR RayTracingPipelineInterfaceCreateInfoKHR.setMaxPipelineRayHitAttributeSize(&self, uint maxPipelineRayHitAttributeSize) {
+   self.maxPipelineRayHitAttributeSize = maxPipelineRayHitAttributeSize;
+   return *self;
+}
+fn PipelineLibraryCreateInfoKHR pipelineLibraryCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR, .pNext = null };
+fn PipelineLibraryCreateInfoKHR PipelineLibraryCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineLibraryCreateInfoKHR PipelineLibraryCreateInfoKHR.setLibraryCount(&self, uint libraryCount) {
+   self.libraryCount = libraryCount;
+   return *self;
+}
+fn PipelineLibraryCreateInfoKHR PipelineLibraryCreateInfoKHR.setLibraries(&self, Pipeline[] pLibraries) {
+   self.libraryCount= (uint)pLibraries.len;
+   self.pLibraries = &pLibraries[0];
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicStateFeaturesEXT physicalDeviceExtendedDynamicStateFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicStateFeaturesEXT PhysicalDeviceExtendedDynamicStateFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicStateFeaturesEXT PhysicalDeviceExtendedDynamicStateFeaturesEXT.setExtendedDynamicState(&self, uint extendedDynamicState) {
+   self.extendedDynamicState = extendedDynamicState;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState2FeaturesEXT physicalDeviceExtendedDynamicState2FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceExtendedDynamicState2FeaturesEXT PhysicalDeviceExtendedDynamicState2FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState2FeaturesEXT PhysicalDeviceExtendedDynamicState2FeaturesEXT.setExtendedDynamicState2(&self, uint extendedDynamicState2) {
+   self.extendedDynamicState2 = extendedDynamicState2;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState2FeaturesEXT PhysicalDeviceExtendedDynamicState2FeaturesEXT.setExtendedDynamicState2LogicOp(&self, uint extendedDynamicState2LogicOp) {
+   self.extendedDynamicState2LogicOp = extendedDynamicState2LogicOp;
+   return *self;
+}
+fn PhysicalDeviceExtendedDynamicState2FeaturesEXT PhysicalDeviceExtendedDynamicState2FeaturesEXT.setExtendedDynamicState2PatchControlPoints(&self, uint extendedDynamicState2PatchControlPoints) {
+   self.extendedDynamicState2PatchControlPoints = extendedDynamicState2PatchControlPoints;
+   return *self;
+}
 fn PhysicalDeviceExtendedDynamicState3FeaturesEXT physicalDeviceExtendedDynamicState3FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT, .pNext = null };
 fn PhysicalDeviceExtendedDynamicState3FeaturesEXT PhysicalDeviceExtendedDynamicState3FeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6117,6 +12899,150 @@ fn PhysicalDeviceExtendedDynamicState3PropertiesEXT PhysicalDeviceExtendedDynami
    self.dynamicPrimitiveTopologyUnrestricted = dynamicPrimitiveTopologyUnrestricted;
    return *self;
 }
+fn RenderPassTransformBeginInfoQCOM renderPassTransformBeginInfoQCOM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM, .pNext = null };
+fn RenderPassTransformBeginInfoQCOM RenderPassTransformBeginInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassTransformBeginInfoQCOM RenderPassTransformBeginInfoQCOM.setTransform(&self, SurfaceTransformFlagBitsKHR transform) {
+   self.transform = transform;
+   return *self;
+}
+fn CopyCommandTransformInfoQCOM copyCommandTransformInfoQCOM() => { .sType = STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM, .pNext = null };
+fn CopyCommandTransformInfoQCOM CopyCommandTransformInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyCommandTransformInfoQCOM CopyCommandTransformInfoQCOM.setTransform(&self, SurfaceTransformFlagBitsKHR transform) {
+   self.transform = transform;
+   return *self;
+}
+fn CommandBufferInheritanceRenderPassTransformInfoQCOM commandBufferInheritanceRenderPassTransformInfoQCOM() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM, .pNext = null };
+fn CommandBufferInheritanceRenderPassTransformInfoQCOM CommandBufferInheritanceRenderPassTransformInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CommandBufferInheritanceRenderPassTransformInfoQCOM CommandBufferInheritanceRenderPassTransformInfoQCOM.setTransform(&self, SurfaceTransformFlagBitsKHR transform) {
+   self.transform = transform;
+   return *self;
+}
+fn CommandBufferInheritanceRenderPassTransformInfoQCOM CommandBufferInheritanceRenderPassTransformInfoQCOM.setRenderArea(&self, Rect2D renderArea) {
+   self.renderArea = renderArea;
+   return *self;
+}
+fn PhysicalDevicePartitionedAccelerationStructureFeaturesNV physicalDevicePartitionedAccelerationStructureFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PARTITIONED_ACCELERATION_STRUCTURE_FEATURES_NV, .pNext = null };
+fn PhysicalDevicePartitionedAccelerationStructureFeaturesNV PhysicalDevicePartitionedAccelerationStructureFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePartitionedAccelerationStructureFeaturesNV PhysicalDevicePartitionedAccelerationStructureFeaturesNV.setPartitionedAccelerationStructure(&self, uint partitionedAccelerationStructure) {
+   self.partitionedAccelerationStructure = partitionedAccelerationStructure;
+   return *self;
+}
+fn PhysicalDevicePartitionedAccelerationStructurePropertiesNV physicalDevicePartitionedAccelerationStructurePropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PARTITIONED_ACCELERATION_STRUCTURE_PROPERTIES_NV, .pNext = null };
+fn PhysicalDevicePartitionedAccelerationStructurePropertiesNV PhysicalDevicePartitionedAccelerationStructurePropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePartitionedAccelerationStructurePropertiesNV PhysicalDevicePartitionedAccelerationStructurePropertiesNV.setMaxPartitionCount(&self, uint maxPartitionCount) {
+   self.maxPartitionCount = maxPartitionCount;
+   return *self;
+}
+fn PartitionedAccelerationStructureFlagsNV partitionedAccelerationStructureFlagsNV() => { .sType = STRUCTURE_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_FLAGS_NV, .pNext = null };
+fn PartitionedAccelerationStructureFlagsNV PartitionedAccelerationStructureFlagsNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PartitionedAccelerationStructureFlagsNV PartitionedAccelerationStructureFlagsNV.setEnablePartitionTranslation(&self, uint enablePartitionTranslation) {
+   self.enablePartitionTranslation = enablePartitionTranslation;
+   return *self;
+}
+fn WriteDescriptorSetPartitionedAccelerationStructureNV writeDescriptorSetPartitionedAccelerationStructureNV() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_PARTITIONED_ACCELERATION_STRUCTURE_NV, .pNext = null };
+fn WriteDescriptorSetPartitionedAccelerationStructureNV WriteDescriptorSetPartitionedAccelerationStructureNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteDescriptorSetPartitionedAccelerationStructureNV WriteDescriptorSetPartitionedAccelerationStructureNV.setAccelerationStructureCount(&self, uint accelerationStructureCount) {
+   self.accelerationStructureCount = accelerationStructureCount;
+   return *self;
+}
+fn WriteDescriptorSetPartitionedAccelerationStructureNV WriteDescriptorSetPartitionedAccelerationStructureNV.setAccelerationStructures(&self, DeviceAddress[] pAccelerationStructures) {
+   self.accelerationStructureCount= (uint)pAccelerationStructures.len;
+   self.pAccelerationStructures = &pAccelerationStructures[0];
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV partitionedAccelerationStructureInstancesInputNV() => { .sType = STRUCTURE_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCES_INPUT_NV, .pNext = null };
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setFlags(&self, BuildAccelerationStructureFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setInstanceCount(&self, uint instanceCount) {
+   self.instanceCount = instanceCount;
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setMaxInstancePerPartitionCount(&self, uint maxInstancePerPartitionCount) {
+   self.maxInstancePerPartitionCount = maxInstancePerPartitionCount;
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setPartitionCount(&self, uint partitionCount) {
+   self.partitionCount = partitionCount;
+   return *self;
+}
+fn PartitionedAccelerationStructureInstancesInputNV PartitionedAccelerationStructureInstancesInputNV.setMaxInstanceInGlobalPartitionCount(&self, uint maxInstanceInGlobalPartitionCount) {
+   self.maxInstanceInGlobalPartitionCount = maxInstanceInGlobalPartitionCount;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV buildPartitionedAccelerationStructureInfoNV() => { .sType = STRUCTURE_TYPE_BUILD_PARTITIONED_ACCELERATION_STRUCTURE_INFO_NV, .pNext = null };
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setInput(&self, PartitionedAccelerationStructureInstancesInputNV input) {
+   self.input = input;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setSrcAccelerationStructureData(&self, DeviceAddress srcAccelerationStructureData) {
+   self.srcAccelerationStructureData = srcAccelerationStructureData;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setDstAccelerationStructureData(&self, DeviceAddress dstAccelerationStructureData) {
+   self.dstAccelerationStructureData = dstAccelerationStructureData;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setScratchData(&self, DeviceAddress scratchData) {
+   self.scratchData = scratchData;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setSrcInfos(&self, DeviceAddress srcInfos) {
+   self.srcInfos = srcInfos;
+   return *self;
+}
+fn BuildPartitionedAccelerationStructureInfoNV BuildPartitionedAccelerationStructureInfoNV.setSrcInfosCount(&self, DeviceAddress srcInfosCount) {
+   self.srcInfosCount = srcInfosCount;
+   return *self;
+}
+fn PhysicalDeviceDiagnosticsConfigFeaturesNV physicalDeviceDiagnosticsConfigFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDiagnosticsConfigFeaturesNV PhysicalDeviceDiagnosticsConfigFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDiagnosticsConfigFeaturesNV PhysicalDeviceDiagnosticsConfigFeaturesNV.setDiagnosticsConfig(&self, uint diagnosticsConfig) {
+   self.diagnosticsConfig = diagnosticsConfig;
+   return *self;
+}
+fn DeviceDiagnosticsConfigCreateInfoNV deviceDiagnosticsConfigCreateInfoNV() => { .sType = STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV, .pNext = null };
+fn DeviceDiagnosticsConfigCreateInfoNV DeviceDiagnosticsConfigCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceDiagnosticsConfigCreateInfoNV DeviceDiagnosticsConfigCreateInfoNV.setFlags(&self, DeviceDiagnosticsConfigFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
 fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures physicalDeviceZeroInitializeWorkgroupMemoryFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES, .pNext = null };
 fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6126,6 +13052,84 @@ fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures PhysicalDeviceZeroInitial
    self.shaderZeroInitializeWorkgroupMemory = shaderZeroInitializeWorkgroupMemory;
    return *self;
 }
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR physicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES, .pNext = null };
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR.setShaderZeroInitializeWorkgroupMemory(&self, uint shaderZeroInitializeWorkgroupMemory) {
+   self.shaderZeroInitializeWorkgroupMemory = shaderZeroInitializeWorkgroupMemory;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR physicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR.setShaderSubgroupUniformControlFlow(&self, uint shaderSubgroupUniformControlFlow) {
+   self.shaderSubgroupUniformControlFlow = shaderSubgroupUniformControlFlow;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesKHR physicalDeviceRobustness2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRobustness2FeaturesKHR PhysicalDeviceRobustness2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesKHR PhysicalDeviceRobustness2FeaturesKHR.setRobustBufferAccess2(&self, uint robustBufferAccess2) {
+   self.robustBufferAccess2 = robustBufferAccess2;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesKHR PhysicalDeviceRobustness2FeaturesKHR.setRobustImageAccess2(&self, uint robustImageAccess2) {
+   self.robustImageAccess2 = robustImageAccess2;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesKHR PhysicalDeviceRobustness2FeaturesKHR.setNullDescriptor(&self, uint nullDescriptor) {
+   self.nullDescriptor = nullDescriptor;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesEXT physicalDeviceRobustness2FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRobustness2FeaturesEXT PhysicalDeviceRobustness2FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesEXT PhysicalDeviceRobustness2FeaturesEXT.setRobustBufferAccess2(&self, uint robustBufferAccess2) {
+   self.robustBufferAccess2 = robustBufferAccess2;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesEXT PhysicalDeviceRobustness2FeaturesEXT.setRobustImageAccess2(&self, uint robustImageAccess2) {
+   self.robustImageAccess2 = robustImageAccess2;
+   return *self;
+}
+fn PhysicalDeviceRobustness2FeaturesEXT PhysicalDeviceRobustness2FeaturesEXT.setNullDescriptor(&self, uint nullDescriptor) {
+   self.nullDescriptor = nullDescriptor;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesKHR physicalDeviceRobustness2PropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceRobustness2PropertiesKHR PhysicalDeviceRobustness2PropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesKHR PhysicalDeviceRobustness2PropertiesKHR.setRobustStorageBufferAccessSizeAlignment(&self, DeviceSize robustStorageBufferAccessSizeAlignment) {
+   self.robustStorageBufferAccessSizeAlignment = robustStorageBufferAccessSizeAlignment;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesKHR PhysicalDeviceRobustness2PropertiesKHR.setRobustUniformBufferAccessSizeAlignment(&self, DeviceSize robustUniformBufferAccessSizeAlignment) {
+   self.robustUniformBufferAccessSizeAlignment = robustUniformBufferAccessSizeAlignment;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesEXT physicalDeviceRobustness2PropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceRobustness2PropertiesEXT PhysicalDeviceRobustness2PropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesEXT PhysicalDeviceRobustness2PropertiesEXT.setRobustStorageBufferAccessSizeAlignment(&self, DeviceSize robustStorageBufferAccessSizeAlignment) {
+   self.robustStorageBufferAccessSizeAlignment = robustStorageBufferAccessSizeAlignment;
+   return *self;
+}
+fn PhysicalDeviceRobustness2PropertiesEXT PhysicalDeviceRobustness2PropertiesEXT.setRobustUniformBufferAccessSizeAlignment(&self, DeviceSize robustUniformBufferAccessSizeAlignment) {
+   self.robustUniformBufferAccessSizeAlignment = robustUniformBufferAccessSizeAlignment;
+   return *self;
+}
 fn PhysicalDeviceImageRobustnessFeatures physicalDeviceImageRobustnessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES, .pNext = null };
 fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6133,6 +13137,36 @@ fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.s
 }
 fn PhysicalDeviceImageRobustnessFeatures PhysicalDeviceImageRobustnessFeatures.setRobustImageAccess(&self, uint robustImageAccess) {
    self.robustImageAccess = robustImageAccess;
+   return *self;
+}
+fn PhysicalDeviceImageRobustnessFeaturesEXT physicalDeviceImageRobustnessFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES, .pNext = null };
+fn PhysicalDeviceImageRobustnessFeaturesEXT PhysicalDeviceImageRobustnessFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageRobustnessFeaturesEXT PhysicalDeviceImageRobustnessFeaturesEXT.setRobustImageAccess(&self, uint robustImageAccess) {
+   self.robustImageAccess = robustImageAccess;
+   return *self;
+}
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR physicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR.setWorkgroupMemoryExplicitLayout(&self, uint workgroupMemoryExplicitLayout) {
+   self.workgroupMemoryExplicitLayout = workgroupMemoryExplicitLayout;
+   return *self;
+}
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR.setWorkgroupMemoryExplicitLayoutScalarBlockLayout(&self, uint workgroupMemoryExplicitLayoutScalarBlockLayout) {
+   self.workgroupMemoryExplicitLayoutScalarBlockLayout = workgroupMemoryExplicitLayoutScalarBlockLayout;
+   return *self;
+}
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR.setWorkgroupMemoryExplicitLayout8BitAccess(&self, uint workgroupMemoryExplicitLayout8BitAccess) {
+   self.workgroupMemoryExplicitLayout8BitAccess = workgroupMemoryExplicitLayout8BitAccess;
+   return *self;
+}
+fn PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR.setWorkgroupMemoryExplicitLayout16BitAccess(&self, uint workgroupMemoryExplicitLayout16BitAccess) {
+   self.workgroupMemoryExplicitLayout16BitAccess = workgroupMemoryExplicitLayout16BitAccess;
    return *self;
 }
 fn PhysicalDevicePortabilitySubsetFeaturesKHR physicalDevicePortabilitySubsetFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR, .pNext = null };
@@ -6209,6 +13243,50 @@ fn PhysicalDevicePortabilitySubsetPropertiesKHR PhysicalDevicePortabilitySubsetP
    self.minVertexInputBindingStrideAlignment = minVertexInputBindingStrideAlignment;
    return *self;
 }
+fn PhysicalDevice4444FormatsFeaturesEXT physicalDevice4444FormatsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT, .pNext = null };
+fn PhysicalDevice4444FormatsFeaturesEXT PhysicalDevice4444FormatsFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevice4444FormatsFeaturesEXT PhysicalDevice4444FormatsFeaturesEXT.setFormatA4R4G4B4(&self, uint formatA4R4G4B4) {
+   self.formatA4R4G4B4 = formatA4R4G4B4;
+   return *self;
+}
+fn PhysicalDevice4444FormatsFeaturesEXT PhysicalDevice4444FormatsFeaturesEXT.setFormatA4B4G4R4(&self, uint formatA4B4G4R4) {
+   self.formatA4B4G4R4 = formatA4B4G4R4;
+   return *self;
+}
+fn PhysicalDeviceSubpassShadingFeaturesHUAWEI physicalDeviceSubpassShadingFeaturesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_FEATURES_HUAWEI, .pNext = null };
+fn PhysicalDeviceSubpassShadingFeaturesHUAWEI PhysicalDeviceSubpassShadingFeaturesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSubpassShadingFeaturesHUAWEI PhysicalDeviceSubpassShadingFeaturesHUAWEI.setSubpassShading(&self, uint subpassShading) {
+   self.subpassShading = subpassShading;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderFeaturesHUAWEI physicalDeviceClusterCullingShaderFeaturesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI, .pNext = null };
+fn PhysicalDeviceClusterCullingShaderFeaturesHUAWEI PhysicalDeviceClusterCullingShaderFeaturesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderFeaturesHUAWEI PhysicalDeviceClusterCullingShaderFeaturesHUAWEI.setClustercullingShader(&self, uint clustercullingShader) {
+   self.clustercullingShader = clustercullingShader;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderFeaturesHUAWEI PhysicalDeviceClusterCullingShaderFeaturesHUAWEI.setMultiviewClusterCullingShader(&self, uint multiviewClusterCullingShader) {
+   self.multiviewClusterCullingShader = multiviewClusterCullingShader;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI physicalDeviceClusterCullingShaderVrsFeaturesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI, .pNext = null };
+fn PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI.setClusterShadingRate(&self, uint clusterShadingRate) {
+   self.clusterShadingRate = clusterShadingRate;
+   return *self;
+}
 fn BufferCopy2 bufferCopy2() => { .sType = STRUCTURE_TYPE_BUFFER_COPY_2, .pNext = null };
 fn BufferCopy2 BufferCopy2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6223,6 +13301,23 @@ fn BufferCopy2 BufferCopy2.setDstOffset(&self, DeviceSize dstOffset) {
    return *self;
 }
 fn BufferCopy2 BufferCopy2.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn BufferCopy2KHR bufferCopy2KHR() => { .sType = STRUCTURE_TYPE_BUFFER_COPY_2, .pNext = null };
+fn BufferCopy2KHR BufferCopy2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferCopy2KHR BufferCopy2KHR.setSrcOffset(&self, DeviceSize srcOffset) {
+   self.srcOffset = srcOffset;
+   return *self;
+}
+fn BufferCopy2KHR BufferCopy2KHR.setDstOffset(&self, DeviceSize dstOffset) {
+   self.dstOffset = dstOffset;
+   return *self;
+}
+fn BufferCopy2KHR BufferCopy2KHR.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
@@ -6251,6 +13346,31 @@ fn ImageCopy2 ImageCopy2.setExtent(&self, Extent3D extent) {
    self.extent = extent;
    return *self;
 }
+fn ImageCopy2KHR imageCopy2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_COPY_2, .pNext = null };
+fn ImageCopy2KHR ImageCopy2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageCopy2KHR ImageCopy2KHR.setSrcSubresource(&self, ImageSubresourceLayers srcSubresource) {
+   self.srcSubresource = srcSubresource;
+   return *self;
+}
+fn ImageCopy2KHR ImageCopy2KHR.setSrcOffset(&self, Offset3D srcOffset) {
+   self.srcOffset = srcOffset;
+   return *self;
+}
+fn ImageCopy2KHR ImageCopy2KHR.setDstSubresource(&self, ImageSubresourceLayers dstSubresource) {
+   self.dstSubresource = dstSubresource;
+   return *self;
+}
+fn ImageCopy2KHR ImageCopy2KHR.setDstOffset(&self, Offset3D dstOffset) {
+   self.dstOffset = dstOffset;
+   return *self;
+}
+fn ImageCopy2KHR ImageCopy2KHR.setExtent(&self, Extent3D extent) {
+   self.extent = extent;
+   return *self;
+}
 fn ImageBlit2 imageBlit2() => { .sType = STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = null };
 fn ImageBlit2 ImageBlit2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6269,6 +13389,27 @@ fn ImageBlit2 ImageBlit2.setDstSubresource(&self, ImageSubresourceLayers dstSubr
    return *self;
 }
 fn ImageBlit2 ImageBlit2.setDstOffsets(&self, Offset3D[2] dstOffsets) {
+   self.dstOffsets = dstOffsets;
+   return *self;
+}
+fn ImageBlit2KHR imageBlit2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = null };
+fn ImageBlit2KHR ImageBlit2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageBlit2KHR ImageBlit2KHR.setSrcSubresource(&self, ImageSubresourceLayers srcSubresource) {
+   self.srcSubresource = srcSubresource;
+   return *self;
+}
+fn ImageBlit2KHR ImageBlit2KHR.setSrcOffsets(&self, Offset3D[2] srcOffsets) {
+   self.srcOffsets = srcOffsets;
+   return *self;
+}
+fn ImageBlit2KHR ImageBlit2KHR.setDstSubresource(&self, ImageSubresourceLayers dstSubresource) {
+   self.dstSubresource = dstSubresource;
+   return *self;
+}
+fn ImageBlit2KHR ImageBlit2KHR.setDstOffsets(&self, Offset3D[2] dstOffsets) {
    self.dstOffsets = dstOffsets;
    return *self;
 }
@@ -6301,6 +13442,35 @@ fn BufferImageCopy2 BufferImageCopy2.setImageExtent(&self, Extent3D imageExtent)
    self.imageExtent = imageExtent;
    return *self;
 }
+fn BufferImageCopy2KHR bufferImageCopy2KHR() => { .sType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2, .pNext = null };
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setBufferOffset(&self, DeviceSize bufferOffset) {
+   self.bufferOffset = bufferOffset;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setBufferRowLength(&self, uint bufferRowLength) {
+   self.bufferRowLength = bufferRowLength;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setBufferImageHeight(&self, uint bufferImageHeight) {
+   self.bufferImageHeight = bufferImageHeight;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setImageSubresource(&self, ImageSubresourceLayers imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setImageOffset(&self, Offset3D imageOffset) {
+   self.imageOffset = imageOffset;
+   return *self;
+}
+fn BufferImageCopy2KHR BufferImageCopy2KHR.setImageExtent(&self, Extent3D imageExtent) {
+   self.imageExtent = imageExtent;
+   return *self;
+}
 fn ImageResolve2 imageResolve2() => { .sType = STRUCTURE_TYPE_IMAGE_RESOLVE_2, .pNext = null };
 fn ImageResolve2 ImageResolve2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6326,6 +13496,31 @@ fn ImageResolve2 ImageResolve2.setExtent(&self, Extent3D extent) {
    self.extent = extent;
    return *self;
 }
+fn ImageResolve2KHR imageResolve2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_RESOLVE_2, .pNext = null };
+fn ImageResolve2KHR ImageResolve2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageResolve2KHR ImageResolve2KHR.setSrcSubresource(&self, ImageSubresourceLayers srcSubresource) {
+   self.srcSubresource = srcSubresource;
+   return *self;
+}
+fn ImageResolve2KHR ImageResolve2KHR.setSrcOffset(&self, Offset3D srcOffset) {
+   self.srcOffset = srcOffset;
+   return *self;
+}
+fn ImageResolve2KHR ImageResolve2KHR.setDstSubresource(&self, ImageSubresourceLayers dstSubresource) {
+   self.dstSubresource = dstSubresource;
+   return *self;
+}
+fn ImageResolve2KHR ImageResolve2KHR.setDstOffset(&self, Offset3D dstOffset) {
+   self.dstOffset = dstOffset;
+   return *self;
+}
+fn ImageResolve2KHR ImageResolve2KHR.setExtent(&self, Extent3D extent) {
+   self.extent = extent;
+   return *self;
+}
 fn CopyBufferInfo2 copyBufferInfo2() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_INFO_2, .pNext = null };
 fn CopyBufferInfo2 CopyBufferInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6344,6 +13539,28 @@ fn CopyBufferInfo2 CopyBufferInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn CopyBufferInfo2 CopyBufferInfo2.setRegions(&self, BufferCopy2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn CopyBufferInfo2KHR copyBufferInfo2KHR() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_INFO_2, .pNext = null };
+fn CopyBufferInfo2KHR CopyBufferInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyBufferInfo2KHR CopyBufferInfo2KHR.setSrcBuffer(&self, Buffer srcBuffer) {
+   self.srcBuffer = srcBuffer;
+   return *self;
+}
+fn CopyBufferInfo2KHR CopyBufferInfo2KHR.setDstBuffer(&self, Buffer dstBuffer) {
+   self.dstBuffer = dstBuffer;
+   return *self;
+}
+fn CopyBufferInfo2KHR CopyBufferInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyBufferInfo2KHR CopyBufferInfo2KHR.setRegions(&self, BufferCopy2[] pRegions) {
    self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
@@ -6374,6 +13591,36 @@ fn CopyImageInfo2 CopyImageInfo2.setRegionCount(&self, uint regionCount) {
    return *self;
 }
 fn CopyImageInfo2 CopyImageInfo2.setRegions(&self, ImageCopy2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn CopyImageInfo2KHR copyImageInfo2KHR() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_INFO_2, .pNext = null };
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyImageInfo2KHR CopyImageInfo2KHR.setRegions(&self, ImageCopy2[] pRegions) {
    self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
@@ -6412,6 +13659,40 @@ fn BlitImageInfo2 BlitImageInfo2.setFilter(&self, Filter filter) {
    self.filter = filter;
    return *self;
 }
+fn BlitImageInfo2KHR blitImageInfo2KHR() => { .sType = STRUCTURE_TYPE_BLIT_IMAGE_INFO_2, .pNext = null };
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setRegions(&self, ImageBlit2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn BlitImageInfo2KHR BlitImageInfo2KHR.setFilter(&self, Filter filter) {
+   self.filter = filter;
+   return *self;
+}
 fn CopyBufferToImageInfo2 copyBufferToImageInfo2() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2, .pNext = null };
 fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6438,6 +13719,32 @@ fn CopyBufferToImageInfo2 CopyBufferToImageInfo2.setRegions(&self, BufferImageCo
    self.pRegions = &pRegions[0];
    return *self;
 }
+fn CopyBufferToImageInfo2KHR copyBufferToImageInfo2KHR() => { .sType = STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2, .pNext = null };
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setSrcBuffer(&self, Buffer srcBuffer) {
+   self.srcBuffer = srcBuffer;
+   return *self;
+}
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyBufferToImageInfo2KHR CopyBufferToImageInfo2KHR.setRegions(&self, BufferImageCopy2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
 fn CopyImageToBufferInfo2 copyImageToBufferInfo2() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2, .pNext = null };
 fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6460,6 +13767,32 @@ fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegionCount(&self, uint regi
    return *self;
 }
 fn CopyImageToBufferInfo2 CopyImageToBufferInfo2.setRegions(&self, BufferImageCopy2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR copyImageToBufferInfo2KHR() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2, .pNext = null };
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setDstBuffer(&self, Buffer dstBuffer) {
+   self.dstBuffer = dstBuffer;
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyImageToBufferInfo2KHR CopyImageToBufferInfo2KHR.setRegions(&self, BufferImageCopy2[] pRegions) {
    self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
@@ -6494,6 +13827,49 @@ fn ResolveImageInfo2 ResolveImageInfo2.setRegions(&self, ImageResolve2[] pRegion
    self.pRegions = &pRegions[0];
    return *self;
 }
+fn ResolveImageInfo2KHR resolveImageInfo2KHR() => { .sType = STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2, .pNext = null };
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn ResolveImageInfo2KHR ResolveImageInfo2KHR.setRegions(&self, ImageResolve2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn PhysicalDeviceShaderImageAtomicInt64FeaturesEXT physicalDeviceShaderImageAtomicInt64FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderImageAtomicInt64FeaturesEXT PhysicalDeviceShaderImageAtomicInt64FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderImageAtomicInt64FeaturesEXT PhysicalDeviceShaderImageAtomicInt64FeaturesEXT.setShaderImageInt64Atomics(&self, uint shaderImageInt64Atomics) {
+   self.shaderImageInt64Atomics = shaderImageInt64Atomics;
+   return *self;
+}
+fn PhysicalDeviceShaderImageAtomicInt64FeaturesEXT PhysicalDeviceShaderImageAtomicInt64FeaturesEXT.setSparseImageInt64Atomics(&self, uint sparseImageInt64Atomics) {
+   self.sparseImageInt64Atomics = sparseImageInt64Atomics;
+   return *self;
+}
 fn FragmentShadingRateAttachmentInfoKHR fragmentShadingRateAttachmentInfoKHR() => { .sType = STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
 fn FragmentShadingRateAttachmentInfoKHR FragmentShadingRateAttachmentInfoKHR.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6507,6 +13883,122 @@ fn FragmentShadingRateAttachmentInfoKHR FragmentShadingRateAttachmentInfoKHR.set
    self.shadingRateAttachmentTexelSize = shadingRateAttachmentTexelSize;
    return *self;
 }
+fn PipelineFragmentShadingRateStateCreateInfoKHR pipelineFragmentShadingRateStateCreateInfoKHR() => { .sType = STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR, .pNext = null };
+fn PipelineFragmentShadingRateStateCreateInfoKHR PipelineFragmentShadingRateStateCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineFragmentShadingRateStateCreateInfoKHR PipelineFragmentShadingRateStateCreateInfoKHR.setFragmentSize(&self, Extent2D fragmentSize) {
+   self.fragmentSize = fragmentSize;
+   return *self;
+}
+fn PipelineFragmentShadingRateStateCreateInfoKHR PipelineFragmentShadingRateStateCreateInfoKHR.setCombinerOps(&self, FragmentShadingRateCombinerOpKHR[2] combinerOps) {
+   self.combinerOps = combinerOps;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateFeaturesKHR physicalDeviceFragmentShadingRateFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceFragmentShadingRateFeaturesKHR PhysicalDeviceFragmentShadingRateFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateFeaturesKHR PhysicalDeviceFragmentShadingRateFeaturesKHR.setPipelineFragmentShadingRate(&self, uint pipelineFragmentShadingRate) {
+   self.pipelineFragmentShadingRate = pipelineFragmentShadingRate;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateFeaturesKHR PhysicalDeviceFragmentShadingRateFeaturesKHR.setPrimitiveFragmentShadingRate(&self, uint primitiveFragmentShadingRate) {
+   self.primitiveFragmentShadingRate = primitiveFragmentShadingRate;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateFeaturesKHR PhysicalDeviceFragmentShadingRateFeaturesKHR.setAttachmentFragmentShadingRate(&self, uint attachmentFragmentShadingRate) {
+   self.attachmentFragmentShadingRate = attachmentFragmentShadingRate;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR physicalDeviceFragmentShadingRatePropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMinFragmentShadingRateAttachmentTexelSize(&self, Extent2D minFragmentShadingRateAttachmentTexelSize) {
+   self.minFragmentShadingRateAttachmentTexelSize = minFragmentShadingRateAttachmentTexelSize;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentShadingRateAttachmentTexelSize(&self, Extent2D maxFragmentShadingRateAttachmentTexelSize) {
+   self.maxFragmentShadingRateAttachmentTexelSize = maxFragmentShadingRateAttachmentTexelSize;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentShadingRateAttachmentTexelSizeAspectRatio(&self, uint maxFragmentShadingRateAttachmentTexelSizeAspectRatio) {
+   self.maxFragmentShadingRateAttachmentTexelSizeAspectRatio = maxFragmentShadingRateAttachmentTexelSizeAspectRatio;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setPrimitiveFragmentShadingRateWithMultipleViewports(&self, uint primitiveFragmentShadingRateWithMultipleViewports) {
+   self.primitiveFragmentShadingRateWithMultipleViewports = primitiveFragmentShadingRateWithMultipleViewports;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setLayeredShadingRateAttachments(&self, uint layeredShadingRateAttachments) {
+   self.layeredShadingRateAttachments = layeredShadingRateAttachments;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateNonTrivialCombinerOps(&self, uint fragmentShadingRateNonTrivialCombinerOps) {
+   self.fragmentShadingRateNonTrivialCombinerOps = fragmentShadingRateNonTrivialCombinerOps;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentSize(&self, Extent2D maxFragmentSize) {
+   self.maxFragmentSize = maxFragmentSize;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentSizeAspectRatio(&self, uint maxFragmentSizeAspectRatio) {
+   self.maxFragmentSizeAspectRatio = maxFragmentSizeAspectRatio;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentShadingRateCoverageSamples(&self, uint maxFragmentShadingRateCoverageSamples) {
+   self.maxFragmentShadingRateCoverageSamples = maxFragmentShadingRateCoverageSamples;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setMaxFragmentShadingRateRasterizationSamples(&self, SampleCountFlagBits maxFragmentShadingRateRasterizationSamples) {
+   self.maxFragmentShadingRateRasterizationSamples = maxFragmentShadingRateRasterizationSamples;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithShaderDepthStencilWrites(&self, uint fragmentShadingRateWithShaderDepthStencilWrites) {
+   self.fragmentShadingRateWithShaderDepthStencilWrites = fragmentShadingRateWithShaderDepthStencilWrites;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithSampleMask(&self, uint fragmentShadingRateWithSampleMask) {
+   self.fragmentShadingRateWithSampleMask = fragmentShadingRateWithSampleMask;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithShaderSampleMask(&self, uint fragmentShadingRateWithShaderSampleMask) {
+   self.fragmentShadingRateWithShaderSampleMask = fragmentShadingRateWithShaderSampleMask;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithConservativeRasterization(&self, uint fragmentShadingRateWithConservativeRasterization) {
+   self.fragmentShadingRateWithConservativeRasterization = fragmentShadingRateWithConservativeRasterization;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithFragmentShaderInterlock(&self, uint fragmentShadingRateWithFragmentShaderInterlock) {
+   self.fragmentShadingRateWithFragmentShaderInterlock = fragmentShadingRateWithFragmentShaderInterlock;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateWithCustomSampleLocations(&self, uint fragmentShadingRateWithCustomSampleLocations) {
+   self.fragmentShadingRateWithCustomSampleLocations = fragmentShadingRateWithCustomSampleLocations;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRatePropertiesKHR PhysicalDeviceFragmentShadingRatePropertiesKHR.setFragmentShadingRateStrictMultiplyCombiner(&self, uint fragmentShadingRateStrictMultiplyCombiner) {
+   self.fragmentShadingRateStrictMultiplyCombiner = fragmentShadingRateStrictMultiplyCombiner;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateKHR physicalDeviceFragmentShadingRateKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, .pNext = null };
+fn PhysicalDeviceFragmentShadingRateKHR PhysicalDeviceFragmentShadingRateKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateKHR PhysicalDeviceFragmentShadingRateKHR.setSampleCounts(&self, SampleCountFlags sampleCounts) {
+   self.sampleCounts = sampleCounts;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateKHR PhysicalDeviceFragmentShadingRateKHR.setFragmentSize(&self, Extent2D fragmentSize) {
+   self.fragmentSize = fragmentSize;
+   return *self;
+}
 fn PhysicalDeviceShaderTerminateInvocationFeatures physicalDeviceShaderTerminateInvocationFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6514,6 +14006,58 @@ fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminate
 }
 fn PhysicalDeviceShaderTerminateInvocationFeatures PhysicalDeviceShaderTerminateInvocationFeatures.setShaderTerminateInvocation(&self, uint shaderTerminateInvocation) {
    self.shaderTerminateInvocation = shaderTerminateInvocation;
+   return *self;
+}
+fn PhysicalDeviceShaderTerminateInvocationFeaturesKHR physicalDeviceShaderTerminateInvocationFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderTerminateInvocationFeaturesKHR PhysicalDeviceShaderTerminateInvocationFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderTerminateInvocationFeaturesKHR PhysicalDeviceShaderTerminateInvocationFeaturesKHR.setShaderTerminateInvocation(&self, uint shaderTerminateInvocation) {
+   self.shaderTerminateInvocation = shaderTerminateInvocation;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsFeaturesNV physicalDeviceFragmentShadingRateEnumsFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceFragmentShadingRateEnumsFeaturesNV PhysicalDeviceFragmentShadingRateEnumsFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsFeaturesNV PhysicalDeviceFragmentShadingRateEnumsFeaturesNV.setFragmentShadingRateEnums(&self, uint fragmentShadingRateEnums) {
+   self.fragmentShadingRateEnums = fragmentShadingRateEnums;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsFeaturesNV PhysicalDeviceFragmentShadingRateEnumsFeaturesNV.setSupersampleFragmentShadingRates(&self, uint supersampleFragmentShadingRates) {
+   self.supersampleFragmentShadingRates = supersampleFragmentShadingRates;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsFeaturesNV PhysicalDeviceFragmentShadingRateEnumsFeaturesNV.setNoInvocationFragmentShadingRates(&self, uint noInvocationFragmentShadingRates) {
+   self.noInvocationFragmentShadingRates = noInvocationFragmentShadingRates;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsPropertiesNV physicalDeviceFragmentShadingRateEnumsPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceFragmentShadingRateEnumsPropertiesNV PhysicalDeviceFragmentShadingRateEnumsPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShadingRateEnumsPropertiesNV PhysicalDeviceFragmentShadingRateEnumsPropertiesNV.setMaxFragmentShadingRateInvocationCount(&self, SampleCountFlagBits maxFragmentShadingRateInvocationCount) {
+   self.maxFragmentShadingRateInvocationCount = maxFragmentShadingRateInvocationCount;
+   return *self;
+}
+fn PipelineFragmentShadingRateEnumStateCreateInfoNV pipelineFragmentShadingRateEnumStateCreateInfoNV() => { .sType = STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV, .pNext = null };
+fn PipelineFragmentShadingRateEnumStateCreateInfoNV PipelineFragmentShadingRateEnumStateCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineFragmentShadingRateEnumStateCreateInfoNV PipelineFragmentShadingRateEnumStateCreateInfoNV.setShadingRateType(&self, FragmentShadingRateTypeNV shadingRateType) {
+   self.shadingRateType = shadingRateType;
+   return *self;
+}
+fn PipelineFragmentShadingRateEnumStateCreateInfoNV PipelineFragmentShadingRateEnumStateCreateInfoNV.setShadingRate(&self, FragmentShadingRateNV shadingRate) {
+   self.shadingRate = shadingRate;
+   return *self;
+}
+fn PipelineFragmentShadingRateEnumStateCreateInfoNV PipelineFragmentShadingRateEnumStateCreateInfoNV.setCombinerOps(&self, FragmentShadingRateCombinerOpKHR[2] combinerOps) {
+   self.combinerOps = combinerOps;
    return *self;
 }
 fn AccelerationStructureBuildSizesInfoKHR accelerationStructureBuildSizesInfoKHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR, .pNext = null };
@@ -6531,6 +14075,582 @@ fn AccelerationStructureBuildSizesInfoKHR AccelerationStructureBuildSizesInfoKHR
 }
 fn AccelerationStructureBuildSizesInfoKHR AccelerationStructureBuildSizesInfoKHR.setBuildScratchSize(&self, DeviceSize buildScratchSize) {
    self.buildScratchSize = buildScratchSize;
+   return *self;
+}
+fn PhysicalDeviceImage2DViewOf3DFeaturesEXT physicalDeviceImage2DViewOf3DFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_2D_VIEW_OF_3D_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceImage2DViewOf3DFeaturesEXT PhysicalDeviceImage2DViewOf3DFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImage2DViewOf3DFeaturesEXT PhysicalDeviceImage2DViewOf3DFeaturesEXT.setImage2DViewOf3D(&self, uint image2DViewOf3D) {
+   self.image2DViewOf3D = image2DViewOf3D;
+   return *self;
+}
+fn PhysicalDeviceImage2DViewOf3DFeaturesEXT PhysicalDeviceImage2DViewOf3DFeaturesEXT.setSampler2DViewOf3D(&self, uint sampler2DViewOf3D) {
+   self.sampler2DViewOf3D = sampler2DViewOf3D;
+   return *self;
+}
+fn PhysicalDeviceImageSlicedViewOf3DFeaturesEXT physicalDeviceImageSlicedViewOf3DFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceImageSlicedViewOf3DFeaturesEXT PhysicalDeviceImageSlicedViewOf3DFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageSlicedViewOf3DFeaturesEXT PhysicalDeviceImageSlicedViewOf3DFeaturesEXT.setImageSlicedViewOf3D(&self, uint imageSlicedViewOf3D) {
+   self.imageSlicedViewOf3D = imageSlicedViewOf3D;
+   return *self;
+}
+fn PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT physicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT.setAttachmentFeedbackLoopDynamicState(&self, uint attachmentFeedbackLoopDynamicState) {
+   self.attachmentFeedbackLoopDynamicState = attachmentFeedbackLoopDynamicState;
+   return *self;
+}
+fn PhysicalDeviceLegacyVertexAttributesFeaturesEXT physicalDeviceLegacyVertexAttributesFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_VERTEX_ATTRIBUTES_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceLegacyVertexAttributesFeaturesEXT PhysicalDeviceLegacyVertexAttributesFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLegacyVertexAttributesFeaturesEXT PhysicalDeviceLegacyVertexAttributesFeaturesEXT.setLegacyVertexAttributes(&self, uint legacyVertexAttributes) {
+   self.legacyVertexAttributes = legacyVertexAttributes;
+   return *self;
+}
+fn PhysicalDeviceLegacyVertexAttributesPropertiesEXT physicalDeviceLegacyVertexAttributesPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_VERTEX_ATTRIBUTES_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceLegacyVertexAttributesPropertiesEXT PhysicalDeviceLegacyVertexAttributesPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLegacyVertexAttributesPropertiesEXT PhysicalDeviceLegacyVertexAttributesPropertiesEXT.setNativeUnalignedPerformance(&self, uint nativeUnalignedPerformance) {
+   self.nativeUnalignedPerformance = nativeUnalignedPerformance;
+   return *self;
+}
+fn PhysicalDeviceMutableDescriptorTypeFeaturesEXT physicalDeviceMutableDescriptorTypeFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMutableDescriptorTypeFeaturesEXT PhysicalDeviceMutableDescriptorTypeFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMutableDescriptorTypeFeaturesEXT PhysicalDeviceMutableDescriptorTypeFeaturesEXT.setMutableDescriptorType(&self, uint mutableDescriptorType) {
+   self.mutableDescriptorType = mutableDescriptorType;
+   return *self;
+}
+fn PhysicalDeviceMutableDescriptorTypeFeaturesVALVE physicalDeviceMutableDescriptorTypeFeaturesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMutableDescriptorTypeFeaturesVALVE PhysicalDeviceMutableDescriptorTypeFeaturesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMutableDescriptorTypeFeaturesVALVE PhysicalDeviceMutableDescriptorTypeFeaturesVALVE.setMutableDescriptorType(&self, uint mutableDescriptorType) {
+   self.mutableDescriptorType = mutableDescriptorType;
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoEXT mutableDescriptorTypeCreateInfoEXT() => { .sType = STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT, .pNext = null };
+fn MutableDescriptorTypeCreateInfoEXT MutableDescriptorTypeCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoEXT MutableDescriptorTypeCreateInfoEXT.setMutableDescriptorTypeListCount(&self, uint mutableDescriptorTypeListCount) {
+   self.mutableDescriptorTypeListCount = mutableDescriptorTypeListCount;
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoEXT MutableDescriptorTypeCreateInfoEXT.setMutableDescriptorTypeLists(&self, MutableDescriptorTypeListEXT[] pMutableDescriptorTypeLists) {
+   self.mutableDescriptorTypeListCount= (uint)pMutableDescriptorTypeLists.len;
+   self.pMutableDescriptorTypeLists = &pMutableDescriptorTypeLists[0];
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoVALVE mutableDescriptorTypeCreateInfoVALVE() => { .sType = STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT, .pNext = null };
+fn MutableDescriptorTypeCreateInfoVALVE MutableDescriptorTypeCreateInfoVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoVALVE MutableDescriptorTypeCreateInfoVALVE.setMutableDescriptorTypeListCount(&self, uint mutableDescriptorTypeListCount) {
+   self.mutableDescriptorTypeListCount = mutableDescriptorTypeListCount;
+   return *self;
+}
+fn MutableDescriptorTypeCreateInfoVALVE MutableDescriptorTypeCreateInfoVALVE.setMutableDescriptorTypeLists(&self, MutableDescriptorTypeListEXT[] pMutableDescriptorTypeLists) {
+   self.mutableDescriptorTypeListCount= (uint)pMutableDescriptorTypeLists.len;
+   self.pMutableDescriptorTypeLists = &pMutableDescriptorTypeLists[0];
+   return *self;
+}
+fn PhysicalDeviceDepthClipControlFeaturesEXT physicalDeviceDepthClipControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDepthClipControlFeaturesEXT PhysicalDeviceDepthClipControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDepthClipControlFeaturesEXT PhysicalDeviceDepthClipControlFeaturesEXT.setDepthClipControl(&self, uint depthClipControl) {
+   self.depthClipControl = depthClipControl;
+   return *self;
+}
+fn PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT physicalDeviceZeroInitializeDeviceMemoryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT.setZeroInitializeDeviceMemory(&self, uint zeroInitializeDeviceMemory) {
+   self.zeroInitializeDeviceMemory = zeroInitializeDeviceMemory;
+   return *self;
+}
+fn BeginCustomResolveInfoEXT beginCustomResolveInfoEXT() => { .sType = STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT, .pNext = null };
+fn BeginCustomResolveInfoEXT BeginCustomResolveInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCustomResolveFeaturesEXT physicalDeviceCustomResolveFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceCustomResolveFeaturesEXT PhysicalDeviceCustomResolveFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCustomResolveFeaturesEXT PhysicalDeviceCustomResolveFeaturesEXT.setCustomResolve(&self, uint customResolve) {
+   self.customResolve = customResolve;
+   return *self;
+}
+fn CustomResolveCreateInfoEXT customResolveCreateInfoEXT() => { .sType = STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT, .pNext = null };
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setCustomResolve(&self, uint customResolve) {
+   self.customResolve = customResolve;
+   return *self;
+}
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setColorAttachmentFormats(&self, Format[] pColorAttachmentFormats) {
+   self.colorAttachmentCount= (uint)pColorAttachmentFormats.len;
+   self.pColorAttachmentFormats = &pColorAttachmentFormats[0];
+   return *self;
+}
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setDepthAttachmentFormat(&self, Format depthAttachmentFormat) {
+   self.depthAttachmentFormat = depthAttachmentFormat;
+   return *self;
+}
+fn CustomResolveCreateInfoEXT CustomResolveCreateInfoEXT.setStencilAttachmentFormat(&self, Format stencilAttachmentFormat) {
+   self.stencilAttachmentFormat = stencilAttachmentFormat;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT physicalDeviceDeviceGeneratedCommandsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT.setDeviceGeneratedCommands(&self, uint deviceGeneratedCommands) {
+   self.deviceGeneratedCommands = deviceGeneratedCommands;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT.setDynamicGeneratedPipelineLayout(&self, uint dynamicGeneratedPipelineLayout) {
+   self.dynamicGeneratedPipelineLayout = dynamicGeneratedPipelineLayout;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT physicalDeviceDeviceGeneratedCommandsPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectPipelineCount(&self, uint maxIndirectPipelineCount) {
+   self.maxIndirectPipelineCount = maxIndirectPipelineCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectShaderObjectCount(&self, uint maxIndirectShaderObjectCount) {
+   self.maxIndirectShaderObjectCount = maxIndirectShaderObjectCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectSequenceCount(&self, uint maxIndirectSequenceCount) {
+   self.maxIndirectSequenceCount = maxIndirectSequenceCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectCommandsTokenCount(&self, uint maxIndirectCommandsTokenCount) {
+   self.maxIndirectCommandsTokenCount = maxIndirectCommandsTokenCount;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectCommandsTokenOffset(&self, uint maxIndirectCommandsTokenOffset) {
+   self.maxIndirectCommandsTokenOffset = maxIndirectCommandsTokenOffset;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setMaxIndirectCommandsIndirectStride(&self, uint maxIndirectCommandsIndirectStride) {
+   self.maxIndirectCommandsIndirectStride = maxIndirectCommandsIndirectStride;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setSupportedIndirectCommandsInputModes(&self, IndirectCommandsInputModeFlagsEXT supportedIndirectCommandsInputModes) {
+   self.supportedIndirectCommandsInputModes = supportedIndirectCommandsInputModes;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setSupportedIndirectCommandsShaderStages(&self, ShaderStageFlags supportedIndirectCommandsShaderStages) {
+   self.supportedIndirectCommandsShaderStages = supportedIndirectCommandsShaderStages;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setSupportedIndirectCommandsShaderStagesPipelineBinding(&self, ShaderStageFlags supportedIndirectCommandsShaderStagesPipelineBinding) {
+   self.supportedIndirectCommandsShaderStagesPipelineBinding = supportedIndirectCommandsShaderStagesPipelineBinding;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setSupportedIndirectCommandsShaderStagesShaderBinding(&self, ShaderStageFlags supportedIndirectCommandsShaderStagesShaderBinding) {
+   self.supportedIndirectCommandsShaderStagesShaderBinding = supportedIndirectCommandsShaderStagesShaderBinding;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setDeviceGeneratedCommandsTransformFeedback(&self, uint deviceGeneratedCommandsTransformFeedback) {
+   self.deviceGeneratedCommandsTransformFeedback = deviceGeneratedCommandsTransformFeedback;
+   return *self;
+}
+fn PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT.setDeviceGeneratedCommandsMultiDrawIndirectCount(&self, uint deviceGeneratedCommandsMultiDrawIndirectCount) {
+   self.deviceGeneratedCommandsMultiDrawIndirectCount = deviceGeneratedCommandsMultiDrawIndirectCount;
+   return *self;
+}
+fn GeneratedCommandsPipelineInfoEXT generatedCommandsPipelineInfoEXT() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_PIPELINE_INFO_EXT, .pNext = null };
+fn GeneratedCommandsPipelineInfoEXT GeneratedCommandsPipelineInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsPipelineInfoEXT GeneratedCommandsPipelineInfoEXT.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn GeneratedCommandsShaderInfoEXT generatedCommandsShaderInfoEXT() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT, .pNext = null };
+fn GeneratedCommandsShaderInfoEXT GeneratedCommandsShaderInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsShaderInfoEXT GeneratedCommandsShaderInfoEXT.setShaderCount(&self, uint shaderCount) {
+   self.shaderCount = shaderCount;
+   return *self;
+}
+fn GeneratedCommandsShaderInfoEXT GeneratedCommandsShaderInfoEXT.setShaders(&self, ShaderEXT[] pShaders) {
+   self.shaderCount= (uint)pShaders.len;
+   self.pShaders = &pShaders[0];
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoEXT generatedCommandsMemoryRequirementsInfoEXT() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_EXT, .pNext = null };
+fn GeneratedCommandsMemoryRequirementsInfoEXT GeneratedCommandsMemoryRequirementsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoEXT GeneratedCommandsMemoryRequirementsInfoEXT.setIndirectExecutionSet(&self, IndirectExecutionSetEXT indirectExecutionSet) {
+   self.indirectExecutionSet = indirectExecutionSet;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoEXT GeneratedCommandsMemoryRequirementsInfoEXT.setIndirectCommandsLayout(&self, IndirectCommandsLayoutEXT indirectCommandsLayout) {
+   self.indirectCommandsLayout = indirectCommandsLayout;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoEXT GeneratedCommandsMemoryRequirementsInfoEXT.setMaxSequenceCount(&self, uint maxSequenceCount) {
+   self.maxSequenceCount = maxSequenceCount;
+   return *self;
+}
+fn GeneratedCommandsMemoryRequirementsInfoEXT GeneratedCommandsMemoryRequirementsInfoEXT.setMaxDrawCount(&self, uint maxDrawCount) {
+   self.maxDrawCount = maxDrawCount;
+   return *self;
+}
+fn IndirectExecutionSetPipelineInfoEXT indirectExecutionSetPipelineInfoEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_PIPELINE_INFO_EXT, .pNext = null };
+fn IndirectExecutionSetPipelineInfoEXT IndirectExecutionSetPipelineInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectExecutionSetPipelineInfoEXT IndirectExecutionSetPipelineInfoEXT.setInitialPipeline(&self, Pipeline initialPipeline) {
+   self.initialPipeline = initialPipeline;
+   return *self;
+}
+fn IndirectExecutionSetPipelineInfoEXT IndirectExecutionSetPipelineInfoEXT.setMaxPipelineCount(&self, uint maxPipelineCount) {
+   self.maxPipelineCount = maxPipelineCount;
+   return *self;
+}
+fn IndirectExecutionSetShaderLayoutInfoEXT indirectExecutionSetShaderLayoutInfoEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_SHADER_LAYOUT_INFO_EXT, .pNext = null };
+fn IndirectExecutionSetShaderLayoutInfoEXT IndirectExecutionSetShaderLayoutInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectExecutionSetShaderLayoutInfoEXT IndirectExecutionSetShaderLayoutInfoEXT.setSetLayoutCount(&self, uint setLayoutCount) {
+   self.setLayoutCount = setLayoutCount;
+   return *self;
+}
+fn IndirectExecutionSetShaderLayoutInfoEXT IndirectExecutionSetShaderLayoutInfoEXT.setSetLayouts(&self, DescriptorSetLayout[] pSetLayouts) {
+   self.setLayoutCount= (uint)pSetLayouts.len;
+   self.pSetLayouts = &pSetLayouts[0];
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT indirectExecutionSetShaderInfoEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_SHADER_INFO_EXT, .pNext = null };
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setShaderCount(&self, uint shaderCount) {
+   self.shaderCount = shaderCount;
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setInitialShaders(&self, ShaderEXT[] pInitialShaders) {
+   self.shaderCount= (uint)pInitialShaders.len;
+   self.pInitialShaders = &pInitialShaders[0];
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setSetLayoutInfos(&self, IndirectExecutionSetShaderLayoutInfoEXT[] pSetLayoutInfos) {
+   self.shaderCount= (uint)pSetLayoutInfos.len;
+   self.pSetLayoutInfos = &pSetLayoutInfos[0];
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setMaxShaderCount(&self, uint maxShaderCount) {
+   self.maxShaderCount = maxShaderCount;
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setPushConstantRangeCount(&self, uint pushConstantRangeCount) {
+   self.pushConstantRangeCount = pushConstantRangeCount;
+   return *self;
+}
+fn IndirectExecutionSetShaderInfoEXT IndirectExecutionSetShaderInfoEXT.setPushConstantRanges(&self, PushConstantRange[] pPushConstantRanges) {
+   self.pushConstantRangeCount= (uint)pPushConstantRanges.len;
+   self.pPushConstantRanges = &pPushConstantRanges[0];
+   return *self;
+}
+fn IndirectExecutionSetCreateInfoEXT indirectExecutionSetCreateInfoEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_CREATE_INFO_EXT, .pNext = null };
+fn IndirectExecutionSetCreateInfoEXT IndirectExecutionSetCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectExecutionSetCreateInfoEXT IndirectExecutionSetCreateInfoEXT.setType(&self, IndirectExecutionSetInfoTypeEXT type) {
+   self.type = type;
+   return *self;
+}
+fn IndirectExecutionSetCreateInfoEXT IndirectExecutionSetCreateInfoEXT.setInfo(&self, IndirectExecutionSetInfoEXT info) {
+   self.info = info;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT generatedCommandsInfoEXT() => { .sType = STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_EXT, .pNext = null };
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setShaderStages(&self, ShaderStageFlags shaderStages) {
+   self.shaderStages = shaderStages;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setIndirectExecutionSet(&self, IndirectExecutionSetEXT indirectExecutionSet) {
+   self.indirectExecutionSet = indirectExecutionSet;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setIndirectCommandsLayout(&self, IndirectCommandsLayoutEXT indirectCommandsLayout) {
+   self.indirectCommandsLayout = indirectCommandsLayout;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setIndirectAddress(&self, DeviceAddress indirectAddress) {
+   self.indirectAddress = indirectAddress;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setIndirectAddressSize(&self, DeviceSize indirectAddressSize) {
+   self.indirectAddressSize = indirectAddressSize;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setPreprocessAddress(&self, DeviceAddress preprocessAddress) {
+   self.preprocessAddress = preprocessAddress;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setPreprocessSize(&self, DeviceSize preprocessSize) {
+   self.preprocessSize = preprocessSize;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setMaxSequenceCount(&self, uint maxSequenceCount) {
+   self.maxSequenceCount = maxSequenceCount;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setSequenceCountAddress(&self, DeviceAddress sequenceCountAddress) {
+   self.sequenceCountAddress = sequenceCountAddress;
+   return *self;
+}
+fn GeneratedCommandsInfoEXT GeneratedCommandsInfoEXT.setMaxDrawCount(&self, uint maxDrawCount) {
+   self.maxDrawCount = maxDrawCount;
+   return *self;
+}
+fn WriteIndirectExecutionSetPipelineEXT writeIndirectExecutionSetPipelineEXT() => { .sType = STRUCTURE_TYPE_WRITE_INDIRECT_EXECUTION_SET_PIPELINE_EXT, .pNext = null };
+fn WriteIndirectExecutionSetPipelineEXT WriteIndirectExecutionSetPipelineEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteIndirectExecutionSetPipelineEXT WriteIndirectExecutionSetPipelineEXT.setIndex(&self, uint index) {
+   self.index = index;
+   return *self;
+}
+fn WriteIndirectExecutionSetPipelineEXT WriteIndirectExecutionSetPipelineEXT.setPipeline(&self, Pipeline pipeline) {
+   self.pipeline = pipeline;
+   return *self;
+}
+fn WriteIndirectExecutionSetShaderEXT writeIndirectExecutionSetShaderEXT() => { .sType = STRUCTURE_TYPE_WRITE_INDIRECT_EXECUTION_SET_SHADER_EXT, .pNext = null };
+fn WriteIndirectExecutionSetShaderEXT WriteIndirectExecutionSetShaderEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteIndirectExecutionSetShaderEXT WriteIndirectExecutionSetShaderEXT.setIndex(&self, uint index) {
+   self.index = index;
+   return *self;
+}
+fn WriteIndirectExecutionSetShaderEXT WriteIndirectExecutionSetShaderEXT.setShader(&self, ShaderEXT shader) {
+   self.shader = shader;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT indirectCommandsLayoutCreateInfoEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_EXT, .pNext = null };
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setFlags(&self, IndirectCommandsLayoutUsageFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setShaderStages(&self, ShaderStageFlags shaderStages) {
+   self.shaderStages = shaderStages;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setIndirectStride(&self, uint indirectStride) {
+   self.indirectStride = indirectStride;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setPipelineLayout(&self, PipelineLayout pipelineLayout) {
+   self.pipelineLayout = pipelineLayout;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setTokenCount(&self, uint tokenCount) {
+   self.tokenCount = tokenCount;
+   return *self;
+}
+fn IndirectCommandsLayoutCreateInfoEXT IndirectCommandsLayoutCreateInfoEXT.setTokens(&self, IndirectCommandsLayoutTokenEXT[] pTokens) {
+   self.tokenCount= (uint)pTokens.len;
+   self.pTokens = &pTokens[0];
+   return *self;
+}
+fn IndirectCommandsLayoutTokenEXT indirectCommandsLayoutTokenEXT() => { .sType = STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_EXT, .pNext = null };
+fn IndirectCommandsLayoutTokenEXT IndirectCommandsLayoutTokenEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenEXT IndirectCommandsLayoutTokenEXT.setType(&self, IndirectCommandsTokenTypeEXT type) {
+   self.type = type;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenEXT IndirectCommandsLayoutTokenEXT.setData(&self, IndirectCommandsTokenDataEXT data) {
+   self.data = data;
+   return *self;
+}
+fn IndirectCommandsLayoutTokenEXT IndirectCommandsLayoutTokenEXT.setOffset(&self, uint offset) {
+   self.offset = offset;
+   return *self;
+}
+fn PipelineViewportDepthClipControlCreateInfoEXT pipelineViewportDepthClipControlCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT, .pNext = null };
+fn PipelineViewportDepthClipControlCreateInfoEXT PipelineViewportDepthClipControlCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportDepthClipControlCreateInfoEXT PipelineViewportDepthClipControlCreateInfoEXT.setNegativeOneToOne(&self, uint negativeOneToOne) {
+   self.negativeOneToOne = negativeOneToOne;
+   return *self;
+}
+fn PhysicalDeviceDepthClampControlFeaturesEXT physicalDeviceDepthClampControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDepthClampControlFeaturesEXT PhysicalDeviceDepthClampControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDepthClampControlFeaturesEXT PhysicalDeviceDepthClampControlFeaturesEXT.setDepthClampControl(&self, uint depthClampControl) {
+   self.depthClampControl = depthClampControl;
+   return *self;
+}
+fn PipelineViewportDepthClampControlCreateInfoEXT pipelineViewportDepthClampControlCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT, .pNext = null };
+fn PipelineViewportDepthClampControlCreateInfoEXT PipelineViewportDepthClampControlCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineViewportDepthClampControlCreateInfoEXT PipelineViewportDepthClampControlCreateInfoEXT.setDepthClampMode(&self, DepthClampModeEXT depthClampMode) {
+   self.depthClampMode = depthClampMode;
+   return *self;
+}
+fn PipelineViewportDepthClampControlCreateInfoEXT PipelineViewportDepthClampControlCreateInfoEXT.setDepthClampRange(&self, DepthClampRangeEXT* pDepthClampRange) {
+   self.pDepthClampRange = pDepthClampRange;
+   return *self;
+}
+fn PhysicalDeviceVertexInputDynamicStateFeaturesEXT physicalDeviceVertexInputDynamicStateFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceVertexInputDynamicStateFeaturesEXT PhysicalDeviceVertexInputDynamicStateFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexInputDynamicStateFeaturesEXT PhysicalDeviceVertexInputDynamicStateFeaturesEXT.setVertexInputDynamicState(&self, uint vertexInputDynamicState) {
+   self.vertexInputDynamicState = vertexInputDynamicState;
+   return *self;
+}
+fn PhysicalDeviceExternalMemoryRDMAFeaturesNV physicalDeviceExternalMemoryRDMAFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_RDMA_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceExternalMemoryRDMAFeaturesNV PhysicalDeviceExternalMemoryRDMAFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalMemoryRDMAFeaturesNV PhysicalDeviceExternalMemoryRDMAFeaturesNV.setExternalMemoryRDMA(&self, uint externalMemoryRDMA) {
+   self.externalMemoryRDMA = externalMemoryRDMA;
+   return *self;
+}
+fn PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR physicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR.setShaderRelaxedExtendedInstruction(&self, uint shaderRelaxedExtendedInstruction) {
+   self.shaderRelaxedExtendedInstruction = shaderRelaxedExtendedInstruction;
+   return *self;
+}
+fn VertexInputBindingDescription2EXT vertexInputBindingDescription2EXT() => { .sType = STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT, .pNext = null };
+fn VertexInputBindingDescription2EXT VertexInputBindingDescription2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VertexInputBindingDescription2EXT VertexInputBindingDescription2EXT.setBinding(&self, uint binding) {
+   self.binding = binding;
+   return *self;
+}
+fn VertexInputBindingDescription2EXT VertexInputBindingDescription2EXT.setStride(&self, uint stride) {
+   self.stride = stride;
+   return *self;
+}
+fn VertexInputBindingDescription2EXT VertexInputBindingDescription2EXT.setInputRate(&self, VertexInputRate inputRate) {
+   self.inputRate = inputRate;
+   return *self;
+}
+fn VertexInputBindingDescription2EXT VertexInputBindingDescription2EXT.setDivisor(&self, uint divisor) {
+   self.divisor = divisor;
+   return *self;
+}
+fn VertexInputAttributeDescription2EXT vertexInputAttributeDescription2EXT() => { .sType = STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT, .pNext = null };
+fn VertexInputAttributeDescription2EXT VertexInputAttributeDescription2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VertexInputAttributeDescription2EXT VertexInputAttributeDescription2EXT.setLocation(&self, uint location) {
+   self.location = location;
+   return *self;
+}
+fn VertexInputAttributeDescription2EXT VertexInputAttributeDescription2EXT.setBinding(&self, uint binding) {
+   self.binding = binding;
+   return *self;
+}
+fn VertexInputAttributeDescription2EXT VertexInputAttributeDescription2EXT.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn VertexInputAttributeDescription2EXT VertexInputAttributeDescription2EXT.setOffset(&self, uint offset) {
+   self.offset = offset;
+   return *self;
+}
+fn PhysicalDeviceColorWriteEnableFeaturesEXT physicalDeviceColorWriteEnableFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COLOR_WRITE_ENABLE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceColorWriteEnableFeaturesEXT PhysicalDeviceColorWriteEnableFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceColorWriteEnableFeaturesEXT PhysicalDeviceColorWriteEnableFeaturesEXT.setColorWriteEnable(&self, uint colorWriteEnable) {
+   self.colorWriteEnable = colorWriteEnable;
+   return *self;
+}
+fn PipelineColorWriteCreateInfoEXT pipelineColorWriteCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineColorWriteCreateInfoEXT PipelineColorWriteCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineColorWriteCreateInfoEXT PipelineColorWriteCreateInfoEXT.setAttachmentCount(&self, uint attachmentCount) {
+   self.attachmentCount = attachmentCount;
+   return *self;
+}
+fn PipelineColorWriteCreateInfoEXT PipelineColorWriteCreateInfoEXT.setColorWriteEnables(&self, uint[] pColorWriteEnables) {
+   self.attachmentCount= (uint)pColorWriteEnables.len;
+   self.pColorWriteEnables = &pColorWriteEnables[0];
    return *self;
 }
 fn MemoryBarrier2 memoryBarrier2() => { .sType = STRUCTURE_TYPE_MEMORY_BARRIER_2, .pNext = null };
@@ -6551,6 +14671,27 @@ fn MemoryBarrier2 MemoryBarrier2.setDstStageMask(&self, PipelineStageFlags2 dstS
    return *self;
 }
 fn MemoryBarrier2 MemoryBarrier2.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
+   self.dstAccessMask = dstAccessMask;
+   return *self;
+}
+fn MemoryBarrier2KHR memoryBarrier2KHR() => { .sType = STRUCTURE_TYPE_MEMORY_BARRIER_2, .pNext = null };
+fn MemoryBarrier2KHR MemoryBarrier2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryBarrier2KHR MemoryBarrier2KHR.setSrcStageMask(&self, PipelineStageFlags2 srcStageMask) {
+   self.srcStageMask = srcStageMask;
+   return *self;
+}
+fn MemoryBarrier2KHR MemoryBarrier2KHR.setSrcAccessMask(&self, AccessFlags2 srcAccessMask) {
+   self.srcAccessMask = srcAccessMask;
+   return *self;
+}
+fn MemoryBarrier2KHR MemoryBarrier2KHR.setDstStageMask(&self, PipelineStageFlags2 dstStageMask) {
+   self.dstStageMask = dstStageMask;
+   return *self;
+}
+fn MemoryBarrier2KHR MemoryBarrier2KHR.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
    self.dstAccessMask = dstAccessMask;
    return *self;
 }
@@ -6599,6 +14740,51 @@ fn ImageMemoryBarrier2 ImageMemoryBarrier2.setSubresourceRange(&self, ImageSubre
    self.subresourceRange = subresourceRange;
    return *self;
 }
+fn ImageMemoryBarrier2KHR imageMemoryBarrier2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2, .pNext = null };
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setSrcStageMask(&self, PipelineStageFlags2 srcStageMask) {
+   self.srcStageMask = srcStageMask;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setSrcAccessMask(&self, AccessFlags2 srcAccessMask) {
+   self.srcAccessMask = srcAccessMask;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setDstStageMask(&self, PipelineStageFlags2 dstStageMask) {
+   self.dstStageMask = dstStageMask;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
+   self.dstAccessMask = dstAccessMask;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setOldLayout(&self, ImageLayout oldLayout) {
+   self.oldLayout = oldLayout;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setNewLayout(&self, ImageLayout newLayout) {
+   self.newLayout = newLayout;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setSrcQueueFamilyIndex(&self, uint srcQueueFamilyIndex) {
+   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setDstQueueFamilyIndex(&self, uint dstQueueFamilyIndex) {
+   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn ImageMemoryBarrier2KHR ImageMemoryBarrier2KHR.setSubresourceRange(&self, ImageSubresourceRange subresourceRange) {
+   self.subresourceRange = subresourceRange;
+   return *self;
+}
 fn BufferMemoryBarrier2 bufferMemoryBarrier2() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2, .pNext = null };
 fn BufferMemoryBarrier2 BufferMemoryBarrier2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6640,6 +14826,60 @@ fn BufferMemoryBarrier2 BufferMemoryBarrier2.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
+fn BufferMemoryBarrier2KHR bufferMemoryBarrier2KHR() => { .sType = STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2, .pNext = null };
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setSrcStageMask(&self, PipelineStageFlags2 srcStageMask) {
+   self.srcStageMask = srcStageMask;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setSrcAccessMask(&self, AccessFlags2 srcAccessMask) {
+   self.srcAccessMask = srcAccessMask;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setDstStageMask(&self, PipelineStageFlags2 dstStageMask) {
+   self.dstStageMask = dstStageMask;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
+   self.dstAccessMask = dstAccessMask;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setSrcQueueFamilyIndex(&self, uint srcQueueFamilyIndex) {
+   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setDstQueueFamilyIndex(&self, uint dstQueueFamilyIndex) {
+   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setOffset(&self, DeviceSize offset) {
+   self.offset = offset;
+   return *self;
+}
+fn BufferMemoryBarrier2KHR BufferMemoryBarrier2KHR.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn MemoryBarrierAccessFlags3KHR memoryBarrierAccessFlags3KHR() => { .sType = STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR, .pNext = null };
+fn MemoryBarrierAccessFlags3KHR MemoryBarrierAccessFlags3KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryBarrierAccessFlags3KHR MemoryBarrierAccessFlags3KHR.setSrcAccessMask3(&self, AccessFlags3KHR srcAccessMask3) {
+   self.srcAccessMask3 = srcAccessMask3;
+   return *self;
+}
+fn MemoryBarrierAccessFlags3KHR MemoryBarrierAccessFlags3KHR.setDstAccessMask3(&self, AccessFlags3KHR dstAccessMask3) {
+   self.dstAccessMask3 = dstAccessMask3;
+   return *self;
+}
 fn DependencyInfo dependencyInfo() => { .sType = STRUCTURE_TYPE_DEPENDENCY_INFO, .pNext = null };
 fn DependencyInfo DependencyInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6676,6 +14916,42 @@ fn DependencyInfo DependencyInfo.setImageMemoryBarriers(&self, ImageMemoryBarrie
    self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
    return *self;
 }
+fn DependencyInfoKHR dependencyInfoKHR() => { .sType = STRUCTURE_TYPE_DEPENDENCY_INFO, .pNext = null };
+fn DependencyInfoKHR DependencyInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setDependencyFlags(&self, DependencyFlags dependencyFlags) {
+   self.dependencyFlags = dependencyFlags;
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setMemoryBarrierCount(&self, uint memoryBarrierCount) {
+   self.memoryBarrierCount = memoryBarrierCount;
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setMemoryBarriers(&self, MemoryBarrier2[] pMemoryBarriers) {
+   self.memoryBarrierCount= (uint)pMemoryBarriers.len;
+   self.pMemoryBarriers = &pMemoryBarriers[0];
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setBufferMemoryBarrierCount(&self, uint bufferMemoryBarrierCount) {
+   self.bufferMemoryBarrierCount = bufferMemoryBarrierCount;
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setBufferMemoryBarriers(&self, BufferMemoryBarrier2[] pBufferMemoryBarriers) {
+   self.bufferMemoryBarrierCount= (uint)pBufferMemoryBarriers.len;
+   self.pBufferMemoryBarriers = &pBufferMemoryBarriers[0];
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setImageMemoryBarrierCount(&self, uint imageMemoryBarrierCount) {
+   self.imageMemoryBarrierCount = imageMemoryBarrierCount;
+   return *self;
+}
+fn DependencyInfoKHR DependencyInfoKHR.setImageMemoryBarriers(&self, ImageMemoryBarrier2[] pImageMemoryBarriers) {
+   self.imageMemoryBarrierCount= (uint)pImageMemoryBarriers.len;
+   self.pImageMemoryBarriers = &pImageMemoryBarriers[0];
+   return *self;
+}
 fn SemaphoreSubmitInfo semaphoreSubmitInfo() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
 fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6697,6 +14973,27 @@ fn SemaphoreSubmitInfo SemaphoreSubmitInfo.setDeviceIndex(&self, uint deviceInde
    self.deviceIndex = deviceIndex;
    return *self;
 }
+fn SemaphoreSubmitInfoKHR semaphoreSubmitInfoKHR() => { .sType = STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO, .pNext = null };
+fn SemaphoreSubmitInfoKHR SemaphoreSubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SemaphoreSubmitInfoKHR SemaphoreSubmitInfoKHR.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn SemaphoreSubmitInfoKHR SemaphoreSubmitInfoKHR.setValue(&self, ulong value) {
+   self.value = value;
+   return *self;
+}
+fn SemaphoreSubmitInfoKHR SemaphoreSubmitInfoKHR.setStageMask(&self, PipelineStageFlags2 stageMask) {
+   self.stageMask = stageMask;
+   return *self;
+}
+fn SemaphoreSubmitInfoKHR SemaphoreSubmitInfoKHR.setDeviceIndex(&self, uint deviceIndex) {
+   self.deviceIndex = deviceIndex;
+   return *self;
+}
 fn CommandBufferSubmitInfo commandBufferSubmitInfo() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO, .pNext = null };
 fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6707,6 +15004,19 @@ fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setCommandBuffer(&self, Comma
    return *self;
 }
 fn CommandBufferSubmitInfo CommandBufferSubmitInfo.setDeviceMask(&self, uint deviceMask) {
+   self.deviceMask = deviceMask;
+   return *self;
+}
+fn CommandBufferSubmitInfoKHR commandBufferSubmitInfoKHR() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO, .pNext = null };
+fn CommandBufferSubmitInfoKHR CommandBufferSubmitInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CommandBufferSubmitInfoKHR CommandBufferSubmitInfoKHR.setCommandBuffer(&self, CommandBuffer commandBuffer) {
+   self.commandBuffer = commandBuffer;
+   return *self;
+}
+fn CommandBufferSubmitInfoKHR CommandBufferSubmitInfoKHR.setDeviceMask(&self, uint deviceMask) {
    self.deviceMask = deviceMask;
    return *self;
 }
@@ -6746,6 +15056,64 @@ fn SubmitInfo2 SubmitInfo2.setSignalSemaphoreInfos(&self, SemaphoreSubmitInfo[] 
    self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
    return *self;
 }
+fn SubmitInfo2KHR submitInfo2KHR() => { .sType = STRUCTURE_TYPE_SUBMIT_INFO_2, .pNext = null };
+fn SubmitInfo2KHR SubmitInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setFlags(&self, SubmitFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setWaitSemaphoreInfoCount(&self, uint waitSemaphoreInfoCount) {
+   self.waitSemaphoreInfoCount = waitSemaphoreInfoCount;
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setWaitSemaphoreInfos(&self, SemaphoreSubmitInfo[] pWaitSemaphoreInfos) {
+   self.waitSemaphoreInfoCount= (uint)pWaitSemaphoreInfos.len;
+   self.pWaitSemaphoreInfos = &pWaitSemaphoreInfos[0];
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setCommandBufferInfoCount(&self, uint commandBufferInfoCount) {
+   self.commandBufferInfoCount = commandBufferInfoCount;
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setCommandBufferInfos(&self, CommandBufferSubmitInfo[] pCommandBufferInfos) {
+   self.commandBufferInfoCount= (uint)pCommandBufferInfos.len;
+   self.pCommandBufferInfos = &pCommandBufferInfos[0];
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setSignalSemaphoreInfoCount(&self, uint signalSemaphoreInfoCount) {
+   self.signalSemaphoreInfoCount = signalSemaphoreInfoCount;
+   return *self;
+}
+fn SubmitInfo2KHR SubmitInfo2KHR.setSignalSemaphoreInfos(&self, SemaphoreSubmitInfo[] pSignalSemaphoreInfos) {
+   self.signalSemaphoreInfoCount= (uint)pSignalSemaphoreInfos.len;
+   self.pSignalSemaphoreInfos = &pSignalSemaphoreInfos[0];
+   return *self;
+}
+fn QueueFamilyCheckpointProperties2NV queueFamilyCheckpointProperties2NV() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV, .pNext = null };
+fn QueueFamilyCheckpointProperties2NV QueueFamilyCheckpointProperties2NV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyCheckpointProperties2NV QueueFamilyCheckpointProperties2NV.setCheckpointExecutionStageMask(&self, PipelineStageFlags2 checkpointExecutionStageMask) {
+   self.checkpointExecutionStageMask = checkpointExecutionStageMask;
+   return *self;
+}
+fn CheckpointData2NV checkpointData2NV() => { .sType = STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV, .pNext = null };
+fn CheckpointData2NV CheckpointData2NV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CheckpointData2NV CheckpointData2NV.setStage(&self, PipelineStageFlags2 stage) {
+   self.stage = stage;
+   return *self;
+}
+fn CheckpointData2NV CheckpointData2NV.setCheckpointMarker(&self, void* pCheckpointMarker) {
+   self.pCheckpointMarker = pCheckpointMarker;
+   return *self;
+}
 fn PhysicalDeviceSynchronization2Features physicalDeviceSynchronization2Features() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, .pNext = null };
 fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6755,12 +15123,43 @@ fn PhysicalDeviceSynchronization2Features PhysicalDeviceSynchronization2Features
    self.synchronization2 = synchronization2;
    return *self;
 }
+fn PhysicalDeviceSynchronization2FeaturesKHR physicalDeviceSynchronization2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, .pNext = null };
+fn PhysicalDeviceSynchronization2FeaturesKHR PhysicalDeviceSynchronization2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSynchronization2FeaturesKHR PhysicalDeviceSynchronization2FeaturesKHR.setSynchronization2(&self, uint synchronization2) {
+   self.synchronization2 = synchronization2;
+   return *self;
+}
+fn PhysicalDeviceUnifiedImageLayoutsFeaturesKHR physicalDeviceUnifiedImageLayoutsFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceUnifiedImageLayoutsFeaturesKHR PhysicalDeviceUnifiedImageLayoutsFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceUnifiedImageLayoutsFeaturesKHR PhysicalDeviceUnifiedImageLayoutsFeaturesKHR.setUnifiedImageLayouts(&self, uint unifiedImageLayouts) {
+   self.unifiedImageLayouts = unifiedImageLayouts;
+   return *self;
+}
+fn PhysicalDeviceUnifiedImageLayoutsFeaturesKHR PhysicalDeviceUnifiedImageLayoutsFeaturesKHR.setUnifiedImageLayoutsVideo(&self, uint unifiedImageLayoutsVideo) {
+   self.unifiedImageLayoutsVideo = unifiedImageLayoutsVideo;
+   return *self;
+}
 fn PhysicalDeviceHostImageCopyFeatures physicalDeviceHostImageCopyFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES, .pNext = null };
 fn PhysicalDeviceHostImageCopyFeatures PhysicalDeviceHostImageCopyFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceHostImageCopyFeatures PhysicalDeviceHostImageCopyFeatures.setHostImageCopy(&self, uint hostImageCopy) {
+   self.hostImageCopy = hostImageCopy;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyFeaturesEXT physicalDeviceHostImageCopyFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES, .pNext = null };
+fn PhysicalDeviceHostImageCopyFeaturesEXT PhysicalDeviceHostImageCopyFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyFeaturesEXT PhysicalDeviceHostImageCopyFeaturesEXT.setHostImageCopy(&self, uint hostImageCopy) {
    self.hostImageCopy = hostImageCopy;
    return *self;
 }
@@ -6795,6 +15194,37 @@ fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.s
    self.identicalMemoryTypeRequirements = identicalMemoryTypeRequirements;
    return *self;
 }
+fn PhysicalDeviceHostImageCopyPropertiesEXT physicalDeviceHostImageCopyPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES, .pNext = null };
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setCopySrcLayoutCount(&self, uint copySrcLayoutCount) {
+   self.copySrcLayoutCount = copySrcLayoutCount;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setCopySrcLayouts(&self, ImageLayout[] pCopySrcLayouts) {
+   self.copySrcLayoutCount= (uint)pCopySrcLayouts.len;
+   self.pCopySrcLayouts = &pCopySrcLayouts[0];
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setCopyDstLayoutCount(&self, uint copyDstLayoutCount) {
+   self.copyDstLayoutCount = copyDstLayoutCount;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setCopyDstLayouts(&self, ImageLayout[] pCopyDstLayouts) {
+   self.copyDstLayoutCount= (uint)pCopyDstLayouts.len;
+   self.pCopyDstLayouts = &pCopyDstLayouts[0];
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setOptimalTilingLayoutUUID(&self, uint[UUID_SIZE] optimalTilingLayoutUUID) {
+   self.optimalTilingLayoutUUID = optimalTilingLayoutUUID;
+   return *self;
+}
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setIdenticalMemoryTypeRequirements(&self, uint identicalMemoryTypeRequirements) {
+   self.identicalMemoryTypeRequirements = identicalMemoryTypeRequirements;
+   return *self;
+}
 fn MemoryToImageCopy memoryToImageCopy() => { .sType = STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY, .pNext = null };
 fn MemoryToImageCopy MemoryToImageCopy.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6821,6 +15251,35 @@ fn MemoryToImageCopy MemoryToImageCopy.setImageOffset(&self, Offset3D imageOffse
    return *self;
 }
 fn MemoryToImageCopy MemoryToImageCopy.setImageExtent(&self, Extent3D imageExtent) {
+   self.imageExtent = imageExtent;
+   return *self;
+}
+fn MemoryToImageCopyEXT memoryToImageCopyEXT() => { .sType = STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY, .pNext = null };
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setHostPointer(&self, void* pHostPointer) {
+   self.pHostPointer = pHostPointer;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setMemoryRowLength(&self, uint memoryRowLength) {
+   self.memoryRowLength = memoryRowLength;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setMemoryImageHeight(&self, uint memoryImageHeight) {
+   self.memoryImageHeight = memoryImageHeight;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setImageSubresource(&self, ImageSubresourceLayers imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setImageOffset(&self, Offset3D imageOffset) {
+   self.imageOffset = imageOffset;
+   return *self;
+}
+fn MemoryToImageCopyEXT MemoryToImageCopyEXT.setImageExtent(&self, Extent3D imageExtent) {
    self.imageExtent = imageExtent;
    return *self;
 }
@@ -6853,6 +15312,35 @@ fn ImageToMemoryCopy ImageToMemoryCopy.setImageExtent(&self, Extent3D imageExten
    self.imageExtent = imageExtent;
    return *self;
 }
+fn ImageToMemoryCopyEXT imageToMemoryCopyEXT() => { .sType = STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY, .pNext = null };
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setHostPointer(&self, void* pHostPointer) {
+   self.pHostPointer = pHostPointer;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setMemoryRowLength(&self, uint memoryRowLength) {
+   self.memoryRowLength = memoryRowLength;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setMemoryImageHeight(&self, uint memoryImageHeight) {
+   self.memoryImageHeight = memoryImageHeight;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setImageSubresource(&self, ImageSubresourceLayers imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setImageOffset(&self, Offset3D imageOffset) {
+   self.imageOffset = imageOffset;
+   return *self;
+}
+fn ImageToMemoryCopyEXT ImageToMemoryCopyEXT.setImageExtent(&self, Extent3D imageExtent) {
+   self.imageExtent = imageExtent;
+   return *self;
+}
 fn CopyMemoryToImageInfo copyMemoryToImageInfo() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO, .pNext = null };
 fn CopyMemoryToImageInfo CopyMemoryToImageInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6879,6 +15367,32 @@ fn CopyMemoryToImageInfo CopyMemoryToImageInfo.setRegions(&self, MemoryToImageCo
    self.pRegions = &pRegions[0];
    return *self;
 }
+fn CopyMemoryToImageInfoEXT copyMemoryToImageInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO, .pNext = null };
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setFlags(&self, HostImageCopyFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyMemoryToImageInfoEXT CopyMemoryToImageInfoEXT.setRegions(&self, MemoryToImageCopy[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
 fn CopyImageToMemoryInfo copyImageToMemoryInfo() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO, .pNext = null };
 fn CopyImageToMemoryInfo CopyImageToMemoryInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6901,6 +15415,32 @@ fn CopyImageToMemoryInfo CopyImageToMemoryInfo.setRegionCount(&self, uint region
    return *self;
 }
 fn CopyImageToMemoryInfo CopyImageToMemoryInfo.setRegions(&self, ImageToMemoryCopy[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT copyImageToMemoryInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO, .pNext = null };
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setFlags(&self, HostImageCopyFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyImageToMemoryInfoEXT CopyImageToMemoryInfoEXT.setRegions(&self, ImageToMemoryCopy[] pRegions) {
    self.regionCount= (uint)pRegions.len;
    self.pRegions = &pRegions[0];
    return *self;
@@ -6939,6 +15479,40 @@ fn CopyImageToImageInfo CopyImageToImageInfo.setRegions(&self, ImageCopy2[] pReg
    self.pRegions = &pRegions[0];
    return *self;
 }
+fn CopyImageToImageInfoEXT copyImageToImageInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO, .pNext = null };
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setFlags(&self, HostImageCopyFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setSrcImage(&self, Image srcImage) {
+   self.srcImage = srcImage;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setSrcImageLayout(&self, ImageLayout srcImageLayout) {
+   self.srcImageLayout = srcImageLayout;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setDstImage(&self, Image dstImage) {
+   self.dstImage = dstImage;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setDstImageLayout(&self, ImageLayout dstImageLayout) {
+   self.dstImageLayout = dstImageLayout;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyImageToImageInfoEXT CopyImageToImageInfoEXT.setRegions(&self, ImageCopy2[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
 fn HostImageLayoutTransitionInfo hostImageLayoutTransitionInfo() => { .sType = STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO, .pNext = null };
 fn HostImageLayoutTransitionInfo HostImageLayoutTransitionInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6960,12 +15534,42 @@ fn HostImageLayoutTransitionInfo HostImageLayoutTransitionInfo.setSubresourceRan
    self.subresourceRange = subresourceRange;
    return *self;
 }
+fn HostImageLayoutTransitionInfoEXT hostImageLayoutTransitionInfoEXT() => { .sType = STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO, .pNext = null };
+fn HostImageLayoutTransitionInfoEXT HostImageLayoutTransitionInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn HostImageLayoutTransitionInfoEXT HostImageLayoutTransitionInfoEXT.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn HostImageLayoutTransitionInfoEXT HostImageLayoutTransitionInfoEXT.setOldLayout(&self, ImageLayout oldLayout) {
+   self.oldLayout = oldLayout;
+   return *self;
+}
+fn HostImageLayoutTransitionInfoEXT HostImageLayoutTransitionInfoEXT.setNewLayout(&self, ImageLayout newLayout) {
+   self.newLayout = newLayout;
+   return *self;
+}
+fn HostImageLayoutTransitionInfoEXT HostImageLayoutTransitionInfoEXT.setSubresourceRange(&self, ImageSubresourceRange subresourceRange) {
+   self.subresourceRange = subresourceRange;
+   return *self;
+}
 fn SubresourceHostMemcpySize subresourceHostMemcpySize() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE, .pNext = null };
 fn SubresourceHostMemcpySize SubresourceHostMemcpySize.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn SubresourceHostMemcpySize SubresourceHostMemcpySize.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn SubresourceHostMemcpySizeEXT subresourceHostMemcpySizeEXT() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE, .pNext = null };
+fn SubresourceHostMemcpySizeEXT SubresourceHostMemcpySizeEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubresourceHostMemcpySizeEXT SubresourceHostMemcpySizeEXT.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
@@ -6982,6 +15586,94 @@ fn HostImageCopyDevicePerformanceQuery HostImageCopyDevicePerformanceQuery.setId
    self.identicalMemoryLayout = identicalMemoryLayout;
    return *self;
 }
+fn HostImageCopyDevicePerformanceQueryEXT hostImageCopyDevicePerformanceQueryEXT() => { .sType = STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY, .pNext = null };
+fn HostImageCopyDevicePerformanceQueryEXT HostImageCopyDevicePerformanceQueryEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn HostImageCopyDevicePerformanceQueryEXT HostImageCopyDevicePerformanceQueryEXT.setOptimalDeviceAccess(&self, uint optimalDeviceAccess) {
+   self.optimalDeviceAccess = optimalDeviceAccess;
+   return *self;
+}
+fn HostImageCopyDevicePerformanceQueryEXT HostImageCopyDevicePerformanceQueryEXT.setIdenticalMemoryLayout(&self, uint identicalMemoryLayout) {
+   self.identicalMemoryLayout = identicalMemoryLayout;
+   return *self;
+}
+fn PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT physicalDevicePrimitivesGeneratedQueryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT.setPrimitivesGeneratedQuery(&self, uint primitivesGeneratedQuery) {
+   self.primitivesGeneratedQuery = primitivesGeneratedQuery;
+   return *self;
+}
+fn PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT.setPrimitivesGeneratedQueryWithRasterizerDiscard(&self, uint primitivesGeneratedQueryWithRasterizerDiscard) {
+   self.primitivesGeneratedQueryWithRasterizerDiscard = primitivesGeneratedQueryWithRasterizerDiscard;
+   return *self;
+}
+fn PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT.setPrimitivesGeneratedQueryWithNonZeroStreams(&self, uint primitivesGeneratedQueryWithNonZeroStreams) {
+   self.primitivesGeneratedQueryWithNonZeroStreams = primitivesGeneratedQueryWithNonZeroStreams;
+   return *self;
+}
+fn PhysicalDeviceLegacyDitheringFeaturesEXT physicalDeviceLegacyDitheringFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceLegacyDitheringFeaturesEXT PhysicalDeviceLegacyDitheringFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLegacyDitheringFeaturesEXT PhysicalDeviceLegacyDitheringFeaturesEXT.setLegacyDithering(&self, uint legacyDithering) {
+   self.legacyDithering = legacyDithering;
+   return *self;
+}
+fn PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT physicalDeviceMultisampledRenderToSingleSampledFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT.setMultisampledRenderToSingleSampled(&self, uint multisampledRenderToSingleSampled) {
+   self.multisampledRenderToSingleSampled = multisampledRenderToSingleSampled;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentId2KHR surfaceCapabilitiesPresentId2KHR() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR, .pNext = null };
+fn SurfaceCapabilitiesPresentId2KHR SurfaceCapabilitiesPresentId2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentId2KHR SurfaceCapabilitiesPresentId2KHR.setPresentId2Supported(&self, uint presentId2Supported) {
+   self.presentId2Supported = presentId2Supported;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentWait2KHR surfaceCapabilitiesPresentWait2KHR() => { .sType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR, .pNext = null };
+fn SurfaceCapabilitiesPresentWait2KHR SurfaceCapabilitiesPresentWait2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfaceCapabilitiesPresentWait2KHR SurfaceCapabilitiesPresentWait2KHR.setPresentWait2Supported(&self, uint presentWait2Supported) {
+   self.presentWait2Supported = presentWait2Supported;
+   return *self;
+}
+fn SubpassResolvePerformanceQueryEXT subpassResolvePerformanceQueryEXT() => { .sType = STRUCTURE_TYPE_SUBPASS_RESOLVE_PERFORMANCE_QUERY_EXT, .pNext = null };
+fn SubpassResolvePerformanceQueryEXT SubpassResolvePerformanceQueryEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubpassResolvePerformanceQueryEXT SubpassResolvePerformanceQueryEXT.setOptimal(&self, uint optimal) {
+   self.optimal = optimal;
+   return *self;
+}
+fn MultisampledRenderToSingleSampledInfoEXT multisampledRenderToSingleSampledInfoEXT() => { .sType = STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT, .pNext = null };
+fn MultisampledRenderToSingleSampledInfoEXT MultisampledRenderToSingleSampledInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MultisampledRenderToSingleSampledInfoEXT MultisampledRenderToSingleSampledInfoEXT.setMultisampledRenderToSingleSampledEnable(&self, uint multisampledRenderToSingleSampledEnable) {
+   self.multisampledRenderToSingleSampledEnable = multisampledRenderToSingleSampledEnable;
+   return *self;
+}
+fn MultisampledRenderToSingleSampledInfoEXT MultisampledRenderToSingleSampledInfoEXT.setRasterizationSamples(&self, SampleCountFlagBits rasterizationSamples) {
+   self.rasterizationSamples = rasterizationSamples;
+   return *self;
+}
 fn PhysicalDevicePipelineProtectedAccessFeatures physicalDevicePipelineProtectedAccessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineProtectedAccessFeatures PhysicalDevicePipelineProtectedAccessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -6989,6 +15681,1417 @@ fn PhysicalDevicePipelineProtectedAccessFeatures PhysicalDevicePipelineProtected
 }
 fn PhysicalDevicePipelineProtectedAccessFeatures PhysicalDevicePipelineProtectedAccessFeatures.setPipelineProtectedAccess(&self, uint pipelineProtectedAccess) {
    self.pipelineProtectedAccess = pipelineProtectedAccess;
+   return *self;
+}
+fn PhysicalDevicePipelineProtectedAccessFeaturesEXT physicalDevicePipelineProtectedAccessFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineProtectedAccessFeaturesEXT PhysicalDevicePipelineProtectedAccessFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineProtectedAccessFeaturesEXT PhysicalDevicePipelineProtectedAccessFeaturesEXT.setPipelineProtectedAccess(&self, uint pipelineProtectedAccess) {
+   self.pipelineProtectedAccess = pipelineProtectedAccess;
+   return *self;
+}
+fn QueueFamilyVideoPropertiesKHR queueFamilyVideoPropertiesKHR() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR, .pNext = null };
+fn QueueFamilyVideoPropertiesKHR QueueFamilyVideoPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyVideoPropertiesKHR QueueFamilyVideoPropertiesKHR.setVideoCodecOperations(&self, VideoCodecOperationFlagsKHR videoCodecOperations) {
+   self.videoCodecOperations = videoCodecOperations;
+   return *self;
+}
+fn QueueFamilyQueryResultStatusPropertiesKHR queueFamilyQueryResultStatusPropertiesKHR() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_QUERY_RESULT_STATUS_PROPERTIES_KHR, .pNext = null };
+fn QueueFamilyQueryResultStatusPropertiesKHR QueueFamilyQueryResultStatusPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyQueryResultStatusPropertiesKHR QueueFamilyQueryResultStatusPropertiesKHR.setQueryResultStatusSupport(&self, uint queryResultStatusSupport) {
+   self.queryResultStatusSupport = queryResultStatusSupport;
+   return *self;
+}
+fn VideoProfileListInfoKHR videoProfileListInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR, .pNext = null };
+fn VideoProfileListInfoKHR VideoProfileListInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoProfileListInfoKHR VideoProfileListInfoKHR.setProfileCount(&self, uint profileCount) {
+   self.profileCount = profileCount;
+   return *self;
+}
+fn VideoProfileListInfoKHR VideoProfileListInfoKHR.setProfiles(&self, VideoProfileInfoKHR[] pProfiles) {
+   self.profileCount= (uint)pProfiles.len;
+   self.pProfiles = &pProfiles[0];
+   return *self;
+}
+fn PhysicalDeviceVideoFormatInfoKHR physicalDeviceVideoFormatInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_FORMAT_INFO_KHR, .pNext = null };
+fn PhysicalDeviceVideoFormatInfoKHR PhysicalDeviceVideoFormatInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoFormatInfoKHR PhysicalDeviceVideoFormatInfoKHR.setImageUsage(&self, ImageUsageFlags imageUsage) {
+   self.imageUsage = imageUsage;
+   return *self;
+}
+fn VideoFormatPropertiesKHR videoFormatPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_FORMAT_PROPERTIES_KHR, .pNext = null };
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setComponentMapping(&self, ComponentMapping componentMapping) {
+   self.componentMapping = componentMapping;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setImageCreateFlags(&self, ImageCreateFlags imageCreateFlags) {
+   self.imageCreateFlags = imageCreateFlags;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setImageType(&self, ImageType imageType) {
+   self.imageType = imageType;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setImageTiling(&self, ImageTiling imageTiling) {
+   self.imageTiling = imageTiling;
+   return *self;
+}
+fn VideoFormatPropertiesKHR VideoFormatPropertiesKHR.setImageUsageFlags(&self, ImageUsageFlags imageUsageFlags) {
+   self.imageUsageFlags = imageUsageFlags;
+   return *self;
+}
+fn VideoEncodeQuantizationMapCapabilitiesKHR videoEncodeQuantizationMapCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_QUANTIZATION_MAP_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeQuantizationMapCapabilitiesKHR VideoEncodeQuantizationMapCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeQuantizationMapCapabilitiesKHR VideoEncodeQuantizationMapCapabilitiesKHR.setMaxQuantizationMapExtent(&self, Extent2D maxQuantizationMapExtent) {
+   self.maxQuantizationMapExtent = maxQuantizationMapExtent;
+   return *self;
+}
+fn VideoEncodeH264QuantizationMapCapabilitiesKHR videoEncodeH264QuantizationMapCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_QUANTIZATION_MAP_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeH264QuantizationMapCapabilitiesKHR VideoEncodeH264QuantizationMapCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264QuantizationMapCapabilitiesKHR VideoEncodeH264QuantizationMapCapabilitiesKHR.setMinQpDelta(&self, int minQpDelta) {
+   self.minQpDelta = minQpDelta;
+   return *self;
+}
+fn VideoEncodeH264QuantizationMapCapabilitiesKHR VideoEncodeH264QuantizationMapCapabilitiesKHR.setMaxQpDelta(&self, int maxQpDelta) {
+   self.maxQpDelta = maxQpDelta;
+   return *self;
+}
+fn VideoEncodeH265QuantizationMapCapabilitiesKHR videoEncodeH265QuantizationMapCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_QUANTIZATION_MAP_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeH265QuantizationMapCapabilitiesKHR VideoEncodeH265QuantizationMapCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265QuantizationMapCapabilitiesKHR VideoEncodeH265QuantizationMapCapabilitiesKHR.setMinQpDelta(&self, int minQpDelta) {
+   self.minQpDelta = minQpDelta;
+   return *self;
+}
+fn VideoEncodeH265QuantizationMapCapabilitiesKHR VideoEncodeH265QuantizationMapCapabilitiesKHR.setMaxQpDelta(&self, int maxQpDelta) {
+   self.maxQpDelta = maxQpDelta;
+   return *self;
+}
+fn VideoEncodeAV1QuantizationMapCapabilitiesKHR videoEncodeAV1QuantizationMapCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_AV1_QUANTIZATION_MAP_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeAV1QuantizationMapCapabilitiesKHR VideoEncodeAV1QuantizationMapCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeAV1QuantizationMapCapabilitiesKHR VideoEncodeAV1QuantizationMapCapabilitiesKHR.setMinQIndexDelta(&self, int minQIndexDelta) {
+   self.minQIndexDelta = minQIndexDelta;
+   return *self;
+}
+fn VideoEncodeAV1QuantizationMapCapabilitiesKHR VideoEncodeAV1QuantizationMapCapabilitiesKHR.setMaxQIndexDelta(&self, int maxQIndexDelta) {
+   self.maxQIndexDelta = maxQIndexDelta;
+   return *self;
+}
+fn VideoFormatQuantizationMapPropertiesKHR videoFormatQuantizationMapPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_FORMAT_QUANTIZATION_MAP_PROPERTIES_KHR, .pNext = null };
+fn VideoFormatQuantizationMapPropertiesKHR VideoFormatQuantizationMapPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoFormatQuantizationMapPropertiesKHR VideoFormatQuantizationMapPropertiesKHR.setQuantizationMapTexelSize(&self, Extent2D quantizationMapTexelSize) {
+   self.quantizationMapTexelSize = quantizationMapTexelSize;
+   return *self;
+}
+fn VideoFormatH265QuantizationMapPropertiesKHR videoFormatH265QuantizationMapPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_FORMAT_H265_QUANTIZATION_MAP_PROPERTIES_KHR, .pNext = null };
+fn VideoFormatH265QuantizationMapPropertiesKHR VideoFormatH265QuantizationMapPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoFormatH265QuantizationMapPropertiesKHR VideoFormatH265QuantizationMapPropertiesKHR.setCompatibleCtbSizes(&self, VideoEncodeH265CtbSizeFlagsKHR compatibleCtbSizes) {
+   self.compatibleCtbSizes = compatibleCtbSizes;
+   return *self;
+}
+fn VideoFormatAV1QuantizationMapPropertiesKHR videoFormatAV1QuantizationMapPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_FORMAT_AV1_QUANTIZATION_MAP_PROPERTIES_KHR, .pNext = null };
+fn VideoFormatAV1QuantizationMapPropertiesKHR VideoFormatAV1QuantizationMapPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoFormatAV1QuantizationMapPropertiesKHR VideoFormatAV1QuantizationMapPropertiesKHR.setCompatibleSuperblockSizes(&self, VideoEncodeAV1SuperblockSizeFlagsKHR compatibleSuperblockSizes) {
+   self.compatibleSuperblockSizes = compatibleSuperblockSizes;
+   return *self;
+}
+fn VideoProfileInfoKHR videoProfileInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_PROFILE_INFO_KHR, .pNext = null };
+fn VideoProfileInfoKHR VideoProfileInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoProfileInfoKHR VideoProfileInfoKHR.setVideoCodecOperation(&self, VideoCodecOperationFlagBitsKHR videoCodecOperation) {
+   self.videoCodecOperation = videoCodecOperation;
+   return *self;
+}
+fn VideoProfileInfoKHR VideoProfileInfoKHR.setChromaSubsampling(&self, VideoChromaSubsamplingFlagsKHR chromaSubsampling) {
+   self.chromaSubsampling = chromaSubsampling;
+   return *self;
+}
+fn VideoProfileInfoKHR VideoProfileInfoKHR.setLumaBitDepth(&self, VideoComponentBitDepthFlagsKHR lumaBitDepth) {
+   self.lumaBitDepth = lumaBitDepth;
+   return *self;
+}
+fn VideoProfileInfoKHR VideoProfileInfoKHR.setChromaBitDepth(&self, VideoComponentBitDepthFlagsKHR chromaBitDepth) {
+   self.chromaBitDepth = chromaBitDepth;
+   return *self;
+}
+fn VideoCapabilitiesKHR videoCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_CAPABILITIES_KHR, .pNext = null };
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setFlags(&self, VideoCapabilityFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMinBitstreamBufferOffsetAlignment(&self, DeviceSize minBitstreamBufferOffsetAlignment) {
+   self.minBitstreamBufferOffsetAlignment = minBitstreamBufferOffsetAlignment;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMinBitstreamBufferSizeAlignment(&self, DeviceSize minBitstreamBufferSizeAlignment) {
+   self.minBitstreamBufferSizeAlignment = minBitstreamBufferSizeAlignment;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setPictureAccessGranularity(&self, Extent2D pictureAccessGranularity) {
+   self.pictureAccessGranularity = pictureAccessGranularity;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMinCodedExtent(&self, Extent2D minCodedExtent) {
+   self.minCodedExtent = minCodedExtent;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMaxCodedExtent(&self, Extent2D maxCodedExtent) {
+   self.maxCodedExtent = maxCodedExtent;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMaxDpbSlots(&self, uint maxDpbSlots) {
+   self.maxDpbSlots = maxDpbSlots;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setMaxActiveReferencePictures(&self, uint maxActiveReferencePictures) {
+   self.maxActiveReferencePictures = maxActiveReferencePictures;
+   return *self;
+}
+fn VideoCapabilitiesKHR VideoCapabilitiesKHR.setStdHeaderVersion(&self, ExtensionProperties stdHeaderVersion) {
+   self.stdHeaderVersion = stdHeaderVersion;
+   return *self;
+}
+fn VideoSessionMemoryRequirementsKHR videoSessionMemoryRequirementsKHR() => { .sType = STRUCTURE_TYPE_VIDEO_SESSION_MEMORY_REQUIREMENTS_KHR, .pNext = null };
+fn VideoSessionMemoryRequirementsKHR VideoSessionMemoryRequirementsKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoSessionMemoryRequirementsKHR VideoSessionMemoryRequirementsKHR.setMemoryBindIndex(&self, uint memoryBindIndex) {
+   self.memoryBindIndex = memoryBindIndex;
+   return *self;
+}
+fn VideoSessionMemoryRequirementsKHR VideoSessionMemoryRequirementsKHR.setMemoryRequirements(&self, MemoryRequirements memoryRequirements) {
+   self.memoryRequirements = memoryRequirements;
+   return *self;
+}
+fn BindVideoSessionMemoryInfoKHR bindVideoSessionMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_VIDEO_SESSION_MEMORY_INFO_KHR, .pNext = null };
+fn BindVideoSessionMemoryInfoKHR BindVideoSessionMemoryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindVideoSessionMemoryInfoKHR BindVideoSessionMemoryInfoKHR.setMemoryBindIndex(&self, uint memoryBindIndex) {
+   self.memoryBindIndex = memoryBindIndex;
+   return *self;
+}
+fn BindVideoSessionMemoryInfoKHR BindVideoSessionMemoryInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindVideoSessionMemoryInfoKHR BindVideoSessionMemoryInfoKHR.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
+fn BindVideoSessionMemoryInfoKHR BindVideoSessionMemoryInfoKHR.setMemorySize(&self, DeviceSize memorySize) {
+   self.memorySize = memorySize;
+   return *self;
+}
+fn VideoPictureResourceInfoKHR videoPictureResourceInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_PICTURE_RESOURCE_INFO_KHR, .pNext = null };
+fn VideoPictureResourceInfoKHR VideoPictureResourceInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoPictureResourceInfoKHR VideoPictureResourceInfoKHR.setCodedOffset(&self, Offset2D codedOffset) {
+   self.codedOffset = codedOffset;
+   return *self;
+}
+fn VideoPictureResourceInfoKHR VideoPictureResourceInfoKHR.setCodedExtent(&self, Extent2D codedExtent) {
+   self.codedExtent = codedExtent;
+   return *self;
+}
+fn VideoPictureResourceInfoKHR VideoPictureResourceInfoKHR.setBaseArrayLayer(&self, uint baseArrayLayer) {
+   self.baseArrayLayer = baseArrayLayer;
+   return *self;
+}
+fn VideoPictureResourceInfoKHR VideoPictureResourceInfoKHR.setImageViewBinding(&self, ImageView imageViewBinding) {
+   self.imageViewBinding = imageViewBinding;
+   return *self;
+}
+fn VideoReferenceSlotInfoKHR videoReferenceSlotInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_REFERENCE_SLOT_INFO_KHR, .pNext = null };
+fn VideoReferenceSlotInfoKHR VideoReferenceSlotInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoReferenceSlotInfoKHR VideoReferenceSlotInfoKHR.setSlotIndex(&self, int slotIndex) {
+   self.slotIndex = slotIndex;
+   return *self;
+}
+fn VideoReferenceSlotInfoKHR VideoReferenceSlotInfoKHR.setPictureResource(&self, VideoPictureResourceInfoKHR* pPictureResource) {
+   self.pPictureResource = pPictureResource;
+   return *self;
+}
+fn VideoDecodeCapabilitiesKHR videoDecodeCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_DECODE_CAPABILITIES_KHR, .pNext = null };
+fn VideoDecodeCapabilitiesKHR VideoDecodeCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoDecodeCapabilitiesKHR VideoDecodeCapabilitiesKHR.setFlags(&self, VideoDecodeCapabilityFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoDecodeUsageInfoKHR videoDecodeUsageInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_DECODE_USAGE_INFO_KHR, .pNext = null };
+fn VideoDecodeUsageInfoKHR VideoDecodeUsageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoDecodeUsageInfoKHR VideoDecodeUsageInfoKHR.setVideoUsageHints(&self, VideoDecodeUsageFlagsKHR videoUsageHints) {
+   self.videoUsageHints = videoUsageHints;
+   return *self;
+}
+fn VideoDecodeInfoKHR videoDecodeInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_DECODE_INFO_KHR, .pNext = null };
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setFlags(&self, VideoDecodeFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setSrcBuffer(&self, Buffer srcBuffer) {
+   self.srcBuffer = srcBuffer;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setSrcBufferOffset(&self, DeviceSize srcBufferOffset) {
+   self.srcBufferOffset = srcBufferOffset;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setSrcBufferRange(&self, DeviceSize srcBufferRange) {
+   self.srcBufferRange = srcBufferRange;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setDstPictureResource(&self, VideoPictureResourceInfoKHR dstPictureResource) {
+   self.dstPictureResource = dstPictureResource;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setSetupReferenceSlot(&self, VideoReferenceSlotInfoKHR* pSetupReferenceSlot) {
+   self.pSetupReferenceSlot = pSetupReferenceSlot;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setReferenceSlotCount(&self, uint referenceSlotCount) {
+   self.referenceSlotCount = referenceSlotCount;
+   return *self;
+}
+fn VideoDecodeInfoKHR VideoDecodeInfoKHR.setReferenceSlots(&self, VideoReferenceSlotInfoKHR[] pReferenceSlots) {
+   self.referenceSlotCount= (uint)pReferenceSlots.len;
+   self.pReferenceSlots = &pReferenceSlots[0];
+   return *self;
+}
+fn PhysicalDeviceVideoMaintenance1FeaturesKHR physicalDeviceVideoMaintenance1FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_1_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoMaintenance1FeaturesKHR PhysicalDeviceVideoMaintenance1FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoMaintenance1FeaturesKHR PhysicalDeviceVideoMaintenance1FeaturesKHR.setVideoMaintenance1(&self, uint videoMaintenance1) {
+   self.videoMaintenance1 = videoMaintenance1;
+   return *self;
+}
+fn PhysicalDeviceVideoMaintenance2FeaturesKHR physicalDeviceVideoMaintenance2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_2_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoMaintenance2FeaturesKHR PhysicalDeviceVideoMaintenance2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoMaintenance2FeaturesKHR PhysicalDeviceVideoMaintenance2FeaturesKHR.setVideoMaintenance2(&self, uint videoMaintenance2) {
+   self.videoMaintenance2 = videoMaintenance2;
+   return *self;
+}
+fn VideoInlineQueryInfoKHR videoInlineQueryInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_INLINE_QUERY_INFO_KHR, .pNext = null };
+fn VideoInlineQueryInfoKHR VideoInlineQueryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoInlineQueryInfoKHR VideoInlineQueryInfoKHR.setQueryPool(&self, QueryPool queryPool) {
+   self.queryPool = queryPool;
+   return *self;
+}
+fn VideoInlineQueryInfoKHR VideoInlineQueryInfoKHR.setFirstQuery(&self, uint firstQuery) {
+   self.firstQuery = firstQuery;
+   return *self;
+}
+fn VideoInlineQueryInfoKHR VideoInlineQueryInfoKHR.setQueryCount(&self, uint queryCount) {
+   self.queryCount = queryCount;
+   return *self;
+}
+fn PhysicalDeviceVideoDecodeVP9FeaturesKHR physicalDeviceVideoDecodeVP9FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_DECODE_VP9_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoDecodeVP9FeaturesKHR PhysicalDeviceVideoDecodeVP9FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoDecodeVP9FeaturesKHR PhysicalDeviceVideoDecodeVP9FeaturesKHR.setVideoDecodeVP9(&self, uint videoDecodeVP9) {
+   self.videoDecodeVP9 = videoDecodeVP9;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR videoSessionCreateInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_SESSION_CREATE_INFO_KHR, .pNext = null };
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setQueueFamilyIndex(&self, uint queueFamilyIndex) {
+   self.queueFamilyIndex = queueFamilyIndex;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setFlags(&self, VideoSessionCreateFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setVideoProfile(&self, VideoProfileInfoKHR* pVideoProfile) {
+   self.pVideoProfile = pVideoProfile;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setPictureFormat(&self, Format pictureFormat) {
+   self.pictureFormat = pictureFormat;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setMaxCodedExtent(&self, Extent2D maxCodedExtent) {
+   self.maxCodedExtent = maxCodedExtent;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setReferencePictureFormat(&self, Format referencePictureFormat) {
+   self.referencePictureFormat = referencePictureFormat;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setMaxDpbSlots(&self, uint maxDpbSlots) {
+   self.maxDpbSlots = maxDpbSlots;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setMaxActiveReferencePictures(&self, uint maxActiveReferencePictures) {
+   self.maxActiveReferencePictures = maxActiveReferencePictures;
+   return *self;
+}
+fn VideoSessionCreateInfoKHR VideoSessionCreateInfoKHR.setStdHeaderVersion(&self, ExtensionProperties* pStdHeaderVersion) {
+   self.pStdHeaderVersion = pStdHeaderVersion;
+   return *self;
+}
+fn VideoSessionParametersCreateInfoKHR videoSessionParametersCreateInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_SESSION_PARAMETERS_CREATE_INFO_KHR, .pNext = null };
+fn VideoSessionParametersCreateInfoKHR VideoSessionParametersCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoSessionParametersCreateInfoKHR VideoSessionParametersCreateInfoKHR.setFlags(&self, VideoSessionParametersCreateFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoSessionParametersCreateInfoKHR VideoSessionParametersCreateInfoKHR.setVideoSessionParametersTemplate(&self, VideoSessionParametersKHR videoSessionParametersTemplate) {
+   self.videoSessionParametersTemplate = videoSessionParametersTemplate;
+   return *self;
+}
+fn VideoSessionParametersCreateInfoKHR VideoSessionParametersCreateInfoKHR.setVideoSession(&self, VideoSessionKHR videoSession) {
+   self.videoSession = videoSession;
+   return *self;
+}
+fn VideoSessionParametersUpdateInfoKHR videoSessionParametersUpdateInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_SESSION_PARAMETERS_UPDATE_INFO_KHR, .pNext = null };
+fn VideoSessionParametersUpdateInfoKHR VideoSessionParametersUpdateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoSessionParametersUpdateInfoKHR VideoSessionParametersUpdateInfoKHR.setUpdateSequenceCount(&self, uint updateSequenceCount) {
+   self.updateSequenceCount = updateSequenceCount;
+   return *self;
+}
+fn VideoEncodeSessionParametersGetInfoKHR videoEncodeSessionParametersGetInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_SESSION_PARAMETERS_GET_INFO_KHR, .pNext = null };
+fn VideoEncodeSessionParametersGetInfoKHR VideoEncodeSessionParametersGetInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeSessionParametersGetInfoKHR VideoEncodeSessionParametersGetInfoKHR.setVideoSessionParameters(&self, VideoSessionParametersKHR videoSessionParameters) {
+   self.videoSessionParameters = videoSessionParameters;
+   return *self;
+}
+fn VideoEncodeSessionParametersFeedbackInfoKHR videoEncodeSessionParametersFeedbackInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_SESSION_PARAMETERS_FEEDBACK_INFO_KHR, .pNext = null };
+fn VideoEncodeSessionParametersFeedbackInfoKHR VideoEncodeSessionParametersFeedbackInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeSessionParametersFeedbackInfoKHR VideoEncodeSessionParametersFeedbackInfoKHR.setHasOverrides(&self, uint hasOverrides) {
+   self.hasOverrides = hasOverrides;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR videoBeginCodingInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_BEGIN_CODING_INFO_KHR, .pNext = null };
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setFlags(&self, VideoBeginCodingFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setVideoSession(&self, VideoSessionKHR videoSession) {
+   self.videoSession = videoSession;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setVideoSessionParameters(&self, VideoSessionParametersKHR videoSessionParameters) {
+   self.videoSessionParameters = videoSessionParameters;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setReferenceSlotCount(&self, uint referenceSlotCount) {
+   self.referenceSlotCount = referenceSlotCount;
+   return *self;
+}
+fn VideoBeginCodingInfoKHR VideoBeginCodingInfoKHR.setReferenceSlots(&self, VideoReferenceSlotInfoKHR[] pReferenceSlots) {
+   self.referenceSlotCount= (uint)pReferenceSlots.len;
+   self.pReferenceSlots = &pReferenceSlots[0];
+   return *self;
+}
+fn VideoEndCodingInfoKHR videoEndCodingInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_END_CODING_INFO_KHR, .pNext = null };
+fn VideoEndCodingInfoKHR VideoEndCodingInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEndCodingInfoKHR VideoEndCodingInfoKHR.setFlags(&self, VideoEndCodingFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoCodingControlInfoKHR videoCodingControlInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_CODING_CONTROL_INFO_KHR, .pNext = null };
+fn VideoCodingControlInfoKHR VideoCodingControlInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoCodingControlInfoKHR VideoCodingControlInfoKHR.setFlags(&self, VideoCodingControlFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeUsageInfoKHR videoEncodeUsageInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_USAGE_INFO_KHR, .pNext = null };
+fn VideoEncodeUsageInfoKHR VideoEncodeUsageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeUsageInfoKHR VideoEncodeUsageInfoKHR.setVideoUsageHints(&self, VideoEncodeUsageFlagsKHR videoUsageHints) {
+   self.videoUsageHints = videoUsageHints;
+   return *self;
+}
+fn VideoEncodeUsageInfoKHR VideoEncodeUsageInfoKHR.setVideoContentHints(&self, VideoEncodeContentFlagsKHR videoContentHints) {
+   self.videoContentHints = videoContentHints;
+   return *self;
+}
+fn VideoEncodeUsageInfoKHR VideoEncodeUsageInfoKHR.setTuningMode(&self, VideoEncodeTuningModeKHR tuningMode) {
+   self.tuningMode = tuningMode;
+   return *self;
+}
+fn VideoEncodeInfoKHR videoEncodeInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_INFO_KHR, .pNext = null };
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setFlags(&self, VideoEncodeFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setDstBuffer(&self, Buffer dstBuffer) {
+   self.dstBuffer = dstBuffer;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setDstBufferOffset(&self, DeviceSize dstBufferOffset) {
+   self.dstBufferOffset = dstBufferOffset;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setDstBufferRange(&self, DeviceSize dstBufferRange) {
+   self.dstBufferRange = dstBufferRange;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setSrcPictureResource(&self, VideoPictureResourceInfoKHR srcPictureResource) {
+   self.srcPictureResource = srcPictureResource;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setSetupReferenceSlot(&self, VideoReferenceSlotInfoKHR* pSetupReferenceSlot) {
+   self.pSetupReferenceSlot = pSetupReferenceSlot;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setReferenceSlotCount(&self, uint referenceSlotCount) {
+   self.referenceSlotCount = referenceSlotCount;
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setReferenceSlots(&self, VideoReferenceSlotInfoKHR[] pReferenceSlots) {
+   self.referenceSlotCount= (uint)pReferenceSlots.len;
+   self.pReferenceSlots = &pReferenceSlots[0];
+   return *self;
+}
+fn VideoEncodeInfoKHR VideoEncodeInfoKHR.setPrecedingExternallyEncodedBytes(&self, uint precedingExternallyEncodedBytes) {
+   self.precedingExternallyEncodedBytes = precedingExternallyEncodedBytes;
+   return *self;
+}
+fn VideoEncodeQuantizationMapInfoKHR videoEncodeQuantizationMapInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_QUANTIZATION_MAP_INFO_KHR, .pNext = null };
+fn VideoEncodeQuantizationMapInfoKHR VideoEncodeQuantizationMapInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeQuantizationMapInfoKHR VideoEncodeQuantizationMapInfoKHR.setQuantizationMap(&self, ImageView quantizationMap) {
+   self.quantizationMap = quantizationMap;
+   return *self;
+}
+fn VideoEncodeQuantizationMapInfoKHR VideoEncodeQuantizationMapInfoKHR.setQuantizationMapExtent(&self, Extent2D quantizationMapExtent) {
+   self.quantizationMapExtent = quantizationMapExtent;
+   return *self;
+}
+fn VideoEncodeQuantizationMapSessionParametersCreateInfoKHR videoEncodeQuantizationMapSessionParametersCreateInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_QUANTIZATION_MAP_SESSION_PARAMETERS_CREATE_INFO_KHR, .pNext = null };
+fn VideoEncodeQuantizationMapSessionParametersCreateInfoKHR VideoEncodeQuantizationMapSessionParametersCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeQuantizationMapSessionParametersCreateInfoKHR VideoEncodeQuantizationMapSessionParametersCreateInfoKHR.setQuantizationMapTexelSize(&self, Extent2D quantizationMapTexelSize) {
+   self.quantizationMapTexelSize = quantizationMapTexelSize;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR physicalDeviceVideoEncodeQuantizationMapFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_QUANTIZATION_MAP_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR.setVideoEncodeQuantizationMap(&self, uint videoEncodeQuantizationMap) {
+   self.videoEncodeQuantizationMap = videoEncodeQuantizationMap;
+   return *self;
+}
+fn QueryPoolVideoEncodeFeedbackCreateInfoKHR queryPoolVideoEncodeFeedbackCreateInfoKHR() => { .sType = STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_FEEDBACK_CREATE_INFO_KHR, .pNext = null };
+fn QueryPoolVideoEncodeFeedbackCreateInfoKHR QueryPoolVideoEncodeFeedbackCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueryPoolVideoEncodeFeedbackCreateInfoKHR QueryPoolVideoEncodeFeedbackCreateInfoKHR.setEncodeFeedbackFlags(&self, VideoEncodeFeedbackFlagsKHR encodeFeedbackFlags) {
+   self.encodeFeedbackFlags = encodeFeedbackFlags;
+   return *self;
+}
+fn VideoEncodeQualityLevelInfoKHR videoEncodeQualityLevelInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_QUALITY_LEVEL_INFO_KHR, .pNext = null };
+fn VideoEncodeQualityLevelInfoKHR VideoEncodeQualityLevelInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeQualityLevelInfoKHR VideoEncodeQualityLevelInfoKHR.setQualityLevel(&self, uint qualityLevel) {
+   self.qualityLevel = qualityLevel;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeQualityLevelInfoKHR physicalDeviceVideoEncodeQualityLevelInfoKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_QUALITY_LEVEL_INFO_KHR, .pNext = null };
+fn PhysicalDeviceVideoEncodeQualityLevelInfoKHR PhysicalDeviceVideoEncodeQualityLevelInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeQualityLevelInfoKHR PhysicalDeviceVideoEncodeQualityLevelInfoKHR.setVideoProfile(&self, VideoProfileInfoKHR* pVideoProfile) {
+   self.pVideoProfile = pVideoProfile;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeQualityLevelInfoKHR PhysicalDeviceVideoEncodeQualityLevelInfoKHR.setQualityLevel(&self, uint qualityLevel) {
+   self.qualityLevel = qualityLevel;
+   return *self;
+}
+fn VideoEncodeQualityLevelPropertiesKHR videoEncodeQualityLevelPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_QUALITY_LEVEL_PROPERTIES_KHR, .pNext = null };
+fn VideoEncodeQualityLevelPropertiesKHR VideoEncodeQualityLevelPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeQualityLevelPropertiesKHR VideoEncodeQualityLevelPropertiesKHR.setPreferredRateControlMode(&self, VideoEncodeRateControlModeFlagBitsKHR preferredRateControlMode) {
+   self.preferredRateControlMode = preferredRateControlMode;
+   return *self;
+}
+fn VideoEncodeQualityLevelPropertiesKHR VideoEncodeQualityLevelPropertiesKHR.setPreferredRateControlLayerCount(&self, uint preferredRateControlLayerCount) {
+   self.preferredRateControlLayerCount = preferredRateControlLayerCount;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR videoEncodeRateControlInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_RATE_CONTROL_INFO_KHR, .pNext = null };
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setFlags(&self, VideoEncodeRateControlFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setRateControlMode(&self, VideoEncodeRateControlModeFlagBitsKHR rateControlMode) {
+   self.rateControlMode = rateControlMode;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setLayerCount(&self, uint layerCount) {
+   self.layerCount = layerCount;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setLayers(&self, VideoEncodeRateControlLayerInfoKHR[] pLayers) {
+   self.layerCount= (uint)pLayers.len;
+   self.pLayers = &pLayers[0];
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setVirtualBufferSizeInMs(&self, uint virtualBufferSizeInMs) {
+   self.virtualBufferSizeInMs = virtualBufferSizeInMs;
+   return *self;
+}
+fn VideoEncodeRateControlInfoKHR VideoEncodeRateControlInfoKHR.setInitialVirtualBufferSizeInMs(&self, uint initialVirtualBufferSizeInMs) {
+   self.initialVirtualBufferSizeInMs = initialVirtualBufferSizeInMs;
+   return *self;
+}
+fn VideoEncodeRateControlLayerInfoKHR videoEncodeRateControlLayerInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_RATE_CONTROL_LAYER_INFO_KHR, .pNext = null };
+fn VideoEncodeRateControlLayerInfoKHR VideoEncodeRateControlLayerInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeRateControlLayerInfoKHR VideoEncodeRateControlLayerInfoKHR.setAverageBitrate(&self, ulong averageBitrate) {
+   self.averageBitrate = averageBitrate;
+   return *self;
+}
+fn VideoEncodeRateControlLayerInfoKHR VideoEncodeRateControlLayerInfoKHR.setMaxBitrate(&self, ulong maxBitrate) {
+   self.maxBitrate = maxBitrate;
+   return *self;
+}
+fn VideoEncodeRateControlLayerInfoKHR VideoEncodeRateControlLayerInfoKHR.setFrameRateNumerator(&self, uint frameRateNumerator) {
+   self.frameRateNumerator = frameRateNumerator;
+   return *self;
+}
+fn VideoEncodeRateControlLayerInfoKHR VideoEncodeRateControlLayerInfoKHR.setFrameRateDenominator(&self, uint frameRateDenominator) {
+   self.frameRateDenominator = frameRateDenominator;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR videoEncodeCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setFlags(&self, VideoEncodeCapabilityFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setRateControlModes(&self, VideoEncodeRateControlModeFlagsKHR rateControlModes) {
+   self.rateControlModes = rateControlModes;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setMaxRateControlLayers(&self, uint maxRateControlLayers) {
+   self.maxRateControlLayers = maxRateControlLayers;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setMaxBitrate(&self, ulong maxBitrate) {
+   self.maxBitrate = maxBitrate;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setMaxQualityLevels(&self, uint maxQualityLevels) {
+   self.maxQualityLevels = maxQualityLevels;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setEncodeInputPictureGranularity(&self, Extent2D encodeInputPictureGranularity) {
+   self.encodeInputPictureGranularity = encodeInputPictureGranularity;
+   return *self;
+}
+fn VideoEncodeCapabilitiesKHR VideoEncodeCapabilitiesKHR.setSupportedEncodeFeedbackFlags(&self, VideoEncodeFeedbackFlagsKHR supportedEncodeFeedbackFlags) {
+   self.supportedEncodeFeedbackFlags = supportedEncodeFeedbackFlags;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR videoEncodeH264QualityLevelPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_QUALITY_LEVEL_PROPERTIES_KHR, .pNext = null };
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredRateControlFlags(&self, VideoEncodeH264RateControlFlagsKHR preferredRateControlFlags) {
+   self.preferredRateControlFlags = preferredRateControlFlags;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredGopFrameCount(&self, uint preferredGopFrameCount) {
+   self.preferredGopFrameCount = preferredGopFrameCount;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredIdrPeriod(&self, uint preferredIdrPeriod) {
+   self.preferredIdrPeriod = preferredIdrPeriod;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredConsecutiveBFrameCount(&self, uint preferredConsecutiveBFrameCount) {
+   self.preferredConsecutiveBFrameCount = preferredConsecutiveBFrameCount;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredTemporalLayerCount(&self, uint preferredTemporalLayerCount) {
+   self.preferredTemporalLayerCount = preferredTemporalLayerCount;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredConstantQp(&self, VideoEncodeH264QpKHR preferredConstantQp) {
+   self.preferredConstantQp = preferredConstantQp;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredMaxL0ReferenceCount(&self, uint preferredMaxL0ReferenceCount) {
+   self.preferredMaxL0ReferenceCount = preferredMaxL0ReferenceCount;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredMaxL1ReferenceCount(&self, uint preferredMaxL1ReferenceCount) {
+   self.preferredMaxL1ReferenceCount = preferredMaxL1ReferenceCount;
+   return *self;
+}
+fn VideoEncodeH264QualityLevelPropertiesKHR VideoEncodeH264QualityLevelPropertiesKHR.setPreferredStdEntropyCodingModeFlag(&self, uint preferredStdEntropyCodingModeFlag) {
+   self.preferredStdEntropyCodingModeFlag = preferredStdEntropyCodingModeFlag;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersGetInfoKHR videoEncodeH264SessionParametersGetInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_SESSION_PARAMETERS_GET_INFO_KHR, .pNext = null };
+fn VideoEncodeH264SessionParametersGetInfoKHR VideoEncodeH264SessionParametersGetInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersGetInfoKHR VideoEncodeH264SessionParametersGetInfoKHR.setWriteStdSPS(&self, uint writeStdSPS) {
+   self.writeStdSPS = writeStdSPS;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersGetInfoKHR VideoEncodeH264SessionParametersGetInfoKHR.setWriteStdPPS(&self, uint writeStdPPS) {
+   self.writeStdPPS = writeStdPPS;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersGetInfoKHR VideoEncodeH264SessionParametersGetInfoKHR.setStdSPSId(&self, uint stdSPSId) {
+   self.stdSPSId = stdSPSId;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersGetInfoKHR VideoEncodeH264SessionParametersGetInfoKHR.setStdPPSId(&self, uint stdPPSId) {
+   self.stdPPSId = stdPPSId;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersFeedbackInfoKHR videoEncodeH264SessionParametersFeedbackInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_SESSION_PARAMETERS_FEEDBACK_INFO_KHR, .pNext = null };
+fn VideoEncodeH264SessionParametersFeedbackInfoKHR VideoEncodeH264SessionParametersFeedbackInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersFeedbackInfoKHR VideoEncodeH264SessionParametersFeedbackInfoKHR.setHasStdSPSOverrides(&self, uint hasStdSPSOverrides) {
+   self.hasStdSPSOverrides = hasStdSPSOverrides;
+   return *self;
+}
+fn VideoEncodeH264SessionParametersFeedbackInfoKHR VideoEncodeH264SessionParametersFeedbackInfoKHR.setHasStdPPSOverrides(&self, uint hasStdPPSOverrides) {
+   self.hasStdPPSOverrides = hasStdPPSOverrides;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR videoEncodeH264RateControlInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_RATE_CONTROL_INFO_KHR, .pNext = null };
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setFlags(&self, VideoEncodeH264RateControlFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setGopFrameCount(&self, uint gopFrameCount) {
+   self.gopFrameCount = gopFrameCount;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setIdrPeriod(&self, uint idrPeriod) {
+   self.idrPeriod = idrPeriod;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setConsecutiveBFrameCount(&self, uint consecutiveBFrameCount) {
+   self.consecutiveBFrameCount = consecutiveBFrameCount;
+   return *self;
+}
+fn VideoEncodeH264RateControlInfoKHR VideoEncodeH264RateControlInfoKHR.setTemporalLayerCount(&self, uint temporalLayerCount) {
+   self.temporalLayerCount = temporalLayerCount;
+   return *self;
+}
+fn VideoEncodeH264GopRemainingFrameInfoKHR videoEncodeH264GopRemainingFrameInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_GOP_REMAINING_FRAME_INFO_KHR, .pNext = null };
+fn VideoEncodeH264GopRemainingFrameInfoKHR VideoEncodeH264GopRemainingFrameInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264GopRemainingFrameInfoKHR VideoEncodeH264GopRemainingFrameInfoKHR.setUseGopRemainingFrames(&self, uint useGopRemainingFrames) {
+   self.useGopRemainingFrames = useGopRemainingFrames;
+   return *self;
+}
+fn VideoEncodeH264GopRemainingFrameInfoKHR VideoEncodeH264GopRemainingFrameInfoKHR.setGopRemainingI(&self, uint gopRemainingI) {
+   self.gopRemainingI = gopRemainingI;
+   return *self;
+}
+fn VideoEncodeH264GopRemainingFrameInfoKHR VideoEncodeH264GopRemainingFrameInfoKHR.setGopRemainingP(&self, uint gopRemainingP) {
+   self.gopRemainingP = gopRemainingP;
+   return *self;
+}
+fn VideoEncodeH264GopRemainingFrameInfoKHR VideoEncodeH264GopRemainingFrameInfoKHR.setGopRemainingB(&self, uint gopRemainingB) {
+   self.gopRemainingB = gopRemainingB;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR videoEncodeH264RateControlLayerInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H264_RATE_CONTROL_LAYER_INFO_KHR, .pNext = null };
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setUseMinQp(&self, uint useMinQp) {
+   self.useMinQp = useMinQp;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setMinQp(&self, VideoEncodeH264QpKHR minQp) {
+   self.minQp = minQp;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setUseMaxQp(&self, uint useMaxQp) {
+   self.useMaxQp = useMaxQp;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setMaxQp(&self, VideoEncodeH264QpKHR maxQp) {
+   self.maxQp = maxQp;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setUseMaxFrameSize(&self, uint useMaxFrameSize) {
+   self.useMaxFrameSize = useMaxFrameSize;
+   return *self;
+}
+fn VideoEncodeH264RateControlLayerInfoKHR VideoEncodeH264RateControlLayerInfoKHR.setMaxFrameSize(&self, VideoEncodeH264FrameSizeKHR maxFrameSize) {
+   self.maxFrameSize = maxFrameSize;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR videoEncodeH265QualityLevelPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_QUALITY_LEVEL_PROPERTIES_KHR, .pNext = null };
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredRateControlFlags(&self, VideoEncodeH265RateControlFlagsKHR preferredRateControlFlags) {
+   self.preferredRateControlFlags = preferredRateControlFlags;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredGopFrameCount(&self, uint preferredGopFrameCount) {
+   self.preferredGopFrameCount = preferredGopFrameCount;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredIdrPeriod(&self, uint preferredIdrPeriod) {
+   self.preferredIdrPeriod = preferredIdrPeriod;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredConsecutiveBFrameCount(&self, uint preferredConsecutiveBFrameCount) {
+   self.preferredConsecutiveBFrameCount = preferredConsecutiveBFrameCount;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredSubLayerCount(&self, uint preferredSubLayerCount) {
+   self.preferredSubLayerCount = preferredSubLayerCount;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredConstantQp(&self, VideoEncodeH265QpKHR preferredConstantQp) {
+   self.preferredConstantQp = preferredConstantQp;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredMaxL0ReferenceCount(&self, uint preferredMaxL0ReferenceCount) {
+   self.preferredMaxL0ReferenceCount = preferredMaxL0ReferenceCount;
+   return *self;
+}
+fn VideoEncodeH265QualityLevelPropertiesKHR VideoEncodeH265QualityLevelPropertiesKHR.setPreferredMaxL1ReferenceCount(&self, uint preferredMaxL1ReferenceCount) {
+   self.preferredMaxL1ReferenceCount = preferredMaxL1ReferenceCount;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR videoEncodeH265SessionParametersGetInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_PARAMETERS_GET_INFO_KHR, .pNext = null };
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setWriteStdVPS(&self, uint writeStdVPS) {
+   self.writeStdVPS = writeStdVPS;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setWriteStdSPS(&self, uint writeStdSPS) {
+   self.writeStdSPS = writeStdSPS;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setWriteStdPPS(&self, uint writeStdPPS) {
+   self.writeStdPPS = writeStdPPS;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setStdVPSId(&self, uint stdVPSId) {
+   self.stdVPSId = stdVPSId;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setStdSPSId(&self, uint stdSPSId) {
+   self.stdSPSId = stdSPSId;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersGetInfoKHR VideoEncodeH265SessionParametersGetInfoKHR.setStdPPSId(&self, uint stdPPSId) {
+   self.stdPPSId = stdPPSId;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersFeedbackInfoKHR videoEncodeH265SessionParametersFeedbackInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_PARAMETERS_FEEDBACK_INFO_KHR, .pNext = null };
+fn VideoEncodeH265SessionParametersFeedbackInfoKHR VideoEncodeH265SessionParametersFeedbackInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersFeedbackInfoKHR VideoEncodeH265SessionParametersFeedbackInfoKHR.setHasStdVPSOverrides(&self, uint hasStdVPSOverrides) {
+   self.hasStdVPSOverrides = hasStdVPSOverrides;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersFeedbackInfoKHR VideoEncodeH265SessionParametersFeedbackInfoKHR.setHasStdSPSOverrides(&self, uint hasStdSPSOverrides) {
+   self.hasStdSPSOverrides = hasStdSPSOverrides;
+   return *self;
+}
+fn VideoEncodeH265SessionParametersFeedbackInfoKHR VideoEncodeH265SessionParametersFeedbackInfoKHR.setHasStdPPSOverrides(&self, uint hasStdPPSOverrides) {
+   self.hasStdPPSOverrides = hasStdPPSOverrides;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR videoEncodeH265RateControlInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_RATE_CONTROL_INFO_KHR, .pNext = null };
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setFlags(&self, VideoEncodeH265RateControlFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setGopFrameCount(&self, uint gopFrameCount) {
+   self.gopFrameCount = gopFrameCount;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setIdrPeriod(&self, uint idrPeriod) {
+   self.idrPeriod = idrPeriod;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setConsecutiveBFrameCount(&self, uint consecutiveBFrameCount) {
+   self.consecutiveBFrameCount = consecutiveBFrameCount;
+   return *self;
+}
+fn VideoEncodeH265RateControlInfoKHR VideoEncodeH265RateControlInfoKHR.setSubLayerCount(&self, uint subLayerCount) {
+   self.subLayerCount = subLayerCount;
+   return *self;
+}
+fn VideoEncodeH265GopRemainingFrameInfoKHR videoEncodeH265GopRemainingFrameInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_GOP_REMAINING_FRAME_INFO_KHR, .pNext = null };
+fn VideoEncodeH265GopRemainingFrameInfoKHR VideoEncodeH265GopRemainingFrameInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265GopRemainingFrameInfoKHR VideoEncodeH265GopRemainingFrameInfoKHR.setUseGopRemainingFrames(&self, uint useGopRemainingFrames) {
+   self.useGopRemainingFrames = useGopRemainingFrames;
+   return *self;
+}
+fn VideoEncodeH265GopRemainingFrameInfoKHR VideoEncodeH265GopRemainingFrameInfoKHR.setGopRemainingI(&self, uint gopRemainingI) {
+   self.gopRemainingI = gopRemainingI;
+   return *self;
+}
+fn VideoEncodeH265GopRemainingFrameInfoKHR VideoEncodeH265GopRemainingFrameInfoKHR.setGopRemainingP(&self, uint gopRemainingP) {
+   self.gopRemainingP = gopRemainingP;
+   return *self;
+}
+fn VideoEncodeH265GopRemainingFrameInfoKHR VideoEncodeH265GopRemainingFrameInfoKHR.setGopRemainingB(&self, uint gopRemainingB) {
+   self.gopRemainingB = gopRemainingB;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR videoEncodeH265RateControlLayerInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_H265_RATE_CONTROL_LAYER_INFO_KHR, .pNext = null };
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setUseMinQp(&self, uint useMinQp) {
+   self.useMinQp = useMinQp;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setMinQp(&self, VideoEncodeH265QpKHR minQp) {
+   self.minQp = minQp;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setUseMaxQp(&self, uint useMaxQp) {
+   self.useMaxQp = useMaxQp;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setMaxQp(&self, VideoEncodeH265QpKHR maxQp) {
+   self.maxQp = maxQp;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setUseMaxFrameSize(&self, uint useMaxFrameSize) {
+   self.useMaxFrameSize = useMaxFrameSize;
+   return *self;
+}
+fn VideoEncodeH265RateControlLayerInfoKHR VideoEncodeH265RateControlLayerInfoKHR.setMaxFrameSize(&self, VideoEncodeH265FrameSizeKHR maxFrameSize) {
+   self.maxFrameSize = maxFrameSize;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR videoEncodeAV1QualityLevelPropertiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_AV1_QUALITY_LEVEL_PROPERTIES_KHR, .pNext = null };
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredRateControlFlags(&self, VideoEncodeAV1RateControlFlagsKHR preferredRateControlFlags) {
+   self.preferredRateControlFlags = preferredRateControlFlags;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredGopFrameCount(&self, uint preferredGopFrameCount) {
+   self.preferredGopFrameCount = preferredGopFrameCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredKeyFramePeriod(&self, uint preferredKeyFramePeriod) {
+   self.preferredKeyFramePeriod = preferredKeyFramePeriod;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredConsecutiveBipredictiveFrameCount(&self, uint preferredConsecutiveBipredictiveFrameCount) {
+   self.preferredConsecutiveBipredictiveFrameCount = preferredConsecutiveBipredictiveFrameCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredTemporalLayerCount(&self, uint preferredTemporalLayerCount) {
+   self.preferredTemporalLayerCount = preferredTemporalLayerCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredConstantQIndex(&self, VideoEncodeAV1QIndexKHR preferredConstantQIndex) {
+   self.preferredConstantQIndex = preferredConstantQIndex;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxSingleReferenceCount(&self, uint preferredMaxSingleReferenceCount) {
+   self.preferredMaxSingleReferenceCount = preferredMaxSingleReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredSingleReferenceNameMask(&self, uint preferredSingleReferenceNameMask) {
+   self.preferredSingleReferenceNameMask = preferredSingleReferenceNameMask;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxUnidirectionalCompoundReferenceCount(&self, uint preferredMaxUnidirectionalCompoundReferenceCount) {
+   self.preferredMaxUnidirectionalCompoundReferenceCount = preferredMaxUnidirectionalCompoundReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxUnidirectionalCompoundGroup1ReferenceCount(&self, uint preferredMaxUnidirectionalCompoundGroup1ReferenceCount) {
+   self.preferredMaxUnidirectionalCompoundGroup1ReferenceCount = preferredMaxUnidirectionalCompoundGroup1ReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredUnidirectionalCompoundReferenceNameMask(&self, uint preferredUnidirectionalCompoundReferenceNameMask) {
+   self.preferredUnidirectionalCompoundReferenceNameMask = preferredUnidirectionalCompoundReferenceNameMask;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxBidirectionalCompoundReferenceCount(&self, uint preferredMaxBidirectionalCompoundReferenceCount) {
+   self.preferredMaxBidirectionalCompoundReferenceCount = preferredMaxBidirectionalCompoundReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxBidirectionalCompoundGroup1ReferenceCount(&self, uint preferredMaxBidirectionalCompoundGroup1ReferenceCount) {
+   self.preferredMaxBidirectionalCompoundGroup1ReferenceCount = preferredMaxBidirectionalCompoundGroup1ReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredMaxBidirectionalCompoundGroup2ReferenceCount(&self, uint preferredMaxBidirectionalCompoundGroup2ReferenceCount) {
+   self.preferredMaxBidirectionalCompoundGroup2ReferenceCount = preferredMaxBidirectionalCompoundGroup2ReferenceCount;
+   return *self;
+}
+fn VideoEncodeAV1QualityLevelPropertiesKHR VideoEncodeAV1QualityLevelPropertiesKHR.setPreferredBidirectionalCompoundReferenceNameMask(&self, uint preferredBidirectionalCompoundReferenceNameMask) {
+   self.preferredBidirectionalCompoundReferenceNameMask = preferredBidirectionalCompoundReferenceNameMask;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeAV1FeaturesKHR physicalDeviceVideoEncodeAV1FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_AV1_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoEncodeAV1FeaturesKHR PhysicalDeviceVideoEncodeAV1FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeAV1FeaturesKHR PhysicalDeviceVideoEncodeAV1FeaturesKHR.setVideoEncodeAV1(&self, uint videoEncodeAV1) {
+   self.videoEncodeAV1 = videoEncodeAV1;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR videoEncodeAV1RateControlInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_AV1_RATE_CONTROL_INFO_KHR, .pNext = null };
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setFlags(&self, VideoEncodeAV1RateControlFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setGopFrameCount(&self, uint gopFrameCount) {
+   self.gopFrameCount = gopFrameCount;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setKeyFramePeriod(&self, uint keyFramePeriod) {
+   self.keyFramePeriod = keyFramePeriod;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setConsecutiveBipredictiveFrameCount(&self, uint consecutiveBipredictiveFrameCount) {
+   self.consecutiveBipredictiveFrameCount = consecutiveBipredictiveFrameCount;
+   return *self;
+}
+fn VideoEncodeAV1RateControlInfoKHR VideoEncodeAV1RateControlInfoKHR.setTemporalLayerCount(&self, uint temporalLayerCount) {
+   self.temporalLayerCount = temporalLayerCount;
+   return *self;
+}
+fn VideoEncodeAV1GopRemainingFrameInfoKHR videoEncodeAV1GopRemainingFrameInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_AV1_GOP_REMAINING_FRAME_INFO_KHR, .pNext = null };
+fn VideoEncodeAV1GopRemainingFrameInfoKHR VideoEncodeAV1GopRemainingFrameInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeAV1GopRemainingFrameInfoKHR VideoEncodeAV1GopRemainingFrameInfoKHR.setUseGopRemainingFrames(&self, uint useGopRemainingFrames) {
+   self.useGopRemainingFrames = useGopRemainingFrames;
+   return *self;
+}
+fn VideoEncodeAV1GopRemainingFrameInfoKHR VideoEncodeAV1GopRemainingFrameInfoKHR.setGopRemainingIntra(&self, uint gopRemainingIntra) {
+   self.gopRemainingIntra = gopRemainingIntra;
+   return *self;
+}
+fn VideoEncodeAV1GopRemainingFrameInfoKHR VideoEncodeAV1GopRemainingFrameInfoKHR.setGopRemainingPredictive(&self, uint gopRemainingPredictive) {
+   self.gopRemainingPredictive = gopRemainingPredictive;
+   return *self;
+}
+fn VideoEncodeAV1GopRemainingFrameInfoKHR VideoEncodeAV1GopRemainingFrameInfoKHR.setGopRemainingBipredictive(&self, uint gopRemainingBipredictive) {
+   self.gopRemainingBipredictive = gopRemainingBipredictive;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR videoEncodeAV1RateControlLayerInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_AV1_RATE_CONTROL_LAYER_INFO_KHR, .pNext = null };
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setUseMinQIndex(&self, uint useMinQIndex) {
+   self.useMinQIndex = useMinQIndex;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setMinQIndex(&self, VideoEncodeAV1QIndexKHR minQIndex) {
+   self.minQIndex = minQIndex;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setUseMaxQIndex(&self, uint useMaxQIndex) {
+   self.useMaxQIndex = useMaxQIndex;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setMaxQIndex(&self, VideoEncodeAV1QIndexKHR maxQIndex) {
+   self.maxQIndex = maxQIndex;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setUseMaxFrameSize(&self, uint useMaxFrameSize) {
+   self.useMaxFrameSize = useMaxFrameSize;
+   return *self;
+}
+fn VideoEncodeAV1RateControlLayerInfoKHR VideoEncodeAV1RateControlLayerInfoKHR.setMaxFrameSize(&self, VideoEncodeAV1FrameSizeKHR maxFrameSize) {
+   self.maxFrameSize = maxFrameSize;
+   return *self;
+}
+fn PhysicalDeviceInheritedViewportScissorFeaturesNV physicalDeviceInheritedViewportScissorFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceInheritedViewportScissorFeaturesNV PhysicalDeviceInheritedViewportScissorFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceInheritedViewportScissorFeaturesNV PhysicalDeviceInheritedViewportScissorFeaturesNV.setInheritedViewportScissor2D(&self, uint inheritedViewportScissor2D) {
+   self.inheritedViewportScissor2D = inheritedViewportScissor2D;
+   return *self;
+}
+fn CommandBufferInheritanceViewportScissorInfoNV commandBufferInheritanceViewportScissorInfoNV() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV, .pNext = null };
+fn CommandBufferInheritanceViewportScissorInfoNV CommandBufferInheritanceViewportScissorInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CommandBufferInheritanceViewportScissorInfoNV CommandBufferInheritanceViewportScissorInfoNV.setViewportScissor2D(&self, uint viewportScissor2D) {
+   self.viewportScissor2D = viewportScissor2D;
+   return *self;
+}
+fn CommandBufferInheritanceViewportScissorInfoNV CommandBufferInheritanceViewportScissorInfoNV.setViewportDepthCount(&self, uint viewportDepthCount) {
+   self.viewportDepthCount = viewportDepthCount;
+   return *self;
+}
+fn CommandBufferInheritanceViewportScissorInfoNV CommandBufferInheritanceViewportScissorInfoNV.setViewportDepths(&self, Viewport* pViewportDepths) {
+   self.pViewportDepths = pViewportDepths;
+   return *self;
+}
+fn PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT physicalDeviceYcbcr2Plane444FormatsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_2_PLANE_444_FORMATS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT.setYcbcr2plane444Formats(&self, uint ycbcr2plane444Formats) {
+   self.ycbcr2plane444Formats = ycbcr2plane444Formats;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexFeaturesEXT physicalDeviceProvokingVertexFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceProvokingVertexFeaturesEXT PhysicalDeviceProvokingVertexFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexFeaturesEXT PhysicalDeviceProvokingVertexFeaturesEXT.setProvokingVertexLast(&self, uint provokingVertexLast) {
+   self.provokingVertexLast = provokingVertexLast;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexFeaturesEXT PhysicalDeviceProvokingVertexFeaturesEXT.setTransformFeedbackPreservesProvokingVertex(&self, uint transformFeedbackPreservesProvokingVertex) {
+   self.transformFeedbackPreservesProvokingVertex = transformFeedbackPreservesProvokingVertex;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexPropertiesEXT physicalDeviceProvokingVertexPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceProvokingVertexPropertiesEXT PhysicalDeviceProvokingVertexPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexPropertiesEXT PhysicalDeviceProvokingVertexPropertiesEXT.setProvokingVertexModePerPipeline(&self, uint provokingVertexModePerPipeline) {
+   self.provokingVertexModePerPipeline = provokingVertexModePerPipeline;
+   return *self;
+}
+fn PhysicalDeviceProvokingVertexPropertiesEXT PhysicalDeviceProvokingVertexPropertiesEXT.setTransformFeedbackPreservesTriangleFanProvokingVertex(&self, uint transformFeedbackPreservesTriangleFanProvokingVertex) {
+   self.transformFeedbackPreservesTriangleFanProvokingVertex = transformFeedbackPreservesTriangleFanProvokingVertex;
+   return *self;
+}
+fn PipelineRasterizationProvokingVertexStateCreateInfoEXT pipelineRasterizationProvokingVertexStateCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT, .pNext = null };
+fn PipelineRasterizationProvokingVertexStateCreateInfoEXT PipelineRasterizationProvokingVertexStateCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRasterizationProvokingVertexStateCreateInfoEXT PipelineRasterizationProvokingVertexStateCreateInfoEXT.setProvokingVertexMode(&self, ProvokingVertexModeEXT provokingVertexMode) {
+   self.provokingVertexMode = provokingVertexMode;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR videoEncodeIntraRefreshCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_INTRA_REFRESH_CAPABILITIES_KHR, .pNext = null };
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setIntraRefreshModes(&self, VideoEncodeIntraRefreshModeFlagsKHR intraRefreshModes) {
+   self.intraRefreshModes = intraRefreshModes;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setMaxIntraRefreshCycleDuration(&self, uint maxIntraRefreshCycleDuration) {
+   self.maxIntraRefreshCycleDuration = maxIntraRefreshCycleDuration;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setMaxIntraRefreshActiveReferencePictures(&self, uint maxIntraRefreshActiveReferencePictures) {
+   self.maxIntraRefreshActiveReferencePictures = maxIntraRefreshActiveReferencePictures;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setPartitionIndependentIntraRefreshRegions(&self, uint partitionIndependentIntraRefreshRegions) {
+   self.partitionIndependentIntraRefreshRegions = partitionIndependentIntraRefreshRegions;
+   return *self;
+}
+fn VideoEncodeIntraRefreshCapabilitiesKHR VideoEncodeIntraRefreshCapabilitiesKHR.setNonRectangularIntraRefreshRegions(&self, uint nonRectangularIntraRefreshRegions) {
+   self.nonRectangularIntraRefreshRegions = nonRectangularIntraRefreshRegions;
+   return *self;
+}
+fn VideoEncodeSessionIntraRefreshCreateInfoKHR videoEncodeSessionIntraRefreshCreateInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_SESSION_INTRA_REFRESH_CREATE_INFO_KHR, .pNext = null };
+fn VideoEncodeSessionIntraRefreshCreateInfoKHR VideoEncodeSessionIntraRefreshCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeSessionIntraRefreshCreateInfoKHR VideoEncodeSessionIntraRefreshCreateInfoKHR.setIntraRefreshMode(&self, VideoEncodeIntraRefreshModeFlagBitsKHR intraRefreshMode) {
+   self.intraRefreshMode = intraRefreshMode;
+   return *self;
+}
+fn VideoEncodeIntraRefreshInfoKHR videoEncodeIntraRefreshInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_INTRA_REFRESH_INFO_KHR, .pNext = null };
+fn VideoEncodeIntraRefreshInfoKHR VideoEncodeIntraRefreshInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeIntraRefreshInfoKHR VideoEncodeIntraRefreshInfoKHR.setIntraRefreshCycleDuration(&self, uint intraRefreshCycleDuration) {
+   self.intraRefreshCycleDuration = intraRefreshCycleDuration;
+   return *self;
+}
+fn VideoEncodeIntraRefreshInfoKHR VideoEncodeIntraRefreshInfoKHR.setIntraRefreshIndex(&self, uint intraRefreshIndex) {
+   self.intraRefreshIndex = intraRefreshIndex;
+   return *self;
+}
+fn VideoReferenceIntraRefreshInfoKHR videoReferenceIntraRefreshInfoKHR() => { .sType = STRUCTURE_TYPE_VIDEO_REFERENCE_INTRA_REFRESH_INFO_KHR, .pNext = null };
+fn VideoReferenceIntraRefreshInfoKHR VideoReferenceIntraRefreshInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoReferenceIntraRefreshInfoKHR VideoReferenceIntraRefreshInfoKHR.setDirtyIntraRefreshRegions(&self, uint dirtyIntraRefreshRegions) {
+   self.dirtyIntraRefreshRegions = dirtyIntraRefreshRegions;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR physicalDeviceVideoEncodeIntraRefreshFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_INTRA_REFRESH_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR.setVideoEncodeIntraRefresh(&self, uint videoEncodeIntraRefresh) {
+   self.videoEncodeIntraRefresh = videoEncodeIntraRefresh;
+   return *self;
+}
+fn CuModuleCreateInfoNVX cuModuleCreateInfoNVX() => { .sType = STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX, .pNext = null };
+fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setDataSize(&self, usz dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
+fn CuModuleTexturingModeCreateInfoNVX cuModuleTexturingModeCreateInfoNVX() => { .sType = STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX, .pNext = null };
+fn CuModuleTexturingModeCreateInfoNVX CuModuleTexturingModeCreateInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CuModuleTexturingModeCreateInfoNVX CuModuleTexturingModeCreateInfoNVX.setUse64bitTexturing(&self, uint use64bitTexturing) {
+   self.use64bitTexturing = use64bitTexturing;
+   return *self;
+}
+fn CuFunctionCreateInfoNVX cuFunctionCreateInfoNVX() => { .sType = STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX, .pNext = null };
+fn CuFunctionCreateInfoNVX CuFunctionCreateInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CuFunctionCreateInfoNVX CuFunctionCreateInfoNVX.setMod(&self, CuModuleNVX mod) {
+   self.mod = mod;
+   return *self;
+}
+fn CuFunctionCreateInfoNVX CuFunctionCreateInfoNVX.setName(&self, char* pName) {
+   self.pName = pName;
+   return *self;
+}
+fn CuLaunchInfoNVX cuLaunchInfoNVX() => { .sType = STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX, .pNext = null };
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setFunction(&self, CuFunctionNVX function) {
+   self.function = function;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setGridDimX(&self, uint gridDimX) {
+   self.gridDimX = gridDimX;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setGridDimY(&self, uint gridDimY) {
+   self.gridDimY = gridDimY;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setGridDimZ(&self, uint gridDimZ) {
+   self.gridDimZ = gridDimZ;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setBlockDimX(&self, uint blockDimX) {
+   self.blockDimX = blockDimX;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setBlockDimY(&self, uint blockDimY) {
+   self.blockDimY = blockDimY;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setBlockDimZ(&self, uint blockDimZ) {
+   self.blockDimZ = blockDimZ;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setSharedMemBytes(&self, uint sharedMemBytes) {
+   self.sharedMemBytes = sharedMemBytes;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setParamCount(&self, usz paramCount) {
+   self.paramCount = paramCount;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setParams(&self, void* pParams) {
+   self.pParams = pParams;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setExtraCount(&self, usz extraCount) {
+   self.extraCount = extraCount;
+   return *self;
+}
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setExtras(&self, void* pExtras) {
+   self.pExtras = pExtras;
    return *self;
 }
 fn PhysicalDeviceDescriptorBufferFeaturesEXT physicalDeviceDescriptorBufferFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT, .pNext = null };
@@ -7246,6 +17349,19 @@ fn SamplerCaptureDescriptorDataInfoEXT SamplerCaptureDescriptorDataInfoEXT.setSa
    self.sampler = sampler;
    return *self;
 }
+fn AccelerationStructureCaptureDescriptorDataInfoEXT accelerationStructureCaptureDescriptorDataInfoEXT() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT, .pNext = null };
+fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setAccelerationStructure(&self, AccelerationStructureKHR accelerationStructure) {
+   self.accelerationStructure = accelerationStructure;
+   return *self;
+}
+fn AccelerationStructureCaptureDescriptorDataInfoEXT AccelerationStructureCaptureDescriptorDataInfoEXT.setAccelerationStructureNV(&self, AccelerationStructureNV accelerationStructureNV) {
+   self.accelerationStructureNV = accelerationStructureNV;
+   return *self;
+}
 fn OpaqueCaptureDescriptorDataCreateInfoEXT opaqueCaptureDescriptorDataCreateInfoEXT() => { .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT, .pNext = null };
 fn OpaqueCaptureDescriptorDataCreateInfoEXT OpaqueCaptureDescriptorDataCreateInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7261,6 +17377,15 @@ fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotP
    return *self;
 }
 fn PhysicalDeviceShaderIntegerDotProductFeatures PhysicalDeviceShaderIntegerDotProductFeatures.setShaderIntegerDotProduct(&self, uint shaderIntegerDotProduct) {
+   self.shaderIntegerDotProduct = shaderIntegerDotProduct;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductFeaturesKHR physicalDeviceShaderIntegerDotProductFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderIntegerDotProductFeaturesKHR PhysicalDeviceShaderIntegerDotProductFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductFeaturesKHR PhysicalDeviceShaderIntegerDotProductFeaturesKHR.setShaderIntegerDotProduct(&self, uint shaderIntegerDotProduct) {
    self.shaderIntegerDotProduct = shaderIntegerDotProduct;
    return *self;
 }
@@ -7389,6 +17514,353 @@ fn PhysicalDeviceShaderIntegerDotProductProperties PhysicalDeviceShaderIntegerDo
    self.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
    return *self;
 }
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR physicalDeviceShaderIntegerDotProductPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES, .pNext = null };
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct8BitUnsignedAccelerated(&self, uint integerDotProduct8BitUnsignedAccelerated) {
+   self.integerDotProduct8BitUnsignedAccelerated = integerDotProduct8BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct8BitSignedAccelerated(&self, uint integerDotProduct8BitSignedAccelerated) {
+   self.integerDotProduct8BitSignedAccelerated = integerDotProduct8BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct8BitMixedSignednessAccelerated(&self, uint integerDotProduct8BitMixedSignednessAccelerated) {
+   self.integerDotProduct8BitMixedSignednessAccelerated = integerDotProduct8BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct4x8BitPackedUnsignedAccelerated(&self, uint integerDotProduct4x8BitPackedUnsignedAccelerated) {
+   self.integerDotProduct4x8BitPackedUnsignedAccelerated = integerDotProduct4x8BitPackedUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct4x8BitPackedSignedAccelerated(&self, uint integerDotProduct4x8BitPackedSignedAccelerated) {
+   self.integerDotProduct4x8BitPackedSignedAccelerated = integerDotProduct4x8BitPackedSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct4x8BitPackedMixedSignednessAccelerated(&self, uint integerDotProduct4x8BitPackedMixedSignednessAccelerated) {
+   self.integerDotProduct4x8BitPackedMixedSignednessAccelerated = integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct16BitUnsignedAccelerated(&self, uint integerDotProduct16BitUnsignedAccelerated) {
+   self.integerDotProduct16BitUnsignedAccelerated = integerDotProduct16BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct16BitSignedAccelerated(&self, uint integerDotProduct16BitSignedAccelerated) {
+   self.integerDotProduct16BitSignedAccelerated = integerDotProduct16BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct16BitMixedSignednessAccelerated(&self, uint integerDotProduct16BitMixedSignednessAccelerated) {
+   self.integerDotProduct16BitMixedSignednessAccelerated = integerDotProduct16BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct32BitUnsignedAccelerated(&self, uint integerDotProduct32BitUnsignedAccelerated) {
+   self.integerDotProduct32BitUnsignedAccelerated = integerDotProduct32BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct32BitSignedAccelerated(&self, uint integerDotProduct32BitSignedAccelerated) {
+   self.integerDotProduct32BitSignedAccelerated = integerDotProduct32BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct32BitMixedSignednessAccelerated(&self, uint integerDotProduct32BitMixedSignednessAccelerated) {
+   self.integerDotProduct32BitMixedSignednessAccelerated = integerDotProduct32BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct64BitUnsignedAccelerated(&self, uint integerDotProduct64BitUnsignedAccelerated) {
+   self.integerDotProduct64BitUnsignedAccelerated = integerDotProduct64BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct64BitSignedAccelerated(&self, uint integerDotProduct64BitSignedAccelerated) {
+   self.integerDotProduct64BitSignedAccelerated = integerDotProduct64BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProduct64BitMixedSignednessAccelerated(&self, uint integerDotProduct64BitMixedSignednessAccelerated) {
+   self.integerDotProduct64BitMixedSignednessAccelerated = integerDotProduct64BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating8BitUnsignedAccelerated(&self, uint integerDotProductAccumulatingSaturating8BitUnsignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating8BitUnsignedAccelerated = integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating8BitSignedAccelerated(&self, uint integerDotProductAccumulatingSaturating8BitSignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating8BitSignedAccelerated = integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated(&self, uint integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated) {
+   self.integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated(&self, uint integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated(&self, uint integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated(&self, uint integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated) {
+   self.integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated = integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating16BitUnsignedAccelerated(&self, uint integerDotProductAccumulatingSaturating16BitUnsignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating16BitUnsignedAccelerated = integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating16BitSignedAccelerated(&self, uint integerDotProductAccumulatingSaturating16BitSignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating16BitSignedAccelerated = integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated(&self, uint integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated) {
+   self.integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating32BitUnsignedAccelerated(&self, uint integerDotProductAccumulatingSaturating32BitUnsignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating32BitUnsignedAccelerated = integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating32BitSignedAccelerated(&self, uint integerDotProductAccumulatingSaturating32BitSignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating32BitSignedAccelerated = integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated(&self, uint integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated) {
+   self.integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating64BitUnsignedAccelerated(&self, uint integerDotProductAccumulatingSaturating64BitUnsignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating64BitUnsignedAccelerated = integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating64BitSignedAccelerated(&self, uint integerDotProductAccumulatingSaturating64BitSignedAccelerated) {
+   self.integerDotProductAccumulatingSaturating64BitSignedAccelerated = integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderIntegerDotProductPropertiesKHR PhysicalDeviceShaderIntegerDotProductPropertiesKHR.setIntegerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated(&self, uint integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated) {
+   self.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT physicalDeviceDrmPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setHasPrimary(&self, uint hasPrimary) {
+   self.hasPrimary = hasPrimary;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setHasRender(&self, uint hasRender) {
+   self.hasRender = hasRender;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setPrimaryMajor(&self, long primaryMajor) {
+   self.primaryMajor = primaryMajor;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setPrimaryMinor(&self, long primaryMinor) {
+   self.primaryMinor = primaryMinor;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setRenderMajor(&self, long renderMajor) {
+   self.renderMajor = renderMajor;
+   return *self;
+}
+fn PhysicalDeviceDrmPropertiesEXT PhysicalDeviceDrmPropertiesEXT.setRenderMinor(&self, long renderMinor) {
+   self.renderMinor = renderMinor;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderBarycentricFeaturesKHR physicalDeviceFragmentShaderBarycentricFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceFragmentShaderBarycentricFeaturesKHR PhysicalDeviceFragmentShaderBarycentricFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderBarycentricFeaturesKHR PhysicalDeviceFragmentShaderBarycentricFeaturesKHR.setFragmentShaderBarycentric(&self, uint fragmentShaderBarycentric) {
+   self.fragmentShaderBarycentric = fragmentShaderBarycentric;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderBarycentricPropertiesKHR physicalDeviceFragmentShaderBarycentricPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceFragmentShaderBarycentricPropertiesKHR PhysicalDeviceFragmentShaderBarycentricPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentShaderBarycentricPropertiesKHR PhysicalDeviceFragmentShaderBarycentricPropertiesKHR.setTriStripVertexOrderIndependentOfProvokingVertex(&self, uint triStripVertexOrderIndependentOfProvokingVertex) {
+   self.triStripVertexOrderIndependentOfProvokingVertex = triStripVertexOrderIndependentOfProvokingVertex;
+   return *self;
+}
+fn PhysicalDeviceShaderFmaFeaturesKHR physicalDeviceShaderFmaFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderFmaFeaturesKHR PhysicalDeviceShaderFmaFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderFmaFeaturesKHR PhysicalDeviceShaderFmaFeaturesKHR.setShaderFmaFloat16(&self, uint shaderFmaFloat16) {
+   self.shaderFmaFloat16 = shaderFmaFloat16;
+   return *self;
+}
+fn PhysicalDeviceShaderFmaFeaturesKHR PhysicalDeviceShaderFmaFeaturesKHR.setShaderFmaFloat32(&self, uint shaderFmaFloat32) {
+   self.shaderFmaFloat32 = shaderFmaFloat32;
+   return *self;
+}
+fn PhysicalDeviceShaderFmaFeaturesKHR PhysicalDeviceShaderFmaFeaturesKHR.setShaderFmaFloat64(&self, uint shaderFmaFloat64) {
+   self.shaderFmaFloat64 = shaderFmaFloat64;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMotionBlurFeaturesNV physicalDeviceRayTracingMotionBlurFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MOTION_BLUR_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setRayTracingMotionBlur(&self, uint rayTracingMotionBlur) {
+   self.rayTracingMotionBlur = rayTracingMotionBlur;
+   return *self;
+}
+fn PhysicalDeviceRayTracingMotionBlurFeaturesNV PhysicalDeviceRayTracingMotionBlurFeaturesNV.setRayTracingMotionBlurPipelineTraceRaysIndirect(&self, uint rayTracingMotionBlurPipelineTraceRaysIndirect) {
+   self.rayTracingMotionBlurPipelineTraceRaysIndirect = rayTracingMotionBlurPipelineTraceRaysIndirect;
+   return *self;
+}
+fn PhysicalDeviceRayTracingValidationFeaturesNV physicalDeviceRayTracingValidationFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingValidationFeaturesNV PhysicalDeviceRayTracingValidationFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingValidationFeaturesNV PhysicalDeviceRayTracingValidationFeaturesNV.setRayTracingValidation(&self, uint rayTracingValidation) {
+   self.rayTracingValidation = rayTracingValidation;
+   return *self;
+}
+fn PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV physicalDeviceRayTracingLinearSweptSpheresFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV.setSpheres(&self, uint spheres) {
+   self.spheres = spheres;
+   return *self;
+}
+fn PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV.setLinearSweptSpheres(&self, uint linearSweptSpheres) {
+   self.linearSweptSpheres = linearSweptSpheres;
+   return *self;
+}
+fn AccelerationStructureGeometryMotionTrianglesDataNV accelerationStructureGeometryMotionTrianglesDataNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV, .pNext = null };
+fn AccelerationStructureGeometryMotionTrianglesDataNV AccelerationStructureGeometryMotionTrianglesDataNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureGeometryMotionTrianglesDataNV AccelerationStructureGeometryMotionTrianglesDataNV.setVertexData(&self, DeviceOrHostAddressConstKHR vertexData) {
+   self.vertexData = vertexData;
+   return *self;
+}
+fn AccelerationStructureMotionInfoNV accelerationStructureMotionInfoNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV, .pNext = null };
+fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setMaxInstances(&self, uint maxInstances) {
+   self.maxInstances = maxInstances;
+   return *self;
+}
+fn AccelerationStructureMotionInfoNV AccelerationStructureMotionInfoNV.setFlags(&self, AccelerationStructureMotionInfoFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MemoryGetRemoteAddressInfoNV memoryGetRemoteAddressInfoNV() => { .sType = STRUCTURE_TYPE_MEMORY_GET_REMOTE_ADDRESS_INFO_NV, .pNext = null };
+fn MemoryGetRemoteAddressInfoNV MemoryGetRemoteAddressInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryGetRemoteAddressInfoNV MemoryGetRemoteAddressInfoNV.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn MemoryGetRemoteAddressInfoNV MemoryGetRemoteAddressInfoNV.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn CudaModuleCreateInfoNV cudaModuleCreateInfoNV() => { .sType = STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV, .pNext = null };
+fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setDataSize(&self, usz dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
+fn CudaFunctionCreateInfoNV cudaFunctionCreateInfoNV() => { .sType = STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV, .pNext = null };
+fn CudaFunctionCreateInfoNV CudaFunctionCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CudaFunctionCreateInfoNV CudaFunctionCreateInfoNV.setMod(&self, CudaModuleNV mod) {
+   self.mod = mod;
+   return *self;
+}
+fn CudaFunctionCreateInfoNV CudaFunctionCreateInfoNV.setName(&self, char* pName) {
+   self.pName = pName;
+   return *self;
+}
+fn CudaLaunchInfoNV cudaLaunchInfoNV() => { .sType = STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV, .pNext = null };
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setFunction(&self, CudaFunctionNV function) {
+   self.function = function;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setGridDimX(&self, uint gridDimX) {
+   self.gridDimX = gridDimX;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setGridDimY(&self, uint gridDimY) {
+   self.gridDimY = gridDimY;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setGridDimZ(&self, uint gridDimZ) {
+   self.gridDimZ = gridDimZ;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setBlockDimX(&self, uint blockDimX) {
+   self.blockDimX = blockDimX;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setBlockDimY(&self, uint blockDimY) {
+   self.blockDimY = blockDimY;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setBlockDimZ(&self, uint blockDimZ) {
+   self.blockDimZ = blockDimZ;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setSharedMemBytes(&self, uint sharedMemBytes) {
+   self.sharedMemBytes = sharedMemBytes;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setParamCount(&self, usz paramCount) {
+   self.paramCount = paramCount;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setParams(&self, void* pParams) {
+   self.pParams = pParams;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setExtraCount(&self, usz extraCount) {
+   self.extraCount = extraCount;
+   return *self;
+}
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setExtras(&self, void* pExtras) {
+   self.pExtras = pExtras;
+   return *self;
+}
+fn PhysicalDeviceRGBA10X6FormatsFeaturesEXT physicalDeviceRGBA10X6FormatsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceRGBA10X6FormatsFeaturesEXT PhysicalDeviceRGBA10X6FormatsFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRGBA10X6FormatsFeaturesEXT PhysicalDeviceRGBA10X6FormatsFeaturesEXT.setFormatRgba10x6WithoutYCbCrSampler(&self, uint formatRgba10x6WithoutYCbCrSampler) {
+   self.formatRgba10x6WithoutYCbCrSampler = formatRgba10x6WithoutYCbCrSampler;
+   return *self;
+}
 fn FormatProperties3 formatProperties3() => { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3, .pNext = null };
 fn FormatProperties3 FormatProperties3.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7404,6 +17876,37 @@ fn FormatProperties3 FormatProperties3.setOptimalTilingFeatures(&self, FormatFea
 }
 fn FormatProperties3 FormatProperties3.setBufferFeatures(&self, FormatFeatureFlags2 bufferFeatures) {
    self.bufferFeatures = bufferFeatures;
+   return *self;
+}
+fn FormatProperties3KHR formatProperties3KHR() => { .sType = STRUCTURE_TYPE_FORMAT_PROPERTIES_3, .pNext = null };
+fn FormatProperties3KHR FormatProperties3KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FormatProperties3KHR FormatProperties3KHR.setLinearTilingFeatures(&self, FormatFeatureFlags2 linearTilingFeatures) {
+   self.linearTilingFeatures = linearTilingFeatures;
+   return *self;
+}
+fn FormatProperties3KHR FormatProperties3KHR.setOptimalTilingFeatures(&self, FormatFeatureFlags2 optimalTilingFeatures) {
+   self.optimalTilingFeatures = optimalTilingFeatures;
+   return *self;
+}
+fn FormatProperties3KHR FormatProperties3KHR.setBufferFeatures(&self, FormatFeatureFlags2 bufferFeatures) {
+   self.bufferFeatures = bufferFeatures;
+   return *self;
+}
+fn DrmFormatModifierPropertiesList2EXT drmFormatModifierPropertiesList2EXT() => { .sType = STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT, .pNext = null };
+fn DrmFormatModifierPropertiesList2EXT DrmFormatModifierPropertiesList2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DrmFormatModifierPropertiesList2EXT DrmFormatModifierPropertiesList2EXT.setDrmFormatModifierCount(&self, uint drmFormatModifierCount) {
+   self.drmFormatModifierCount = drmFormatModifierCount;
+   return *self;
+}
+fn DrmFormatModifierPropertiesList2EXT DrmFormatModifierPropertiesList2EXT.setDrmFormatModifierProperties(&self, DrmFormatModifierProperties2EXT[] pDrmFormatModifierProperties) {
+   self.drmFormatModifierCount= (uint)pDrmFormatModifierProperties.len;
+   self.pDrmFormatModifierProperties = &pDrmFormatModifierProperties[0];
    return *self;
 }
 fn PipelineRenderingCreateInfo pipelineRenderingCreateInfo() => { .sType = STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO, .pNext = null };
@@ -7534,7 +18037,12 @@ fn RenderingInfoKHR RenderingInfoKHR.setStencilAttachment(&self, RenderingAttach
    self.pStencilAttachment = pStencilAttachment;
    return *self;
 }
-fn RenderingEndInfoEXT renderingEndInfoEXT() => { .sType = STRUCTURE_TYPE_RENDERING_END_INFO_EXT, .pNext = null };
+fn RenderingEndInfoKHR renderingEndInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_END_INFO_KHR, .pNext = null };
+fn RenderingEndInfoKHR RenderingEndInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingEndInfoEXT renderingEndInfoEXT() => { .sType = STRUCTURE_TYPE_RENDERING_END_INFO_KHR, .pNext = null };
 fn RenderingEndInfoEXT RenderingEndInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
@@ -7611,6 +18119,36 @@ fn RenderingAttachmentInfoKHR RenderingAttachmentInfoKHR.setStoreOp(&self, Attac
 }
 fn RenderingAttachmentInfoKHR RenderingAttachmentInfoKHR.setClearValue(&self, ClearValue clearValue) {
    self.clearValue = clearValue;
+   return *self;
+}
+fn RenderingFragmentShadingRateAttachmentInfoKHR renderingFragmentShadingRateAttachmentInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR, .pNext = null };
+fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setImageView(&self, ImageView imageView) {
+   self.imageView = imageView;
+   return *self;
+}
+fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setImageLayout(&self, ImageLayout imageLayout) {
+   self.imageLayout = imageLayout;
+   return *self;
+}
+fn RenderingFragmentShadingRateAttachmentInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR.setShadingRateAttachmentTexelSize(&self, Extent2D shadingRateAttachmentTexelSize) {
+   self.shadingRateAttachmentTexelSize = shadingRateAttachmentTexelSize;
+   return *self;
+}
+fn RenderingFragmentDensityMapAttachmentInfoEXT renderingFragmentDensityMapAttachmentInfoEXT() => { .sType = STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT, .pNext = null };
+fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setImageView(&self, ImageView imageView) {
+   self.imageView = imageView;
+   return *self;
+}
+fn RenderingFragmentDensityMapAttachmentInfoEXT RenderingFragmentDensityMapAttachmentInfoEXT.setImageLayout(&self, ImageLayout imageLayout) {
+   self.imageLayout = imageLayout;
    return *self;
 }
 fn PhysicalDeviceDynamicRenderingFeatures physicalDeviceDynamicRenderingFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES, .pNext = null };
@@ -7699,6 +18237,346 @@ fn CommandBufferInheritanceRenderingInfoKHR CommandBufferInheritanceRenderingInf
    self.rasterizationSamples = rasterizationSamples;
    return *self;
 }
+fn AttachmentSampleCountInfoAMD attachmentSampleCountInfoAMD() => { .sType = STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD, .pNext = null };
+fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setColorAttachmentSamples(&self, SampleCountFlagBits[] pColorAttachmentSamples) {
+   self.colorAttachmentCount= (uint)pColorAttachmentSamples.len;
+   self.pColorAttachmentSamples = &pColorAttachmentSamples[0];
+   return *self;
+}
+fn AttachmentSampleCountInfoAMD AttachmentSampleCountInfoAMD.setDepthStencilAttachmentSamples(&self, SampleCountFlagBits depthStencilAttachmentSamples) {
+   self.depthStencilAttachmentSamples = depthStencilAttachmentSamples;
+   return *self;
+}
+fn AttachmentSampleCountInfoNV attachmentSampleCountInfoNV() => { .sType = STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD, .pNext = null };
+fn AttachmentSampleCountInfoNV AttachmentSampleCountInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AttachmentSampleCountInfoNV AttachmentSampleCountInfoNV.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn AttachmentSampleCountInfoNV AttachmentSampleCountInfoNV.setColorAttachmentSamples(&self, SampleCountFlagBits[] pColorAttachmentSamples) {
+   self.colorAttachmentCount= (uint)pColorAttachmentSamples.len;
+   self.pColorAttachmentSamples = &pColorAttachmentSamples[0];
+   return *self;
+}
+fn AttachmentSampleCountInfoNV AttachmentSampleCountInfoNV.setDepthStencilAttachmentSamples(&self, SampleCountFlagBits depthStencilAttachmentSamples) {
+   self.depthStencilAttachmentSamples = depthStencilAttachmentSamples;
+   return *self;
+}
+fn MultiviewPerViewAttributesInfoNVX multiviewPerViewAttributesInfoNVX() => { .sType = STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX, .pNext = null };
+fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setPerViewAttributes(&self, uint perViewAttributes) {
+   self.perViewAttributes = perViewAttributes;
+   return *self;
+}
+fn MultiviewPerViewAttributesInfoNVX MultiviewPerViewAttributesInfoNVX.setPerViewAttributesPositionXOnly(&self, uint perViewAttributesPositionXOnly) {
+   self.perViewAttributesPositionXOnly = perViewAttributesPositionXOnly;
+   return *self;
+}
+fn PhysicalDeviceImageViewMinLodFeaturesEXT physicalDeviceImageViewMinLodFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceImageViewMinLodFeaturesEXT PhysicalDeviceImageViewMinLodFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageViewMinLodFeaturesEXT PhysicalDeviceImageViewMinLodFeaturesEXT.setMinLod(&self, uint minLod) {
+   self.minLod = minLod;
+   return *self;
+}
+fn ImageViewMinLodCreateInfoEXT imageViewMinLodCreateInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT, .pNext = null };
+fn ImageViewMinLodCreateInfoEXT ImageViewMinLodCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewMinLodCreateInfoEXT ImageViewMinLodCreateInfoEXT.setMinLod(&self, float minLod) {
+   self.minLod = minLod;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT physicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT.setRasterizationOrderColorAttachmentAccess(&self, uint rasterizationOrderColorAttachmentAccess) {
+   self.rasterizationOrderColorAttachmentAccess = rasterizationOrderColorAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT.setRasterizationOrderDepthAttachmentAccess(&self, uint rasterizationOrderDepthAttachmentAccess) {
+   self.rasterizationOrderDepthAttachmentAccess = rasterizationOrderDepthAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT.setRasterizationOrderStencilAttachmentAccess(&self, uint rasterizationOrderStencilAttachmentAccess) {
+   self.rasterizationOrderStencilAttachmentAccess = rasterizationOrderStencilAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM physicalDeviceRasterizationOrderAttachmentAccessFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM.setRasterizationOrderColorAttachmentAccess(&self, uint rasterizationOrderColorAttachmentAccess) {
+   self.rasterizationOrderColorAttachmentAccess = rasterizationOrderColorAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM.setRasterizationOrderDepthAttachmentAccess(&self, uint rasterizationOrderDepthAttachmentAccess) {
+   self.rasterizationOrderDepthAttachmentAccess = rasterizationOrderDepthAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM.setRasterizationOrderStencilAttachmentAccess(&self, uint rasterizationOrderStencilAttachmentAccess) {
+   self.rasterizationOrderStencilAttachmentAccess = rasterizationOrderStencilAttachmentAccess;
+   return *self;
+}
+fn PhysicalDeviceLinearColorAttachmentFeaturesNV physicalDeviceLinearColorAttachmentFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceLinearColorAttachmentFeaturesNV PhysicalDeviceLinearColorAttachmentFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLinearColorAttachmentFeaturesNV PhysicalDeviceLinearColorAttachmentFeaturesNV.setLinearColorAttachment(&self, uint linearColorAttachment) {
+   self.linearColorAttachment = linearColorAttachment;
+   return *self;
+}
+fn PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT physicalDeviceGraphicsPipelineLibraryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT.setGraphicsPipelineLibrary(&self, uint graphicsPipelineLibrary) {
+   self.graphicsPipelineLibrary = graphicsPipelineLibrary;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryFeaturesKHR physicalDevicePipelineBinaryFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_BINARY_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePipelineBinaryFeaturesKHR PhysicalDevicePipelineBinaryFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryFeaturesKHR PhysicalDevicePipelineBinaryFeaturesKHR.setPipelineBinaries(&self, uint pipelineBinaries) {
+   self.pipelineBinaries = pipelineBinaries;
+   return *self;
+}
+fn DevicePipelineBinaryInternalCacheControlKHR devicePipelineBinaryInternalCacheControlKHR() => { .sType = STRUCTURE_TYPE_DEVICE_PIPELINE_BINARY_INTERNAL_CACHE_CONTROL_KHR, .pNext = null };
+fn DevicePipelineBinaryInternalCacheControlKHR DevicePipelineBinaryInternalCacheControlKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DevicePipelineBinaryInternalCacheControlKHR DevicePipelineBinaryInternalCacheControlKHR.setDisableInternalCache(&self, uint disableInternalCache) {
+   self.disableInternalCache = disableInternalCache;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR physicalDevicePipelineBinaryPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_BINARY_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setPipelineBinaryInternalCache(&self, uint pipelineBinaryInternalCache) {
+   self.pipelineBinaryInternalCache = pipelineBinaryInternalCache;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setPipelineBinaryInternalCacheControl(&self, uint pipelineBinaryInternalCacheControl) {
+   self.pipelineBinaryInternalCacheControl = pipelineBinaryInternalCacheControl;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setPipelineBinaryPrefersInternalCache(&self, uint pipelineBinaryPrefersInternalCache) {
+   self.pipelineBinaryPrefersInternalCache = pipelineBinaryPrefersInternalCache;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setPipelineBinaryPrecompiledInternalCache(&self, uint pipelineBinaryPrecompiledInternalCache) {
+   self.pipelineBinaryPrecompiledInternalCache = pipelineBinaryPrecompiledInternalCache;
+   return *self;
+}
+fn PhysicalDevicePipelineBinaryPropertiesKHR PhysicalDevicePipelineBinaryPropertiesKHR.setPipelineBinaryCompressedData(&self, uint pipelineBinaryCompressedData) {
+   self.pipelineBinaryCompressedData = pipelineBinaryCompressedData;
+   return *self;
+}
+fn PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT physicalDeviceGraphicsPipelineLibraryPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT.setGraphicsPipelineLibraryFastLinking(&self, uint graphicsPipelineLibraryFastLinking) {
+   self.graphicsPipelineLibraryFastLinking = graphicsPipelineLibraryFastLinking;
+   return *self;
+}
+fn PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT.setGraphicsPipelineLibraryIndependentInterpolationDecoration(&self, uint graphicsPipelineLibraryIndependentInterpolationDecoration) {
+   self.graphicsPipelineLibraryIndependentInterpolationDecoration = graphicsPipelineLibraryIndependentInterpolationDecoration;
+   return *self;
+}
+fn GraphicsPipelineLibraryCreateInfoEXT graphicsPipelineLibraryCreateInfoEXT() => { .sType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT, .pNext = null };
+fn GraphicsPipelineLibraryCreateInfoEXT GraphicsPipelineLibraryCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GraphicsPipelineLibraryCreateInfoEXT GraphicsPipelineLibraryCreateInfoEXT.setFlags(&self, GraphicsPipelineLibraryFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE physicalDeviceDescriptorSetHostMappingFeaturesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE, .pNext = null };
+fn PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE.setDescriptorSetHostMapping(&self, uint descriptorSetHostMapping) {
+   self.descriptorSetHostMapping = descriptorSetHostMapping;
+   return *self;
+}
+fn DescriptorSetBindingReferenceVALVE descriptorSetBindingReferenceVALVE() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE, .pNext = null };
+fn DescriptorSetBindingReferenceVALVE DescriptorSetBindingReferenceVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetBindingReferenceVALVE DescriptorSetBindingReferenceVALVE.setDescriptorSetLayout(&self, DescriptorSetLayout descriptorSetLayout) {
+   self.descriptorSetLayout = descriptorSetLayout;
+   return *self;
+}
+fn DescriptorSetBindingReferenceVALVE DescriptorSetBindingReferenceVALVE.setBinding(&self, uint binding) {
+   self.binding = binding;
+   return *self;
+}
+fn DescriptorSetLayoutHostMappingInfoVALVE descriptorSetLayoutHostMappingInfoVALVE() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE, .pNext = null };
+fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVALVE.setDescriptorOffset(&self, usz descriptorOffset) {
+   self.descriptorOffset = descriptorOffset;
+   return *self;
+}
+fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVALVE.setDescriptorSize(&self, uint descriptorSize) {
+   self.descriptorSize = descriptorSize;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferFeaturesEXT physicalDeviceNestedCommandBufferFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceNestedCommandBufferFeaturesEXT PhysicalDeviceNestedCommandBufferFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferFeaturesEXT PhysicalDeviceNestedCommandBufferFeaturesEXT.setNestedCommandBuffer(&self, uint nestedCommandBuffer) {
+   self.nestedCommandBuffer = nestedCommandBuffer;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferFeaturesEXT PhysicalDeviceNestedCommandBufferFeaturesEXT.setNestedCommandBufferRendering(&self, uint nestedCommandBufferRendering) {
+   self.nestedCommandBufferRendering = nestedCommandBufferRendering;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferFeaturesEXT PhysicalDeviceNestedCommandBufferFeaturesEXT.setNestedCommandBufferSimultaneousUse(&self, uint nestedCommandBufferSimultaneousUse) {
+   self.nestedCommandBufferSimultaneousUse = nestedCommandBufferSimultaneousUse;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferPropertiesEXT physicalDeviceNestedCommandBufferPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceNestedCommandBufferPropertiesEXT PhysicalDeviceNestedCommandBufferPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceNestedCommandBufferPropertiesEXT PhysicalDeviceNestedCommandBufferPropertiesEXT.setMaxCommandBufferNestingLevel(&self, uint maxCommandBufferNestingLevel) {
+   self.maxCommandBufferNestingLevel = maxCommandBufferNestingLevel;
+   return *self;
+}
+fn PhysicalDeviceShaderModuleIdentifierFeaturesEXT physicalDeviceShaderModuleIdentifierFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderModuleIdentifierFeaturesEXT PhysicalDeviceShaderModuleIdentifierFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderModuleIdentifierFeaturesEXT PhysicalDeviceShaderModuleIdentifierFeaturesEXT.setShaderModuleIdentifier(&self, uint shaderModuleIdentifier) {
+   self.shaderModuleIdentifier = shaderModuleIdentifier;
+   return *self;
+}
+fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT physicalDeviceShaderModuleIdentifierPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT PhysicalDeviceShaderModuleIdentifierPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT PhysicalDeviceShaderModuleIdentifierPropertiesEXT.setShaderModuleIdentifierAlgorithmUUID(&self, uint[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID) {
+   self.shaderModuleIdentifierAlgorithmUUID = shaderModuleIdentifierAlgorithmUUID;
+   return *self;
+}
+fn PipelineShaderStageModuleIdentifierCreateInfoEXT pipelineShaderStageModuleIdentifierCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_MODULE_IDENTIFIER_CREATE_INFO_EXT, .pNext = null };
+fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIdentifierCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIdentifierCreateInfoEXT.setIdentifierSize(&self, uint identifierSize) {
+   self.identifierSize = identifierSize;
+   return *self;
+}
+fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIdentifierCreateInfoEXT.setIdentifier(&self, uint[] pIdentifier) {
+   self.identifierSize= (uint)pIdentifier.len;
+   self.pIdentifier = &pIdentifier[0];
+   return *self;
+}
+fn ShaderModuleIdentifierEXT shaderModuleIdentifierEXT() => { .sType = STRUCTURE_TYPE_SHADER_MODULE_IDENTIFIER_EXT, .pNext = null };
+fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setIdentifierSize(&self, uint identifierSize) {
+   self.identifierSize = identifierSize;
+   return *self;
+}
+fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setIdentifier(&self, uint[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier) {
+   self.identifierSize= (uint)identifier.len;
+   self.identifier = identifier;
+   return *self;
+}
+fn ImageCompressionControlEXT imageCompressionControlEXT() => { .sType = STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT, .pNext = null };
+fn ImageCompressionControlEXT ImageCompressionControlEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageCompressionControlEXT ImageCompressionControlEXT.setFlags(&self, ImageCompressionFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ImageCompressionControlEXT ImageCompressionControlEXT.setCompressionControlPlaneCount(&self, uint compressionControlPlaneCount) {
+   self.compressionControlPlaneCount = compressionControlPlaneCount;
+   return *self;
+}
+fn ImageCompressionControlEXT ImageCompressionControlEXT.setFixedRateFlags(&self, ImageCompressionFixedRateFlagsEXT[] pFixedRateFlags) {
+   self.compressionControlPlaneCount= (uint)pFixedRateFlags.len;
+   self.pFixedRateFlags = &pFixedRateFlags[0];
+   return *self;
+}
+fn PhysicalDeviceImageCompressionControlFeaturesEXT physicalDeviceImageCompressionControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceImageCompressionControlFeaturesEXT PhysicalDeviceImageCompressionControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageCompressionControlFeaturesEXT PhysicalDeviceImageCompressionControlFeaturesEXT.setImageCompressionControl(&self, uint imageCompressionControl) {
+   self.imageCompressionControl = imageCompressionControl;
+   return *self;
+}
+fn ImageCompressionPropertiesEXT imageCompressionPropertiesEXT() => { .sType = STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT, .pNext = null };
+fn ImageCompressionPropertiesEXT ImageCompressionPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageCompressionPropertiesEXT ImageCompressionPropertiesEXT.setImageCompressionFlags(&self, ImageCompressionFlagsEXT imageCompressionFlags) {
+   self.imageCompressionFlags = imageCompressionFlags;
+   return *self;
+}
+fn ImageCompressionPropertiesEXT ImageCompressionPropertiesEXT.setImageCompressionFixedRateFlags(&self, ImageCompressionFixedRateFlagsEXT imageCompressionFixedRateFlags) {
+   self.imageCompressionFixedRateFlags = imageCompressionFixedRateFlags;
+   return *self;
+}
+fn PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT physicalDeviceImageCompressionControlSwapchainFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_SWAPCHAIN_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT.setImageCompressionControlSwapchain(&self, uint imageCompressionControlSwapchain) {
+   self.imageCompressionControlSwapchain = imageCompressionControlSwapchain;
+   return *self;
+}
 fn ImageSubresource2 imageSubresource2() => { .sType = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2, .pNext = null };
 fn ImageSubresource2 ImageSubresource2.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7708,12 +18586,48 @@ fn ImageSubresource2 ImageSubresource2.setImageSubresource(&self, ImageSubresour
    self.imageSubresource = imageSubresource;
    return *self;
 }
+fn ImageSubresource2KHR imageSubresource2KHR() => { .sType = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2, .pNext = null };
+fn ImageSubresource2KHR ImageSubresource2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageSubresource2KHR ImageSubresource2KHR.setImageSubresource(&self, ImageSubresource imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
+fn ImageSubresource2EXT imageSubresource2EXT() => { .sType = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2, .pNext = null };
+fn ImageSubresource2EXT ImageSubresource2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageSubresource2EXT ImageSubresource2EXT.setImageSubresource(&self, ImageSubresource imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
 fn SubresourceLayout2 subresourceLayout2() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2, .pNext = null };
 fn SubresourceLayout2 SubresourceLayout2.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn SubresourceLayout2 SubresourceLayout2.setSubresourceLayout(&self, SubresourceLayout subresourceLayout) {
+   self.subresourceLayout = subresourceLayout;
+   return *self;
+}
+fn SubresourceLayout2KHR subresourceLayout2KHR() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2, .pNext = null };
+fn SubresourceLayout2KHR SubresourceLayout2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubresourceLayout2KHR SubresourceLayout2KHR.setSubresourceLayout(&self, SubresourceLayout subresourceLayout) {
+   self.subresourceLayout = subresourceLayout;
+   return *self;
+}
+fn SubresourceLayout2EXT subresourceLayout2EXT() => { .sType = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2, .pNext = null };
+fn SubresourceLayout2EXT SubresourceLayout2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubresourceLayout2EXT SubresourceLayout2EXT.setSubresourceLayout(&self, SubresourceLayout subresourceLayout) {
    self.subresourceLayout = subresourceLayout;
    return *self;
 }
@@ -7744,12 +18658,531 @@ fn RenderPassSubpassFeedbackCreateInfoEXT RenderPassSubpassFeedbackCreateInfoEXT
    self.pSubpassFeedback = pSubpassFeedback;
    return *self;
 }
+fn PhysicalDeviceSubpassMergeFeedbackFeaturesEXT physicalDeviceSubpassMergeFeedbackFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceSubpassMergeFeedbackFeaturesEXT PhysicalDeviceSubpassMergeFeedbackFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSubpassMergeFeedbackFeaturesEXT PhysicalDeviceSubpassMergeFeedbackFeaturesEXT.setSubpassMergeFeedback(&self, uint subpassMergeFeedback) {
+   self.subpassMergeFeedback = subpassMergeFeedback;
+   return *self;
+}
+fn MicromapBuildInfoEXT micromapBuildInfoEXT() => { .sType = STRUCTURE_TYPE_MICROMAP_BUILD_INFO_EXT, .pNext = null };
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setType(&self, MicromapTypeEXT type) {
+   self.type = type;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setFlags(&self, BuildMicromapFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setMode(&self, BuildMicromapModeEXT mode) {
+   self.mode = mode;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setDstMicromap(&self, MicromapEXT dstMicromap) {
+   self.dstMicromap = dstMicromap;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setUsageCountsCount(&self, uint usageCountsCount) {
+   self.usageCountsCount = usageCountsCount;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setUsageCounts(&self, MicromapUsageEXT[] pUsageCounts) {
+   self.usageCountsCount= (uint)pUsageCounts.len;
+   self.pUsageCounts = &pUsageCounts[0];
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setPUsageCounts(&self, MicromapUsageEXT* ppUsageCounts) {
+   self.ppUsageCounts = ppUsageCounts;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setData(&self, DeviceOrHostAddressConstKHR data) {
+   self.data = data;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setScratchData(&self, DeviceOrHostAddressKHR scratchData) {
+   self.scratchData = scratchData;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setTriangleArray(&self, DeviceOrHostAddressConstKHR triangleArray) {
+   self.triangleArray = triangleArray;
+   return *self;
+}
+fn MicromapBuildInfoEXT MicromapBuildInfoEXT.setTriangleArrayStride(&self, DeviceSize triangleArrayStride) {
+   self.triangleArrayStride = triangleArrayStride;
+   return *self;
+}
+fn MicromapCreateInfoEXT micromapCreateInfoEXT() => { .sType = STRUCTURE_TYPE_MICROMAP_CREATE_INFO_EXT, .pNext = null };
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setCreateFlags(&self, MicromapCreateFlagsEXT createFlags) {
+   self.createFlags = createFlags;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setBuffer(&self, Buffer buffer) {
+   self.buffer = buffer;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setOffset(&self, DeviceSize offset) {
+   self.offset = offset;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setType(&self, MicromapTypeEXT type) {
+   self.type = type;
+   return *self;
+}
+fn MicromapCreateInfoEXT MicromapCreateInfoEXT.setDeviceAddress(&self, DeviceAddress deviceAddress) {
+   self.deviceAddress = deviceAddress;
+   return *self;
+}
+fn MicromapVersionInfoEXT micromapVersionInfoEXT() => { .sType = STRUCTURE_TYPE_MICROMAP_VERSION_INFO_EXT, .pNext = null };
+fn MicromapVersionInfoEXT MicromapVersionInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MicromapVersionInfoEXT MicromapVersionInfoEXT.setVersionData(&self, uint* pVersionData) {
+   self.pVersionData = pVersionData;
+   return *self;
+}
+fn CopyMicromapInfoEXT copyMicromapInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_MICROMAP_INFO_EXT, .pNext = null };
+fn CopyMicromapInfoEXT CopyMicromapInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMicromapInfoEXT CopyMicromapInfoEXT.setSrc(&self, MicromapEXT src) {
+   self.src = src;
+   return *self;
+}
+fn CopyMicromapInfoEXT CopyMicromapInfoEXT.setDst(&self, MicromapEXT dst) {
+   self.dst = dst;
+   return *self;
+}
+fn CopyMicromapInfoEXT CopyMicromapInfoEXT.setMode(&self, CopyMicromapModeEXT mode) {
+   self.mode = mode;
+   return *self;
+}
+fn CopyMicromapToMemoryInfoEXT copyMicromapToMemoryInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_MICROMAP_TO_MEMORY_INFO_EXT, .pNext = null };
+fn CopyMicromapToMemoryInfoEXT CopyMicromapToMemoryInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMicromapToMemoryInfoEXT CopyMicromapToMemoryInfoEXT.setSrc(&self, MicromapEXT src) {
+   self.src = src;
+   return *self;
+}
+fn CopyMicromapToMemoryInfoEXT CopyMicromapToMemoryInfoEXT.setDst(&self, DeviceOrHostAddressKHR dst) {
+   self.dst = dst;
+   return *self;
+}
+fn CopyMicromapToMemoryInfoEXT CopyMicromapToMemoryInfoEXT.setMode(&self, CopyMicromapModeEXT mode) {
+   self.mode = mode;
+   return *self;
+}
+fn CopyMemoryToMicromapInfoEXT copyMemoryToMicromapInfoEXT() => { .sType = STRUCTURE_TYPE_COPY_MEMORY_TO_MICROMAP_INFO_EXT, .pNext = null };
+fn CopyMemoryToMicromapInfoEXT CopyMemoryToMicromapInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyMemoryToMicromapInfoEXT CopyMemoryToMicromapInfoEXT.setSrc(&self, DeviceOrHostAddressConstKHR src) {
+   self.src = src;
+   return *self;
+}
+fn CopyMemoryToMicromapInfoEXT CopyMemoryToMicromapInfoEXT.setDst(&self, MicromapEXT dst) {
+   self.dst = dst;
+   return *self;
+}
+fn CopyMemoryToMicromapInfoEXT CopyMemoryToMicromapInfoEXT.setMode(&self, CopyMicromapModeEXT mode) {
+   self.mode = mode;
+   return *self;
+}
+fn MicromapBuildSizesInfoEXT micromapBuildSizesInfoEXT() => { .sType = STRUCTURE_TYPE_MICROMAP_BUILD_SIZES_INFO_EXT, .pNext = null };
+fn MicromapBuildSizesInfoEXT MicromapBuildSizesInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MicromapBuildSizesInfoEXT MicromapBuildSizesInfoEXT.setMicromapSize(&self, DeviceSize micromapSize) {
+   self.micromapSize = micromapSize;
+   return *self;
+}
+fn MicromapBuildSizesInfoEXT MicromapBuildSizesInfoEXT.setBuildScratchSize(&self, DeviceSize buildScratchSize) {
+   self.buildScratchSize = buildScratchSize;
+   return *self;
+}
+fn MicromapBuildSizesInfoEXT MicromapBuildSizesInfoEXT.setDiscardable(&self, uint discardable) {
+   self.discardable = discardable;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapFeaturesEXT physicalDeviceOpacityMicromapFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceOpacityMicromapFeaturesEXT PhysicalDeviceOpacityMicromapFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapFeaturesEXT PhysicalDeviceOpacityMicromapFeaturesEXT.setMicromap(&self, uint micromap) {
+   self.micromap = micromap;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapFeaturesEXT PhysicalDeviceOpacityMicromapFeaturesEXT.setMicromapCaptureReplay(&self, uint micromapCaptureReplay) {
+   self.micromapCaptureReplay = micromapCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapFeaturesEXT PhysicalDeviceOpacityMicromapFeaturesEXT.setMicromapHostCommands(&self, uint micromapHostCommands) {
+   self.micromapHostCommands = micromapHostCommands;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapPropertiesEXT physicalDeviceOpacityMicromapPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceOpacityMicromapPropertiesEXT PhysicalDeviceOpacityMicromapPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapPropertiesEXT PhysicalDeviceOpacityMicromapPropertiesEXT.setMaxOpacity2StateSubdivisionLevel(&self, uint maxOpacity2StateSubdivisionLevel) {
+   self.maxOpacity2StateSubdivisionLevel = maxOpacity2StateSubdivisionLevel;
+   return *self;
+}
+fn PhysicalDeviceOpacityMicromapPropertiesEXT PhysicalDeviceOpacityMicromapPropertiesEXT.setMaxOpacity4StateSubdivisionLevel(&self, uint maxOpacity4StateSubdivisionLevel) {
+   self.maxOpacity4StateSubdivisionLevel = maxOpacity4StateSubdivisionLevel;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT accelerationStructureTrianglesOpacityMicromapEXT() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT, .pNext = null };
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setIndexBuffer(&self, DeviceOrHostAddressConstKHR indexBuffer) {
+   self.indexBuffer = indexBuffer;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setIndexStride(&self, DeviceSize indexStride) {
+   self.indexStride = indexStride;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setBaseTriangle(&self, uint baseTriangle) {
+   self.baseTriangle = baseTriangle;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setUsageCountsCount(&self, uint usageCountsCount) {
+   self.usageCountsCount = usageCountsCount;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setUsageCounts(&self, MicromapUsageEXT[] pUsageCounts) {
+   self.usageCountsCount= (uint)pUsageCounts.len;
+   self.pUsageCounts = &pUsageCounts[0];
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setPUsageCounts(&self, MicromapUsageEXT* ppUsageCounts) {
+   self.ppUsageCounts = ppUsageCounts;
+   return *self;
+}
+fn AccelerationStructureTrianglesOpacityMicromapEXT AccelerationStructureTrianglesOpacityMicromapEXT.setMicromap(&self, MicromapEXT micromap) {
+   self.micromap = micromap;
+   return *self;
+}
+fn PhysicalDeviceDisplacementMicromapFeaturesNV physicalDeviceDisplacementMicromapFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDisplacementMicromapFeaturesNV PhysicalDeviceDisplacementMicromapFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDisplacementMicromapFeaturesNV PhysicalDeviceDisplacementMicromapFeaturesNV.setDisplacementMicromap(&self, uint displacementMicromap) {
+   self.displacementMicromap = displacementMicromap;
+   return *self;
+}
+fn PhysicalDeviceDisplacementMicromapPropertiesNV physicalDeviceDisplacementMicromapPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceDisplacementMicromapPropertiesNV PhysicalDeviceDisplacementMicromapPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDisplacementMicromapPropertiesNV PhysicalDeviceDisplacementMicromapPropertiesNV.setMaxDisplacementMicromapSubdivisionLevel(&self, uint maxDisplacementMicromapSubdivisionLevel) {
+   self.maxDisplacementMicromapSubdivisionLevel = maxDisplacementMicromapSubdivisionLevel;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV accelerationStructureTrianglesDisplacementMicromapNV() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_DISPLACEMENT_MICROMAP_NV, .pNext = null };
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementBiasAndScaleFormat(&self, Format displacementBiasAndScaleFormat) {
+   self.displacementBiasAndScaleFormat = displacementBiasAndScaleFormat;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementVectorFormat(&self, Format displacementVectorFormat) {
+   self.displacementVectorFormat = displacementVectorFormat;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementBiasAndScaleBuffer(&self, DeviceOrHostAddressConstKHR displacementBiasAndScaleBuffer) {
+   self.displacementBiasAndScaleBuffer = displacementBiasAndScaleBuffer;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementBiasAndScaleStride(&self, DeviceSize displacementBiasAndScaleStride) {
+   self.displacementBiasAndScaleStride = displacementBiasAndScaleStride;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementVectorBuffer(&self, DeviceOrHostAddressConstKHR displacementVectorBuffer) {
+   self.displacementVectorBuffer = displacementVectorBuffer;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacementVectorStride(&self, DeviceSize displacementVectorStride) {
+   self.displacementVectorStride = displacementVectorStride;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacedMicromapPrimitiveFlags(&self, DeviceOrHostAddressConstKHR displacedMicromapPrimitiveFlags) {
+   self.displacedMicromapPrimitiveFlags = displacedMicromapPrimitiveFlags;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setDisplacedMicromapPrimitiveFlagsStride(&self, DeviceSize displacedMicromapPrimitiveFlagsStride) {
+   self.displacedMicromapPrimitiveFlagsStride = displacedMicromapPrimitiveFlagsStride;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setIndexBuffer(&self, DeviceOrHostAddressConstKHR indexBuffer) {
+   self.indexBuffer = indexBuffer;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setIndexStride(&self, DeviceSize indexStride) {
+   self.indexStride = indexStride;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setBaseTriangle(&self, uint baseTriangle) {
+   self.baseTriangle = baseTriangle;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setUsageCountsCount(&self, uint usageCountsCount) {
+   self.usageCountsCount = usageCountsCount;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setUsageCounts(&self, MicromapUsageEXT[] pUsageCounts) {
+   self.usageCountsCount= (uint)pUsageCounts.len;
+   self.pUsageCounts = &pUsageCounts[0];
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setPUsageCounts(&self, MicromapUsageEXT* ppUsageCounts) {
+   self.ppUsageCounts = ppUsageCounts;
+   return *self;
+}
+fn AccelerationStructureTrianglesDisplacementMicromapNV AccelerationStructureTrianglesDisplacementMicromapNV.setMicromap(&self, MicromapEXT micromap) {
+   self.micromap = micromap;
+   return *self;
+}
+fn PipelinePropertiesIdentifierEXT pipelinePropertiesIdentifierEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_PROPERTIES_IDENTIFIER_EXT, .pNext = null };
+fn PipelinePropertiesIdentifierEXT PipelinePropertiesIdentifierEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelinePropertiesIdentifierEXT PipelinePropertiesIdentifierEXT.setPipelineIdentifier(&self, uint[UUID_SIZE] pipelineIdentifier) {
+   self.pipelineIdentifier = pipelineIdentifier;
+   return *self;
+}
+fn PhysicalDevicePipelinePropertiesFeaturesEXT physicalDevicePipelinePropertiesFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROPERTIES_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePipelinePropertiesFeaturesEXT PhysicalDevicePipelinePropertiesFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelinePropertiesFeaturesEXT PhysicalDevicePipelinePropertiesFeaturesEXT.setPipelinePropertiesIdentifier(&self, uint pipelinePropertiesIdentifier) {
+   self.pipelinePropertiesIdentifier = pipelinePropertiesIdentifier;
+   return *self;
+}
+fn PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD physicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD, .pNext = null };
+fn PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD.setShaderEarlyAndLateFragmentTests(&self, uint shaderEarlyAndLateFragmentTests) {
+   self.shaderEarlyAndLateFragmentTests = shaderEarlyAndLateFragmentTests;
+   return *self;
+}
+fn ExternalMemoryAcquireUnmodifiedEXT externalMemoryAcquireUnmodifiedEXT() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_ACQUIRE_UNMODIFIED_EXT, .pNext = null };
+fn ExternalMemoryAcquireUnmodifiedEXT ExternalMemoryAcquireUnmodifiedEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalMemoryAcquireUnmodifiedEXT ExternalMemoryAcquireUnmodifiedEXT.setAcquireUnmodifiedMemory(&self, uint acquireUnmodifiedMemory) {
+   self.acquireUnmodifiedMemory = acquireUnmodifiedMemory;
+   return *self;
+}
+fn ExportMetalObjectCreateInfoEXT exportMetalObjectCreateInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT, .pNext = null };
+fn ExportMetalObjectCreateInfoEXT ExportMetalObjectCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalObjectCreateInfoEXT ExportMetalObjectCreateInfoEXT.setExportObjectType(&self, ExportMetalObjectTypeFlagBitsEXT exportObjectType) {
+   self.exportObjectType = exportObjectType;
+   return *self;
+}
+fn ExportMetalObjectsInfoEXT exportMetalObjectsInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT, .pNext = null };
+fn ExportMetalObjectsInfoEXT ExportMetalObjectsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalDeviceInfoEXT exportMetalDeviceInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT, .pNext = null };
+fn ExportMetalDeviceInfoEXT ExportMetalDeviceInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalDeviceInfoEXT ExportMetalDeviceInfoEXT.setMtlDevice(&self, void* mtlDevice) {
+   self.mtlDevice = mtlDevice;
+   return *self;
+}
+fn ExportMetalCommandQueueInfoEXT exportMetalCommandQueueInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT, .pNext = null };
+fn ExportMetalCommandQueueInfoEXT ExportMetalCommandQueueInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalCommandQueueInfoEXT ExportMetalCommandQueueInfoEXT.setQueue(&self, Queue queue) {
+   self.queue = queue;
+   return *self;
+}
+fn ExportMetalCommandQueueInfoEXT ExportMetalCommandQueueInfoEXT.setMtlCommandQueue(&self, void* mtlCommandQueue) {
+   self.mtlCommandQueue = mtlCommandQueue;
+   return *self;
+}
+fn ExportMetalBufferInfoEXT exportMetalBufferInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT, .pNext = null };
+fn ExportMetalBufferInfoEXT ExportMetalBufferInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalBufferInfoEXT ExportMetalBufferInfoEXT.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn ExportMetalBufferInfoEXT ExportMetalBufferInfoEXT.setMtlBuffer(&self, void* mtlBuffer) {
+   self.mtlBuffer = mtlBuffer;
+   return *self;
+}
+fn ImportMetalBufferInfoEXT importMetalBufferInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT, .pNext = null };
+fn ImportMetalBufferInfoEXT ImportMetalBufferInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMetalBufferInfoEXT ImportMetalBufferInfoEXT.setMtlBuffer(&self, void* mtlBuffer) {
+   self.mtlBuffer = mtlBuffer;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT exportMetalTextureInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT, .pNext = null };
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setImageView(&self, ImageView imageView) {
+   self.imageView = imageView;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setBufferView(&self, BufferView bufferView) {
+   self.bufferView = bufferView;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setPlane(&self, ImageAspectFlagBits plane) {
+   self.plane = plane;
+   return *self;
+}
+fn ExportMetalTextureInfoEXT ExportMetalTextureInfoEXT.setMtlTexture(&self, void* mtlTexture) {
+   self.mtlTexture = mtlTexture;
+   return *self;
+}
+fn ImportMetalTextureInfoEXT importMetalTextureInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT, .pNext = null };
+fn ImportMetalTextureInfoEXT ImportMetalTextureInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMetalTextureInfoEXT ImportMetalTextureInfoEXT.setPlane(&self, ImageAspectFlagBits plane) {
+   self.plane = plane;
+   return *self;
+}
+fn ImportMetalTextureInfoEXT ImportMetalTextureInfoEXT.setMtlTexture(&self, void* mtlTexture) {
+   self.mtlTexture = mtlTexture;
+   return *self;
+}
+fn ExportMetalIOSurfaceInfoEXT exportMetalIOSurfaceInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT, .pNext = null };
+fn ExportMetalIOSurfaceInfoEXT ExportMetalIOSurfaceInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalIOSurfaceInfoEXT ExportMetalIOSurfaceInfoEXT.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn ExportMetalIOSurfaceInfoEXT ExportMetalIOSurfaceInfoEXT.setIoSurface(&self, void* ioSurface) {
+   self.ioSurface = ioSurface;
+   return *self;
+}
+fn ImportMetalIOSurfaceInfoEXT importMetalIOSurfaceInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT, .pNext = null };
+fn ImportMetalIOSurfaceInfoEXT ImportMetalIOSurfaceInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMetalIOSurfaceInfoEXT ImportMetalIOSurfaceInfoEXT.setIoSurface(&self, void* ioSurface) {
+   self.ioSurface = ioSurface;
+   return *self;
+}
+fn ExportMetalSharedEventInfoEXT exportMetalSharedEventInfoEXT() => { .sType = STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT, .pNext = null };
+fn ExportMetalSharedEventInfoEXT ExportMetalSharedEventInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExportMetalSharedEventInfoEXT ExportMetalSharedEventInfoEXT.setSemaphore(&self, Semaphore semaphore) {
+   self.semaphore = semaphore;
+   return *self;
+}
+fn ExportMetalSharedEventInfoEXT ExportMetalSharedEventInfoEXT.setEvent(&self, Event event) {
+   self.event = event;
+   return *self;
+}
+fn ExportMetalSharedEventInfoEXT ExportMetalSharedEventInfoEXT.setMtlSharedEvent(&self, void* mtlSharedEvent) {
+   self.mtlSharedEvent = mtlSharedEvent;
+   return *self;
+}
+fn ImportMetalSharedEventInfoEXT importMetalSharedEventInfoEXT() => { .sType = STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT, .pNext = null };
+fn ImportMetalSharedEventInfoEXT ImportMetalSharedEventInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImportMetalSharedEventInfoEXT ImportMetalSharedEventInfoEXT.setMtlSharedEvent(&self, void* mtlSharedEvent) {
+   self.mtlSharedEvent = mtlSharedEvent;
+   return *self;
+}
+fn PhysicalDeviceNonSeamlessCubeMapFeaturesEXT physicalDeviceNonSeamlessCubeMapFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceNonSeamlessCubeMapFeaturesEXT PhysicalDeviceNonSeamlessCubeMapFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceNonSeamlessCubeMapFeaturesEXT PhysicalDeviceNonSeamlessCubeMapFeaturesEXT.setNonSeamlessCubeMap(&self, uint nonSeamlessCubeMap) {
+   self.nonSeamlessCubeMap = nonSeamlessCubeMap;
+   return *self;
+}
 fn PhysicalDevicePipelineRobustnessFeatures physicalDevicePipelineRobustnessFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES, .pNext = null };
 fn PhysicalDevicePipelineRobustnessFeatures PhysicalDevicePipelineRobustnessFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDevicePipelineRobustnessFeatures PhysicalDevicePipelineRobustnessFeatures.setPipelineRobustness(&self, uint pipelineRobustness) {
+   self.pipelineRobustness = pipelineRobustness;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessFeaturesEXT physicalDevicePipelineRobustnessFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES, .pNext = null };
+fn PhysicalDevicePipelineRobustnessFeaturesEXT PhysicalDevicePipelineRobustnessFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessFeaturesEXT PhysicalDevicePipelineRobustnessFeaturesEXT.setPipelineRobustness(&self, uint pipelineRobustness) {
    self.pipelineRobustness = pipelineRobustness;
    return *self;
 }
@@ -7774,6 +19207,27 @@ fn PipelineRobustnessCreateInfo PipelineRobustnessCreateInfo.setImages(&self, Pi
    self.images = images;
    return *self;
 }
+fn PipelineRobustnessCreateInfoEXT pipelineRobustnessCreateInfoEXT() => { .sType = STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO, .pNext = null };
+fn PipelineRobustnessCreateInfoEXT PipelineRobustnessCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineRobustnessCreateInfoEXT PipelineRobustnessCreateInfoEXT.setStorageBuffers(&self, PipelineRobustnessBufferBehavior storageBuffers) {
+   self.storageBuffers = storageBuffers;
+   return *self;
+}
+fn PipelineRobustnessCreateInfoEXT PipelineRobustnessCreateInfoEXT.setUniformBuffers(&self, PipelineRobustnessBufferBehavior uniformBuffers) {
+   self.uniformBuffers = uniformBuffers;
+   return *self;
+}
+fn PipelineRobustnessCreateInfoEXT PipelineRobustnessCreateInfoEXT.setVertexInputs(&self, PipelineRobustnessBufferBehavior vertexInputs) {
+   self.vertexInputs = vertexInputs;
+   return *self;
+}
+fn PipelineRobustnessCreateInfoEXT PipelineRobustnessCreateInfoEXT.setImages(&self, PipelineRobustnessImageBehavior images) {
+   self.images = images;
+   return *self;
+}
 fn PhysicalDevicePipelineRobustnessProperties physicalDevicePipelineRobustnessProperties() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES, .pNext = null };
 fn PhysicalDevicePipelineRobustnessProperties PhysicalDevicePipelineRobustnessProperties.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7795,6 +19249,623 @@ fn PhysicalDevicePipelineRobustnessProperties PhysicalDevicePipelineRobustnessPr
    self.defaultRobustnessImages = defaultRobustnessImages;
    return *self;
 }
+fn PhysicalDevicePipelineRobustnessPropertiesEXT physicalDevicePipelineRobustnessPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES, .pNext = null };
+fn PhysicalDevicePipelineRobustnessPropertiesEXT PhysicalDevicePipelineRobustnessPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessPropertiesEXT PhysicalDevicePipelineRobustnessPropertiesEXT.setDefaultRobustnessStorageBuffers(&self, PipelineRobustnessBufferBehavior defaultRobustnessStorageBuffers) {
+   self.defaultRobustnessStorageBuffers = defaultRobustnessStorageBuffers;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessPropertiesEXT PhysicalDevicePipelineRobustnessPropertiesEXT.setDefaultRobustnessUniformBuffers(&self, PipelineRobustnessBufferBehavior defaultRobustnessUniformBuffers) {
+   self.defaultRobustnessUniformBuffers = defaultRobustnessUniformBuffers;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessPropertiesEXT PhysicalDevicePipelineRobustnessPropertiesEXT.setDefaultRobustnessVertexInputs(&self, PipelineRobustnessBufferBehavior defaultRobustnessVertexInputs) {
+   self.defaultRobustnessVertexInputs = defaultRobustnessVertexInputs;
+   return *self;
+}
+fn PhysicalDevicePipelineRobustnessPropertiesEXT PhysicalDevicePipelineRobustnessPropertiesEXT.setDefaultRobustnessImages(&self, PipelineRobustnessImageBehavior defaultRobustnessImages) {
+   self.defaultRobustnessImages = defaultRobustnessImages;
+   return *self;
+}
+fn ImageViewSampleWeightCreateInfoQCOM imageViewSampleWeightCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_IMAGE_VIEW_SAMPLE_WEIGHT_CREATE_INFO_QCOM, .pNext = null };
+fn ImageViewSampleWeightCreateInfoQCOM ImageViewSampleWeightCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageViewSampleWeightCreateInfoQCOM ImageViewSampleWeightCreateInfoQCOM.setFilterCenter(&self, Offset2D filterCenter) {
+   self.filterCenter = filterCenter;
+   return *self;
+}
+fn ImageViewSampleWeightCreateInfoQCOM ImageViewSampleWeightCreateInfoQCOM.setFilterSize(&self, Extent2D filterSize) {
+   self.filterSize = filterSize;
+   return *self;
+}
+fn ImageViewSampleWeightCreateInfoQCOM ImageViewSampleWeightCreateInfoQCOM.setNumPhases(&self, uint numPhases) {
+   self.numPhases = numPhases;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingFeaturesQCOM physicalDeviceImageProcessingFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceImageProcessingFeaturesQCOM PhysicalDeviceImageProcessingFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingFeaturesQCOM PhysicalDeviceImageProcessingFeaturesQCOM.setTextureSampleWeighted(&self, uint textureSampleWeighted) {
+   self.textureSampleWeighted = textureSampleWeighted;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingFeaturesQCOM PhysicalDeviceImageProcessingFeaturesQCOM.setTextureBoxFilter(&self, uint textureBoxFilter) {
+   self.textureBoxFilter = textureBoxFilter;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingFeaturesQCOM PhysicalDeviceImageProcessingFeaturesQCOM.setTextureBlockMatch(&self, uint textureBlockMatch) {
+   self.textureBlockMatch = textureBlockMatch;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingPropertiesQCOM physicalDeviceImageProcessingPropertiesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_PROPERTIES_QCOM, .pNext = null };
+fn PhysicalDeviceImageProcessingPropertiesQCOM PhysicalDeviceImageProcessingPropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingPropertiesQCOM PhysicalDeviceImageProcessingPropertiesQCOM.setMaxWeightFilterPhases(&self, uint maxWeightFilterPhases) {
+   self.maxWeightFilterPhases = maxWeightFilterPhases;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingPropertiesQCOM PhysicalDeviceImageProcessingPropertiesQCOM.setMaxWeightFilterDimension(&self, Extent2D maxWeightFilterDimension) {
+   self.maxWeightFilterDimension = maxWeightFilterDimension;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingPropertiesQCOM PhysicalDeviceImageProcessingPropertiesQCOM.setMaxBlockMatchRegion(&self, Extent2D maxBlockMatchRegion) {
+   self.maxBlockMatchRegion = maxBlockMatchRegion;
+   return *self;
+}
+fn PhysicalDeviceImageProcessingPropertiesQCOM PhysicalDeviceImageProcessingPropertiesQCOM.setMaxBoxFilterBlockSize(&self, Extent2D maxBoxFilterBlockSize) {
+   self.maxBoxFilterBlockSize = maxBoxFilterBlockSize;
+   return *self;
+}
+fn PhysicalDeviceTilePropertiesFeaturesQCOM physicalDeviceTilePropertiesFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_PROPERTIES_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceTilePropertiesFeaturesQCOM PhysicalDeviceTilePropertiesFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTilePropertiesFeaturesQCOM PhysicalDeviceTilePropertiesFeaturesQCOM.setTileProperties(&self, uint tileProperties) {
+   self.tileProperties = tileProperties;
+   return *self;
+}
+fn TilePropertiesQCOM tilePropertiesQCOM() => { .sType = STRUCTURE_TYPE_TILE_PROPERTIES_QCOM, .pNext = null };
+fn TilePropertiesQCOM TilePropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TilePropertiesQCOM TilePropertiesQCOM.setTileSize(&self, Extent3D tileSize) {
+   self.tileSize = tileSize;
+   return *self;
+}
+fn TilePropertiesQCOM TilePropertiesQCOM.setApronSize(&self, Extent2D apronSize) {
+   self.apronSize = apronSize;
+   return *self;
+}
+fn TilePropertiesQCOM TilePropertiesQCOM.setOrigin(&self, Offset2D origin) {
+   self.origin = origin;
+   return *self;
+}
+fn TileMemoryBindInfoQCOM tileMemoryBindInfoQCOM() => { .sType = STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM, .pNext = null };
+fn TileMemoryBindInfoQCOM TileMemoryBindInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TileMemoryBindInfoQCOM TileMemoryBindInfoQCOM.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn PhysicalDeviceAmigoProfilingFeaturesSEC physicalDeviceAmigoProfilingFeaturesSEC() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_AMIGO_PROFILING_FEATURES_SEC, .pNext = null };
+fn PhysicalDeviceAmigoProfilingFeaturesSEC PhysicalDeviceAmigoProfilingFeaturesSEC.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceAmigoProfilingFeaturesSEC PhysicalDeviceAmigoProfilingFeaturesSEC.setAmigoProfiling(&self, uint amigoProfiling) {
+   self.amigoProfiling = amigoProfiling;
+   return *self;
+}
+fn AmigoProfilingSubmitInfoSEC amigoProfilingSubmitInfoSEC() => { .sType = STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC, .pNext = null };
+fn AmigoProfilingSubmitInfoSEC AmigoProfilingSubmitInfoSEC.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AmigoProfilingSubmitInfoSEC AmigoProfilingSubmitInfoSEC.setFirstDrawTimestamp(&self, ulong firstDrawTimestamp) {
+   self.firstDrawTimestamp = firstDrawTimestamp;
+   return *self;
+}
+fn AmigoProfilingSubmitInfoSEC AmigoProfilingSubmitInfoSEC.setSwapBufferTimestamp(&self, ulong swapBufferTimestamp) {
+   self.swapBufferTimestamp = swapBufferTimestamp;
+   return *self;
+}
+fn PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT physicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT.setAttachmentFeedbackLoopLayout(&self, uint attachmentFeedbackLoopLayout) {
+   self.attachmentFeedbackLoopLayout = attachmentFeedbackLoopLayout;
+   return *self;
+}
+fn AttachmentFeedbackLoopInfoEXT attachmentFeedbackLoopInfoEXT() => { .sType = STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT, .pNext = null };
+fn AttachmentFeedbackLoopInfoEXT AttachmentFeedbackLoopInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AttachmentFeedbackLoopInfoEXT AttachmentFeedbackLoopInfoEXT.setFeedbackLoopEnable(&self, uint feedbackLoopEnable) {
+   self.feedbackLoopEnable = feedbackLoopEnable;
+   return *self;
+}
+fn PhysicalDeviceAddressBindingReportFeaturesEXT physicalDeviceAddressBindingReportFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ADDRESS_BINDING_REPORT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceAddressBindingReportFeaturesEXT PhysicalDeviceAddressBindingReportFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceAddressBindingReportFeaturesEXT PhysicalDeviceAddressBindingReportFeaturesEXT.setReportAddressBinding(&self, uint reportAddressBinding) {
+   self.reportAddressBinding = reportAddressBinding;
+   return *self;
+}
+fn RenderingAttachmentFlagsInfoKHR renderingAttachmentFlagsInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR, .pNext = null };
+fn RenderingAttachmentFlagsInfoKHR RenderingAttachmentFlagsInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingAttachmentFlagsInfoKHR RenderingAttachmentFlagsInfoKHR.setFlags(&self, RenderingAttachmentFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ResolveImageModeInfoKHR resolveImageModeInfoKHR() => { .sType = STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR, .pNext = null };
+fn ResolveImageModeInfoKHR ResolveImageModeInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ResolveImageModeInfoKHR ResolveImageModeInfoKHR.setFlags(&self, ResolveImageFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ResolveImageModeInfoKHR ResolveImageModeInfoKHR.setResolveMode(&self, ResolveModeFlagBits resolveMode) {
+   self.resolveMode = resolveMode;
+   return *self;
+}
+fn ResolveImageModeInfoKHR ResolveImageModeInfoKHR.setStencilResolveMode(&self, ResolveModeFlagBits stencilResolveMode) {
+   self.stencilResolveMode = stencilResolveMode;
+   return *self;
+}
+fn DeviceAddressBindingCallbackDataEXT deviceAddressBindingCallbackDataEXT() => { .sType = STRUCTURE_TYPE_DEVICE_ADDRESS_BINDING_CALLBACK_DATA_EXT, .pNext = null };
+fn DeviceAddressBindingCallbackDataEXT DeviceAddressBindingCallbackDataEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceAddressBindingCallbackDataEXT DeviceAddressBindingCallbackDataEXT.setFlags(&self, DeviceAddressBindingFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn DeviceAddressBindingCallbackDataEXT DeviceAddressBindingCallbackDataEXT.setBaseAddress(&self, DeviceAddress baseAddress) {
+   self.baseAddress = baseAddress;
+   return *self;
+}
+fn DeviceAddressBindingCallbackDataEXT DeviceAddressBindingCallbackDataEXT.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn DeviceAddressBindingCallbackDataEXT DeviceAddressBindingCallbackDataEXT.setBindingType(&self, DeviceAddressBindingTypeEXT bindingType) {
+   self.bindingType = bindingType;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowFeaturesNV physicalDeviceOpticalFlowFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceOpticalFlowFeaturesNV PhysicalDeviceOpticalFlowFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowFeaturesNV PhysicalDeviceOpticalFlowFeaturesNV.setOpticalFlow(&self, uint opticalFlow) {
+   self.opticalFlow = opticalFlow;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV physicalDeviceOpticalFlowPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setSupportedOutputGridSizes(&self, OpticalFlowGridSizeFlagsNV supportedOutputGridSizes) {
+   self.supportedOutputGridSizes = supportedOutputGridSizes;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setSupportedHintGridSizes(&self, OpticalFlowGridSizeFlagsNV supportedHintGridSizes) {
+   self.supportedHintGridSizes = supportedHintGridSizes;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setHintSupported(&self, uint hintSupported) {
+   self.hintSupported = hintSupported;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setCostSupported(&self, uint costSupported) {
+   self.costSupported = costSupported;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setBidirectionalFlowSupported(&self, uint bidirectionalFlowSupported) {
+   self.bidirectionalFlowSupported = bidirectionalFlowSupported;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setGlobalFlowSupported(&self, uint globalFlowSupported) {
+   self.globalFlowSupported = globalFlowSupported;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setMinWidth(&self, uint minWidth) {
+   self.minWidth = minWidth;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setMinHeight(&self, uint minHeight) {
+   self.minHeight = minHeight;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setMaxWidth(&self, uint maxWidth) {
+   self.maxWidth = maxWidth;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setMaxHeight(&self, uint maxHeight) {
+   self.maxHeight = maxHeight;
+   return *self;
+}
+fn PhysicalDeviceOpticalFlowPropertiesNV PhysicalDeviceOpticalFlowPropertiesNV.setMaxNumRegionsOfInterest(&self, uint maxNumRegionsOfInterest) {
+   self.maxNumRegionsOfInterest = maxNumRegionsOfInterest;
+   return *self;
+}
+fn OpticalFlowImageFormatInfoNV opticalFlowImageFormatInfoNV() => { .sType = STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_INFO_NV, .pNext = null };
+fn OpticalFlowImageFormatInfoNV OpticalFlowImageFormatInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpticalFlowImageFormatInfoNV OpticalFlowImageFormatInfoNV.setUsage(&self, OpticalFlowUsageFlagsNV usage) {
+   self.usage = usage;
+   return *self;
+}
+fn OpticalFlowImageFormatPropertiesNV opticalFlowImageFormatPropertiesNV() => { .sType = STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_NV, .pNext = null };
+fn OpticalFlowImageFormatPropertiesNV OpticalFlowImageFormatPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpticalFlowImageFormatPropertiesNV OpticalFlowImageFormatPropertiesNV.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV opticalFlowSessionCreateInfoNV() => { .sType = STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_INFO_NV, .pNext = null };
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setWidth(&self, uint width) {
+   self.width = width;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setHeight(&self, uint height) {
+   self.height = height;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setImageFormat(&self, Format imageFormat) {
+   self.imageFormat = imageFormat;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setFlowVectorFormat(&self, Format flowVectorFormat) {
+   self.flowVectorFormat = flowVectorFormat;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setCostFormat(&self, Format costFormat) {
+   self.costFormat = costFormat;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setOutputGridSize(&self, OpticalFlowGridSizeFlagsNV outputGridSize) {
+   self.outputGridSize = outputGridSize;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setHintGridSize(&self, OpticalFlowGridSizeFlagsNV hintGridSize) {
+   self.hintGridSize = hintGridSize;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setPerformanceLevel(&self, OpticalFlowPerformanceLevelNV performanceLevel) {
+   self.performanceLevel = performanceLevel;
+   return *self;
+}
+fn OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreateInfoNV.setFlags(&self, OpticalFlowSessionCreateFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn OpticalFlowSessionCreatePrivateDataInfoNV opticalFlowSessionCreatePrivateDataInfoNV() => { .sType = STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV, .pNext = null };
+fn OpticalFlowSessionCreatePrivateDataInfoNV OpticalFlowSessionCreatePrivateDataInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpticalFlowSessionCreatePrivateDataInfoNV OpticalFlowSessionCreatePrivateDataInfoNV.setId(&self, uint id) {
+   self.id = id;
+   return *self;
+}
+fn OpticalFlowSessionCreatePrivateDataInfoNV OpticalFlowSessionCreatePrivateDataInfoNV.setSize(&self, uint size) {
+   self.size = size;
+   return *self;
+}
+fn OpticalFlowSessionCreatePrivateDataInfoNV OpticalFlowSessionCreatePrivateDataInfoNV.setPrivateData(&self, void* pPrivateData) {
+   self.pPrivateData = pPrivateData;
+   return *self;
+}
+fn OpticalFlowExecuteInfoNV opticalFlowExecuteInfoNV() => { .sType = STRUCTURE_TYPE_OPTICAL_FLOW_EXECUTE_INFO_NV, .pNext = null };
+fn OpticalFlowExecuteInfoNV OpticalFlowExecuteInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpticalFlowExecuteInfoNV OpticalFlowExecuteInfoNV.setFlags(&self, OpticalFlowExecuteFlagsNV flags) {
+   self.flags = flags;
+   return *self;
+}
+fn OpticalFlowExecuteInfoNV OpticalFlowExecuteInfoNV.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn OpticalFlowExecuteInfoNV OpticalFlowExecuteInfoNV.setRegions(&self, Rect2D[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesEXT physicalDeviceFaultFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFaultFeaturesEXT PhysicalDeviceFaultFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesEXT PhysicalDeviceFaultFeaturesEXT.setDeviceFault(&self, uint deviceFault) {
+   self.deviceFault = deviceFault;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesEXT PhysicalDeviceFaultFeaturesEXT.setDeviceFaultVendorBinary(&self, uint deviceFaultVendorBinary) {
+   self.deviceFaultVendorBinary = deviceFaultVendorBinary;
+   return *self;
+}
+fn DeviceFaultInfoKHR deviceFaultInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR, .pNext = null };
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setFlags(&self, DeviceFaultFlagsKHR flags) {
+   self.flags = flags;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setGroupId(&self, ulong groupId) {
+   self.groupId = groupId;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setFaultAddressInfo(&self, DeviceFaultAddressInfoKHR faultAddressInfo) {
+   self.faultAddressInfo = faultAddressInfo;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setInstructionAddressInfo(&self, DeviceFaultAddressInfoKHR instructionAddressInfo) {
+   self.instructionAddressInfo = instructionAddressInfo;
+   return *self;
+}
+fn DeviceFaultInfoKHR DeviceFaultInfoKHR.setVendorInfo(&self, DeviceFaultVendorInfoKHR vendorInfo) {
+   self.vendorInfo = vendorInfo;
+   return *self;
+}
+fn DeviceFaultDebugInfoKHR deviceFaultDebugInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR, .pNext = null };
+fn DeviceFaultDebugInfoKHR DeviceFaultDebugInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceFaultDebugInfoKHR DeviceFaultDebugInfoKHR.setVendorBinarySize(&self, uint vendorBinarySize) {
+   self.vendorBinarySize = vendorBinarySize;
+   return *self;
+}
+fn DeviceFaultDebugInfoKHR DeviceFaultDebugInfoKHR.setVendorBinaryData(&self, void* pVendorBinaryData) {
+   self.pVendorBinaryData = pVendorBinaryData;
+   return *self;
+}
+fn DeviceFaultCountsEXT deviceFaultCountsEXT() => { .sType = STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT, .pNext = null };
+fn DeviceFaultCountsEXT DeviceFaultCountsEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceFaultCountsEXT DeviceFaultCountsEXT.setAddressInfoCount(&self, uint addressInfoCount) {
+   self.addressInfoCount = addressInfoCount;
+   return *self;
+}
+fn DeviceFaultCountsEXT DeviceFaultCountsEXT.setVendorInfoCount(&self, uint vendorInfoCount) {
+   self.vendorInfoCount = vendorInfoCount;
+   return *self;
+}
+fn DeviceFaultCountsEXT DeviceFaultCountsEXT.setVendorBinarySize(&self, DeviceSize vendorBinarySize) {
+   self.vendorBinarySize = vendorBinarySize;
+   return *self;
+}
+fn DeviceFaultInfoEXT deviceFaultInfoEXT() => { .sType = STRUCTURE_TYPE_DEVICE_FAULT_INFO_EXT, .pNext = null };
+fn DeviceFaultInfoEXT DeviceFaultInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceFaultInfoEXT DeviceFaultInfoEXT.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn DeviceFaultInfoEXT DeviceFaultInfoEXT.setAddressInfos(&self, DeviceFaultAddressInfoKHR* pAddressInfos) {
+   self.pAddressInfos = pAddressInfos;
+   return *self;
+}
+fn DeviceFaultInfoEXT DeviceFaultInfoEXT.setVendorInfos(&self, DeviceFaultVendorInfoKHR* pVendorInfos) {
+   self.pVendorInfos = pVendorInfos;
+   return *self;
+}
+fn DeviceFaultInfoEXT DeviceFaultInfoEXT.setVendorBinaryData(&self, void* pVendorBinaryData) {
+   self.pVendorBinaryData = pVendorBinaryData;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesKHR physicalDeviceFaultFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceFaultFeaturesKHR PhysicalDeviceFaultFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesKHR PhysicalDeviceFaultFeaturesKHR.setDeviceFault(&self, uint deviceFault) {
+   self.deviceFault = deviceFault;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesKHR PhysicalDeviceFaultFeaturesKHR.setDeviceFaultVendorBinary(&self, uint deviceFaultVendorBinary) {
+   self.deviceFaultVendorBinary = deviceFaultVendorBinary;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesKHR PhysicalDeviceFaultFeaturesKHR.setDeviceFaultReportMasked(&self, uint deviceFaultReportMasked) {
+   self.deviceFaultReportMasked = deviceFaultReportMasked;
+   return *self;
+}
+fn PhysicalDeviceFaultFeaturesKHR PhysicalDeviceFaultFeaturesKHR.setDeviceFaultDeviceLostOnMasked(&self, uint deviceFaultDeviceLostOnMasked) {
+   self.deviceFaultDeviceLostOnMasked = deviceFaultDeviceLostOnMasked;
+   return *self;
+}
+fn PhysicalDeviceFaultPropertiesKHR physicalDeviceFaultPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceFaultPropertiesKHR PhysicalDeviceFaultPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFaultPropertiesKHR PhysicalDeviceFaultPropertiesKHR.setMaxDeviceFaultCount(&self, uint maxDeviceFaultCount) {
+   self.maxDeviceFaultCount = maxDeviceFaultCount;
+   return *self;
+}
+fn PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT physicalDevicePipelineLibraryGroupHandlesFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT, .pNext = null };
+fn PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT.setPipelineLibraryGroupHandles(&self, uint pipelineLibraryGroupHandles) {
+   self.pipelineLibraryGroupHandles = pipelineLibraryGroupHandles;
+   return *self;
+}
+fn DepthBiasInfoEXT depthBiasInfoEXT() => { .sType = STRUCTURE_TYPE_DEPTH_BIAS_INFO_EXT, .pNext = null };
+fn DepthBiasInfoEXT DepthBiasInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DepthBiasInfoEXT DepthBiasInfoEXT.setDepthBiasConstantFactor(&self, float depthBiasConstantFactor) {
+   self.depthBiasConstantFactor = depthBiasConstantFactor;
+   return *self;
+}
+fn DepthBiasInfoEXT DepthBiasInfoEXT.setDepthBiasClamp(&self, float depthBiasClamp) {
+   self.depthBiasClamp = depthBiasClamp;
+   return *self;
+}
+fn DepthBiasInfoEXT DepthBiasInfoEXT.setDepthBiasSlopeFactor(&self, float depthBiasSlopeFactor) {
+   self.depthBiasSlopeFactor = depthBiasSlopeFactor;
+   return *self;
+}
+fn DepthBiasRepresentationInfoEXT depthBiasRepresentationInfoEXT() => { .sType = STRUCTURE_TYPE_DEPTH_BIAS_REPRESENTATION_INFO_EXT, .pNext = null };
+fn DepthBiasRepresentationInfoEXT DepthBiasRepresentationInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DepthBiasRepresentationInfoEXT DepthBiasRepresentationInfoEXT.setDepthBiasRepresentation(&self, DepthBiasRepresentationEXT depthBiasRepresentation) {
+   self.depthBiasRepresentation = depthBiasRepresentation;
+   return *self;
+}
+fn DepthBiasRepresentationInfoEXT DepthBiasRepresentationInfoEXT.setDepthBiasExact(&self, uint depthBiasExact) {
+   self.depthBiasExact = depthBiasExact;
+   return *self;
+}
+fn DecompressMemoryInfoEXT decompressMemoryInfoEXT() => { .sType = STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT, .pNext = null };
+fn DecompressMemoryInfoEXT DecompressMemoryInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DecompressMemoryInfoEXT DecompressMemoryInfoEXT.setDecompressionMethod(&self, MemoryDecompressionMethodFlagsEXT decompressionMethod) {
+   self.decompressionMethod = decompressionMethod;
+   return *self;
+}
+fn DecompressMemoryInfoEXT DecompressMemoryInfoEXT.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn DecompressMemoryInfoEXT DecompressMemoryInfoEXT.setRegions(&self, DecompressMemoryRegionEXT[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsPropertiesARM physicalDeviceShaderCoreBuiltinsPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceShaderCoreBuiltinsPropertiesARM PhysicalDeviceShaderCoreBuiltinsPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsPropertiesARM PhysicalDeviceShaderCoreBuiltinsPropertiesARM.setShaderCoreMask(&self, ulong shaderCoreMask) {
+   self.shaderCoreMask = shaderCoreMask;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsPropertiesARM PhysicalDeviceShaderCoreBuiltinsPropertiesARM.setShaderCoreCount(&self, uint shaderCoreCount) {
+   self.shaderCoreCount = shaderCoreCount;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsPropertiesARM PhysicalDeviceShaderCoreBuiltinsPropertiesARM.setShaderWarpsPerCore(&self, uint shaderWarpsPerCore) {
+   self.shaderWarpsPerCore = shaderWarpsPerCore;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsFeaturesARM physicalDeviceShaderCoreBuiltinsFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceShaderCoreBuiltinsFeaturesARM PhysicalDeviceShaderCoreBuiltinsFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderCoreBuiltinsFeaturesARM PhysicalDeviceShaderCoreBuiltinsFeaturesARM.setShaderCoreBuiltins(&self, uint shaderCoreBuiltins) {
+   self.shaderCoreBuiltins = shaderCoreBuiltins;
+   return *self;
+}
+fn FrameBoundaryEXT frameBoundaryEXT() => { .sType = STRUCTURE_TYPE_FRAME_BOUNDARY_EXT, .pNext = null };
+fn FrameBoundaryEXT FrameBoundaryEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setFlags(&self, FrameBoundaryFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setFrameID(&self, ulong frameID) {
+   self.frameID = frameID;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setImageCount(&self, uint imageCount) {
+   self.imageCount = imageCount;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setImages(&self, Image[] pImages) {
+   self.imageCount= (uint)pImages.len;
+   self.pImages = &pImages[0];
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setBufferCount(&self, uint bufferCount) {
+   self.bufferCount = bufferCount;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setBuffers(&self, Buffer[] pBuffers) {
+   self.bufferCount= (uint)pBuffers.len;
+   self.pBuffers = &pBuffers[0];
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setTagName(&self, ulong tagName) {
+   self.tagName = tagName;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setTagSize(&self, usz tagSize) {
+   self.tagSize = tagSize;
+   return *self;
+}
+fn FrameBoundaryEXT FrameBoundaryEXT.setTag(&self, void* pTag) {
+   self.pTag = pTag;
+   return *self;
+}
+fn PhysicalDeviceFrameBoundaryFeaturesEXT physicalDeviceFrameBoundaryFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAME_BOUNDARY_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceFrameBoundaryFeaturesEXT PhysicalDeviceFrameBoundaryFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFrameBoundaryFeaturesEXT PhysicalDeviceFrameBoundaryFeaturesEXT.setFrameBoundary(&self, uint frameBoundary) {
+   self.frameBoundary = frameBoundary;
+   return *self;
+}
 fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT physicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT, .pNext = null };
 fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7802,6 +19873,388 @@ fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT PhysicalDeviceDyna
 }
 fn PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT.setDynamicRenderingUnusedAttachments(&self, uint dynamicRenderingUnusedAttachments) {
    self.dynamicRenderingUnusedAttachments = dynamicRenderingUnusedAttachments;
+   return *self;
+}
+fn PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR physicalDeviceInternallySynchronizedQueuesFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR.setInternallySynchronizedQueues(&self, uint internallySynchronizedQueues) {
+   self.internallySynchronizedQueues = internallySynchronizedQueues;
+   return *self;
+}
+fn SurfacePresentModeKHR surfacePresentModeKHR() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR, .pNext = null };
+fn SurfacePresentModeKHR SurfacePresentModeKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentModeKHR SurfacePresentModeKHR.setPresentMode(&self, PresentModeKHR presentMode) {
+   self.presentMode = presentMode;
+   return *self;
+}
+fn SurfacePresentModeEXT surfacePresentModeEXT() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR, .pNext = null };
+fn SurfacePresentModeEXT SurfacePresentModeEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentModeEXT SurfacePresentModeEXT.setPresentMode(&self, PresentModeKHR presentMode) {
+   self.presentMode = presentMode;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR surfacePresentScalingCapabilitiesKHR() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR, .pNext = null };
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setSupportedPresentScaling(&self, PresentScalingFlagsKHR supportedPresentScaling) {
+   self.supportedPresentScaling = supportedPresentScaling;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setSupportedPresentGravityX(&self, PresentGravityFlagsKHR supportedPresentGravityX) {
+   self.supportedPresentGravityX = supportedPresentGravityX;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setSupportedPresentGravityY(&self, PresentGravityFlagsKHR supportedPresentGravityY) {
+   self.supportedPresentGravityY = supportedPresentGravityY;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setMinScaledImageExtent(&self, Extent2D minScaledImageExtent) {
+   self.minScaledImageExtent = minScaledImageExtent;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesKHR SurfacePresentScalingCapabilitiesKHR.setMaxScaledImageExtent(&self, Extent2D maxScaledImageExtent) {
+   self.maxScaledImageExtent = maxScaledImageExtent;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT surfacePresentScalingCapabilitiesEXT() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR, .pNext = null };
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setSupportedPresentScaling(&self, PresentScalingFlagsKHR supportedPresentScaling) {
+   self.supportedPresentScaling = supportedPresentScaling;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setSupportedPresentGravityX(&self, PresentGravityFlagsKHR supportedPresentGravityX) {
+   self.supportedPresentGravityX = supportedPresentGravityX;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setSupportedPresentGravityY(&self, PresentGravityFlagsKHR supportedPresentGravityY) {
+   self.supportedPresentGravityY = supportedPresentGravityY;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setMinScaledImageExtent(&self, Extent2D minScaledImageExtent) {
+   self.minScaledImageExtent = minScaledImageExtent;
+   return *self;
+}
+fn SurfacePresentScalingCapabilitiesEXT SurfacePresentScalingCapabilitiesEXT.setMaxScaledImageExtent(&self, Extent2D maxScaledImageExtent) {
+   self.maxScaledImageExtent = maxScaledImageExtent;
+   return *self;
+}
+fn SurfacePresentModeCompatibilityKHR surfacePresentModeCompatibilityKHR() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR, .pNext = null };
+fn SurfacePresentModeCompatibilityKHR SurfacePresentModeCompatibilityKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentModeCompatibilityKHR SurfacePresentModeCompatibilityKHR.setPresentModeCount(&self, uint presentModeCount) {
+   self.presentModeCount = presentModeCount;
+   return *self;
+}
+fn SurfacePresentModeCompatibilityKHR SurfacePresentModeCompatibilityKHR.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.presentModeCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn SurfacePresentModeCompatibilityEXT surfacePresentModeCompatibilityEXT() => { .sType = STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR, .pNext = null };
+fn SurfacePresentModeCompatibilityEXT SurfacePresentModeCompatibilityEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SurfacePresentModeCompatibilityEXT SurfacePresentModeCompatibilityEXT.setPresentModeCount(&self, uint presentModeCount) {
+   self.presentModeCount = presentModeCount;
+   return *self;
+}
+fn SurfacePresentModeCompatibilityEXT SurfacePresentModeCompatibilityEXT.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.presentModeCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn PhysicalDeviceSwapchainMaintenance1FeaturesKHR physicalDeviceSwapchainMaintenance1FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceSwapchainMaintenance1FeaturesKHR PhysicalDeviceSwapchainMaintenance1FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSwapchainMaintenance1FeaturesKHR PhysicalDeviceSwapchainMaintenance1FeaturesKHR.setSwapchainMaintenance1(&self, uint swapchainMaintenance1) {
+   self.swapchainMaintenance1 = swapchainMaintenance1;
+   return *self;
+}
+fn PhysicalDeviceSwapchainMaintenance1FeaturesEXT physicalDeviceSwapchainMaintenance1FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceSwapchainMaintenance1FeaturesEXT PhysicalDeviceSwapchainMaintenance1FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSwapchainMaintenance1FeaturesEXT PhysicalDeviceSwapchainMaintenance1FeaturesEXT.setSwapchainMaintenance1(&self, uint swapchainMaintenance1) {
+   self.swapchainMaintenance1 = swapchainMaintenance1;
+   return *self;
+}
+fn SwapchainPresentFenceInfoKHR swapchainPresentFenceInfoKHR() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR, .pNext = null };
+fn SwapchainPresentFenceInfoKHR SwapchainPresentFenceInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentFenceInfoKHR SwapchainPresentFenceInfoKHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn SwapchainPresentFenceInfoKHR SwapchainPresentFenceInfoKHR.setFences(&self, Fence[] pFences) {
+   self.swapchainCount= (uint)pFences.len;
+   self.pFences = &pFences[0];
+   return *self;
+}
+fn SwapchainPresentFenceInfoEXT swapchainPresentFenceInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR, .pNext = null };
+fn SwapchainPresentFenceInfoEXT SwapchainPresentFenceInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentFenceInfoEXT SwapchainPresentFenceInfoEXT.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn SwapchainPresentFenceInfoEXT SwapchainPresentFenceInfoEXT.setFences(&self, Fence[] pFences) {
+   self.swapchainCount= (uint)pFences.len;
+   self.pFences = &pFences[0];
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoKHR swapchainPresentModesCreateInfoKHR() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainPresentModesCreateInfoKHR SwapchainPresentModesCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoKHR SwapchainPresentModesCreateInfoKHR.setPresentModeCount(&self, uint presentModeCount) {
+   self.presentModeCount = presentModeCount;
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoKHR SwapchainPresentModesCreateInfoKHR.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.presentModeCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoEXT swapchainPresentModesCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainPresentModesCreateInfoEXT SwapchainPresentModesCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoEXT SwapchainPresentModesCreateInfoEXT.setPresentModeCount(&self, uint presentModeCount) {
+   self.presentModeCount = presentModeCount;
+   return *self;
+}
+fn SwapchainPresentModesCreateInfoEXT SwapchainPresentModesCreateInfoEXT.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.presentModeCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn SwapchainPresentModeInfoKHR swapchainPresentModeInfoKHR() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR, .pNext = null };
+fn SwapchainPresentModeInfoKHR SwapchainPresentModeInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentModeInfoKHR SwapchainPresentModeInfoKHR.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn SwapchainPresentModeInfoKHR SwapchainPresentModeInfoKHR.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.swapchainCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn SwapchainPresentModeInfoEXT swapchainPresentModeInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR, .pNext = null };
+fn SwapchainPresentModeInfoEXT SwapchainPresentModeInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentModeInfoEXT SwapchainPresentModeInfoEXT.setSwapchainCount(&self, uint swapchainCount) {
+   self.swapchainCount = swapchainCount;
+   return *self;
+}
+fn SwapchainPresentModeInfoEXT SwapchainPresentModeInfoEXT.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.swapchainCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoKHR swapchainPresentScalingCreateInfoKHR() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainPresentScalingCreateInfoKHR SwapchainPresentScalingCreateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoKHR SwapchainPresentScalingCreateInfoKHR.setScalingBehavior(&self, PresentScalingFlagsKHR scalingBehavior) {
+   self.scalingBehavior = scalingBehavior;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoKHR SwapchainPresentScalingCreateInfoKHR.setPresentGravityX(&self, PresentGravityFlagsKHR presentGravityX) {
+   self.presentGravityX = presentGravityX;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoKHR SwapchainPresentScalingCreateInfoKHR.setPresentGravityY(&self, PresentGravityFlagsKHR presentGravityY) {
+   self.presentGravityY = presentGravityY;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoEXT swapchainPresentScalingCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR, .pNext = null };
+fn SwapchainPresentScalingCreateInfoEXT SwapchainPresentScalingCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoEXT SwapchainPresentScalingCreateInfoEXT.setScalingBehavior(&self, PresentScalingFlagsKHR scalingBehavior) {
+   self.scalingBehavior = scalingBehavior;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoEXT SwapchainPresentScalingCreateInfoEXT.setPresentGravityX(&self, PresentGravityFlagsKHR presentGravityX) {
+   self.presentGravityX = presentGravityX;
+   return *self;
+}
+fn SwapchainPresentScalingCreateInfoEXT SwapchainPresentScalingCreateInfoEXT.setPresentGravityY(&self, PresentGravityFlagsKHR presentGravityY) {
+   self.presentGravityY = presentGravityY;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoKHR releaseSwapchainImagesInfoKHR() => { .sType = STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR, .pNext = null };
+fn ReleaseSwapchainImagesInfoKHR ReleaseSwapchainImagesInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoKHR ReleaseSwapchainImagesInfoKHR.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoKHR ReleaseSwapchainImagesInfoKHR.setImageIndexCount(&self, uint imageIndexCount) {
+   self.imageIndexCount = imageIndexCount;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoKHR ReleaseSwapchainImagesInfoKHR.setImageIndices(&self, uint[] pImageIndices) {
+   self.imageIndexCount= (uint)pImageIndices.len;
+   self.pImageIndices = &pImageIndices[0];
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoEXT releaseSwapchainImagesInfoEXT() => { .sType = STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR, .pNext = null };
+fn ReleaseSwapchainImagesInfoEXT ReleaseSwapchainImagesInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoEXT ReleaseSwapchainImagesInfoEXT.setSwapchain(&self, SwapchainKHR swapchain) {
+   self.swapchain = swapchain;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoEXT ReleaseSwapchainImagesInfoEXT.setImageIndexCount(&self, uint imageIndexCount) {
+   self.imageIndexCount = imageIndexCount;
+   return *self;
+}
+fn ReleaseSwapchainImagesInfoEXT ReleaseSwapchainImagesInfoEXT.setImageIndices(&self, uint[] pImageIndices) {
+   self.imageIndexCount= (uint)pImageIndices.len;
+   self.pImageIndices = &pImageIndices[0];
+   return *self;
+}
+fn PhysicalDeviceDepthBiasControlFeaturesEXT physicalDeviceDepthBiasControlFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_BIAS_CONTROL_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDepthBiasControlFeaturesEXT PhysicalDeviceDepthBiasControlFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDepthBiasControlFeaturesEXT PhysicalDeviceDepthBiasControlFeaturesEXT.setDepthBiasControl(&self, uint depthBiasControl) {
+   self.depthBiasControl = depthBiasControl;
+   return *self;
+}
+fn PhysicalDeviceDepthBiasControlFeaturesEXT PhysicalDeviceDepthBiasControlFeaturesEXT.setLeastRepresentableValueForceUnormRepresentation(&self, uint leastRepresentableValueForceUnormRepresentation) {
+   self.leastRepresentableValueForceUnormRepresentation = leastRepresentableValueForceUnormRepresentation;
+   return *self;
+}
+fn PhysicalDeviceDepthBiasControlFeaturesEXT PhysicalDeviceDepthBiasControlFeaturesEXT.setFloatRepresentation(&self, uint floatRepresentation) {
+   self.floatRepresentation = floatRepresentation;
+   return *self;
+}
+fn PhysicalDeviceDepthBiasControlFeaturesEXT PhysicalDeviceDepthBiasControlFeaturesEXT.setDepthBiasExact(&self, uint depthBiasExact) {
+   self.depthBiasExact = depthBiasExact;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesEXT physicalDeviceRayTracingInvocationReorderFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesEXT PhysicalDeviceRayTracingInvocationReorderFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesEXT PhysicalDeviceRayTracingInvocationReorderFeaturesEXT.setRayTracingInvocationReorder(&self, uint rayTracingInvocationReorder) {
+   self.rayTracingInvocationReorder = rayTracingInvocationReorder;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesNV physicalDeviceRayTracingInvocationReorderFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesNV PhysicalDeviceRayTracingInvocationReorderFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderFeaturesNV PhysicalDeviceRayTracingInvocationReorderFeaturesNV.setRayTracingInvocationReorder(&self, uint rayTracingInvocationReorder) {
+   self.rayTracingInvocationReorder = rayTracingInvocationReorder;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesEXT physicalDeviceRayTracingInvocationReorderPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesEXT PhysicalDeviceRayTracingInvocationReorderPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesEXT PhysicalDeviceRayTracingInvocationReorderPropertiesEXT.setRayTracingInvocationReorderReorderingHint(&self, RayTracingInvocationReorderModeEXT rayTracingInvocationReorderReorderingHint) {
+   self.rayTracingInvocationReorderReorderingHint = rayTracingInvocationReorderReorderingHint;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesEXT PhysicalDeviceRayTracingInvocationReorderPropertiesEXT.setMaxShaderBindingTableRecordIndex(&self, uint maxShaderBindingTableRecordIndex) {
+   self.maxShaderBindingTableRecordIndex = maxShaderBindingTableRecordIndex;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesNV physicalDeviceRayTracingInvocationReorderPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesNV PhysicalDeviceRayTracingInvocationReorderPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingInvocationReorderPropertiesNV PhysicalDeviceRayTracingInvocationReorderPropertiesNV.setRayTracingInvocationReorderReorderingHint(&self, RayTracingInvocationReorderModeEXT rayTracingInvocationReorderReorderingHint) {
+   self.rayTracingInvocationReorderReorderingHint = rayTracingInvocationReorderReorderingHint;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV physicalDeviceExtendedSparseAddressSpaceFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV.setExtendedSparseAddressSpace(&self, uint extendedSparseAddressSpace) {
+   self.extendedSparseAddressSpace = extendedSparseAddressSpace;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpacePropertiesNV physicalDeviceExtendedSparseAddressSpacePropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceExtendedSparseAddressSpacePropertiesNV PhysicalDeviceExtendedSparseAddressSpacePropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpacePropertiesNV PhysicalDeviceExtendedSparseAddressSpacePropertiesNV.setExtendedSparseAddressSpaceSize(&self, DeviceSize extendedSparseAddressSpaceSize) {
+   self.extendedSparseAddressSpaceSize = extendedSparseAddressSpaceSize;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpacePropertiesNV PhysicalDeviceExtendedSparseAddressSpacePropertiesNV.setExtendedSparseImageUsageFlags(&self, ImageUsageFlags extendedSparseImageUsageFlags) {
+   self.extendedSparseImageUsageFlags = extendedSparseImageUsageFlags;
+   return *self;
+}
+fn PhysicalDeviceExtendedSparseAddressSpacePropertiesNV PhysicalDeviceExtendedSparseAddressSpacePropertiesNV.setExtendedSparseBufferUsageFlags(&self, BufferUsageFlags extendedSparseBufferUsageFlags) {
+   self.extendedSparseBufferUsageFlags = extendedSparseBufferUsageFlags;
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM physicalDeviceMultiviewPerViewViewportsFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM.setMultiviewPerViewViewports(&self, uint multiviewPerViewViewports) {
+   self.multiviewPerViewViewports = multiviewPerViewViewports;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPositionFetchFeaturesKHR physicalDeviceRayTracingPositionFetchFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceRayTracingPositionFetchFeaturesKHR PhysicalDeviceRayTracingPositionFetchFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRayTracingPositionFetchFeaturesKHR PhysicalDeviceRayTracingPositionFetchFeaturesKHR.setRayTracingPositionFetch(&self, uint rayTracingPositionFetch) {
+   self.rayTracingPositionFetch = rayTracingPositionFetch;
    return *self;
 }
 fn DeviceImageSubresourceInfo deviceImageSubresourceInfo() => { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO, .pNext = null };
@@ -7815,6 +20268,68 @@ fn DeviceImageSubresourceInfo DeviceImageSubresourceInfo.setCreateInfo(&self, Im
 }
 fn DeviceImageSubresourceInfo DeviceImageSubresourceInfo.setSubresource(&self, ImageSubresource2* pSubresource) {
    self.pSubresource = pSubresource;
+   return *self;
+}
+fn DeviceImageSubresourceInfoKHR deviceImageSubresourceInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO, .pNext = null };
+fn DeviceImageSubresourceInfoKHR DeviceImageSubresourceInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceImageSubresourceInfoKHR DeviceImageSubresourceInfoKHR.setCreateInfo(&self, ImageCreateInfo* pCreateInfo) {
+   self.pCreateInfo = pCreateInfo;
+   return *self;
+}
+fn DeviceImageSubresourceInfoKHR DeviceImageSubresourceInfoKHR.setSubresource(&self, ImageSubresource2* pSubresource) {
+   self.pSubresource = pSubresource;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesARM physicalDeviceShaderCorePropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceShaderCorePropertiesARM PhysicalDeviceShaderCorePropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesARM PhysicalDeviceShaderCorePropertiesARM.setPixelRate(&self, uint pixelRate) {
+   self.pixelRate = pixelRate;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesARM PhysicalDeviceShaderCorePropertiesARM.setTexelRate(&self, uint texelRate) {
+   self.texelRate = texelRate;
+   return *self;
+}
+fn PhysicalDeviceShaderCorePropertiesARM PhysicalDeviceShaderCorePropertiesARM.setFmaRate(&self, uint fmaRate) {
+   self.fmaRate = fmaRate;
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM physicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM.setMultiviewPerViewRenderAreas(&self, uint multiviewPerViewRenderAreas) {
+   self.multiviewPerViewRenderAreas = multiviewPerViewRenderAreas;
+   return *self;
+}
+fn MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM multiviewPerViewRenderAreasRenderPassBeginInfoQCOM() => { .sType = STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM, .pNext = null };
+fn MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM.setPerViewRenderAreaCount(&self, uint perViewRenderAreaCount) {
+   self.perViewRenderAreaCount = perViewRenderAreaCount;
+   return *self;
+}
+fn MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM.setPerViewRenderAreas(&self, Rect2D[] pPerViewRenderAreas) {
+   self.perViewRenderAreaCount= (uint)pPerViewRenderAreas.len;
+   self.pPerViewRenderAreas = &pPerViewRenderAreas[0];
+   return *self;
+}
+fn QueryLowLatencySupportNV queryLowLatencySupportNV() => { .sType = STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV, .pNext = null };
+fn QueryLowLatencySupportNV QueryLowLatencySupportNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueryLowLatencySupportNV QueryLowLatencySupportNV.setQueriedLowLatencyData(&self, void* pQueriedLowLatencyData) {
+   self.pQueriedLowLatencyData = pQueriedLowLatencyData;
    return *self;
 }
 fn MemoryMapInfo memoryMapInfo() => { .sType = STRUCTURE_TYPE_MEMORY_MAP_INFO, .pNext = null };
@@ -7838,6 +20353,27 @@ fn MemoryMapInfo MemoryMapInfo.setSize(&self, DeviceSize size) {
    self.size = size;
    return *self;
 }
+fn MemoryMapInfoKHR memoryMapInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_MAP_INFO, .pNext = null };
+fn MemoryMapInfoKHR MemoryMapInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryMapInfoKHR MemoryMapInfoKHR.setFlags(&self, MemoryMapFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MemoryMapInfoKHR MemoryMapInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn MemoryMapInfoKHR MemoryMapInfoKHR.setOffset(&self, DeviceSize offset) {
+   self.offset = offset;
+   return *self;
+}
+fn MemoryMapInfoKHR MemoryMapInfoKHR.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
 fn MemoryUnmapInfo memoryUnmapInfo() => { .sType = STRUCTURE_TYPE_MEMORY_UNMAP_INFO, .pNext = null };
 fn MemoryUnmapInfo MemoryUnmapInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7851,12 +20387,410 @@ fn MemoryUnmapInfo MemoryUnmapInfo.setMemory(&self, DeviceMemory memory) {
    self.memory = memory;
    return *self;
 }
+fn MemoryUnmapInfoKHR memoryUnmapInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_UNMAP_INFO, .pNext = null };
+fn MemoryUnmapInfoKHR MemoryUnmapInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryUnmapInfoKHR MemoryUnmapInfoKHR.setFlags(&self, MemoryUnmapFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn MemoryUnmapInfoKHR MemoryUnmapInfoKHR.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn PhysicalDeviceShaderObjectFeaturesEXT physicalDeviceShaderObjectFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderObjectFeaturesEXT PhysicalDeviceShaderObjectFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderObjectFeaturesEXT PhysicalDeviceShaderObjectFeaturesEXT.setShaderObject(&self, uint shaderObject) {
+   self.shaderObject = shaderObject;
+   return *self;
+}
+fn PhysicalDeviceShaderObjectPropertiesEXT physicalDeviceShaderObjectPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesEXT.setShaderBinaryUUID(&self, uint[UUID_SIZE] shaderBinaryUUID) {
+   self.shaderBinaryUUID = shaderBinaryUUID;
+   return *self;
+}
+fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesEXT.setShaderBinaryVersion(&self, uint shaderBinaryVersion) {
+   self.shaderBinaryVersion = shaderBinaryVersion;
+   return *self;
+}
+fn ShaderCreateInfoEXT shaderCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT, .pNext = null };
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setFlags(&self, ShaderCreateFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setStage(&self, ShaderStageFlagBits stage) {
+   self.stage = stage;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setNextStage(&self, ShaderStageFlags nextStage) {
+   self.nextStage = nextStage;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCodeType(&self, ShaderCodeTypeEXT codeType) {
+   self.codeType = codeType;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCodeSize(&self, usz codeSize) {
+   self.codeSize = codeSize;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCode(&self, void* pCode) {
+   self.pCode = pCode;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setName(&self, char* pName) {
+   self.pName = pName;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setSetLayoutCount(&self, uint setLayoutCount) {
+   self.setLayoutCount = setLayoutCount;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setSetLayouts(&self, DescriptorSetLayout[] pSetLayouts) {
+   self.setLayoutCount= (uint)pSetLayouts.len;
+   self.pSetLayouts = &pSetLayouts[0];
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setPushConstantRangeCount(&self, uint pushConstantRangeCount) {
+   self.pushConstantRangeCount = pushConstantRangeCount;
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setPushConstantRanges(&self, PushConstantRange[] pPushConstantRanges) {
+   self.pushConstantRangeCount= (uint)pPushConstantRanges.len;
+   self.pPushConstantRanges = &pPushConstantRanges[0];
+   return *self;
+}
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setSpecializationInfo(&self, SpecializationInfo* pSpecializationInfo) {
+   self.pSpecializationInfo = pSpecializationInfo;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImageFeaturesEXT physicalDeviceShaderTileImageFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TILE_IMAGE_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderTileImageFeaturesEXT PhysicalDeviceShaderTileImageFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImageFeaturesEXT PhysicalDeviceShaderTileImageFeaturesEXT.setShaderTileImageColorReadAccess(&self, uint shaderTileImageColorReadAccess) {
+   self.shaderTileImageColorReadAccess = shaderTileImageColorReadAccess;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImageFeaturesEXT PhysicalDeviceShaderTileImageFeaturesEXT.setShaderTileImageDepthReadAccess(&self, uint shaderTileImageDepthReadAccess) {
+   self.shaderTileImageDepthReadAccess = shaderTileImageDepthReadAccess;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImageFeaturesEXT PhysicalDeviceShaderTileImageFeaturesEXT.setShaderTileImageStencilReadAccess(&self, uint shaderTileImageStencilReadAccess) {
+   self.shaderTileImageStencilReadAccess = shaderTileImageStencilReadAccess;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImagePropertiesEXT physicalDeviceShaderTileImagePropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TILE_IMAGE_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceShaderTileImagePropertiesEXT PhysicalDeviceShaderTileImagePropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImagePropertiesEXT PhysicalDeviceShaderTileImagePropertiesEXT.setShaderTileImageCoherentReadAccelerated(&self, uint shaderTileImageCoherentReadAccelerated) {
+   self.shaderTileImageCoherentReadAccelerated = shaderTileImageCoherentReadAccelerated;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImagePropertiesEXT PhysicalDeviceShaderTileImagePropertiesEXT.setShaderTileImageReadSampleFromPixelRateInvocation(&self, uint shaderTileImageReadSampleFromPixelRateInvocation) {
+   self.shaderTileImageReadSampleFromPixelRateInvocation = shaderTileImageReadSampleFromPixelRateInvocation;
+   return *self;
+}
+fn PhysicalDeviceShaderTileImagePropertiesEXT PhysicalDeviceShaderTileImagePropertiesEXT.setShaderTileImageReadFromHelperInvocation(&self, uint shaderTileImageReadFromHelperInvocation) {
+   self.shaderTileImageReadFromHelperInvocation = shaderTileImageReadFromHelperInvocation;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesKHR physicalDeviceCooperativeMatrixFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceCooperativeMatrixFeaturesKHR PhysicalDeviceCooperativeMatrixFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesKHR PhysicalDeviceCooperativeMatrixFeaturesKHR.setCooperativeMatrix(&self, uint cooperativeMatrix) {
+   self.cooperativeMatrix = cooperativeMatrix;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixFeaturesKHR PhysicalDeviceCooperativeMatrixFeaturesKHR.setCooperativeMatrixRobustBufferAccess(&self, uint cooperativeMatrixRobustBufferAccess) {
+   self.cooperativeMatrixRobustBufferAccess = cooperativeMatrixRobustBufferAccess;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR cooperativeMatrixPropertiesKHR() => { .sType = STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR, .pNext = null };
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setMSize(&self, uint mSize) {
+   self.mSize = mSize;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setNSize(&self, uint nSize) {
+   self.nSize = nSize;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setKSize(&self, uint kSize) {
+   self.kSize = kSize;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setAType(&self, ComponentTypeKHR aType) {
+   self.aType = aType;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setBType(&self, ComponentTypeKHR bType) {
+   self.bType = bType;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setCType(&self, ComponentTypeKHR cType) {
+   self.cType = cType;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setResultType(&self, ComponentTypeKHR resultType) {
+   self.resultType = resultType;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setSaturatingAccumulation(&self, uint saturatingAccumulation) {
+   self.saturatingAccumulation = saturatingAccumulation;
+   return *self;
+}
+fn CooperativeMatrixPropertiesKHR CooperativeMatrixPropertiesKHR.setScope(&self, ScopeKHR scope) {
+   self.scope = scope;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixPropertiesKHR physicalDeviceCooperativeMatrixPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceCooperativeMatrixPropertiesKHR PhysicalDeviceCooperativeMatrixPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixPropertiesKHR PhysicalDeviceCooperativeMatrixPropertiesKHR.setCooperativeMatrixSupportedStages(&self, ShaderStageFlags cooperativeMatrixSupportedStages) {
+   self.cooperativeMatrixSupportedStages = cooperativeMatrixSupportedStages;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM physicalDeviceCooperativeMatrixConversionFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.setCooperativeMatrixConversion(&self, uint cooperativeMatrixConversion) {
+   self.cooperativeMatrixConversion = cooperativeMatrixConversion;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX physicalDeviceShaderEnqueuePropertiesAMDX() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX, .pNext = null };
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphDepth(&self, uint maxExecutionGraphDepth) {
+   self.maxExecutionGraphDepth = maxExecutionGraphDepth;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphShaderOutputNodes(&self, uint maxExecutionGraphShaderOutputNodes) {
+   self.maxExecutionGraphShaderOutputNodes = maxExecutionGraphShaderOutputNodes;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphShaderPayloadSize(&self, uint maxExecutionGraphShaderPayloadSize) {
+   self.maxExecutionGraphShaderPayloadSize = maxExecutionGraphShaderPayloadSize;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphShaderPayloadCount(&self, uint maxExecutionGraphShaderPayloadCount) {
+   self.maxExecutionGraphShaderPayloadCount = maxExecutionGraphShaderPayloadCount;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setExecutionGraphDispatchAddressAlignment(&self, uint executionGraphDispatchAddressAlignment) {
+   self.executionGraphDispatchAddressAlignment = executionGraphDispatchAddressAlignment;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphWorkgroupCount(&self, uint[3] maxExecutionGraphWorkgroupCount) {
+   self.maxExecutionGraphWorkgroupCount = maxExecutionGraphWorkgroupCount;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueuePropertiesAMDX PhysicalDeviceShaderEnqueuePropertiesAMDX.setMaxExecutionGraphWorkgroups(&self, uint maxExecutionGraphWorkgroups) {
+   self.maxExecutionGraphWorkgroups = maxExecutionGraphWorkgroups;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueueFeaturesAMDX physicalDeviceShaderEnqueueFeaturesAMDX() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX, .pNext = null };
+fn PhysicalDeviceShaderEnqueueFeaturesAMDX PhysicalDeviceShaderEnqueueFeaturesAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueueFeaturesAMDX PhysicalDeviceShaderEnqueueFeaturesAMDX.setShaderEnqueue(&self, uint shaderEnqueue) {
+   self.shaderEnqueue = shaderEnqueue;
+   return *self;
+}
+fn PhysicalDeviceShaderEnqueueFeaturesAMDX PhysicalDeviceShaderEnqueueFeaturesAMDX.setShaderMeshEnqueue(&self, uint shaderMeshEnqueue) {
+   self.shaderMeshEnqueue = shaderMeshEnqueue;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX executionGraphPipelineCreateInfoAMDX() => { .sType = STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX, .pNext = null };
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setFlags(&self, PipelineCreateFlags flags) {
+   self.flags = flags;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setStageCount(&self, uint stageCount) {
+   self.stageCount = stageCount;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setStages(&self, PipelineShaderStageCreateInfo[] pStages) {
+   self.stageCount= (uint)pStages.len;
+   self.pStages = &pStages[0];
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setLibraryInfo(&self, PipelineLibraryCreateInfoKHR* pLibraryInfo) {
+   self.pLibraryInfo = pLibraryInfo;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setBasePipelineHandle(&self, Pipeline basePipelineHandle) {
+   self.basePipelineHandle = basePipelineHandle;
+   return *self;
+}
+fn ExecutionGraphPipelineCreateInfoAMDX ExecutionGraphPipelineCreateInfoAMDX.setBasePipelineIndex(&self, int basePipelineIndex) {
+   self.basePipelineIndex = basePipelineIndex;
+   return *self;
+}
+fn PipelineShaderStageNodeCreateInfoAMDX pipelineShaderStageNodeCreateInfoAMDX() => { .sType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX, .pNext = null };
+fn PipelineShaderStageNodeCreateInfoAMDX PipelineShaderStageNodeCreateInfoAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineShaderStageNodeCreateInfoAMDX PipelineShaderStageNodeCreateInfoAMDX.setName(&self, char* pName) {
+   self.pName = pName;
+   return *self;
+}
+fn PipelineShaderStageNodeCreateInfoAMDX PipelineShaderStageNodeCreateInfoAMDX.setIndex(&self, uint index) {
+   self.index = index;
+   return *self;
+}
+fn ExecutionGraphPipelineScratchSizeAMDX executionGraphPipelineScratchSizeAMDX() => { .sType = STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_SCRATCH_SIZE_AMDX, .pNext = null };
+fn ExecutionGraphPipelineScratchSizeAMDX ExecutionGraphPipelineScratchSizeAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExecutionGraphPipelineScratchSizeAMDX ExecutionGraphPipelineScratchSizeAMDX.setMinSize(&self, DeviceSize minSize) {
+   self.minSize = minSize;
+   return *self;
+}
+fn ExecutionGraphPipelineScratchSizeAMDX ExecutionGraphPipelineScratchSizeAMDX.setMaxSize(&self, DeviceSize maxSize) {
+   self.maxSize = maxSize;
+   return *self;
+}
+fn ExecutionGraphPipelineScratchSizeAMDX ExecutionGraphPipelineScratchSizeAMDX.setSizeGranularity(&self, DeviceSize sizeGranularity) {
+   self.sizeGranularity = sizeGranularity;
+   return *self;
+}
+fn PhysicalDeviceAntiLagFeaturesAMD physicalDeviceAntiLagFeaturesAMD() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD, .pNext = null };
+fn PhysicalDeviceAntiLagFeaturesAMD PhysicalDeviceAntiLagFeaturesAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceAntiLagFeaturesAMD PhysicalDeviceAntiLagFeaturesAMD.setAntiLag(&self, uint antiLag) {
+   self.antiLag = antiLag;
+   return *self;
+}
+fn AntiLagDataAMD antiLagDataAMD() => { .sType = STRUCTURE_TYPE_ANTI_LAG_DATA_AMD, .pNext = null };
+fn AntiLagDataAMD AntiLagDataAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AntiLagDataAMD AntiLagDataAMD.setMode(&self, AntiLagModeAMD mode) {
+   self.mode = mode;
+   return *self;
+}
+fn AntiLagDataAMD AntiLagDataAMD.setMaxFPS(&self, uint maxFPS) {
+   self.maxFPS = maxFPS;
+   return *self;
+}
+fn AntiLagDataAMD AntiLagDataAMD.setPresentationInfo(&self, AntiLagPresentationInfoAMD* pPresentationInfo) {
+   self.pPresentationInfo = pPresentationInfo;
+   return *self;
+}
+fn AntiLagPresentationInfoAMD antiLagPresentationInfoAMD() => { .sType = STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD, .pNext = null };
+fn AntiLagPresentationInfoAMD AntiLagPresentationInfoAMD.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AntiLagPresentationInfoAMD AntiLagPresentationInfoAMD.setStage(&self, AntiLagStageAMD stage) {
+   self.stage = stage;
+   return *self;
+}
+fn AntiLagPresentationInfoAMD AntiLagPresentationInfoAMD.setFrameIndex(&self, ulong frameIndex) {
+   self.frameIndex = frameIndex;
+   return *self;
+}
 fn BindMemoryStatus bindMemoryStatus() => { .sType = STRUCTURE_TYPE_BIND_MEMORY_STATUS, .pNext = null };
 fn BindMemoryStatus BindMemoryStatus.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn BindMemoryStatus BindMemoryStatus.setResult(&self, Result* pResult) {
+   self.pResult = pResult;
+   return *self;
+}
+fn PhysicalDeviceTileMemoryHeapFeaturesQCOM physicalDeviceTileMemoryHeapFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceTileMemoryHeapFeaturesQCOM PhysicalDeviceTileMemoryHeapFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTileMemoryHeapFeaturesQCOM PhysicalDeviceTileMemoryHeapFeaturesQCOM.setTileMemoryHeap(&self, uint tileMemoryHeap) {
+   self.tileMemoryHeap = tileMemoryHeap;
+   return *self;
+}
+fn PhysicalDeviceTileMemoryHeapPropertiesQCOM physicalDeviceTileMemoryHeapPropertiesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM, .pNext = null };
+fn PhysicalDeviceTileMemoryHeapPropertiesQCOM PhysicalDeviceTileMemoryHeapPropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTileMemoryHeapPropertiesQCOM PhysicalDeviceTileMemoryHeapPropertiesQCOM.setQueueSubmitBoundary(&self, uint queueSubmitBoundary) {
+   self.queueSubmitBoundary = queueSubmitBoundary;
+   return *self;
+}
+fn PhysicalDeviceTileMemoryHeapPropertiesQCOM PhysicalDeviceTileMemoryHeapPropertiesQCOM.setTileBufferTransfers(&self, uint tileBufferTransfers) {
+   self.tileBufferTransfers = tileBufferTransfers;
+   return *self;
+}
+fn TileMemorySizeInfoQCOM tileMemorySizeInfoQCOM() => { .sType = STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM, .pNext = null };
+fn TileMemorySizeInfoQCOM TileMemorySizeInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TileMemorySizeInfoQCOM TileMemorySizeInfoQCOM.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn TileMemoryRequirementsQCOM tileMemoryRequirementsQCOM() => { .sType = STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM, .pNext = null };
+fn TileMemoryRequirementsQCOM TileMemoryRequirementsQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TileMemoryRequirementsQCOM TileMemoryRequirementsQCOM.setSize(&self, DeviceSize size) {
+   self.size = size;
+   return *self;
+}
+fn TileMemoryRequirementsQCOM TileMemoryRequirementsQCOM.setAlignment(&self, DeviceSize alignment) {
+   self.alignment = alignment;
+   return *self;
+}
+fn BindMemoryStatusKHR bindMemoryStatusKHR() => { .sType = STRUCTURE_TYPE_BIND_MEMORY_STATUS, .pNext = null };
+fn BindMemoryStatusKHR BindMemoryStatusKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindMemoryStatusKHR BindMemoryStatusKHR.setResult(&self, Result* pResult) {
    self.pResult = pResult;
    return *self;
 }
@@ -7895,6 +20829,41 @@ fn BindDescriptorSetsInfo BindDescriptorSetsInfo.setDynamicOffsets(&self, uint[]
    self.pDynamicOffsets = &pDynamicOffsets[0];
    return *self;
 }
+fn BindDescriptorSetsInfoKHR bindDescriptorSetsInfoKHR() => { .sType = STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO, .pNext = null };
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setStageFlags(&self, ShaderStageFlags stageFlags) {
+   self.stageFlags = stageFlags;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setFirstSet(&self, uint firstSet) {
+   self.firstSet = firstSet;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setDescriptorSetCount(&self, uint descriptorSetCount) {
+   self.descriptorSetCount = descriptorSetCount;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setDescriptorSets(&self, DescriptorSet[] pDescriptorSets) {
+   self.descriptorSetCount= (uint)pDescriptorSets.len;
+   self.pDescriptorSets = &pDescriptorSets[0];
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setDynamicOffsetCount(&self, uint dynamicOffsetCount) {
+   self.dynamicOffsetCount = dynamicOffsetCount;
+   return *self;
+}
+fn BindDescriptorSetsInfoKHR BindDescriptorSetsInfoKHR.setDynamicOffsets(&self, uint[] pDynamicOffsets) {
+   self.dynamicOffsetCount= (uint)pDynamicOffsets.len;
+   self.pDynamicOffsets = &pDynamicOffsets[0];
+   return *self;
+}
 fn PushConstantsInfo pushConstantsInfo() => { .sType = STRUCTURE_TYPE_PUSH_CONSTANTS_INFO, .pNext = null };
 fn PushConstantsInfo PushConstantsInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7917,6 +20886,31 @@ fn PushConstantsInfo PushConstantsInfo.setSize(&self, uint size) {
    return *self;
 }
 fn PushConstantsInfo PushConstantsInfo.setValues(&self, void* pValues) {
+   self.pValues = pValues;
+   return *self;
+}
+fn PushConstantsInfoKHR pushConstantsInfoKHR() => { .sType = STRUCTURE_TYPE_PUSH_CONSTANTS_INFO, .pNext = null };
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setStageFlags(&self, ShaderStageFlags stageFlags) {
+   self.stageFlags = stageFlags;
+   return *self;
+}
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setOffset(&self, uint offset) {
+   self.offset = offset;
+   return *self;
+}
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setSize(&self, uint size) {
+   self.size = size;
+   return *self;
+}
+fn PushConstantsInfoKHR PushConstantsInfoKHR.setValues(&self, void* pValues) {
    self.pValues = pValues;
    return *self;
 }
@@ -7946,6 +20940,32 @@ fn PushDescriptorSetInfo PushDescriptorSetInfo.setDescriptorWrites(&self, WriteD
    self.pDescriptorWrites = &pDescriptorWrites[0];
    return *self;
 }
+fn PushDescriptorSetInfoKHR pushDescriptorSetInfoKHR() => { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO, .pNext = null };
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setStageFlags(&self, ShaderStageFlags stageFlags) {
+   self.stageFlags = stageFlags;
+   return *self;
+}
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setSet(&self, uint set) {
+   self.set = set;
+   return *self;
+}
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setDescriptorWriteCount(&self, uint descriptorWriteCount) {
+   self.descriptorWriteCount = descriptorWriteCount;
+   return *self;
+}
+fn PushDescriptorSetInfoKHR PushDescriptorSetInfoKHR.setDescriptorWrites(&self, WriteDescriptorSet[] pDescriptorWrites) {
+   self.descriptorWriteCount= (uint)pDescriptorWrites.len;
+   self.pDescriptorWrites = &pDescriptorWrites[0];
+   return *self;
+}
 fn PushDescriptorSetWithTemplateInfo pushDescriptorSetWithTemplateInfo() => { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO, .pNext = null };
 fn PushDescriptorSetWithTemplateInfo PushDescriptorSetWithTemplateInfo.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7967,6 +20987,489 @@ fn PushDescriptorSetWithTemplateInfo PushDescriptorSetWithTemplateInfo.setData(&
    self.pData = pData;
    return *self;
 }
+fn PushDescriptorSetWithTemplateInfoKHR pushDescriptorSetWithTemplateInfoKHR() => { .sType = STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO, .pNext = null };
+fn PushDescriptorSetWithTemplateInfoKHR PushDescriptorSetWithTemplateInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PushDescriptorSetWithTemplateInfoKHR PushDescriptorSetWithTemplateInfoKHR.setDescriptorUpdateTemplate(&self, DescriptorUpdateTemplate descriptorUpdateTemplate) {
+   self.descriptorUpdateTemplate = descriptorUpdateTemplate;
+   return *self;
+}
+fn PushDescriptorSetWithTemplateInfoKHR PushDescriptorSetWithTemplateInfoKHR.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn PushDescriptorSetWithTemplateInfoKHR PushDescriptorSetWithTemplateInfoKHR.setSet(&self, uint set) {
+   self.set = set;
+   return *self;
+}
+fn PushDescriptorSetWithTemplateInfoKHR PushDescriptorSetWithTemplateInfoKHR.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT setDescriptorBufferOffsetsInfoEXT() => { .sType = STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT, .pNext = null };
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setStageFlags(&self, ShaderStageFlags stageFlags) {
+   self.stageFlags = stageFlags;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setFirstSet(&self, uint firstSet) {
+   self.firstSet = firstSet;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setSetCount(&self, uint setCount) {
+   self.setCount = setCount;
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setBufferIndices(&self, uint[] pBufferIndices) {
+   self.setCount= (uint)pBufferIndices.len;
+   self.pBufferIndices = &pBufferIndices[0];
+   return *self;
+}
+fn SetDescriptorBufferOffsetsInfoEXT SetDescriptorBufferOffsetsInfoEXT.setOffsets(&self, DeviceSize[] pOffsets) {
+   self.setCount= (uint)pOffsets.len;
+   self.pOffsets = &pOffsets[0];
+   return *self;
+}
+fn BindDescriptorBufferEmbeddedSamplersInfoEXT bindDescriptorBufferEmbeddedSamplersInfoEXT() => { .sType = STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT, .pNext = null };
+fn BindDescriptorBufferEmbeddedSamplersInfoEXT BindDescriptorBufferEmbeddedSamplersInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindDescriptorBufferEmbeddedSamplersInfoEXT BindDescriptorBufferEmbeddedSamplersInfoEXT.setStageFlags(&self, ShaderStageFlags stageFlags) {
+   self.stageFlags = stageFlags;
+   return *self;
+}
+fn BindDescriptorBufferEmbeddedSamplersInfoEXT BindDescriptorBufferEmbeddedSamplersInfoEXT.setLayout(&self, PipelineLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn BindDescriptorBufferEmbeddedSamplersInfoEXT BindDescriptorBufferEmbeddedSamplersInfoEXT.setSet(&self, uint set) {
+   self.set = set;
+   return *self;
+}
+fn PhysicalDeviceCubicClampFeaturesQCOM physicalDeviceCubicClampFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUBIC_CLAMP_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceCubicClampFeaturesQCOM PhysicalDeviceCubicClampFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCubicClampFeaturesQCOM PhysicalDeviceCubicClampFeaturesQCOM.setCubicRangeClamp(&self, uint cubicRangeClamp) {
+   self.cubicRangeClamp = cubicRangeClamp;
+   return *self;
+}
+fn PhysicalDeviceYcbcrDegammaFeaturesQCOM physicalDeviceYcbcrDegammaFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_DEGAMMA_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceYcbcrDegammaFeaturesQCOM PhysicalDeviceYcbcrDegammaFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceYcbcrDegammaFeaturesQCOM PhysicalDeviceYcbcrDegammaFeaturesQCOM.setYcbcrDegamma(&self, uint ycbcrDegamma) {
+   self.ycbcrDegamma = ycbcrDegamma;
+   return *self;
+}
+fn SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM samplerYcbcrConversionYcbcrDegammaCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_YCBCR_DEGAMMA_CREATE_INFO_QCOM, .pNext = null };
+fn SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM.setEnableYDegamma(&self, uint enableYDegamma) {
+   self.enableYDegamma = enableYDegamma;
+   return *self;
+}
+fn SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM.setEnableCbCrDegamma(&self, uint enableCbCrDegamma) {
+   self.enableCbCrDegamma = enableCbCrDegamma;
+   return *self;
+}
+fn PhysicalDeviceCubicWeightsFeaturesQCOM physicalDeviceCubicWeightsFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUBIC_WEIGHTS_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceCubicWeightsFeaturesQCOM PhysicalDeviceCubicWeightsFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCubicWeightsFeaturesQCOM PhysicalDeviceCubicWeightsFeaturesQCOM.setSelectableCubicWeights(&self, uint selectableCubicWeights) {
+   self.selectableCubicWeights = selectableCubicWeights;
+   return *self;
+}
+fn SamplerCubicWeightsCreateInfoQCOM samplerCubicWeightsCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_SAMPLER_CUBIC_WEIGHTS_CREATE_INFO_QCOM, .pNext = null };
+fn SamplerCubicWeightsCreateInfoQCOM SamplerCubicWeightsCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerCubicWeightsCreateInfoQCOM SamplerCubicWeightsCreateInfoQCOM.setCubicWeights(&self, CubicFilterWeightsQCOM cubicWeights) {
+   self.cubicWeights = cubicWeights;
+   return *self;
+}
+fn BlitImageCubicWeightsInfoQCOM blitImageCubicWeightsInfoQCOM() => { .sType = STRUCTURE_TYPE_BLIT_IMAGE_CUBIC_WEIGHTS_INFO_QCOM, .pNext = null };
+fn BlitImageCubicWeightsInfoQCOM BlitImageCubicWeightsInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BlitImageCubicWeightsInfoQCOM BlitImageCubicWeightsInfoQCOM.setCubicWeights(&self, CubicFilterWeightsQCOM cubicWeights) {
+   self.cubicWeights = cubicWeights;
+   return *self;
+}
+fn PhysicalDeviceImageProcessing2FeaturesQCOM physicalDeviceImageProcessing2FeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceImageProcessing2FeaturesQCOM PhysicalDeviceImageProcessing2FeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageProcessing2FeaturesQCOM PhysicalDeviceImageProcessing2FeaturesQCOM.setTextureBlockMatch2(&self, uint textureBlockMatch2) {
+   self.textureBlockMatch2 = textureBlockMatch2;
+   return *self;
+}
+fn PhysicalDeviceImageProcessing2PropertiesQCOM physicalDeviceImageProcessing2PropertiesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM, .pNext = null };
+fn PhysicalDeviceImageProcessing2PropertiesQCOM PhysicalDeviceImageProcessing2PropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageProcessing2PropertiesQCOM PhysicalDeviceImageProcessing2PropertiesQCOM.setMaxBlockMatchWindow(&self, Extent2D maxBlockMatchWindow) {
+   self.maxBlockMatchWindow = maxBlockMatchWindow;
+   return *self;
+}
+fn SamplerBlockMatchWindowCreateInfoQCOM samplerBlockMatchWindowCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM, .pNext = null };
+fn SamplerBlockMatchWindowCreateInfoQCOM SamplerBlockMatchWindowCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerBlockMatchWindowCreateInfoQCOM SamplerBlockMatchWindowCreateInfoQCOM.setWindowExtent(&self, Extent2D windowExtent) {
+   self.windowExtent = windowExtent;
+   return *self;
+}
+fn SamplerBlockMatchWindowCreateInfoQCOM SamplerBlockMatchWindowCreateInfoQCOM.setWindowCompareMode(&self, BlockMatchWindowCompareModeQCOM windowCompareMode) {
+   self.windowCompareMode = windowCompareMode;
+   return *self;
+}
+fn PhysicalDeviceDescriptorPoolOverallocationFeaturesNV physicalDeviceDescriptorPoolOverallocationFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceDescriptorPoolOverallocationFeaturesNV PhysicalDeviceDescriptorPoolOverallocationFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorPoolOverallocationFeaturesNV PhysicalDeviceDescriptorPoolOverallocationFeaturesNV.setDescriptorPoolOverallocation(&self, uint descriptorPoolOverallocation) {
+   self.descriptorPoolOverallocation = descriptorPoolOverallocation;
+   return *self;
+}
+fn PhysicalDeviceLayeredDriverPropertiesMSFT physicalDeviceLayeredDriverPropertiesMSFT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT, .pNext = null };
+fn PhysicalDeviceLayeredDriverPropertiesMSFT PhysicalDeviceLayeredDriverPropertiesMSFT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceLayeredDriverPropertiesMSFT PhysicalDeviceLayeredDriverPropertiesMSFT.setUnderlyingAPI(&self, LayeredDriverUnderlyingApiMSFT underlyingAPI) {
+   self.underlyingAPI = underlyingAPI;
+   return *self;
+}
+fn PhysicalDevicePerStageDescriptorSetFeaturesNV physicalDevicePerStageDescriptorSetFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV, .pNext = null };
+fn PhysicalDevicePerStageDescriptorSetFeaturesNV PhysicalDevicePerStageDescriptorSetFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePerStageDescriptorSetFeaturesNV PhysicalDevicePerStageDescriptorSetFeaturesNV.setPerStageDescriptorSet(&self, uint perStageDescriptorSet) {
+   self.perStageDescriptorSet = perStageDescriptorSet;
+   return *self;
+}
+fn PhysicalDevicePerStageDescriptorSetFeaturesNV PhysicalDevicePerStageDescriptorSetFeaturesNV.setDynamicPipelineLayout(&self, uint dynamicPipelineLayout) {
+   self.dynamicPipelineLayout = dynamicPipelineLayout;
+   return *self;
+}
+fn LatencySleepModeInfoNV latencySleepModeInfoNV() => { .sType = STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV, .pNext = null };
+fn LatencySleepModeInfoNV LatencySleepModeInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LatencySleepModeInfoNV LatencySleepModeInfoNV.setLowLatencyMode(&self, uint lowLatencyMode) {
+   self.lowLatencyMode = lowLatencyMode;
+   return *self;
+}
+fn LatencySleepModeInfoNV LatencySleepModeInfoNV.setLowLatencyBoost(&self, uint lowLatencyBoost) {
+   self.lowLatencyBoost = lowLatencyBoost;
+   return *self;
+}
+fn LatencySleepModeInfoNV LatencySleepModeInfoNV.setMinimumIntervalUs(&self, uint minimumIntervalUs) {
+   self.minimumIntervalUs = minimumIntervalUs;
+   return *self;
+}
+fn LatencySleepInfoNV latencySleepInfoNV() => { .sType = STRUCTURE_TYPE_LATENCY_SLEEP_INFO_NV, .pNext = null };
+fn LatencySleepInfoNV LatencySleepInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LatencySleepInfoNV LatencySleepInfoNV.setSignalSemaphore(&self, Semaphore signalSemaphore) {
+   self.signalSemaphore = signalSemaphore;
+   return *self;
+}
+fn LatencySleepInfoNV LatencySleepInfoNV.setValue(&self, ulong value) {
+   self.value = value;
+   return *self;
+}
+fn SetLatencyMarkerInfoNV setLatencyMarkerInfoNV() => { .sType = STRUCTURE_TYPE_SET_LATENCY_MARKER_INFO_NV, .pNext = null };
+fn SetLatencyMarkerInfoNV SetLatencyMarkerInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SetLatencyMarkerInfoNV SetLatencyMarkerInfoNV.setPresentID(&self, ulong presentID) {
+   self.presentID = presentID;
+   return *self;
+}
+fn SetLatencyMarkerInfoNV SetLatencyMarkerInfoNV.setMarker(&self, LatencyMarkerNV marker) {
+   self.marker = marker;
+   return *self;
+}
+fn GetLatencyMarkerInfoNV getLatencyMarkerInfoNV() => { .sType = STRUCTURE_TYPE_GET_LATENCY_MARKER_INFO_NV, .pNext = null };
+fn GetLatencyMarkerInfoNV GetLatencyMarkerInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn GetLatencyMarkerInfoNV GetLatencyMarkerInfoNV.setTimingCount(&self, uint timingCount) {
+   self.timingCount = timingCount;
+   return *self;
+}
+fn GetLatencyMarkerInfoNV GetLatencyMarkerInfoNV.setTimings(&self, LatencyTimingsFrameReportNV[] pTimings) {
+   self.timingCount= (uint)pTimings.len;
+   self.pTimings = &pTimings[0];
+   return *self;
+}
+fn LatencyTimingsFrameReportNV latencyTimingsFrameReportNV() => { .sType = STRUCTURE_TYPE_LATENCY_TIMINGS_FRAME_REPORT_NV, .pNext = null };
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setPresentID(&self, ulong presentID) {
+   self.presentID = presentID;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setInputSampleTimeUs(&self, ulong inputSampleTimeUs) {
+   self.inputSampleTimeUs = inputSampleTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setSimStartTimeUs(&self, ulong simStartTimeUs) {
+   self.simStartTimeUs = simStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setSimEndTimeUs(&self, ulong simEndTimeUs) {
+   self.simEndTimeUs = simEndTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setRenderSubmitStartTimeUs(&self, ulong renderSubmitStartTimeUs) {
+   self.renderSubmitStartTimeUs = renderSubmitStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setRenderSubmitEndTimeUs(&self, ulong renderSubmitEndTimeUs) {
+   self.renderSubmitEndTimeUs = renderSubmitEndTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setPresentStartTimeUs(&self, ulong presentStartTimeUs) {
+   self.presentStartTimeUs = presentStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setPresentEndTimeUs(&self, ulong presentEndTimeUs) {
+   self.presentEndTimeUs = presentEndTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setDriverStartTimeUs(&self, ulong driverStartTimeUs) {
+   self.driverStartTimeUs = driverStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setDriverEndTimeUs(&self, ulong driverEndTimeUs) {
+   self.driverEndTimeUs = driverEndTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setOsRenderQueueStartTimeUs(&self, ulong osRenderQueueStartTimeUs) {
+   self.osRenderQueueStartTimeUs = osRenderQueueStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setOsRenderQueueEndTimeUs(&self, ulong osRenderQueueEndTimeUs) {
+   self.osRenderQueueEndTimeUs = osRenderQueueEndTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setGpuRenderStartTimeUs(&self, ulong gpuRenderStartTimeUs) {
+   self.gpuRenderStartTimeUs = gpuRenderStartTimeUs;
+   return *self;
+}
+fn LatencyTimingsFrameReportNV LatencyTimingsFrameReportNV.setGpuRenderEndTimeUs(&self, ulong gpuRenderEndTimeUs) {
+   self.gpuRenderEndTimeUs = gpuRenderEndTimeUs;
+   return *self;
+}
+fn OutOfBandQueueTypeInfoNV outOfBandQueueTypeInfoNV() => { .sType = STRUCTURE_TYPE_OUT_OF_BAND_QUEUE_TYPE_INFO_NV, .pNext = null };
+fn OutOfBandQueueTypeInfoNV OutOfBandQueueTypeInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OutOfBandQueueTypeInfoNV OutOfBandQueueTypeInfoNV.setQueueType(&self, OutOfBandQueueTypeNV queueType) {
+   self.queueType = queueType;
+   return *self;
+}
+fn LatencySubmissionPresentIdNV latencySubmissionPresentIdNV() => { .sType = STRUCTURE_TYPE_LATENCY_SUBMISSION_PRESENT_ID_NV, .pNext = null };
+fn LatencySubmissionPresentIdNV LatencySubmissionPresentIdNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LatencySubmissionPresentIdNV LatencySubmissionPresentIdNV.setPresentID(&self, ulong presentID) {
+   self.presentID = presentID;
+   return *self;
+}
+fn SwapchainLatencyCreateInfoNV swapchainLatencyCreateInfoNV() => { .sType = STRUCTURE_TYPE_SWAPCHAIN_LATENCY_CREATE_INFO_NV, .pNext = null };
+fn SwapchainLatencyCreateInfoNV SwapchainLatencyCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SwapchainLatencyCreateInfoNV SwapchainLatencyCreateInfoNV.setLatencyModeEnable(&self, uint latencyModeEnable) {
+   self.latencyModeEnable = latencyModeEnable;
+   return *self;
+}
+fn LatencySurfaceCapabilitiesNV latencySurfaceCapabilitiesNV() => { .sType = STRUCTURE_TYPE_LATENCY_SURFACE_CAPABILITIES_NV, .pNext = null };
+fn LatencySurfaceCapabilitiesNV LatencySurfaceCapabilitiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn LatencySurfaceCapabilitiesNV LatencySurfaceCapabilitiesNV.setPresentModeCount(&self, uint presentModeCount) {
+   self.presentModeCount = presentModeCount;
+   return *self;
+}
+fn LatencySurfaceCapabilitiesNV LatencySurfaceCapabilitiesNV.setPresentModes(&self, PresentModeKHR[] pPresentModes) {
+   self.presentModeCount= (uint)pPresentModes.len;
+   self.pPresentModes = &pPresentModes[0];
+   return *self;
+}
+fn PhysicalDeviceCudaKernelLaunchFeaturesNV physicalDeviceCudaKernelLaunchFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCudaKernelLaunchFeaturesNV PhysicalDeviceCudaKernelLaunchFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCudaKernelLaunchFeaturesNV PhysicalDeviceCudaKernelLaunchFeaturesNV.setCudaKernelLaunchFeatures(&self, uint cudaKernelLaunchFeatures) {
+   self.cudaKernelLaunchFeatures = cudaKernelLaunchFeatures;
+   return *self;
+}
+fn PhysicalDeviceCudaKernelLaunchPropertiesNV physicalDeviceCudaKernelLaunchPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceCudaKernelLaunchPropertiesNV PhysicalDeviceCudaKernelLaunchPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCudaKernelLaunchPropertiesNV PhysicalDeviceCudaKernelLaunchPropertiesNV.setComputeCapabilityMinor(&self, uint computeCapabilityMinor) {
+   self.computeCapabilityMinor = computeCapabilityMinor;
+   return *self;
+}
+fn PhysicalDeviceCudaKernelLaunchPropertiesNV PhysicalDeviceCudaKernelLaunchPropertiesNV.setComputeCapabilityMajor(&self, uint computeCapabilityMajor) {
+   self.computeCapabilityMajor = computeCapabilityMajor;
+   return *self;
+}
+fn DeviceQueueShaderCoreControlCreateInfoARM deviceQueueShaderCoreControlCreateInfoARM() => { .sType = STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM, .pNext = null };
+fn DeviceQueueShaderCoreControlCreateInfoARM DeviceQueueShaderCoreControlCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceQueueShaderCoreControlCreateInfoARM DeviceQueueShaderCoreControlCreateInfoARM.setShaderCoreCount(&self, uint shaderCoreCount) {
+   self.shaderCoreCount = shaderCoreCount;
+   return *self;
+}
+fn PhysicalDeviceSchedulingControlsFeaturesARM physicalDeviceSchedulingControlsFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceSchedulingControlsFeaturesARM PhysicalDeviceSchedulingControlsFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSchedulingControlsFeaturesARM PhysicalDeviceSchedulingControlsFeaturesARM.setSchedulingControls(&self, uint schedulingControls) {
+   self.schedulingControls = schedulingControls;
+   return *self;
+}
+fn PhysicalDeviceSchedulingControlsPropertiesARM physicalDeviceSchedulingControlsPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceSchedulingControlsPropertiesARM PhysicalDeviceSchedulingControlsPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceSchedulingControlsPropertiesARM PhysicalDeviceSchedulingControlsPropertiesARM.setSchedulingControlsFlags(&self, PhysicalDeviceSchedulingControlsFlagsARM schedulingControlsFlags) {
+   self.schedulingControlsFlags = schedulingControlsFlags;
+   return *self;
+}
+fn PhysicalDeviceRelaxedLineRasterizationFeaturesIMG physicalDeviceRelaxedLineRasterizationFeaturesIMG() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RELAXED_LINE_RASTERIZATION_FEATURES_IMG, .pNext = null };
+fn PhysicalDeviceRelaxedLineRasterizationFeaturesIMG PhysicalDeviceRelaxedLineRasterizationFeaturesIMG.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRelaxedLineRasterizationFeaturesIMG PhysicalDeviceRelaxedLineRasterizationFeaturesIMG.setRelaxedLineRasterization(&self, uint relaxedLineRasterization) {
+   self.relaxedLineRasterization = relaxedLineRasterization;
+   return *self;
+}
+fn PhysicalDeviceRenderPassStripedFeaturesARM physicalDeviceRenderPassStripedFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceRenderPassStripedFeaturesARM PhysicalDeviceRenderPassStripedFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRenderPassStripedFeaturesARM PhysicalDeviceRenderPassStripedFeaturesARM.setRenderPassStriped(&self, uint renderPassStriped) {
+   self.renderPassStriped = renderPassStriped;
+   return *self;
+}
+fn PhysicalDeviceRenderPassStripedPropertiesARM physicalDeviceRenderPassStripedPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceRenderPassStripedPropertiesARM PhysicalDeviceRenderPassStripedPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRenderPassStripedPropertiesARM PhysicalDeviceRenderPassStripedPropertiesARM.setRenderPassStripeGranularity(&self, Extent2D renderPassStripeGranularity) {
+   self.renderPassStripeGranularity = renderPassStripeGranularity;
+   return *self;
+}
+fn PhysicalDeviceRenderPassStripedPropertiesARM PhysicalDeviceRenderPassStripedPropertiesARM.setMaxRenderPassStripes(&self, uint maxRenderPassStripes) {
+   self.maxRenderPassStripes = maxRenderPassStripes;
+   return *self;
+}
+fn RenderPassStripeInfoARM renderPassStripeInfoARM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM, .pNext = null };
+fn RenderPassStripeInfoARM RenderPassStripeInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassStripeInfoARM RenderPassStripeInfoARM.setStripeArea(&self, Rect2D stripeArea) {
+   self.stripeArea = stripeArea;
+   return *self;
+}
+fn RenderPassStripeBeginInfoARM renderPassStripeBeginInfoARM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM, .pNext = null };
+fn RenderPassStripeBeginInfoARM RenderPassStripeBeginInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassStripeBeginInfoARM RenderPassStripeBeginInfoARM.setStripeInfoCount(&self, uint stripeInfoCount) {
+   self.stripeInfoCount = stripeInfoCount;
+   return *self;
+}
+fn RenderPassStripeBeginInfoARM RenderPassStripeBeginInfoARM.setStripeInfos(&self, RenderPassStripeInfoARM[] pStripeInfos) {
+   self.stripeInfoCount= (uint)pStripeInfos.len;
+   self.pStripeInfos = &pStripeInfos[0];
+   return *self;
+}
+fn RenderPassStripeSubmitInfoARM renderPassStripeSubmitInfoARM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM, .pNext = null };
+fn RenderPassStripeSubmitInfoARM RenderPassStripeSubmitInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassStripeSubmitInfoARM RenderPassStripeSubmitInfoARM.setStripeSemaphoreInfoCount(&self, uint stripeSemaphoreInfoCount) {
+   self.stripeSemaphoreInfoCount = stripeSemaphoreInfoCount;
+   return *self;
+}
+fn RenderPassStripeSubmitInfoARM RenderPassStripeSubmitInfoARM.setStripeSemaphoreInfos(&self, SemaphoreSubmitInfo[] pStripeSemaphoreInfos) {
+   self.stripeSemaphoreInfoCount= (uint)pStripeSemaphoreInfos.len;
+   self.pStripeSemaphoreInfos = &pStripeSemaphoreInfos[0];
+   return *self;
+}
+fn PhysicalDevicePipelineOpacityMicromapFeaturesARM physicalDevicePipelineOpacityMicromapFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM, .pNext = null };
+fn PhysicalDevicePipelineOpacityMicromapFeaturesARM PhysicalDevicePipelineOpacityMicromapFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineOpacityMicromapFeaturesARM PhysicalDevicePipelineOpacityMicromapFeaturesARM.setPipelineOpacityMicromap(&self, uint pipelineOpacityMicromap) {
+   self.pipelineOpacityMicromap = pipelineOpacityMicromap;
+   return *self;
+}
+fn PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR physicalDeviceShaderMaximalReconvergenceFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR.setShaderMaximalReconvergence(&self, uint shaderMaximalReconvergence) {
+   self.shaderMaximalReconvergence = shaderMaximalReconvergence;
+   return *self;
+}
 fn PhysicalDeviceShaderSubgroupRotateFeatures physicalDeviceShaderSubgroupRotateFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderSubgroupRotateFeatures PhysicalDeviceShaderSubgroupRotateFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
@@ -7980,12 +21483,34 @@ fn PhysicalDeviceShaderSubgroupRotateFeatures PhysicalDeviceShaderSubgroupRotate
    self.shaderSubgroupRotateClustered = shaderSubgroupRotateClustered;
    return *self;
 }
+fn PhysicalDeviceShaderSubgroupRotateFeaturesKHR physicalDeviceShaderSubgroupRotateFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderSubgroupRotateFeaturesKHR PhysicalDeviceShaderSubgroupRotateFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupRotateFeaturesKHR PhysicalDeviceShaderSubgroupRotateFeaturesKHR.setShaderSubgroupRotate(&self, uint shaderSubgroupRotate) {
+   self.shaderSubgroupRotate = shaderSubgroupRotate;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupRotateFeaturesKHR PhysicalDeviceShaderSubgroupRotateFeaturesKHR.setShaderSubgroupRotateClustered(&self, uint shaderSubgroupRotateClustered) {
+   self.shaderSubgroupRotateClustered = shaderSubgroupRotateClustered;
+   return *self;
+}
 fn PhysicalDeviceShaderExpectAssumeFeatures physicalDeviceShaderExpectAssumeFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES, .pNext = null };
 fn PhysicalDeviceShaderExpectAssumeFeatures PhysicalDeviceShaderExpectAssumeFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceShaderExpectAssumeFeatures PhysicalDeviceShaderExpectAssumeFeatures.setShaderExpectAssume(&self, uint shaderExpectAssume) {
+   self.shaderExpectAssume = shaderExpectAssume;
+   return *self;
+}
+fn PhysicalDeviceShaderExpectAssumeFeaturesKHR physicalDeviceShaderExpectAssumeFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderExpectAssumeFeaturesKHR PhysicalDeviceShaderExpectAssumeFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderExpectAssumeFeaturesKHR PhysicalDeviceShaderExpectAssumeFeaturesKHR.setShaderExpectAssume(&self, uint shaderExpectAssume) {
    self.shaderExpectAssume = shaderExpectAssume;
    return *self;
 }
@@ -7998,12 +21523,30 @@ fn PhysicalDeviceShaderFloatControls2Features PhysicalDeviceShaderFloatControls2
    self.shaderFloatControls2 = shaderFloatControls2;
    return *self;
 }
+fn PhysicalDeviceShaderFloatControls2FeaturesKHR physicalDeviceShaderFloatControls2FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES, .pNext = null };
+fn PhysicalDeviceShaderFloatControls2FeaturesKHR PhysicalDeviceShaderFloatControls2FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderFloatControls2FeaturesKHR PhysicalDeviceShaderFloatControls2FeaturesKHR.setShaderFloatControls2(&self, uint shaderFloatControls2) {
+   self.shaderFloatControls2 = shaderFloatControls2;
+   return *self;
+}
 fn PhysicalDeviceDynamicRenderingLocalReadFeatures physicalDeviceDynamicRenderingLocalReadFeatures() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES, .pNext = null };
 fn PhysicalDeviceDynamicRenderingLocalReadFeatures PhysicalDeviceDynamicRenderingLocalReadFeatures.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
 fn PhysicalDeviceDynamicRenderingLocalReadFeatures PhysicalDeviceDynamicRenderingLocalReadFeatures.setDynamicRenderingLocalRead(&self, uint dynamicRenderingLocalRead) {
+   self.dynamicRenderingLocalRead = dynamicRenderingLocalRead;
+   return *self;
+}
+fn PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR physicalDeviceDynamicRenderingLocalReadFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES, .pNext = null };
+fn PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR.setDynamicRenderingLocalRead(&self, uint dynamicRenderingLocalRead) {
    self.dynamicRenderingLocalRead = dynamicRenderingLocalRead;
    return *self;
 }
@@ -8017,6 +21560,20 @@ fn RenderingAttachmentLocationInfo RenderingAttachmentLocationInfo.setColorAttac
    return *self;
 }
 fn RenderingAttachmentLocationInfo RenderingAttachmentLocationInfo.setColorAttachmentLocations(&self, uint[] pColorAttachmentLocations) {
+   self.colorAttachmentCount= (uint)pColorAttachmentLocations.len;
+   self.pColorAttachmentLocations = &pColorAttachmentLocations[0];
+   return *self;
+}
+fn RenderingAttachmentLocationInfoKHR renderingAttachmentLocationInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO, .pNext = null };
+fn RenderingAttachmentLocationInfoKHR RenderingAttachmentLocationInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingAttachmentLocationInfoKHR RenderingAttachmentLocationInfoKHR.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn RenderingAttachmentLocationInfoKHR RenderingAttachmentLocationInfoKHR.setColorAttachmentLocations(&self, uint[] pColorAttachmentLocations) {
    self.colorAttachmentCount= (uint)pColorAttachmentLocations.len;
    self.pColorAttachmentLocations = &pColorAttachmentLocations[0];
    return *self;
@@ -8041,5 +21598,2302 @@ fn RenderingInputAttachmentIndexInfo RenderingInputAttachmentIndexInfo.setDepthI
 }
 fn RenderingInputAttachmentIndexInfo RenderingInputAttachmentIndexInfo.setStencilInputAttachmentIndex(&self, uint* pStencilInputAttachmentIndex) {
    self.pStencilInputAttachmentIndex = pStencilInputAttachmentIndex;
+   return *self;
+}
+fn RenderingInputAttachmentIndexInfoKHR renderingInputAttachmentIndexInfoKHR() => { .sType = STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO, .pNext = null };
+fn RenderingInputAttachmentIndexInfoKHR RenderingInputAttachmentIndexInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderingInputAttachmentIndexInfoKHR RenderingInputAttachmentIndexInfoKHR.setColorAttachmentCount(&self, uint colorAttachmentCount) {
+   self.colorAttachmentCount = colorAttachmentCount;
+   return *self;
+}
+fn RenderingInputAttachmentIndexInfoKHR RenderingInputAttachmentIndexInfoKHR.setColorAttachmentInputIndices(&self, uint[] pColorAttachmentInputIndices) {
+   self.colorAttachmentCount= (uint)pColorAttachmentInputIndices.len;
+   self.pColorAttachmentInputIndices = &pColorAttachmentInputIndices[0];
+   return *self;
+}
+fn RenderingInputAttachmentIndexInfoKHR RenderingInputAttachmentIndexInfoKHR.setDepthInputAttachmentIndex(&self, uint* pDepthInputAttachmentIndex) {
+   self.pDepthInputAttachmentIndex = pDepthInputAttachmentIndex;
+   return *self;
+}
+fn RenderingInputAttachmentIndexInfoKHR RenderingInputAttachmentIndexInfoKHR.setStencilInputAttachmentIndex(&self, uint* pStencilInputAttachmentIndex) {
+   self.pStencilInputAttachmentIndex = pStencilInputAttachmentIndex;
+   return *self;
+}
+fn PhysicalDeviceShaderQuadControlFeaturesKHR physicalDeviceShaderQuadControlFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderQuadControlFeaturesKHR PhysicalDeviceShaderQuadControlFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderQuadControlFeaturesKHR PhysicalDeviceShaderQuadControlFeaturesKHR.setShaderQuadControl(&self, uint shaderQuadControl) {
+   self.shaderQuadControl = shaderQuadControl;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV physicalDeviceShaderAtomicFloat16VectorFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV.setShaderFloat16VectorAtomics(&self, uint shaderFloat16VectorAtomics) {
+   self.shaderFloat16VectorAtomics = shaderFloat16VectorAtomics;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedFeaturesEXT physicalDeviceMapMemoryPlacedFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceMapMemoryPlacedFeaturesEXT PhysicalDeviceMapMemoryPlacedFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedFeaturesEXT PhysicalDeviceMapMemoryPlacedFeaturesEXT.setMemoryMapPlaced(&self, uint memoryMapPlaced) {
+   self.memoryMapPlaced = memoryMapPlaced;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedFeaturesEXT PhysicalDeviceMapMemoryPlacedFeaturesEXT.setMemoryMapRangePlaced(&self, uint memoryMapRangePlaced) {
+   self.memoryMapRangePlaced = memoryMapRangePlaced;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedFeaturesEXT PhysicalDeviceMapMemoryPlacedFeaturesEXT.setMemoryUnmapReserve(&self, uint memoryUnmapReserve) {
+   self.memoryUnmapReserve = memoryUnmapReserve;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedPropertiesEXT physicalDeviceMapMemoryPlacedPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceMapMemoryPlacedPropertiesEXT PhysicalDeviceMapMemoryPlacedPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceMapMemoryPlacedPropertiesEXT PhysicalDeviceMapMemoryPlacedPropertiesEXT.setMinPlacedMemoryMapAlignment(&self, DeviceSize minPlacedMemoryMapAlignment) {
+   self.minPlacedMemoryMapAlignment = minPlacedMemoryMapAlignment;
+   return *self;
+}
+fn MemoryMapPlacedInfoEXT memoryMapPlacedInfoEXT() => { .sType = STRUCTURE_TYPE_MEMORY_MAP_PLACED_INFO_EXT, .pNext = null };
+fn MemoryMapPlacedInfoEXT MemoryMapPlacedInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryMapPlacedInfoEXT MemoryMapPlacedInfoEXT.setPlacedAddress(&self, void* pPlacedAddress) {
+   self.pPlacedAddress = pPlacedAddress;
+   return *self;
+}
+fn PhysicalDeviceShaderBfloat16FeaturesKHR physicalDeviceShaderBfloat16FeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderBfloat16FeaturesKHR PhysicalDeviceShaderBfloat16FeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderBfloat16FeaturesKHR PhysicalDeviceShaderBfloat16FeaturesKHR.setShaderBFloat16Type(&self, uint shaderBFloat16Type) {
+   self.shaderBFloat16Type = shaderBFloat16Type;
+   return *self;
+}
+fn PhysicalDeviceShaderBfloat16FeaturesKHR PhysicalDeviceShaderBfloat16FeaturesKHR.setShaderBFloat16DotProduct(&self, uint shaderBFloat16DotProduct) {
+   self.shaderBFloat16DotProduct = shaderBFloat16DotProduct;
+   return *self;
+}
+fn PhysicalDeviceShaderBfloat16FeaturesKHR PhysicalDeviceShaderBfloat16FeaturesKHR.setShaderBFloat16CooperativeMatrix(&self, uint shaderBFloat16CooperativeMatrix) {
+   self.shaderBFloat16CooperativeMatrix = shaderBFloat16CooperativeMatrix;
+   return *self;
+}
+fn PhysicalDeviceRawAccessChainsFeaturesNV physicalDeviceRawAccessChainsFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceRawAccessChainsFeaturesNV PhysicalDeviceRawAccessChainsFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceRawAccessChainsFeaturesNV PhysicalDeviceRawAccessChainsFeaturesNV.setShaderRawAccessChains(&self, uint shaderRawAccessChains) {
+   self.shaderRawAccessChains = shaderRawAccessChains;
+   return *self;
+}
+fn PhysicalDeviceCommandBufferInheritanceFeaturesNV physicalDeviceCommandBufferInheritanceFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMMAND_BUFFER_INHERITANCE_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCommandBufferInheritanceFeaturesNV PhysicalDeviceCommandBufferInheritanceFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCommandBufferInheritanceFeaturesNV PhysicalDeviceCommandBufferInheritanceFeaturesNV.setCommandBufferInheritance(&self, uint commandBufferInheritance) {
+   self.commandBufferInheritance = commandBufferInheritance;
+   return *self;
+}
+fn PhysicalDeviceImageAlignmentControlFeaturesMESA physicalDeviceImageAlignmentControlFeaturesMESA() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA, .pNext = null };
+fn PhysicalDeviceImageAlignmentControlFeaturesMESA PhysicalDeviceImageAlignmentControlFeaturesMESA.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageAlignmentControlFeaturesMESA PhysicalDeviceImageAlignmentControlFeaturesMESA.setImageAlignmentControl(&self, uint imageAlignmentControl) {
+   self.imageAlignmentControl = imageAlignmentControl;
+   return *self;
+}
+fn PhysicalDeviceImageAlignmentControlPropertiesMESA physicalDeviceImageAlignmentControlPropertiesMESA() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_PROPERTIES_MESA, .pNext = null };
+fn PhysicalDeviceImageAlignmentControlPropertiesMESA PhysicalDeviceImageAlignmentControlPropertiesMESA.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceImageAlignmentControlPropertiesMESA PhysicalDeviceImageAlignmentControlPropertiesMESA.setSupportedImageAlignmentMask(&self, uint supportedImageAlignmentMask) {
+   self.supportedImageAlignmentMask = supportedImageAlignmentMask;
+   return *self;
+}
+fn ImageAlignmentControlCreateInfoMESA imageAlignmentControlCreateInfoMESA() => { .sType = STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA, .pNext = null };
+fn ImageAlignmentControlCreateInfoMESA ImageAlignmentControlCreateInfoMESA.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageAlignmentControlCreateInfoMESA ImageAlignmentControlCreateInfoMESA.setMaximumRequestedAlignment(&self, uint maximumRequestedAlignment) {
+   self.maximumRequestedAlignment = maximumRequestedAlignment;
+   return *self;
+}
+fn PhysicalDeviceShaderReplicatedCompositesFeaturesEXT physicalDeviceShaderReplicatedCompositesFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderReplicatedCompositesFeaturesEXT PhysicalDeviceShaderReplicatedCompositesFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderReplicatedCompositesFeaturesEXT PhysicalDeviceShaderReplicatedCompositesFeaturesEXT.setShaderReplicatedComposites(&self, uint shaderReplicatedComposites) {
+   self.shaderReplicatedComposites = shaderReplicatedComposites;
+   return *self;
+}
+fn PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR physicalDevicePresentModeFifoLatestReadyFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR, .pNext = null };
+fn PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR.setPresentModeFifoLatestReady(&self, uint presentModeFifoLatestReady) {
+   self.presentModeFifoLatestReady = presentModeFifoLatestReady;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV physicalDeviceCooperativeMatrix2FeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixWorkgroupScope(&self, uint cooperativeMatrixWorkgroupScope) {
+   self.cooperativeMatrixWorkgroupScope = cooperativeMatrixWorkgroupScope;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixFlexibleDimensions(&self, uint cooperativeMatrixFlexibleDimensions) {
+   self.cooperativeMatrixFlexibleDimensions = cooperativeMatrixFlexibleDimensions;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixReductions(&self, uint cooperativeMatrixReductions) {
+   self.cooperativeMatrixReductions = cooperativeMatrixReductions;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixConversions(&self, uint cooperativeMatrixConversions) {
+   self.cooperativeMatrixConversions = cooperativeMatrixConversions;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixPerElementOperations(&self, uint cooperativeMatrixPerElementOperations) {
+   self.cooperativeMatrixPerElementOperations = cooperativeMatrixPerElementOperations;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixTensorAddressing(&self, uint cooperativeMatrixTensorAddressing) {
+   self.cooperativeMatrixTensorAddressing = cooperativeMatrixTensorAddressing;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2FeaturesNV PhysicalDeviceCooperativeMatrix2FeaturesNV.setCooperativeMatrixBlockLoads(&self, uint cooperativeMatrixBlockLoads) {
+   self.cooperativeMatrixBlockLoads = cooperativeMatrixBlockLoads;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2PropertiesNV physicalDeviceCooperativeMatrix2PropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeMatrix2PropertiesNV PhysicalDeviceCooperativeMatrix2PropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2PropertiesNV PhysicalDeviceCooperativeMatrix2PropertiesNV.setCooperativeMatrixWorkgroupScopeMaxWorkgroupSize(&self, uint cooperativeMatrixWorkgroupScopeMaxWorkgroupSize) {
+   self.cooperativeMatrixWorkgroupScopeMaxWorkgroupSize = cooperativeMatrixWorkgroupScopeMaxWorkgroupSize;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2PropertiesNV PhysicalDeviceCooperativeMatrix2PropertiesNV.setCooperativeMatrixFlexibleDimensionsMaxDimension(&self, uint cooperativeMatrixFlexibleDimensionsMaxDimension) {
+   self.cooperativeMatrixFlexibleDimensionsMaxDimension = cooperativeMatrixFlexibleDimensionsMaxDimension;
+   return *self;
+}
+fn PhysicalDeviceCooperativeMatrix2PropertiesNV PhysicalDeviceCooperativeMatrix2PropertiesNV.setCooperativeMatrixWorkgroupScopeReservedSharedMemory(&self, uint cooperativeMatrixWorkgroupScopeReservedSharedMemory) {
+   self.cooperativeMatrixWorkgroupScopeReservedSharedMemory = cooperativeMatrixWorkgroupScopeReservedSharedMemory;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV cooperativeMatrixFlexibleDimensionsPropertiesNV() => { .sType = STRUCTURE_TYPE_COOPERATIVE_MATRIX_FLEXIBLE_DIMENSIONS_PROPERTIES_NV, .pNext = null };
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setMGranularity(&self, uint mGranularity) {
+   self.mGranularity = mGranularity;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setNGranularity(&self, uint nGranularity) {
+   self.nGranularity = nGranularity;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setKGranularity(&self, uint kGranularity) {
+   self.kGranularity = kGranularity;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setAType(&self, ComponentTypeKHR aType) {
+   self.aType = aType;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setBType(&self, ComponentTypeKHR bType) {
+   self.bType = bType;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setCType(&self, ComponentTypeKHR cType) {
+   self.cType = cType;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setResultType(&self, ComponentTypeKHR resultType) {
+   self.resultType = resultType;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setSaturatingAccumulation(&self, uint saturatingAccumulation) {
+   self.saturatingAccumulation = saturatingAccumulation;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setScope(&self, ScopeKHR scope) {
+   self.scope = scope;
+   return *self;
+}
+fn CooperativeMatrixFlexibleDimensionsPropertiesNV CooperativeMatrixFlexibleDimensionsPropertiesNV.setWorkgroupInvocations(&self, uint workgroupInvocations) {
+   self.workgroupInvocations = workgroupInvocations;
+   return *self;
+}
+fn PhysicalDeviceHdrVividFeaturesHUAWEI physicalDeviceHdrVividFeaturesHUAWEI() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI, .pNext = null };
+fn PhysicalDeviceHdrVividFeaturesHUAWEI PhysicalDeviceHdrVividFeaturesHUAWEI.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceHdrVividFeaturesHUAWEI PhysicalDeviceHdrVividFeaturesHUAWEI.setHdrVivid(&self, uint hdrVivid) {
+   self.hdrVivid = hdrVivid;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeRobustnessFeaturesEXT physicalDeviceVertexAttributeRobustnessFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceVertexAttributeRobustnessFeaturesEXT PhysicalDeviceVertexAttributeRobustnessFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVertexAttributeRobustnessFeaturesEXT PhysicalDeviceVertexAttributeRobustnessFeaturesEXT.setVertexAttributeRobustness(&self, uint vertexAttributeRobustness) {
+   self.vertexAttributeRobustness = vertexAttributeRobustness;
+   return *self;
+}
+fn PhysicalDeviceDenseGeometryFormatFeaturesAMDX physicalDeviceDenseGeometryFormatFeaturesAMDX() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX, .pNext = null };
+fn PhysicalDeviceDenseGeometryFormatFeaturesAMDX PhysicalDeviceDenseGeometryFormatFeaturesAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDenseGeometryFormatFeaturesAMDX PhysicalDeviceDenseGeometryFormatFeaturesAMDX.setDenseGeometryFormat(&self, uint denseGeometryFormat) {
+   self.denseGeometryFormat = denseGeometryFormat;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX accelerationStructureDenseGeometryFormatTrianglesDataAMDX() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX, .pNext = null };
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setCompressedData(&self, DeviceOrHostAddressConstKHR compressedData) {
+   self.compressedData = compressedData;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setDataSize(&self, DeviceSize dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setNumTriangles(&self, uint numTriangles) {
+   self.numTriangles = numTriangles;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setNumVertices(&self, uint numVertices) {
+   self.numVertices = numVertices;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setMaxPrimitiveIndex(&self, uint maxPrimitiveIndex) {
+   self.maxPrimitiveIndex = maxPrimitiveIndex;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setMaxGeometryIndex(&self, uint maxGeometryIndex) {
+   self.maxGeometryIndex = maxGeometryIndex;
+   return *self;
+}
+fn AccelerationStructureDenseGeometryFormatTrianglesDataAMDX AccelerationStructureDenseGeometryFormatTrianglesDataAMDX.setFormat(&self, CompressedTriangleFormatAMDX format) {
+   self.format = format;
+   return *self;
+}
+fn PhysicalDeviceDepthClampZeroOneFeaturesKHR physicalDeviceDepthClampZeroOneFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceDepthClampZeroOneFeaturesKHR PhysicalDeviceDepthClampZeroOneFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDepthClampZeroOneFeaturesKHR PhysicalDeviceDepthClampZeroOneFeaturesKHR.setDepthClampZeroOne(&self, uint depthClampZeroOne) {
+   self.depthClampZeroOne = depthClampZeroOne;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorFeaturesNV physicalDeviceCooperativeVectorFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeVectorFeaturesNV PhysicalDeviceCooperativeVectorFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorFeaturesNV PhysicalDeviceCooperativeVectorFeaturesNV.setCooperativeVector(&self, uint cooperativeVector) {
+   self.cooperativeVector = cooperativeVector;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorFeaturesNV PhysicalDeviceCooperativeVectorFeaturesNV.setCooperativeVectorTraining(&self, uint cooperativeVectorTraining) {
+   self.cooperativeVectorTraining = cooperativeVectorTraining;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV cooperativeVectorPropertiesNV() => { .sType = STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV, .pNext = null };
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setInputType(&self, ComponentTypeKHR inputType) {
+   self.inputType = inputType;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setInputInterpretation(&self, ComponentTypeKHR inputInterpretation) {
+   self.inputInterpretation = inputInterpretation;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setMatrixInterpretation(&self, ComponentTypeKHR matrixInterpretation) {
+   self.matrixInterpretation = matrixInterpretation;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setBiasInterpretation(&self, ComponentTypeKHR biasInterpretation) {
+   self.biasInterpretation = biasInterpretation;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setResultType(&self, ComponentTypeKHR resultType) {
+   self.resultType = resultType;
+   return *self;
+}
+fn CooperativeVectorPropertiesNV CooperativeVectorPropertiesNV.setTranspose(&self, uint transpose) {
+   self.transpose = transpose;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorPropertiesNV physicalDeviceCooperativeVectorPropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceCooperativeVectorPropertiesNV PhysicalDeviceCooperativeVectorPropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorPropertiesNV PhysicalDeviceCooperativeVectorPropertiesNV.setCooperativeVectorSupportedStages(&self, ShaderStageFlags cooperativeVectorSupportedStages) {
+   self.cooperativeVectorSupportedStages = cooperativeVectorSupportedStages;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorPropertiesNV PhysicalDeviceCooperativeVectorPropertiesNV.setCooperativeVectorTrainingFloat16Accumulation(&self, uint cooperativeVectorTrainingFloat16Accumulation) {
+   self.cooperativeVectorTrainingFloat16Accumulation = cooperativeVectorTrainingFloat16Accumulation;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorPropertiesNV PhysicalDeviceCooperativeVectorPropertiesNV.setCooperativeVectorTrainingFloat32Accumulation(&self, uint cooperativeVectorTrainingFloat32Accumulation) {
+   self.cooperativeVectorTrainingFloat32Accumulation = cooperativeVectorTrainingFloat32Accumulation;
+   return *self;
+}
+fn PhysicalDeviceCooperativeVectorPropertiesNV PhysicalDeviceCooperativeVectorPropertiesNV.setMaxCooperativeVectorComponents(&self, uint maxCooperativeVectorComponents) {
+   self.maxCooperativeVectorComponents = maxCooperativeVectorComponents;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV convertCooperativeVectorMatrixInfoNV() => { .sType = STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV, .pNext = null };
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcSize(&self, usz srcSize) {
+   self.srcSize = srcSize;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcData(&self, DeviceOrHostAddressConstKHR srcData) {
+   self.srcData = srcData;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstSize(&self, usz* pDstSize) {
+   self.pDstSize = pDstSize;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstData(&self, DeviceOrHostAddressKHR dstData) {
+   self.dstData = dstData;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcComponentType(&self, ComponentTypeKHR srcComponentType) {
+   self.srcComponentType = srcComponentType;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstComponentType(&self, ComponentTypeKHR dstComponentType) {
+   self.dstComponentType = dstComponentType;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setNumRows(&self, uint numRows) {
+   self.numRows = numRows;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setNumColumns(&self, uint numColumns) {
+   self.numColumns = numColumns;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcLayout(&self, CooperativeVectorMatrixLayoutNV srcLayout) {
+   self.srcLayout = srcLayout;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcStride(&self, usz srcStride) {
+   self.srcStride = srcStride;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstLayout(&self, CooperativeVectorMatrixLayoutNV dstLayout) {
+   self.dstLayout = dstLayout;
+   return *self;
+}
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstStride(&self, usz dstStride) {
+   self.dstStride = dstStride;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM physicalDeviceTileShadingFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShading(&self, uint tileShading) {
+   self.tileShading = tileShading;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingFragmentStage(&self, uint tileShadingFragmentStage) {
+   self.tileShadingFragmentStage = tileShadingFragmentStage;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingColorAttachments(&self, uint tileShadingColorAttachments) {
+   self.tileShadingColorAttachments = tileShadingColorAttachments;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingDepthAttachments(&self, uint tileShadingDepthAttachments) {
+   self.tileShadingDepthAttachments = tileShadingDepthAttachments;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingStencilAttachments(&self, uint tileShadingStencilAttachments) {
+   self.tileShadingStencilAttachments = tileShadingStencilAttachments;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingInputAttachments(&self, uint tileShadingInputAttachments) {
+   self.tileShadingInputAttachments = tileShadingInputAttachments;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingSampledAttachments(&self, uint tileShadingSampledAttachments) {
+   self.tileShadingSampledAttachments = tileShadingSampledAttachments;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingPerTileDraw(&self, uint tileShadingPerTileDraw) {
+   self.tileShadingPerTileDraw = tileShadingPerTileDraw;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingPerTileDispatch(&self, uint tileShadingPerTileDispatch) {
+   self.tileShadingPerTileDispatch = tileShadingPerTileDispatch;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingDispatchTile(&self, uint tileShadingDispatchTile) {
+   self.tileShadingDispatchTile = tileShadingDispatchTile;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingApron(&self, uint tileShadingApron) {
+   self.tileShadingApron = tileShadingApron;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingAnisotropicApron(&self, uint tileShadingAnisotropicApron) {
+   self.tileShadingAnisotropicApron = tileShadingAnisotropicApron;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingAtomicOps(&self, uint tileShadingAtomicOps) {
+   self.tileShadingAtomicOps = tileShadingAtomicOps;
+   return *self;
+}
+fn PhysicalDeviceTileShadingFeaturesQCOM PhysicalDeviceTileShadingFeaturesQCOM.setTileShadingImageProcessing(&self, uint tileShadingImageProcessing) {
+   self.tileShadingImageProcessing = tileShadingImageProcessing;
+   return *self;
+}
+fn PhysicalDeviceTileShadingPropertiesQCOM physicalDeviceTileShadingPropertiesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM, .pNext = null };
+fn PhysicalDeviceTileShadingPropertiesQCOM PhysicalDeviceTileShadingPropertiesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTileShadingPropertiesQCOM PhysicalDeviceTileShadingPropertiesQCOM.setMaxApronSize(&self, uint maxApronSize) {
+   self.maxApronSize = maxApronSize;
+   return *self;
+}
+fn PhysicalDeviceTileShadingPropertiesQCOM PhysicalDeviceTileShadingPropertiesQCOM.setPreferNonCoherent(&self, uint preferNonCoherent) {
+   self.preferNonCoherent = preferNonCoherent;
+   return *self;
+}
+fn PhysicalDeviceTileShadingPropertiesQCOM PhysicalDeviceTileShadingPropertiesQCOM.setTileGranularity(&self, Extent2D tileGranularity) {
+   self.tileGranularity = tileGranularity;
+   return *self;
+}
+fn PhysicalDeviceTileShadingPropertiesQCOM PhysicalDeviceTileShadingPropertiesQCOM.setMaxTileShadingRate(&self, Extent2D maxTileShadingRate) {
+   self.maxTileShadingRate = maxTileShadingRate;
+   return *self;
+}
+fn RenderPassTileShadingCreateInfoQCOM renderPassTileShadingCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM, .pNext = null };
+fn RenderPassTileShadingCreateInfoQCOM RenderPassTileShadingCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassTileShadingCreateInfoQCOM RenderPassTileShadingCreateInfoQCOM.setFlags(&self, TileShadingRenderPassFlagsQCOM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn RenderPassTileShadingCreateInfoQCOM RenderPassTileShadingCreateInfoQCOM.setTileApronSize(&self, Extent2D tileApronSize) {
+   self.tileApronSize = tileApronSize;
+   return *self;
+}
+fn PerTileBeginInfoQCOM perTileBeginInfoQCOM() => { .sType = STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM, .pNext = null };
+fn PerTileBeginInfoQCOM PerTileBeginInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerTileEndInfoQCOM perTileEndInfoQCOM() => { .sType = STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM, .pNext = null };
+fn PerTileEndInfoQCOM PerTileEndInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DispatchTileInfoQCOM dispatchTileInfoQCOM() => { .sType = STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM, .pNext = null };
+fn DispatchTileInfoQCOM DispatchTileInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE physicalDeviceFragmentDensityMapLayeredPropertiesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE.setMaxFragmentDensityMapLayers(&self, uint maxFragmentDensityMapLayers) {
+   self.maxFragmentDensityMapLayers = maxFragmentDensityMapLayers;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE physicalDeviceFragmentDensityMapLayeredFeaturesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE, .pNext = null };
+fn PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE.setFragmentDensityMapLayered(&self, uint fragmentDensityMapLayered) {
+   self.fragmentDensityMapLayered = fragmentDensityMapLayered;
+   return *self;
+}
+fn PipelineFragmentDensityMapLayeredCreateInfoVALVE pipelineFragmentDensityMapLayeredCreateInfoVALVE() => { .sType = STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE, .pNext = null };
+fn PipelineFragmentDensityMapLayeredCreateInfoVALVE PipelineFragmentDensityMapLayeredCreateInfoVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PipelineFragmentDensityMapLayeredCreateInfoVALVE PipelineFragmentDensityMapLayeredCreateInfoVALVE.setMaxFragmentDensityMapLayers(&self, uint maxFragmentDensityMapLayers) {
+   self.maxFragmentDensityMapLayers = maxFragmentDensityMapLayers;
+   return *self;
+}
+fn SetPresentConfigNV setPresentConfigNV() => { .sType = STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV, .pNext = null };
+fn SetPresentConfigNV SetPresentConfigNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SetPresentConfigNV SetPresentConfigNV.setNumFramesPerBatch(&self, uint numFramesPerBatch) {
+   self.numFramesPerBatch = numFramesPerBatch;
+   return *self;
+}
+fn SetPresentConfigNV SetPresentConfigNV.setPresentConfigFeedback(&self, uint presentConfigFeedback) {
+   self.presentConfigFeedback = presentConfigFeedback;
+   return *self;
+}
+fn PhysicalDevicePresentMeteringFeaturesNV physicalDevicePresentMeteringFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV, .pNext = null };
+fn PhysicalDevicePresentMeteringFeaturesNV PhysicalDevicePresentMeteringFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePresentMeteringFeaturesNV PhysicalDevicePresentMeteringFeaturesNV.setPresentMetering(&self, uint presentMetering) {
+   self.presentMetering = presentMetering;
+   return *self;
+}
+fn ExternalComputeQueueDeviceCreateInfoNV externalComputeQueueDeviceCreateInfoNV() => { .sType = STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV, .pNext = null };
+fn ExternalComputeQueueDeviceCreateInfoNV ExternalComputeQueueDeviceCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalComputeQueueDeviceCreateInfoNV ExternalComputeQueueDeviceCreateInfoNV.setReservedExternalQueues(&self, uint reservedExternalQueues) {
+   self.reservedExternalQueues = reservedExternalQueues;
+   return *self;
+}
+fn ExternalComputeQueueCreateInfoNV externalComputeQueueCreateInfoNV() => { .sType = STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV, .pNext = null };
+fn ExternalComputeQueueCreateInfoNV ExternalComputeQueueCreateInfoNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalComputeQueueCreateInfoNV ExternalComputeQueueCreateInfoNV.setPreferredQueue(&self, Queue preferredQueue) {
+   self.preferredQueue = preferredQueue;
+   return *self;
+}
+fn ExternalComputeQueueDataParamsNV externalComputeQueueDataParamsNV() => { .sType = STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV, .pNext = null };
+fn ExternalComputeQueueDataParamsNV ExternalComputeQueueDataParamsNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalComputeQueueDataParamsNV ExternalComputeQueueDataParamsNV.setDeviceIndex(&self, uint deviceIndex) {
+   self.deviceIndex = deviceIndex;
+   return *self;
+}
+fn PhysicalDeviceExternalComputeQueuePropertiesNV physicalDeviceExternalComputeQueuePropertiesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV, .pNext = null };
+fn PhysicalDeviceExternalComputeQueuePropertiesNV PhysicalDeviceExternalComputeQueuePropertiesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalComputeQueuePropertiesNV PhysicalDeviceExternalComputeQueuePropertiesNV.setExternalDataSize(&self, uint externalDataSize) {
+   self.externalDataSize = externalDataSize;
+   return *self;
+}
+fn PhysicalDeviceExternalComputeQueuePropertiesNV PhysicalDeviceExternalComputeQueuePropertiesNV.setMaxExternalQueues(&self, uint maxExternalQueues) {
+   self.maxExternalQueues = maxExternalQueues;
+   return *self;
+}
+fn PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT physicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT.setShaderUniformBufferUnsizedArray(&self, uint shaderUniformBufferUnsizedArray) {
+   self.shaderUniformBufferUnsizedArray = shaderUniformBufferUnsizedArray;
+   return *self;
+}
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE physicalDeviceShaderMixedFloatDotProductFeaturesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE, .pNext = null };
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.setShaderMixedFloatDotProductFloat16AccFloat32(&self, uint shaderMixedFloatDotProductFloat16AccFloat32) {
+   self.shaderMixedFloatDotProductFloat16AccFloat32 = shaderMixedFloatDotProductFloat16AccFloat32;
+   return *self;
+}
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.setShaderMixedFloatDotProductFloat16AccFloat16(&self, uint shaderMixedFloatDotProductFloat16AccFloat16) {
+   self.shaderMixedFloatDotProductFloat16AccFloat16 = shaderMixedFloatDotProductFloat16AccFloat16;
+   return *self;
+}
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.setShaderMixedFloatDotProductBFloat16Acc(&self, uint shaderMixedFloatDotProductBFloat16Acc) {
+   self.shaderMixedFloatDotProductBFloat16Acc = shaderMixedFloatDotProductBFloat16Acc;
+   return *self;
+}
+fn PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.setShaderMixedFloatDotProductFloat8AccFloat32(&self, uint shaderMixedFloatDotProductFloat8AccFloat32) {
+   self.shaderMixedFloatDotProductFloat8AccFloat32 = shaderMixedFloatDotProductFloat8AccFloat32;
+   return *self;
+}
+fn PhysicalDeviceFormatPackFeaturesARM physicalDeviceFormatPackFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceFormatPackFeaturesARM PhysicalDeviceFormatPackFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceFormatPackFeaturesARM PhysicalDeviceFormatPackFeaturesARM.setFormatPack(&self, uint formatPack) {
+   self.formatPack = formatPack;
+   return *self;
+}
+fn TensorDescriptionARM tensorDescriptionARM() => { .sType = STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM, .pNext = null };
+fn TensorDescriptionARM TensorDescriptionARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setTiling(&self, TensorTilingARM tiling) {
+   self.tiling = tiling;
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setDimensionCount(&self, uint dimensionCount) {
+   self.dimensionCount = dimensionCount;
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setDimensions(&self, long[] pDimensions) {
+   self.dimensionCount= (uint)pDimensions.len;
+   self.pDimensions = &pDimensions[0];
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setStrides(&self, long[] pStrides) {
+   self.dimensionCount= (uint)pStrides.len;
+   self.pStrides = &pStrides[0];
+   return *self;
+}
+fn TensorDescriptionARM TensorDescriptionARM.setUsage(&self, TensorUsageFlagsARM usage) {
+   self.usage = usage;
+   return *self;
+}
+fn TensorCreateInfoARM tensorCreateInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM, .pNext = null };
+fn TensorCreateInfoARM TensorCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorCreateInfoARM TensorCreateInfoARM.setFlags(&self, TensorCreateFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn TensorCreateInfoARM TensorCreateInfoARM.setDescription(&self, TensorDescriptionARM* pDescription) {
+   self.pDescription = pDescription;
+   return *self;
+}
+fn TensorCreateInfoARM TensorCreateInfoARM.setSharingMode(&self, SharingMode sharingMode) {
+   self.sharingMode = sharingMode;
+   return *self;
+}
+fn TensorCreateInfoARM TensorCreateInfoARM.setQueueFamilyIndexCount(&self, uint queueFamilyIndexCount) {
+   self.queueFamilyIndexCount = queueFamilyIndexCount;
+   return *self;
+}
+fn TensorCreateInfoARM TensorCreateInfoARM.setQueueFamilyIndices(&self, uint[] pQueueFamilyIndices) {
+   self.queueFamilyIndexCount= (uint)pQueueFamilyIndices.len;
+   self.pQueueFamilyIndices = &pQueueFamilyIndices[0];
+   return *self;
+}
+fn TensorViewCreateInfoARM tensorViewCreateInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM, .pNext = null };
+fn TensorViewCreateInfoARM TensorViewCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorViewCreateInfoARM TensorViewCreateInfoARM.setFlags(&self, TensorViewCreateFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn TensorViewCreateInfoARM TensorViewCreateInfoARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn TensorViewCreateInfoARM TensorViewCreateInfoARM.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn TensorMemoryRequirementsInfoARM tensorMemoryRequirementsInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM, .pNext = null };
+fn TensorMemoryRequirementsInfoARM TensorMemoryRequirementsInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorMemoryRequirementsInfoARM TensorMemoryRequirementsInfoARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn BindTensorMemoryInfoARM bindTensorMemoryInfoARM() => { .sType = STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM, .pNext = null };
+fn BindTensorMemoryInfoARM BindTensorMemoryInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindTensorMemoryInfoARM BindTensorMemoryInfoARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn BindTensorMemoryInfoARM BindTensorMemoryInfoARM.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindTensorMemoryInfoARM BindTensorMemoryInfoARM.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
+fn WriteDescriptorSetTensorARM writeDescriptorSetTensorARM() => { .sType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM, .pNext = null };
+fn WriteDescriptorSetTensorARM WriteDescriptorSetTensorARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn WriteDescriptorSetTensorARM WriteDescriptorSetTensorARM.setTensorViewCount(&self, uint tensorViewCount) {
+   self.tensorViewCount = tensorViewCount;
+   return *self;
+}
+fn WriteDescriptorSetTensorARM WriteDescriptorSetTensorARM.setTensorViews(&self, TensorViewARM[] pTensorViews) {
+   self.tensorViewCount= (uint)pTensorViews.len;
+   self.pTensorViews = &pTensorViews[0];
+   return *self;
+}
+fn TensorFormatPropertiesARM tensorFormatPropertiesARM() => { .sType = STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM, .pNext = null };
+fn TensorFormatPropertiesARM TensorFormatPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorFormatPropertiesARM TensorFormatPropertiesARM.setOptimalTilingTensorFeatures(&self, FormatFeatureFlags2 optimalTilingTensorFeatures) {
+   self.optimalTilingTensorFeatures = optimalTilingTensorFeatures;
+   return *self;
+}
+fn TensorFormatPropertiesARM TensorFormatPropertiesARM.setLinearTilingTensorFeatures(&self, FormatFeatureFlags2 linearTilingTensorFeatures) {
+   self.linearTilingTensorFeatures = linearTilingTensorFeatures;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM physicalDeviceTensorPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorDimensionCount(&self, uint maxTensorDimensionCount) {
+   self.maxTensorDimensionCount = maxTensorDimensionCount;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorElements(&self, ulong maxTensorElements) {
+   self.maxTensorElements = maxTensorElements;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxPerDimensionTensorElements(&self, ulong maxPerDimensionTensorElements) {
+   self.maxPerDimensionTensorElements = maxPerDimensionTensorElements;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorStride(&self, long maxTensorStride) {
+   self.maxTensorStride = maxTensorStride;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorSize(&self, ulong maxTensorSize) {
+   self.maxTensorSize = maxTensorSize;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorShaderAccessArrayLength(&self, uint maxTensorShaderAccessArrayLength) {
+   self.maxTensorShaderAccessArrayLength = maxTensorShaderAccessArrayLength;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxTensorShaderAccessSize(&self, uint maxTensorShaderAccessSize) {
+   self.maxTensorShaderAccessSize = maxTensorShaderAccessSize;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxDescriptorSetStorageTensors(&self, uint maxDescriptorSetStorageTensors) {
+   self.maxDescriptorSetStorageTensors = maxDescriptorSetStorageTensors;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxPerStageDescriptorSetStorageTensors(&self, uint maxPerStageDescriptorSetStorageTensors) {
+   self.maxPerStageDescriptorSetStorageTensors = maxPerStageDescriptorSetStorageTensors;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxDescriptorSetUpdateAfterBindStorageTensors(&self, uint maxDescriptorSetUpdateAfterBindStorageTensors) {
+   self.maxDescriptorSetUpdateAfterBindStorageTensors = maxDescriptorSetUpdateAfterBindStorageTensors;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setMaxPerStageDescriptorUpdateAfterBindStorageTensors(&self, uint maxPerStageDescriptorUpdateAfterBindStorageTensors) {
+   self.maxPerStageDescriptorUpdateAfterBindStorageTensors = maxPerStageDescriptorUpdateAfterBindStorageTensors;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setShaderStorageTensorArrayNonUniformIndexingNative(&self, uint shaderStorageTensorArrayNonUniformIndexingNative) {
+   self.shaderStorageTensorArrayNonUniformIndexingNative = shaderStorageTensorArrayNonUniformIndexingNative;
+   return *self;
+}
+fn PhysicalDeviceTensorPropertiesARM PhysicalDeviceTensorPropertiesARM.setShaderTensorSupportedStages(&self, ShaderStageFlags shaderTensorSupportedStages) {
+   self.shaderTensorSupportedStages = shaderTensorSupportedStages;
+   return *self;
+}
+fn TensorMemoryBarrierARM tensorMemoryBarrierARM() => { .sType = STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM, .pNext = null };
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setSrcStageMask(&self, PipelineStageFlags2 srcStageMask) {
+   self.srcStageMask = srcStageMask;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setSrcAccessMask(&self, AccessFlags2 srcAccessMask) {
+   self.srcAccessMask = srcAccessMask;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setDstStageMask(&self, PipelineStageFlags2 dstStageMask) {
+   self.dstStageMask = dstStageMask;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
+   self.dstAccessMask = dstAccessMask;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setSrcQueueFamilyIndex(&self, uint srcQueueFamilyIndex) {
+   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setDstQueueFamilyIndex(&self, uint dstQueueFamilyIndex) {
+   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
+   return *self;
+}
+fn TensorMemoryBarrierARM TensorMemoryBarrierARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn TensorDependencyInfoARM tensorDependencyInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM, .pNext = null };
+fn TensorDependencyInfoARM TensorDependencyInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorDependencyInfoARM TensorDependencyInfoARM.setTensorMemoryBarrierCount(&self, uint tensorMemoryBarrierCount) {
+   self.tensorMemoryBarrierCount = tensorMemoryBarrierCount;
+   return *self;
+}
+fn TensorDependencyInfoARM TensorDependencyInfoARM.setTensorMemoryBarriers(&self, TensorMemoryBarrierARM* pTensorMemoryBarriers) {
+   self.pTensorMemoryBarriers = pTensorMemoryBarriers;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM physicalDeviceTensorFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setTensorNonPacked(&self, uint tensorNonPacked) {
+   self.tensorNonPacked = tensorNonPacked;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setShaderTensorAccess(&self, uint shaderTensorAccess) {
+   self.shaderTensorAccess = shaderTensorAccess;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setShaderStorageTensorArrayDynamicIndexing(&self, uint shaderStorageTensorArrayDynamicIndexing) {
+   self.shaderStorageTensorArrayDynamicIndexing = shaderStorageTensorArrayDynamicIndexing;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setShaderStorageTensorArrayNonUniformIndexing(&self, uint shaderStorageTensorArrayNonUniformIndexing) {
+   self.shaderStorageTensorArrayNonUniformIndexing = shaderStorageTensorArrayNonUniformIndexing;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setDescriptorBindingStorageTensorUpdateAfterBind(&self, uint descriptorBindingStorageTensorUpdateAfterBind) {
+   self.descriptorBindingStorageTensorUpdateAfterBind = descriptorBindingStorageTensorUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceTensorFeaturesARM PhysicalDeviceTensorFeaturesARM.setTensors(&self, uint tensors) {
+   self.tensors = tensors;
+   return *self;
+}
+fn DeviceTensorMemoryRequirementsARM deviceTensorMemoryRequirementsARM() => { .sType = STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM, .pNext = null };
+fn DeviceTensorMemoryRequirementsARM DeviceTensorMemoryRequirementsARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceTensorMemoryRequirementsARM DeviceTensorMemoryRequirementsARM.setCreateInfo(&self, TensorCreateInfoARM* pCreateInfo) {
+   self.pCreateInfo = pCreateInfo;
+   return *self;
+}
+fn CopyTensorInfoARM copyTensorInfoARM() => { .sType = STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM, .pNext = null };
+fn CopyTensorInfoARM CopyTensorInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyTensorInfoARM CopyTensorInfoARM.setSrcTensor(&self, TensorARM srcTensor) {
+   self.srcTensor = srcTensor;
+   return *self;
+}
+fn CopyTensorInfoARM CopyTensorInfoARM.setDstTensor(&self, TensorARM dstTensor) {
+   self.dstTensor = dstTensor;
+   return *self;
+}
+fn CopyTensorInfoARM CopyTensorInfoARM.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyTensorInfoARM CopyTensorInfoARM.setRegions(&self, TensorCopyARM[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn TensorCopyARM tensorCopyARM() => { .sType = STRUCTURE_TYPE_TENSOR_COPY_ARM, .pNext = null };
+fn TensorCopyARM TensorCopyARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorCopyARM TensorCopyARM.setDimensionCount(&self, uint dimensionCount) {
+   self.dimensionCount = dimensionCount;
+   return *self;
+}
+fn TensorCopyARM TensorCopyARM.setSrcOffset(&self, ulong[] pSrcOffset) {
+   self.dimensionCount= (uint)pSrcOffset.len;
+   self.pSrcOffset = &pSrcOffset[0];
+   return *self;
+}
+fn TensorCopyARM TensorCopyARM.setDstOffset(&self, ulong[] pDstOffset) {
+   self.dimensionCount= (uint)pDstOffset.len;
+   self.pDstOffset = &pDstOffset[0];
+   return *self;
+}
+fn TensorCopyARM TensorCopyARM.setExtent(&self, ulong[] pExtent) {
+   self.dimensionCount= (uint)pExtent.len;
+   self.pExtent = &pExtent[0];
+   return *self;
+}
+fn MemoryDedicatedAllocateInfoTensorARM memoryDedicatedAllocateInfoTensorARM() => { .sType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM, .pNext = null };
+fn MemoryDedicatedAllocateInfoTensorARM MemoryDedicatedAllocateInfoTensorARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryDedicatedAllocateInfoTensorARM MemoryDedicatedAllocateInfoTensorARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM physicalDeviceDescriptorBufferTensorPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorCaptureReplayDescriptorDataSize(&self, usz tensorCaptureReplayDescriptorDataSize) {
+   self.tensorCaptureReplayDescriptorDataSize = tensorCaptureReplayDescriptorDataSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorViewCaptureReplayDescriptorDataSize(&self, usz tensorViewCaptureReplayDescriptorDataSize) {
+   self.tensorViewCaptureReplayDescriptorDataSize = tensorViewCaptureReplayDescriptorDataSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorDescriptorSize(&self, usz tensorDescriptorSize) {
+   self.tensorDescriptorSize = tensorDescriptorSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorFeaturesARM physicalDeviceDescriptorBufferTensorFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceDescriptorBufferTensorFeaturesARM PhysicalDeviceDescriptorBufferTensorFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorBufferTensorFeaturesARM PhysicalDeviceDescriptorBufferTensorFeaturesARM.setDescriptorBufferTensorDescriptors(&self, uint descriptorBufferTensorDescriptors) {
+   self.descriptorBufferTensorDescriptors = descriptorBufferTensorDescriptors;
+   return *self;
+}
+fn TensorCaptureDescriptorDataInfoARM tensorCaptureDescriptorDataInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM, .pNext = null };
+fn TensorCaptureDescriptorDataInfoARM TensorCaptureDescriptorDataInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorCaptureDescriptorDataInfoARM TensorCaptureDescriptorDataInfoARM.setTensor(&self, TensorARM tensor) {
+   self.tensor = tensor;
+   return *self;
+}
+fn TensorViewCaptureDescriptorDataInfoARM tensorViewCaptureDescriptorDataInfoARM() => { .sType = STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM, .pNext = null };
+fn TensorViewCaptureDescriptorDataInfoARM TensorViewCaptureDescriptorDataInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TensorViewCaptureDescriptorDataInfoARM TensorViewCaptureDescriptorDataInfoARM.setTensorView(&self, TensorViewARM tensorView) {
+   self.tensorView = tensorView;
+   return *self;
+}
+fn DescriptorGetTensorInfoARM descriptorGetTensorInfoARM() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM, .pNext = null };
+fn DescriptorGetTensorInfoARM DescriptorGetTensorInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorGetTensorInfoARM DescriptorGetTensorInfoARM.setTensorView(&self, TensorViewARM tensorView) {
+   self.tensorView = tensorView;
+   return *self;
+}
+fn FrameBoundaryTensorsARM frameBoundaryTensorsARM() => { .sType = STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM, .pNext = null };
+fn FrameBoundaryTensorsARM FrameBoundaryTensorsARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn FrameBoundaryTensorsARM FrameBoundaryTensorsARM.setTensorCount(&self, uint tensorCount) {
+   self.tensorCount = tensorCount;
+   return *self;
+}
+fn FrameBoundaryTensorsARM FrameBoundaryTensorsARM.setTensors(&self, TensorARM[] pTensors) {
+   self.tensorCount= (uint)pTensors.len;
+   self.pTensors = &pTensors[0];
+   return *self;
+}
+fn PhysicalDeviceExternalTensorInfoARM physicalDeviceExternalTensorInfoARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM, .pNext = null };
+fn PhysicalDeviceExternalTensorInfoARM PhysicalDeviceExternalTensorInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceExternalTensorInfoARM PhysicalDeviceExternalTensorInfoARM.setFlags(&self, TensorCreateFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PhysicalDeviceExternalTensorInfoARM PhysicalDeviceExternalTensorInfoARM.setDescription(&self, TensorDescriptionARM* pDescription) {
+   self.pDescription = pDescription;
+   return *self;
+}
+fn PhysicalDeviceExternalTensorInfoARM PhysicalDeviceExternalTensorInfoARM.setHandleType(&self, ExternalMemoryHandleTypeFlagBits handleType) {
+   self.handleType = handleType;
+   return *self;
+}
+fn ExternalTensorPropertiesARM externalTensorPropertiesARM() => { .sType = STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM, .pNext = null };
+fn ExternalTensorPropertiesARM ExternalTensorPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalTensorPropertiesARM ExternalTensorPropertiesARM.setExternalMemoryProperties(&self, ExternalMemoryProperties externalMemoryProperties) {
+   self.externalMemoryProperties = externalMemoryProperties;
+   return *self;
+}
+fn ExternalMemoryTensorCreateInfoARM externalMemoryTensorCreateInfoARM() => { .sType = STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM, .pNext = null };
+fn ExternalMemoryTensorCreateInfoARM ExternalMemoryTensorCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ExternalMemoryTensorCreateInfoARM ExternalMemoryTensorCreateInfoARM.setHandleTypes(&self, ExternalMemoryHandleTypeFlags handleTypes) {
+   self.handleTypes = handleTypes;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat8FeaturesEXT physicalDeviceShaderFloat8FeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderFloat8FeaturesEXT PhysicalDeviceShaderFloat8FeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat8FeaturesEXT PhysicalDeviceShaderFloat8FeaturesEXT.setShaderFloat8(&self, uint shaderFloat8) {
+   self.shaderFloat8 = shaderFloat8;
+   return *self;
+}
+fn PhysicalDeviceShaderFloat8FeaturesEXT PhysicalDeviceShaderFloat8FeaturesEXT.setShaderFloat8CooperativeMatrix(&self, uint shaderFloat8CooperativeMatrix) {
+   self.shaderFloat8CooperativeMatrix = shaderFloat8CooperativeMatrix;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM physicalDeviceDataGraphFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setDataGraph(&self, uint dataGraph) {
+   self.dataGraph = dataGraph;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setDataGraphUpdateAfterBind(&self, uint dataGraphUpdateAfterBind) {
+   self.dataGraphUpdateAfterBind = dataGraphUpdateAfterBind;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setDataGraphSpecializationConstants(&self, uint dataGraphSpecializationConstants) {
+   self.dataGraphSpecializationConstants = dataGraphSpecializationConstants;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setDataGraphDescriptorBuffer(&self, uint dataGraphDescriptorBuffer) {
+   self.dataGraphDescriptorBuffer = dataGraphDescriptorBuffer;
+   return *self;
+}
+fn PhysicalDeviceDataGraphFeaturesARM PhysicalDeviceDataGraphFeaturesARM.setDataGraphShaderModule(&self, uint dataGraphShaderModule) {
+   self.dataGraphShaderModule = dataGraphShaderModule;
+   return *self;
+}
+fn DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM dataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM, .pNext = null };
+fn DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM.setDimension(&self, uint dimension) {
+   self.dimension = dimension;
+   return *self;
+}
+fn DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM.setZeroCount(&self, uint zeroCount) {
+   self.zeroCount = zeroCount;
+   return *self;
+}
+fn DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM.setGroupSize(&self, uint groupSize) {
+   self.groupSize = groupSize;
+   return *self;
+}
+fn DataGraphPipelineConstantARM dataGraphPipelineConstantARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM, .pNext = null };
+fn DataGraphPipelineConstantARM DataGraphPipelineConstantARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineConstantARM DataGraphPipelineConstantARM.setId(&self, uint id) {
+   self.id = id;
+   return *self;
+}
+fn DataGraphPipelineConstantARM DataGraphPipelineConstantARM.setConstantData(&self, void* pConstantData) {
+   self.pConstantData = pConstantData;
+   return *self;
+}
+fn DataGraphPipelineResourceInfoARM dataGraphPipelineResourceInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineResourceInfoARM DataGraphPipelineResourceInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineResourceInfoARM DataGraphPipelineResourceInfoARM.setDescriptorSet(&self, uint descriptorSet) {
+   self.descriptorSet = descriptorSet;
+   return *self;
+}
+fn DataGraphPipelineResourceInfoARM DataGraphPipelineResourceInfoARM.setBinding(&self, uint binding) {
+   self.binding = binding;
+   return *self;
+}
+fn DataGraphPipelineResourceInfoARM DataGraphPipelineResourceInfoARM.setArrayElement(&self, uint arrayElement) {
+   self.arrayElement = arrayElement;
+   return *self;
+}
+fn DataGraphPipelineCompilerControlCreateInfoARM dataGraphPipelineCompilerControlCreateInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineCompilerControlCreateInfoARM DataGraphPipelineCompilerControlCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineCompilerControlCreateInfoARM DataGraphPipelineCompilerControlCreateInfoARM.setVendorOptions(&self, char* pVendorOptions) {
+   self.pVendorOptions = pVendorOptions;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM dataGraphPipelineShaderModuleCreateInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setMod(&self, ShaderModule mod) {
+   self.mod = mod;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setName(&self, char* pName) {
+   self.pName = pName;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setSpecializationInfo(&self, SpecializationInfo* pSpecializationInfo) {
+   self.pSpecializationInfo = pSpecializationInfo;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setConstantCount(&self, uint constantCount) {
+   self.constantCount = constantCount;
+   return *self;
+}
+fn DataGraphPipelineShaderModuleCreateInfoARM DataGraphPipelineShaderModuleCreateInfoARM.setConstants(&self, DataGraphPipelineConstantARM[] pConstants) {
+   self.constantCount= (uint)pConstants.len;
+   self.pConstants = &pConstants[0];
+   return *self;
+}
+fn DataGraphPipelineSessionCreateInfoARM dataGraphPipelineSessionCreateInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineSessionCreateInfoARM DataGraphPipelineSessionCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineSessionCreateInfoARM DataGraphPipelineSessionCreateInfoARM.setFlags(&self, DataGraphPipelineSessionCreateFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn DataGraphPipelineSessionCreateInfoARM DataGraphPipelineSessionCreateInfoARM.setDataGraphPipeline(&self, Pipeline dataGraphPipeline) {
+   self.dataGraphPipeline = dataGraphPipeline;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementsInfoARM dataGraphPipelineSessionBindPointRequirementsInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM, .pNext = null };
+fn DataGraphPipelineSessionBindPointRequirementsInfoARM DataGraphPipelineSessionBindPointRequirementsInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementsInfoARM DataGraphPipelineSessionBindPointRequirementsInfoARM.setSession(&self, DataGraphPipelineSessionARM session) {
+   self.session = session;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementARM dataGraphPipelineSessionBindPointRequirementARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM, .pNext = null };
+fn DataGraphPipelineSessionBindPointRequirementARM DataGraphPipelineSessionBindPointRequirementARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementARM DataGraphPipelineSessionBindPointRequirementARM.setBindPoint(&self, DataGraphPipelineSessionBindPointARM bindPoint) {
+   self.bindPoint = bindPoint;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementARM DataGraphPipelineSessionBindPointRequirementARM.setBindPointType(&self, DataGraphPipelineSessionBindPointTypeARM bindPointType) {
+   self.bindPointType = bindPointType;
+   return *self;
+}
+fn DataGraphPipelineSessionBindPointRequirementARM DataGraphPipelineSessionBindPointRequirementARM.setNumObjects(&self, uint numObjects) {
+   self.numObjects = numObjects;
+   return *self;
+}
+fn DataGraphPipelineSessionMemoryRequirementsInfoARM dataGraphPipelineSessionMemoryRequirementsInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM, .pNext = null };
+fn DataGraphPipelineSessionMemoryRequirementsInfoARM DataGraphPipelineSessionMemoryRequirementsInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineSessionMemoryRequirementsInfoARM DataGraphPipelineSessionMemoryRequirementsInfoARM.setSession(&self, DataGraphPipelineSessionARM session) {
+   self.session = session;
+   return *self;
+}
+fn DataGraphPipelineSessionMemoryRequirementsInfoARM DataGraphPipelineSessionMemoryRequirementsInfoARM.setBindPoint(&self, DataGraphPipelineSessionBindPointARM bindPoint) {
+   self.bindPoint = bindPoint;
+   return *self;
+}
+fn DataGraphPipelineSessionMemoryRequirementsInfoARM DataGraphPipelineSessionMemoryRequirementsInfoARM.setObjectIndex(&self, uint objectIndex) {
+   self.objectIndex = objectIndex;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM bindDataGraphPipelineSessionMemoryInfoARM() => { .sType = STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM, .pNext = null };
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setSession(&self, DataGraphPipelineSessionARM session) {
+   self.session = session;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setBindPoint(&self, DataGraphPipelineSessionBindPointARM bindPoint) {
+   self.bindPoint = bindPoint;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setObjectIndex(&self, uint objectIndex) {
+   self.objectIndex = objectIndex;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setMemory(&self, DeviceMemory memory) {
+   self.memory = memory;
+   return *self;
+}
+fn BindDataGraphPipelineSessionMemoryInfoARM BindDataGraphPipelineSessionMemoryInfoARM.setMemoryOffset(&self, DeviceSize memoryOffset) {
+   self.memoryOffset = memoryOffset;
+   return *self;
+}
+fn DataGraphPipelineInfoARM dataGraphPipelineInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineInfoARM DataGraphPipelineInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineInfoARM DataGraphPipelineInfoARM.setDataGraphPipeline(&self, Pipeline dataGraphPipeline) {
+   self.dataGraphPipeline = dataGraphPipeline;
+   return *self;
+}
+fn DataGraphPipelinePropertyQueryResultARM dataGraphPipelinePropertyQueryResultARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM, .pNext = null };
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setProperty(&self, DataGraphPipelinePropertyARM property) {
+   self.property = property;
+   return *self;
+}
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setIsText(&self, uint isText) {
+   self.isText = isText;
+   return *self;
+}
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setDataSize(&self, usz dataSize) {
+   self.dataSize = dataSize;
+   return *self;
+}
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setData(&self, void* pData) {
+   self.pData = pData;
+   return *self;
+}
+fn DataGraphPipelineIdentifierCreateInfoARM dataGraphPipelineIdentifierCreateInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM, .pNext = null };
+fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInfoARM.setIdentifierSize(&self, uint identifierSize) {
+   self.identifierSize = identifierSize;
+   return *self;
+}
+fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInfoARM.setIdentifier(&self, uint[] pIdentifier) {
+   self.identifierSize= (uint)pIdentifier.len;
+   self.pIdentifier = &pIdentifier[0];
+   return *self;
+}
+fn DataGraphPipelineDispatchInfoARM dataGraphPipelineDispatchInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM, .pNext = null };
+fn DataGraphPipelineDispatchInfoARM DataGraphPipelineDispatchInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineDispatchInfoARM DataGraphPipelineDispatchInfoARM.setFlags(&self, DataGraphPipelineDispatchFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn QueueFamilyDataGraphPropertiesARM queueFamilyDataGraphPropertiesARM() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM, .pNext = null };
+fn QueueFamilyDataGraphPropertiesARM QueueFamilyDataGraphPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyDataGraphPropertiesARM QueueFamilyDataGraphPropertiesARM.setEngine(&self, PhysicalDeviceDataGraphProcessingEngineARM engine) {
+   self.engine = engine;
+   return *self;
+}
+fn QueueFamilyDataGraphPropertiesARM QueueFamilyDataGraphPropertiesARM.setOperation(&self, PhysicalDeviceDataGraphOperationSupportARM operation) {
+   self.operation = operation;
+   return *self;
+}
+fn PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM physicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM, .pNext = null };
+fn PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM.setQueueFamilyIndex(&self, uint queueFamilyIndex) {
+   self.queueFamilyIndex = queueFamilyIndex;
+   return *self;
+}
+fn PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM.setEngineType(&self, PhysicalDeviceDataGraphProcessingEngineTypeARM engineType) {
+   self.engineType = engineType;
+   return *self;
+}
+fn QueueFamilyDataGraphProcessingEnginePropertiesARM queueFamilyDataGraphProcessingEnginePropertiesARM() => { .sType = STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM, .pNext = null };
+fn QueueFamilyDataGraphProcessingEnginePropertiesARM QueueFamilyDataGraphProcessingEnginePropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn QueueFamilyDataGraphProcessingEnginePropertiesARM QueueFamilyDataGraphProcessingEnginePropertiesARM.setForeignSemaphoreHandleTypes(&self, ExternalSemaphoreHandleTypeFlags foreignSemaphoreHandleTypes) {
+   self.foreignSemaphoreHandleTypes = foreignSemaphoreHandleTypes;
+   return *self;
+}
+fn QueueFamilyDataGraphProcessingEnginePropertiesARM QueueFamilyDataGraphProcessingEnginePropertiesARM.setForeignMemoryHandleTypes(&self, ExternalMemoryHandleTypeFlags foreignMemoryHandleTypes) {
+   self.foreignMemoryHandleTypes = foreignMemoryHandleTypes;
+   return *self;
+}
+fn DataGraphProcessingEngineCreateInfoARM dataGraphProcessingEngineCreateInfoARM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM, .pNext = null };
+fn DataGraphProcessingEngineCreateInfoARM DataGraphProcessingEngineCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphProcessingEngineCreateInfoARM DataGraphProcessingEngineCreateInfoARM.setProcessingEngineCount(&self, uint processingEngineCount) {
+   self.processingEngineCount = processingEngineCount;
+   return *self;
+}
+fn DataGraphProcessingEngineCreateInfoARM DataGraphProcessingEngineCreateInfoARM.setProcessingEngines(&self, PhysicalDeviceDataGraphProcessingEngineARM[] pProcessingEngines) {
+   self.processingEngineCount= (uint)pProcessingEngines.len;
+   self.pProcessingEngines = &pProcessingEngines[0];
+   return *self;
+}
+fn PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC physicalDevicePipelineCacheIncrementalModeFeaturesSEC() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC, .pNext = null };
+fn PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC.setPipelineCacheIncrementalMode(&self, uint pipelineCacheIncrementalMode) {
+   self.pipelineCacheIncrementalMode = pipelineCacheIncrementalMode;
+   return *self;
+}
+fn DataGraphPipelineBuiltinModelCreateInfoQCOM dataGraphPipelineBuiltinModelCreateInfoQCOM() => { .sType = STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM, .pNext = null };
+fn DataGraphPipelineBuiltinModelCreateInfoQCOM DataGraphPipelineBuiltinModelCreateInfoQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DataGraphPipelineBuiltinModelCreateInfoQCOM DataGraphPipelineBuiltinModelCreateInfoQCOM.setOperation(&self, PhysicalDeviceDataGraphOperationSupportARM* pOperation) {
+   self.pOperation = pOperation;
+   return *self;
+}
+fn PhysicalDeviceDataGraphModelFeaturesQCOM physicalDeviceDataGraphModelFeaturesQCOM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM, .pNext = null };
+fn PhysicalDeviceDataGraphModelFeaturesQCOM PhysicalDeviceDataGraphModelFeaturesQCOM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDataGraphModelFeaturesQCOM PhysicalDeviceDataGraphModelFeaturesQCOM.setDataGraphModel(&self, uint dataGraphModel) {
+   self.dataGraphModel = dataGraphModel;
+   return *self;
+}
+fn PhysicalDeviceShaderUntypedPointersFeaturesKHR physicalDeviceShaderUntypedPointersFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderUntypedPointersFeaturesKHR PhysicalDeviceShaderUntypedPointersFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderUntypedPointersFeaturesKHR PhysicalDeviceShaderUntypedPointersFeaturesKHR.setShaderUntypedPointers(&self, uint shaderUntypedPointers) {
+   self.shaderUntypedPointers = shaderUntypedPointers;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE physicalDeviceVideoEncodeRgbConversionFeaturesVALVE() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE, .pNext = null };
+fn PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE.setVideoEncodeRgbConversion(&self, uint videoEncodeRgbConversion) {
+   self.videoEncodeRgbConversion = videoEncodeRgbConversion;
+   return *self;
+}
+fn VideoEncodeRgbConversionCapabilitiesVALVE videoEncodeRgbConversionCapabilitiesVALVE() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_RGB_CONVERSION_CAPABILITIES_VALVE, .pNext = null };
+fn VideoEncodeRgbConversionCapabilitiesVALVE VideoEncodeRgbConversionCapabilitiesVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeRgbConversionCapabilitiesVALVE VideoEncodeRgbConversionCapabilitiesVALVE.setRgbModels(&self, VideoEncodeRgbModelConversionFlagsVALVE rgbModels) {
+   self.rgbModels = rgbModels;
+   return *self;
+}
+fn VideoEncodeRgbConversionCapabilitiesVALVE VideoEncodeRgbConversionCapabilitiesVALVE.setRgbRanges(&self, VideoEncodeRgbRangeCompressionFlagsVALVE rgbRanges) {
+   self.rgbRanges = rgbRanges;
+   return *self;
+}
+fn VideoEncodeRgbConversionCapabilitiesVALVE VideoEncodeRgbConversionCapabilitiesVALVE.setXChromaOffsets(&self, VideoEncodeRgbChromaOffsetFlagsVALVE xChromaOffsets) {
+   self.xChromaOffsets = xChromaOffsets;
+   return *self;
+}
+fn VideoEncodeRgbConversionCapabilitiesVALVE VideoEncodeRgbConversionCapabilitiesVALVE.setYChromaOffsets(&self, VideoEncodeRgbChromaOffsetFlagsVALVE yChromaOffsets) {
+   self.yChromaOffsets = yChromaOffsets;
+   return *self;
+}
+fn VideoEncodeProfileRgbConversionInfoVALVE videoEncodeProfileRgbConversionInfoVALVE() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_PROFILE_RGB_CONVERSION_INFO_VALVE, .pNext = null };
+fn VideoEncodeProfileRgbConversionInfoVALVE VideoEncodeProfileRgbConversionInfoVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeProfileRgbConversionInfoVALVE VideoEncodeProfileRgbConversionInfoVALVE.setPerformEncodeRgbConversion(&self, uint performEncodeRgbConversion) {
+   self.performEncodeRgbConversion = performEncodeRgbConversion;
+   return *self;
+}
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE videoEncodeSessionRgbConversionCreateInfoVALVE() => { .sType = STRUCTURE_TYPE_VIDEO_ENCODE_SESSION_RGB_CONVERSION_CREATE_INFO_VALVE, .pNext = null };
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE VideoEncodeSessionRgbConversionCreateInfoVALVE.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE VideoEncodeSessionRgbConversionCreateInfoVALVE.setRgbModel(&self, VideoEncodeRgbModelConversionFlagBitsVALVE rgbModel) {
+   self.rgbModel = rgbModel;
+   return *self;
+}
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE VideoEncodeSessionRgbConversionCreateInfoVALVE.setRgbRange(&self, VideoEncodeRgbRangeCompressionFlagBitsVALVE rgbRange) {
+   self.rgbRange = rgbRange;
+   return *self;
+}
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE VideoEncodeSessionRgbConversionCreateInfoVALVE.setXChromaOffset(&self, VideoEncodeRgbChromaOffsetFlagBitsVALVE xChromaOffset) {
+   self.xChromaOffset = xChromaOffset;
+   return *self;
+}
+fn VideoEncodeSessionRgbConversionCreateInfoVALVE VideoEncodeSessionRgbConversionCreateInfoVALVE.setYChromaOffset(&self, VideoEncodeRgbChromaOffsetFlagBitsVALVE yChromaOffset) {
+   self.yChromaOffset = yChromaOffset;
+   return *self;
+}
+fn PhysicalDeviceShader64BitIndexingFeaturesEXT physicalDeviceShader64BitIndexingFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShader64BitIndexingFeaturesEXT PhysicalDeviceShader64BitIndexingFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShader64BitIndexingFeaturesEXT PhysicalDeviceShader64BitIndexingFeaturesEXT.setShader64BitIndexing(&self, uint shader64BitIndexing) {
+   self.shader64BitIndexing = shader64BitIndexing;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionFeaturesARM physicalDevicePerformanceCountersByRegionFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM, .pNext = null };
+fn PhysicalDevicePerformanceCountersByRegionFeaturesARM PhysicalDevicePerformanceCountersByRegionFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionFeaturesARM PhysicalDevicePerformanceCountersByRegionFeaturesARM.setPerformanceCountersByRegion(&self, uint performanceCountersByRegion) {
+   self.performanceCountersByRegion = performanceCountersByRegion;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM physicalDevicePerformanceCountersByRegionPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setMaxPerRegionPerformanceCounters(&self, uint maxPerRegionPerformanceCounters) {
+   self.maxPerRegionPerformanceCounters = maxPerRegionPerformanceCounters;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setPerformanceCounterRegionSize(&self, Extent2D performanceCounterRegionSize) {
+   self.performanceCounterRegionSize = performanceCounterRegionSize;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setRowStrideAlignment(&self, uint rowStrideAlignment) {
+   self.rowStrideAlignment = rowStrideAlignment;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setRegionAlignment(&self, uint regionAlignment) {
+   self.regionAlignment = regionAlignment;
+   return *self;
+}
+fn PhysicalDevicePerformanceCountersByRegionPropertiesARM PhysicalDevicePerformanceCountersByRegionPropertiesARM.setIdentityTransformOrder(&self, uint identityTransformOrder) {
+   self.identityTransformOrder = identityTransformOrder;
+   return *self;
+}
+fn PerformanceCounterARM performanceCounterARM() => { .sType = STRUCTURE_TYPE_PERFORMANCE_COUNTER_ARM, .pNext = null };
+fn PerformanceCounterARM PerformanceCounterARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceCounterARM PerformanceCounterARM.setCounterID(&self, uint counterID) {
+   self.counterID = counterID;
+   return *self;
+}
+fn PerformanceCounterDescriptionARM performanceCounterDescriptionARM() => { .sType = STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_ARM, .pNext = null };
+fn PerformanceCounterDescriptionARM PerformanceCounterDescriptionARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PerformanceCounterDescriptionARM PerformanceCounterDescriptionARM.setFlags(&self, PerformanceCounterDescriptionFlagsARM flags) {
+   self.flags = flags;
+   return *self;
+}
+fn PerformanceCounterDescriptionARM PerformanceCounterDescriptionARM.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM renderPassPerformanceCountersByRegionBeginInfoARM() => { .sType = STRUCTURE_TYPE_RENDER_PASS_PERFORMANCE_COUNTERS_BY_REGION_BEGIN_INFO_ARM, .pNext = null };
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setCounterAddressCount(&self, uint counterAddressCount) {
+   self.counterAddressCount = counterAddressCount;
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setCounterAddresses(&self, DeviceAddress[] pCounterAddresses) {
+   self.counterAddressCount= (uint)pCounterAddresses.len;
+   self.pCounterAddresses = &pCounterAddresses[0];
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setSerializeRegions(&self, uint serializeRegions) {
+   self.serializeRegions = serializeRegions;
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setCounterIndexCount(&self, uint counterIndexCount) {
+   self.counterIndexCount = counterIndexCount;
+   return *self;
+}
+fn RenderPassPerformanceCountersByRegionBeginInfoARM RenderPassPerformanceCountersByRegionBeginInfoARM.setCounterIndices(&self, uint[] pCounterIndices) {
+   self.counterIndexCount= (uint)pCounterIndices.len;
+   self.pCounterIndices = &pCounterIndices[0];
+   return *self;
+}
+fn ComputeOccupancyPriorityParametersNV computeOccupancyPriorityParametersNV() => { .sType = STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV, .pNext = null };
+fn ComputeOccupancyPriorityParametersNV ComputeOccupancyPriorityParametersNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ComputeOccupancyPriorityParametersNV ComputeOccupancyPriorityParametersNV.setOccupancyPriority(&self, float occupancyPriority) {
+   self.occupancyPriority = occupancyPriority;
+   return *self;
+}
+fn ComputeOccupancyPriorityParametersNV ComputeOccupancyPriorityParametersNV.setOccupancyThrottling(&self, float occupancyThrottling) {
+   self.occupancyThrottling = occupancyThrottling;
+   return *self;
+}
+fn PhysicalDeviceComputeOccupancyPriorityFeaturesNV physicalDeviceComputeOccupancyPriorityFeaturesNV() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV, .pNext = null };
+fn PhysicalDeviceComputeOccupancyPriorityFeaturesNV PhysicalDeviceComputeOccupancyPriorityFeaturesNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceComputeOccupancyPriorityFeaturesNV PhysicalDeviceComputeOccupancyPriorityFeaturesNV.setComputeOccupancyPriority(&self, uint computeOccupancyPriority) {
+   self.computeOccupancyPriority = computeOccupancyPriority;
+   return *self;
+}
+fn PhysicalDeviceShaderLongVectorFeaturesEXT physicalDeviceShaderLongVectorFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderLongVectorFeaturesEXT PhysicalDeviceShaderLongVectorFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderLongVectorFeaturesEXT PhysicalDeviceShaderLongVectorFeaturesEXT.setLongVector(&self, uint longVector) {
+   self.longVector = longVector;
+   return *self;
+}
+fn PhysicalDeviceShaderLongVectorPropertiesEXT physicalDeviceShaderLongVectorPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceShaderLongVectorPropertiesEXT PhysicalDeviceShaderLongVectorPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderLongVectorPropertiesEXT PhysicalDeviceShaderLongVectorPropertiesEXT.setMaxVectorComponents(&self, uint maxVectorComponents) {
+   self.maxVectorComponents = maxVectorComponents;
+   return *self;
+}
+fn PhysicalDeviceTextureCompressionASTC3DFeaturesEXT physicalDeviceTextureCompressionASTC3DFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceTextureCompressionASTC3DFeaturesEXT PhysicalDeviceTextureCompressionASTC3DFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceTextureCompressionASTC3DFeaturesEXT PhysicalDeviceTextureCompressionASTC3DFeaturesEXT.setTextureCompressionASTC_3D(&self, uint textureCompressionASTC_3D) {
+   self.textureCompressionASTC_3D = textureCompressionASTC_3D;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT physicalDeviceShaderSubgroupPartitionedFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT.setShaderSubgroupPartitioned(&self, uint shaderSubgroupPartitioned) {
+   self.shaderSubgroupPartitioned = shaderSubgroupPartitioned;
+   return *self;
+}
+fn TexelBufferDescriptorInfoEXT texelBufferDescriptorInfoEXT() => { .sType = STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT, .pNext = null };
+fn TexelBufferDescriptorInfoEXT TexelBufferDescriptorInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn TexelBufferDescriptorInfoEXT TexelBufferDescriptorInfoEXT.setFormat(&self, Format format) {
+   self.format = format;
+   return *self;
+}
+fn TexelBufferDescriptorInfoEXT TexelBufferDescriptorInfoEXT.setAddressRange(&self, DeviceAddressRangeEXT addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn ImageDescriptorInfoEXT imageDescriptorInfoEXT() => { .sType = STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT, .pNext = null };
+fn ImageDescriptorInfoEXT ImageDescriptorInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ImageDescriptorInfoEXT ImageDescriptorInfoEXT.setView(&self, ImageViewCreateInfo* pView) {
+   self.pView = pView;
+   return *self;
+}
+fn ImageDescriptorInfoEXT ImageDescriptorInfoEXT.setLayout(&self, ImageLayout layout) {
+   self.layout = layout;
+   return *self;
+}
+fn ResourceDescriptorInfoEXT resourceDescriptorInfoEXT() => { .sType = STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT, .pNext = null };
+fn ResourceDescriptorInfoEXT ResourceDescriptorInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ResourceDescriptorInfoEXT ResourceDescriptorInfoEXT.setType(&self, DescriptorType type) {
+   self.type = type;
+   return *self;
+}
+fn ResourceDescriptorInfoEXT ResourceDescriptorInfoEXT.setData(&self, ResourceDescriptorDataEXT data) {
+   self.data = data;
+   return *self;
+}
+fn BindHeapInfoEXT bindHeapInfoEXT() => { .sType = STRUCTURE_TYPE_BIND_HEAP_INFO_EXT, .pNext = null };
+fn BindHeapInfoEXT BindHeapInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindHeapInfoEXT BindHeapInfoEXT.setHeapRange(&self, DeviceAddressRangeEXT heapRange) {
+   self.heapRange = heapRange;
+   return *self;
+}
+fn BindHeapInfoEXT BindHeapInfoEXT.setReservedRangeOffset(&self, DeviceSize reservedRangeOffset) {
+   self.reservedRangeOffset = reservedRangeOffset;
+   return *self;
+}
+fn BindHeapInfoEXT BindHeapInfoEXT.setReservedRangeSize(&self, DeviceSize reservedRangeSize) {
+   self.reservedRangeSize = reservedRangeSize;
+   return *self;
+}
+fn PushDataInfoEXT pushDataInfoEXT() => { .sType = STRUCTURE_TYPE_PUSH_DATA_INFO_EXT, .pNext = null };
+fn PushDataInfoEXT PushDataInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PushDataInfoEXT PushDataInfoEXT.setOffset(&self, uint offset) {
+   self.offset = offset;
+   return *self;
+}
+fn PushDataInfoEXT PushDataInfoEXT.setData(&self, HostAddressRangeConstEXT data) {
+   self.data = data;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT descriptorSetAndBindingMappingEXT() => { .sType = STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT, .pNext = null };
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setDescriptorSet(&self, uint descriptorSet) {
+   self.descriptorSet = descriptorSet;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setFirstBinding(&self, uint firstBinding) {
+   self.firstBinding = firstBinding;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setBindingCount(&self, uint bindingCount) {
+   self.bindingCount = bindingCount;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setResourceMask(&self, SpirvResourceTypeFlagsEXT resourceMask) {
+   self.resourceMask = resourceMask;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setSource(&self, DescriptorMappingSourceEXT source) {
+   self.source = source;
+   return *self;
+}
+fn DescriptorSetAndBindingMappingEXT DescriptorSetAndBindingMappingEXT.setSourceData(&self, DescriptorMappingSourceDataEXT sourceData) {
+   self.sourceData = sourceData;
+   return *self;
+}
+fn ShaderDescriptorSetAndBindingMappingInfoEXT shaderDescriptorSetAndBindingMappingInfoEXT() => { .sType = STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT, .pNext = null };
+fn ShaderDescriptorSetAndBindingMappingInfoEXT ShaderDescriptorSetAndBindingMappingInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderDescriptorSetAndBindingMappingInfoEXT ShaderDescriptorSetAndBindingMappingInfoEXT.setMappingCount(&self, uint mappingCount) {
+   self.mappingCount = mappingCount;
+   return *self;
+}
+fn ShaderDescriptorSetAndBindingMappingInfoEXT ShaderDescriptorSetAndBindingMappingInfoEXT.setMappings(&self, DescriptorSetAndBindingMappingEXT[] pMappings) {
+   self.mappingCount= (uint)pMappings.len;
+   self.pMappings = &pMappings[0];
+   return *self;
+}
+fn SamplerCustomBorderColorIndexCreateInfoEXT samplerCustomBorderColorIndexCreateInfoEXT() => { .sType = STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT, .pNext = null };
+fn SamplerCustomBorderColorIndexCreateInfoEXT SamplerCustomBorderColorIndexCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SamplerCustomBorderColorIndexCreateInfoEXT SamplerCustomBorderColorIndexCreateInfoEXT.setIndex(&self, uint index) {
+   self.index = index;
+   return *self;
+}
+fn OpaqueCaptureDataCreateInfoEXT opaqueCaptureDataCreateInfoEXT() => { .sType = STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT, .pNext = null };
+fn OpaqueCaptureDataCreateInfoEXT OpaqueCaptureDataCreateInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn OpaqueCaptureDataCreateInfoEXT OpaqueCaptureDataCreateInfoEXT.setData(&self, HostAddressRangeConstEXT* pData) {
+   self.pData = pData;
+   return *self;
+}
+fn IndirectCommandsLayoutPushDataTokenNV indirectCommandsLayoutPushDataTokenNV() => { .sType = STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV, .pNext = null };
+fn IndirectCommandsLayoutPushDataTokenNV IndirectCommandsLayoutPushDataTokenNV.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn IndirectCommandsLayoutPushDataTokenNV IndirectCommandsLayoutPushDataTokenNV.setPushDataOffset(&self, uint pushDataOffset) {
+   self.pushDataOffset = pushDataOffset;
+   return *self;
+}
+fn IndirectCommandsLayoutPushDataTokenNV IndirectCommandsLayoutPushDataTokenNV.setPushDataSize(&self, uint pushDataSize) {
+   self.pushDataSize = pushDataSize;
+   return *self;
+}
+fn SubsampledImageFormatPropertiesEXT subsampledImageFormatPropertiesEXT() => { .sType = STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT, .pNext = null };
+fn SubsampledImageFormatPropertiesEXT SubsampledImageFormatPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn SubsampledImageFormatPropertiesEXT SubsampledImageFormatPropertiesEXT.setSubsampledImageDescriptorCount(&self, uint subsampledImageDescriptorCount) {
+   self.subsampledImageDescriptorCount = subsampledImageDescriptorCount;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapFeaturesEXT physicalDeviceDescriptorHeapFeaturesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT, .pNext = null };
+fn PhysicalDeviceDescriptorHeapFeaturesEXT PhysicalDeviceDescriptorHeapFeaturesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapFeaturesEXT PhysicalDeviceDescriptorHeapFeaturesEXT.setDescriptorHeap(&self, uint descriptorHeap) {
+   self.descriptorHeap = descriptorHeap;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapFeaturesEXT PhysicalDeviceDescriptorHeapFeaturesEXT.setDescriptorHeapCaptureReplay(&self, uint descriptorHeapCaptureReplay) {
+   self.descriptorHeapCaptureReplay = descriptorHeapCaptureReplay;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT physicalDeviceDescriptorHeapPropertiesEXT() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT, .pNext = null };
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setSamplerHeapAlignment(&self, DeviceSize samplerHeapAlignment) {
+   self.samplerHeapAlignment = samplerHeapAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setResourceHeapAlignment(&self, DeviceSize resourceHeapAlignment) {
+   self.resourceHeapAlignment = resourceHeapAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMaxSamplerHeapSize(&self, DeviceSize maxSamplerHeapSize) {
+   self.maxSamplerHeapSize = maxSamplerHeapSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMaxResourceHeapSize(&self, DeviceSize maxResourceHeapSize) {
+   self.maxResourceHeapSize = maxResourceHeapSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMinSamplerHeapReservedRange(&self, DeviceSize minSamplerHeapReservedRange) {
+   self.minSamplerHeapReservedRange = minSamplerHeapReservedRange;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMinSamplerHeapReservedRangeWithEmbedded(&self, DeviceSize minSamplerHeapReservedRangeWithEmbedded) {
+   self.minSamplerHeapReservedRangeWithEmbedded = minSamplerHeapReservedRangeWithEmbedded;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMinResourceHeapReservedRange(&self, DeviceSize minResourceHeapReservedRange) {
+   self.minResourceHeapReservedRange = minResourceHeapReservedRange;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setSamplerDescriptorSize(&self, DeviceSize samplerDescriptorSize) {
+   self.samplerDescriptorSize = samplerDescriptorSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setImageDescriptorSize(&self, DeviceSize imageDescriptorSize) {
+   self.imageDescriptorSize = imageDescriptorSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setBufferDescriptorSize(&self, DeviceSize bufferDescriptorSize) {
+   self.bufferDescriptorSize = bufferDescriptorSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setSamplerDescriptorAlignment(&self, DeviceSize samplerDescriptorAlignment) {
+   self.samplerDescriptorAlignment = samplerDescriptorAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setImageDescriptorAlignment(&self, DeviceSize imageDescriptorAlignment) {
+   self.imageDescriptorAlignment = imageDescriptorAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setBufferDescriptorAlignment(&self, DeviceSize bufferDescriptorAlignment) {
+   self.bufferDescriptorAlignment = bufferDescriptorAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMaxPushDataSize(&self, DeviceSize maxPushDataSize) {
+   self.maxPushDataSize = maxPushDataSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setImageCaptureReplayOpaqueDataSize(&self, usz imageCaptureReplayOpaqueDataSize) {
+   self.imageCaptureReplayOpaqueDataSize = imageCaptureReplayOpaqueDataSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setMaxDescriptorHeapEmbeddedSamplers(&self, uint maxDescriptorHeapEmbeddedSamplers) {
+   self.maxDescriptorHeapEmbeddedSamplers = maxDescriptorHeapEmbeddedSamplers;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setSamplerYcbcrConversionCount(&self, uint samplerYcbcrConversionCount) {
+   self.samplerYcbcrConversionCount = samplerYcbcrConversionCount;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setSparseDescriptorHeaps(&self, uint sparseDescriptorHeaps) {
+   self.sparseDescriptorHeaps = sparseDescriptorHeaps;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setProtectedDescriptorHeaps(&self, uint protectedDescriptorHeaps) {
+   self.protectedDescriptorHeaps = protectedDescriptorHeaps;
+   return *self;
+}
+fn CommandBufferInheritanceDescriptorHeapInfoEXT commandBufferInheritanceDescriptorHeapInfoEXT() => { .sType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT, .pNext = null };
+fn CommandBufferInheritanceDescriptorHeapInfoEXT CommandBufferInheritanceDescriptorHeapInfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CommandBufferInheritanceDescriptorHeapInfoEXT CommandBufferInheritanceDescriptorHeapInfoEXT.setSamplerHeapBindInfo(&self, BindHeapInfoEXT* pSamplerHeapBindInfo) {
+   self.pSamplerHeapBindInfo = pSamplerHeapBindInfo;
+   return *self;
+}
+fn CommandBufferInheritanceDescriptorHeapInfoEXT CommandBufferInheritanceDescriptorHeapInfoEXT.setResourceHeapBindInfo(&self, BindHeapInfoEXT* pResourceHeapBindInfo) {
+   self.pResourceHeapBindInfo = pResourceHeapBindInfo;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM physicalDeviceDescriptorHeapTensorPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setTensorDescriptorSize(&self, DeviceSize tensorDescriptorSize) {
+   self.tensorDescriptorSize = tensorDescriptorSize;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setTensorDescriptorAlignment(&self, DeviceSize tensorDescriptorAlignment) {
+   self.tensorDescriptorAlignment = tensorDescriptorAlignment;
+   return *self;
+}
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setTensorCaptureReplayOpaqueDataSize(&self, usz tensorCaptureReplayOpaqueDataSize) {
+   self.tensorCaptureReplayOpaqueDataSize = tensorCaptureReplayOpaqueDataSize;
+   return *self;
+}
+fn PhysicalDeviceShaderInstrumentationFeaturesARM physicalDeviceShaderInstrumentationFeaturesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM, .pNext = null };
+fn PhysicalDeviceShaderInstrumentationFeaturesARM PhysicalDeviceShaderInstrumentationFeaturesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderInstrumentationFeaturesARM PhysicalDeviceShaderInstrumentationFeaturesARM.setShaderInstrumentation(&self, uint shaderInstrumentation) {
+   self.shaderInstrumentation = shaderInstrumentation;
+   return *self;
+}
+fn PhysicalDeviceShaderInstrumentationPropertiesARM physicalDeviceShaderInstrumentationPropertiesARM() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM, .pNext = null };
+fn PhysicalDeviceShaderInstrumentationPropertiesARM PhysicalDeviceShaderInstrumentationPropertiesARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderInstrumentationPropertiesARM PhysicalDeviceShaderInstrumentationPropertiesARM.setNumMetrics(&self, uint numMetrics) {
+   self.numMetrics = numMetrics;
+   return *self;
+}
+fn PhysicalDeviceShaderInstrumentationPropertiesARM PhysicalDeviceShaderInstrumentationPropertiesARM.setPerBasicBlockGranularity(&self, uint perBasicBlockGranularity) {
+   self.perBasicBlockGranularity = perBasicBlockGranularity;
+   return *self;
+}
+fn ShaderInstrumentationCreateInfoARM shaderInstrumentationCreateInfoARM() => { .sType = STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM, .pNext = null };
+fn ShaderInstrumentationCreateInfoARM ShaderInstrumentationCreateInfoARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderInstrumentationMetricDescriptionARM shaderInstrumentationMetricDescriptionARM() => { .sType = STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM, .pNext = null };
+fn ShaderInstrumentationMetricDescriptionARM ShaderInstrumentationMetricDescriptionARM.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ShaderInstrumentationMetricDescriptionARM ShaderInstrumentationMetricDescriptionARM.setName(&self, char[MAX_DESCRIPTION_SIZE] name) {
+   self.name = name;
+   return *self;
+}
+fn ShaderInstrumentationMetricDescriptionARM ShaderInstrumentationMetricDescriptionARM.setDescription(&self, char[MAX_DESCRIPTION_SIZE] description) {
+   self.description = description;
+   return *self;
+}
+fn DeviceMemoryCopyKHR deviceMemoryCopyKHR() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR, .pNext = null };
+fn DeviceMemoryCopyKHR DeviceMemoryCopyKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceMemoryCopyKHR DeviceMemoryCopyKHR.setSrcRange(&self, DeviceAddressRangeKHR srcRange) {
+   self.srcRange = srcRange;
+   return *self;
+}
+fn DeviceMemoryCopyKHR DeviceMemoryCopyKHR.setSrcFlags(&self, AddressCommandFlagsKHR srcFlags) {
+   self.srcFlags = srcFlags;
+   return *self;
+}
+fn DeviceMemoryCopyKHR DeviceMemoryCopyKHR.setDstRange(&self, DeviceAddressRangeKHR dstRange) {
+   self.dstRange = dstRange;
+   return *self;
+}
+fn DeviceMemoryCopyKHR DeviceMemoryCopyKHR.setDstFlags(&self, AddressCommandFlagsKHR dstFlags) {
+   self.dstFlags = dstFlags;
+   return *self;
+}
+fn CopyDeviceMemoryInfoKHR copyDeviceMemoryInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR, .pNext = null };
+fn CopyDeviceMemoryInfoKHR CopyDeviceMemoryInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyDeviceMemoryInfoKHR CopyDeviceMemoryInfoKHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyDeviceMemoryInfoKHR CopyDeviceMemoryInfoKHR.setRegions(&self, DeviceMemoryCopyKHR[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR deviceMemoryImageCopyKHR() => { .sType = STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR, .pNext = null };
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setAddressRowLength(&self, uint addressRowLength) {
+   self.addressRowLength = addressRowLength;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setAddressImageHeight(&self, uint addressImageHeight) {
+   self.addressImageHeight = addressImageHeight;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setImageSubresource(&self, ImageSubresourceLayers imageSubresource) {
+   self.imageSubresource = imageSubresource;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setImageLayout(&self, ImageLayout imageLayout) {
+   self.imageLayout = imageLayout;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setImageOffset(&self, Offset3D imageOffset) {
+   self.imageOffset = imageOffset;
+   return *self;
+}
+fn DeviceMemoryImageCopyKHR DeviceMemoryImageCopyKHR.setImageExtent(&self, Extent3D imageExtent) {
+   self.imageExtent = imageExtent;
+   return *self;
+}
+fn CopyDeviceMemoryImageInfoKHR copyDeviceMemoryImageInfoKHR() => { .sType = STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR, .pNext = null };
+fn CopyDeviceMemoryImageInfoKHR CopyDeviceMemoryImageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn CopyDeviceMemoryImageInfoKHR CopyDeviceMemoryImageInfoKHR.setImage(&self, Image image) {
+   self.image = image;
+   return *self;
+}
+fn CopyDeviceMemoryImageInfoKHR CopyDeviceMemoryImageInfoKHR.setRegionCount(&self, uint regionCount) {
+   self.regionCount = regionCount;
+   return *self;
+}
+fn CopyDeviceMemoryImageInfoKHR CopyDeviceMemoryImageInfoKHR.setRegions(&self, DeviceMemoryImageCopyKHR[] pRegions) {
+   self.regionCount= (uint)pRegions.len;
+   self.pRegions = &pRegions[0];
+   return *self;
+}
+fn MemoryRangeBarriersInfoKHR memoryRangeBarriersInfoKHR() => { .sType = STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR, .pNext = null };
+fn MemoryRangeBarriersInfoKHR MemoryRangeBarriersInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryRangeBarriersInfoKHR MemoryRangeBarriersInfoKHR.setMemoryRangeBarrierCount(&self, uint memoryRangeBarrierCount) {
+   self.memoryRangeBarrierCount = memoryRangeBarrierCount;
+   return *self;
+}
+fn MemoryRangeBarriersInfoKHR MemoryRangeBarriersInfoKHR.setMemoryRangeBarriers(&self, MemoryRangeBarrierKHR[] pMemoryRangeBarriers) {
+   self.memoryRangeBarrierCount= (uint)pMemoryRangeBarriers.len;
+   self.pMemoryRangeBarriers = &pMemoryRangeBarriers[0];
+   return *self;
+}
+fn MemoryRangeBarrierKHR memoryRangeBarrierKHR() => { .sType = STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR, .pNext = null };
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setSrcStageMask(&self, PipelineStageFlags2 srcStageMask) {
+   self.srcStageMask = srcStageMask;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setSrcAccessMask(&self, AccessFlags2 srcAccessMask) {
+   self.srcAccessMask = srcAccessMask;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setDstStageMask(&self, PipelineStageFlags2 dstStageMask) {
+   self.dstStageMask = dstStageMask;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setDstAccessMask(&self, AccessFlags2 dstAccessMask) {
+   self.dstAccessMask = dstAccessMask;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setSrcQueueFamilyIndex(&self, uint srcQueueFamilyIndex) {
+   self.srcQueueFamilyIndex = srcQueueFamilyIndex;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setDstQueueFamilyIndex(&self, uint dstQueueFamilyIndex) {
+   self.dstQueueFamilyIndex = dstQueueFamilyIndex;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn MemoryRangeBarrierKHR MemoryRangeBarrierKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn PhysicalDeviceDeviceAddressCommandsFeaturesKHR physicalDeviceDeviceAddressCommandsFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceDeviceAddressCommandsFeaturesKHR PhysicalDeviceDeviceAddressCommandsFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceDeviceAddressCommandsFeaturesKHR PhysicalDeviceDeviceAddressCommandsFeaturesKHR.setDeviceAddressCommands(&self, uint deviceAddressCommands) {
+   self.deviceAddressCommands = deviceAddressCommands;
+   return *self;
+}
+fn ConditionalRenderingBeginInfo2EXT conditionalRenderingBeginInfo2EXT() => { .sType = STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT, .pNext = null };
+fn ConditionalRenderingBeginInfo2EXT ConditionalRenderingBeginInfo2EXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn ConditionalRenderingBeginInfo2EXT ConditionalRenderingBeginInfo2EXT.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn ConditionalRenderingBeginInfo2EXT ConditionalRenderingBeginInfo2EXT.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn ConditionalRenderingBeginInfo2EXT ConditionalRenderingBeginInfo2EXT.setFlags(&self, ConditionalRenderingFlagsEXT flags) {
+   self.flags = flags;
+   return *self;
+}
+fn AccelerationStructureCreateInfo2KHR accelerationStructureCreateInfo2KHR() => { .sType = STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR, .pNext = null };
+fn AccelerationStructureCreateInfo2KHR AccelerationStructureCreateInfo2KHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn AccelerationStructureCreateInfo2KHR AccelerationStructureCreateInfo2KHR.setCreateFlags(&self, AccelerationStructureCreateFlagsKHR createFlags) {
+   self.createFlags = createFlags;
+   return *self;
+}
+fn AccelerationStructureCreateInfo2KHR AccelerationStructureCreateInfo2KHR.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn AccelerationStructureCreateInfo2KHR AccelerationStructureCreateInfo2KHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn AccelerationStructureCreateInfo2KHR AccelerationStructureCreateInfo2KHR.setType(&self, AccelerationStructureTypeKHR type) {
+   self.type = type;
+   return *self;
+}
+fn BindIndexBuffer3InfoKHR bindIndexBuffer3InfoKHR() => { .sType = STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR, .pNext = null };
+fn BindIndexBuffer3InfoKHR BindIndexBuffer3InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindIndexBuffer3InfoKHR BindIndexBuffer3InfoKHR.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn BindIndexBuffer3InfoKHR BindIndexBuffer3InfoKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn BindIndexBuffer3InfoKHR BindIndexBuffer3InfoKHR.setIndexType(&self, IndexType indexType) {
+   self.indexType = indexType;
+   return *self;
+}
+fn BindVertexBuffer3InfoKHR bindVertexBuffer3InfoKHR() => { .sType = STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR, .pNext = null };
+fn BindVertexBuffer3InfoKHR BindVertexBuffer3InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindVertexBuffer3InfoKHR BindVertexBuffer3InfoKHR.setSetStride(&self, uint setStride) {
+   self.setStride = setStride;
+   return *self;
+}
+fn BindVertexBuffer3InfoKHR BindVertexBuffer3InfoKHR.setAddressRange(&self, StridedDeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn BindVertexBuffer3InfoKHR BindVertexBuffer3InfoKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn DrawIndirect2InfoKHR drawIndirect2InfoKHR() => { .sType = STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR, .pNext = null };
+fn DrawIndirect2InfoKHR DrawIndirect2InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DrawIndirect2InfoKHR DrawIndirect2InfoKHR.setAddressRange(&self, StridedDeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn DrawIndirect2InfoKHR DrawIndirect2InfoKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn DrawIndirect2InfoKHR DrawIndirect2InfoKHR.setDrawCount(&self, uint drawCount) {
+   self.drawCount = drawCount;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR drawIndirectCount2InfoKHR() => { .sType = STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR, .pNext = null };
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setAddressRange(&self, StridedDeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setCountAddressRange(&self, DeviceAddressRangeKHR countAddressRange) {
+   self.countAddressRange = countAddressRange;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setCountAddressFlags(&self, AddressCommandFlagsKHR countAddressFlags) {
+   self.countAddressFlags = countAddressFlags;
+   return *self;
+}
+fn DrawIndirectCount2InfoKHR DrawIndirectCount2InfoKHR.setMaxDrawCount(&self, uint maxDrawCount) {
+   self.maxDrawCount = maxDrawCount;
+   return *self;
+}
+fn DispatchIndirect2InfoKHR dispatchIndirect2InfoKHR() => { .sType = STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR, .pNext = null };
+fn DispatchIndirect2InfoKHR DispatchIndirect2InfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DispatchIndirect2InfoKHR DispatchIndirect2InfoKHR.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn DispatchIndirect2InfoKHR DispatchIndirect2InfoKHR.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn BindTransformFeedbackBuffer2InfoEXT bindTransformFeedbackBuffer2InfoEXT() => { .sType = STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT, .pNext = null };
+fn BindTransformFeedbackBuffer2InfoEXT BindTransformFeedbackBuffer2InfoEXT.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn BindTransformFeedbackBuffer2InfoEXT BindTransformFeedbackBuffer2InfoEXT.setAddressRange(&self, DeviceAddressRangeKHR addressRange) {
+   self.addressRange = addressRange;
+   return *self;
+}
+fn BindTransformFeedbackBuffer2InfoEXT BindTransformFeedbackBuffer2InfoEXT.setAddressFlags(&self, AddressCommandFlagsKHR addressFlags) {
+   self.addressFlags = addressFlags;
+   return *self;
+}
+fn PhysicalDeviceShaderConstantDataFeaturesKHR physicalDeviceShaderConstantDataFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderConstantDataFeaturesKHR PhysicalDeviceShaderConstantDataFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderConstantDataFeaturesKHR PhysicalDeviceShaderConstantDataFeaturesKHR.setShaderConstantData(&self, uint shaderConstantData) {
+   self.shaderConstantData = shaderConstantData;
+   return *self;
+}
+fn PhysicalDeviceShaderAbortFeaturesKHR physicalDeviceShaderAbortFeaturesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR, .pNext = null };
+fn PhysicalDeviceShaderAbortFeaturesKHR PhysicalDeviceShaderAbortFeaturesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAbortFeaturesKHR PhysicalDeviceShaderAbortFeaturesKHR.setShaderAbort(&self, uint shaderAbort) {
+   self.shaderAbort = shaderAbort;
+   return *self;
+}
+fn PhysicalDeviceShaderAbortPropertiesKHR physicalDeviceShaderAbortPropertiesKHR() => { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR, .pNext = null };
+fn PhysicalDeviceShaderAbortPropertiesKHR PhysicalDeviceShaderAbortPropertiesKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn PhysicalDeviceShaderAbortPropertiesKHR PhysicalDeviceShaderAbortPropertiesKHR.setMaxShaderAbortMessageSize(&self, ulong maxShaderAbortMessageSize) {
+   self.maxShaderAbortMessageSize = maxShaderAbortMessageSize;
+   return *self;
+}
+fn DeviceFaultShaderAbortMessageInfoKHR deviceFaultShaderAbortMessageInfoKHR() => { .sType = STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR, .pNext = null };
+fn DeviceFaultShaderAbortMessageInfoKHR DeviceFaultShaderAbortMessageInfoKHR.setNext(&self, void* pNext) {
+   self.pNext = pNext;
+   return *self;
+}
+fn DeviceFaultShaderAbortMessageInfoKHR DeviceFaultShaderAbortMessageInfoKHR.setMessageDataSize(&self, ulong messageDataSize) {
+   self.messageDataSize = messageDataSize;
+   return *self;
+}
+fn DeviceFaultShaderAbortMessageInfoKHR DeviceFaultShaderAbortMessageInfoKHR.setMessageData(&self, void* pMessageData) {
+   self.pMessageData = pMessageData;
    return *self;
 }
