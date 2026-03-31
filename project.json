@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"dependency-search-paths": ["libs"],
 	"dependencies": [],
-	"features": ["WAYLAND"],
+	"features": [],
 	"script-dir": "./",
 	"targets": {
 		"shaders": {
