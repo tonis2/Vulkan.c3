@@ -58,8 +58,8 @@ fn void Camera.zoom(Camera* self, float value) {
 
 fn UniformData Camera.matrix(Camera self) {
     return {
-        self.perspective.transpose(),
-        self.view.transpose(),
+        self.perspective,
+        self.view,
         self.eye,
     };
 }
