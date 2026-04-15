@@ -470,7 +470,7 @@ fn void main(String[] args)
 			&descriptorSets[0]
 		);
 
-		vk::cmdBindVertexBuffers(command_buffer, 0, 1, (Buffer[]) { vertex_buffer.buffer }, (DeviceSize[]) { 0 });
+		vk::cmdBindVertexBuffers(command_buffer, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (DeviceSize[]) { 0 });
 		vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
 		vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
 		vk::cmdEndRenderPass(command_buffer);
