@@ -11,7 +11,7 @@ tmp
 _c3l
 assets/
 .DS_Store
-.vscode/*
+.vscode/
 .claude/
 
 # Linker output

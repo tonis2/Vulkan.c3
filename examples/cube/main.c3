@@ -1,9 +1,7 @@
 import std::io;
 import std::collections::list;
 import std::math;
-import c3w;
-import vk;
-import camera;
+import vk, camera, c3w;
 
 const WIDTH                = 800;
 const HEIGHT               = 600;
@@ -12,8 +10,8 @@ const MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Vertex
 {
-	Vec3f pos;
-	Vec4f color;
+	Vec3 pos;
+	Vec4 color;
 }
 
 Vertex[] vertices = {
@@ -137,64 +135,7 @@ fn void main(String[] args)
 	Instance instance = instanceInfo.build()!!;
 
 	// Create surface
-	SurfaceKHR surface;
-	$switch (env::OS_TYPE):
-		$case MACOS:
-			MetalSurfaceCreateInfoEXT createInfo = {
-				.sType = vk::STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT,
-				.pLayer = (CAMetalLayer*)win.src.layer.id
-			};
-
-			vk::createMetalSurfaceEXT(instance, &createInfo, null, &surface)!!;
-		$case LINUX:
-			{
-				switch (backend)
-				{
-					case WAYLAND:
-						{
-							WaylandWindow* wl = (WaylandWindow*)win.src.backend_data;
-							WaylandSurfaceCreateInfoKHR createInfo = {
-								vk::STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
-								null,
-								0,
-								wl.display,
-								wl.surface,
-							};
-							vk::createWaylandSurfaceKHR(instance, &createInfo, null, &surface)!!;
-						}
-					case X11:
-						{
-							X11Window* x11 = (X11Window*)win.src.backend_data;
-							XcbSurfaceCreateInfoKHR createInfo = {
-								vk::STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
-								null,
-								0,
-								x11.connection,
-								(vk::Window)x11.window,
-							};
-							vk::createXcbSurfaceKHR(instance, &createInfo, null, &surface)!!;
-						}
-					default:
-						{
-							// No backend available
-						}
-				}
-			}
-		$case WIN32:
-			{
-				Win32SurfaceCreateInfoKHR createInfo = {
-					vk::STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
-					null,
-					0,
-					win.src.instance,
-					win.src.hwnd
-				};
-				vk::createWin32SurfaceKHR(instance, &createInfo, null, &surface)!!;
-			}
-		$default:
-			{
-			}
-	$endswitch
+	SurfaceKHR surface = (SurfaceKHR)win.create_vk_surface(instance)!!;
 
 	// --- Physical device selection ---
 	vk::DeviceSelection selection = vk::selectPhysicalDevice(instance, surface, device_extensions)!!;
@@ -386,21 +327,25 @@ fn void main(String[] args)
 		viewports[..]
 	).setScissors(scissors[..]);
 
-	Pipeline pipeline = vk::graphicsPipelineCreateInfo()
-	.setStages(
+	Pipeline pipeline = vk::graphicsPipelineCreateInfo().setStages(
 		shader_stages[..]
-	)
-	.setLayout(pipeline_layout)
-	.setVertexInputState(&vertex_input_state)
-	.setDynamicState(&dynamic_state)
-	.setRasterizationState(&rasterization_state)
-	.setInputAssemblyState(&input_assembly_state)
-	.setMultisampleState(&multisample_state)
-	.setDepthStencilState(&depth_stencil_state)
-	.setColorBlendState(&color_blend_state)
-	.setViewportState(&viewport_state)
-	.setRenderPass(render_pass)
-	.build(device)!!;
+	).setLayout(
+		pipeline_layout
+	).setVertexInputState(
+		&vertex_input_state
+	).setDynamicState(
+		&dynamic_state
+	).setRasterizationState(
+		&rasterization_state
+	).setInputAssemblyState(
+		&input_assembly_state
+	).setMultisampleState(
+		&multisample_state
+	).setDepthStencilState(
+		&depth_stencil_state
+	).setColorBlendState(
+		&color_blend_state
+	).setViewportState(&viewport_state).setRenderPass(render_pass).build(device)!!;
 
 	// --- Frame sync ---
 	vk::FrameSync frame_sync;
