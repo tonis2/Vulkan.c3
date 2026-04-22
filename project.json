@@ -9,9 +9,10 @@
 	"script-dir": "./",
 	"targets": {
 		"shaders": {
-			"type": "static-lib",
+			"type": "prepare",
 			"exec": [
-				"slangc examples/cube/shaders/shader.slang -target spirv -o examples/cube/shaders/shader.spv"
+				"slangc examples/cube/shaders/shader.slang -target spirv -o examples/cube/shaders/shader.spv",
+				"slangc examples/textured_cube/shaders/shader.slang -target spirv -o examples/textured_cube/shaders/shader.spv"
 			]
 		},
 		"zip": {
@@ -21,6 +22,12 @@
 		"cube": {
 			"type": "executable",
 			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
+			"dependencies": ["c3w"],
+			"linked-libraries": ["vulkan"]
+		},
+		"textured_cube": {
+			"type": "executable",
+			"sources": ["./examples/textured_cube/main.c3", "./examples/camera.c3", "./vk/*"],
 			"dependencies": ["c3w"],
 			"linked-libraries": ["vulkan"]
 		},
