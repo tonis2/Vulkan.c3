@@ -28,7 +28,7 @@
 		"textured_cube": {
 			"type": "executable",
 			"sources": ["./examples/textured_cube/main.c3", "./examples/camera.c3", "./vk/*"],
-			"dependencies": ["c3w"],
+			"dependencies": ["c3w", "image"],
 			"linked-libraries": ["vulkan"]
 		},
 		"cube-win": {
