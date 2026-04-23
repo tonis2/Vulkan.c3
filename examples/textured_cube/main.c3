@@ -2,9 +2,8 @@ import std::io;
 import std::math;
 import vk, vk::lite, camera, c3w;
 
-
-const WIDTH  = 800;
-const HEIGHT = 600;
+const WIDTH  = 1200;
+const HEIGHT = 800;
 
 struct Vertex {
 	Vec3 pos;
@@ -76,13 +75,13 @@ fn void main(String[] args) {
 	c3w::Window win = c3w::new(params: { .width = WIDTH, .height = HEIGHT, .x = 0, .y = 0 }, name: "Textured Cube")!!;
 	defer win.free();
 
-	Camera cam = camera::new(eye: { 0.0, 5.0, 10 }, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
+	Camera cam = camera::new(eye: { 0.0, 5.0, 10 }, aspect: (float)WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
 	// Instance + surface (user responsibility)
 	vk::Instance instance = vk::createDefaultInstance({ .enable_validation = true })!!;
 	defer instance.free();
 
-	vk::SurfaceKHR surface = lite::createSurface(instance, &win)!!;
+	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(instance)!!;
 	defer surface.free(instance);
 
 	// --- lite::init does everything else ---
@@ -94,7 +93,7 @@ fn void main(String[] args) {
 		&ctx.allocator,
 		usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		data: &vertices,
+		data: vertices.ptr,
 		data_size: Vertex.sizeof * vertices.len,
 	)!!;
 	defer vertex_buffer.free();
@@ -103,7 +102,7 @@ fn void main(String[] args) {
 		&ctx.allocator,
 		usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		data: &indices,
+		data: indices.ptr,
 		data_size: ushort.sizeof * indices.len,
 	)!!;
 	defer index_buffer.free();

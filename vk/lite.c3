@@ -689,8 +689,3 @@ fn vk::DescriptorSetLayout? createPushDescriptorLayout(vk::Device device, vk::De
 // ============================================================================
 // Surface creation
 // ============================================================================
-
-fn vk::SurfaceKHR? createSurface(vk::Instance instance, c3w::Window* win) {
-    void* surface = win.create_vk_surface(instance)!;
-    return (vk::SurfaceKHR)surface;
-}
