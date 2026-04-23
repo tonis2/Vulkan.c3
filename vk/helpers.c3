@@ -844,7 +844,6 @@ fn void FrameSync.free(&self, Device device) {
 }
 
 // --- 5. Shader loading helper -----------------------------------------------
-
 fn ShaderModule? loadShaderModule(Device device, char[] spirv_data) {
     return shaderModuleCreateInfo()
         .setCodeSize(spirv_data.len)
@@ -853,7 +852,6 @@ fn ShaderModule? loadShaderModule(Device device, char[] spirv_data) {
 }
 
 // --- 6. Instance creation with platform defaults ----------------------------
-
 struct InstanceConfig {
     ZString app_name;
     uint api_version;
@@ -861,32 +859,27 @@ struct InstanceConfig {
     ZString[] extra_extensions;
 }
 
-fn Instance? createDefaultInstance(InstanceConfig config = {}) {
+
+// Create default extensions for current platform
+const ZString[] DEFAULT_VALUES @if (env::OS_TYPE == MACOS) = { "VK_EXT_metal_surface" };
+const ZString[] DEFAULT_VALUES @if (env::OS_TYPE == WIN32) = { "VK_KHR_win32_surface" };
+const ZString[] DEFAULT_VALUES @if (env::OS_TYPE == LINUX && $feature(X11)) = { "VK_KHR_xcb_surface" };
+const ZString[] DEFAULT_VALUES @if (env::OS_TYPE == LINUX && $feature(WAYLAND)) = { "VK_KHR_wayland_surface" };
+const ZString[] DEFAULT_VALUES @if (env::OS_TYPE == LINUX && !$feature(WAYLAND) && !$feature(X11)) = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
+
+fn Instance? createDefaultInstance(InstanceConfig config = {}, ZString[] defaultValues = {...DEFAULT_VALUES, "VK_KHR_surface"}) {
     ZString app_name = config.app_name != null ? config.app_name : "Vulkan App";
     uint api_version = config.api_version != 0 ? config.api_version : @makeApiVersion(0, 1, 3, 0);
 
     ZStringList exts;
     defer exts.free();
-    exts.push("VK_KHR_surface");
-
-    $switch (env::OS_TYPE):
-        $case MACOS:
-            exts.push_all({ "VK_EXT_metal_surface", "VK_KHR_portability_enumeration" });
-        $case WIN32:
-            exts.push("VK_KHR_win32_surface");
-        $case LINUX:
-            // Add both — the driver will only use the one that matches
-            exts.push_all({ "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" });
-        $default:
-    $endswitch
 
     if (config.enable_validation) {
         exts.push("VK_EXT_debug_utils");
     }
 
-    foreach (ext : config.extra_extensions) {
-        exts.push(ext);
-    }
+    exts.push_all(defaultValues);
+    exts.push_all(config.extra_extensions);
 
     checkInstanceExtensionSupport(exts)!;
 
@@ -900,7 +893,7 @@ fn Instance? createDefaultInstance(InstanceConfig config = {}) {
 
     InstanceCreateInfo instance_info = instanceCreateInfo()
         .setApplicationInfo(&app_info)
-        .setFlags(env::os_is_darwin() ? INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
+        .setFlags(0)
         .setEnabledExtensionNames(exts.array_view());
 
     if (config.enable_validation) {
