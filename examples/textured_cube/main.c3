@@ -1,6 +1,6 @@
 import std::io;
 import std::math;
-import vk, vk::lite, camera, c3w;
+import vk, vk::lite, camera, c3w, image;
 
 const WIDTH  = 1200;
 const HEIGHT = 800;
@@ -54,22 +54,7 @@ ushort[] indices = {
 };
 
 char[*] shader = $embed("./shaders/shader.spv");
-
-// Generate a 64x64 checkerboard texture (RGBA)
-fn void generateCheckerboard(char[] pixels, uint size) {
-	uint tile = 8;
-	for (uint y = 0; y < size; ++y) {
-		for (uint x = 0; x < size; ++x) {
-			uint i = (y * size + x) * 4;
-			bool white = ((x / tile) + (y / tile)) % 2 == 0;
-			char c = white ? (char)255 : (char)40;
-			pixels[i]     = c;
-			pixels[i + 1] = c;
-			pixels[i + 2] = c;
-			pixels[i + 3] = 255;
-		}
-	}
-}
+char[*] logo_data = $embed("./logo.png");
 
 fn void main(String[] args) {
 	c3w::Window win = c3w::new(params: { .width = WIDTH, .height = HEIGHT, .x = 0, .y = 0 }, name: "Textured Cube")!!;
@@ -117,11 +102,10 @@ fn void main(String[] args) {
 	defer uniform_buffer.free();
 
 	// Texture
-	const TEX_SIZE = 64;
-	char[TEX_SIZE * TEX_SIZE * 4] tex_pixels;
-	generateCheckerboard(tex_pixels[..], TEX_SIZE);
+	image::Image img = image::png::load_bytes(logo_data[..])!!;
+	defer img.free();
 
-	lite::Texture texture = ctx.createTexture(tex_pixels[..], TEX_SIZE, TEX_SIZE)!!;
+	lite::Texture texture = ctx.createTexture(img.pixels[..], img.width, img.height)!!;
 	defer texture.free(ctx.device);
 
 	// Descriptor layout (push descriptors)

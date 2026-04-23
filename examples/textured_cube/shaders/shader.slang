@@ -41,5 +41,6 @@ VertexOutput vertexMain(VertexInput assembledVertex)
 [shader("fragment")]
 float4 fragmentMain(Fragment coarseVertex) : SV_Target
 {
-    return tex.Sample(coarseVertex.uv);
+    float4 color = tex.Sample(coarseVertex.uv);
+    return float4(lerp(float3(1.0), color.rgb, color.a), 1.0);
 }
