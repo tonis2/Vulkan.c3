@@ -3,19 +3,15 @@ import std::math;
 import std::math::matrix;
 import std::io;
 
-alias Vec2f = float[<2>];
-alias Vec3f = float[<3>];
-alias Vec4f = float[<4>];
-
 struct UniformData {
     Matrix4f projection;
     Matrix4f view;
-    Vec3f eye;
+    Vec3 eye;
 }
 
 struct Camera {
-    Vec3f target;
-    Vec3f eye;
+    Vec3 target;
+    Vec3 eye;
     Matrix4f perspective;
     Matrix4f view;
     float pitch;
@@ -23,7 +19,7 @@ struct Camera {
     float zoom_value;
 }
 
-fn Camera new(Vec3f target = {0.0, 0.0, 0.0}, Vec3f eye = {0.0, 0.0, 0.0}, float aspect = 0.8, float view = 45, float min_zoom = 0.1, float max_zoom = 500) {
+fn Camera new(Vec3 target = {0.0, 0.0, 0.0}, Vec3 eye = {0.0, 0.0, 0.0}, float aspect = 0.8, float view = 45, float min_zoom = 0.1, float max_zoom = 500) {
     return {
         target,
         eye,

@@ -171,13 +171,13 @@ fn void main(String[] args) {
 	};
 
 	// Render loop
-	Vec2f prev_mouse;
+	Vec2 prev_mouse;
 	bool running = true;
 	while (running) {
 		c3w::EventMap event_map = win.getEvent();
 
 		if (event_map.is_pressed(LEFT_MOUSE)) {
-			Vec2f mouse_pos = win.getMousePos();
+			Vec2 mouse_pos = win.getMousePos();
 			cam.rotate(mouse_pos.x - prev_mouse.x, mouse_pos.y - prev_mouse.y);
 			uniform_buffer.upload(&&cam.matrix(), camera::UniformData.sizeof);
 			prev_mouse = mouse_pos;
