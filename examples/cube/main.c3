@@ -352,14 +352,14 @@ fn void main(String[] args)
 	frame_sync.init(device, sc.image_count)!!;
 
 	bool running = true;
-	Vec2f prev_mouse;
+	Vec2 prev_mouse;
 	while (running)
 	{
 		EventMap event_map = win.getEvent();
 
 		if (event_map.is_pressed(LEFT_MOUSE))
 		{
-			Vec2f mouse_pos = win.getMousePos();
+			Vec2 mouse_pos = win.getMousePos();
 			camera.rotate(mouse_pos.x - prev_mouse.x, (mouse_pos.y - prev_mouse.y));
 			uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
 			prev_mouse = mouse_pos;

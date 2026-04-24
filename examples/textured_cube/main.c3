@@ -1,6 +1,6 @@
 import std::io;
 import std::math;
-import vk, vk::lite, camera, c3w, image;
+import vk, camera, c3w, image;
 
 const WIDTH  = 1200;
 const HEIGHT = 800;
@@ -63,14 +63,19 @@ fn void main(String[] args) {
 	Camera cam = camera::new(eye: { 0.0, 5.0, 10 }, aspect: (float)WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
 	// Instance + surface (user responsibility)
-	vk::Instance instance = vk::createDefaultInstance({ .enable_validation = true })!!;
+	vk::Instance instance = vk::createDefaultInstance(
+		{ 
+			.enable_validation = true,
+			.extensions = {...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface"}
+		}
+	)!!;
 	defer instance.free();
 
 	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(instance)!!;
 	defer surface.free(instance);
 
 	// --- lite::init does everything else ---
-	lite::Context ctx = lite::init(instance, surface, { .width = WIDTH, .height = HEIGHT, .enable_depth = true })!!;
+	vk::Context ctx = vk::init(instance, surface, { .width = WIDTH, .height = HEIGHT, .enable_depth = true })!!;
 	defer ctx.free();
 
 	// Buffers
@@ -105,11 +110,11 @@ fn void main(String[] args) {
 	image::Image img = image::png::load_bytes(logo_data[..])!!;
 	defer img.free();
 
-	lite::Texture texture = ctx.createTexture(img.pixels[..], img.width, img.height)!!;
+	Texture texture = ctx.createTexture(img.pixels[..], img.width, img.height)!!;
 	defer texture.free(ctx.device);
 
 	// Descriptor layout (push descriptors)
-	vk::DescriptorSetLayout desc_layout = lite::createPushDescriptorLayout(ctx.device, (vk::DescriptorSetLayoutBinding[]) {
+	vk::DescriptorSetLayout desc_layout = vk::createPushDescriptorLayout(ctx.device, (vk::DescriptorSetLayoutBinding[]) {
 		{
 			.binding = 0,
 			.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -126,7 +131,7 @@ fn void main(String[] args) {
 	defer desc_layout.free(ctx.device);
 
 	// Pipeline
-	lite::GraphicsPipeline pipe = ctx.createPipeline({
+	GraphicsPipeline pipe = ctx.createPipeline({
 		.shaders = {
 			{ .spirv = shader[..], .entry_name = "vertexMain", .stage = vk::SHADER_STAGE_VERTEX_BIT },
 			{ .spirv = shader[..], .entry_name = "fragmentMain", .stage = vk::SHADER_STAGE_FRAGMENT_BIT },
