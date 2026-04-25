@@ -74,7 +74,7 @@ fn void main(String[] args) {
 	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(instance)!!;
 	defer surface.free(instance);
 
-	// --- lite::init does everything else ---
+	// --- vk::init does everything else ---
 	vk::Context ctx = vk::init(instance, surface, { .width = WIDTH, .height = HEIGHT, .enable_depth = true })!!;
 	defer ctx.free();
 

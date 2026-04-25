@@ -33,7 +33,10 @@ VertexOutput vertexMain(VertexInput assembledVertex)
     VertexOutput output;
 
     output.coarseVertex.uv = assembledVertex.uv;
-    output.sv_position = mul(projection, mul(view, float4(assembledVertex.position, 1.0)));
+
+    float3 position = assembledVertex.position;
+    float4x4 identity_matrix = float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    output.sv_position = mul(mul(mul(projection, view), identity_matrix), float4(position, 1.0));
 
     return output;
 }
