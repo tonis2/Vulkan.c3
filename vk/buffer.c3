@@ -52,7 +52,7 @@ struct MemoryPage {
 struct MemoryAllocator {
     Device device;
     PhysicalDevice pdevice;
-    DeviceQueue* queue;
+    DeviceQueue queue;
     usz default_page_size;
     MemoryAllocateFlags flags;
     PageList pages;
@@ -395,11 +395,7 @@ fn Memory? new_buffer(
         !((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
         data != null) {
 
-        DeviceQueue* transfer_queue = queue != null ? queue : allocator.queue;
-        if (transfer_queue == null) {
-            io::printfn("No queue available for staging transfer");
-            return ALLOCATION_HAS_NO_ROOM~;
-        }
+        DeviceQueue transfer_queue = queue != null ? *queue : allocator.queue;
 
         // Create staging buffer on host-visible memory
         Memory stage_buffer = new_buffer(
@@ -410,7 +406,7 @@ fn Memory? new_buffer(
             data_size: data_size
         )!;
 
-        device.@single_time_command(queue: *transfer_queue; CommandBuffer command_buffer) {
+        device.@single_time_command(queue: transfer_queue; CommandBuffer command_buffer) {
             vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, response.buffer, 1, (BufferCopy[]){
                 {
                     .srcOffset = 0,
@@ -510,12 +506,7 @@ fn void Memory.set_used_size(&self, usz size) @dynamic => self.used_size = (uint
 fn void? Memory.upload_from_stage(&self, void* data, usz data_size, DeviceQueue* queue = null)
 {
     vk::Device device = self.allocator.device;
-    DeviceQueue* transfer_queue = queue != null ? queue : self.allocator.queue;
-
-    if (transfer_queue == null) {
-        io::printfn("No queue available for staging transfer");
-        return ALLOCATION_HAS_NO_ROOM~;
-    }
+    DeviceQueue transfer_queue = queue != null ? *queue : self.allocator.queue;
 
     Memory stage_buffer = new_buffer(
 		self.allocator,
@@ -525,7 +516,7 @@ fn void? Memory.upload_from_stage(&self, void* data, usz data_size, DeviceQueue*
         data_size: data_size
     )!;
 
-    device.@single_time_command(queue: *transfer_queue; CommandBuffer command_buffer) {
+    device.@single_time_command(queue: transfer_queue; CommandBuffer command_buffer) {
         vk::cmdCopyBuffer(command_buffer, stage_buffer.buffer, self.buffer, 1, (BufferCopy[]){
             {
                 .srcOffset = 0,

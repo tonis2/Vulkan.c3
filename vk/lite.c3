@@ -279,7 +279,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 	ctx.allocator = {
 		.device = ctx.device,
 		.pdevice = ctx.physical_device,
-		.queue = &ctx.graphics_queue,
+		.queue = ctx.graphics_queue,
 		.flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 	};
 
@@ -295,8 +295,6 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 		ctx.createDepthResources(config.width, config.height)!;
 		ctx.has_depth = true;
 	}
-
-	ctx.allocator.queue = &ctx.graphics_queue;
 
 	return ctx;
 }
