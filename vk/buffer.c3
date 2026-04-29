@@ -747,7 +747,7 @@ fn BufferManager create_buffer_manager(Allocator[] buffers, UploadFN uploadFN = 
 fn Region? BufferManager.alloc(&self, uint buffer_index, uint size, void* data = null) {
     Allocator buffer = self.buffers[buffer_index];
 
-    if (!(buffer.total_size() > buffer.get_used_size() + size)) return COMPONENT_BUFFER_OVERFLOW~;
+    if (buffer.total_size() < buffer.get_used_size() + size) return COMPONENT_BUFFER_OVERFLOW~;
 
     Region region = {
         .size = size,
