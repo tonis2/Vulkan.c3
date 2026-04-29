@@ -503,6 +503,33 @@ fn uint Memory.get_type(&self) @dynamic => self.type.ordinal;
 fn void* Memory.get_buffer(&self) @dynamic => self.buffer;
 fn void Memory.set_used_size(&self, usz size) @dynamic => self.used_size = (uint)size;
 
+<*
+ Stage `data` (size `data_size`) into a sub-range of `dst` starting at `dst_offset`.
+ Used to fill a Region that lives on a DEVICE_LOCAL buffer without having to
+ re-upload the entire backing buffer.
+*>
+fn void? stage_upload_at(MemoryAllocator* allocator, vk::Buffer dst, void* data, usz data_size, usz dst_offset, DeviceQueue* queue = null)
+{
+    vk::Device device = allocator.device;
+    DeviceQueue transfer_queue = queue != null ? *queue : allocator.queue;
+
+    Memory stage = new_buffer(
+        allocator,
+        usage: vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
+        properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        data: data,
+        data_size: data_size,
+    )!;
+
+    device.@single_time_command(queue: transfer_queue; CommandBuffer cmd) {
+        vk::cmdCopyBuffer(cmd, stage.buffer, dst, 1, (BufferCopy[]){
+            { .srcOffset = 0, .dstOffset = dst_offset, .size = data_size }
+        });
+    }!;
+
+    stage.free();
+}
+
 fn void? Memory.upload_from_stage(&self, void* data, usz data_size, DeviceQueue* queue = null)
 {
     vk::Device device = self.allocator.device;
@@ -635,7 +662,7 @@ fn char* Region.data(&self) => self.bm.buffers[self.buffer].data() + self.offset
 fn void Region.reset(&self) => self.used_size = 0;
 
 <*
- @require self.size > (self.used_size + size) : "Region total size is too small"
+ @require self.size >= (self.used_size + size) : "Region total size is too small"
 *>
 macro void Region.@push(&self, #data, usz size = 0, usz offset = 0, bool auto_increase = true) {
     usz data_size = size;
