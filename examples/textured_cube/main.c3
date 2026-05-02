@@ -1,6 +1,6 @@
 import std::io;
 import std::math;
-import vk, camera, c3w, image;
+import vk, camera, context, c3w, image;
 
 const WIDTH  = 1200;
 const HEIGHT = 800;
@@ -74,8 +74,8 @@ fn void main(String[] args) {
 	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(instance)!!;
 	defer surface.free(instance);
 
-	// --- vk::init does everything else ---
-	vk::Context ctx = vk::init(instance, surface, { .width = WIDTH, .height = HEIGHT, .enable_depth = true })!!;
+	// --- context::init does everything else ---
+	context::Context ctx = context::init(instance, surface, { .width = WIDTH, .height = HEIGHT, .enable_depth = true })!!;
 	defer ctx.free();
 
 	// Buffers
@@ -114,7 +114,7 @@ fn void main(String[] args) {
 	defer texture.free(ctx.device);
 
 	// Descriptor layout (push descriptors)
-	vk::DescriptorSetLayout desc_layout = vk::createPushDescriptorLayout(ctx.device, (vk::DescriptorSetLayoutBinding[]) {
+	vk::DescriptorSetLayout desc_layout = context::createPushDescriptorLayout(ctx.device, (vk::DescriptorSetLayoutBinding[]) {
 		{
 			.binding = 0,
 			.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,

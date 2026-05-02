@@ -126,11 +126,9 @@ fn void main(String[] args)
 		.apiVersion = vk::@makeApiVersion(0, 1, 3, 0)
 	};
 
-	InstanceCreateInfo instanceInfo = vk::instanceCreateInfo().setApplicationInfo(
-		&info
-	).setFlags(
-		env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0
-	).setEnabledExtensionNames(extensions.array_view());
+	InstanceCreateInfo instanceInfo = vk::instanceCreateInfo().setApplicationInfo(&info)
+		.setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
+		.setEnabledExtensionNames(extensions.array_view());
 
 	Instance instance = instanceInfo.build()!!;
 
@@ -138,9 +136,9 @@ fn void main(String[] args)
 	SurfaceKHR surface = (SurfaceKHR)win.create_vk_surface(instance)!!;
 
 	// --- Physical device selection ---
-	vk::DeviceSelection selection = vk::selectPhysicalDevice(instance, surface, device_extensions)!!;
+	vk::DeviceSelection selection  = vk::selectPhysicalDevice(instance, surface, device_extensions)!!;
 	PhysicalDevice physical_device = selection.device;
-	DeviceQueue graphics_queue = { .index = selection.graphics_queue_index };
+	DeviceQueue graphics_queue     = { .index = selection.graphics_queue_index };
 
 	// --- Logical device ---
 	PhysicalDeviceVulkan13Features vulkan13Features = {
@@ -165,13 +163,13 @@ fn void main(String[] args)
 
 	vk::getPhysicalDeviceFeatures2(physical_device, &device_features);
 
-	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo().setQueueFamilyIndex(
-		graphics_queue.index
-	).setQueuePriorities({ 1.0 });
+	DeviceQueueCreateInfo graphicsInfo = vk::deviceQueueCreateInfo().setQueueFamilyIndex(graphics_queue.index)
+		.setQueuePriorities({ 1.0 });
 
-	Device device = vk::deviceCreateInfo().setQueueCreateInfos(
-		{ graphicsInfo }
-	).setEnabledExtensionNames(device_extensions.array_view()).setNext(&device_features).build(physical_device)!!;
+	Device device = vk::deviceCreateInfo().setQueueCreateInfos({ graphicsInfo })
+		.setEnabledExtensionNames(device_extensions.array_view())
+		.setNext(&device_features)
+		.build(physical_device)!!;
 
 	defer
 	{
@@ -192,34 +190,37 @@ fn void main(String[] args)
 		.pColorAttachments = colorAttachments.ptr
 	};
 
-	RenderPass render_pass = vk::renderPassCreateInfo().setAttachments(
-		{
+	RenderPass render_pass = vk::renderPassCreateInfo()
+		.setAttachments(
 			{
-				.format = vk::FORMAT_B8G8R8A8_UNORM,
-				.samples = vk::SAMPLE_COUNT_1_BIT,
-				.initialLayout = vk::IMAGE_LAYOUT_UNDEFINED,
-				.finalLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
-				.loadOp = vk::ATTACHMENT_LOAD_OP_CLEAR,
-				.storeOp = vk::ATTACHMENT_STORE_OP_STORE,
-				.stencilLoadOp = vk::ATTACHMENT_LOAD_OP_DONT_CARE,
-				.stencilStoreOp = vk::ATTACHMENT_STORE_OP_DONT_CARE
+				{
+					.format = vk::FORMAT_B8G8R8A8_UNORM,
+					.samples = vk::SAMPLE_COUNT_1_BIT,
+					.initialLayout = vk::IMAGE_LAYOUT_UNDEFINED,
+					.finalLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
+					.loadOp = vk::ATTACHMENT_LOAD_OP_CLEAR,
+					.storeOp = vk::ATTACHMENT_STORE_OP_STORE,
+					.stencilLoadOp = vk::ATTACHMENT_LOAD_OP_DONT_CARE,
+					.stencilStoreOp = vk::ATTACHMENT_STORE_OP_DONT_CARE
+				}
 			}
-		}
-	).setSubpasses({ subpass }).build(device)!!;
+		)
+		.setSubpasses({ subpass })
+		.build(device)!!;
 
 	// --- Swapchain (with framebuffers) ---
 	vk::Swapchain sc;
 	sc.init(device, physical_device, surface, WIDTH, HEIGHT, render_pass: render_pass)!!;
 
 	// --- Command pool & buffers ---
-	CommandPool command_pool = device.createCommandPool(queue: graphics_queue.index)!!;
+	CommandPool command_pool          = device.createCommandPool(queue: graphics_queue.index)!!;
 	CommandBufferList command_buffers = device.createCommandBuffers(command_pool, sc.image_count)!!;
 
 	// --- Memory allocator & buffers ---
 	vk::MemoryAllocator allocator = (vk::MemoryAllocator) {
 		.device = device,
 		.pdevice = physical_device,
-		.queue = &graphics_queue,
+		.queue = graphics_queue,
 		.flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
 	}.init()!!;
 
@@ -248,41 +249,37 @@ fn void main(String[] args)
 	)!!;
 
 	// --- Descriptors ---
-	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo().setFlags(
-		vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
-	).setBindings(
-		{
+	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
+		.setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+		.setBindings(
 			{
-				.binding = 0,
-				.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-				.descriptorCount = 1,
-				.stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+				{
+					.binding = 0,
+					.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+					.descriptorCount = 1,
+					.stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+				}
 			}
-		}
-	).build(device)!!;
+		)
+		.build(device)!!;
 
-	WriteDescriptorSet[] descriptorSets = {
-		vk::writeDescriptorSet().setDescriptorType(
-			vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER
-		).setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData.sizeof, }, })
-	};
+	WriteDescriptorSet[] descriptorSets = { vk::writeDescriptorSet()
+		.setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		.setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData.sizeof, }, }) };
 
 	// --- Shader & pipeline ---
 	ShaderModule shader_module = vk::loadShaderModule(device, shader[..])!!;
 	defer shader_module.free(device);
 
-	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts(
-		{ descriptor_set_layout }
-	).build(device)!!;
+	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout })
+		.build(device)!!;
 
-	PipelineShaderStageCreateInfo[2] shader_stages = {
-		vk::pipelineShaderStageCreateInfo().setStage(
-			vk::SHADER_STAGE_VERTEX_BIT
-		).setMod(shader_module).setName("vertexMain"),
-		vk::pipelineShaderStageCreateInfo().setStage(
-			vk::SHADER_STAGE_FRAGMENT_BIT
-		).setMod(shader_module).setName("fragmentMain")
-	};
+	PipelineShaderStageCreateInfo[2] shader_stages = { vk::pipelineShaderStageCreateInfo()
+		.setStage(vk::SHADER_STAGE_VERTEX_BIT)
+		.setMod(shader_module)
+		.setName("vertexMain"), vk::pipelineShaderStageCreateInfo().setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
+			.setMod(shader_module)
+			.setName("fragmentMain") };
 
 	VertexInputBindingDescription[1] binding_descriptions = {
 		{ .binding = 0, .stride = Vertex.sizeof, .inputRate = vk::VERTEX_INPUT_RATE_VERTEX, }
@@ -294,58 +291,45 @@ fn void main(String[] args)
 	};
 
 	PipelineVertexInputStateCreateInfo vertex_input_state = vk::pipelineVertexInputStateCreateInfo()
-		.setVertexBindingDescriptions(
-		binding_descriptions[..]
-	).setVertexAttributeDescriptions(attribute_descriptions[..]);
+		.setVertexBindingDescriptions(binding_descriptions[..])
+		.setVertexAttributeDescriptions(attribute_descriptions[..]);
 
 	// Use default pipeline states — caller owns array data to avoid dangling pointers
-	PipelineRasterizationStateCreateInfo rasterization_state = vk::defaultRasterizationState().setCullMode(
-		vk::CULL_MODE_FRONT_BIT
-	);
-	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo().setTopology(
-		vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-	);
+	PipelineRasterizationStateCreateInfo rasterization_state = vk::defaultRasterizationState()
+		.setCullMode(vk::CULL_MODE_FRONT_BIT);
+	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo()
+		.setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 
-	PipelineMultisampleStateCreateInfo multisample_state = vk::defaultMultisampleState();
+	PipelineMultisampleStateCreateInfo multisample_state    = vk::defaultMultisampleState();
 	PipelineDepthStencilStateCreateInfo depth_stencil_state = vk::defaultDepthStencilState();
 
 	PipelineColorBlendAttachmentState[1] blend_attachments = { vk::defaultColorBlendAttachment() };
-	PipelineColorBlendStateCreateInfo color_blend_state = vk::defaultColorBlendState(blend_attachments[..]);
+	PipelineColorBlendStateCreateInfo color_blend_state    = vk::defaultColorBlendState(blend_attachments[..]);
 
 	DynamicState[2] dynamic_states = { vk::DYNAMIC_STATE_VIEWPORT, vk::DYNAMIC_STATE_LINE_WIDTH };
 
-	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo().setDynamicStates(
-		dynamic_states[..]
-	);
+	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
+		.setDynamicStates(dynamic_states[..]);
 
 	Viewport[1] viewports = {
 		{ .width = sc.extent.width, .height = sc.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }
 	};
 	Rect2D[1] scissors = { { .extent = sc.extent, .offset = { 0, 0 } } };
 
-	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo().setViewports(
-		viewports[..]
-	).setScissors(scissors[..]);
+	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo().setViewports(viewports[..])
+		.setScissors(scissors[..]);
 
-	Pipeline pipeline = vk::graphicsPipelineCreateInfo().setStages(
-		shader_stages[..]
-	).setLayout(
-		pipeline_layout
-	).setVertexInputState(
-		&vertex_input_state
-	).setDynamicState(
-		&dynamic_state
-	).setRasterizationState(
-		&rasterization_state
-	).setInputAssemblyState(
-		&input_assembly_state
-	).setMultisampleState(
-		&multisample_state
-	).setDepthStencilState(
-		&depth_stencil_state
-	).setColorBlendState(
-		&color_blend_state
-	).setViewportState(&viewport_state).setRenderPass(render_pass).build(device)!!;
+	Pipeline pipeline = vk::graphicsPipelineCreateInfo().setStages(shader_stages[..]).setLayout(pipeline_layout)
+		.setVertexInputState(&vertex_input_state)
+		.setDynamicState(&dynamic_state)
+		.setRasterizationState(&rasterization_state)
+		.setInputAssemblyState(&input_assembly_state)
+		.setMultisampleState(&multisample_state)
+		.setDepthStencilState(&depth_stencil_state)
+		.setColorBlendState(&color_blend_state)
+		.setViewportState(&viewport_state)
+		.setRenderPass(render_pass)
+		.build(device)!!;
 
 	// --- Frame sync ---
 	vk::FrameSync frame_sync;
@@ -384,13 +368,10 @@ fn void main(String[] args)
 
 		uint next_image = frame_sync.beginFrame(device, sc.handle)!!;
 
-		RenderPassBeginInfo render_pass_info = vk::renderPassBeginInfo().setFramebuffer(
-			sc.framebuffers[next_image]
-		).setRenderPass(
-			render_pass
-		).setRenderArea(
-			{ .offset = { 0, 0 }, .extent = sc.extent }
-		).setClearValues({ { .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 } } } });
+		RenderPassBeginInfo render_pass_info = vk::renderPassBeginInfo().setFramebuffer(sc.framebuffers[next_image])
+			.setRenderPass(render_pass)
+			.setRenderArea({ .offset = { 0, 0 }, .extent = sc.extent })
+			.setClearValues({ { .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 } } } });
 
 		CommandBuffer command_buffer = command_buffers[next_image];
 		vk::resetCommandBuffer(command_buffer, 0)!!;
