@@ -3,59 +3,70 @@ import std::math;
 import std::math::matrix;
 import std::io;
 
-struct UniformData {
-    Matrix4f projection;
-    Matrix4f view;
-    Vec3 eye;
+struct UniformData
+{
+	Matrix4f projection;
+	Matrix4f view;
+	Vec3 eye;
 }
 
-struct Camera {
-    Vec3 target;
-    Vec3 eye;
-    Matrix4f perspective;
-    Matrix4f view;
-    float pitch;
-    float yaw;
-    float zoom_value;
+struct Camera
+{
+	Vec3 target;
+	Vec3 eye;
+	Matrix4f perspective;
+	Matrix4f view;
+	float pitch;
+	float yaw;
+	float zoom_value;
 }
 
-fn Camera new(Vec3 target = {0.0, 0.0, 0.0}, Vec3 eye = {0.0, 0.0, 0.0}, float aspect = 0.8, float view = 45, float min_zoom = 0.1, float max_zoom = 500) {
-    return {
-        target,
-        eye,
-        matrix::perspective{float}((float)math::deg_to_rad(view), aspect, min_zoom, max_zoom),
-        matrix::look_at{float}(eye, target, {0.0, 1.0, 0.0}),
-        0,
-        0,
-        -eye.z
-    };
+fn Camera new(
+	Vec3 target = { 0.0, 0.0, 0.0 },
+	Vec3 eye = { 0.0, 0.0, 0.0 },
+	float aspect = 0.8,
+	float view = 45,
+	float min_zoom = 0.1,
+	float max_zoom = 500
+)
+{
+	return {
+		target,
+		eye,
+		matrix::perspective{float}((float)math::deg_to_rad(view), aspect, min_zoom, max_zoom),
+		matrix::look_at{float}(eye, target, { 0.0, 1.0, 0.0 }),
+		0,
+		0,
+		-eye.z
+	};
 }
 
-fn void Camera.rotate (Camera* self, float x_offset, float y_offset) {
-    self.yaw += x_offset;
-    self.pitch += y_offset;
+fn void Camera.rotate(Camera* self, float x_offset, float y_offset)
+{
+	self.yaw += x_offset;
+	self.pitch += y_offset;
 
-    if (self.pitch > 89.0) self.pitch = 89.0;
-    if (self.pitch < -89.0) self.pitch = -89.0;
+	if (self.pitch > 89.0) self.pitch = 89.0;
+	if (self.pitch < -89.0) self.pitch = -89.0;
 
-    self.eye = { math::cos((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch)),
-                 math::sin((float)math::deg_to_rad(self.pitch)),
-                 math::sin((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch))};
+	self.eye = {
+		math::cos((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch)),
+		math::sin((float)math::deg_to_rad(self.pitch)),
+		math::sin((float)math::deg_to_rad(self.yaw)) * math::cos((float)math::deg_to_rad(self.pitch))
+	};
 
-    self.view = matrix::look_at{float}(self.eye, self.target, {0.0, 1.0, 0.0});
-    self.view.m23 = self.zoom_value;
+	self.view = matrix::look_at{float}(self.eye, self.target, { 0.0, 1.0, 0.0 });
+	self.view.m23 = self.zoom_value;
 }
 
-fn void Camera.zoom(Camera* self, float value) {
-    if (self.zoom_value + value > 0) return;
-    self.zoom_value += value;
-    self.view.m23 += value;
+fn void Camera.zoom(Camera* self, float value)
+{
+	if (self.zoom_value + value > 0) return;
+	self.zoom_value += value;
+	self.view.m23 += value;
 }
 
-fn UniformData Camera.matrix(Camera self) {
-    return {
-        self.perspective,
-        self.view,
-        self.eye,
-    };
+fn UniformData Camera.matrix(Camera self)
+{
+	return { self.perspective, self.view, self.eye, };
 }
