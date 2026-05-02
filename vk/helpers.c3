@@ -203,7 +203,7 @@ fn DeviceList? Instance.getDevices(self)
 
 fn bool? PhysicalDevice.checkExtensionSupport(self, ZStringList extensions)
 {
-	bool supports = true;
+	bool supports                = true;
 	StringList device_extensions = getDeviceExtensions(self)!;
 	defer device_extensions.free();
 
@@ -532,25 +532,22 @@ fn void DebugUtilsMessengerEXT.free(self, Instance instance)
 // Create PipelineRasterizationStateCreateInfo struct with some prefilled options
 fn PipelineRasterizationStateCreateInfo defaultRasterizationState()
 {
-	return pipelineRasterizationStateCreateInfo().setDepthClampEnable(
-		FALSE
-	).setRasterizerDiscardEnable(
-		FALSE
-	).setPolygonMode(
-		POLYGON_MODE_FILL
-	).setLineWidth(
-		1.0
-	).setCullMode(CULL_MODE_BACK_BIT).setFrontFace(FRONT_FACE_COUNTER_CLOCKWISE).setDepthBiasEnable(FALSE);
+	return pipelineRasterizationStateCreateInfo().setDepthClampEnable(FALSE).setRasterizerDiscardEnable(FALSE)
+		.setPolygonMode(POLYGON_MODE_FILL)
+		.setLineWidth(1.0)
+		.setCullMode(CULL_MODE_BACK_BIT)
+		.setFrontFace(FRONT_FACE_COUNTER_CLOCKWISE)
+		.setDepthBiasEnable(FALSE);
 }
 
 // Create PipelineMultisampleStateCreateInfo struct with some prefilled options
 fn PipelineMultisampleStateCreateInfo defaultMultisampleState()
 {
-	return pipelineMultisampleStateCreateInfo().setSampleShadingEnable(
-		FALSE
-	).setRasterizationSamples(
-		SAMPLE_COUNT_1_BIT
-	).setMinSampleShading(1.0).setAlphaToCoverageEnable(FALSE).setAlphaToOneEnable(FALSE);
+	return pipelineMultisampleStateCreateInfo().setSampleShadingEnable(FALSE)
+		.setRasterizationSamples(SAMPLE_COUNT_1_BIT)
+		.setMinSampleShading(1.0)
+		.setAlphaToCoverageEnable(FALSE)
+		.setAlphaToOneEnable(FALSE);
 }
 
 // Create PipelineColorBlendAttachmentState struct with some prefilled options
@@ -572,22 +569,18 @@ fn PipelineColorBlendAttachmentState defaultColorBlendAttachment()
 // Create PipelineColorBlendStateCreateInfo struct with some prefilled options
 fn PipelineColorBlendStateCreateInfo defaultColorBlendState(PipelineColorBlendAttachmentState[] attachments)
 {
-	return pipelineColorBlendStateCreateInfo().setBlendConstants(
-		{ 0.0, 0.0, 0.0, 0.0 }
-	).setLogicOp(LOGIC_OP_COPY).setAttachments(attachments);
+	return pipelineColorBlendStateCreateInfo().setBlendConstants({ 0.0, 0.0, 0.0, 0.0 }).setLogicOp(LOGIC_OP_COPY)
+		.setAttachments(attachments);
 }
 
 // Create PipelineDepthStencilStateCreateInfo struct with some prefilled options
 fn PipelineDepthStencilStateCreateInfo defaultDepthStencilState()
 {
-	return pipelineDepthStencilStateCreateInfo().setDepthTestEnable(
-		FALSE
-	).setDepthWriteEnable(
-		FALSE
-	).setDepthCompareOp(COMPARE_OP_LESS_OR_EQUAL).setBack({ .compareOp = COMPARE_OP_ALWAYS });
+	return pipelineDepthStencilStateCreateInfo().setDepthTestEnable(FALSE).setDepthWriteEnable(FALSE)
+		.setDepthCompareOp(COMPARE_OP_LESS_OR_EQUAL)
+		.setBack({ .compareOp = COMPARE_OP_ALWAYS });
 }
 // --- 2. Swapchain helper ---------------------------------------------------
-
 
 
 fn void Swapchain.free(&self, Device device)
