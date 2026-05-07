@@ -212,6 +212,30 @@ fn void MemoryAllocator.sync(&self) {
     self.pending_deletes.clear();
 }
 
+// Destroy any pages whose entire used range is in their free list.
+// Call this after freeing a large set of allocations (e.g. unloading a model)
+// to actually return device memory to the driver — Memory.free only marks
+// regions as free *within* a page; the underlying Vulkan allocation persists
+// until either MemoryAllocator.free() or this method.
+fn void MemoryAllocator.release_empty_pages(&self) {
+    self.sync();
+    for (usz i = self.pages.len(); i > 0; i--) {
+        MemoryPage* page = self.pages[i - 1];
+        bool fully_free = page.free_blocks.len() == 1
+            && page.free_blocks[0].offset == 0
+            && page.free_blocks[0].size == page.used_size;
+        if (!fully_free) continue;
+
+        if (page.mapped != null) {
+            vk::unmapMemory(self.device, page.memory);
+        }
+        page.free_blocks.free();
+        freeMemory(self.device, page.memory, null);
+        mem::free(page);
+        self.pages.remove_at(i - 1);
+    }
+}
+
 // Get memory statistics
 fn usz MemoryAllocator.total_allocated(&self) {
     usz total = 0;
