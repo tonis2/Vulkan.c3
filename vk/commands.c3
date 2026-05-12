@@ -2342,7 +2342,7 @@ fn void? allocateMemory (Device device, MemoryAllocateInfo* pAllocateInfo, Alloc
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
        case ERROR_INVALID_EXTERNAL_HANDLE: return E_ERROR_INVALID_EXTERNAL_HANDLE~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2380,7 +2380,7 @@ fn void? bindBufferMemory (Device device, Buffer buffer, DeviceMemory memory, De
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2510,7 +2510,7 @@ fn void? createBuffer (Device device, BufferCreateInfo* pCreateInfo, AllocationC
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2530,7 +2530,7 @@ fn void? createImage (Device device, ImageCreateInfo* pCreateInfo, AllocationCal
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
        case ERROR_COMPRESSION_EXHAUSTED_EXT: return E_ERROR_COMPRESSION_EXHAUSTED_EXT~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2540,7 +2540,7 @@ fn void? createImageView (Device device, ImageViewCreateInfo* pCreateInfo, Alloc
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2662,7 +2662,7 @@ fn void? createSampler (Device device, SamplerCreateInfo* pCreateInfo, Allocatio
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -2681,7 +2681,7 @@ fn void? createDescriptorPool (Device device, DescriptorPoolCreateInfo* pCreateI
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_FRAGMENTATION_EXT: return E_ERROR_FRAGMENTATION_EXT~;
+       case ERROR_FRAGMENTATION: return E_ERROR_FRAGMENTATION~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -3289,7 +3289,7 @@ fn void? bindBufferMemory2 (Device device, uint bindInfoCount, BindBufferMemoryI
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -3299,7 +3299,7 @@ fn void? bindBufferMemory2KHR (Device device, uint bindInfoCount, BindBufferMemo
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
        case ERROR_OUT_OF_DEVICE_MEMORY: return E_ERROR_OUT_OF_DEVICE_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -4023,7 +4023,7 @@ fn void? createAccelerationStructureKHR (Device device, AccelerationStructureCre
   Result result = extensions.vkCreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -4443,7 +4443,7 @@ fn void? createMicromapEXT (Device device, MicromapCreateInfoEXT* pCreateInfo, A
   Result result = extensions.vkCreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
@@ -4968,7 +4968,7 @@ fn void? createAccelerationStructure2KHR (Device device, AccelerationStructureCr
   Result result = extensions.vkCreateAccelerationStructure2KHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
-       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR~;
+       case ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS: return E_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS~;
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
        case ERROR_UNKNOWN: return E_ERROR_UNKNOWN~;
   }
@@ -5040,12 +5040,12 @@ fn PipelineBinaryHandlesInfoKHR? PipelineBinaryCreateInfoKHR.build(&self, Device
    createPipelineBinariesKHR(device, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline? GraphicsPipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
+fn Pipeline? GraphicsPipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = (PipelineCache)null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createGraphicsPipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline? ComputePipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
+fn Pipeline? ComputePipelineCreateInfo.build(&self, Device device, PipelineCache pipelineCache = (PipelineCache)null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createComputePipelines(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;
@@ -5175,12 +5175,12 @@ fn RenderPass? RenderPassCreateInfo2.build(&self, Device device, AllocationCallb
    createRenderPass2(device, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline? RayTracingPipelineCreateInfoNV.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
+fn Pipeline? RayTracingPipelineCreateInfoNV.build(&self, Device device, PipelineCache pipelineCache = (PipelineCache)null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createRayTracingPipelinesNV(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline? RayTracingPipelineCreateInfoKHR.build(&self, Device device, DeferredOperationKHR deferredOperation = null, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
+fn Pipeline? RayTracingPipelineCreateInfoKHR.build(&self, Device device, DeferredOperationKHR deferredOperation = (DeferredOperationKHR)null, PipelineCache pipelineCache = (PipelineCache)null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;
@@ -5245,7 +5245,7 @@ fn ShaderEXT? ShaderCreateInfoEXT.build(&self, Device device, uint createInfoCou
    createShadersEXT(device, createInfoCount, self, pAllocator, &response)!;
    return response;
 }
-fn Pipeline? ExecutionGraphPipelineCreateInfoAMDX.build(&self, Device device, PipelineCache pipelineCache = null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
+fn Pipeline? ExecutionGraphPipelineCreateInfoAMDX.build(&self, Device device, PipelineCache pipelineCache = (PipelineCache)null, uint createInfoCount = 1, AllocationCallbacks* pAllocator = null) {
    Pipeline response;
    createExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, self, pAllocator, &response)!;
    return response;

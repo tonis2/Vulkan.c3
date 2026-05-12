@@ -66,7 +66,7 @@ fn void main(String[] args)
 
 	// Instance + surface (user responsibility)
 	vk::Instance instance = vk::createDefaultInstance(
-		{ .enable_validation = true, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
+		{ .enable_validation = true, .extensions = { ...DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
 	)!!;
 	defer instance.free();
 
@@ -87,7 +87,7 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: vertices.ptr,
-		data_size: Vertex.sizeof * vertices.len,
+		data_size: Vertex::size * vertices.len,
 	)!!;
 	defer vertex_buffer.free();
 
@@ -96,7 +96,7 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: indices.ptr,
-		data_size: ushort.sizeof * indices.len,
+		data_size: ushort::size * indices.len,
 	)!!;
 	defer index_buffer.free();
 
@@ -105,7 +105,7 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
 		data: &&cam.matrix(),
-		data_size: camera::UniformData.sizeof,
+		data_size: camera::UniformData::size,
 	)!!;
 	defer uniform_buffer.free();
 
@@ -122,13 +122,13 @@ fn void main(String[] args)
 		(vk::DescriptorSetLayoutBinding[]) {
 			{
 				.binding = 0,
-				.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				.descriptorCount = 1,
 				.stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
 			},
 			{
 				.binding = 1,
-				.descriptorType = vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+				.descriptorType = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				.descriptorCount = 1,
 				.stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT,
 			},
@@ -144,11 +144,11 @@ fn void main(String[] args)
 				{ .spirv = shader[..], .entry_name = "fragmentMain", .stage = vk::SHADER_STAGE_FRAGMENT_BIT },
 			},
 			.vertex_bindings = {
-				{ .binding = 0, .stride = Vertex.sizeof, .inputRate = vk::VERTEX_INPUT_RATE_VERTEX },
+				{ .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX },
 			},
 			.vertex_attributes = {
-				{ .binding = 0, .location = 0, .format = vk::FORMAT_R32G32B32_SFLOAT, .offset = Vertex.pos.offsetof },
-				{ .binding = 0, .location = 1, .format = vk::FORMAT_R32G32_SFLOAT, .offset = Vertex.uv.offsetof },
+				{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = Vertex.pos.offsetof },
+				{ .binding = 0, .location = 1, .format = FORMAT_R32G32_SFLOAT, .offset = Vertex.uv.offsetof },
 			},
 			.descriptor_layouts = { desc_layout },
 			.cull_mode = vk::CULL_MODE_FRONT_BIT,
@@ -163,19 +163,19 @@ fn void main(String[] args)
 	vk::DescriptorBufferInfo buffer_info = {
 		.buffer = uniform_buffer.buffer,
 		.offset = 0,
-		.range = camera::UniformData.sizeof,
+		.range = camera::UniformData::size,
 	};
 
 	vk::DescriptorImageInfo image_info = {
 		.sampler = texture.sampler,
 		.imageView = texture.view,
-		.imageLayout = vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+		.imageLayout = IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};
 
 	vk::WriteDescriptorSet[2] descriptor_writes = { vk::writeDescriptorSet().setDstBinding(0)
-		.setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
 		.setBufferInfo({ buffer_info }), vk::writeDescriptorSet().setDstBinding(1)
-			.setDescriptorType(vk::DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+			.setDescriptorType(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 			.setImageInfo({ image_info }), };
 
 	// Render loop
@@ -189,20 +189,20 @@ fn void main(String[] args)
 		{
 			Vec2 mouse_pos = win.getMousePos();
 			cam.rotate(mouse_pos.x - prev_mouse.x, mouse_pos.y - prev_mouse.y);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData.sizeof);
+			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
 			prev_mouse = mouse_pos;
 		}
 
 		if (event_map.is_pressed(MOUSE_SCROLL_UP))
 		{
 			cam.zoom(5);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData.sizeof);
+			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
 		}
 
 		if (event_map.is_pressed(MOUSE_SCROLL_DOWN))
 		{
 			cam.zoom(-5);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData.sizeof);
+			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
 		}
 
 		if (event_map.is_pressed(ESCAPE))
@@ -212,10 +212,10 @@ fn void main(String[] args)
 
 		vk::CommandBuffer cmd = ctx.beginFrame()!!;
 
-		vk::cmdBindPipeline(cmd, vk::PIPELINE_BIND_POINT_GRAPHICS, pipe.handle);
-		vk::cmdPushDescriptorSetKHR(cmd, vk::PIPELINE_BIND_POINT_GRAPHICS, pipe.layout, 0, 2, &descriptor_writes);
+		vk::cmdBindPipeline(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.handle);
+		vk::cmdPushDescriptorSetKHR(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.layout, 0, 2, &descriptor_writes);
 		vk::cmdBindVertexBuffers(cmd, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (vk::DeviceSize[]) { 0 });
-		vk::cmdBindIndexBuffer(cmd, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+		vk::cmdBindIndexBuffer(cmd, index_buffer.buffer, 0, INDEX_TYPE_UINT16);
 		vk::cmdDrawIndexed(cmd, (uint)indices.len, 1, 0, 0, 0);
 
 		ctx.endFrame()!!;
