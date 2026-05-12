@@ -23,17 +23,17 @@ alias HMonitor = void*;
 alias LpcWstr = void*;
 alias SecurityAttributes = void;
 
-alias PFN_vkAllocationFunction = fn void*(void*, usz, usz, SystemAllocationScope);
+alias PFN_vkAllocationFunction = fn void*(void*, sz, sz, SystemAllocationScope);
 alias PFN_vkFreeFunction = fn void(void*, void*);
-alias PFN_vkInternalAllocationNotification = fn void(void*, usz, InternalAllocationType, SystemAllocationScope);
-alias PFN_vkInternalFreeNotification = fn void(void*, usz, InternalAllocationType, SystemAllocationScope);
-alias PFN_vkReallocationFunction = fn void*(void*, void*, usz, usz, SystemAllocationScope);
+alias PFN_vkInternalAllocationNotification = fn void(void*, sz, InternalAllocationType, SystemAllocationScope);
+alias PFN_vkInternalFreeNotification = fn void(void*, sz, InternalAllocationType, SystemAllocationScope);
+alias PFN_vkReallocationFunction = fn void*(void*, void*, sz, sz, SystemAllocationScope);
 alias PFN_vkVoidFunction = fn void();
 alias PFN_vkDebugReportCallbackEXT = fn uint(
 	DebugReportFlagsEXT,
 	DebugReportObjectTypeEXT,
 	ulong,
-	usz,
+	sz,
 	int,
 	char,
 	char,
