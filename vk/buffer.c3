@@ -411,7 +411,7 @@ fn Memory? new_buffer(
 
     // Host-visible: direct memcpy
     if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT && data != null) {
-        response.upload(data, (ulong)data_size);
+        response.upload(data, data_size);
     }
 
     // Device-local with data: use staging buffer
@@ -506,9 +506,9 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
 }
 
 
-fn void Memory.upload(&self, void* data, ulong size, sz offset = 0) @dynamic
+fn void Memory.upload(&self, void* data, sz size, sz offset = 0) @dynamic
 {
-    mem::copy(self.page.mapped + self.page_offset + offset, data, (sz)size);
+    mem::copy(self.page.mapped + self.page_offset + offset, data, size);
 }
 
 fn char* Memory.data(&self) @dynamic
@@ -580,10 +580,10 @@ fn void? Memory.upload_from_stage(&self, void* data, sz data_size, DeviceQueue* 
     stage_buffer.free();
 }
 
-fn void Memory.push(&self, void* data, ulong size) @dynamic
+fn void Memory.push(&self, void* data, sz size) @dynamic
 {
-    mem::copy(self.page.mapped + self.page_offset + self.used_size, data, (sz)size);
-    self.used_size += (sz)size;
+    mem::copy(self.page.mapped + self.page_offset + self.used_size, data, size);
+    self.used_size += size;
 }
 
 // Mark this allocation for deferred deletion

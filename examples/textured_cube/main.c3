@@ -66,7 +66,7 @@ fn void main(String[] args)
 
 	// Instance + surface (user responsibility)
 	vk::Instance instance = vk::createDefaultInstance(
-		{ .enable_validation = true, .extensions = { ...DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
+		{ .enable_validation = true, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
 	)!!;
 	defer instance.free();
 
@@ -147,8 +147,8 @@ fn void main(String[] args)
 				{ .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX },
 			},
 			.vertex_attributes = {
-				{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = Vertex.pos.offsetof },
-				{ .binding = 0, .location = 1, .format = FORMAT_R32G32_SFLOAT, .offset = Vertex.uv.offsetof },
+				{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = 0 },
+				{ .binding = 0, .location = 1, .format = FORMAT_R32G32_SFLOAT, .offset = Vec3::size },
 			},
 			.descriptor_layouts = { desc_layout },
 			.cull_mode = vk::CULL_MODE_FRONT_BIT,
