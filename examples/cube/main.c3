@@ -142,22 +142,22 @@ fn void main(String[] args)
 
 	// --- Logical device ---
 	PhysicalDeviceVulkan13Features vulkan13Features = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
 		.pNext = null,
 	};
 
 	PhysicalDeviceVulkan12Features vulkan12Features = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
 		.pNext = &vulkan13Features,
 	};
 
 	PhysicalDeviceVulkan11Features vulkan11Features = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
 		.pNext = &vulkan12Features,
 	};
 
 	PhysicalDeviceFeatures2 device_features = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
 		.pNext = &vulkan11Features,
 	};
 
@@ -181,11 +181,11 @@ fn void main(String[] args)
 
 	// --- Render pass ---
 	AttachmentReference[] colorAttachments = {
-		{ .attachment = 0, .layout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL }
+		{ .attachment = 0, .layout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL }
 	};
 
 	SubpassDescription subpass = {
-		.pipelineBindPoint = vk::PIPELINE_BIND_POINT_GRAPHICS,
+		.pipelineBindPoint = PIPELINE_BIND_POINT_GRAPHICS,
 		.colorAttachmentCount = colorAttachments.len,
 		.pColorAttachments = colorAttachments.ptr
 	};
@@ -194,14 +194,14 @@ fn void main(String[] args)
 		.setAttachments(
 			{
 				{
-					.format = vk::FORMAT_B8G8R8A8_UNORM,
+					.format = FORMAT_B8G8R8A8_UNORM,
 					.samples = vk::SAMPLE_COUNT_1_BIT,
-					.initialLayout = vk::IMAGE_LAYOUT_UNDEFINED,
-					.finalLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
-					.loadOp = vk::ATTACHMENT_LOAD_OP_CLEAR,
-					.storeOp = vk::ATTACHMENT_STORE_OP_STORE,
-					.stencilLoadOp = vk::ATTACHMENT_LOAD_OP_DONT_CARE,
-					.stencilStoreOp = vk::ATTACHMENT_STORE_OP_DONT_CARE
+					.initialLayout = IMAGE_LAYOUT_UNDEFINED,
+					.finalLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR,
+					.loadOp = ATTACHMENT_LOAD_OP_CLEAR,
+					.storeOp = ATTACHMENT_STORE_OP_STORE,
+					.stencilLoadOp = ATTACHMENT_LOAD_OP_DONT_CARE,
+					.stencilStoreOp = ATTACHMENT_STORE_OP_DONT_CARE
 				}
 			}
 		)
@@ -229,7 +229,7 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: vertices.ptr,
-		data_size: Vertex.sizeof * vertices.len
+		data_size: Vertex::size * vertices.len
 	)!!;
 
 	Memory index_buffer = vk::new_buffer(
@@ -237,7 +237,7 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: indices.ptr,
-		data_size: indices.len * ushort.sizeof
+		data_size: indices.len * ushort::size
 	)!!;
 
 	Memory uniform_buffer = vk::new_buffer(
@@ -245,17 +245,17 @@ fn void main(String[] args)
 		usage: vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 		properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
 		data: &&camera.matrix(),
-		data_size: UniformData.sizeof
+		data_size: UniformData::size
 	)!!;
 
 	// --- Descriptors ---
 	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
-		.setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+		.setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
 		.setBindings(
 			{
 				{
 					.binding = 0,
-					.descriptorType = vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+					.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 					.descriptorCount = 1,
 					.stageFlags = vk::SHADER_STAGE_VERTEX_BIT
 				}
@@ -264,8 +264,8 @@ fn void main(String[] args)
 		.build(device)!!;
 
 	WriteDescriptorSet[] descriptorSets = { vk::writeDescriptorSet()
-		.setDescriptorType(vk::DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-		.setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData.sizeof, }, }) };
+		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		.setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData::size, }, }) };
 
 	// --- Shader & pipeline ---
 	ShaderModule shader_module = vk::loadShaderModule(device, shader[..])!!;
@@ -282,12 +282,12 @@ fn void main(String[] args)
 			.setName("fragmentMain") };
 
 	VertexInputBindingDescription[1] binding_descriptions = {
-		{ .binding = 0, .stride = Vertex.sizeof, .inputRate = vk::VERTEX_INPUT_RATE_VERTEX, }
+		{ .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX, }
 	};
 
 	VertexInputAttributeDescription[2] attribute_descriptions = {
-		{ .binding = 0, .location = 0, .format = vk::FORMAT_R32G32B32_SFLOAT, .offset = Vertex.pos.offsetof },
-		{ .binding = 0, .location = 1, .format = vk::FORMAT_R32G32B32_SFLOAT, .offset = Vertex.color.offsetof }
+		{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = 0 },
+		{ .binding = 0, .location = 1, .format = FORMAT_R32G32B32_SFLOAT, .offset = Vec3::size }
 	};
 
 	PipelineVertexInputStateCreateInfo vertex_input_state = vk::pipelineVertexInputStateCreateInfo()
@@ -298,7 +298,7 @@ fn void main(String[] args)
 	PipelineRasterizationStateCreateInfo rasterization_state = vk::defaultRasterizationState()
 		.setCullMode(vk::CULL_MODE_FRONT_BIT);
 	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo()
-		.setTopology(vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+		.setTopology(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 
 	PipelineMultisampleStateCreateInfo multisample_state    = vk::defaultMultisampleState();
 	PipelineDepthStencilStateCreateInfo depth_stencil_state = vk::defaultDepthStencilState();
@@ -306,7 +306,7 @@ fn void main(String[] args)
 	PipelineColorBlendAttachmentState[1] blend_attachments = { vk::defaultColorBlendAttachment() };
 	PipelineColorBlendStateCreateInfo color_blend_state    = vk::defaultColorBlendState(blend_attachments[..]);
 
-	DynamicState[2] dynamic_states = { vk::DYNAMIC_STATE_VIEWPORT, vk::DYNAMIC_STATE_LINE_WIDTH };
+	DynamicState[2] dynamic_states = { DYNAMIC_STATE_VIEWPORT, DYNAMIC_STATE_LINE_WIDTH };
 
 	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
 		.setDynamicStates(dynamic_states[..]);
@@ -377,7 +377,7 @@ fn void main(String[] args)
 		vk::resetCommandBuffer(command_buffer, 0)!!;
 		vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!!;
 
-		vk::cmdBeginRenderPass(command_buffer, &render_pass_info, vk::SUBPASS_CONTENTS_INLINE);
+		vk::cmdBeginRenderPass(command_buffer, &render_pass_info, SUBPASS_CONTENTS_INLINE);
 		vk::cmdSetViewport(
 			command_buffer,
 			0,
@@ -386,10 +386,10 @@ fn void main(String[] args)
 		);
 		vk::cmdSetScissor(command_buffer, 0, 1, (Rect2D[]) { { .extent = sc.extent, .offset = { .x = 0, .y = 0 } } });
 
-		vk::cmdBindPipeline(command_buffer, vk::PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		vk::cmdBindPipeline(command_buffer, PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 		vk::cmdPushDescriptorSetKHR(
 			command_buffer,
-			vk::PIPELINE_BIND_POINT_GRAPHICS,
+			PIPELINE_BIND_POINT_GRAPHICS,
 			pipeline_layout,
 			0,
 			1,
@@ -397,7 +397,7 @@ fn void main(String[] args)
 		);
 
 		vk::cmdBindVertexBuffers(command_buffer, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (DeviceSize[]) { 0 });
-		vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, vk::INDEX_TYPE_UINT16);
+		vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, INDEX_TYPE_UINT16);
 		vk::cmdDrawIndexed(command_buffer, indices.len, 1, 0, 0, 0);
 		vk::cmdEndRenderPass(command_buffer);
 
