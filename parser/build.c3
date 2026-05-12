@@ -22,7 +22,9 @@ fn void main(String[] args) {
     defer allocator.free();
 
     TypeMap type_values;
-    
+    TypeMap enum_alias_to_canonical;
+    enum_alias_to_canonical.init_with_key_values(&allocator);
+
     type_values.init_with_key_values(
         &allocator,
         "uint16_t", "uint",
@@ -298,15 +300,8 @@ fn void main(String[] args) {
                                 };
 
                                 if (try alias_name) {
-                                    foreach (node: enum_parent.values) {
-                                        if (node.name == alias_name) {
-                                            if (!enum_parent.contains_value(name)) {
-                                                VkValue alias_node = node;
-                                                alias_node.name = name;
-                                                enum_parent.values.push(alias_node);
-                                            }
-                                        }
-                                    }
+                                    enum_alias_to_canonical.set(name, alias_name);
+                                    continue;
                                 }
 
                                 String vk_value = value ?? "";
@@ -375,18 +370,29 @@ fn void main(String[] args) {
         String enum_type = "uint";
         if (entry.name == "VkResult" || entry.negative) enum_type = "int";
         if (entry.bitwidth == "64") enum_type = "ulong";
-     
 
-        DString text_body = dstring::join(&allocator, {"typedef ", entry.name[2..], " = ", "inline ", enum_type, ";\n"}, "");
+        bool is_flag_bits = entry.name.contains("FlagBits");
+
+        DString text_body;
         defer text_body.free();
-        // Add values
-        foreach (value : entry.values) {
-            // if (entry.name == "VkResult" && value.value[0] == '-') io::printfn("%s", value.name);
-            value.name.convert_to_upper();
-            text_body.append(dstring::join(&allocator, {"const ", entry.name[2..]," ", value.name[3..]," = ", value.value,";\n"}, ""));
+
+        if (is_flag_bits) {
+            String type_name = entry.name[2..];
+            text_body.append(dstring::join(&allocator, {"typedef ", type_name, " = inline ", enum_type, ";\n"}, ""));
+            foreach (value : entry.values) {
+                value.name.convert_to_upper();
+                text_body.append(dstring::join(&allocator, {"const ", type_name, " ", value.name[3..], " = (", type_name, ")", value.value, ";\n"}, ""));
+            }
+            text_body.append_string("\n");
+        } else {
+            text_body.append(dstring::join(&allocator, {"constdef ", entry.name[2..], " : ", enum_type, "\n{\n"}, ""));
+            foreach (value : entry.values) {
+                value.name.convert_to_upper();
+                text_body.append(dstring::join(&allocator, {"    ", value.name[3..], " = ", value.value, ",\n"}, ""));
+            }
+            text_body.append_string("}\n\n");
         }
-        
-        text_body.append_string("\n");
+
         main_file.write(text_body.str_view())!!;
     }
 
@@ -668,7 +674,10 @@ fn void main(String[] args) {
             if (value.type == command_name || value.type == result_type) continue;
             String type = type_values[value.type] ?? value.type.remove_vk();
             String default_value = "";
-            if (value.optional) default_value = " = null";
+            if (value.optional) {
+                bool is_pointer = value.value.len > 0 || type.ends_with("*");
+                default_value = is_pointer ? " = null" : dstring::join(&allocator, {" = (", type, ")null"}, "").str_view();
+            }
             if (type == "uint") default_value = " = 1";
 
             create_commands.append(dstring::join(&allocator, {type, value.value, " ", value.name, default_value, i == entry.values.len() - 2 ? ") {\n" : ", "}, ""));
@@ -749,9 +758,15 @@ fn void main(String[] args) {
 
         if (entry.error_codes.len() > 0) {
             text_body.append("  switch(result) { \n");
+            HashMap{String, bool} seen_cases;
+            seen_cases.init_with_key_values(&allocator);
+            defer seen_cases.free();
             foreach (i, value : entry.error_codes) {
                 if (!value.starts_with("VK_ERROR")) continue;
-                text_body.append(dstring::join(&allocator, {"       case ", value[3..], ": return E_", value[3..], "~;\n"}, ""));
+                String canonical = enum_alias_to_canonical[value] ?? value;
+                if (seen_cases.has_key(canonical)) continue;
+                seen_cases.set(canonical, true);
+                text_body.append(dstring::join(&allocator, {"       case ", canonical[3..], ": return E_", canonical[3..], "~;\n"}, ""));
             }
             text_body.append("  }\n");
         } else {

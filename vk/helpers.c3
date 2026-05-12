@@ -33,9 +33,9 @@ fn CommandPool? Device.createCommandPool(self, CommandPoolCreateInfo* info = nul
 	if (info == null)
 	{
 		info = &&(CommandPoolCreateInfo) {
-			.sType = vk::STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+			.sType = STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 			.pNext = null,
-			.flags = vk::COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+			.flags = COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
 			.queueFamilyIndex = queue,
 		};
 	}
@@ -62,7 +62,7 @@ fn CommandBufferList? Device.createCommandBuffers(
 	};
 
 	allocateCommandBuffers(self, &command_buffer_info, command_buffers)!;
-	for (int i = 0; i < count; ++i)
+	for (uint i = 0; i < count; ++i)
 	{
 		buffers.push(command_buffers[i]);
 	}
@@ -117,7 +117,7 @@ macro void? Device.@single_time_command(self, DeviceQueue queue; @body(CommandBu
 		.commandBufferCount = 1,
 		.pCommandBuffers = &command_buffer
 	};
-	queueSubmit(queue.handle, 1, &submitInfo, null)!;
+	queueSubmit(queue.handle, 1, &submitInfo, (Fence)null)!;
 	queueWaitIdle(queue.handle)!;
 	freeCommandBuffers(self, command_pool, 1, &command_buffer);
 	destroyCommandPool(self, command_pool, null);
@@ -223,7 +223,7 @@ fn uint PhysicalDevice.getMemoryType(self, MemoryPropertyFlags properties, uint 
 	vk::PhysicalDeviceMemoryProperties memProperties;
 	vk::getPhysicalDeviceMemoryProperties(self, &memProperties);
 
-	for (int i = 0; i < memProperties.memoryTypeCount; ++i)
+	for (uint i = 0; i < memProperties.memoryTypeCount; ++i)
 	{
 		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
 		{
@@ -406,7 +406,7 @@ fn vk::ImageList? SwapchainKHR.getImages(self, Device device, uint count)
 fn uint SwapchainKHR.getNextImage(self, Device device, Semaphore wait_semaphore)
 {
 	uint index;
-	vk::acquireNextImageKHR(device, self, uint.max, wait_semaphore, null, &index)!!;
+	vk::acquireNextImageKHR(device, self, (uint)-1, wait_semaphore, (Fence)null, &index)!!;
 	return index;
 }
 
@@ -484,7 +484,7 @@ fn void SemaphoreList.release(self, vk::Device device)
 
 fn void? Fence.wait(&self, vk::Device device)
 {
-	vk::waitForFences(device, 1, self, vk::TRUE, uint.max)!;
+	vk::waitForFences(device, 1, self, vk::TRUE, (uint)-1)!;
 }
 
 fn void? Fence.reset(&self, vk::Device device)
@@ -636,16 +636,16 @@ struct PipelineConfig
 fn vk::ImageMemoryBarrier2 colorBeginBarrier(vk::Image image)
 {
 	return {
-		.sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+		.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 		.image = image,
-		.srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-		.dstStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+		.srcStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+		.dstStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
 		.srcAccessMask = 0,
-		.dstAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
-		.oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
-		.newLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+		.dstAccessMask = ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+		.oldLayout = IMAGE_LAYOUT_UNDEFINED,
+		.newLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
 		.subresourceRange = {
-			.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+			.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 			.baseMipLevel = 0,
 			.levelCount = 1,
 			.baseArrayLayer = 0,
@@ -657,16 +657,16 @@ fn vk::ImageMemoryBarrier2 colorBeginBarrier(vk::Image image)
 fn vk::ImageMemoryBarrier2 colorEndBarrier(vk::Image image)
 {
 	return {
-		.sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+		.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 		.image = image,
-		.srcStageMask = vk::PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-		.dstStageMask = vk::PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
-		.srcAccessMask = vk::ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+		.srcStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+		.dstStageMask = PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+		.srcAccessMask = ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
 		.dstAccessMask = 0,
-		.oldLayout = vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-		.newLayout = vk::IMAGE_LAYOUT_PRESENT_SRC_KHR,
+		.oldLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+		.newLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR,
 		.subresourceRange = {
-			.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+			.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 			.baseMipLevel = 0,
 			.levelCount = 1,
 			.baseArrayLayer = 0,
@@ -678,16 +678,16 @@ fn vk::ImageMemoryBarrier2 colorEndBarrier(vk::Image image)
 fn vk::ImageMemoryBarrier2 depthBarrier(vk::Image image)
 {
 	return {
-		.sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+		.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 		.image = image,
-		.srcStageMask = vk::PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
-		.dstStageMask = vk::PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | vk::PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
+		.srcStageMask = PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
+		.dstStageMask = PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
 		.srcAccessMask = 0,
-		.dstAccessMask = vk::ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
-		.oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
-		.newLayout = vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+		.dstAccessMask = ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+		.oldLayout = IMAGE_LAYOUT_UNDEFINED,
+		.newLayout = IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
 		.subresourceRange = {
-			.aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
+			.aspectMask = IMAGE_ASPECT_DEPTH_BIT,
 			.baseMipLevel = 0,
 			.levelCount = 1,
 			.baseArrayLayer = 0,
@@ -699,16 +699,16 @@ fn vk::ImageMemoryBarrier2 depthBarrier(vk::Image image)
 fn vk::ImageMemoryBarrier2 transferBarrier(vk::Image image, vk::ImageLayout old_layout, vk::ImageLayout new_layout)
 {
 	return {
-		.sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+		.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 		.image = image,
-		.srcStageMask = vk::PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
-		.dstStageMask = vk::PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
-		.srcAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
-		.dstAccessMask = vk::ACCESS_2_SHADER_READ_BIT,
+		.srcStageMask = PIPELINE_STAGE_2_ALL_TRANSFER_BIT,
+		.dstStageMask = PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT,
+		.srcAccessMask = ACCESS_2_TRANSFER_WRITE_BIT,
+		.dstAccessMask = ACCESS_2_SHADER_READ_BIT,
 		.oldLayout = old_layout,
 		.newLayout = new_layout,
 		.subresourceRange = {
-			.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+			.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 			.baseMipLevel = 0,
 			.levelCount = 1,
 			.baseArrayLayer = 0,
@@ -787,13 +787,13 @@ fn DeviceSelection? selectPhysicalDevice(
 			fn (
 				sz index,
 				QueueFamilyProperties props
-			) => (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
-				&& (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT == 0
+			) => ((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
+				&& ((QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT) == 0
 		);
 		if (transfer_index < 0)
 		{
 			transfer_index = queue_properties.find(
-				fn (sz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
+				fn (sz index, QueueFamilyProperties props) => ((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
 			);
 		}
 
@@ -841,7 +841,7 @@ fn Swapchain? Swapchain.init(
 	SurfaceKHR surface,
 	uint width,
 	uint height,
-	RenderPass render_pass = null,
+	RenderPass render_pass = (RenderPass)null,
 	Format preferred_format = FORMAT_B8G8R8A8_UNORM,
 	PresentModeKHR preferred_mode = PRESENT_MODE_FIFO_KHR
 )
@@ -944,7 +944,7 @@ fn Swapchain? Swapchain.recreate(
 	SurfaceKHR surface,
 	uint width,
 	uint height,
-	RenderPass render_pass = null
+	RenderPass render_pass = (RenderPass)null
 )
 {
 	device.waitIdle();
@@ -1132,12 +1132,12 @@ fn DebugUtilsMessengerEXT? setupDebugMessenger(Instance instance)
 {
 	return vk::debugUtilsMessengerCreateInfoEXT()
 		.setMessageSeverity(
-			vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-				| vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+			DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+				| DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
 		)
 		.setMessageType(
-			vk::DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | vk::DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-				| vk::DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+			DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+				| DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
 		)
 		.setPfnUserCallback((PFN_vkDebugUtilsMessengerCallbackEXT)&debugCallback)
 		.build(instance);
@@ -1151,19 +1151,19 @@ fn bool debugCallback(
 	void* userData
 )
 {
-	if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+	if (messageSeverity >= DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
 	{
 		io::printf("ERROR: %s \n", (ZString)data.pMessage);
 	}
-	else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	else if (messageSeverity >= DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		io::printf("WARNING: %s \n", (ZString)data.pMessage);
 	}
-	else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
+	else if (messageSeverity >= DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
 	{
 		io::printf("INFO: %s \n", (ZString)data.pMessage);
 	}
-	else if (messageSeverity >= vk::DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+	else if (messageSeverity >= DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
 	{
 		io::printf("%s \n", (ZString)data.pMessage);
 	}

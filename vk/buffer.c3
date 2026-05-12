@@ -31,7 +31,7 @@ interface Allocator
 
 faultdef BUFFER_TOO_SMALL, ALLOCATION_NOT_FOUND, ALLOCATION_HAS_NO_ROOM;
 
-fn sz alignUp(sz value, sz factor)  => value + factor - 1 - (value + factor - 1) % factor;
+macro alignUp(value, factor) => value + factor - 1 - (value + factor - 1) % factor;
 
 // Represents a free region in a memory page
 struct FreeBlock {
@@ -156,7 +156,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
     MemoryAllocateFlagsInfo flags_info = {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags};
 
     DeviceMemory memory = memoryAllocateInfo()
-	.setAllocationSize(page_size)
+	.setAllocationSize((DeviceSize)page_size)
 	.setNext(&flags_info)
 	.setMemoryTypeIndex(memory_type)
 	.build(self.device)!!;
@@ -173,7 +173,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
 
     // Map memory if host-visible
     if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
-        vk::mapMemory(self.device, memory, 0, page_size, 0, &new_page.mapped)!!;
+        vk::mapMemory(self.device, memory, 0, (DeviceSize)page_size, 0, &new_page.mapped)!!;
     }
 
     self.pages.push(new_page);
@@ -191,11 +191,11 @@ fn void MemoryAllocator.sync(&self) {
     foreach (mem : self.pending_deletes) {
         if (mem.buffer != null) {
             vk::destroyBuffer(self.device, mem.buffer, null);
-            mem.buffer = null;
+            mem.buffer = (Buffer)null;
         }
         if (mem.image != null) {
             vk::destroyImage(self.device, mem.image, null);
-            mem.image = null;
+            mem.image = (Image)null;
         }
 
         // Add the freed region to the page's free list
@@ -307,32 +307,32 @@ fn Memory? new_buffer(
 
     // For device-local buffers with data, we need transfer destination capability
     BufferUsageFlagBits actual_usage = usage;
-    if ((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT && data != null) {
-        actual_usage |= vk::BUFFER_USAGE_TRANSFER_DST_BIT;
+    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT && data != null) {
+        actual_usage |= BUFFER_USAGE_TRANSFER_DST_BIT;
     }
 
     vk::Buffer buffer = vk::bufferCreateInfo()
         .setUsage(actual_usage)
-        .setSharingMode(vk::SHARING_MODE_EXCLUSIVE)
-        .setSize(data_size)
+        .setSharingMode(SHARING_MODE_EXCLUSIVE)
+        .setSize((DeviceSize)data_size)
         .build(device)!!;
 
     MemoryRequirements mem_reqs = buffer.memoryRequirements(device);
 
-    if ((MemoryPropertyFlagBits)usage & vk::BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
+    if ((MemoryPropertyFlagBits)usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
         PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
-            .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+            .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
         };
 
         PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2()
             .setNext(&descriptorProperties)
             .build(pdevice);
 
-        mem_reqs.size = alignUp(data_size, descriptorProperties.descriptorBufferOffsetAlignment);
+        mem_reqs.size = (DeviceSize)alignUp((ulong)data_size, descriptorProperties.descriptorBufferOffsetAlignment);
         mem_reqs.alignment = descriptorProperties.descriptorBufferOffsetAlignment;
     }
 
-    sz size = alignUp(mem_reqs.size, mem_reqs.alignment);
+    sz size = (sz)alignUp((sz)mem_reqs.size, (sz)mem_reqs.alignment);
 
     // Find or create a page with the requested properties
     uint memory_type = pdevice.getMemoryType(properties, mem_reqs.memoryTypeBits);
@@ -343,10 +343,10 @@ fn Memory? new_buffer(
     // First, try to find a free block in an existing page
     foreach (p : allocator.pages) {
         if (p.memory_type == memory_type) {
-            FreeBlock* free_block = p.find_free_block(size, mem_reqs.alignment);
+            FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
             if (free_block != null) {
                 page = p;
-                offset = alignUp(free_block.offset, mem_reqs.alignment);
+                offset = alignUp(free_block.offset, (sz)mem_reqs.alignment);
                 sz padding = offset - free_block.offset;
                 sz total_used = size + padding;
 
@@ -368,10 +368,10 @@ fn Memory? new_buffer(
     // If no free block found, allocate from page end
     if (!used_free_block) {
         page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits);
-        offset = alignUp(page.used_size, mem_reqs.alignment);
+        offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
     }
 
-    vk::bindBufferMemory(device, buffer, page.memory, offset)!!;
+    vk::bindBufferMemory(device, buffer, page.memory, (DeviceSize)offset)!!;
     if (!used_free_block) {
         page.used_size = offset + size;
     } else {
@@ -384,9 +384,9 @@ fn Memory? new_buffer(
 
     vk::DeviceAddress address;
 
-    if ((MemoryPropertyFlagBits)usage & vk::BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+    if ((MemoryPropertyFlagBits)usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
         BufferDeviceAddressInfo address_info = {
-            .sType = vk::STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+            .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
             .buffer = buffer
         };
         address = vk::getBufferDeviceAddress(device, &address_info);
@@ -403,20 +403,20 @@ fn Memory? new_buffer(
         .usage = usage,
     };
 
-    if ((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
+    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
         response.type = GpuType.HOST_VISIBLE;
     } else {
         response.type = GpuType.DEVICE_ONLY;
     }
 
     // Host-visible: direct memcpy
-    if ((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT && data != null) {
-        response.upload(data, data_size);
+    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT && data != null) {
+        response.upload(data, (ulong)data_size);
     }
 
     // Device-local with data: use staging buffer
-    if ((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT &&
-        !((MemoryPropertyFlagBits)properties & vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
+    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_DEVICE_LOCAL_BIT &&
+        !((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
         data != null) {
 
         DeviceQueue transfer_queue = queue != null ? *queue : allocator.queue;
@@ -424,8 +424,8 @@ fn Memory? new_buffer(
         // Create staging buffer on host-visible memory
         Memory stage_buffer = new_buffer(
 			allocator,
-            usage: vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-            properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            usage: BUFFER_USAGE_TRANSFER_SRC_BIT,
+            properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
             data: data,
             data_size: data_size
         )!;
@@ -435,7 +435,7 @@ fn Memory? new_buffer(
                 {
                     .srcOffset = 0,
                     .dstOffset = 0,
-                    .size = data_size
+                    .size = (DeviceSize)data_size
                 }
             });
         }!;
@@ -452,7 +452,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
     vk::PhysicalDevice pdevice = allocator.pdevice;
 
     MemoryRequirements mem_reqs = image.getMemoryRequirements(device);
-    sz size = alignUp(mem_reqs.size, mem_reqs.alignment);
+    sz size = (sz)alignUp((sz)mem_reqs.size, (sz)mem_reqs.alignment);
 
     // Try to find a free block first
     uint memory_type = pdevice.getMemoryType(properties, mem_reqs.memoryTypeBits);
@@ -462,10 +462,10 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
 
     foreach (p : allocator.pages) {
         if (p.memory_type == memory_type) {
-            FreeBlock* free_block = p.find_free_block(size, mem_reqs.alignment);
+            FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
             if (free_block != null) {
                 page = p;
-                offset = alignUp(free_block.offset, mem_reqs.alignment);
+                offset = alignUp(free_block.offset, (sz)mem_reqs.alignment);
                 sz padding = offset - free_block.offset;
                 sz total_used = size + padding;
 
@@ -483,10 +483,10 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
 
     if (!used_free_block) {
         page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits);
-        offset = alignUp(page.used_size, mem_reqs.alignment);
+        offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
     }
 
-    vk::bindImageMemory(device, image, page.memory, offset)!;
+    vk::bindImageMemory(device, image, page.memory, (DeviceSize)offset)!;
     if (!used_free_block) {
         page.used_size = offset + size;
     } else if (offset + size > page.used_size) {
@@ -508,7 +508,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
 
 fn void Memory.upload(&self, void* data, ulong size, sz offset = 0) @dynamic
 {
-    mem::copy(self.page.mapped + self.page_offset + offset, data, size);
+    mem::copy(self.page.mapped + self.page_offset + offset, data, (sz)size);
 }
 
 fn char* Memory.data(&self) @dynamic
@@ -523,7 +523,7 @@ fn ulong Memory.get_address(&self) @dynamic
 
 fn sz Memory.total_size(&self) @dynamic => self.size;
 fn sz Memory.get_used_size(&self) @dynamic => self.used_size;
-fn uint Memory.get_type(&self) @dynamic => self.type.ordinal;
+fn uint Memory.get_type(&self) @dynamic => (uint)self.type.ordinal;
 fn void* Memory.get_buffer(&self) @dynamic => self.buffer;
 fn void Memory.set_used_size(&self, sz size) @dynamic => self.used_size = (uint)size;
 
@@ -539,15 +539,15 @@ fn void? stage_upload_at(MemoryAllocator* allocator, vk::Buffer dst, void* data,
 
     Memory stage = new_buffer(
         allocator,
-        usage: vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-        properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        usage: BUFFER_USAGE_TRANSFER_SRC_BIT,
+        properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
         data: data,
         data_size: data_size,
     )!;
 
     device.@single_time_command(queue: transfer_queue; CommandBuffer cmd) {
         vk::cmdCopyBuffer(cmd, stage.buffer, dst, 1, (BufferCopy[]){
-            { .srcOffset = 0, .dstOffset = dst_offset, .size = data_size }
+            { .srcOffset = 0, .dstOffset = (DeviceSize)dst_offset, .size = (DeviceSize)data_size }
         });
     }!;
 
@@ -561,8 +561,8 @@ fn void? Memory.upload_from_stage(&self, void* data, sz data_size, DeviceQueue* 
 
     Memory stage_buffer = new_buffer(
 		self.allocator,
-        usage: vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-        properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        usage: BUFFER_USAGE_TRANSFER_SRC_BIT,
+        properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
         data: data,
         data_size: data_size
     )!;
@@ -572,7 +572,7 @@ fn void? Memory.upload_from_stage(&self, void* data, sz data_size, DeviceQueue* 
             {
                 .srcOffset = 0,
                 .dstOffset = 0,
-                .size = data_size
+                .size = (DeviceSize)data_size
             }
         });
     }!;
@@ -582,8 +582,8 @@ fn void? Memory.upload_from_stage(&self, void* data, sz data_size, DeviceQueue* 
 
 fn void Memory.push(&self, void* data, ulong size) @dynamic
 {
-    mem::copy(self.page.mapped + self.page_offset + self.used_size, data, size);
-    self.used_size += size;
+    mem::copy(self.page.mapped + self.page_offset + self.used_size, data, (sz)size);
+    self.used_size += (sz)size;
 }
 
 // Mark this allocation for deferred deletion
@@ -605,12 +605,12 @@ fn void Memory.free(&self) @dynamic
 {
     if (self.buffer != null) {
         vk::destroyBuffer(self.allocator.device, self.buffer, null);
-        self.buffer = null;
+        self.buffer = (Buffer)null;
     }
 
     if (self.image != null) {
         vk::destroyImage(self.allocator.device, self.image, null);
-        self.image = null;
+        self.image = (Image)null;
     }
 
     // Add freed region to page's free list for reuse
@@ -634,7 +634,7 @@ fn MemoryRequirements Buffer.memoryRequirements(self, Device device) {
 
 fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, PhysicalDevice device) {
     PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
-        .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
+        .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
     };
 
     PhysicalDeviceProperties2 device_properties = vk::physicalDeviceProperties2()
@@ -642,7 +642,7 @@ fn MemoryRequirements BufferCreateInfo.descriptorMemoryRequirements(self, Physic
       .build(device);
 
     return {
-        .size = alignUp(self.size, descriptorProperties.descriptorBufferOffsetAlignment),
+        .size = (sz)alignUp(self.size, descriptorProperties.descriptorBufferOffsetAlignment),
         .alignment = descriptorProperties.descriptorBufferOffsetAlignment
     };
 }
@@ -680,7 +680,7 @@ struct Region {
     BufferManager* bm;
 }
 
-fn ulong Region.get_address(&self) => self.bm.buffers[self.buffer].get_address() + self.offset;
+fn ulong Region.get_address(&self) => self.bm.buffers[self.buffer].get_address() + (ulong)self.offset;
 fn void* Region.get_ref(&self) => (void*)(self.bm.buffers[self.buffer].data() + self.offset);
 fn char* Region.data(&self) => self.bm.buffers[self.buffer].data() + self.offset;
 fn void Region.reset(&self) => self.used_size = 0;
@@ -781,7 +781,7 @@ fn Region? BufferManager.alloc(&self, uint buffer_index, uint size, void* data =
     };
 
     if (data != null) {
-        if (buffer.get_type() == GpuType.DEVICE_ONLY) {
+        if (buffer.get_type() == (uint)GpuType.DEVICE_ONLY.ordinal) {
             self.uploadFN(buffer, data, size, region.offset);
         } else {
             buffer.upload(data, size, region.offset);
@@ -857,7 +857,7 @@ fn void LocalBuffer.mark_deleted(&self) @dynamic {
 fn bool LocalBuffer.is_deleted(&self) @dynamic => self.deleted;
 
 fn char* LocalBuffer.data(&self) @dynamic => self.mapped;
-fn sz LocalBuffer.total_size(&self) @dynamic => uint.max;
+fn sz LocalBuffer.total_size(&self) @dynamic => (uint)-1;
 fn sz LocalBuffer.get_used_size(&self) @dynamic => self.used_size;
 fn ulong LocalBuffer.get_address(&self) @dynamic => 0;
 fn uint LocalBuffer.get_type(&self) @dynamic => 2;

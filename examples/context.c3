@@ -79,7 +79,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 	ctx.surface = surface;
 
 	uint frames          = config.frames_in_flight != 0 ? config.frames_in_flight : 2;
-	vk::Format preferred = config.preferred_format != 0 ? config.preferred_format : vk::FORMAT_B8G8R8A8_UNORM;
+	vk::Format preferred = config.preferred_format != 0 ? config.preferred_format : FORMAT_B8G8R8A8_UNORM;
 
 	vk::ZStringList device_extensions;
 	defer device_extensions.free();
@@ -91,17 +91,17 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 	ctx.graphics_queue = { .index = selection.graphics_queue_index };
 	ctx.transfer_queue = { .index = selection.transfer_queue_index };
 
-	vk::PhysicalDeviceVulkan13Features v13 = { .sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES, };
+	vk::PhysicalDeviceVulkan13Features v13 = { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES, };
 	vk::PhysicalDeviceVulkan12Features v12 = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
 		.pNext = &v13,
 	};
 	vk::PhysicalDeviceVulkan11Features v11 = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
 		.pNext = &v12,
 	};
 	vk::PhysicalDeviceFeatures2 features2 = {
-		.sType = vk::STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
 		.pNext = &v11,
 	};
 	vk::getPhysicalDeviceFeatures2(ctx.physical_device, &features2);
@@ -168,12 +168,12 @@ fn void? Context.createDepthResources(&self, uint width, uint height)
 		device: self.physical_device
 	);
 
-	vk::Image depth_img = vk::imageCreateInfo().setImageType(vk::IMAGE_TYPE_2D).setFormat(self.depth_format)
+	vk::Image depth_img = vk::imageCreateInfo().setImageType(IMAGE_TYPE_2D).setFormat(self.depth_format)
 		.setExtent({ .width = width, .height = height, .depth = 1 })
 		.setMipLevels(1)
 		.setArrayLayers(1)
 		.setSamples(vk::SAMPLE_COUNT_1_BIT)
-		.setTiling(vk::IMAGE_TILING_OPTIMAL)
+		.setTiling(IMAGE_TILING_OPTIMAL)
 		.setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
 		.build(self.device)!;
 
@@ -181,7 +181,7 @@ fn void? Context.createDepthResources(&self, uint width, uint height)
 	vk::Memory mem = vk::create_image_buffer(depth_img, &self.allocator, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
 	self.depth_memory = mem::new(vk::Memory, mem);
 
-	self.depth_view = vk::imageViewCreateInfo().setViewType(vk::IMAGE_VIEW_TYPE_2D).setFormat(self.depth_format)
+	self.depth_view = vk::imageViewCreateInfo().setViewType(IMAGE_VIEW_TYPE_2D).setFormat(self.depth_format)
 		.setSubresourceRange(
 			{
 				.aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
@@ -235,9 +235,9 @@ fn vk::CommandBuffer? Context.beginFrame(&self, float[4] clear_color = { 0, 0, 0
 
 	vk::RenderingAttachmentInfo color_attachment = vk::renderingAttachmentInfo()
 		.setImageView(self.swapchain.views[next_image])
-		.setImageLayout(vk::IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-		.setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-		.setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+		.setImageLayout(IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+		.setStoreOp(ATTACHMENT_STORE_OP_STORE)
+		.setLoadOp(ATTACHMENT_LOAD_OP_CLEAR)
 		.setClearValue({ .color = { .float32 = clear_color } });
 
 	vk::RenderingInfo rendering = vk::renderingInfo().setRenderArea({ .extent = self.swapchain.extent })
@@ -251,9 +251,9 @@ fn vk::CommandBuffer? Context.beginFrame(&self, float[4] clear_color = { 0, 0, 0
 		vk::cmdPipelineBarrier2(cmd, &&vk::dependencyInfo().setImageMemoryBarriers({ depth_begin }));
 
 		depth_attachment = vk::renderingAttachmentInfo().setImageView(self.depth_view)
-			.setImageLayout(vk::IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-			.setStoreOp(vk::ATTACHMENT_STORE_OP_STORE)
-			.setLoadOp(vk::ATTACHMENT_LOAD_OP_CLEAR)
+			.setImageLayout(IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+			.setStoreOp(ATTACHMENT_STORE_OP_STORE)
+			.setLoadOp(ATTACHMENT_LOAD_OP_CLEAR)
 			.setClearValue({ .depthStencil = { 1.0, 0 } });
 		rendering = rendering.setDepthAttachment(&depth_attachment);
 	}
@@ -312,19 +312,19 @@ fn void? Context.resize(&self, uint width, uint height)
 
 fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint height, vk::TextureConfig config = { })
 {
-	vk::Format format = config.format != 0 ? config.format : vk::FORMAT_R8G8B8A8_SRGB;
-	vk::Filter filter = config.filter != 0 ? config.filter : vk::FILTER_LINEAR;
+	vk::Format format = config.format != 0 ? config.format : FORMAT_R8G8B8A8_SRGB;
+	vk::Filter filter = config.filter != 0 ? config.filter : FILTER_LINEAR;
 	vk::SamplerAddressMode address_mode = config.address_mode
-		!= 0 ? config.address_mode : vk::SAMPLER_ADDRESS_MODE_REPEAT;
+		!= 0 ? config.address_mode : SAMPLER_ADDRESS_MODE_REPEAT;
 
-	vk::Image image = vk::imageCreateInfo().setImageType(vk::IMAGE_TYPE_2D).setFormat(format)
+	vk::Image image = vk::imageCreateInfo().setImageType(IMAGE_TYPE_2D).setFormat(format)
 		.setExtent({ .width = width, .height = height, .depth = 1 })
 		.setMipLevels(1)
 		.setArrayLayers(1)
 		.setSamples(vk::SAMPLE_COUNT_1_BIT)
-		.setTiling(vk::IMAGE_TILING_OPTIMAL)
+		.setTiling(IMAGE_TILING_OPTIMAL)
 		.setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
-		.setInitialLayout(vk::IMAGE_LAYOUT_UNDEFINED)
+		.setInitialLayout(IMAGE_LAYOUT_UNDEFINED)
 		.build(self.device)!;
 
 	vk::Memory mem = vk::create_image_buffer(image, &self.allocator, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
@@ -340,14 +340,14 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 	self.device.@single_time_command(queue: self.graphics_queue ; vk::CommandBuffer cmd)
 	{
 		vk::ImageMemoryBarrier2 to_transfer = {
-			.sType = vk::STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+			.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 			.image = image,
 			.srcStageMask = vk::PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
-			.dstStageMask = vk::PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+			.dstStageMask = PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
 			.srcAccessMask = 0,
 			.dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
-			.oldLayout = vk::IMAGE_LAYOUT_UNDEFINED,
-			.newLayout = vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			.oldLayout = IMAGE_LAYOUT_UNDEFINED,
+			.newLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			.subresourceRange = {
 				.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
 				.baseMipLevel = 0,
@@ -371,25 +371,25 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 			.imageOffset = { 0, 0, 0 },
 			.imageExtent = { width, height, 1 },
 		};
-		vk::cmdCopyBufferToImage(cmd, stage.buffer, image, vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+		vk::cmdCopyBufferToImage(cmd, stage.buffer, image, IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
 		vk::ImageMemoryBarrier2 to_shader = vk::transferBarrier(
 			image,
-			vk::IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			vk::IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+			IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		);
 		vk::cmdPipelineBarrier2(cmd, &&vk::dependencyInfo().setImageMemoryBarriers({ to_shader }));
 	}!;
 
 	stage.free();
 
-	vk::ImageView view = vk::imageViewCreateInfo().setViewType(vk::IMAGE_VIEW_TYPE_2D).setFormat(format)
+	vk::ImageView view = vk::imageViewCreateInfo().setViewType(IMAGE_VIEW_TYPE_2D).setFormat(format)
 		.setComponents(
 			{
-				.r = vk::COMPONENT_SWIZZLE_IDENTITY,
-				.g = vk::COMPONENT_SWIZZLE_IDENTITY,
-				.b = vk::COMPONENT_SWIZZLE_IDENTITY,
-				.a = vk::COMPONENT_SWIZZLE_IDENTITY,
+				.r = COMPONENT_SWIZZLE_IDENTITY,
+				.g = COMPONENT_SWIZZLE_IDENTITY,
+				.b = COMPONENT_SWIZZLE_IDENTITY,
+				.a = COMPONENT_SWIZZLE_IDENTITY,
 			}
 		)
 		.setSubresourceRange(
@@ -408,10 +408,10 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		.setAddressModeU(address_mode)
 		.setAddressModeV(address_mode)
 		.setAddressModeW(address_mode)
-		.setMipmapMode(vk::SAMPLER_MIPMAP_MODE_LINEAR)
+		.setMipmapMode(SAMPLER_MIPMAP_MODE_LINEAR)
 		.setMinLod(0.0)
 		.setMaxLod(0.0)
-		.setBorderColor(vk::BORDER_COLOR_INT_OPAQUE_BLACK)
+		.setBorderColor(BORDER_COLOR_INT_OPAQUE_BLACK)
 		.build(self.device)!;
 
 	return (vk::Texture) {
@@ -432,9 +432,9 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 {
 	vk::Format color_format        = config.color_format != 0 ? config.color_format : self.swapchain.format.format;
-	vk::PrimitiveTopology topology = config.topology != 0 ? config.topology : vk::PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	vk::PrimitiveTopology topology = config.topology != 0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	vk::CullModeFlags cull_mode    = config.cull_mode != 0 ? config.cull_mode : vk::CULL_MODE_BACK_BIT;
-	vk::FrontFace front_face       = config.front_face != 0 ? config.front_face : vk::FRONT_FACE_COUNTER_CLOCKWISE;
+	vk::FrontFace front_face       = config.front_face != 0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
 
 	vk::ShaderModule[8] modules;
 	vk::PipelineShaderStageCreateInfo[8] stages;
@@ -486,7 +486,7 @@ fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 	if (config.depth_test) depth_stencil = depth_stencil.setDepthTestEnable(vk::TRUE);
 	if (config.depth_write) depth_stencil = depth_stencil.setDepthWriteEnable(vk::TRUE);
 
-	vk::DynamicState[2] dynamic_states = { vk::DYNAMIC_STATE_VIEWPORT, vk::DYNAMIC_STATE_SCISSOR };
+	vk::DynamicState[2] dynamic_states = { DYNAMIC_STATE_VIEWPORT, DYNAMIC_STATE_SCISSOR };
 	vk::PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
 		.setDynamicStates(dynamic_states[..]);
 
@@ -523,7 +523,7 @@ fn void GraphicsPipeline.free(&self, vk::Device device)
 
 fn vk::DescriptorSetLayout? createPushDescriptorLayout(vk::Device device, vk::DescriptorSetLayoutBinding[] bindings)
 {
-	return vk::descriptorSetLayoutCreateInfo().setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+	return vk::descriptorSetLayoutCreateInfo().setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
 		.setBindings(bindings)
 		.build(device);
 }
