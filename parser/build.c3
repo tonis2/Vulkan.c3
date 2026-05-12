@@ -33,8 +33,8 @@ fn void main(String[] args) {
         "int64_t", "long",
         "uint8_t", "uint",
         "int8_t", "int",
-        "size_t", "usz",
-        "isize_t", "isz",
+        "size_t", "sz",
+        "isize_t", "sz",
         "null", "void*",
         "HANDLE", "void*",
         "VkBool32", "uint",
@@ -84,9 +84,7 @@ fn void main(String[] args) {
     defer types_nodes.free();
 
     root_node.find(fn (node) => node.name == "feature" || node.name == "extension", &feature_nodes);
-
     root_node.find(fn (node) => (node.attributes.has_key("category") || node.attributes.has_key("type")), &types_nodes);
-
     root_node.find(fn (node) {
         if (node.name == "command") {
             if (node.attributes.has_key("api") && node.attributes["api"]!! == "vulkansc") {
@@ -617,7 +615,7 @@ fn void main(String[] args) {
             }
             // Pick the command with fewest params as the canonical builder for each CreateInfo type
             if (command_name.len > 0) {
-                if (!builder_types.has_key(command_name) || entry.values.len() < builder_types[command_name]!!) {
+                if (!builder_types.has_key(command_name) || entry.values.len() < (sz)builder_types[command_name]!!) {
                     builder_types.set(command_name, (usz)entry.values.len());
                 }
             }

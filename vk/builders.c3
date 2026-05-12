@@ -572,7 +572,7 @@ fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setFlags(&self, ShaderModuleCre
    self.flags = flags;
    return *self;
 }
-fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCodeSize(&self, usz codeSize) {
+fn ShaderModuleCreateInfo ShaderModuleCreateInfo.setCodeSize(&self, sz codeSize) {
    self.codeSize = codeSize;
    return *self;
 }
@@ -1065,7 +1065,7 @@ fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setFlags(&self, PipelineCache
    self.flags = flags;
    return *self;
 }
-fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(&self, usz initialDataSize) {
+fn PipelineCacheCreateInfo PipelineCacheCreateInfo.setInitialDataSize(&self, sz initialDataSize) {
    self.initialDataSize = initialDataSize;
    return *self;
 }
@@ -1844,7 +1844,7 @@ fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTagName(&self, ulo
    self.tagName = tagName;
    return *self;
 }
-fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTagSize(&self, usz tagSize) {
+fn DebugMarkerObjectTagInfoEXT DebugMarkerObjectTagInfoEXT.setTagSize(&self, sz tagSize) {
    self.tagSize = tagSize;
    return *self;
 }
@@ -4669,7 +4669,7 @@ fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setNext(&self, vo
    self.pNext = pNext;
    return *self;
 }
-fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setDynamicMetadataSize(&self, usz dynamicMetadataSize) {
+fn HdrVividDynamicMetadataHUAWEI HdrVividDynamicMetadataHUAWEI.setDynamicMetadataSize(&self, sz dynamicMetadataSize) {
    self.dynamicMetadataSize = dynamicMetadataSize;
    return *self;
 }
@@ -5914,7 +5914,7 @@ fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setFlags(&self, Val
    self.flags = flags;
    return *self;
 }
-fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setInitialDataSize(&self, usz initialDataSize) {
+fn ValidationCacheCreateInfoEXT ValidationCacheCreateInfoEXT.setInitialDataSize(&self, sz initialDataSize) {
    self.initialDataSize = initialDataSize;
    return *self;
 }
@@ -6698,7 +6698,7 @@ fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagName(&self, ulong
    self.tagName = tagName;
    return *self;
 }
-fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagSize(&self, usz tagSize) {
+fn DebugUtilsObjectTagInfoEXT DebugUtilsObjectTagInfoEXT.setTagSize(&self, sz tagSize) {
    self.tagSize = tagSize;
    return *self;
 }
@@ -10857,7 +10857,7 @@ fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalReprese
    self.isText = isText;
    return *self;
 }
-fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setDataSize(&self, usz dataSize) {
+fn PipelineExecutableInternalRepresentationKHR PipelineExecutableInternalRepresentationKHR.setDataSize(&self, sz dataSize) {
    self.dataSize = dataSize;
    return *self;
 }
@@ -17011,7 +17011,7 @@ fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setDataSize(&self, usz dataSize) {
+fn CuModuleCreateInfoNVX CuModuleCreateInfoNVX.setDataSize(&self, sz dataSize) {
    self.dataSize = dataSize;
    return *self;
 }
@@ -17078,7 +17078,7 @@ fn CuLaunchInfoNVX CuLaunchInfoNVX.setSharedMemBytes(&self, uint sharedMemBytes)
    self.sharedMemBytes = sharedMemBytes;
    return *self;
 }
-fn CuLaunchInfoNVX CuLaunchInfoNVX.setParamCount(&self, usz paramCount) {
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setParamCount(&self, sz paramCount) {
    self.paramCount = paramCount;
    return *self;
 }
@@ -17086,7 +17086,7 @@ fn CuLaunchInfoNVX CuLaunchInfoNVX.setParams(&self, void* pParams) {
    self.pParams = pParams;
    return *self;
 }
-fn CuLaunchInfoNVX CuLaunchInfoNVX.setExtraCount(&self, usz extraCount) {
+fn CuLaunchInfoNVX CuLaunchInfoNVX.setExtraCount(&self, sz extraCount) {
    self.extraCount = extraCount;
    return *self;
 }
@@ -17156,79 +17156,79 @@ fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPro
    self.maxEmbeddedImmutableSamplers = maxEmbeddedImmutableSamplers;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setBufferCaptureReplayDescriptorDataSize(&self, usz bufferCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setBufferCaptureReplayDescriptorDataSize(&self, sz bufferCaptureReplayDescriptorDataSize) {
    self.bufferCaptureReplayDescriptorDataSize = bufferCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageCaptureReplayDescriptorDataSize(&self, usz imageCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageCaptureReplayDescriptorDataSize(&self, sz imageCaptureReplayDescriptorDataSize) {
    self.imageCaptureReplayDescriptorDataSize = imageCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageViewCaptureReplayDescriptorDataSize(&self, usz imageViewCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setImageViewCaptureReplayDescriptorDataSize(&self, sz imageViewCaptureReplayDescriptorDataSize) {
    self.imageViewCaptureReplayDescriptorDataSize = imageViewCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerCaptureReplayDescriptorDataSize(&self, usz samplerCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerCaptureReplayDescriptorDataSize(&self, sz samplerCaptureReplayDescriptorDataSize) {
    self.samplerCaptureReplayDescriptorDataSize = samplerCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureCaptureReplayDescriptorDataSize(&self, usz accelerationStructureCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureCaptureReplayDescriptorDataSize(&self, sz accelerationStructureCaptureReplayDescriptorDataSize) {
    self.accelerationStructureCaptureReplayDescriptorDataSize = accelerationStructureCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerDescriptorSize(&self, usz samplerDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSamplerDescriptorSize(&self, sz samplerDescriptorSize) {
    self.samplerDescriptorSize = samplerDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setCombinedImageSamplerDescriptorSize(&self, usz combinedImageSamplerDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setCombinedImageSamplerDescriptorSize(&self, sz combinedImageSamplerDescriptorSize) {
    self.combinedImageSamplerDescriptorSize = combinedImageSamplerDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSampledImageDescriptorSize(&self, usz sampledImageDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setSampledImageDescriptorSize(&self, sz sampledImageDescriptorSize) {
    self.sampledImageDescriptorSize = sampledImageDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageImageDescriptorSize(&self, usz storageImageDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageImageDescriptorSize(&self, sz storageImageDescriptorSize) {
    self.storageImageDescriptorSize = storageImageDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformTexelBufferDescriptorSize(&self, usz uniformTexelBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformTexelBufferDescriptorSize(&self, sz uniformTexelBufferDescriptorSize) {
    self.uniformTexelBufferDescriptorSize = uniformTexelBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformTexelBufferDescriptorSize(&self, usz robustUniformTexelBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformTexelBufferDescriptorSize(&self, sz robustUniformTexelBufferDescriptorSize) {
    self.robustUniformTexelBufferDescriptorSize = robustUniformTexelBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageTexelBufferDescriptorSize(&self, usz storageTexelBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageTexelBufferDescriptorSize(&self, sz storageTexelBufferDescriptorSize) {
    self.storageTexelBufferDescriptorSize = storageTexelBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageTexelBufferDescriptorSize(&self, usz robustStorageTexelBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageTexelBufferDescriptorSize(&self, sz robustStorageTexelBufferDescriptorSize) {
    self.robustStorageTexelBufferDescriptorSize = robustStorageTexelBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformBufferDescriptorSize(&self, usz uniformBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setUniformBufferDescriptorSize(&self, sz uniformBufferDescriptorSize) {
    self.uniformBufferDescriptorSize = uniformBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformBufferDescriptorSize(&self, usz robustUniformBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustUniformBufferDescriptorSize(&self, sz robustUniformBufferDescriptorSize) {
    self.robustUniformBufferDescriptorSize = robustUniformBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageBufferDescriptorSize(&self, usz storageBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setStorageBufferDescriptorSize(&self, sz storageBufferDescriptorSize) {
    self.storageBufferDescriptorSize = storageBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageBufferDescriptorSize(&self, usz robustStorageBufferDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setRobustStorageBufferDescriptorSize(&self, sz robustStorageBufferDescriptorSize) {
    self.robustStorageBufferDescriptorSize = robustStorageBufferDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setInputAttachmentDescriptorSize(&self, usz inputAttachmentDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setInputAttachmentDescriptorSize(&self, sz inputAttachmentDescriptorSize) {
    self.inputAttachmentDescriptorSize = inputAttachmentDescriptorSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureDescriptorSize(&self, usz accelerationStructureDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferPropertiesEXT PhysicalDeviceDescriptorBufferPropertiesEXT.setAccelerationStructureDescriptorSize(&self, sz accelerationStructureDescriptorSize) {
    self.accelerationStructureDescriptorSize = accelerationStructureDescriptorSize;
    return *self;
 }
@@ -17257,7 +17257,7 @@ fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescripto
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT.setCombinedImageSamplerDensityMapDescriptorSize(&self, usz combinedImageSamplerDensityMapDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT.setCombinedImageSamplerDensityMapDescriptorSize(&self, sz combinedImageSamplerDensityMapDescriptorSize) {
    self.combinedImageSamplerDensityMapDescriptorSize = combinedImageSamplerDensityMapDescriptorSize;
    return *self;
 }
@@ -17778,7 +17778,7 @@ fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setDataSize(&self, usz dataSize) {
+fn CudaModuleCreateInfoNV CudaModuleCreateInfoNV.setDataSize(&self, sz dataSize) {
    self.dataSize = dataSize;
    return *self;
 }
@@ -17836,7 +17836,7 @@ fn CudaLaunchInfoNV CudaLaunchInfoNV.setSharedMemBytes(&self, uint sharedMemByte
    self.sharedMemBytes = sharedMemBytes;
    return *self;
 }
-fn CudaLaunchInfoNV CudaLaunchInfoNV.setParamCount(&self, usz paramCount) {
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setParamCount(&self, sz paramCount) {
    self.paramCount = paramCount;
    return *self;
 }
@@ -17844,7 +17844,7 @@ fn CudaLaunchInfoNV CudaLaunchInfoNV.setParams(&self, void* pParams) {
    self.pParams = pParams;
    return *self;
 }
-fn CudaLaunchInfoNV CudaLaunchInfoNV.setExtraCount(&self, usz extraCount) {
+fn CudaLaunchInfoNV CudaLaunchInfoNV.setExtraCount(&self, sz extraCount) {
    self.extraCount = extraCount;
    return *self;
 }
@@ -18448,7 +18448,7 @@ fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVAL
    self.pNext = pNext;
    return *self;
 }
-fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVALVE.setDescriptorOffset(&self, usz descriptorOffset) {
+fn DescriptorSetLayoutHostMappingInfoVALVE DescriptorSetLayoutHostMappingInfoVALVE.setDescriptorOffset(&self, sz descriptorOffset) {
    self.descriptorOffset = descriptorOffset;
    return *self;
 }
@@ -19849,7 +19849,7 @@ fn FrameBoundaryEXT FrameBoundaryEXT.setTagName(&self, ulong tagName) {
    self.tagName = tagName;
    return *self;
 }
-fn FrameBoundaryEXT FrameBoundaryEXT.setTagSize(&self, usz tagSize) {
+fn FrameBoundaryEXT FrameBoundaryEXT.setTagSize(&self, sz tagSize) {
    self.tagSize = tagSize;
    return *self;
 }
@@ -20443,7 +20443,7 @@ fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCodeType(&self, ShaderCodeTypeEXT 
    self.codeType = codeType;
    return *self;
 }
-fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCodeSize(&self, usz codeSize) {
+fn ShaderCreateInfoEXT ShaderCreateInfoEXT.setCodeSize(&self, sz codeSize) {
    self.codeSize = codeSize;
    return *self;
 }
@@ -21987,7 +21987,7 @@ fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.set
    self.pNext = pNext;
    return *self;
 }
-fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcSize(&self, usz srcSize) {
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcSize(&self, sz srcSize) {
    self.srcSize = srcSize;
    return *self;
 }
@@ -21995,7 +21995,7 @@ fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.set
    self.srcData = srcData;
    return *self;
 }
-fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstSize(&self, usz* pDstSize) {
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstSize(&self, sz* pDstSize) {
    self.pDstSize = pDstSize;
    return *self;
 }
@@ -22023,7 +22023,7 @@ fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.set
    self.srcLayout = srcLayout;
    return *self;
 }
-fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcStride(&self, usz srcStride) {
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setSrcStride(&self, sz srcStride) {
    self.srcStride = srcStride;
    return *self;
 }
@@ -22031,7 +22031,7 @@ fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.set
    self.dstLayout = dstLayout;
    return *self;
 }
-fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstStride(&self, usz dstStride) {
+fn ConvertCooperativeVectorMatrixInfoNV ConvertCooperativeVectorMatrixInfoNV.setDstStride(&self, sz dstStride) {
    self.dstStride = dstStride;
    return *self;
 }
@@ -22601,15 +22601,15 @@ fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBuf
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorCaptureReplayDescriptorDataSize(&self, usz tensorCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorCaptureReplayDescriptorDataSize(&self, sz tensorCaptureReplayDescriptorDataSize) {
    self.tensorCaptureReplayDescriptorDataSize = tensorCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorViewCaptureReplayDescriptorDataSize(&self, usz tensorViewCaptureReplayDescriptorDataSize) {
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorViewCaptureReplayDescriptorDataSize(&self, sz tensorViewCaptureReplayDescriptorDataSize) {
    self.tensorViewCaptureReplayDescriptorDataSize = tensorViewCaptureReplayDescriptorDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorDescriptorSize(&self, usz tensorDescriptorSize) {
+fn PhysicalDeviceDescriptorBufferTensorPropertiesARM PhysicalDeviceDescriptorBufferTensorPropertiesARM.setTensorDescriptorSize(&self, sz tensorDescriptorSize) {
    self.tensorDescriptorSize = tensorDescriptorSize;
    return *self;
 }
@@ -22921,7 +22921,7 @@ fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultA
    self.isText = isText;
    return *self;
 }
-fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setDataSize(&self, usz dataSize) {
+fn DataGraphPipelinePropertyQueryResultARM DataGraphPipelinePropertyQueryResultARM.setDataSize(&self, sz dataSize) {
    self.dataSize = dataSize;
    return *self;
 }
@@ -23477,7 +23477,7 @@ fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropert
    self.maxPushDataSize = maxPushDataSize;
    return *self;
 }
-fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setImageCaptureReplayOpaqueDataSize(&self, usz imageCaptureReplayOpaqueDataSize) {
+fn PhysicalDeviceDescriptorHeapPropertiesEXT PhysicalDeviceDescriptorHeapPropertiesEXT.setImageCaptureReplayOpaqueDataSize(&self, sz imageCaptureReplayOpaqueDataSize) {
    self.imageCaptureReplayOpaqueDataSize = imageCaptureReplayOpaqueDataSize;
    return *self;
 }
@@ -23523,7 +23523,7 @@ fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapT
    self.tensorDescriptorAlignment = tensorDescriptorAlignment;
    return *self;
 }
-fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setTensorCaptureReplayOpaqueDataSize(&self, usz tensorCaptureReplayOpaqueDataSize) {
+fn PhysicalDeviceDescriptorHeapTensorPropertiesARM PhysicalDeviceDescriptorHeapTensorPropertiesARM.setTensorCaptureReplayOpaqueDataSize(&self, sz tensorCaptureReplayOpaqueDataSize) {
    self.tensorCaptureReplayOpaqueDataSize = tensorCaptureReplayOpaqueDataSize;
    return *self;
 }

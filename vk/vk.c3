@@ -5728,7 +5728,7 @@ struct ShaderModuleCreateInfo {
    StructureType sType;
    void* pNext;
    ShaderModuleCreateFlags flags;
-   usz codeSize;
+   sz codeSize;
    uint* pCode;
 }
 struct DescriptorSetLayoutBinding {
@@ -5767,12 +5767,12 @@ struct DescriptorSetAllocateInfo {
 struct SpecializationMapEntry {
    uint constantID;
    uint offset;
-   usz size;
+   sz size;
 }
 struct SpecializationInfo {
    uint mapEntryCount;
    SpecializationMapEntry* pMapEntries;
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct PipelineShaderStageCreateInfo {
@@ -5953,7 +5953,7 @@ struct PipelineCacheCreateInfo {
    StructureType sType;
    void* pNext;
    PipelineCacheCreateFlags flags;
-   usz initialDataSize;
+   sz initialDataSize;
    void* pInitialData;
 }
 struct PipelineCacheHeaderVersionOne {
@@ -5989,7 +5989,7 @@ struct PipelineBinaryHandlesInfoKHR {
    PipelineBinaryKHR* pPipelineBinaries;
 }
 struct PipelineBinaryDataKHR {
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct PipelineBinaryKeysAndDataKHR {
@@ -6287,7 +6287,7 @@ struct PhysicalDeviceLimits {
    uint[2] maxViewportDimensions;
    float[2] viewportBoundsRange;
    uint viewportSubPixelBits;
-   usz minMemoryMapAlignment;
+   sz minMemoryMapAlignment;
    DeviceSize minTexelBufferOffsetAlignment;
    DeviceSize minUniformBufferOffsetAlignment;
    DeviceSize minStorageBufferOffsetAlignment;
@@ -6571,7 +6571,7 @@ struct DebugMarkerObjectTagInfoEXT {
    DebugReportObjectTypeEXT objectType;
    ulong object;
    ulong tagName;
-   usz tagSize;
+   sz tagSize;
    void* pTag;
 }
 struct DebugMarkerMarkerInfoEXT {
@@ -7721,16 +7721,16 @@ struct DescriptorUpdateTemplateEntry {
    uint dstArrayElement;
    uint descriptorCount;
    DescriptorType descriptorType;
-   usz offset;
-   usz stride;
+   sz offset;
+   sz stride;
 }
 struct DescriptorUpdateTemplateEntryKHR {
    uint dstBinding;
    uint dstArrayElement;
    uint descriptorCount;
    DescriptorType descriptorType;
-   usz offset;
-   usz stride;
+   sz offset;
+   sz stride;
 }
 struct DescriptorUpdateTemplateCreateInfo {
    StructureType sType;
@@ -7892,7 +7892,7 @@ struct HdrMetadataEXT {
 struct HdrVividDynamicMetadataHUAWEI {
    StructureType sType;
    void* pNext;
-   usz dynamicMetadataSize;
+   sz dynamicMetadataSize;
    void* pDynamicMetadata;
 }
 struct DisplayNativeHdrSurfaceCapabilitiesAMD {
@@ -8513,7 +8513,7 @@ struct ValidationCacheCreateInfoEXT {
    StructureType sType;
    void* pNext;
    ValidationCacheCreateFlagsEXT flags;
-   usz initialDataSize;
+   sz initialDataSize;
    void* pInitialData;
 }
 struct ShaderModuleValidationCacheCreateInfoEXT {
@@ -8788,8 +8788,8 @@ struct ShaderResourceUsageAMD {
    uint numUsedVgprs;
    uint numUsedSgprs;
    uint ldsSizePerLocalWorkGroup;
-   usz ldsUsageSizeInBytes;
-   usz scratchMemUsageInBytes;
+   sz ldsUsageSizeInBytes;
+   sz scratchMemUsageInBytes;
 }
 struct ShaderStatisticsInfoAMD {
    ShaderStageFlags shaderStageMask;
@@ -8861,7 +8861,7 @@ struct DebugUtilsObjectTagInfoEXT {
    ObjectType objectType;
    ulong objectHandle;
    ulong tagName;
-   usz tagSize;
+   sz tagSize;
    void* pTag;
 }
 struct DebugUtilsLabelEXT {
@@ -10607,7 +10607,7 @@ struct PipelineExecutableInternalRepresentationKHR {
    char[MAX_DESCRIPTION_SIZE] name;
    char[MAX_DESCRIPTION_SIZE] description;
    uint isText;
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct PhysicalDeviceShaderDemoteToHelperInvocationFeatures {
@@ -13074,7 +13074,7 @@ struct PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR {
 struct CuModuleCreateInfoNVX {
    StructureType sType;
    void* pNext;
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct CuModuleTexturingModeCreateInfoNVX {
@@ -13099,9 +13099,9 @@ struct CuLaunchInfoNVX {
    uint blockDimY;
    uint blockDimZ;
    uint sharedMemBytes;
-   usz paramCount;
+   sz paramCount;
    void* pParams;
-   usz extraCount;
+   sz extraCount;
    void* pExtras;
 }
 struct PhysicalDeviceDescriptorBufferFeaturesEXT {
@@ -13124,25 +13124,25 @@ struct PhysicalDeviceDescriptorBufferPropertiesEXT {
    uint maxSamplerDescriptorBufferBindings;
    uint maxEmbeddedImmutableSamplerBindings;
    uint maxEmbeddedImmutableSamplers;
-   usz bufferCaptureReplayDescriptorDataSize;
-   usz imageCaptureReplayDescriptorDataSize;
-   usz imageViewCaptureReplayDescriptorDataSize;
-   usz samplerCaptureReplayDescriptorDataSize;
-   usz accelerationStructureCaptureReplayDescriptorDataSize;
-   usz samplerDescriptorSize;
-   usz combinedImageSamplerDescriptorSize;
-   usz sampledImageDescriptorSize;
-   usz storageImageDescriptorSize;
-   usz uniformTexelBufferDescriptorSize;
-   usz robustUniformTexelBufferDescriptorSize;
-   usz storageTexelBufferDescriptorSize;
-   usz robustStorageTexelBufferDescriptorSize;
-   usz uniformBufferDescriptorSize;
-   usz robustUniformBufferDescriptorSize;
-   usz storageBufferDescriptorSize;
-   usz robustStorageBufferDescriptorSize;
-   usz inputAttachmentDescriptorSize;
-   usz accelerationStructureDescriptorSize;
+   sz bufferCaptureReplayDescriptorDataSize;
+   sz imageCaptureReplayDescriptorDataSize;
+   sz imageViewCaptureReplayDescriptorDataSize;
+   sz samplerCaptureReplayDescriptorDataSize;
+   sz accelerationStructureCaptureReplayDescriptorDataSize;
+   sz samplerDescriptorSize;
+   sz combinedImageSamplerDescriptorSize;
+   sz sampledImageDescriptorSize;
+   sz storageImageDescriptorSize;
+   sz uniformTexelBufferDescriptorSize;
+   sz robustUniformTexelBufferDescriptorSize;
+   sz storageTexelBufferDescriptorSize;
+   sz robustStorageTexelBufferDescriptorSize;
+   sz uniformBufferDescriptorSize;
+   sz robustUniformBufferDescriptorSize;
+   sz storageBufferDescriptorSize;
+   sz robustStorageBufferDescriptorSize;
+   sz inputAttachmentDescriptorSize;
+   sz accelerationStructureDescriptorSize;
    DeviceSize maxSamplerDescriptorBufferRange;
    DeviceSize maxResourceDescriptorBufferRange;
    DeviceSize samplerDescriptorBufferAddressSpaceSize;
@@ -13152,7 +13152,7 @@ struct PhysicalDeviceDescriptorBufferPropertiesEXT {
 struct PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT {
    StructureType sType;
    void* pNext;
-   usz combinedImageSamplerDensityMapDescriptorSize;
+   sz combinedImageSamplerDensityMapDescriptorSize;
 }
 struct DescriptorAddressInfoEXT {
    StructureType sType;
@@ -13350,7 +13350,7 @@ struct SRTDataNV {
    float sy;
    float c;
    float pvy;
-   float sz;
+   float size;
    float pvz;
    float qx;
    float qy;
@@ -13392,7 +13392,7 @@ struct MemoryGetRemoteAddressInfoNV {
 struct CudaModuleCreateInfoNV {
    StructureType sType;
    void* pNext;
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct CudaFunctionCreateInfoNV {
@@ -13412,9 +13412,9 @@ struct CudaLaunchInfoNV {
    uint blockDimY;
    uint blockDimZ;
    uint sharedMemBytes;
-   usz paramCount;
+   sz paramCount;
    void* pParams;
-   usz extraCount;
+   sz extraCount;
    void* pExtras;
 }
 struct PhysicalDeviceRGBA10X6FormatsFeaturesEXT {
@@ -13664,7 +13664,7 @@ struct DescriptorSetBindingReferenceVALVE {
 struct DescriptorSetLayoutHostMappingInfoVALVE {
    StructureType sType;
    void* pNext;
-   usz descriptorOffset;
+   sz descriptorOffset;
    uint descriptorSize;
 }
 struct PhysicalDeviceNestedCommandBufferFeaturesEXT {
@@ -14332,7 +14332,7 @@ struct FrameBoundaryEXT {
    uint bufferCount;
    Buffer* pBuffers;
    ulong tagName;
-   usz tagSize;
+   sz tagSize;
    void* pTag;
 }
 struct PhysicalDeviceFrameBoundaryFeaturesEXT {
@@ -14596,7 +14596,7 @@ struct ShaderCreateInfoEXT {
    ShaderStageFlagBits stage;
    ShaderStageFlags nextStage;
    ShaderCodeTypeEXT codeType;
-   usz codeSize;
+   sz codeSize;
    void* pCode;
    char* pName;
    uint setLayoutCount;
@@ -15270,18 +15270,18 @@ struct PhysicalDeviceCooperativeVectorPropertiesNV {
 struct ConvertCooperativeVectorMatrixInfoNV {
    StructureType sType;
    void* pNext;
-   usz srcSize;
+   sz srcSize;
    DeviceOrHostAddressConstKHR srcData;
-   usz* pDstSize;
+   sz* pDstSize;
    DeviceOrHostAddressKHR dstData;
    ComponentTypeKHR srcComponentType;
    ComponentTypeKHR dstComponentType;
    uint numRows;
    uint numColumns;
    CooperativeVectorMatrixLayoutNV srcLayout;
-   usz srcStride;
+   sz srcStride;
    CooperativeVectorMatrixLayoutNV dstLayout;
-   usz dstStride;
+   sz dstStride;
 }
 struct PhysicalDeviceTileShadingFeaturesQCOM {
    StructureType sType;
@@ -15515,9 +15515,9 @@ struct MemoryDedicatedAllocateInfoTensorARM {
 struct PhysicalDeviceDescriptorBufferTensorPropertiesARM {
    StructureType sType;
    void* pNext;
-   usz tensorCaptureReplayDescriptorDataSize;
-   usz tensorViewCaptureReplayDescriptorDataSize;
-   usz tensorDescriptorSize;
+   sz tensorCaptureReplayDescriptorDataSize;
+   sz tensorViewCaptureReplayDescriptorDataSize;
+   sz tensorDescriptorSize;
 }
 struct PhysicalDeviceDescriptorBufferTensorFeaturesARM {
    StructureType sType;
@@ -15655,7 +15655,7 @@ struct DataGraphPipelinePropertyQueryResultARM {
    void* pNext;
    DataGraphPipelinePropertyARM property;
    uint isText;
-   usz dataSize;
+   sz dataSize;
    void* pData;
 }
 struct DataGraphPipelineIdentifierCreateInfoARM {
@@ -15820,11 +15820,11 @@ struct PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT {
 }
 struct HostAddressRangeEXT {
    void* address;
-   usz size;
+   sz size;
 }
 struct HostAddressRangeConstEXT {
    void* address;
-   usz size;
+   sz size;
 }
 struct TexelBufferDescriptorInfoEXT {
    StructureType sType;
@@ -15982,7 +15982,7 @@ struct PhysicalDeviceDescriptorHeapPropertiesEXT {
    DeviceSize imageDescriptorAlignment;
    DeviceSize bufferDescriptorAlignment;
    DeviceSize maxPushDataSize;
-   usz imageCaptureReplayOpaqueDataSize;
+   sz imageCaptureReplayOpaqueDataSize;
    uint maxDescriptorHeapEmbeddedSamplers;
    uint samplerYcbcrConversionCount;
    uint sparseDescriptorHeaps;
@@ -15999,7 +15999,7 @@ struct PhysicalDeviceDescriptorHeapTensorPropertiesARM {
    void* pNext;
    DeviceSize tensorDescriptorSize;
    DeviceSize tensorDescriptorAlignment;
-   usz tensorCaptureReplayOpaqueDataSize;
+   sz tensorCaptureReplayOpaqueDataSize;
 }
 struct PhysicalDeviceShaderInstrumentationFeaturesARM {
    StructureType sType;
