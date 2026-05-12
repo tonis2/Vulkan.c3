@@ -124,7 +124,7 @@ macro void? Device.@single_time_command(self, DeviceQueue queue; @body(CommandBu
 }
 
 
-fn bool? SurfaceKHR.checkSurfaceSupport(self, usz index, PhysicalDevice device)
+fn bool? SurfaceKHR.checkSurfaceSupport(self, sz index, PhysicalDevice device)
 {
 	uint response;
 	getPhysicalDeviceSurfaceSupportKHR(device, (uint)index, self, &response)!;
@@ -364,7 +364,7 @@ fn StringList? getValidationLayers()
 	return layersList;
 }
 
-alias CompareFN = fn bool(usz index, QueueFamilyProperties flags);
+alias CompareFN = fn bool(sz index, QueueFamilyProperties flags);
 fn int QueuePropertiesList.find(self, CompareFN callback)
 {
 	int response = -1;
@@ -774,18 +774,18 @@ fn DeviceSelection? selectPhysicalDevice(
 
 		// Find graphics + transfer queue
 		int graphics_index = queue_properties.find(
-			fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT != 0
+			fn (sz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT != 0
 		);
 		if (graphics_index < 0) continue;
 
 		// Check surface support
-		bool surface_ok = surface.checkSurfaceSupport((usz)graphics_index, entry)!;
+		bool surface_ok = surface.checkSurfaceSupport((sz)graphics_index, entry)!;
 		if (!surface_ok) continue;
 
 		// Find transfer queue (prefer dedicated)
 		int transfer_index = queue_properties.find(
 			fn (
-				usz index,
+				sz index,
 				QueueFamilyProperties props
 			) => (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
 				&& (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT == 0
@@ -793,7 +793,7 @@ fn DeviceSelection? selectPhysicalDevice(
 		if (transfer_index < 0)
 		{
 			transfer_index = queue_properties.find(
-				fn (usz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
+				fn (sz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT != 0
 			);
 		}
 

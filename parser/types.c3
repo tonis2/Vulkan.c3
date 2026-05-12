@@ -120,7 +120,7 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
         value.defaultValue = member.attributes.get("values") ?? "";
         value.optional = member.attributes.has_key("optional");
 
-        value.len = value.len.strip_end(",null-terminated");
+        value.len = value.len.strip_suffix(",null-terminated");
 
         if (value.len.contains("latexmath") || value.len.contains(",") || value.len == "null-terminated") value.len = "";
         if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
@@ -135,6 +135,7 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
             if (entry.name == "name") {
                 value.name = entry.value;
                 if (value.name == "module") value.name = "mod";
+				if (value.name == "sz") value.name = "size";
                 if (value.name.len > 0 && value.name[0] >= 'A' && value.name[0] <= 'Z') {
                     value.name = value.name.copy(mem);
                     value.name[0] = value.name[0].to_lower();

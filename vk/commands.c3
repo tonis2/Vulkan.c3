@@ -50,7 +50,7 @@ extern fn Result vkSetEvent(Device, Event) @cname("vkSetEvent");
 extern fn Result vkResetEvent(Device, Event) @cname("vkResetEvent"); 
 extern fn Result vkCreateQueryPool(Device, QueryPoolCreateInfo*, AllocationCallbacks*, QueryPool*) @cname("vkCreateQueryPool"); 
 extern fn void destroyQueryPool(Device, QueryPool, AllocationCallbacks*) @cname("vkDestroyQueryPool"); 
-extern fn Result vkGetQueryPoolResults(Device, QueryPool, uint, uint, usz, void*, DeviceSize, QueryResultFlags) @cname("vkGetQueryPoolResults"); 
+extern fn Result vkGetQueryPoolResults(Device, QueryPool, uint, uint, sz, void*, DeviceSize, QueryResultFlags) @cname("vkGetQueryPoolResults"); 
 extern fn void resetQueryPool(Device, QueryPool, uint, uint) @cname("vkResetQueryPool"); 
 extern fn Result vkCreateBuffer(Device, BufferCreateInfo*, AllocationCallbacks*, Buffer*) @cname("vkCreateBuffer"); 
 extern fn void destroyBuffer(Device, Buffer, AllocationCallbacks*) @cname("vkDestroyBuffer"); 
@@ -65,7 +65,7 @@ extern fn Result vkCreateShaderModule(Device, ShaderModuleCreateInfo*, Allocatio
 extern fn void destroyShaderModule(Device, ShaderModule, AllocationCallbacks*) @cname("vkDestroyShaderModule"); 
 extern fn Result vkCreatePipelineCache(Device, PipelineCacheCreateInfo*, AllocationCallbacks*, PipelineCache*) @cname("vkCreatePipelineCache"); 
 extern fn void destroyPipelineCache(Device, PipelineCache, AllocationCallbacks*) @cname("vkDestroyPipelineCache"); 
-extern fn Result vkGetPipelineCacheData(Device, PipelineCache, usz*, void*) @cname("vkGetPipelineCacheData"); 
+extern fn Result vkGetPipelineCacheData(Device, PipelineCache, sz*, void*) @cname("vkGetPipelineCacheData"); 
 extern fn Result vkMergePipelineCaches(Device, PipelineCache, uint, PipelineCache*) @cname("vkMergePipelineCaches"); 
 extern fn Result vkCreateGraphicsPipelines(Device, PipelineCache, uint, GraphicsPipelineCreateInfo*, AllocationCallbacks*, Pipeline*) @cname("vkCreateGraphicsPipelines"); 
 extern fn Result vkCreateComputePipelines(Device, PipelineCache, uint, ComputePipelineCreateInfo*, AllocationCallbacks*, Pipeline*) @cname("vkCreateComputePipelines"); 
@@ -239,7 +239,7 @@ alias PFN_vkResetQueryPoolEXT = fn void (Device, QueryPool, uint, uint);
 alias PFN_vkCreatePipelineBinariesKHR = fn Result (Device, PipelineBinaryCreateInfoKHR*, AllocationCallbacks*, PipelineBinaryHandlesInfoKHR*);
 alias PFN_vkDestroyPipelineBinaryKHR = fn void (Device, PipelineBinaryKHR, AllocationCallbacks*);
 alias PFN_vkGetPipelineKeyKHR = fn Result (Device, PipelineCreateInfoKHR*, PipelineBinaryKeyKHR*);
-alias PFN_vkGetPipelineBinaryDataKHR = fn Result (Device, PipelineBinaryDataInfoKHR*, PipelineBinaryKeyKHR*, usz*, void*);
+alias PFN_vkGetPipelineBinaryDataKHR = fn Result (Device, PipelineBinaryDataInfoKHR*, PipelineBinaryKeyKHR*, sz*, void*);
 alias PFN_vkReleaseCapturedPipelineDataKHR = fn Result (Device, ReleaseCapturedPipelineDataInfoKHR*, AllocationCallbacks*);
 alias PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI = fn Result (Device, RenderPass, Extent2D*);
 alias PFN_vkGetRenderingAreaGranularityKHR = fn void (Device, RenderingAreaInfo*, Extent2D*);
@@ -283,7 +283,7 @@ alias PFN_vkCreateXcbSurfaceKHR = fn Result (Instance, XcbSurfaceCreateInfoKHR*,
 alias PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = fn uint (PhysicalDevice, uint, Connection*, Window);
 alias PFN_vkCreateDebugReportCallbackEXT = fn Result (Instance, DebugReportCallbackCreateInfoEXT*, AllocationCallbacks*, DebugReportCallbackEXT*);
 alias PFN_vkDestroyDebugReportCallbackEXT = fn void (Instance, DebugReportCallbackEXT, AllocationCallbacks*);
-alias PFN_vkDebugReportMessageEXT = fn void (Instance, DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, usz, int, char*, char*);
+alias PFN_vkDebugReportMessageEXT = fn void (Instance, DebugReportFlagsEXT, DebugReportObjectTypeEXT, ulong, sz, int, char*, char*);
 alias PFN_vkDebugMarkerSetObjectNameEXT = fn Result (Device, DebugMarkerObjectNameInfoEXT*);
 alias PFN_vkDebugMarkerSetObjectTagEXT = fn Result (Device, DebugMarkerObjectTagInfoEXT*);
 alias PFN_vkCmdDebugMarkerBeginEXT = fn void (CommandBuffer, DebugMarkerMarkerInfoEXT*);
@@ -382,10 +382,10 @@ alias PFN_vkCreateSamplerYcbcrConversionKHR = fn Result (Device, SamplerYcbcrCon
 alias PFN_vkDestroySamplerYcbcrConversionKHR = fn void (Device, SamplerYcbcrConversion, AllocationCallbacks*);
 alias PFN_vkCreateValidationCacheEXT = fn Result (Device, ValidationCacheCreateInfoEXT*, AllocationCallbacks*, ValidationCacheEXT*);
 alias PFN_vkDestroyValidationCacheEXT = fn void (Device, ValidationCacheEXT, AllocationCallbacks*);
-alias PFN_vkGetValidationCacheDataEXT = fn Result (Device, ValidationCacheEXT, usz*, void*);
+alias PFN_vkGetValidationCacheDataEXT = fn Result (Device, ValidationCacheEXT, sz*, void*);
 alias PFN_vkMergeValidationCachesEXT = fn Result (Device, ValidationCacheEXT, uint, ValidationCacheEXT*);
 alias PFN_vkGetDescriptorSetLayoutSupportKHR = fn void (Device, DescriptorSetLayoutCreateInfo*, DescriptorSetLayoutSupport*);
-alias PFN_vkGetShaderInfoAMD = fn Result (Device, Pipeline, ShaderStageFlagBits, ShaderInfoTypeAMD, usz*, void*);
+alias PFN_vkGetShaderInfoAMD = fn Result (Device, Pipeline, ShaderStageFlagBits, ShaderInfoTypeAMD, sz*, void*);
 alias PFN_vkSetLocalDimmingAMD = fn void (Device, SwapchainKHR, uint);
 alias PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR = fn Result (PhysicalDevice, uint*, TimeDomainKHR*);
 alias PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = fn Result (PhysicalDevice, uint*, TimeDomainKHR*);
@@ -449,13 +449,13 @@ alias PFN_vkCmdCopyMemoryToAccelerationStructureKHR = fn void (CommandBuffer, Co
 alias PFN_vkCopyMemoryToAccelerationStructureKHR = fn Result (Device, DeferredOperationKHR, CopyMemoryToAccelerationStructureInfoKHR*);
 alias PFN_vkCmdWriteAccelerationStructuresPropertiesKHR = fn void (CommandBuffer, uint, AccelerationStructureKHR*, QueryType, QueryPool, uint);
 alias PFN_vkCmdWriteAccelerationStructuresPropertiesNV = fn void (CommandBuffer, uint, AccelerationStructureNV*, QueryType, QueryPool, uint);
-alias PFN_vkWriteAccelerationStructuresPropertiesKHR = fn Result (Device, uint, AccelerationStructureKHR*, QueryType, usz, void*, usz);
+alias PFN_vkWriteAccelerationStructuresPropertiesKHR = fn Result (Device, uint, AccelerationStructureKHR*, QueryType, sz, void*, sz);
 alias PFN_vkCmdTraceRaysKHR = fn void (CommandBuffer, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, uint, uint, uint);
 alias PFN_vkCmdTraceRaysNV = fn void (CommandBuffer, Buffer, DeviceSize, Buffer, DeviceSize, DeviceSize, Buffer, DeviceSize, DeviceSize, Buffer, DeviceSize, DeviceSize, uint, uint, uint);
-alias PFN_vkGetRayTracingShaderGroupHandlesKHR = fn Result (Device, Pipeline, uint, uint, usz, void*);
-alias PFN_vkGetRayTracingShaderGroupHandlesNV = fn Result (Device, Pipeline, uint, uint, usz, void*);
-alias PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = fn Result (Device, Pipeline, uint, uint, usz, void*);
-alias PFN_vkGetAccelerationStructureHandleNV = fn Result (Device, AccelerationStructureNV, usz, void*);
+alias PFN_vkGetRayTracingShaderGroupHandlesKHR = fn Result (Device, Pipeline, uint, uint, sz, void*);
+alias PFN_vkGetRayTracingShaderGroupHandlesNV = fn Result (Device, Pipeline, uint, uint, sz, void*);
+alias PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = fn Result (Device, Pipeline, uint, uint, sz, void*);
+alias PFN_vkGetAccelerationStructureHandleNV = fn Result (Device, AccelerationStructureNV, sz, void*);
 alias PFN_vkCreateRayTracingPipelinesNV = fn Result (Device, PipelineCache, uint, RayTracingPipelineCreateInfoNV*, AllocationCallbacks*, Pipeline*);
 alias PFN_vkCreateRayTracingPipelinesKHR = fn Result (Device, DeferredOperationKHR, PipelineCache, uint, RayTracingPipelineCreateInfoKHR*, AllocationCallbacks*, Pipeline*);
 alias PFN_vkCmdTraceRaysIndirectKHR = fn void (CommandBuffer, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, StridedDeviceAddressRegionKHR*, DeviceAddress);
@@ -595,7 +595,7 @@ alias PFN_vkCreateVideoSessionKHR = fn Result (Device, VideoSessionCreateInfoKHR
 alias PFN_vkDestroyVideoSessionKHR = fn void (Device, VideoSessionKHR, AllocationCallbacks*);
 alias PFN_vkCreateVideoSessionParametersKHR = fn Result (Device, VideoSessionParametersCreateInfoKHR*, AllocationCallbacks*, VideoSessionParametersKHR*);
 alias PFN_vkUpdateVideoSessionParametersKHR = fn Result (Device, VideoSessionParametersKHR, VideoSessionParametersUpdateInfoKHR*);
-alias PFN_vkGetEncodedVideoSessionParametersKHR = fn Result (Device, VideoEncodeSessionParametersGetInfoKHR*, VideoEncodeSessionParametersFeedbackInfoKHR*, usz*, void*);
+alias PFN_vkGetEncodedVideoSessionParametersKHR = fn Result (Device, VideoEncodeSessionParametersGetInfoKHR*, VideoEncodeSessionParametersFeedbackInfoKHR*, sz*, void*);
 alias PFN_vkDestroyVideoSessionParametersKHR = fn void (Device, VideoSessionParametersKHR, AllocationCallbacks*);
 alias PFN_vkGetVideoSessionMemoryRequirementsKHR = fn Result (Device, VideoSessionKHR, uint*, VideoSessionMemoryRequirementsKHR*);
 alias PFN_vkBindVideoSessionMemoryKHR = fn Result (Device, VideoSessionKHR, uint, BindVideoSessionMemoryInfoKHR*);
@@ -616,7 +616,7 @@ alias PFN_vkDestroyCuFunctionNVX = fn void (Device, CuFunctionNVX, AllocationCal
 alias PFN_vkCmdCuLaunchKernelNVX = fn void (CommandBuffer, CuLaunchInfoNVX*);
 alias PFN_vkGetDescriptorSetLayoutSizeEXT = fn void (Device, DescriptorSetLayout, DeviceSize*);
 alias PFN_vkGetDescriptorSetLayoutBindingOffsetEXT = fn void (Device, DescriptorSetLayout, uint, DeviceSize*);
-alias PFN_vkGetDescriptorEXT = fn void (Device, DescriptorGetInfoEXT*, usz, void*);
+alias PFN_vkGetDescriptorEXT = fn void (Device, DescriptorGetInfoEXT*, sz, void*);
 alias PFN_vkCmdBindDescriptorBuffersEXT = fn void (CommandBuffer, uint, DescriptorBufferBindingInfoEXT*);
 alias PFN_vkCmdSetDescriptorBufferOffsetsEXT = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint, uint, uint*, DeviceSize*);
 alias PFN_vkCmdBindDescriptorBufferEmbeddedSamplersEXT = fn void (CommandBuffer, PipelineBindPoint, PipelineLayout, uint);
@@ -631,7 +631,7 @@ alias PFN_vkGetDrmDisplayEXT = fn Result (PhysicalDevice, int, uint, DisplayKHR*
 alias PFN_vkWaitForPresent2KHR = fn Result (Device, SwapchainKHR, PresentWait2InfoKHR*);
 alias PFN_vkWaitForPresentKHR = fn Result (Device, SwapchainKHR, ulong, ulong);
 alias PFN_vkCreateCudaModuleNV = fn Result (Device, CudaModuleCreateInfoNV*, AllocationCallbacks*, CudaModuleNV*);
-alias PFN_vkGetCudaModuleCacheNV = fn Result (Device, CudaModuleNV, usz*, void*);
+alias PFN_vkGetCudaModuleCacheNV = fn Result (Device, CudaModuleNV, sz*, void*);
 alias PFN_vkCreateCudaFunctionNV = fn Result (Device, CudaFunctionCreateInfoNV*, AllocationCallbacks*, CudaFunctionNV*);
 alias PFN_vkDestroyCudaModuleNV = fn void (Device, CudaModuleNV, AllocationCallbacks*);
 alias PFN_vkDestroyCudaFunctionNV = fn void (Device, CudaFunctionNV, AllocationCallbacks*);
@@ -653,7 +653,7 @@ alias PFN_vkCopyMicromapToMemoryEXT = fn Result (Device, DeferredOperationKHR, C
 alias PFN_vkCmdCopyMemoryToMicromapEXT = fn void (CommandBuffer, CopyMemoryToMicromapInfoEXT*);
 alias PFN_vkCopyMemoryToMicromapEXT = fn Result (Device, DeferredOperationKHR, CopyMemoryToMicromapInfoEXT*);
 alias PFN_vkCmdWriteMicromapsPropertiesEXT = fn void (CommandBuffer, uint, MicromapEXT*, QueryType, QueryPool, uint);
-alias PFN_vkWriteMicromapsPropertiesEXT = fn Result (Device, uint, MicromapEXT*, QueryType, usz, void*, usz);
+alias PFN_vkWriteMicromapsPropertiesEXT = fn Result (Device, uint, MicromapEXT*, QueryType, sz, void*, sz);
 alias PFN_vkGetDeviceMicromapCompatibilityEXT = fn void (Device, MicromapVersionInfoEXT*, AccelerationStructureCompatibilityKHR*);
 alias PFN_vkGetMicromapBuildSizesEXT = fn void (Device, AccelerationStructureBuildTypeKHR, MicromapBuildInfoEXT*, MicromapBuildSizesInfoEXT*);
 alias PFN_vkGetShaderModuleIdentifierEXT = fn void (Device, ShaderModule, ShaderModuleIdentifierEXT*);
@@ -681,7 +681,7 @@ alias PFN_vkMapMemory2KHR = fn Result (Device, MemoryMapInfo*, void**);
 alias PFN_vkUnmapMemory2KHR = fn Result (Device, MemoryUnmapInfo*);
 alias PFN_vkCreateShadersEXT = fn Result (Device, uint, ShaderCreateInfoEXT*, AllocationCallbacks*, ShaderEXT*);
 alias PFN_vkDestroyShaderEXT = fn void (Device, ShaderEXT, AllocationCallbacks*);
-alias PFN_vkGetShaderBinaryDataEXT = fn Result (Device, ShaderEXT, usz*, void*);
+alias PFN_vkGetShaderBinaryDataEXT = fn Result (Device, ShaderEXT, sz*, void*);
 alias PFN_vkCmdBindShadersEXT = fn void (CommandBuffer, uint, ShaderStageFlagBits*, ShaderEXT*);
 alias PFN_vkSetSwapchainPresentTimingQueueSizeEXT = fn Result (Device, SwapchainKHR, uint);
 alias PFN_vkGetSwapchainTimingPropertiesEXT = fn Result (Device, SwapchainKHR, SwapchainTimingPropertiesEXT*, ulong*);
@@ -1907,7 +1907,7 @@ fn uint getPhysicalDeviceWaylandPresentationSupportKHR (PhysicalDevice physicalD
 fn uint getPhysicalDeviceWin32PresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex) => extensions.vkGetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
 fn uint getPhysicalDeviceXcbPresentationSupportKHR (PhysicalDevice physicalDevice, uint queueFamilyIndex, Connection* connection, Window visual_id) => extensions.vkGetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
 fn void destroyDebugReportCallbackEXT (Instance instance, DebugReportCallbackEXT callback, AllocationCallbacks* pAllocator) => extensions.vkDestroyDebugReportCallbackEXT(instance, callback, pAllocator);
-fn void debugReportMessageEXT (Instance instance, DebugReportFlagsEXT flags, DebugReportObjectTypeEXT objectType, ulong object, usz location, int messageCode, char* pLayerPrefix, char* pMessage) => extensions.vkDebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
+fn void debugReportMessageEXT (Instance instance, DebugReportFlagsEXT flags, DebugReportObjectTypeEXT objectType, ulong object, sz location, int messageCode, char* pLayerPrefix, char* pMessage) => extensions.vkDebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
 fn void cmdDebugMarkerBeginEXT (CommandBuffer commandBuffer, DebugMarkerMarkerInfoEXT* pMarkerInfo) => extensions.vkCmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
 fn void cmdDebugMarkerEndEXT (CommandBuffer commandBuffer) => extensions.vkCmdDebugMarkerEndEXT(commandBuffer);
 fn void cmdDebugMarkerInsertEXT (CommandBuffer commandBuffer, DebugMarkerMarkerInfoEXT* pMarkerInfo) => extensions.vkCmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
@@ -2116,7 +2116,7 @@ fn void destroyCuFunctionNVX (Device device, CuFunctionNVX function, AllocationC
 fn void cmdCuLaunchKernelNVX (CommandBuffer commandBuffer, CuLaunchInfoNVX* pLaunchInfo) => extensions.vkCmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
 fn void getDescriptorSetLayoutSizeEXT (Device device, DescriptorSetLayout layout, DeviceSize* pLayoutSizeInBytes) => extensions.vkGetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
 fn void getDescriptorSetLayoutBindingOffsetEXT (Device device, DescriptorSetLayout layout, uint binding, DeviceSize* pOffset) => extensions.vkGetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
-fn void getDescriptorEXT (Device device, DescriptorGetInfoEXT* pDescriptorInfo, usz dataSize, void* pDescriptor) => extensions.vkGetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
+fn void getDescriptorEXT (Device device, DescriptorGetInfoEXT* pDescriptorInfo, sz dataSize, void* pDescriptor) => extensions.vkGetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
 fn void cmdBindDescriptorBuffersEXT (CommandBuffer commandBuffer, uint bufferCount, DescriptorBufferBindingInfoEXT* pBindingInfos) => extensions.vkCmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
 fn void cmdSetDescriptorBufferOffsetsEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint setCount, uint* pBufferIndices, DeviceSize* pOffsets) => extensions.vkCmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 fn void cmdBindDescriptorBufferEmbeddedSamplersEXT (CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint set) => extensions.vkCmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
@@ -2495,7 +2495,7 @@ fn void? createQueryPool (Device device, QueryPoolCreateInfo* pCreateInfo, Alloc
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getQueryPoolResults (Device device, QueryPool queryPool, uint firstQuery, uint queryCount, usz dataSize, void* pData, DeviceSize stride, QueryResultFlags flags) {
+fn void? getQueryPoolResults (Device device, QueryPool queryPool, uint firstQuery, uint queryCount, sz dataSize, void* pData, DeviceSize stride, QueryResultFlags flags) {
   Result result = vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -2564,7 +2564,7 @@ fn void? createPipelineCache (Device device, PipelineCacheCreateInfo* pCreateInf
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getPipelineCacheData (Device device, PipelineCache pipelineCache, usz* pDataSize, void* pData) {
+fn void? getPipelineCacheData (Device device, PipelineCache pipelineCache, sz* pDataSize, void* pData) {
   Result result = vkGetPipelineCacheData(device, pipelineCache, pDataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -2601,7 +2601,7 @@ fn void? getPipelineKeyKHR (Device device, PipelineCreateInfoKHR* pPipelineCreat
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getPipelineBinaryDataKHR (Device device, PipelineBinaryDataInfoKHR* pInfo, PipelineBinaryKeyKHR* pPipelineBinaryKey, usz* pPipelineBinaryDataSize, void* pPipelineBinaryData) {
+fn void? getPipelineBinaryDataKHR (Device device, PipelineBinaryDataInfoKHR* pInfo, PipelineBinaryKeyKHR* pPipelineBinaryKey, sz* pPipelineBinaryDataSize, void* pPipelineBinaryData) {
   Result result = extensions.vkGetPipelineBinaryDataKHR(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3527,7 +3527,7 @@ fn void? createValidationCacheEXT (Device device, ValidationCacheCreateInfoEXT* 
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getValidationCacheDataEXT (Device device, ValidationCacheEXT validationCache, usz* pDataSize, void* pData) {
+fn void? getValidationCacheDataEXT (Device device, ValidationCacheEXT validationCache, sz* pDataSize, void* pData) {
   Result result = extensions.vkGetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3545,7 +3545,7 @@ fn void? mergeValidationCachesEXT (Device device, ValidationCacheEXT dstCache, u
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getShaderInfoAMD (Device device, Pipeline pipeline, ShaderStageFlagBits shaderStage, ShaderInfoTypeAMD infoType, usz* pInfoSize, void* pInfo) {
+fn void? getShaderInfoAMD (Device device, Pipeline pipeline, ShaderStageFlagBits shaderStage, ShaderInfoTypeAMD infoType, sz* pInfoSize, void* pInfo) {
   Result result = extensions.vkGetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
   switch(result) { 
        case ERROR_FEATURE_NOT_PRESENT: return E_ERROR_FEATURE_NOT_PRESENT~;
@@ -3746,7 +3746,7 @@ fn void? copyMemoryToAccelerationStructureKHR (Device device, DeferredOperationK
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? writeAccelerationStructuresPropertiesKHR (Device device, uint accelerationStructureCount, AccelerationStructureKHR* pAccelerationStructures, QueryType queryType, usz dataSize, void* pData, usz stride) {
+fn void? writeAccelerationStructuresPropertiesKHR (Device device, uint accelerationStructureCount, AccelerationStructureKHR* pAccelerationStructures, QueryType queryType, sz dataSize, void* pData, sz stride) {
   Result result = extensions.vkWriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3755,7 +3755,7 @@ fn void? writeAccelerationStructuresPropertiesKHR (Device device, uint accelerat
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getRayTracingShaderGroupHandlesKHR (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, usz dataSize, void* pData) {
+fn void? getRayTracingShaderGroupHandlesKHR (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, sz dataSize, void* pData) {
   Result result = extensions.vkGetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3764,7 +3764,7 @@ fn void? getRayTracingShaderGroupHandlesKHR (Device device, Pipeline pipeline, u
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getRayTracingShaderGroupHandlesNV (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, usz dataSize, void* pData) {
+fn void? getRayTracingShaderGroupHandlesNV (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, sz dataSize, void* pData) {
   Result result = extensions.vkGetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3773,7 +3773,7 @@ fn void? getRayTracingShaderGroupHandlesNV (Device device, Pipeline pipeline, ui
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getRayTracingCaptureReplayShaderGroupHandlesKHR (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, usz dataSize, void* pData) {
+fn void? getRayTracingCaptureReplayShaderGroupHandlesKHR (Device device, Pipeline pipeline, uint firstGroup, uint groupCount, sz dataSize, void* pData) {
   Result result = extensions.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -3782,7 +3782,7 @@ fn void? getRayTracingCaptureReplayShaderGroupHandlesKHR (Device device, Pipelin
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getAccelerationStructureHandleNV (Device device, AccelerationStructureNV accelerationStructure, usz dataSize, void* pData) {
+fn void? getAccelerationStructureHandleNV (Device device, AccelerationStructureNV accelerationStructure, sz dataSize, void* pData) {
   Result result = extensions.vkGetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -4282,7 +4282,7 @@ fn void? updateVideoSessionParametersKHR (Device device, VideoSessionParametersK
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getEncodedVideoSessionParametersKHR (Device device, VideoEncodeSessionParametersGetInfoKHR* pVideoSessionParametersInfo, VideoEncodeSessionParametersFeedbackInfoKHR* pFeedbackInfo, usz* pDataSize, void* pData) {
+fn void? getEncodedVideoSessionParametersKHR (Device device, VideoEncodeSessionParametersGetInfoKHR* pVideoSessionParametersInfo, VideoEncodeSessionParametersFeedbackInfoKHR* pFeedbackInfo, sz* pDataSize, void* pData) {
   Result result = extensions.vkGetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -4422,7 +4422,7 @@ fn void? createCudaModuleNV (Device device, CudaModuleCreateInfoNV* pCreateInfo,
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getCudaModuleCacheNV (Device device, CudaModuleNV mod, usz* pCacheSize, void* pCacheData) {
+fn void? getCudaModuleCacheNV (Device device, CudaModuleNV mod, sz* pCacheSize, void* pCacheData) {
   Result result = extensions.vkGetCudaModuleCacheNV(device, mod, pCacheSize, pCacheData);
   switch(result) { 
        case ERROR_INITIALIZATION_FAILED: return E_ERROR_INITIALIZATION_FAILED~;
@@ -4484,7 +4484,7 @@ fn void? copyMemoryToMicromapEXT (Device device, DeferredOperationKHR deferredOp
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? writeMicromapsPropertiesEXT (Device device, uint micromapCount, MicromapEXT* pMicromaps, QueryType queryType, usz dataSize, void* pData, usz stride) {
+fn void? writeMicromapsPropertiesEXT (Device device, uint micromapCount, MicromapEXT* pMicromaps, QueryType queryType, sz dataSize, void* pData, sz stride) {
   Result result = extensions.vkWriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
@@ -4630,7 +4630,7 @@ fn void? createShadersEXT (Device device, uint createInfoCount, ShaderCreateInfo
        case ERROR_VALIDATION_FAILED: return E_ERROR_VALIDATION_FAILED~;
   }
 }
-fn void? getShaderBinaryDataEXT (Device device, ShaderEXT shader, usz* pDataSize, void* pData) {
+fn void? getShaderBinaryDataEXT (Device device, ShaderEXT shader, sz* pDataSize, void* pData) {
   Result result = extensions.vkGetShaderBinaryDataEXT(device, shader, pDataSize, pData);
   switch(result) { 
        case ERROR_OUT_OF_HOST_MEMORY: return E_ERROR_OUT_OF_HOST_MEMORY~;
