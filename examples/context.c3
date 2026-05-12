@@ -79,7 +79,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 	ctx.surface = surface;
 
 	uint frames          = config.frames_in_flight != 0 ? config.frames_in_flight : 2;
-	vk::Format preferred = config.preferred_format != 0 ? config.preferred_format : FORMAT_B8G8R8A8_UNORM;
+	vk::Format preferred = config.preferred_format != (vk::Format)0 ? config.preferred_format : FORMAT_B8G8R8A8_UNORM;
 
 	vk::ZStringList device_extensions;
 	defer device_extensions.free();
@@ -312,10 +312,10 @@ fn void? Context.resize(&self, uint width, uint height)
 
 fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint height, vk::TextureConfig config = { })
 {
-	vk::Format format = config.format != 0 ? config.format : FORMAT_R8G8B8A8_SRGB;
-	vk::Filter filter = config.filter != 0 ? config.filter : FILTER_LINEAR;
+	vk::Format format = config.format != (vk::Format)0 ? config.format : FORMAT_R8G8B8A8_SRGB;
+	vk::Filter filter = config.filter != (vk::Filter)0 ? config.filter : FILTER_LINEAR;
 	vk::SamplerAddressMode address_mode = config.address_mode
-		!= 0 ? config.address_mode : SAMPLER_ADDRESS_MODE_REPEAT;
+		!= (vk::SamplerAddressMode)0 ? config.address_mode : SAMPLER_ADDRESS_MODE_REPEAT;
 
 	vk::Image image = vk::imageCreateInfo().setImageType(IMAGE_TYPE_2D).setFormat(format)
 		.setExtent({ .width = width, .height = height, .depth = 1 })
@@ -343,7 +343,7 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 			.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 			.image = image,
 			.srcStageMask = vk::PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
-			.dstStageMask = PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+			.dstStageMask = vk::PIPELINE_STAGE_2_ALL_TRANSFER_BIT,
 			.srcAccessMask = 0,
 			.dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
 			.oldLayout = IMAGE_LAYOUT_UNDEFINED,
@@ -431,10 +431,10 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 
 fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 {
-	vk::Format color_format        = config.color_format != 0 ? config.color_format : self.swapchain.format.format;
-	vk::PrimitiveTopology topology = config.topology != 0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	vk::Format color_format        = config.color_format != (vk::Format)0 ? config.color_format : self.swapchain.format.format;
+	vk::PrimitiveTopology topology = config.topology != (vk::PrimitiveTopology)0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	vk::CullModeFlags cull_mode    = config.cull_mode != 0 ? config.cull_mode : vk::CULL_MODE_BACK_BIT;
-	vk::FrontFace front_face       = config.front_face != 0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
+	vk::FrontFace front_face       = config.front_face != (vk::FrontFace)0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
 
 	vk::ShaderModule[8] modules;
 	vk::PipelineShaderStageCreateInfo[8] stages;
@@ -457,7 +457,7 @@ fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 
 	vk::PipelineRenderingCreateInfo rendering_info = vk::pipelineRenderingCreateInfo()
 		.setColorAttachmentFormats((vk::Format[]) { color_format });
-	if (config.depth_format != 0) rendering_info = rendering_info.setDepthAttachmentFormat(config.depth_format);
+	if (config.depth_format != (vk::Format)0) rendering_info = rendering_info.setDepthAttachmentFormat(config.depth_format);
 
 	vk::PipelineVertexInputStateCreateInfo vertex_input = vk::pipelineVertexInputStateCreateInfo();
 	if (config.vertex_bindings.len > 0) vertex_input = vertex_input.setVertexBindingDescriptions(
@@ -523,7 +523,7 @@ fn void GraphicsPipeline.free(&self, vk::Device device)
 
 fn vk::DescriptorSetLayout? createPushDescriptorLayout(vk::Device device, vk::DescriptorSetLayoutBinding[] bindings)
 {
-	return vk::descriptorSetLayoutCreateInfo().setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
+	return vk::descriptorSetLayoutCreateInfo().setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
 		.setBindings(bindings)
 		.build(device);
 }

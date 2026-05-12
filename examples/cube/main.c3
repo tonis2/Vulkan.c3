@@ -345,20 +345,20 @@ fn void main(String[] args)
 		{
 			Vec2 mouse_pos = win.getMousePos();
 			camera.rotate(mouse_pos.x - prev_mouse.x, (mouse_pos.y - prev_mouse.y));
-			uniform_buffer.upload(&&camera.matrix(), (ulong)uniform_buffer.size);
+			uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
 			prev_mouse = mouse_pos;
 		}
 
 		if (event_map.is_pressed(MOUSE_SCROLL_UP))
 		{
 			camera.zoom(5);
-			uniform_buffer.upload(&&camera.matrix(), size: (ulong)uniform_buffer.size);
+			uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
 		}
 
 		if (event_map.is_pressed(MOUSE_SCROLL_DOWN))
 		{
 			camera.zoom(-5);
-			uniform_buffer.upload(&&camera.matrix(), size: (ulong)uniform_buffer.size);
+			uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
 		}
 
 		if (event_map.is_pressed(ESCAPE))
