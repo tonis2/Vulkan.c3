@@ -693,15 +693,15 @@ macro void Region.@push(&self, #data, sz size = 0, sz offset = 0, bool auto_incr
     Allocator buffer = self.bm.buffers[self.buffer];
     sz data_offset = self.offset + offset + (self.used_size * (auto_increase ? 1 : 0));
 
-    $if $kindof(#data) == POINTER: {
-        if (size == 0) data_size = $typeof(*#data).sizeof;
+    $if @kindof(#data) == POINTER: {
+        if (size == 0) data_size = $Typeof(*#data)::size;
     }
     $else {
-        if (size == 0) data_size = $typeof(#data).sizeof;
+        if (size == 0) data_size = $Typeof(#data)::size;
     }
     $endif
 
-    $if $kindof(#data) == POINTER: {
+    $if @kindof(#data) == POINTER: {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
             self.bm.uploadFN(buffer, #data, data_size, data_offset);
         } else  {
@@ -725,15 +725,15 @@ macro void @region_upload(Region region, #data, sz size = 0, sz offset = 0) {
     Allocator buffer = region.bm.buffers[region.buffer];
     sz data_offset = region.offset + offset;
 
-    $if $kindof(#data) == POINTER: {
-        if (size == 0) data_size = $typeof(*#data).sizeof;
+    $if @kindof(#data) == POINTER: {
+        if (size == 0) data_size = $Typeof(*#data)::size;
     }
     $else {
-        if (size == 0) data_size = $typeof(#data).sizeof;
+        if (size == 0) data_size = $Typeof(#data)::size;
     }
     $endif
 
-    $if $kindof(#data) == POINTER: {
+    $if @kindof(#data) == POINTER: {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
             region.bm.uploadFN(buffer, #data, data_size, data_offset);
         } else  {
