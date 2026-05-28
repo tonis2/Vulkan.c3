@@ -1072,6 +1072,7 @@ struct InstanceConfig
 	uint api_version;
 	bool enable_validation;
 	ZString[] extensions;
+	ZString[] layers;
 }
 
 const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == MACOS) = { "VK_EXT_metal_surface" };
@@ -1112,17 +1113,24 @@ fn Instance? createDefaultInstance(InstanceConfig config = { })
 	// Layer names and validation features must outlive instance_info.build() —
 	// keep them at function scope, not inside the `if`, so their backing storage
 	// isn't freed before vkCreateInstance reads it.
-	ZStringList validations;
-	defer validations.free();
+	ZStringList layers;
+	defer layers.free();
 
+	ValidationFeatureEnableEXT[1] enabled_features = { VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT };
+	ValidationFeaturesEXT validation_features = validationFeaturesEXT()
+		.setEnabledValidationFeatures(enabled_features[..]);
 
 	if (config.enable_validation)
 	{
-		ValidationFeatureEnableEXT[1] enabled_features = { VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT };
-		ValidationFeaturesEXT validation_features = validationFeaturesEXT()
-			.setEnabledValidationFeatures(enabled_features[..]);
-		validations.push("VK_LAYER_KHRONOS_validation");
-		instance_info = instance_info.setEnabledLayerNames(validations.array_view()).setNext(&validation_features);
+		layers.push("VK_LAYER_KHRONOS_validation");
+		instance_info = instance_info.setNext(&validation_features);
+	}
+
+	layers.push_all(config.layers);
+
+	if (layers.len() > 0)
+	{
+		instance_info = instance_info.setEnabledLayerNames(layers.array_view());
 	}
 
 	return instance_info.build();
