@@ -127,7 +127,7 @@ fn void main(String[] args)
 	};
 
 	InstanceCreateInfo instanceInfo = vk::instanceCreateInfo().setApplicationInfo(&info)
-		.setFlags(env::os_is_darwin() ? vk::INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : 0)
+		.setFlags(env::os_is_darwin() ? vk::InstanceCreateFlagBits.INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : (vk::InstanceCreateFlags)0)
 		.setEnabledExtensionNames(extensions.array_view());
 
 	Instance instance = instanceInfo.build()!!;
@@ -195,7 +195,7 @@ fn void main(String[] args)
 			{
 				{
 					.format = FORMAT_B8G8R8A8_UNORM,
-					.samples = vk::SAMPLE_COUNT_1_BIT,
+					.samples = SAMPLE_COUNT_1_BIT,
 					.initialLayout = IMAGE_LAYOUT_UNDEFINED,
 					.finalLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR,
 					.loadOp = ATTACHMENT_LOAD_OP_CLEAR,
@@ -221,43 +221,43 @@ fn void main(String[] args)
 		.device = device,
 		.pdevice = physical_device,
 		.queue = graphics_queue,
-		.flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
 	}.init()!!;
 
 	Memory vertex_buffer = vk::new_buffer(
 		allocator: &allocator,
-		usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		usage: BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: vertices.ptr,
 		data_size: Vertex::size * vertices.len
 	)!!;
 
 	Memory index_buffer = vk::new_buffer(
 		allocator: &allocator,
-		usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		usage: BUFFER_USAGE_INDEX_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: indices.ptr,
 		data_size: indices.len * ushort::size
 	)!!;
 
 	Memory uniform_buffer = vk::new_buffer(
 		allocator: &allocator,
-		usage: vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_CACHED_BIT,
 		data: &&camera.matrix(),
 		data_size: UniformData::size
 	)!!;
 
 	// --- Descriptors ---
 	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
-		.setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
+		.setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
 		.setBindings(
 			{
 				{
 					.binding = 0,
 					.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 					.descriptorCount = 1,
-					.stageFlags = vk::SHADER_STAGE_VERTEX_BIT
+					.stageFlags = SHADER_STAGE_VERTEX_BIT
 				}
 			}
 		)
@@ -275,9 +275,9 @@ fn void main(String[] args)
 		.build(device)!!;
 
 	PipelineShaderStageCreateInfo[2] shader_stages = { vk::pipelineShaderStageCreateInfo()
-		.setStage(vk::SHADER_STAGE_VERTEX_BIT)
+		.setStage(SHADER_STAGE_VERTEX_BIT)
 		.setMod(shader_module)
-		.setName("vertexMain"), vk::pipelineShaderStageCreateInfo().setStage(vk::SHADER_STAGE_FRAGMENT_BIT)
+		.setName("vertexMain"), vk::pipelineShaderStageCreateInfo().setStage(SHADER_STAGE_FRAGMENT_BIT)
 			.setMod(shader_module)
 			.setName("fragmentMain") };
 
@@ -296,7 +296,7 @@ fn void main(String[] args)
 
 	// Use default pipeline states — caller owns array data to avoid dangling pointers
 	PipelineRasterizationStateCreateInfo rasterization_state = vk::defaultRasterizationState()
-		.setCullMode(vk::CULL_MODE_FRONT_BIT);
+		.setCullMode(CULL_MODE_FRONT_BIT);
 	PipelineInputAssemblyStateCreateInfo input_assembly_state = vk::pipelineInputAssemblyStateCreateInfo()
 		.setTopology(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 
@@ -374,7 +374,7 @@ fn void main(String[] args)
 			.setClearValues({ { .color = { .float32 = { 0.0, 0.0, 0.0, 1.0 } } } });
 
 		CommandBuffer command_buffer = command_buffers[next_image];
-		vk::resetCommandBuffer(command_buffer, 0)!!;
+		vk::resetCommandBuffer(command_buffer, (vk::CommandBufferResetFlags)0)!!;
 		vk::beginCommandBuffer(command_buffer, &&vk::commandBufferBeginInfo())!!;
 
 		vk::cmdBeginRenderPass(command_buffer, &render_pass_info, SUBPASS_CONTENTS_INLINE);

@@ -173,7 +173,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
 
     // Map memory if host-visible
     if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
-        vk::mapMemory(self.device, memory, 0, (DeviceSize)page_size, 0, &new_page.mapped)!!;
+        vk::mapMemory(self.device, memory, 0, (DeviceSize)page_size, (MemoryMapFlags)0, &new_page.mapped)!!;
     }
 
     self.pages.push(new_page);
@@ -319,7 +319,7 @@ fn Memory? new_buffer(
 
     MemoryRequirements mem_reqs = buffer.memoryRequirements(device);
 
-    if ((MemoryPropertyFlagBits)usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
+    if ((BufferUsageFlagBits)usage & BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT) {
         PhysicalDeviceDescriptorBufferPropertiesEXT descriptorProperties = {
             .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT,
         };
@@ -384,7 +384,7 @@ fn Memory? new_buffer(
 
     vk::DeviceAddress address;
 
-    if ((MemoryPropertyFlagBits)usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+    if ((BufferUsageFlagBits)usage & BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
         BufferDeviceAddressInfo address_info = {
             .sType = STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
             .buffer = buffer
