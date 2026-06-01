@@ -640,7 +640,7 @@ fn vk::ImageMemoryBarrier2 colorBeginBarrier(vk::Image image)
 		.image = image,
 		.srcStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
 		.dstStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-		.srcAccessMask = 0,
+		.srcAccessMask = (AccessFlags2)0,
 		.dstAccessMask = ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
 		.oldLayout = IMAGE_LAYOUT_UNDEFINED,
 		.newLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
@@ -662,7 +662,7 @@ fn vk::ImageMemoryBarrier2 colorEndBarrier(vk::Image image)
 		.srcStageMask = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
 		.dstStageMask = PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
 		.srcAccessMask = ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
-		.dstAccessMask = 0,
+		.dstAccessMask = (AccessFlags2)0,
 		.oldLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
 		.newLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR,
 		.subresourceRange = {
@@ -682,7 +682,7 @@ fn vk::ImageMemoryBarrier2 depthBarrier(vk::Image image)
 		.image = image,
 		.srcStageMask = PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
 		.dstStageMask = PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT,
-		.srcAccessMask = 0,
+		.srcAccessMask = (AccessFlags2)0,
 		.dstAccessMask = ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
 		.oldLayout = IMAGE_LAYOUT_UNDEFINED,
 		.newLayout = IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -774,7 +774,10 @@ fn DeviceSelection? selectPhysicalDevice(
 
 		// Find graphics + transfer queue
 		int graphics_index = queue_properties.find(
-			fn (sz index, QueueFamilyProperties props) => (QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT != 0
+			fn (
+				sz index,
+				QueueFamilyProperties props
+			) => (uint)((QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT) != 0
 		);
 		if (graphics_index < 0) continue;
 
@@ -787,13 +790,16 @@ fn DeviceSelection? selectPhysicalDevice(
 			fn (
 				sz index,
 				QueueFamilyProperties props
-			) => ((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
-				&& ((QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT) == 0
+			) => (uint)((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
+				&& (uint)((QueueFlagBits)props.queueFlags & QUEUE_GRAPHICS_BIT) == 0
 		);
 		if (transfer_index < 0)
 		{
 			transfer_index = queue_properties.find(
-				fn (sz index, QueueFamilyProperties props) => ((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
+				fn (
+					sz index,
+					QueueFamilyProperties props
+				) => (uint)((QueueFlagBits)props.queueFlags & QUEUE_TRANSFER_BIT) != 0
 			);
 		}
 
@@ -1107,7 +1113,8 @@ fn Instance? createDefaultInstance(InstanceConfig config = { })
 		.apiVersion = api_version,
 	};
 
-	InstanceCreateInfo instance_info = instanceCreateInfo().setApplicationInfo(&app_info).setFlags(0)
+	InstanceCreateInfo instance_info = instanceCreateInfo().setApplicationInfo(&app_info)
+		.setFlags((InstanceCreateFlags)0)
 		.setEnabledExtensionNames(exts.array_view());
 
 	// Layer names and validation features must outlive instance_info.build() —
@@ -1181,6 +1188,3 @@ fn bool debugCallback(
 	}
 	return false;
 }
-
-
-

@@ -84,8 +84,8 @@ fn void main(String[] args)
 	// Buffers
 	vk::Memory vertex_buffer = vk::new_buffer(
 		&ctx.allocator,
-		usage: vk::BUFFER_USAGE_VERTEX_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		usage: BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: vertices.ptr,
 		data_size: Vertex::size * vertices.len,
 	)!!;
@@ -93,8 +93,8 @@ fn void main(String[] args)
 
 	vk::Memory index_buffer = vk::new_buffer(
 		&ctx.allocator,
-		usage: vk::BUFFER_USAGE_INDEX_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		usage: BUFFER_USAGE_INDEX_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		data: indices.ptr,
 		data_size: ushort::size * indices.len,
 	)!!;
@@ -102,8 +102,8 @@ fn void main(String[] args)
 
 	vk::Memory uniform_buffer = vk::new_buffer(
 		&ctx.allocator,
-		usage: vk::BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_CACHED_BIT,
+		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_CACHED_BIT,
 		data: &&cam.matrix(),
 		data_size: camera::UniformData::size,
 	)!!;
@@ -124,13 +124,13 @@ fn void main(String[] args)
 				.binding = 0,
 				.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				.descriptorCount = 1,
-				.stageFlags = vk::SHADER_STAGE_VERTEX_BIT,
+				.stageFlags = SHADER_STAGE_VERTEX_BIT,
 			},
 			{
 				.binding = 1,
 				.descriptorType = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				.descriptorCount = 1,
-				.stageFlags = vk::SHADER_STAGE_FRAGMENT_BIT,
+				.stageFlags = SHADER_STAGE_FRAGMENT_BIT,
 			},
 		}
 	)!!;
@@ -140,18 +140,16 @@ fn void main(String[] args)
 	GraphicsPipeline pipe = ctx.createPipeline(
 		{
 			.shaders = {
-				{ .spirv = shader[..], .entry_name = "vertexMain", .stage = vk::SHADER_STAGE_VERTEX_BIT },
-				{ .spirv = shader[..], .entry_name = "fragmentMain", .stage = vk::SHADER_STAGE_FRAGMENT_BIT },
+				{ .spirv = shader[..], .entry_name = "vertexMain", .stage = SHADER_STAGE_VERTEX_BIT },
+				{ .spirv = shader[..], .entry_name = "fragmentMain", .stage = SHADER_STAGE_FRAGMENT_BIT },
 			},
-			.vertex_bindings = {
-				{ .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX },
-			},
+			.vertex_bindings = { { .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX }, },
 			.vertex_attributes = {
 				{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = 0 },
 				{ .binding = 0, .location = 1, .format = FORMAT_R32G32_SFLOAT, .offset = Vec3::size },
 			},
 			.descriptor_layouts = { desc_layout },
-			.cull_mode = vk::CULL_MODE_FRONT_BIT,
+			.cull_mode = CULL_MODE_FRONT_BIT,
 			.depth_test = true,
 			.depth_write = true,
 			.depth_format = ctx.depth_format,

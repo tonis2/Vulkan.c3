@@ -100,10 +100,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
 		.pNext = &v12,
 	};
-	vk::PhysicalDeviceFeatures2 features2 = {
-		.sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-		.pNext = &v11,
-	};
+	vk::PhysicalDeviceFeatures2 features2 = { .sType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = &v11, };
 	vk::getPhysicalDeviceFeatures2(ctx.physical_device, &features2);
 
 	vk::DeviceQueueCreateInfo gfx_q = vk::deviceQueueCreateInfo().setQueueFamilyIndex(ctx.graphics_queue.index)
@@ -145,7 +142,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 		.device = ctx.device,
 		.pdevice = ctx.physical_device,
 		.queue = ctx.graphics_queue,
-		.flags = vk::MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 	};
 	ctx.allocator.init()!;
 
@@ -164,7 +161,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 fn void? Context.createDepthResources(&self, uint width, uint height)
 {
 	self.depth_format = vk::findDepthFormat(
-		features: vk::FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT,
+		features: FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT,
 		device: self.physical_device
 	);
 
@@ -172,19 +169,19 @@ fn void? Context.createDepthResources(&self, uint width, uint height)
 		.setExtent({ .width = width, .height = height, .depth = 1 })
 		.setMipLevels(1)
 		.setArrayLayers(1)
-		.setSamples(vk::SAMPLE_COUNT_1_BIT)
+		.setSamples(SAMPLE_COUNT_1_BIT)
 		.setTiling(IMAGE_TILING_OPTIMAL)
-		.setUsage(vk::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+		.setUsage(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
 		.build(self.device)!;
 
 	self.depth_image = depth_img;
-	vk::Memory mem = vk::create_image_buffer(depth_img, &self.allocator, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
+	vk::Memory mem = vk::create_image_buffer(depth_img, &self.allocator, MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
 	self.depth_memory = mem::new(vk::Memory, mem);
 
 	self.depth_view = vk::imageViewCreateInfo().setViewType(IMAGE_VIEW_TYPE_2D).setFormat(self.depth_format)
 		.setSubresourceRange(
 			{
-				.aspectMask = vk::IMAGE_ASPECT_DEPTH_BIT,
+				.aspectMask = IMAGE_ASPECT_DEPTH_BIT,
 				.baseMipLevel = 0,
 				.levelCount = 1,
 				.baseArrayLayer = 0,
@@ -227,7 +224,7 @@ fn vk::CommandBuffer? Context.beginFrame(&self, float[4] clear_color = { 0, 0, 0
 	self.current_image = next_image;
 
 	vk::CommandBuffer cmd = self.command_buffers[next_image];
-	vk::resetCommandBuffer(cmd, 0)!;
+	vk::resetCommandBuffer(cmd, (vk::CommandBufferResetFlags)0)!;
 	vk::beginCommandBuffer(cmd, &&vk::commandBufferBeginInfo())!;
 
 	vk::ImageMemoryBarrier2 begin_barrier = vk::colorBeginBarrier(self.swapchain.images[next_image]);
@@ -321,18 +318,18 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		.setExtent({ .width = width, .height = height, .depth = 1 })
 		.setMipLevels(1)
 		.setArrayLayers(1)
-		.setSamples(vk::SAMPLE_COUNT_1_BIT)
+		.setSamples(SAMPLE_COUNT_1_BIT)
 		.setTiling(IMAGE_TILING_OPTIMAL)
-		.setUsage(vk::IMAGE_USAGE_TRANSFER_DST_BIT | vk::IMAGE_USAGE_SAMPLED_BIT)
+		.setUsage(IMAGE_USAGE_TRANSFER_DST_BIT | IMAGE_USAGE_SAMPLED_BIT)
 		.setInitialLayout(IMAGE_LAYOUT_UNDEFINED)
 		.build(self.device)!;
 
-	vk::Memory mem = vk::create_image_buffer(image, &self.allocator, vk::MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
+	vk::Memory mem = vk::create_image_buffer(image, &self.allocator, MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
 
 	vk::Memory stage = vk::new_buffer(
 		&self.allocator,
-		usage: vk::BUFFER_USAGE_TRANSFER_SRC_BIT,
-		properties: vk::MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk::MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		usage: BUFFER_USAGE_TRANSFER_SRC_BIT,
+		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		data: pixels.ptr,
 		data_size: pixels.len,
 	)!;
@@ -342,14 +339,14 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		vk::ImageMemoryBarrier2 to_transfer = {
 			.sType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
 			.image = image,
-			.srcStageMask = vk::PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
-			.dstStageMask = vk::PIPELINE_STAGE_2_ALL_TRANSFER_BIT,
-			.srcAccessMask = 0,
-			.dstAccessMask = vk::ACCESS_2_TRANSFER_WRITE_BIT,
+			.srcStageMask = PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+			.dstStageMask = PIPELINE_STAGE_2_ALL_TRANSFER_BIT,
+			.srcAccessMask = (vk::AccessFlags2)0,
+			.dstAccessMask = ACCESS_2_TRANSFER_WRITE_BIT,
 			.oldLayout = IMAGE_LAYOUT_UNDEFINED,
 			.newLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			.subresourceRange = {
-				.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+				.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 				.baseMipLevel = 0,
 				.levelCount = 1,
 				.baseArrayLayer = 0,
@@ -363,7 +360,7 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 			.bufferRowLength = 0,
 			.bufferImageHeight = 0,
 			.imageSubresource = {
-				.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+				.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 				.mipLevel = 0,
 				.baseArrayLayer = 0,
 				.layerCount = 1,
@@ -394,7 +391,7 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		)
 		.setSubresourceRange(
 			{
-				.aspectMask = vk::IMAGE_ASPECT_COLOR_BIT,
+				.aspectMask = IMAGE_ASPECT_COLOR_BIT,
 				.baseMipLevel = 0,
 				.levelCount = 1,
 				.baseArrayLayer = 0,
@@ -431,10 +428,12 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 
 fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 {
-	vk::Format color_format        = config.color_format != (vk::Format)0 ? config.color_format : self.swapchain.format.format;
-	vk::PrimitiveTopology topology = config.topology != (vk::PrimitiveTopology)0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	vk::CullModeFlags cull_mode    = config.cull_mode != 0 ? config.cull_mode : vk::CULL_MODE_BACK_BIT;
-	vk::FrontFace front_face       = config.front_face != (vk::FrontFace)0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
+	vk::Format color_format = config.color_format != (vk::Format)0 ? config.color_format : self.swapchain.format.format;
+	vk::PrimitiveTopology topology = config.topology
+		!= (vk::PrimitiveTopology)0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	vk::CullModeFlags cull_mode = config.cull_mode != (vk::CullModeFlags)0 ? config.cull_mode : CULL_MODE_BACK_BIT;
+	vk::FrontFace front_face    = config.front_face
+		!= (vk::FrontFace)0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
 
 	vk::ShaderModule[8] modules;
 	vk::PipelineShaderStageCreateInfo[8] stages;
@@ -443,8 +442,7 @@ fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 	for (uint i = 0; i < stage_count; ++i)
 	{
 		modules[i] = vk::loadShaderModule(self.device, config.shaders[i].spirv)!;
-		stages[i] = vk::pipelineShaderStageCreateInfo().setStage(config.shaders[i].stage)
-			.setMod(modules[i])
+		stages[i] = vk::pipelineShaderStageCreateInfo().setStage(config.shaders[i].stage).setMod(modules[i])
 			.setName(config.shaders[i].entry_name);
 	}
 
@@ -457,7 +455,8 @@ fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 
 	vk::PipelineRenderingCreateInfo rendering_info = vk::pipelineRenderingCreateInfo()
 		.setColorAttachmentFormats((vk::Format[]) { color_format });
-	if (config.depth_format != (vk::Format)0) rendering_info = rendering_info.setDepthAttachmentFormat(config.depth_format);
+	if (config.depth_format
+		!= (vk::Format)0) rendering_info = rendering_info.setDepthAttachmentFormat(config.depth_format);
 
 	vk::PipelineVertexInputStateCreateInfo vertex_input = vk::pipelineVertexInputStateCreateInfo();
 	if (config.vertex_bindings.len > 0) vertex_input = vertex_input.setVertexBindingDescriptions(
@@ -493,8 +492,7 @@ fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 	vk::PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo().setViewportCount(1)
 		.setScissorCount(1);
 
-	vk::Pipeline pipeline = vk::graphicsPipelineCreateInfo().setNext(&rendering_info)
-		.setStages(stages[:stage_count])
+	vk::Pipeline pipeline = vk::graphicsPipelineCreateInfo().setNext(&rendering_info).setStages(stages[:stage_count])
 		.setVertexInputState(&vertex_input)
 		.setInputAssemblyState(&input_assembly)
 		.setViewportState(&viewport_state)
@@ -523,7 +521,7 @@ fn void GraphicsPipeline.free(&self, vk::Device device)
 
 fn vk::DescriptorSetLayout? createPushDescriptorLayout(vk::Device device, vk::DescriptorSetLayoutBinding[] bindings)
 {
-	return vk::descriptorSetLayoutCreateInfo().setFlags(vk::DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
+	return vk::descriptorSetLayoutCreateInfo().setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
 		.setBindings(bindings)
 		.build(device);
 }

@@ -354,47 +354,52 @@ fn void main(String[] args) {
 
     main_file.write("\n")!!;
 
-    // BaseTypes
-    foreach (entry : basetypes) {
-        if (entry.type == "") continue;
+    // Enums (emitted before BaseTypes so the Flags aliases below can point at the FlagBits constdefs)
+    HashMap{String, bool} emitted_flag_bits;
+    emitted_flag_bits.init_with_key_values(&allocator);
 
-        String type = type_values[entry.type] ?? entry.type.remove_vk();
-        DString text_body = dstring::join(&allocator, {"alias ", entry.name[2..], " = ", type, ";\n"}, "");
-        main_file.write(text_body.str_view())!!;
-    }
-
-    main_file.write("\n")!!;
-
-    // Enums
     foreach (entry : enums) {
         String enum_type = "uint";
         if (entry.name == "VkResult" || entry.negative) enum_type = "int";
         if (entry.bitwidth == "64") enum_type = "ulong";
 
         bool is_flag_bits = entry.name.contains("FlagBits");
+        if (is_flag_bits) emitted_flag_bits.set(entry.name[2..], true);
 
         DString text_body;
         defer text_body.free();
 
-        if (is_flag_bits) {
-            String type_name = entry.name[2..];
-            text_body.append(dstring::join(&allocator, {"typedef ", type_name, " = inline ", enum_type, ";\n"}, ""));
-            foreach (value : entry.values) {
-                value.name.convert_to_upper();
-                text_body.append(dstring::join(&allocator, {"const ", type_name, " ", value.name[3..], " = (", type_name, ")", value.value, ";\n"}, ""));
-            }
-            text_body.append_string("\n");
-        } else {
-            text_body.append(dstring::join(&allocator, {"constdef ", entry.name[2..], " : ", enum_type, "\n{\n"}, ""));
-            foreach (value : entry.values) {
-                value.name.convert_to_upper();
-                text_body.append(dstring::join(&allocator, {"    ", value.name[3..], " = ", value.value, ",\n"}, ""));
-            }
-            text_body.append_string("}\n\n");
+        // FlagBits are emitted as constdef just like the other enums: constdef supports
+        // non-contiguous/arbitrary values and bitwise OR, which is exactly what bitmasks need.
+        text_body.append(dstring::join(&allocator, {"constdef ", entry.name[2..], " : ", enum_type, "\n{\n"}, ""));
+        foreach (value : entry.values) {
+            value.name.convert_to_upper();
+            text_body.append(dstring::join(&allocator, {"    ", value.name[3..], " = ", value.value, ",\n"}, ""));
         }
+        text_body.append_string("}\n\n");
 
         main_file.write(text_body.str_view())!!;
     }
+
+    // BaseTypes
+    foreach (entry : basetypes) {
+        if (entry.type == "") continue;
+
+        String type = type_values[entry.type] ?? entry.type.remove_vk();
+
+        // A Vulkan `XFlags` type is `typedef VkFlags`; point it at its `XFlagBits` constdef
+        // (when one exists) so OR-combined flag values assign to struct fields without a cast.
+        String base_name = entry.name[2..];
+        if (base_name.ends_with_flags_suffix()) {
+            String fb_name = base_name.flags_to_flag_bits();
+            if (emitted_flag_bits.has_key(fb_name)) type = fb_name;
+        }
+
+        DString text_body = dstring::join(&allocator, {"alias ", base_name, " = ", type, ";\n"}, "");
+        main_file.write(text_body.str_view())!!;
+    }
+
+    main_file.write("\n")!!;
 
     // Write C3 errors
     foreach (entry : enums) {
@@ -808,6 +813,26 @@ fn String String.capitalize(self) {
     String new_value = self.copy(mem);
     new_value[0] = new_value[0].to_upper();
     return new_value;
+}
+
+// True when the name is a Vulkan `XFlags` type: it ends with "Flags" followed only by an
+// optional version digit and an optional uppercase vendor suffix (e.g. "Flags", "Flags2KHR").
+fn bool String.ends_with_flags_suffix(self) {
+    usz end = self.len;
+    while (end > 0 && self[end - 1] >= 'A' && self[end - 1] <= 'Z') end--; // vendor caps (KHR, EXT, NV, ...)
+    while (end > 0 && self[end - 1] >= '0' && self[end - 1] <= '9') end--; // version digit
+    return end >= 5 && self[:end].ends_with("Flags");
+}
+
+// Maps an `XFlags` name to its `XFlagBits` enum name: QueueFlags -> QueueFlagBits,
+// AccessFlags2KHR -> AccessFlagBits2KHR. Only valid when ends_with_flags_suffix() is true.
+fn String String.flags_to_flag_bits(self) {
+    usz end = self.len;
+    while (end > 0 && self[end - 1] >= 'A' && self[end - 1] <= 'Z') end--;
+    while (end > 0 && self[end - 1] >= '0' && self[end - 1] <= '9') end--;
+    char[64] buffer;
+    String res = (String)io::bprintf(&buffer, "%sFlagBits%s", self[:end - 5], self[end..])!!;
+    return res.copy(mem);
 }
 
 fn String String.remove_vk(self) {
