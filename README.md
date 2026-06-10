@@ -12,13 +12,15 @@ Vulkan bindings for [C3](https://c3-lang.org/), auto-generated from the official
 vk/                  # Generated + hand-written bindings (this is the library)
   vk.c3              # Types, enums, structs, unions
   commands.c3        # Function declarations and extension loading
-  builders.c3        # Auto-generated builder/setter methods
+  builders_core.c3   # Auto-generated builder/setter methods (core Vulkan structs)
+  builders_ext.c3    # Auto-generated builder/setter methods (extension structs)
   extra.c3           # Hand-written type aliases (platform types, function pointers)
   helpers.c3         # Convenience wrappers (swapchain, device queries, etc.)
   buffer.c3          # Memory allocator and buffer helpers
 parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
   build.c3           # Main generator logic
   types.c3           # XML parsing types
+  diag.c3            # Generator diagnostics (skipped/dropped report)
 examples/
   cube/              # 3D rotating cube with camera controls
 ```
@@ -129,6 +131,8 @@ sh build.sh
 ```
 
 This downloads `vk.xml` from the Khronos repository and runs the parser. All extensions compatible with supported platforms (Win32, X11, XCB, Wayland, macOS/Metal, iOS) are included. Extensions referencing undefined types are automatically skipped.
+
+The generator prints a summary of everything it skipped or dropped (and why) to stderr. Run it with `c3c run build -- --strict` to make any warning fail the run.
 
 ## Resources
 
