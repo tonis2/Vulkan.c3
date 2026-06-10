@@ -11,6 +11,14 @@ alias CommandList = List{VkCommand};
 alias ValueList = List{VkValue};
 alias EnumList = List{VkEnum};
 
+// Vulkan member/param names that collide with C3 keywords or generated type names
+const String[2][*] RESERVED_RENAMES = {{"module", "mod"}, {"sz", "size"}};
+
+fn String fix_reserved_name(String name) {
+    foreach (pair : RESERVED_RENAMES) if (name == pair[0]) return pair[1];
+    return name;
+}
+
 struct Base {
     String name;
     String comment;
@@ -35,6 +43,7 @@ fn void Base.free(&self) {
 
 struct VkStruct {
     inline Base base;
+    bool from_extension;
 }
 
 struct VkCommand {
@@ -122,7 +131,6 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
 
         value.len = value.len.strip_suffix(",null-terminated");
 
-        if (value.len.contains("latexmath") || value.len.contains(",") || value.len == "null-terminated") value.len = "";
         if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
  
         value.value = member.value.len > 1 ? member.value[0..0] : "";
@@ -133,15 +141,22 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
             if (entry.name == "enum") value.size = entry.value;
             if (entry.name == "type") value.type = entry.value;
             if (entry.name == "name") {
-                value.name = entry.value;
-                if (value.name == "module") value.name = "mod";
-				if (value.name == "sz") value.name = "size";
+                value.name = fix_reserved_name(entry.value);
                 if (value.name.len > 0 && value.name[0] >= 'A' && value.name[0] <= 'Z') {
                     value.name = value.name.copy(mem);
                     value.name[0] = value.name[0].to_lower();
                 }
             };
         }
+
+        // Lengths with latexmath expressions or multiple parts can't be mapped to a
+        // single C3 slice-length assignment; drop them, but say so.
+        if (value.len.contains("latexmath") || value.len.contains(",")) {
+            diag.warn(&diag.lost_lengths, dstring::join(mem,
+                {self.name, ".", value.name, ": unsupported len '", value.len, "' discarded"}, "").str_view());
+            value.len = "";
+        }
+        if (value.len == "null-terminated") value.len = "";
 
         if (value.size != "" && value.size != "null-terminated" && value.size[0] != '[') {
             DString size_value = dstring::join(mem, {"[", value.size[3..], "]"}, "");
@@ -179,10 +194,7 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
                 if (entry.name == "type") self.returnType = entry.value;
             } else if (!is_vulkansc) {
                 if (entry.name == "type") value.type = entry.value;
-                if (entry.name == "name") {
-                    value.name = entry.value;
-                    if (value.name == "module") value.name = "mod";
-                }
+                if (entry.name == "name") value.name = fix_reserved_name(entry.value);
             }
         }
         if (member.name == "param" && !is_vulkansc) self.values.push(value);

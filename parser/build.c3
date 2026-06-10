@@ -8,6 +8,7 @@ import std::collections::map;
 import xml;
 
 const MAX_VERSION = 1.4;
+const String VERSION_LABEL = "1.4"; // keep in sync with MAX_VERSION
 
 alias TypeMap = HashMap{String, String};
 
@@ -15,7 +16,9 @@ const String[*] ALLOWED_PLATFORMS = {
     "win32", "xlib", "xcb", "wayland", "macos", "metal", "ios", "xlib_xrandr", "provisional"
 };
 
-fn void main(String[] args) {
+fn int main(String[] args) {
+
+    foreach (arg : args) if (arg == "--strict") diag.strict = true;
 
     DynamicArenaAllocator allocator;
     allocator.init(allocator: mem, page_size: 256);
@@ -72,8 +75,11 @@ fn void main(String[] args) {
     File command_file = io::file::open("vk/commands.c3", "wb")!!;
     defer command_file.close()!!;
 
-    File builders_file = io::file::open("vk/builders.c3", "wb")!!;
-    defer builders_file.close()!!;
+    File builders_core_file = io::file::open("vk/builders_core.c3", "wb")!!;
+    defer builders_core_file.close()!!;
+
+    File builders_ext_file = io::file::open("vk/builders_ext.c3", "wb")!!;
+    defer builders_ext_file.close()!!;
 
     // Find required nodes
     NodeList feature_nodes;
@@ -144,6 +150,8 @@ fn void main(String[] args) {
         }
     }
 
+    String header_version = "unknown";
+
     foreach (usz i, node : types_nodes) {
         String? comment = node.attributes.get("comment");
         String? extends = node.attributes.get("structextends");
@@ -194,6 +202,25 @@ fn void main(String[] args) {
                 case "basetype": {
                     basetypes.push((VkValue){}.from_node(node));
                 }
+                case "define": {
+                    // <type category="define">#define <name>VK_HEADER_VERSION</name> 353</type>
+                    // The spec carries a second, vulkansc-only define with its own version.
+                    String? define_api = node.attributes.get("api");
+                    if (try define_api && define_api == "vulkansc") continue;
+                    foreach (child : node.children) {
+                        if (child.name == "name" && child.value == "VK_HEADER_VERSION") {
+                            String[] parts = node.value.trim(" \t\r\n").split(mem, " ");
+                            String candidate = parts.len > 0 ? parts[parts.len - 1].trim(" \t\r\n") : "";
+                            bool numeric = candidate.len > 0;
+                            foreach (c : candidate) if (c < '0' || c > '9') numeric = false;
+                            if (numeric) {
+                                header_version = candidate;
+                            } else {
+                                diag.warn(&diag.bad_prefixes, "could not parse VK_HEADER_VERSION from vk.xml");
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -235,12 +262,22 @@ fn void main(String[] args) {
         if (@ok(feature_api) && feature_api!! == "vulkansc") continue;
 
         String? supported = feature.attributes.get("supported");
-        if (try supported && (supported == "disabled" || supported == "vulkansc")) continue;
+        if (try supported && (supported == "disabled" || supported == "vulkansc")) {
+            diag.note_unique(&diag.skipped_extensions, dstring::join(mem,
+                {extension_name ?? "?", " (supported=", supported, ")"}, "").str_view());
+            continue;
+        }
 
         bool is_extension = feature.name == "extension";
 
         String? platform = feature.attributes.get("platform");
         bool enabled = is_extension ? (!@ok(platform) || ALLOWED_PLATFORMS.contains(platform!!)) : true;
+
+        if (is_extension && !enabled) {
+            diag.note_unique(&diag.skipped_extensions, dstring::join(mem,
+                {extension_name ?? "?", " (platform '", platform!!, "')"}, "").str_view());
+        }
+        if (is_extension && enabled) diag.extensions_enabled++;
 
         // Get only up-to required vulkan version
         if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || is_extension)) {
@@ -265,9 +302,12 @@ fn void main(String[] args) {
                                 foreach (&node : structs) {
                                     if (node.name == name && node.enabled == false) {
                                         node.enabled = enabled;
+                                        // Core <feature> elements precede <extensions> in vk.xml,
+                                        // so types shared with core keep from_extension = false.
+                                        node.from_extension = is_extension;
                                         break;
                                     }
-                                }  
+                                }
                             }
                         }
                         case "command": {
@@ -328,9 +368,10 @@ fn void main(String[] args) {
     }
 
     // Build C3 files
-    main_file.write("module vk;\n")!!;
-    command_file.write("module vk;\n")!!;
-    builders_file.write("module vk;\n")!!;
+    write_header(&main_file, header_version);
+    write_header(&command_file, header_version);
+    write_header(&builders_core_file, header_version);
+    write_header(&builders_ext_file, header_version);
 
 
 
@@ -338,16 +379,20 @@ fn void main(String[] args) {
     foreach (value : constants) {
         String type = type_values[value.value] ?? value.value;
 
-        DString text_body = dstring::join(&allocator, {"const ", value.name[3..], " = ", type, ";\n"}, "");
+        DString text_body = dstring::join(&allocator, {"const ", value.name.strip_checked("VK_", "constant"), " = ", type, ";\n"}, "");
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
-    
+
+    if (header_version != "unknown") {
+        main_file.write(dstring::join(&allocator, {"const HEADER_VERSION = ", header_version, ";\n"}, "").str_view())!!;
+    }
+
     main_file.write("\n")!!;
 
     // Handles
     foreach (entry : handles) {
-        DString text_body = dstring::join(&allocator, {"typedef ", entry.name[2..], " = inline void*;\n"}, "");
+        DString text_body = dstring::join(&allocator, {"typedef ", entry.name.strip_checked("Vk", "handle"), " = inline void*;\n"}, "");
         defer text_body.free();
         main_file.write(text_body.str_view())!!;
     }
@@ -363,22 +408,30 @@ fn void main(String[] args) {
         if (entry.name == "VkResult" || entry.negative) enum_type = "int";
         if (entry.bitwidth == "64") enum_type = "ulong";
 
+        String enum_name = entry.name.strip_checked("Vk", "enum");
+
         bool is_flag_bits = entry.name.contains("FlagBits");
-        if (is_flag_bits) emitted_flag_bits.set(entry.name[2..], true);
+        if (is_flag_bits) emitted_flag_bits.set(enum_name, true);
 
         DString text_body;
         defer text_body.free();
 
         // FlagBits are emitted as constdef just like the other enums: constdef supports
         // non-contiguous/arbitrary values and bitwise OR, which is exactly what bitmasks need.
-        text_body.append(dstring::join(&allocator, {"constdef ", entry.name[2..], " : ", enum_type, "\n{\n"}, ""));
+        text_body.append(dstring::join(&allocator, {"constdef ", enum_name, " : ", enum_type, "\n{\n"}, ""));
         foreach (value : entry.values) {
             value.name.convert_to_upper();
+            if (!value.name.starts_with("VK_")) {
+                diag.warn(&diag.bad_prefixes, dstring::join(mem,
+                    {"enum value '", value.name, "' in ", entry.name, " lacks VK_ prefix — skipped"}, "").str_view());
+                continue;
+            }
             text_body.append(dstring::join(&allocator, {"    ", value.name[3..], " = ", value.value, ",\n"}, ""));
         }
         text_body.append_string("}\n\n");
 
         main_file.write(text_body.str_view())!!;
+        diag.enums_emitted++;
     }
 
     // BaseTypes
@@ -389,7 +442,7 @@ fn void main(String[] args) {
 
         // A Vulkan `XFlags` type is `typedef VkFlags`; point it at its `XFlagBits` constdef
         // (when one exists) so OR-combined flag values assign to struct fields without a cast.
-        String base_name = entry.name[2..];
+        String base_name = entry.name.strip_checked("Vk", "basetype");
         if (base_name.ends_with_flags_suffix()) {
             String fb_name = base_name.flags_to_flag_bits();
             if (emitted_flag_bits.has_key(fb_name)) type = fb_name;
@@ -405,7 +458,7 @@ fn void main(String[] args) {
     foreach (entry : enums) {
         if (entry.name == "VkResult") {
             DString text_body = dstring::join(&allocator, {"faultdef ",}, "");
-            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::join(&allocator, {" E_", value.name[3..], ",\n"}, ""));
+            foreach (value : entry.values) if (value.value[0] == '-') text_body.append(dstring::join(&allocator, {" E_", value.name.strip_checked("VK_", "result code"), ",\n"}, ""));
             text_body.append(";\n");
 
             main_file.write(text_body.str_view())!!;
@@ -415,8 +468,10 @@ fn void main(String[] args) {
     }
     main_file.write("\n")!!;
 
-    DString creator_functions;
-    defer creator_functions.free();
+    DString creators_core;
+    DString creators_ext;
+    defer creators_core.free();
+    defer creators_ext.free();
 
     // Collect all known type names so we can skip structs/commands referencing undefined types
     HashMap{String, bool} known_types;
@@ -435,7 +490,11 @@ fn void main(String[] args) {
     foreach (entry : handles) known_types.set(entry.name, true);
     foreach (entry : basetypes) known_types.set(entry.name, true);
 
-    // Iteratively remove structs/unions with unresolvable member types
+    // Iteratively remove structs/unions with unresolvable member types.
+    // removed_types separates root-cause unknowns from cascade removals in the diagnostics.
+    HashMap{String, bool} removed_types;
+    removed_types.init_with_key_values(&allocator);
+
     bool changed = true;
     while (changed) {
         changed = false;
@@ -445,6 +504,8 @@ fn void main(String[] args) {
                 if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
                     entry.enabled = false;
                     known_types.remove(entry.name);
+                    removed_types.set(entry.name, true);
+                    diag.record_dropped_type(&diag.dropped_structs, entry.name, value.name, value.type, &removed_types);
                     changed = true;
                     break;
                 }
@@ -456,6 +517,8 @@ fn void main(String[] args) {
                 if (value.type.len > 0 && !type_values.has_key(value.type) && !known_types.has_key(value.type)) {
                     entry.enabled = false;
                     known_types.remove(entry.name);
+                    removed_types.set(entry.name, true);
+                    diag.record_dropped_type(&diag.dropped_structs, entry.name, value.name, value.type, &removed_types);
                     changed = true;
                     break;
                 }
@@ -476,6 +539,10 @@ fn void main(String[] args) {
             }
         }
         if (has_missing_type) continue;
+        diag.structs_emitted++;
+
+        // Builders for extension-only structs land in builders_ext.c3
+        DString* creator_functions = entry.from_extension ? &creators_ext : &creators_core;
 
         bool has_struct_type = entry.values[0].type == "VkStructureType" && entry.values[0].defaultValue != "";
 
@@ -486,7 +553,7 @@ fn void main(String[] args) {
 
         if (has_struct_type) {
             creator_functions.append(dstring::join(&allocator, {"fn ", name, " ", name.to_lower_case(), "() => ",
-            "{ .sType = ", entry.values[0].defaultValue[3..], ", .pNext = null };\n"}, ""));
+            "{ .sType = ", entry.values[0].defaultValue.strip_checked("VK_", "sType value"), ", .pNext = null };\n"}, ""));
         }
 
         // Add struct values
@@ -526,7 +593,8 @@ fn void main(String[] args) {
         main_file.write(text_body.str_view())!!;
     }
 
-    builders_file.write(creator_functions.str_view())!!;
+    builders_core_file.write(creators_core.str_view())!!;
+    builders_ext_file.write(creators_ext.str_view())!!;
     main_file.write("\n")!!;
 
     // Unions
@@ -541,8 +609,9 @@ fn void main(String[] args) {
             }
         }
         if (has_missing_type) continue;
+        diag.unions_emitted++;
 
-        DString text_body = dstring::join(&allocator, {"union ", entry.name[2..], " { \n"}, "");
+        DString text_body = dstring::join(&allocator, {"union ", entry.name.strip_checked("Vk", "union"), " { \n"}, "");
         defer text_body.free();
 
         // Add values
@@ -582,10 +651,12 @@ fn void main(String[] args) {
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
 
+    // Maps each CreateInfo type to the index (into `commands`) of the command
+    // chosen to back its generated `.build()` method.
     HashMap{String, usz} builder_types;
     builder_types.init_with_key_values(&allocator);
 
-    foreach (entry : commands) {
+    foreach (usz command_index, entry : commands) {
         if (entry.enabled == false) continue;
 
         // Skip commands that reference types we haven't generated
@@ -594,10 +665,12 @@ fn void main(String[] args) {
             String raw_type = value.type;
             if (raw_type.len > 0 && !type_values.has_key(raw_type) && !known_types.has_key(raw_type)) {
                 has_missing_type = true;
+                diag.record_dropped_type(&diag.dropped_commands, entry.name, value.name, raw_type, &removed_types);
                 break;
             }
         }
         if (has_missing_type) continue;
+        diag.commands_emitted++;
 
         String return_type = type_values[entry.returnType] ?? entry.returnType.remove_vk();
         bool no_result = return_type != "Result";
@@ -619,15 +692,24 @@ fn void main(String[] args) {
             extension_bind.append(dstring::join(&allocator, {"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
         }
 
-        if (create_command && entry.name != "vkCreateRenderPass2KHR") {
+        if (create_command) {
             String command_name;
             {
                 foreach (value : entry.values) if (value.type.contains("CreateInfo")) command_name = value.type;
             }
-            // Pick the command with fewest params as the canonical builder for each CreateInfo type
+            // Pick the canonical builder command per CreateInfo type: fewest params wins;
+            // on ties prefer a core command over an extension alias (e.g. vkCreateRenderPass2
+            // over vkCreateRenderPass2KHR) so .build() links statically instead of going
+            // through a runtime-loaded function pointer.
             if (command_name.len > 0) {
-                if (!builder_types.has_key(command_name) || entry.values.len() < (sz)builder_types[command_name]!!) {
-                    builder_types.set(command_name, (usz)entry.values.len());
+                if (!builder_types.has_key(command_name)) {
+                    builder_types.set(command_name, command_index);
+                } else {
+                    VkCommand current = commands[(sz)builder_types[command_name]!!];
+                    if (entry.values.len() < current.values.len()
+                        || (entry.values.len() == current.values.len() && current.extension && !entry.extension)) {
+                        builder_types.set(command_name, command_index);
+                    }
                 }
             }
         }
@@ -656,20 +738,18 @@ fn void main(String[] args) {
         }
     }
 
-    // Generate .build() methods for create commands (second pass, using best command per CreateInfo)
-    foreach (entry : commands) {
+    // Generate .build() methods for create commands (second pass, using the command
+    // selected per CreateInfo type in the first pass)
+    foreach (usz command_index, entry : commands) {
         if (entry.enabled == false) continue;
-        if (!entry.name[2..].starts_with("Create") || entry.name == "vkCreateRenderPass2KHR") continue;
+        if (!entry.name[2..].starts_with("Create")) continue;
 
         String command_name;
         {
             foreach (value : entry.values) if (value.type.contains("CreateInfo")) command_name = value.type;
         }
         if (command_name.len == 0) continue;
-        // Only generate if this command was selected as the best (fewest params) for this CreateInfo
-        if (!builder_types.has_key(command_name) || builder_types[command_name]!! != (usz)entry.values.len()) continue;
-        // Remove from map so we don't generate twice for same param count
-        builder_types.remove(command_name);
+        if (!builder_types.has_key(command_name) || builder_types[command_name]!! != command_index) continue;
 
         String result_type = entry.values[entry.values.len() - 1].type;
 
@@ -767,7 +847,10 @@ fn void main(String[] args) {
             seen_cases.init_with_key_values(&allocator);
             defer seen_cases.free();
             foreach (i, value : entry.error_codes) {
-                if (!value.starts_with("VK_ERROR")) continue;
+                if (!value.starts_with("VK_ERROR")) {
+                    diag.note_unique(&diag.skipped_result_codes, value);
+                    continue;
+                }
                 String canonical = enum_alias_to_canonical[value] ?? value;
                 if (seen_cases.has_key(canonical)) continue;
                 seen_cases.set(canonical, true);
@@ -786,6 +869,9 @@ fn void main(String[] args) {
     command_file.write("\n")!!;
     command_file.write(create_commands.str_view())!!;
     command_file.write("\n")!!;
+
+    diag.report();
+    return diag.strict && diag.has_warnings() ? 1 : 0;
 }
 
 macro bool String[*].contains(self, String key) {
@@ -833,6 +919,25 @@ fn String String.flags_to_flag_bits(self) {
     char[64] buffer;
     String res = (String)io::bprintf(&buffer, "%sFlagBits%s", self[:end - 5], self[end..])!!;
     return res.copy(mem);
+}
+
+// No timestamp on purpose: regenerating from the same spec must produce identical files.
+fn void write_header(File* file, String header_version) {
+    DString header = dstring::join(mem, {
+        "// Generated by parser/build.c3 from vk.xml (Vulkan ", VERSION_LABEL,
+        ", VK_HEADER_VERSION ", header_version, "). Do not edit.\n",
+        "module vk;\n"}, "");
+    defer header.free();
+    file.write(header.str_view())!!;
+}
+
+// Strip an expected prefix ("VK_"/"Vk"), warning instead of silently slicing
+// garbage when the name doesn't carry it.
+fn String String.strip_checked(self, String prefix, String ctx) {
+    if (self.len > prefix.len && self[:prefix.len] == prefix) return self[prefix.len..];
+    diag.warn(&diag.bad_prefixes, dstring::join(mem,
+        {ctx, ": '", self, "' lacks expected prefix '", prefix, "'"}, "").str_view());
+    return self;
 }
 
 fn String String.remove_vk(self) {
