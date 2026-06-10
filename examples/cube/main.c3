@@ -99,8 +99,7 @@ fn void main(String[] args)
 
 	$switch (env::OS_TYPE):
 		$case MACOS:
-			extensions.push_all({ "VK_EXT_metal_surface", "VK_KHR_portability_enumeration" });
-			device_extensions.push("VK_KHR_portability_subset");
+			extensions.push("VK_EXT_metal_surface");
 		$case WIN32:
 			extensions.push_all({ "VK_KHR_win32_surface" });
 		$case LINUX:
@@ -127,7 +126,6 @@ fn void main(String[] args)
 	};
 
 	InstanceCreateInfo instanceInfo = vk::instanceCreateInfo().setApplicationInfo(&info)
-		.setFlags(env::os_is_darwin() ? vk::InstanceCreateFlagBits.INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR : (vk::InstanceCreateFlags)0)
 		.setEnabledExtensionNames(extensions.array_view());
 
 	Instance instance = instanceInfo.build()!!;

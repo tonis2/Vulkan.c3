@@ -66,7 +66,7 @@ fn void main(String[] args)
 
 	// Instance + surface (user responsibility)
 	vk::Instance instance = vk::createDefaultInstance(
-		{ .enable_validation = true, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
+		{ .enable_validation = false, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
 	)!!;
 	defer instance.free();
 
@@ -116,8 +116,10 @@ fn void main(String[] args)
 	Texture texture = ctx.createTexture(img.pixels[..], img.width, img.height)!!;
 	defer texture.free(ctx.device);
 
-	// Descriptor layout (push descriptors)
-	vk::DescriptorSetLayout desc_layout = context::createPushDescriptorLayout(
+	// Descriptor layout — traditional sets (not push descriptors). KosmicKrisp's
+	// vkCmdPushDescriptorSetKHR breaks subsequent draws when descriptorWriteCount > 0;
+	// allocate + bind once instead.
+	vk::DescriptorSetLayout desc_layout = context::createDescriptorLayout(
 		ctx.device,
 		(vk::DescriptorSetLayoutBinding[]) {
 			{
@@ -135,6 +137,22 @@ fn void main(String[] args)
 		}
 	)!!;
 	defer desc_layout.free(ctx.device);
+
+	// Pool with room for one set of each type used here.
+	vk::DescriptorPool desc_pool = vk::descriptorPoolCreateInfo()
+		.setMaxSets(1)
+		.setPoolSizes((vk::DescriptorPoolSize[]) {
+			{ .type = DESCRIPTOR_TYPE_UNIFORM_BUFFER, .descriptorCount = 1 },
+			{ .type = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .descriptorCount = 1 },
+		})
+		.build(ctx.device)!!;
+	defer vk::destroyDescriptorPool(ctx.device, desc_pool, null);
+
+	vk::DescriptorSet desc_set;
+	vk::DescriptorSetAllocateInfo alloc_info = vk::descriptorSetAllocateInfo()
+		.setDescriptorPool(desc_pool)
+		.setSetLayouts((vk::DescriptorSetLayout[]) { desc_layout });
+	vk::allocateDescriptorSets(ctx.device, &alloc_info, &desc_set)!!;
 
 	// Pipeline
 	GraphicsPipeline pipe = ctx.createPipeline(
@@ -157,24 +175,27 @@ fn void main(String[] args)
 	)!!;
 	defer pipe.free(ctx.device);
 
-	// Pre-build descriptor writes
+	// Write descriptors into the allocated set (once — uniform buffer storage
+	// is updated in place each frame, descriptor handle stays the same).
 	vk::DescriptorBufferInfo buffer_info = {
 		.buffer = uniform_buffer.buffer,
 		.offset = 0,
 		.range = camera::UniformData::size,
 	};
-
 	vk::DescriptorImageInfo image_info = {
 		.sampler = texture.sampler,
 		.imageView = texture.view,
 		.imageLayout = IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};
-
-	vk::WriteDescriptorSet[2] descriptor_writes = { vk::writeDescriptorSet().setDstBinding(0)
-		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-		.setBufferInfo({ buffer_info }), vk::writeDescriptorSet().setDstBinding(1)
+	vk::WriteDescriptorSet[2] descriptor_writes = {
+		vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(0)
+			.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+			.setBufferInfo({ buffer_info }),
+		vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(1)
 			.setDescriptorType(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-			.setImageInfo({ image_info }), };
+			.setImageInfo({ image_info }),
+	};
+	vk::updateDescriptorSets(ctx.device, 2, &descriptor_writes[0], 0, null);
 
 	// Render loop
 	Vec2 prev_mouse;
@@ -211,7 +232,7 @@ fn void main(String[] args)
 		vk::CommandBuffer cmd = ctx.beginFrame()!!;
 
 		vk::cmdBindPipeline(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.handle);
-		vk::cmdPushDescriptorSetKHR(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.layout, 0, 2, &descriptor_writes);
+		vk::cmdBindDescriptorSets(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.layout, 0, 1, &desc_set, 0, null);
 		vk::cmdBindVertexBuffers(cmd, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (vk::DeviceSize[]) { 0 });
 		vk::cmdBindIndexBuffer(cmd, index_buffer.buffer, 0, INDEX_TYPE_UINT16);
 		vk::cmdDrawIndexed(cmd, (uint)indices.len, 1, 0, 0, 0);
