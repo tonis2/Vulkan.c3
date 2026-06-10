@@ -428,12 +428,13 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 
 fn GraphicsPipeline? Context.createPipeline(&self, PipelineConfig config)
 {
-	vk::Format color_format = config.color_format != (vk::Format)0 ? config.color_format : self.swapchain.format.format;
-	vk::PrimitiveTopology topology = config.topology
-		!= (vk::PrimitiveTopology)0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	vk::CullModeFlags cull_mode = config.cull_mode != (vk::CullModeFlags)0 ? config.cull_mode : CULL_MODE_BACK_BIT;
-	vk::FrontFace front_face    = config.front_face
-		!= (vk::FrontFace)0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
+	vk::Format color_format        = config.color_format != (vk::Format)0 ? config.color_format : self.swapchain.format.format;
+	vk::PrimitiveTopology topology = config.topology != (vk::PrimitiveTopology)0 ? config.topology : PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	// CULL_MODE_NONE is 0, so we cannot use `config.cull_mode != 0` to distinguish
+	// "unset" from "explicitly NONE". Default to NONE; callers that want culling
+	// must request it explicitly.
+	vk::CullModeFlags cull_mode    = config.cull_mode;
+	vk::FrontFace front_face       = config.front_face != (vk::FrontFace)0 ? config.front_face : FRONT_FACE_COUNTER_CLOCKWISE;
 
 	vk::ShaderModule[8] modules;
 	vk::PipelineShaderStageCreateInfo[8] stages;
@@ -516,12 +517,19 @@ fn void GraphicsPipeline.free(&self, vk::Device device)
 }
 
 // ============================================================================
-// Push descriptor layout helper
+// Descriptor layout helpers
 // ============================================================================
 
 fn vk::DescriptorSetLayout? createPushDescriptorLayout(vk::Device device, vk::DescriptorSetLayoutBinding[] bindings)
 {
 	return vk::descriptorSetLayoutCreateInfo().setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
+		.setBindings(bindings)
+		.build(device);
+}
+
+fn vk::DescriptorSetLayout? createDescriptorLayout(vk::Device device, vk::DescriptorSetLayoutBinding[] bindings)
+{
+	return vk::descriptorSetLayoutCreateInfo()
 		.setBindings(bindings)
 		.build(device);
 }

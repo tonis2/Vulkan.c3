@@ -13,6 +13,7 @@ assets/
 .DS_Store
 .vscode/
 .claude/
+obj/
 
 # Linker output
 *.ilk

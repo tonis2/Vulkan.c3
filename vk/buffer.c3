@@ -143,9 +143,15 @@ fn void MemoryPage.merge_free_blocks(&self) {
 fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits) {
     uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
 
-    // Search existing pages for matching properties + enough space
+    // Search existing pages for matching properties + enough space.
+    // Match on memory_type AND properties — on unified-memory GPUs (Apple Silicon
+    // via KosmicKrisp/MoltenVK) all property bits live on one memory_type, so a
+    // device-local-only page (unmapped) must not be reused for a host-visible
+    // allocation, otherwise upload memcpy hits a null `mapped`.
     foreach (page : self.pages) {
-        if (page.memory_type == memory_type && (page.size - page.used_size) >= required_size) {
+        if (page.memory_type == memory_type
+            && page.properties == properties
+            && (page.size - page.used_size) >= required_size) {
             return page;
         }
     }
@@ -340,9 +346,9 @@ fn Memory? new_buffer(
     sz offset;
     bool used_free_block = false;
 
-    // First, try to find a free block in an existing page
+    // First, try to find a free block in an existing page with matching properties
     foreach (p : allocator.pages) {
-        if (p.memory_type == memory_type) {
+        if (p.memory_type == memory_type && p.properties == properties) {
             FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
             if (free_block != null) {
                 page = p;
@@ -461,7 +467,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
     bool used_free_block = false;
 
     foreach (p : allocator.pages) {
-        if (p.memory_type == memory_type) {
+        if (p.memory_type == memory_type && p.properties == properties) {
             FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
             if (free_block != null) {
                 page = p;
