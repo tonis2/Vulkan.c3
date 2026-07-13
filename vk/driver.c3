@@ -119,6 +119,40 @@ fn PFN_vkGetInstanceProcAddrLUNARG? findDriver(String[] paths)
 }
 
 <*
+ The driver this library ships for macOS, the one platform with no system
+ Vulkan: KosmicKrisp, a Metal translation layer, in the `macos-aarch64/`
+ directory the .c3l carries. Looked for in the same locations as the bundled
+ loader (see DEFAULT_LOADER_PATHS in loader.c3) — but only the bundled ones:
+ an installed driver is the loader's own discovery to make, not direct
+ loading's.
+
+ Finding nothing is not an error: fall back to the loader's discovery, which
+ is what happens when developing against a system Vulkan SDK.
+
+ @return? DRIVER_NOT_LOADED : `No bundled driver — fall back to the loader's own discovery.`
+*>
+fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(env::DARWIN)
+{
+	return findDriver({
+		"@executable_path/libvulkan_kosmickrisp.dylib",
+		"build/unpacked_c3l/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
+		"macos-aarch64/libvulkan_kosmickrisp.dylib",
+		"lib/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
+	});
+}
+
+<*
+ No bundled driver on this platform: the machine's own driver is bound to the
+ GPU and the kernel module, and the loader finds it.
+
+ @return? DRIVER_NOT_LOADED : `Always — nothing is bundled here.`
+*>
+fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(!env::DARWIN)
+{
+	return DRIVER_NOT_LOADED~;
+}
+
+<*
  Whether the loader on this machine implements direct driver loading. Older
  loaders do not, so probe before enabling the extension and fall back to the
  loader's own driver discovery.

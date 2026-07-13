@@ -89,49 +89,22 @@ fn void main(String[] args)
 	defer win.free();
 
 	Camera camera = camera::new(eye: { 0.0, 5.0, 10 }, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
-
-	// --- Instance & surface ---
+	
 	ZStringList device_extensions;
 	device_extensions.push_all({ "VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_shader_non_semantic_info" });
 
-	ZStringList extensions;
-	extensions.push_all({ "VK_KHR_surface" });
+	vk::init()!!;
 
-	$switch (env::OS_TYPE):
-		$case MACOS:
-			extensions.push("VK_EXT_metal_surface");
-		$case WIN32:
-			extensions.push_all({ "VK_KHR_win32_surface" });
-		$case LINUX:
-			BackendType backend = win.getBackend();
-			switch (backend)
-			{
-				case WAYLAND:
-					extensions.push_all({ "VK_KHR_wayland_surface" });
-				case X11:
-					extensions.push_all({ "VK_KHR_xcb_surface" });
-				default:
-			}
-		$default:
-	$endswitch
+	vk::Instance instance = vk::createDefaultInstance(
+		{ .enable_validation = false, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" }, .app_name = "test" }
+	)!!;
 
-	vk::checkInstanceExtensionSupport(extensions)!!;
-
-	ApplicationInfo info = {
-		.pApplicationName = "TEST",
-		.pEngineName = "Super engine",
-		.applicationVersion = vk::@makeApiVersion(0, 1, 0, 0),
-		.engineVersion = vk::@makeApiVersion(0, 1, 0, 0),
-		.apiVersion = vk::@makeApiVersion(0, 1, 3, 0)
-	};
-
-	InstanceCreateInfo instanceInfo = vk::instanceCreateInfo().setApplicationInfo(&info)
-		.setEnabledExtensionNames(extensions.array_view());
-
-	Instance instance = instanceInfo.build()!!;
-
-	// Create surface
-	SurfaceKHR surface = (SurfaceKHR)win.create_vk_surface(instance)!!;
+	// Create surface. The window library gets our vkGetInstanceProcAddr: it has
+	// no way to find the loader this program opened by itself.
+	SurfaceKHR surface = (SurfaceKHR)win.create_vk_surface(
+		instance,
+		(c3w::VkGetInstanceProcAddrFn)vk::getInstanceProcAddr
+	)!!;
 
 	// --- Physical device selection ---
 	vk::DeviceSelection selection  = vk::selectPhysicalDevice(instance, surface, device_extensions)!!;
