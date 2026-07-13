@@ -3423,7 +3423,6 @@ constdef VendorId : uint
     VENDOR_ID_MESA = 0x10005,
     VENDOR_ID_POCL = 0x10006,
     VENDOR_ID_MOBILEYE = 0x10007,
-    VENDOR_ID_APE = 0x10008,
 }
 
 constdef DriverId : uint
@@ -3457,7 +3456,6 @@ constdef DriverId : uint
     DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN = 27,
     DRIVER_ID_MESA_KOSMICKRISP = 28,
     DRIVER_ID_MESA_GFXSTREAM = 29,
-    DRIVER_ID_APE_SOFT = 30,
 }
 
 constdef ConditionalRenderingFlagBitsEXT : uint

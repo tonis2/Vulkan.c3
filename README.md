@@ -5,15 +5,18 @@ Vulkan bindings for [C3](https://c3-lang.org/), auto-generated from the official
 - Idiomatic C3 error handling — Vulkan error codes map to C3 faults
 - Builder pattern — auto-generated `.set*()` and `.build()` methods for Vulkan structs
 - Cross-platform — Windows, Linux (X11/Wayland), and macOS
+- No link-time Vulkan dependency — the loader is found at runtime (volk-style), so no Vulkan SDK is needed to build
 
 ## Project structure
 
 ```
 vk/                  # Generated + hand-written bindings (this is the library)
   vk.c3              # Types, enums, structs, unions
-  commands.c3        # Function declarations and extension loading
+  commands.c3        # Command pointers, staged loading, and wrappers
   builders_core.c3   # Auto-generated builder/setter methods (core Vulkan structs)
   builders_ext.c3    # Auto-generated builder/setter methods (extension structs)
+  loader.c3          # Runtime loader bootstrap (vk::init)
+  driver.c3          # VK_LUNARG_direct_driver_loading support
   extra.c3           # Hand-written type aliases (platform types, function pointers)
   helpers.c3         # Convenience wrappers (swapchain, device queries, etc.)
   buffer.c3          # Memory allocator and buffer helpers
@@ -21,16 +24,36 @@ parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
   build.c3           # Main generator logic
   types.c3           # XML parsing types
   diag.c3            # Generator diagnostics (skipped/dropped report)
+macos-aarch64/       # Bundled loader + driver dylibs for macOS (see below)
 examples/
   cube/              # 3D rotating cube with camera controls
 ```
+
+## How commands are loaded
+
+Nothing links against Vulkan. Every command is a function pointer, resolved in
+three stages (the same model as [volk](https://github.com/zeux/volk)):
+
+1. `vk::init()` — dlopens the Vulkan loader (`libvulkan.so.1` / `vulkan-1.dll` /
+   `libvulkan.dylib`, or explicit candidate paths you pass in), pulls
+   `vkGetInstanceProcAddr` out of it, and binds the global-level commands.
+2. Creating an instance — `InstanceCreateInfo.build()` (or `vk::loadExtensions`)
+   binds every remaining command through `vkGetInstanceProcAddr`.
+3. `vk::loadDeviceCommands(device)` — optional: rebinds device-level commands
+   through `vkGetDeviceProcAddr`, skipping the loader's dispatch trampoline.
+
+Call `vk::init()` before anything else (`vk::createDefaultInstance` calls it
+for you). A command called before its stage has run is a null pointer — a
+crash, not a link error.
+
 
 ## Quick start
 
 ### Prerequisites
 
 1. [C3 compiler](https://c3-lang.org/) (latest version)
-2. Vulkan drivers installed for your GPU
+2. A Vulkan loader and driver installed on the machine that *runs* the program
+   (nothing is needed to build)
 
 ### Running the cube example
 
@@ -44,28 +67,28 @@ c3c run cube
 c3c run cube-win
 ```
 
-**macOS** (needs Vulkan SDK rpath):
+**macOS:**
 ```bash
-c3c run cube -z -rpath -z /path/to/VulkanSDK/macOS/lib
+c3c run cube
 ```
 
-### Platform setup
+### Platform setup (runtime only)
 
-**Linux** — install Vulkan packages for your distro:
+**Linux** — the loader and driver ship with the GPU stack; for tooling and validation layers:
 ```bash
 # Ubuntu/Debian
-sudo apt install libvulkan-dev vulkan-tools vulkan-validationlayers-dev spirv-tools
+sudo apt install libvulkan1 vulkan-tools vulkan-validationlayers spirv-tools
 
 # Fedora
-sudo dnf install vulkan-loader-devel vulkan-tools vulkan-validation-layers-devel spirv-tools
+sudo dnf install vulkan-loader vulkan-tools vulkan-validation-layers spirv-tools
 
 # Arch
 sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-tools
 ```
 
-**Windows** — download and install the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home). Make sure `VULKAN_SDK` is set. The `cube-win` target includes Windows SDK configuration for cross-compilation from Linux.
+**Windows** — the loader (`vulkan-1.dll`) ships with the GPU driver. The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is only needed for validation layers and tooling.
 
-**macOS** — download the [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac) and pass the library path when building (see above).
+**macOS** — install the [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac) (MoltenVK), or ship a loader + driver with your app and pass their paths to `vk::init`.
 
 ## Using the library in your project
 
@@ -76,10 +99,11 @@ Download `vulkan.c3l` from [releases](https://github.com/tonis2/Vulkan.c3/releas
 ```json
 {
   "dependency-search-paths": ["./libs"],
-  "dependencies": ["vulkan"],
-  "linked-libraries": ["vulkan"]
+  "dependencies": ["vulkan"]
 }
 ```
+
+No `linked-libraries` entry — the loader is found at runtime by `vk::init()`.
 
 ### Option 2: Build from source
 
@@ -95,6 +119,8 @@ This creates `vulkan.c3l` in the project root.
 import vk;
 
 fn void! main() {
+    vk::init()!;
+
     ApplicationInfo info = {
         .pApplicationName = "My App",
         .pEngineName = "My Engine",

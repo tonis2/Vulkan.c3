@@ -43,7 +43,7 @@ Vertex[] vertices = {
 	{ { -1, -1, 1 }, { 0, 0 } },
 	{ { -1, 1, 1 }, { 0, 1 } },
 	{ { -1, 1, -1 }, { 1, 1 } },
-	};
+};
 
 ushort[] indices = {
 	0, 1, 2, 0, 2, 3,
@@ -52,7 +52,7 @@ ushort[] indices = {
 	12, 13, 14, 12, 14, 15,
 	16, 17, 18, 16, 18, 19,
 	20, 21, 22, 20, 22, 23,
-	};
+};
 
 char[*] shader    = $embed("./shaders/shader.spv");
 char[*] logo_data = $embed("./logo.png");
@@ -64,13 +64,20 @@ fn void main(String[] args)
 
 	Camera cam = camera::new(eye: { 0.0, 5.0, 10 }, aspect: (float)WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
+	vk::init()!!;
+
 	// Instance + surface (user responsibility)
 	vk::Instance instance = vk::createDefaultInstance(
 		{ .enable_validation = false, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
 	)!!;
 	defer instance.free();
 
-	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(instance)!!;
+	// The window library gets our vkGetInstanceProcAddr: it has no way to find
+	// the loader this program opened by itself.
+	vk::SurfaceKHR surface = (vk::SurfaceKHR)win.create_vk_surface(
+		instance,
+		(c3w::VkGetInstanceProcAddrFn)vk::getInstanceProcAddr
+	)!!;
 	defer surface.free(instance);
 
 	// --- context::init does everything else ---
@@ -139,18 +146,18 @@ fn void main(String[] args)
 	defer desc_layout.free(ctx.device);
 
 	// Pool with room for one set of each type used here.
-	vk::DescriptorPool desc_pool = vk::descriptorPoolCreateInfo()
-		.setMaxSets(1)
-		.setPoolSizes((vk::DescriptorPoolSize[]) {
-			{ .type = DESCRIPTOR_TYPE_UNIFORM_BUFFER, .descriptorCount = 1 },
-			{ .type = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .descriptorCount = 1 },
-		})
+	vk::DescriptorPool desc_pool = vk::descriptorPoolCreateInfo().setMaxSets(1)
+		.setPoolSizes(
+			(vk::DescriptorPoolSize[]) {
+				{ .type = DESCRIPTOR_TYPE_UNIFORM_BUFFER, .descriptorCount = 1 },
+				{ .type = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .descriptorCount = 1 },
+			}
+		)
 		.build(ctx.device)!!;
 	defer vk::destroyDescriptorPool(ctx.device, desc_pool, null);
 
 	vk::DescriptorSet desc_set;
-	vk::DescriptorSetAllocateInfo alloc_info = vk::descriptorSetAllocateInfo()
-		.setDescriptorPool(desc_pool)
+	vk::DescriptorSetAllocateInfo alloc_info = vk::descriptorSetAllocateInfo().setDescriptorPool(desc_pool)
 		.setSetLayouts((vk::DescriptorSetLayout[]) { desc_layout });
 	vk::allocateDescriptorSets(ctx.device, &alloc_info, &desc_set)!!;
 
@@ -187,14 +194,11 @@ fn void main(String[] args)
 		.imageView = texture.view,
 		.imageLayout = IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};
-	vk::WriteDescriptorSet[2] descriptor_writes = {
-		vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(0)
-			.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-			.setBufferInfo({ buffer_info }),
-		vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(1)
+	vk::WriteDescriptorSet[2] descriptor_writes = { vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(0)
+		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		.setBufferInfo({ buffer_info }), vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(1)
 			.setDescriptorType(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-			.setImageInfo({ image_info }),
-	};
+			.setImageInfo({ image_info }), };
 	vk::updateDescriptorSets(ctx.device, 2, &descriptor_writes[0], 0, null);
 
 	// Render loop

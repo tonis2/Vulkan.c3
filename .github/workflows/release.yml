@@ -25,8 +25,12 @@ jobs:
           fi
 
       - name: Build vulkan.c3l
+        # macos-aarch64/ carries the loader + driver dylibs the library dlopens
+        # at runtime on macOS -- nothing is linked, they only need to travel.
         run: |
-          zip -r vulkan.c3l ./vk manifest.json
+          test -f macos-aarch64/libvulkan.1.dylib
+          test -f macos-aarch64/libvulkan_kosmickrisp.dylib
+          zip -r vulkan.c3l ./vk macos-aarch64 manifest.json
 
       - name: Create Release
         uses: softprops/action-gh-release@v2

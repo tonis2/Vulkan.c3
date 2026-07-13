@@ -1,0 +1,64 @@
+name: Vendor Vulkan loader
+
+# Run by hand, rarely — only to refresh the Vulkan loader dylib under
+# macos-aarch64/.
+#
+# That dylib is committed to the repository on purpose, so that cutting a
+# release is nothing but zipping files: no toolchains, no package installs, no
+# network fetches, and the binary shipped is exactly the one that was tested.
+#
+# macOS is the only platform that needs anything vendored: nothing links
+# against Vulkan (the bindings dlopen the loader at runtime), and on Linux
+# and Windows the system loader is the correct one and always installed. macOS
+# has no system Vulkan, so the library ships the loader — and the KosmicKrisp
+# driver, which this workflow does NOT build; replace that dylib by hand.
+#
+# The LunarG macOS SDK ships this same dylib, so a local copy out of an SDK
+# install works too; this workflow exists to pin the version reproducibly.
+#
+# Download the `vulkan-libs` artifact this produces, unzip it over the repo
+# root, and commit.
+
+on:
+  workflow_dispatch:
+    inputs:
+      loader_version:
+        description: "Vulkan-Loader tag to build, e.g. vulkan-sdk-1.4.350.1"
+        required: true
+        default: "vulkan-sdk-1.4.350.1"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Vulkan-Loader
+        uses: actions/checkout@v4
+        with:
+          repository: KhronosGroup/Vulkan-Loader
+          ref: ${{ inputs.loader_version }}
+
+      - name: Build loader
+        shell: bash
+        run: |
+          # CMAKE_OSX_DEPLOYMENT_TARGET must be set explicitly: unset, cmake
+          # stamps every object with the runner's own macOS version, and dyld
+          # then warns when an app built with c3c's 11.0 floor loads it. 11.0
+          # is that floor -- the loader needs nothing newer.
+          cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D UPDATE_DEPS=ON \
+            -D CMAKE_OSX_ARCHITECTURES=arm64 -D CMAKE_OSX_DEPLOYMENT_TARGET=11.0
+          cmake --build build --config Release -j
+
+          mkdir -p out/macos-aarch64
+          # The real file, not the symlink chain: zip does not carry symlinks
+          # reliably. The name matches what vk::init and its consumers look for.
+          cp "$(find build -name 'libvulkan.1.*.dylib' | head -1)" out/macos-aarch64/libvulkan.1.dylib
+          MINOS=$(otool -l out/macos-aarch64/libvulkan.1.dylib | grep -o 'minos [0-9.]*' | sort -u)
+          [ "$MINOS" = "minos 11.0" ] || { echo "unexpected deployment target: $MINOS"; exit 1; }
+          ls -la out/macos-aarch64
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulkan-libs
+          path: out/
+          if-no-files-found: error
