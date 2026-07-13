@@ -17,24 +17,20 @@
 		},
 		"zip": {
 			"type": "prepare",
-			"exec": ["zip -r vulkan.c3l ./vk manifest.json"]
+			"exec": ["zip -r vulkan.c3l ./vk macos-aarch64 manifest.json"]
 		},
 		"cube": {
 			"type": "executable",
 			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"],
-			"dependencies": ["c3w"],
-			"linked-libraries": ["vulkan"]
+			"dependencies": ["c3w"]
 		},
 		"textured_cube": {
 			"type": "executable",
 			"sources": ["./examples/textured_cube/main.c3", "./examples/camera.c3", "./examples/context.c3", "./vk/*"],
-			"dependencies": ["c3w", "image"],
-			"linked-libraries": ["vulkan"]
+			"dependencies": ["c3w", "image"]
 		},
 		"cube-win": {
 			"target": "windows-x64",
-			"linker-search-paths": ["./libs"],	
-			"linked-libraries": ["vulkan-1"],
 			"dependencies": ["c3w"],
 			"type": "executable",
 			"sources": ["./examples/cube/main.c3", "./examples/camera.c3", "./vk/*"]

@@ -1077,6 +1077,10 @@ struct InstanceConfig
 	ZString app_name;
 	uint api_version;
 	bool enable_validation;
+	// On macOS the library ships its own driver and uses it by default (see
+	// vk::findBundledDriver). Set this to let the loader discover an installed
+	// driver instead — a system MoltenVK, for example.
+	bool skip_bundled_driver;
 	ZString[] extensions;
 	ZString[] layers;
 }
@@ -1090,6 +1094,8 @@ const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == LINUX && !$feature(WAYLAN
 
 fn Instance? createDefaultInstance(InstanceConfig config = { })
 {
+	init()!;
+
 	ZString app_name = config.app_name != null ? config.app_name : "Vulkan App";
 	uint api_version = config.api_version != 0 ? config.api_version : @makeApiVersion(0, 1, 3, 0);
 
@@ -1103,7 +1109,32 @@ fn Instance? createDefaultInstance(InstanceConfig config = { })
 
 	exts.push_all(config.extensions);
 
-	checkInstanceExtensionSupport(exts)!;
+	// The bundled driver, when there is one: handed straight to the loader via
+	// VK_LUNARG_direct_driver_loading. Both structs must outlive build(), so
+	// they live at function scope.
+	DirectDriverLoadingInfoLUNARG bundled_driver;
+	DirectDriverLoadingListLUNARG bundled_drivers;
+	bool direct_driver = false;
+
+	if (!config.skip_bundled_driver)
+	{
+		if (try icd = findBundledDriver())
+		{
+			if (supportsDirectDriverLoading())
+			{
+				bundled_driver = directDriverInfo(icd);
+				bundled_drivers = directDriverList(&bundled_driver, 1);
+				exts.push(DIRECT_DRIVER_LOADING_EXTENSION_NAME);
+				direct_driver = true;
+			}
+		}
+	}
+
+	// Only meaningful against drivers the loader has already discovered:
+	// instance extensions are enumerated before the instance exists, so a
+	// driver supplied at create time is invisible here. vkCreateInstance
+	// validates the list against the bundled driver instead.
+	if (!direct_driver) checkInstanceExtensionSupport(exts)!;
 
 	ApplicationInfo app_info = {
 		.pApplicationName = app_name,
@@ -1138,6 +1169,13 @@ fn Instance? createDefaultInstance(InstanceConfig config = { })
 	if (layers.len() > 0)
 	{
 		instance_info = instance_info.setEnabledLayerNames(layers.array_view());
+	}
+
+	// Chained last, in front of whatever is already there (validation features).
+	if (direct_driver)
+	{
+		bundled_drivers.pNext = instance_info.pNext;
+		instance_info.pNext = &bundled_drivers;
 	}
 
 	return instance_info.build();
