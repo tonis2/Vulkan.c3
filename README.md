@@ -34,19 +34,6 @@ examples/
 Nothing links against Vulkan. Every command is a function pointer, resolved in
 three stages (the same model as [volk](https://github.com/zeux/volk)):
 
-1. `vk::init()` — dlopens the Vulkan loader (`libvulkan.so.1` / `vulkan-1.dll` /
-   `libvulkan.dylib`, or explicit candidate paths you pass in), pulls
-   `vkGetInstanceProcAddr` out of it, and binds the global-level commands.
-2. Creating an instance — `InstanceCreateInfo.build()` (or `vk::loadExtensions`)
-   binds every remaining command through `vkGetInstanceProcAddr`.
-3. `vk::loadDeviceCommands(device)` — optional: rebinds device-level commands
-   through `vkGetDeviceProcAddr`, skipping the loader's dispatch trampoline.
-
-Call `vk::init()` before anything else (`vk::createDefaultInstance` calls it
-for you). A command called before its stage has run is a null pointer — a
-crash, not a link error.
-
-
 ## Quick start
 
 ### Prerequisites
