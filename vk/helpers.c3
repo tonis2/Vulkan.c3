@@ -836,6 +836,9 @@ struct Swapchain
 	ImageViewList views;
 	FrameBufferList framebuffers;
 	uint image_count;
+	// Usage the surface actually granted, which may be less than was requested.
+	// Check this before relying on an optional bit such as TRANSFER_SRC.
+	ImageUsageFlags image_usage;
 }
 
 faultdef NO_SUITABLE_FORMAT;
@@ -849,7 +852,8 @@ fn Swapchain? Swapchain.init(
 	uint height,
 	RenderPass render_pass = (RenderPass)null,
 	Format preferred_format = FORMAT_B8G8R8A8_UNORM,
-	PresentModeKHR preferred_mode = PRESENT_MODE_FIFO_KHR
+	PresentModeKHR preferred_mode = PRESENT_MODE_FIFO_KHR,
+	ImageUsageFlags image_usage = IMAGE_USAGE_COLOR_ATTACHMENT_BIT
 )
 {
 	SurfaceCapabilitiesKHR capabilities = surface.deviceSurfaceCapabilities(pdevice)!;
@@ -882,8 +886,15 @@ fn Swapchain? Swapchain.init(
 
 	Extent2D extent = { width, height };
 
+	// Mask the request down to what the surface supports: asking for a bit the
+	// surface does not grant makes swapchain creation fail outright, which would
+	// be a hard error for an optional extra such as TRANSFER_SRC (screenshots).
+	// COLOR_ATTACHMENT is required of every surface by the spec, so the result
+	// is never empty.
+	ImageUsageFlags granted_usage = image_usage & capabilities.supportedUsageFlags;
+
 	SwapchainCreateInfoKHR swapchain_info = swapchainCreateInfoKHR().setMinImageCount(min_images)
-		.setImageUsage(IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+		.setImageUsage(granted_usage)
 		.setImageSharingMode(SHARING_MODE_EXCLUSIVE)
 		.setCompositeAlpha(COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
 		.setPresentMode(preferred_mode)
@@ -898,6 +909,7 @@ fn Swapchain? Swapchain.init(
 	self.handle = swapchain_info.build(device)!;
 	self.format = chosen_format;
 	self.extent = extent;
+	self.image_usage = granted_usage;
 	self.image_count = min_images;
 	self.images = self.handle.getImages(device, min_images)!;
 
@@ -974,6 +986,9 @@ fn Swapchain? Swapchain.recreate(
 		render_pass: render_pass,
 		preferred_format: fmt,
 		preferred_mode: PRESENT_MODE_FIFO_KHR,
+		// Keep whatever usage was granted at init, or a resize would silently
+		// drop extras like TRANSFER_SRC and break screenshots afterwards.
+		image_usage: self.image_usage,
 	)!;
 
 	return *self;
