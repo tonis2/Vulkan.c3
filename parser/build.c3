@@ -638,6 +638,8 @@ fn int main(String[] args) {
     DString extension_functions;
     DString base_commands;
     DString create_commands;
+    DString global_bind;
+    DString device_bind;
 
     defer {
         base_commands.free();
@@ -646,10 +648,14 @@ fn int main(String[] args) {
         extension_bind.free();
         extension_functions.free();
         create_commands.free();
+        global_bind.free();
+        device_bind.free();
     }
 
     extension_pointers.append("struct VK_extension_bindings {\n");
     extension_bind.append("fn void loadExtensions(Instance instance) {\n");
+    global_bind.append("fn void loadGlobalCommands(PFN_vkGetInstanceProcAddr gipa) {\n   getInstanceProcAddr = gipa;\n");
+    device_bind.append("fn void loadDeviceCommands(Device device) {\n   PFN_vkVoidFunction fp;\n");
 
     // Maps each CreateInfo type to the index (into `commands`) of the command
     // chosen to back its generated `.build()` method.
@@ -677,19 +683,45 @@ fn int main(String[] args) {
         bool create_command = entry.name[2..].starts_with("Create");
 
         String extension_def = dstring::join(&allocator, {"PFN_", entry.name}, "").str_view();
+        String public_name = no_result ? entry.name[2..].to_lower_case() : entry.name;
 
-        if (!entry.extension) {
-            base_commands.append(dstring::join(&allocator, {"extern fn ", return_type, " ", no_result ? entry.name[2..].to_lower_case() : entry.name, "("}, ""));
-        }
+        // Dispatch level from the first parameter type: it decides which load
+        // function binds the command. vkGetDeviceProcAddr is special: the spec
+        // hands it out through vkGetInstanceProcAddr, so it binds instance-level.
+        String first_param = entry.values.len() > 0 ? entry.values[0].type : "";
+        String level = "global";
+        if (first_param == "VkInstance" || first_param == "VkPhysicalDevice") level = "instance";
+        if (first_param == "VkDevice" || first_param == "VkQueue" || first_param == "VkCommandBuffer") level = "device";
+        if (entry.name == "vkGetDeviceProcAddr") level = "instance";
+
+        // Every command gets a PFN alias; core commands become module-level
+        // function pointers under the same public name the extern had.
+        extension_definitions.append(dstring::join(&allocator, {"alias ", extension_def, " = fn ", return_type, " ("}, ""));
 
         if (no_result && entry.extension) {
             extension_functions.append(dstring::join(&allocator, {"fn ", return_type, " ", entry.name.remove_vk().to_lower_case(), " ("}, ""));
         }
 
         if (entry.extension) {
-            extension_definitions.append(dstring::join(&allocator, {"alias ", extension_def, " = fn ", return_type, " ("}, ""));
             extension_pointers.append(dstring::join(&allocator, {"  ", extension_def, " ", entry.name, ";\n"}, ""));
             extension_bind.append(dstring::join(&allocator, {"   extensions.", entry.name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
+            if (level == "device") {
+                device_bind.append(dstring::join(&allocator, {"   fp = getDeviceProcAddr(device, \"", entry.name, "\");\n   if (fp) extensions.", entry.name, " = (", extension_def, ")fp;\n"}, ""));
+            }
+        } else {
+            base_commands.append(dstring::join(&allocator, {extension_def, " ", public_name, ";\n"}, ""));
+            // vkGetInstanceProcAddr is the bootstrap: only ever set from the
+            // loader handle in loadGlobalCommands, never rebound through itself.
+            if (entry.name != "vkGetInstanceProcAddr") {
+                if (level == "global") {
+                    global_bind.append(dstring::join(&allocator, {"   ", public_name, " = (", extension_def, ")gipa((Instance)null, \"", entry.name, "\");\n"}, ""));
+                } else {
+                    extension_bind.append(dstring::join(&allocator, {"   ", public_name, " = (", extension_def, ")getInstanceProcAddr(instance,\"", entry.name, "\");\n"}, ""));
+                }
+                if (level == "device") {
+                    device_bind.append(dstring::join(&allocator, {"   fp = getDeviceProcAddr(device, \"", entry.name, "\");\n   if (fp) ", public_name, " = (", extension_def, ")fp;\n"}, ""));
+                }
+            }
         }
 
         if (create_command) {
@@ -699,8 +731,8 @@ fn int main(String[] args) {
             }
             // Pick the canonical builder command per CreateInfo type: fewest params wins;
             // on ties prefer a core command over an extension alias (e.g. vkCreateRenderPass2
-            // over vkCreateRenderPass2KHR) so .build() links statically instead of going
-            // through a runtime-loaded function pointer.
+            // over vkCreateRenderPass2KHR) — the core pointer is always bound, while an
+            // extension alias may be absent from the driver.
             if (command_name.len > 0) {
                 if (!builder_types.has_key(command_name)) {
                     builder_types.set(command_name, command_index);
@@ -719,22 +751,17 @@ fn int main(String[] args) {
             String type = type_values[value.type] ?? value.type.remove_vk();
             String fn_values = dstring::join(&allocator, {type, value.value, i == entry.values.len() - 1 ? "" : ", "}, "").str_view();
 
-            if (entry.extension) {
-                extension_definitions.append(fn_values);
-                if (no_result) extension_functions.append(dstring::join(&allocator, {type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
-            } 
-            
-            if (!entry.extension) base_commands.append(fn_values); 
+            extension_definitions.append(fn_values);
+            if (entry.extension && no_result) {
+                extension_functions.append(dstring::join(&allocator, {type, value.value, " ", value.name, i == entry.values.len() - 1 ? ")" : ", "}, ""));
+            }
         }
 
-        if (entry.extension) {
-            if (no_result) {
-                extension_functions.append(dstring::join(&allocator, {" => extensions.", entry.name, "("}, ""));
-                foreach (i, value : entry.values) extension_functions.append(dstring::join(&allocator, {value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));   
-            }
-            extension_definitions.append(dstring::join(&allocator, {");\n"}, ""));
-        } else {
-            base_commands.append(dstring::join(&allocator, {")", " @cname(\"", entry.name, "\"); \n"}, ""));
+        extension_definitions.append(dstring::join(&allocator, {");\n"}, ""));
+
+        if (entry.extension && no_result) {
+            extension_functions.append(dstring::join(&allocator, {" => extensions.", entry.name, "("}, ""));
+            foreach (i, value : entry.values) extension_functions.append(dstring::join(&allocator, {value.name, i == entry.values.len() - 1 ? ");\n" : ", "}, ""));
         }
     }
 
@@ -785,14 +812,20 @@ fn int main(String[] args) {
 
     extension_pointers.append("}\nVK_extension_bindings extensions;\n");
     extension_bind.append("}\n");
+    global_bind.append("}\n");
+    device_bind.append("}\n");
 
-    command_file.write(base_commands.str_view())!!;
-    command_file.write("\n")!!;
     command_file.write(extension_definitions.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(base_commands.str_view())!!;
     command_file.write("\n")!!;
     command_file.write(extension_pointers.str_view())!!;
     command_file.write("\n")!!;
+    command_file.write(global_bind.str_view())!!;
+    command_file.write("\n")!!;
     command_file.write(extension_bind.str_view())!!;
+    command_file.write("\n")!!;
+    command_file.write(device_bind.str_view())!!;
     command_file.write("\n")!!;
     command_file.write(extension_functions.str_view())!!;
     command_file.write("\n")!!;
