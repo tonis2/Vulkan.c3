@@ -59,10 +59,21 @@ struct MemoryAllocator {
     BlockList pending_deletes;  // Allocations marked for deletion
 }
 
+// The two lists are given the heap explicitly, and that is not tidiness.
+// A List left zero-initialised has a null allocator, and C3's
+// list_ensure_capacity resolves null to `tmem` — the temp arena. So the first
+// push would back the list with pool memory, and any @pool() open at that
+// moment would free it on the way out. Nothing faults there: the entries turn
+// into 0xAA and the crash lands wherever `pages` is next walked, which may be
+// hundreds of allocations later or in free(). A GPU allocation happening to
+// occur inside a temp scope is ordinary — loaders format tensor names that way
+// — so the allocator has to own its own bookkeeping.
 fn MemoryAllocator? MemoryAllocator.init(&self) {
     if (self.default_page_size == 0) {
         self.default_page_size = 64_000_000;  // 64MB default
     }
+    self.pages.init(mem);
+    self.pending_deletes.init(mem);
     return *self;
 }
 
@@ -176,6 +187,8 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
 		.memory_type = memory_type,
 		.properties = properties,
 	};
+
+	new_page.free_blocks.init(mem);
 
     // Map memory if host-visible
     if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
