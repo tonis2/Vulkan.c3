@@ -1583,15 +1583,15 @@ fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setNext(&self, void* pN
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceUUID(&self, uint[UUID_SIZE] deviceUUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceUUID(&self, char[UUID_SIZE] deviceUUID) {
    self.deviceUUID = deviceUUID;
    return *self;
 }
-fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDriverUUID(&self, uint[UUID_SIZE] driverUUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDriverUUID(&self, char[UUID_SIZE] driverUUID) {
    self.driverUUID = driverUUID;
    return *self;
 }
-fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUID(&self, uint[LUID_SIZE] deviceLUID) {
+fn PhysicalDeviceIDProperties PhysicalDeviceIDProperties.setDeviceLUID(&self, char[LUID_SIZE] deviceLUID) {
    self.deviceLUID = deviceLUID;
    return *self;
 }
@@ -3689,7 +3689,7 @@ fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreate
    self.lineStippleFactor = lineStippleFactor;
    return *self;
 }
-fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreateInfo.setLineStipplePattern(&self, uint lineStipplePattern) {
+fn PipelineRasterizationLineStateCreateInfo PipelineRasterizationLineStateCreateInfo.setLineStipplePattern(&self, ushort lineStipplePattern) {
    self.lineStipplePattern = lineStipplePattern;
    return *self;
 }
@@ -3760,15 +3760,15 @@ fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setNext(&se
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDeviceUUID(&self, uint[UUID_SIZE] deviceUUID) {
+fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDeviceUUID(&self, char[UUID_SIZE] deviceUUID) {
    self.deviceUUID = deviceUUID;
    return *self;
 }
-fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDriverUUID(&self, uint[UUID_SIZE] driverUUID) {
+fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDriverUUID(&self, char[UUID_SIZE] driverUUID) {
    self.driverUUID = driverUUID;
    return *self;
 }
-fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDeviceLUID(&self, uint[LUID_SIZE] deviceLUID) {
+fn PhysicalDeviceVulkan11Properties PhysicalDeviceVulkan11Properties.setDeviceLUID(&self, char[LUID_SIZE] deviceLUID) {
    self.deviceLUID = deviceLUID;
    return *self;
 }
@@ -4664,7 +4664,7 @@ fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setCopyDstL
    self.pCopyDstLayouts = &pCopyDstLayouts[0];
    return *self;
 }
-fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setOptimalTilingLayoutUUID(&self, uint[UUID_SIZE] optimalTilingLayoutUUID) {
+fn PhysicalDeviceVulkan14Properties PhysicalDeviceVulkan14Properties.setOptimalTilingLayoutUUID(&self, char[UUID_SIZE] optimalTilingLayoutUUID) {
    self.optimalTilingLayoutUUID = optimalTilingLayoutUUID;
    return *self;
 }
@@ -5276,7 +5276,7 @@ fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.s
    self.pCopyDstLayouts = &pCopyDstLayouts[0];
    return *self;
 }
-fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.setOptimalTilingLayoutUUID(&self, uint[UUID_SIZE] optimalTilingLayoutUUID) {
+fn PhysicalDeviceHostImageCopyProperties PhysicalDeviceHostImageCopyProperties.setOptimalTilingLayoutUUID(&self, char[UUID_SIZE] optimalTilingLayoutUUID) {
    self.optimalTilingLayoutUUID = optimalTilingLayoutUUID;
    return *self;
 }

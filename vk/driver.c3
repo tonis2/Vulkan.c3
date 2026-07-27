@@ -133,12 +133,19 @@ fn PFN_vkGetInstanceProcAddrLUNARG? findDriver(String[] paths)
 *>
 fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(env::DARWIN)
 {
-	return findDriver({
-		"@executable_path/libvulkan_kosmickrisp.dylib",
-		"build/unpacked_c3l/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
-		"macos-aarch64/libvulkan_kosmickrisp.dylib",
-		"lib/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
-	});
+	@pool()
+	{
+		// The last candidate is this .c3l's own folder, resolved from the
+		// compile-time path of the library source rather than the working
+		// directory — see c3l_root in loader.c3.
+		return findDriver({
+			"@executable_path/libvulkan_kosmickrisp.dylib",
+			"build/unpacked_c3l/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
+			"macos-aarch64/libvulkan_kosmickrisp.dylib",
+			"lib/vulkan.c3l/macos-aarch64/libvulkan_kosmickrisp.dylib",
+			string::tformat("%s/macos-aarch64/libvulkan_kosmickrisp.dylib", c3l_root()),
+		});
+	};
 }
 
 <*
