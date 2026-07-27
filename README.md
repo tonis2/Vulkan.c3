@@ -5,7 +5,8 @@ Vulkan bindings for [C3](https://c3-lang.org/), auto-generated from the official
 - Idiomatic C3 error handling — Vulkan error codes map to C3 faults
 - Builder pattern — auto-generated `.set*()` and `.build()` methods for Vulkan structs
 - Cross-platform — Windows, Linux (X11/Wayland), and macOS
-- No link-time Vulkan dependency — the loader is found at runtime (volk-style), so no Vulkan SDK is needed to build
+- No link-time Vulkan dependency — the loader is opened at runtime (volk-style), so the Vulkan SDK is optional on every platform, at build time and at run time
+- Ships its own loader and driver on macOS (arm64), so a Mac needs nothing installed to run
 
 ## Project structure
 
@@ -27,6 +28,7 @@ parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
 macos-aarch64/       # Bundled loader + driver dylibs for macOS (see below)
 examples/
   cube/              # 3D rotating cube with camera controls
+  textured_cube/     # The same cube, with a texture and descriptor sets
 ```
 
 ## How commands are loaded
@@ -34,13 +36,28 @@ examples/
 Nothing links against Vulkan. Every command is a function pointer, resolved in
 three stages (the same model as [volk](https://github.com/zeux/volk)):
 
+1. `vk::init()` opens the loader shared library (`vulkan-1.dll`, `libvulkan.so.1`,
+   `libvulkan.1.dylib`), pulls `vkGetInstanceProcAddr` out of it, and binds the
+   global-level commands — enough to query extensions and layers and to call
+   `vkCreateInstance`. Pass your own candidate paths to `init` to override the
+   search: `vk::init({ "/path/to/libvulkan.so" })!`.
+2. Creating an instance binds every remaining command, core and extension alike,
+   through `vkGetInstanceProcAddr`.
+3. `vk::loadDeviceCommands(device)` is optional: it rebinds device-level commands
+   through `vkGetDeviceProcAddr`, so calls dispatch straight into the driver
+   instead of through the loader trampoline.
+
+`init` must run before anything else in the library — a command called before it
+is a crash, not a link error.
+
 ## Quick start
 
 ### Prerequisites
 
 1. [C3 compiler](https://c3-lang.org/) (latest version)
-2. A Vulkan loader and driver installed on the machine that *runs* the program
-   (nothing is needed to build)
+2. Nothing else. The Vulkan SDK is optional on every platform — it is never
+   needed to build, and at run time the loader either ships with the GPU driver
+   (Linux, Windows) or with this library (macOS).
 
 ### Running the cube example
 
@@ -61,7 +78,11 @@ c3c run cube
 
 ### Platform setup (runtime only)
 
-**Linux** — the loader and driver ship with the GPU stack; for tooling and validation layers:
+The Vulkan SDK is optional everywhere. Install it only when you want validation
+layers and tooling (`vulkaninfo`, `glslc`, RenderDoc integration) — never to
+build or run.
+
+**Linux** — the loader and driver ship with the GPU stack, so nothing is needed. For validation layers and tooling:
 ```bash
 # Ubuntu/Debian
 sudo apt install libvulkan1 vulkan-tools vulkan-validationlayers spirv-tools
@@ -73,9 +94,32 @@ sudo dnf install vulkan-loader vulkan-tools vulkan-validation-layers spirv-tools
 sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-tools
 ```
 
-**Windows** — the loader (`vulkan-1.dll`) ships with the GPU driver. The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is only needed for validation layers and tooling.
+**Windows** — the loader (`vulkan-1.dll`) ships with the GPU driver, so nothing is needed. The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is only for validation layers and tooling.
 
-**macOS** — install the [Vulkan SDK for macOS](https://vulkan.lunarg.com/sdk/home#mac) (MoltenVK), or ship a loader + driver with your app and pass their paths to `vk::init`.
+**macOS (arm64)** — nothing is needed either. macOS has no system Vulkan, so the library carries its own in `macos-aarch64/` and both are bundled into `vulkan.c3l`:
+
+- `libvulkan.1.dylib` — the Khronos loader, opened by `vk::init()`
+- `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`
+
+`vk::createDefaultInstance()` wires the bundled driver up on its own. If you would
+rather use an installed driver (a system MoltenVK from the LunarG SDK, say), set
+`skip_bundled_driver` and the loader does its normal ICD discovery:
+
+```c3
+vk::Instance instance = vk::createDefaultInstance({
+    .app_name = "My App",
+    .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" },
+    .skip_bundled_driver = true,
+})!;
+```
+
+Building the instance by hand instead? `vk::findBundledDriver()` returns the
+shipped driver's entry point, and `vk::supportsDirectDriverLoading()` reports
+whether the loader on the machine understands the extension — see `vk/driver.c3`.
+
+Intel Macs are not covered by the bundled pair; there `vk::init` falls back to a
+loader installed by the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#mac), or
+to paths you pass it yourself.
 
 ## Using the library in your project
 
@@ -90,7 +134,9 @@ Download `vulkan.c3l` from [releases](https://github.com/tonis2/Vulkan.c3/releas
 }
 ```
 
-No `linked-libraries` entry — the loader is found at runtime by `vk::init()`.
+No `linked-libraries` entry on any target — the loader is opened at runtime by
+`vk::init()`. On macOS the `.c3l` also carries the loader and driver themselves,
+so unzipping it is the whole install.
 
 ### Option 2: Build from source
 
@@ -98,14 +144,31 @@ No `linked-libraries` entry — the loader is found at runtime by `vk::init()`.
 c3c build zip --trust=full
 ```
 
-This creates `vulkan.c3l` in the project root.
+This creates `vulkan.c3l` in the project root (bindings plus the macOS
+loader/driver pair).
 
 ### Example usage
+
+`vk::createDefaultInstance` handles the whole bootstrap — `init`, the platform
+surface extension, and the bundled macOS driver:
 
 ```c3
 import vk;
 
-fn void! main() {
+fn void? main() {
+    vk::Instance instance = vk::createDefaultInstance({
+        .app_name = "My App",
+        .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" },
+    })!;
+}
+```
+
+Or drive it yourself, calling `vk::init()` first:
+
+```c3
+import vk;
+
+fn void? main() {
     vk::init()!;
 
     ApplicationInfo info = {
