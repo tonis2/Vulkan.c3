@@ -53,7 +53,9 @@ fn CommandBufferList? Device.createCommandBuffers(
 )
 {
 	CommandBufferList buffers;
+	// Scratch for the driver to fill; the handles are copied into the list below.
 	CommandBuffer* command_buffers = mem::new_array(CommandBuffer, count);
+	defer mem::free(command_buffers);
 	CommandBufferAllocateInfo command_buffer_info = {
 		.sType = STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		.commandPool = pool,
@@ -205,7 +207,7 @@ fn bool? PhysicalDevice.checkExtensionSupport(self, ZStringList extensions)
 {
 	bool supports                = true;
 	StringList device_extensions = getDeviceExtensions(self)!;
-	defer device_extensions.free();
+	defer device_extensions.release();
 
 	foreach (extension_name : extensions)
 	{
@@ -286,7 +288,7 @@ fn void? checkInstanceExtensionSupport(ZStringList requested_extensions)
 		extensions.push(name.str_view().copy(mem));
 	}
 
-	defer extensions.free();
+	defer extensions.release();
 	foreach (i, value : requested_extensions)
 	{
 		if (!extensions.contains(value.str_view()))
@@ -296,6 +298,23 @@ fn void? checkInstanceExtensionSupport(ZStringList requested_extensions)
 		}
 	}
 }
+
+
+<*
+ Release a name list along with the names in it.
+
+ getDeviceExtensions, getInstanceExtensions and getValidationLayers each copy
+ every name they return, because the ExtensionProperties/LayerProperties array
+ the names were read from is freed before the list reaches the caller. Freeing
+ the list on its own therefore leaves one allocation per name behind — and a
+ driver can advertise a couple of hundred extensions.
+*>
+fn void StringList.release(&self)
+{
+	foreach (name : self) mem::free(name);
+	self.free();
+}
+
 
 fn StringList? getDeviceExtensions(PhysicalDevice device)
 {
@@ -318,7 +337,7 @@ fn StringList? getDeviceExtensions(PhysicalDevice device)
 fn void? checkValidationLayersSupport(String[] requested_validations)
 {
 	StringList validations = getValidationLayers()!;
-	defer validations.free();
+	defer validations.release();
 	foreach (value : requested_validations)
 	{
 		if (!validations.contains(value))
