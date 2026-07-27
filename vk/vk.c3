@@ -5645,7 +5645,7 @@ struct PhysicalDeviceProperties {
    uint deviceID;
    PhysicalDeviceType deviceType;
    char[MAX_PHYSICAL_DEVICE_NAME_SIZE] deviceName;
-   uint[UUID_SIZE] pipelineCacheUUID;
+   char[UUID_SIZE] pipelineCacheUUID;
    PhysicalDeviceLimits limits;
    PhysicalDeviceSparseProperties sparseProperties;
 }
@@ -6284,7 +6284,7 @@ struct PipelineCacheHeaderVersionOne {
    PipelineCacheHeaderVersion headerVersion;
    uint vendorID;
    uint deviceID;
-   uint[UUID_SIZE] pipelineCacheUUID;
+   char[UUID_SIZE] pipelineCacheUUID;
 }
 struct PipelineCacheHeaderVersionDataGraphQCOM {
    uint headerSize;
@@ -6324,7 +6324,7 @@ struct PipelineBinaryKeyKHR {
    StructureType sType;
    void* pNext;
    uint keySize;
-   uint[MAX_PIPELINE_BINARY_KEY_SIZE_KHR] key;
+   char[MAX_PIPELINE_BINARY_KEY_SIZE_KHR] key;
 }
 struct PipelineBinaryInfoKHR {
    StructureType sType;
@@ -7082,10 +7082,10 @@ struct ClusterAccelerationStructureBuildTriangleClusterInfoNV {
    uint indexType;
    uint opacityMicromapIndexType;
    ClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV baseGeometryIndexAndGeometryFlags;
-   uint indexBufferStride;
-   uint vertexBufferStride;
-   uint geometryIndexAndFlagsBufferStride;
-   uint opacityMicromapIndexBufferStride;
+   ushort indexBufferStride;
+   ushort vertexBufferStride;
+   ushort geometryIndexAndFlagsBufferStride;
+   ushort opacityMicromapIndexBufferStride;
    DeviceAddress indexBuffer;
    DeviceAddress vertexBuffer;
    DeviceAddress geometryIndexAndFlagsBuffer;
@@ -7101,10 +7101,10 @@ struct ClusterAccelerationStructureBuildTriangleClusterTemplateInfoNV {
    uint indexType;
    uint opacityMicromapIndexType;
    ClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV baseGeometryIndexAndGeometryFlags;
-   uint indexBufferStride;
-   uint vertexBufferStride;
-   uint geometryIndexAndFlagsBufferStride;
-   uint opacityMicromapIndexBufferStride;
+   ushort indexBufferStride;
+   ushort vertexBufferStride;
+   ushort geometryIndexAndFlagsBufferStride;
+   ushort opacityMicromapIndexBufferStride;
    DeviceAddress indexBuffer;
    DeviceAddress vertexBuffer;
    DeviceAddress geometryIndexAndFlagsBuffer;
@@ -7384,16 +7384,16 @@ struct PhysicalDevicePushDescriptorPropertiesKHR {
    uint maxPushDescriptors;
 }
 struct ConformanceVersion {
-   uint major;
-   uint minor;
-   uint subminor;
-   uint patch;
+   char major;
+   char minor;
+   char subminor;
+   char patch;
 }
 struct ConformanceVersionKHR {
-   uint major;
-   uint minor;
-   uint subminor;
-   uint patch;
+   char major;
+   char minor;
+   char subminor;
+   char patch;
 }
 struct PhysicalDeviceDriverProperties {
    StructureType sType;
@@ -7507,18 +7507,18 @@ struct ExternalBufferPropertiesKHR {
 struct PhysicalDeviceIDProperties {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] deviceUUID;
-   uint[UUID_SIZE] driverUUID;
-   uint[LUID_SIZE] deviceLUID;
+   char[UUID_SIZE] deviceUUID;
+   char[UUID_SIZE] driverUUID;
+   char[LUID_SIZE] deviceLUID;
    uint deviceNodeMask;
    uint deviceLUIDValid;
 }
 struct PhysicalDeviceIDPropertiesKHR {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] deviceUUID;
-   uint[UUID_SIZE] driverUUID;
-   uint[LUID_SIZE] deviceLUID;
+   char[UUID_SIZE] deviceUUID;
+   char[UUID_SIZE] driverUUID;
+   char[LUID_SIZE] deviceLUID;
    uint deviceNodeMask;
    uint deviceLUIDValid;
 }
@@ -10742,7 +10742,7 @@ struct PerformanceCounterKHR {
    PerformanceCounterUnitKHR unit;
    PerformanceCounterScopeKHR scope;
    PerformanceCounterStorageKHR storage;
-   uint[UUID_SIZE] uuid;
+   char[UUID_SIZE] uuid;
 }
 struct PerformanceCounterDescriptionKHR {
    StructureType sType;
@@ -11132,7 +11132,7 @@ struct PipelineRasterizationLineStateCreateInfo {
    LineRasterizationMode lineRasterizationMode;
    uint stippledLineEnable;
    uint lineStippleFactor;
-   uint lineStipplePattern;
+   ushort lineStipplePattern;
 }
 struct PipelineRasterizationLineStateCreateInfoKHR {
    StructureType sType;
@@ -11140,7 +11140,7 @@ struct PipelineRasterizationLineStateCreateInfoKHR {
    LineRasterizationMode lineRasterizationMode;
    uint stippledLineEnable;
    uint lineStippleFactor;
-   uint lineStipplePattern;
+   ushort lineStipplePattern;
 }
 struct PipelineRasterizationLineStateCreateInfoEXT {
    StructureType sType;
@@ -11148,7 +11148,7 @@ struct PipelineRasterizationLineStateCreateInfoEXT {
    LineRasterizationMode lineRasterizationMode;
    uint stippledLineEnable;
    uint lineStippleFactor;
-   uint lineStipplePattern;
+   ushort lineStipplePattern;
 }
 struct PhysicalDevicePipelineCreationCacheControlFeatures {
    StructureType sType;
@@ -11179,9 +11179,9 @@ struct PhysicalDeviceVulkan11Features {
 struct PhysicalDeviceVulkan11Properties {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] deviceUUID;
-   uint[UUID_SIZE] driverUUID;
-   uint[LUID_SIZE] deviceLUID;
+   char[UUID_SIZE] deviceUUID;
+   char[UUID_SIZE] driverUUID;
+   char[LUID_SIZE] deviceLUID;
    uint deviceNodeMask;
    uint deviceLUIDValid;
    uint subgroupSize;
@@ -11421,7 +11421,7 @@ struct PhysicalDeviceVulkan14Properties {
    ImageLayout* pCopySrcLayouts;
    uint copyDstLayoutCount;
    ImageLayout* pCopyDstLayouts;
-   uint[UUID_SIZE] optimalTilingLayoutUUID;
+   char[UUID_SIZE] optimalTilingLayoutUUID;
    uint identicalMemoryTypeRequirements;
 }
 struct PipelineCompilerControlCreateInfoAMD {
@@ -11688,7 +11688,7 @@ struct AccelerationStructureDeviceAddressInfoKHR {
 struct AccelerationStructureVersionInfoKHR {
    StructureType sType;
    void* pNext;
-   uint* pVersionData;
+   char* pVersionData;
 }
 struct CopyAccelerationStructureInfoKHR {
    StructureType sType;
@@ -12753,7 +12753,7 @@ struct PhysicalDeviceHostImageCopyProperties {
    ImageLayout* pCopySrcLayouts;
    uint copyDstLayoutCount;
    ImageLayout* pCopyDstLayouts;
-   uint[UUID_SIZE] optimalTilingLayoutUUID;
+   char[UUID_SIZE] optimalTilingLayoutUUID;
    uint identicalMemoryTypeRequirements;
 }
 struct PhysicalDeviceHostImageCopyPropertiesEXT {
@@ -12763,7 +12763,7 @@ struct PhysicalDeviceHostImageCopyPropertiesEXT {
    ImageLayout* pCopySrcLayouts;
    uint copyDstLayoutCount;
    ImageLayout* pCopyDstLayouts;
-   uint[UUID_SIZE] optimalTilingLayoutUUID;
+   char[UUID_SIZE] optimalTilingLayoutUUID;
    uint identicalMemoryTypeRequirements;
 }
 struct MemoryToImageCopy {
@@ -14168,19 +14168,19 @@ struct PhysicalDeviceShaderModuleIdentifierFeaturesEXT {
 struct PhysicalDeviceShaderModuleIdentifierPropertiesEXT {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID;
+   char[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID;
 }
 struct PipelineShaderStageModuleIdentifierCreateInfoEXT {
    StructureType sType;
    void* pNext;
    uint identifierSize;
-   uint* pIdentifier;
+   char* pIdentifier;
 }
 struct ShaderModuleIdentifierEXT {
    StructureType sType;
    void* pNext;
    uint identifierSize;
-   uint[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier;
+   char[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier;
 }
 struct ImageCompressionControlEXT {
    StructureType sType;
@@ -14301,7 +14301,7 @@ struct MicromapCreateInfoEXT {
 struct MicromapVersionInfoEXT {
    StructureType sType;
    void* pNext;
-   uint* pVersionData;
+   char* pVersionData;
 }
 struct CopyMicromapInfoEXT {
    StructureType sType;
@@ -14343,8 +14343,8 @@ struct MicromapUsageEXT {
 }
 struct MicromapTriangleKHR {
    uint dataOffset;
-   uint subdivisionLevel;
-   uint format;
+   ushort subdivisionLevel;
+   ushort format;
 }
 struct MicromapTriangleEXT {
    uint dataOffset;
@@ -14431,7 +14431,7 @@ struct AccelerationStructureTrianglesDisplacementMicromapNV {
 struct PipelinePropertiesIdentifierEXT {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] pipelineIdentifier;
+   char[UUID_SIZE] pipelineIdentifier;
 }
 struct PhysicalDevicePipelinePropertiesFeaturesEXT {
    StructureType sType;
@@ -14779,7 +14779,7 @@ struct DeviceFaultVendorBinaryHeaderVersionOneKHR {
    uint vendorID;
    uint deviceID;
    uint driverVersion;
-   uint[UUID_SIZE] pipelineCacheUUID;
+   char[UUID_SIZE] pipelineCacheUUID;
    uint applicationNameOffset;
    uint applicationVersion;
    uint engineNameOffset;
@@ -14792,7 +14792,7 @@ struct DeviceFaultVendorBinaryHeaderVersionOneEXT {
    uint vendorID;
    uint deviceID;
    uint driverVersion;
-   uint[UUID_SIZE] pipelineCacheUUID;
+   char[UUID_SIZE] pipelineCacheUUID;
    uint applicationNameOffset;
    uint applicationVersion;
    uint engineNameOffset;
@@ -15126,7 +15126,7 @@ struct PhysicalDeviceShaderObjectFeaturesEXT {
 struct PhysicalDeviceShaderObjectPropertiesEXT {
    StructureType sType;
    void* pNext;
-   uint[UUID_SIZE] shaderBinaryUUID;
+   char[UUID_SIZE] shaderBinaryUUID;
    uint shaderBinaryVersion;
 }
 struct ShaderCreateInfoEXT {
@@ -16256,7 +16256,7 @@ struct DataGraphPipelineIdentifierCreateInfoARM {
    StructureType sType;
    void* pNext;
    uint identifierSize;
-   uint* pIdentifier;
+   char* pIdentifier;
 }
 struct DataGraphPipelineDispatchInfoARM {
    StructureType sType;

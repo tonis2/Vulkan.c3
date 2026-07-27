@@ -144,7 +144,7 @@ fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setKeySize(&self, uint keySize) {
    self.keySize = keySize;
    return *self;
 }
-fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setKey(&self, uint[MAX_PIPELINE_BINARY_KEY_SIZE_KHR] key) {
+fn PipelineBinaryKeyKHR PipelineBinaryKeyKHR.setKey(&self, char[MAX_PIPELINE_BINARY_KEY_SIZE_KHR] key) {
    self.key = key;
    return *self;
 }
@@ -1445,15 +1445,15 @@ fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setNext(&self, vo
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceUUID(&self, uint[UUID_SIZE] deviceUUID) {
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceUUID(&self, char[UUID_SIZE] deviceUUID) {
    self.deviceUUID = deviceUUID;
    return *self;
 }
-fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDriverUUID(&self, uint[UUID_SIZE] driverUUID) {
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDriverUUID(&self, char[UUID_SIZE] driverUUID) {
    self.driverUUID = driverUUID;
    return *self;
 }
-fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceLUID(&self, uint[LUID_SIZE] deviceLUID) {
+fn PhysicalDeviceIDPropertiesKHR PhysicalDeviceIDPropertiesKHR.setDeviceLUID(&self, char[LUID_SIZE] deviceLUID) {
    self.deviceLUID = deviceLUID;
    return *self;
 }
@@ -6978,7 +6978,7 @@ fn PerformanceCounterKHR PerformanceCounterKHR.setStorage(&self, PerformanceCoun
    self.storage = storage;
    return *self;
 }
-fn PerformanceCounterKHR PerformanceCounterKHR.setUuid(&self, uint[UUID_SIZE] uuid) {
+fn PerformanceCounterKHR PerformanceCounterKHR.setUuid(&self, char[UUID_SIZE] uuid) {
    self.uuid = uuid;
    return *self;
 }
@@ -7650,7 +7650,7 @@ fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCre
    self.lineStippleFactor = lineStippleFactor;
    return *self;
 }
-fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setLineStipplePattern(&self, uint lineStipplePattern) {
+fn PipelineRasterizationLineStateCreateInfoKHR PipelineRasterizationLineStateCreateInfoKHR.setLineStipplePattern(&self, ushort lineStipplePattern) {
    self.lineStipplePattern = lineStipplePattern;
    return *self;
 }
@@ -7671,7 +7671,7 @@ fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCre
    self.lineStippleFactor = lineStippleFactor;
    return *self;
 }
-fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setLineStipplePattern(&self, uint lineStipplePattern) {
+fn PipelineRasterizationLineStateCreateInfoEXT PipelineRasterizationLineStateCreateInfoEXT.setLineStipplePattern(&self, ushort lineStipplePattern) {
    self.lineStipplePattern = lineStipplePattern;
    return *self;
 }
@@ -8204,7 +8204,7 @@ fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setNe
    self.pNext = pNext;
    return *self;
 }
-fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setVersionData(&self, uint* pVersionData) {
+fn AccelerationStructureVersionInfoKHR AccelerationStructureVersionInfoKHR.setVersionData(&self, char* pVersionData) {
    self.pVersionData = pVersionData;
    return *self;
 }
@@ -10190,7 +10190,7 @@ fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertie
    self.pCopyDstLayouts = &pCopyDstLayouts[0];
    return *self;
 }
-fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setOptimalTilingLayoutUUID(&self, uint[UUID_SIZE] optimalTilingLayoutUUID) {
+fn PhysicalDeviceHostImageCopyPropertiesEXT PhysicalDeviceHostImageCopyPropertiesEXT.setOptimalTilingLayoutUUID(&self, char[UUID_SIZE] optimalTilingLayoutUUID) {
    self.optimalTilingLayoutUUID = optimalTilingLayoutUUID;
    return *self;
 }
@@ -13066,7 +13066,7 @@ fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT PhysicalDeviceShaderModuleI
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT PhysicalDeviceShaderModuleIdentifierPropertiesEXT.setShaderModuleIdentifierAlgorithmUUID(&self, uint[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID) {
+fn PhysicalDeviceShaderModuleIdentifierPropertiesEXT PhysicalDeviceShaderModuleIdentifierPropertiesEXT.setShaderModuleIdentifierAlgorithmUUID(&self, char[UUID_SIZE] shaderModuleIdentifierAlgorithmUUID) {
    self.shaderModuleIdentifierAlgorithmUUID = shaderModuleIdentifierAlgorithmUUID;
    return *self;
 }
@@ -13079,7 +13079,7 @@ fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIde
    self.identifierSize = identifierSize;
    return *self;
 }
-fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIdentifierCreateInfoEXT.setIdentifier(&self, uint[] pIdentifier) {
+fn PipelineShaderStageModuleIdentifierCreateInfoEXT PipelineShaderStageModuleIdentifierCreateInfoEXT.setIdentifier(&self, char[] pIdentifier) {
    self.identifierSize= (uint)pIdentifier.len;
    self.pIdentifier = &pIdentifier[0];
    return *self;
@@ -13093,7 +13093,7 @@ fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setIdentifierSize(&self, 
    self.identifierSize = identifierSize;
    return *self;
 }
-fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setIdentifier(&self, uint[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier) {
+fn ShaderModuleIdentifierEXT ShaderModuleIdentifierEXT.setIdentifier(&self, char[MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT] identifier) {
    self.identifierSize= (uint)identifier.len;
    self.identifier = identifier;
    return *self;
@@ -13306,7 +13306,7 @@ fn MicromapVersionInfoEXT MicromapVersionInfoEXT.setNext(&self, void* pNext) {
    self.pNext = pNext;
    return *self;
 }
-fn MicromapVersionInfoEXT MicromapVersionInfoEXT.setVersionData(&self, uint* pVersionData) {
+fn MicromapVersionInfoEXT MicromapVersionInfoEXT.setVersionData(&self, char* pVersionData) {
    self.pVersionData = pVersionData;
    return *self;
 }
@@ -13594,7 +13594,7 @@ fn PipelinePropertiesIdentifierEXT PipelinePropertiesIdentifierEXT.setNext(&self
    self.pNext = pNext;
    return *self;
 }
-fn PipelinePropertiesIdentifierEXT PipelinePropertiesIdentifierEXT.setPipelineIdentifier(&self, uint[UUID_SIZE] pipelineIdentifier) {
+fn PipelinePropertiesIdentifierEXT PipelinePropertiesIdentifierEXT.setPipelineIdentifier(&self, char[UUID_SIZE] pipelineIdentifier) {
    self.pipelineIdentifier = pipelineIdentifier;
    return *self;
 }
@@ -14944,7 +14944,7 @@ fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesE
    self.pNext = pNext;
    return *self;
 }
-fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesEXT.setShaderBinaryUUID(&self, uint[UUID_SIZE] shaderBinaryUUID) {
+fn PhysicalDeviceShaderObjectPropertiesEXT PhysicalDeviceShaderObjectPropertiesEXT.setShaderBinaryUUID(&self, char[UUID_SIZE] shaderBinaryUUID) {
    self.shaderBinaryUUID = shaderBinaryUUID;
    return *self;
 }
@@ -17395,7 +17395,7 @@ fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInf
    self.identifierSize = identifierSize;
    return *self;
 }
-fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInfoARM.setIdentifier(&self, uint[] pIdentifier) {
+fn DataGraphPipelineIdentifierCreateInfoARM DataGraphPipelineIdentifierCreateInfoARM.setIdentifier(&self, char[] pIdentifier) {
    self.identifierSize= (uint)pIdentifier.len;
    self.pIdentifier = &pIdentifier[0];
    return *self;

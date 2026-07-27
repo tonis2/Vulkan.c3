@@ -30,14 +30,14 @@ fn int main(String[] args) {
 
     type_values.init_with_key_values(
         &allocator,
-        "uint16_t", "uint",
+        "uint16_t", "ushort",
         "int16_t", "short",
         "uint32_t", "uint",
         "int32_t", "int",
         "uint64_t", "ulong",
         "int64_t", "long",
-        "uint8_t", "uint",
-        "int8_t", "int",
+        "uint8_t", "char",
+        "int8_t", "ichar",
         "size_t", "sz",
         "isize_t", "sz",
         "null", "void*",
