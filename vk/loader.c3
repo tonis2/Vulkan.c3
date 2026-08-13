@@ -60,7 +60,7 @@ fn String trim_segments(String path, uint count) @private
  Open a file the .c3l ships in its platform folder, located relative to this
  source file rather than to the working directory.
 *>
-fn bool bind_bundled_loader(String name) @private @if(env::DARWIN)
+fn bool bind_bundled_loader(String name) @private @feat(DARWIN)
 {
 	@pool()
 	{
@@ -86,8 +86,8 @@ fn bool bind_bundled_loader(String name) @private @if(env::DARWIN)
  covers the layouts not guessed here — `dependencies/`, the c3c convention —
  and holds whatever directory the program is run from.
 *>
-const String[*] DEFAULT_LOADER_PATHS @private @if(env::WIN32) = { "vulkan-1.dll" };
-const String[*] DEFAULT_LOADER_PATHS @private @if(env::DARWIN) = {
+const String[*] DEFAULT_LOADER_PATHS @private @feat(WIN32) = { "vulkan-1.dll" };
+const String[*] DEFAULT_LOADER_PATHS @private @feat(DARWIN) = {
 	"@executable_path/libvulkan.1.dylib",
 	"build/unpacked_c3l/vulkan.c3l/macos-aarch64/libvulkan.1.dylib",
 	"macos-aarch64/libvulkan.1.dylib",
@@ -95,7 +95,7 @@ const String[*] DEFAULT_LOADER_PATHS @private @if(env::DARWIN) = {
 	"libvulkan.dylib", "libvulkan.1.dylib",
 	"/usr/local/lib/libvulkan.1.dylib", "/usr/local/lib/libvulkan.dylib",
 };
-const String[*] DEFAULT_LOADER_PATHS @private @if(!env::WIN32 && !env::DARWIN) = { "libvulkan.so.1", "libvulkan.so" };
+const String[*] DEFAULT_LOADER_PATHS @private @feat(!WIN32 & !DARWIN) = { "libvulkan.so.1", "libvulkan.so" };
 
 <*
  Whether `init` has already found a loader.

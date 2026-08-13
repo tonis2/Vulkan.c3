@@ -1119,12 +1119,11 @@ struct InstanceConfig
 	ZString[] layers;
 }
 
-const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == MACOS) = { "VK_EXT_metal_surface" };
-const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == WIN32) = { "VK_KHR_win32_surface" };
-const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == LINUX && $feature( X11 )) = { "VK_KHR_xcb_surface" };
-const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == LINUX && $feature( WAYLAND )) = { "VK_KHR_wayland_surface" };
-const ZString[] DEFAULT_EXTENSIONS @if(env::OS_TYPE == LINUX && !$feature(WAYLAND)
-	&& !$feature(X11)) = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(MACOS) = { "VK_EXT_metal_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(WIN32) = { "VK_KHR_win32_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & X11 & !WAYLAND) = { "VK_KHR_xcb_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & WAYLAND) = { "VK_KHR_wayland_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & !WAYLAND & !X11) = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
 
 fn Instance? createDefaultInstance(InstanceConfig config = { })
 {
