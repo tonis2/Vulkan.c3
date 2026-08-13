@@ -29,12 +29,12 @@
 *>
 module vk;
 
-extern fn void* loadLibraryA(char* name) @cname("LoadLibraryA") @private @if(env::WIN32);
-extern fn void* getProcAddress(void* handle, char* symbol) @cname("GetProcAddress") @private @if(env::WIN32);
+extern fn void* loadLibraryA(char* name) @cname("LoadLibraryA") @private @feat(WIN32);
+extern fn void* getProcAddress(void* handle, char* symbol) @cname("GetProcAddress") @private @feat(WIN32);
 
-extern fn void* dlopen(char* filename, int flags) @cname("dlopen") @private @if(!env::WIN32);
-extern fn void* dlsym(void* handle, char* symbol) @cname("dlsym") @private @if(!env::WIN32);
-const int RTLD_LAZY @private @if(!env::WIN32) = 1;
+extern fn void* dlopen(char* filename, int flags) @cname("dlopen") @private @feat(!WIN32);
+extern fn void* dlsym(void* handle, char* symbol) @cname("dlsym") @private @feat(!WIN32);
+const int RTLD_LAZY @private @feat(!WIN32) = 1;
 
 const ZString DIRECT_DRIVER_LOADING_EXTENSION_NAME = "VK_LUNARG_direct_driver_loading";
 
@@ -131,7 +131,7 @@ fn PFN_vkGetInstanceProcAddrLUNARG? findDriver(String[] paths)
 
  @return? DRIVER_NOT_LOADED : `No bundled driver — fall back to the loader's own discovery.`
 *>
-fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(env::DARWIN)
+fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @feat(DARWIN)
 {
 	@pool()
 	{
@@ -154,7 +154,7 @@ fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(env::DARWIN)
 
  @return? DRIVER_NOT_LOADED : `Always — nothing is bundled here.`
 *>
-fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @if(!env::DARWIN)
+fn PFN_vkGetInstanceProcAddrLUNARG? findBundledDriver() @feat(!DARWIN)
 {
 	return DRIVER_NOT_LOADED~;
 }
