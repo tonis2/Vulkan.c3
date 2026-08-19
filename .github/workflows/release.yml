@@ -19,12 +19,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Fetch the KosmicKrisp driver
+        # The driver is not on main. It is 15 MB and is replaced whenever Mesa is
+        # worth bumping, and git keeps every version of a tracked file forever --
+        # so committing it here would charge every clone of this repository, and
+        # of anything using it as a submodule, for drivers nobody will run again.
+        #
+        # It lives on the `driver` orphan branch instead, which is amended and
+        # force-pushed rather than added to (see vendor-kosmickrisp.sh), so that
+        # branch holds exactly one revision no matter how many bumps it has seen.
+        #
+        # --depth 1 because the branch has no history worth the name, and because
+        # actions/checkout leaves a shallow clone that has never heard of it.
+        run: |
+          git fetch --depth 1 origin driver
+          git cat-file blob FETCH_HEAD:libvulkan_kosmickrisp.dylib \
+            > macos-aarch64/libvulkan_kosmickrisp.dylib
+          chmod 755 macos-aarch64/libvulkan_kosmickrisp.dylib
+          echo "driver: $(git show FETCH_HEAD:VERSION 2>/dev/null || echo unversioned)"
+
       - name: Build vulkan.c3l
         # macos-aarch64/ carries the loader + driver dylibs the library dlopens
         # at runtime on macOS -- nothing is linked, they only need to travel.
         run: |
           test -f macos-aarch64/libvulkan.1.dylib
           test -f macos-aarch64/libvulkan_kosmickrisp.dylib
+          # A pointer file or an HTML error page is also "a file that exists".
+          # The driver has never been under 10 MB; anything smaller is a failed
+          # fetch that would otherwise ship as a working release.
+          test "$(wc -c < macos-aarch64/libvulkan_kosmickrisp.dylib)" -gt 10000000
           # rm first -- zip appends to an existing archive instead of replacing
           # it. Same packaging as build.sh; keep the two in step.
           rm -f vulkan.c3l
