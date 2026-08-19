@@ -4,6 +4,10 @@ on:
   push:
       branches:
         - "main"
+  # Re-cut the release without pushing a commit -- no inputs, because the
+  # release below is always the rolling `latest` tag, so there is no version to
+  # pass in.
+  workflow_dispatch:
 
 jobs:
   release:
@@ -15,21 +19,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          fi
-
       - name: Build vulkan.c3l
         # macos-aarch64/ carries the loader + driver dylibs the library dlopens
         # at runtime on macOS -- nothing is linked, they only need to travel.
         run: |
           test -f macos-aarch64/libvulkan.1.dylib
           test -f macos-aarch64/libvulkan_kosmickrisp.dylib
+          # rm first -- zip appends to an existing archive instead of replacing
+          # it. Same packaging as build.sh; keep the two in step.
+          rm -f vulkan.c3l
           zip -r vulkan.c3l ./vk macos-aarch64 manifest.json
 
       - name: Create Release
