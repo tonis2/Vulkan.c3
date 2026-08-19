@@ -4,12 +4,37 @@ import std::io;
 import std::core;
 import std::math;
 import std::collections::list;
-import xml;
+import std::encoding::xml;
 
 alias StructList = List{VkStruct};
 alias CommandList = List{VkCommand};
 alias ValueList = List{VkValue};
 alias EnumList = List{VkEnum};
+
+<*
+ The text written directly inside an element, leading whitespace removed.
+
+ vk.xml mixes text and child elements freely -- a member reads
+ `<member>const <type>void</type>* <name>pNext</name></member>` -- and it is the
+ run behind the last child element that carries the pointer or array suffix the
+ generator is after, so a later run replaces an earlier one. Whitespace-only runs
+ hold nothing and are skipped; an element without text yields "".
+*>
+fn String XmlNode.text_value(&self) {
+    String text;
+    foreach (child : self.children) {
+        if (child.kind != TEXT) continue;
+        String run = child.value.trim_left(" \t\r\n\v");
+        if (run.len) text = run;
+    }
+    return text;
+}
+
+<* True when the element has child elements; text, comments and prologs don't count. *>
+fn bool XmlNode.has_elements(&self) {
+    foreach (child : self.children) if (child.kind == START_ELEMENT) return true;
+    return false;
+}
 
 // Vulkan member/param names that collide with C3 keywords or generated type names
 const String[2][*] RESERVED_RENAMES = {{"module", "mod"}, {"sz", "size"}};
@@ -77,12 +102,13 @@ fn void VkCommand.free(&self) {
     self.base.free();
 }
 
-fn VkEnum VkEnum.from_node(&self, xml::Node node) {
+fn VkEnum VkEnum.from_node(&self, XmlNode* node) {
     self.comment = node.attributes.get("comment") ?? "";
     self.name = node.attributes.get("name")!!;
     self.bitwidth = node.attributes.get("bitwidth") ?? "";
 
     foreach (entry : node.children) {
+        if (entry.kind != START_ELEMENT) continue;
         String? name = entry.attributes.get("name");
         String? value = entry.attributes.get("value");
         String? bitpos = entry.attributes.get("bitpos");
@@ -108,22 +134,26 @@ fn VkEnum VkEnum.from_node(&self, xml::Node node) {
     return *self;
 }
 
-fn VkValue VkValue.from_node(&self, xml::Node node) {
+fn VkValue VkValue.from_node(&self, XmlNode* node) {
 
     foreach (entry : node.children) {
-        if (entry.name == "name") self.name = entry.value;
-        if (entry.name == "type") self.type = entry.value;
+        if (entry.kind != START_ELEMENT) continue;
+        if (entry.name == "name") self.name = entry.text_value();
+        if (entry.name == "type") self.type = entry.text_value();
     }
     return *self;
 }
 
-fn VkStruct VkStruct.from_node(&self, xml::Node node) {
+fn VkStruct VkStruct.from_node(&self, XmlNode* node) {
     self.name = node.attributes.get("name") ?? "-";
     
     foreach (member : node.children) {
+        if (member.kind != START_ELEMENT) continue;
+
         String? api = member.attributes.get("api");
         if (try api && api == "vulkansc") continue;
 
+        String text = member.text_value();
         VkValue value;
         value.len = member.attributes.get("len") ?? "";
         value.defaultValue = member.attributes.get("values") ?? "";
@@ -131,17 +161,18 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
 
         value.len = value.len.strip_suffix(",null-terminated");
 
-        if (!value.optional && member.value != "" && member.value[0] != ':' && member.value[0] != '*') value.size = member.value;
+        if (!value.optional && text != "" && text[0] != ':' && text[0] != '*') value.size = text;
  
-        value.value = member.value.len > 1 ? member.value[0..0] : "";
+        value.value = text.len > 1 ? text[0..0] : "";
         if (value.value == ":") value.value = "";
 
         foreach (entry : member.children) {
+            if (entry.kind != START_ELEMENT) continue;
             // Enum used as SIZE element at vulkan :/
-            if (entry.name == "enum") value.size = entry.value;
-            if (entry.name == "type") value.type = entry.value;
+            if (entry.name == "enum") value.size = entry.text_value();
+            if (entry.name == "type") value.type = entry.text_value();
             if (entry.name == "name") {
-                value.name = fix_reserved_name(entry.value);
+                value.name = fix_reserved_name(entry.text_value());
                 if (value.name.len > 0 && value.name[0] >= 'A' && value.name[0] <= 'Z') {
                     value.name = value.name.copy(mem);
                     value.name[0] = value.name[0].to_lower();
@@ -170,7 +201,7 @@ fn VkStruct VkStruct.from_node(&self, xml::Node node) {
 }
 
 
-fn VkCommand VkCommand.from_node(&self, xml::Node node) {
+fn VkCommand VkCommand.from_node(&self, XmlNode* node) {
     String? success_codes = node.attributes.get("successcodes");
     String? error_codes = node.attributes.get("errorcodes");
 
@@ -181,20 +212,23 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
     }
     
     foreach (member : node.children) {
+        if (member.kind != START_ELEMENT) continue;
+
         String? api = member.attributes.get("api");
         bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
         value.optional = member.attributes.has_key("optional");
-        value.value = member.value.trim(" ");
+        value.value = member.text_value().trim(" ");
         if (value.value.contains("const")) value.value = value.value[0..1];
 
         foreach (entry : member.children) {
+            if (entry.kind != START_ELEMENT) continue;
             if (member.name == "proto") {
-                if (entry.name == "name") self.name = entry.value;
-                if (entry.name == "type") self.returnType = entry.value;
+                if (entry.name == "name") self.name = entry.text_value();
+                if (entry.name == "type") self.returnType = entry.text_value();
             } else if (!is_vulkansc) {
-                if (entry.name == "type") value.type = entry.value;
-                if (entry.name == "name") value.name = fix_reserved_name(entry.value);
+                if (entry.name == "type") value.type = entry.text_value();
+                if (entry.name == "name") value.name = fix_reserved_name(entry.text_value());
             }
         }
         if (member.name == "param" && !is_vulkansc) self.values.push(value);
@@ -202,17 +236,21 @@ fn VkCommand VkCommand.from_node(&self, xml::Node node) {
     return *self;
 }
 
-fn VkCommand VkCommand.from_func_ptr(&self, xml::Node node) {
+fn VkCommand VkCommand.from_func_ptr(&self, XmlNode* node) {
     self.enabled = true;
-    if (node.value.len > 5) self.returnType = node.value;
-    //node.value[7..(node.value.len + 7 - 10)]
+
+    String text = node.text_value();
+    if (text.len > 5) self.returnType = text;
+
     foreach (member : node.children) {
+        if (member.kind != START_ELEMENT) continue;
+
         String? api = member.attributes.get("api");
         bool is_vulkansc = @ok(api) && api!! == "vulkansc";
         VkValue value;
 
-        if (member.name == "name") self.name = member.value;
-        if (member.name == "type") value.type = member.value;
+        if (member.name == "name") self.name = member.text_value();
+        if (member.name == "type") value.type = member.text_value();
         if (member.name == "type" && !is_vulkansc) self.values.push(value);
     }
     return *self;
