@@ -11,7 +11,8 @@ name: Vendor Vulkan loader
 # against Vulkan (the bindings dlopen the loader at runtime), and on Linux
 # and Windows the system loader is the correct one and always installed. macOS
 # has no system Vulkan, so the library ships the loader — and the KosmicKrisp
-# driver, which this workflow does NOT build; replace that dylib by hand.
+# driver, which this workflow does NOT build: it needs a full Mesa build with
+# an LLVM toolchain, which is `vendor-kosmickrisp.sh` and runs on a Mac by hand.
 #
 # The LunarG macOS SDK ships this same dylib, so a local copy out of an SDK
 # install works too; this workflow exists to pin the version reproducibly.

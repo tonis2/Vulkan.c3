@@ -113,7 +113,7 @@ sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-too
 **macOS (arm64)** — nothing is needed either. macOS has no system Vulkan, so the library carries its own in `macos-aarch64/` and both are bundled into `vulkan.c3l`:
 
 - `libvulkan.1.dylib` — the Khronos loader, opened by `vk::init()`
-- `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`
+- `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`.
 
 `vk::createDefaultInstance()` wires the bundled driver up on its own. If you would
 rather use an installed driver (a system MoltenVK from the LunarG SDK, say), set

@@ -58,7 +58,14 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# ...except the Vulkan loader + driver dylibs shipped for macOS (see README);
-# without this exemption the *.dylib rule above silently drops them from commits.
-!macos-aarch64/*.dylib
+# ...except the Vulkan loader shipped for macOS (see README); without this
+# exemption the *.dylib rule above silently drops it from commits.
+#
+# The KosmicKrisp driver beside it is deliberately NOT exempted. It is 15 MB and
+# is rebuilt on every Mesa bump, and git keeps every version of a tracked file
+# for ever, so committing it here would charge every clone -- and every clone of
+# a project using this as a submodule -- for drivers nobody will run again. It
+# lives on the `driver` orphan branch, amended in place; `build.sh` and the
+# release workflow fetch it, and `vendor-kosmickrisp.sh` publishes it.
+!macos-aarch64/libvulkan.1.dylib
 /vulkan.c3l
