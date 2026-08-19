@@ -26,6 +26,9 @@ parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
   types.c3           # XML parsing types
   diag.c3            # Generator diagnostics (skipped/dropped report)
 macos-aarch64/       # Bundled loader + driver dylibs for macOS (see below)
+libs/                # Example dependencies, as git submodules
+  window.c3l/        # https://github.com/tonis2/Window.c3
+  image.c3l/         # https://github.com/tonis2/image.c3
 examples/
   cube/              # 3D rotating cube with camera controls
   textured_cube/     # The same cube, with a texture and descriptor sets
@@ -60,6 +63,17 @@ is a crash, not a link error.
    (Linux, Windows) or with this library (macOS).
 
 ### Running the cube example
+
+The examples build against the window and image libraries in `libs/`, which are
+git submodules — clone with them, or pull them in afterwards:
+
+```bash
+git clone --recurse-submodules https://github.com/tonis2/Vulkan.c3.git
+# already cloned?
+git submodule update --init
+```
+
+Nothing in `vk/` depends on them; they are only needed to build the examples.
 
 **Linux:**
 ```bash

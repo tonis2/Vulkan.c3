@@ -1,0 +1,6 @@
+[submodule "libs/window.c3l"]
+	path = libs/window.c3l
+	url = https://github.com/tonis2/Window.c3.git
+[submodule "libs/image.c3l"]
+	path = libs/image.c3l
+	url = https://github.com/tonis2/image.c3.git

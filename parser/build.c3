@@ -5,7 +5,7 @@ import std::core;
 import std::math;
 import std::collections::list;
 import std::collections::map;
-import xml;
+import std::encoding::xml;
 
 const MAX_VERSION = 1.4;
 const String VERSION_LABEL = "1.4"; // keep in sync with MAX_VERSION
@@ -64,10 +64,13 @@ fn int main(String[] args) {
         "(~0ULL)", "(~0UL)"
     );
     
-    xml::Parser parser = xml::load_file("assets/vk.xml")!!;
-    defer parser.free();
+    File spec_file = io::file::open("assets/vk.xml", "rb")!!;
+    defer spec_file.close()!!;
 
-    Node root_node = parser.root;
+    XmlDocument* document = xml::load(mem, &spec_file)!!;
+    defer document.free();
+
+    XmlNode* root_node = document.root;
 
     File main_file = io::file::open("vk/vk.c3", "wb")!!;
     defer main_file.close()!!;
@@ -82,18 +85,18 @@ fn int main(String[] args) {
     defer builders_ext_file.close()!!;
 
     // Find required nodes
-    NodeList feature_nodes;
+    XmlNodeList feature_nodes;
     defer feature_nodes.free();
 
-    NodeList command_nodes;
+    XmlNodeList command_nodes;
     defer command_nodes.free();
 
-    NodeList types_nodes;
+    XmlNodeList types_nodes;
     defer types_nodes.free();
 
-    root_node.find(fn (node) => node.name == "feature" || node.name == "extension", &feature_nodes);
-    root_node.find(fn (node) => (node.attributes.has_key("category") || node.attributes.has_key("type")), &types_nodes);
-    root_node.find(fn (node) {
+    root_node.find_by_filter(fn (node) => node.name == "feature" || node.name == "extension", &feature_nodes);
+    root_node.find_by_filter(fn (node) => (node.attributes.has_key("category") || node.attributes.has_key("type")), &types_nodes);
+    root_node.find_by_filter(fn (node) {
         if (node.name == "command") {
             if (node.attributes.has_key("api") && node.attributes["api"]!! == "vulkansc") {
                  return false;
@@ -124,13 +127,17 @@ fn int main(String[] args) {
     }
 
     // Create api contants
-    foreach (node: root_node.children) {
+    foreach (node : root_node.children) {
+        if (node.kind != START_ELEMENT) continue;
+
         String? name = node.attributes.get("name");
         String? type = node.attributes.get("type");
         String? comment = node.attributes.get("comment");
         
         if (try name && name == "API Constants") {
-            foreach (child: node.children) {
+            foreach (child : node.children) {
+                if (child.kind != START_ELEMENT) continue;
+
                 String? child_name = child.attributes.get("name");
                 String? alias_name = child.attributes.get("alias");
                 String? value = child.attributes.get("value");
@@ -178,7 +185,7 @@ fn int main(String[] args) {
             }
         } 
         
-        if (node.children.len() > 0) {
+        if (node.has_elements()) {
             switch (category) {
                 case "enum": {
                     if (try name) enums.push((VkEnum){}.from_node(node));
@@ -208,8 +215,9 @@ fn int main(String[] args) {
                     String? define_api = node.attributes.get("api");
                     if (try define_api && define_api == "vulkansc") continue;
                     foreach (child : node.children) {
-                        if (child.name == "name" && child.value == "VK_HEADER_VERSION") {
-                            String[] parts = node.value.trim(" \t\r\n").split(mem, " ");
+                        if (child.kind != START_ELEMENT) continue;
+                        if (child.name == "name" && child.text_value() == "VK_HEADER_VERSION") {
+                            String[] parts = node.text_value().trim(" \t\r\n").split(mem, " ");
                             String candidate = parts.len > 0 ? parts[parts.len - 1].trim(" \t\r\n") : "";
                             bool numeric = candidate.len > 0;
                             foreach (c : candidate) if (c < '0' || c > '9') numeric = false;
@@ -230,7 +238,7 @@ fn int main(String[] args) {
         String? alias_name = node.attributes.get("alias");
         String? name = node.attributes.get("name");
 
-        if (node.children.len() > 0) {
+        if (node.has_elements()) {
             VkCommand command = (VkCommand){}.from_node(node);
             commands.push(command);
         }
@@ -281,10 +289,14 @@ fn int main(String[] args) {
 
         // Get only up-to required vulkan version
         if (((@ok(number) && number.to_double()!! <= MAX_VERSION) || is_extension)) {
-            foreach (require: feature.children) {
+            foreach (require : feature.children) {
+                if (require.kind != START_ELEMENT) continue;
+
                 String? depends = require.attributes.get("depends");
 
                 foreach (entry : require.children) {
+                    if (entry.kind != START_ELEMENT) continue;
+
                     String? name = entry.attributes.get("name");
                     String? extends = entry.attributes.get("extends");
                     String? value = entry.attributes.get("value");
