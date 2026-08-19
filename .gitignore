@@ -61,3 +61,4 @@ dkms.conf
 # ...except the Vulkan loader + driver dylibs shipped for macOS (see README);
 # without this exemption the *.dylib rule above silently drops them from commits.
 !macos-aarch64/*.dylib
+/vulkan.c3l
