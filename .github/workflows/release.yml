@@ -25,18 +25,17 @@ jobs:
         # so committing it here would charge every clone of this repository, and
         # of anything using it as a submodule, for drivers nobody will run again.
         #
-        # It lives on the `driver` orphan branch instead, which is amended and
-        # force-pushed rather than added to (see vendor-kosmickrisp.sh), so that
-        # branch holds exactly one revision no matter how many bumps it has seen.
+        # It is an asset on this same rolling release instead, verified against
+        # driver.sha256 (see fetch-driver.sh for why an asset and not the `driver`
+        # branch this replaced). So this pulls it out of the PREVIOUS release and
+        # the upload step below re-attaches it unchanged: the bytes that ship are
+        # the bytes that were pinned, and a Mesa bump is an asset replacement plus
+        # a one-line commit rather than a 15 MB push.
         #
-        # --depth 1 because the branch has no history worth the name, and because
-        # actions/checkout leaves a shallow clone that has never heard of it.
-        run: |
-          git fetch --depth 1 origin driver
-          git cat-file blob FETCH_HEAD:libvulkan_kosmickrisp.dylib \
-            > macos-aarch64/libvulkan_kosmickrisp.dylib
-          chmod 755 macos-aarch64/libvulkan_kosmickrisp.dylib
-          echo "driver: $(git show FETCH_HEAD:VERSION 2>/dev/null || echo unversioned)"
+        # **This fails the release if the asset is missing**, which is the point.
+        # The alternative is a bundle that extracts fine and finds no driver at
+        # runtime, silently, because vk::findBundledDriver treats that as normal.
+        run: ./fetch-driver.sh
 
       - name: Build vulkan.c3l
         # macos-aarch64/ carries the loader + driver dylibs the library dlopens
@@ -44,10 +43,9 @@ jobs:
         run: |
           test -f macos-aarch64/libvulkan.1.dylib
           test -f macos-aarch64/libvulkan_kosmickrisp.dylib
-          # A pointer file or an HTML error page is also "a file that exists".
-          # The driver has never been under 10 MB; anything smaller is a failed
-          # fetch that would otherwise ship as a working release.
-          test "$(wc -c < macos-aarch64/libvulkan_kosmickrisp.dylib)" -gt 10000000
+          # fetch-driver.sh already hashed the driver against driver.sha256, so
+          # the size check it used to need is gone. The loader is still worth a
+          # test -f: it is committed, and a bad checkout is the failure left.
           # rm first -- zip appends to an existing archive instead of replacing
           # it. Same packaging as build.sh; keep the two in step.
           rm -f vulkan.c3l
@@ -58,5 +56,13 @@ jobs:
         with:
           tag_name: latest
           name: latest
-          files: vulkan.c3l
+          # Two kinds of asset, and they are not interchangeable:
+          #
+          #   vulkan.c3l   the bundle a c3c consumer installs, driver inside.
+          #   the dylib    loose, so a SOURCE checkout can fetch just it without
+          #                pulling a 3 MB zip it would throw away -- and so the
+          #                next run of this workflow has something to fetch.
+          files: |
+            vulkan.c3l
+            macos-aarch64/libvulkan_kosmickrisp.dylib
           generate_release_notes: false

@@ -115,6 +115,26 @@ sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-too
 - `libvulkan.1.dylib` — the Khronos loader, opened by `vk::init()`
 - `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`.
 
+Installing the `.c3l` gets you both. **A git checkout gets only the loader** —
+the driver is 15 MB and is rebuilt on every Mesa bump, so it is a release asset
+rather than a tracked file, and a checkout fetches it once:
+
+```bash
+./fetch-driver.sh
+```
+
+`build.sh` calls it for you. `driver.sha256` is what makes it reproducible: the
+tag is rolling, the hash is in git, and a mismatch fails by name. Skipping it
+does not break the build — nothing links against the driver — it fails later and
+*silently*, because `vk::findBundledDriver` treats "no bundled driver" as a
+normal outcome and falls back to the loader's own ICD discovery. The symptom is
+no devices, or the wrong ICD, never a missing file.
+
+It used to live on a `driver` orphan branch. That kept it out of a checkout but
+not out of the object database — `git clone` fetches every branch, and there is
+no way to opt one out — so every clone paid for it regardless. See
+`fetch-driver.sh` for the longer version.
+
 `vk::createDefaultInstance()` wires the bundled driver up on its own. If you would
 rather use an installed driver (a system MoltenVK from the LunarG SDK, say), set
 `skip_bundled_driver` and the loader does its normal ICD discovery:
@@ -220,7 +240,8 @@ To regenerate the bindings from the latest Vulkan XML specification:
 sh build.sh
 ```
 
-This downloads `vk.xml` from the Khronos repository and runs the parser. All extensions compatible with supported platforms (Win32, X11, XCB, Wayland, macOS/Metal, iOS) are included. Extensions referencing undefined types are automatically skipped.
+This downloads `vk.xml` from the Khronos repository, runs the parser, fetches the
+macOS driver if it is not already there, and zips `vulkan.c3l`. All extensions compatible with supported platforms (Win32, X11, XCB, Wayland, macOS/Metal, iOS) are included. Extensions referencing undefined types are automatically skipped.
 
 The generator prints a summary of everything it skipped or dropped (and why) to stderr. Run it with `c3c run build -- --strict` to make any warning fail the run.
 

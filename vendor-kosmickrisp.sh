@@ -83,25 +83,30 @@ chmod 755 "$HERE/macos-aarch64/libvulkan_kosmickrisp.dylib"
 echo "==> replaced macos-aarch64/libvulkan_kosmickrisp.dylib"
 echo "    Confirm with: VK_DRIVER_FILES=<icd.json> vulkaninfo | grep driverInfo"
 echo
-echo "==> to publish it, replace the single commit on the driver branch:"
+echo "==> to publish it:"
 cat <<PUBLISH
 
-    # In a scratch clone, NOT this working tree: an orphan checkout empties the
-    # tree it is standing in.
-    git checkout --orphan driver-new
-    git rm -rf --cached . >/dev/null && rm -rf ./*
-    cp $BUILT libvulkan_kosmickrisp.dylib
-    echo "\$(cat $WORK/mesa/VERSION)" > VERSION
-    git add libvulkan_kosmickrisp.dylib VERSION
-    git commit -m "KosmicKrisp \$(cat $WORK/mesa/VERSION)"
-    git push --force origin driver-new:driver
+    # 1. Upload the dylib to the rolling \`latest\` release, replacing the one
+    #    already there. Assets are not reachable from any ref, so this costs a
+    #    clone of this repository nothing -- which is the whole reason it is not
+    #    the \`driver\` orphan branch it used to be. A branch stays out of a
+    #    checkout but not out of the object database, and \`git clone\` fetches
+    #    every branch whether the machine will ever run macOS or not.
+    gh release upload latest -R tonis2/Vulkan.c3 --clobber \\
+        macos-aarch64/libvulkan_kosmickrisp.dylib
 
-One commit, force-pushed, on purpose: that branch is storage rather than
-history, and letting it accumulate would put back exactly the cost it exists to
-avoid. The consequence is that the driver it replaces is gone — if a bump turns
-out bad the way back is to rebuild the older Mesa with this script, which is why
-VERSION is committed beside it.
+    # 2. Commit the new hash. NOT optional: fetch-driver.sh verifies against
+    #    driver.sha256 and refuses anything else, so until this lands every
+    #    fetch -- including the release workflow's -- fails on the mismatch.
+    #    That is the intended failure; the alternative is shipping a driver
+    #    nobody chose.
+    printf '%s  libvulkan_kosmickrisp.dylib\\n' \\
+        "\$(shasum -a 256 macos-aarch64/libvulkan_kosmickrisp.dylib | awk '{print \$1}')"
 
-Note that a default clone still fetches every branch, so this keeps the driver
-at one revision rather than out of clones entirely; --single-branch skips it.
+    # ...with the '# mesa <version>' comment line above it updated to
+    # $(cat "$WORK/mesa/VERSION").
+
+The release keeps one driver, the current one. If a bump turns out bad the way
+back is to rebuild the older Mesa with this script, which is why the version is
+recorded in driver.sha256 beside the hash.
 PUBLISH

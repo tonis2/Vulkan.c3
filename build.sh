@@ -2,15 +2,11 @@ mkdir -p ./assets
 curl https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml --output ./assets/vk.xml
 c3c run build
 
-# The KosmicKrisp driver is not committed -- it lives on the `driver` orphan
-# branch, one revision at a time, so that bumping it does not charge every clone
-# for the versions it replaced. Same fetch the release workflow does.
-if [ ! -f ./macos-aarch64/libvulkan_kosmickrisp.dylib ]; then
-  git fetch --depth 1 origin driver
-  git cat-file blob FETCH_HEAD:libvulkan_kosmickrisp.dylib \
-    > ./macos-aarch64/libvulkan_kosmickrisp.dylib
-  chmod 755 ./macos-aarch64/libvulkan_kosmickrisp.dylib
-fi
+# The KosmicKrisp driver is not committed -- it is a release asset, so that
+# neither it nor the versions it replaced charge a clone anything. Same fetch the
+# release workflow does; it verifies against driver.sha256 and is a no-op once
+# the file is there.
+./fetch-driver.sh
 
 # Same layout the release workflow ships: sources under vk/ (what manifest.json
 # declares) and the macOS loader + driver dylibs the bindings dlopen at runtime.

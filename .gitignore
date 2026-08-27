@@ -64,8 +64,12 @@ dkms.conf
 # The KosmicKrisp driver beside it is deliberately NOT exempted. It is 15 MB and
 # is rebuilt on every Mesa bump, and git keeps every version of a tracked file
 # for ever, so committing it here would charge every clone -- and every clone of
-# a project using this as a submodule -- for drivers nobody will run again. It
-# lives on the `driver` orphan branch, amended in place; `build.sh` and the
-# release workflow fetch it, and `vendor-kosmickrisp.sh` publishes it.
+# a project using this as a submodule -- for drivers nobody will run again.
+#
+# It is a release asset instead, pinned by driver.sha256. It used to be an
+# orphan `driver` branch, which was the wrong shape: a branch stays out of a
+# checkout but not out of the object database, and a clone fetches every branch
+# whether it wants it or not. `build.sh` and the release workflow fetch it with
+# `fetch-driver.sh`, and `vendor-kosmickrisp.sh` publishes it.
 !macos-aarch64/libvulkan.1.dylib
 /vulkan.c3l
