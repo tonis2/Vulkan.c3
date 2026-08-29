@@ -2,7 +2,6 @@
 { 
   "provides" : "vk",
   "sources": ["vk/**"],
-  "wincrt": "static",
   "targets" : {
     "macos-x64" : {
       "linked-libraries" : []
