@@ -1,5 +1,5 @@
 import std::io;
-import std::math;
+
 import vk, camera, context, c3w, image;
 
 const WIDTH  = 1200;

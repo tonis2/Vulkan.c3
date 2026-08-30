@@ -1,5 +1,5 @@
 module camera;
-import std::math;
+
 import std::math::matrix;
 import std::io;
 

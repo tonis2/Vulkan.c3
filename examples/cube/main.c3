@@ -1,6 +1,6 @@
 import std::io;
 import std::collections::list;
-import std::math;
+
 import vk, camera, c3w;
 
 const WIDTH                = 800;

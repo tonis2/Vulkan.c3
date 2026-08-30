@@ -2,7 +2,7 @@ module parser;
 
 import std::io;
 import std::core;
-import std::math;
+
 import std::collections::list;
 import std::encoding::xml;
 
