@@ -1,6 +1,7 @@
 module camera;
 
 import std::math::matrix;
+import std::math::vector;
 import std::io;
 
 struct UniformData
