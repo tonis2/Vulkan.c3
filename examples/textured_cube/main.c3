@@ -1,4 +1,6 @@
 import std::io;
+import std::math::vector;
+
 
 import vk, camera, context, c3w, image;
 
