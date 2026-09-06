@@ -6,7 +6,12 @@
 # build the driver — this is the missing half of that sentence. KosmicKrisp is
 # Mesa's Vulkan-on-Metal driver, there is no upstream binary to download, and a
 # Homebrew `mesa` is not a substitute (see "Why not Homebrew" below), so a bump
-# means a real Mesa build. Run this, check the result, commit the dylib.
+# means a real Mesa build. Run this, check the result, upload the dylib.
+#
+# The dylib is NOT committed. It is 15 MB and git keeps every version of a
+# tracked file for ever, so it is a release asset pinned by `dylibs.sha256` and
+# fetched by `fetch-dylibs.sh` -- see that script for why an asset and not the
+# `driver` branch this replaced. The publish block at the bottom is both steps.
 #
 # ## Two things about the dependencies that are not obvious
 #
@@ -95,18 +100,17 @@ cat <<PUBLISH
     gh release upload latest -R tonis2/Vulkan.c3 --clobber \\
         macos-aarch64/libvulkan_kosmickrisp.dylib
 
-    # 2. Commit the new hash. NOT optional: fetch-driver.sh verifies against
-    #    driver.sha256 and refuses anything else, so until this lands every
-    #    fetch -- including the release workflow's -- fails on the mismatch.
-    #    That is the intended failure; the alternative is shipping a driver
-    #    nobody chose.
-    printf '%s  libvulkan_kosmickrisp.dylib\\n' \\
-        "\$(shasum -a 256 macos-aarch64/libvulkan_kosmickrisp.dylib | awk '{print \$1}')"
-
-    # ...with the '# mesa <version>' comment line above it updated to
-    # $(cat "$WORK/mesa/VERSION").
+    # 2. Commit the new hash and version in dylibs.sha256, replacing the
+    #    libvulkan_kosmickrisp.dylib line. NOT optional: fetch-dylibs.sh
+    #    verifies against that file and refuses anything else, so until this
+    #    lands every fetch -- including the release workflow's -- fails on the
+    #    mismatch. That is the intended failure; the alternative is shipping a
+    #    driver nobody chose.
+    printf '%s  libvulkan_kosmickrisp.dylib  mesa-%s\\n' \\
+        "\$(shasum -a 256 macos-aarch64/libvulkan_kosmickrisp.dylib | awk '{print \$1}')" \\
+        "$(cat "$WORK/mesa/VERSION")"
 
 The release keeps one driver, the current one. If a bump turns out bad the way
 back is to rebuild the older Mesa with this script, which is why the version is
-recorded in driver.sha256 beside the hash.
+recorded in dylibs.sha256 beside the hash.
 PUBLISH

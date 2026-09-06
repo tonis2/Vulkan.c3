@@ -1,0 +1,28 @@
+# The macOS dylibs, pinned. fetch-dylibs.sh verifies each downloaded asset
+# against this and refuses anything else, so this file -- not the rolling
+# `latest` tag -- is what makes the fetch reproducible.
+#
+# Neither dylib is committed. Git keeps every version of a tracked file for
+# ever, so a binary on main charges every clone of this repository -- and of
+# anything using it as a submodule -- for versions nobody will run again,
+# including the clones that will never touch macOS. Release assets are not
+# reachable from any ref, so a clone pays nothing and only the machines
+# assembling a macOS bundle download them.
+#
+# Bumping either one is two steps and the second is not optional: upload the new
+# dylib to the release, then commit the new hash here. Until that commit lands
+# every fetch fails on the mismatch, which is the intended failure -- the
+# alternative is shipping a binary nobody chose.
+#
+#   libvulkan_kosmickrisp.dylib   Mesa's Vulkan-on-Metal driver, built by
+#                                 vendor-kosmickrisp.sh, which prints the
+#                                 upload command. 15 MB, bumped with Mesa.
+#   libvulkan.1.dylib             the Khronos loader, built by
+#                                 vendor-vulkan.yml. 1.4 MB, changes about
+#                                 once a year.
+#
+# Columns: sha256, file name, and the version the bytes were built from -- the
+# version is what makes a bad bump recoverable, since the way back is to
+# rebuild that exact version.
+c98d6fffd38478ece406fb6bb359aedf4b4a8efe86f1345e963a5a9c23393ad5  libvulkan_kosmickrisp.dylib  mesa-26.3.0-devel
+092cdfd0699a1556c747ce6120b17202e02a7ba9406ba3b11ebd8029e285da44  libvulkan.1.dylib            vulkan-sdk-1.4.350.1

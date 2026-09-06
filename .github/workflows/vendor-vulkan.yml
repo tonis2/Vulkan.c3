@@ -1,11 +1,14 @@
 name: Vendor Vulkan loader
 
-# Run by hand, rarely — only to refresh the Vulkan loader dylib under
+# Run by hand, rarely — only to refresh the Vulkan loader dylib that ships in
 # macos-aarch64/.
 #
-# That dylib is committed to the repository on purpose, so that cutting a
-# release is nothing but zipping files: no toolchains, no package installs, no
-# network fetches, and the binary shipped is exactly the one that was tested.
+# That dylib is NOT committed to the repository. It is 1.4 MB, git keeps every
+# version of a tracked file for ever, and a binary on main charges every clone —
+# including every clone of a project using this as a submodule, and every clone
+# that will never touch macOS. It is a release asset instead, pinned by
+# dylibs.sha256 and fetched by `fetch-dylibs.sh`; see that script for why an
+# asset rather than a branch.
 #
 # macOS is the only platform that needs anything vendored: nothing links
 # against Vulkan (the bindings dlopen the loader at runtime), and on Linux
@@ -17,8 +20,10 @@ name: Vendor Vulkan loader
 # The LunarG macOS SDK ships this same dylib, so a local copy out of an SDK
 # install works too; this workflow exists to pin the version reproducibly.
 #
-# Download the `vulkan-libs` artifact this produces, unzip it over the repo
-# root, and commit.
+# To publish what this produces, follow the two steps the final step prints:
+# upload the dylib to the rolling `latest` release, then commit the new hash and
+# version to dylibs.sha256. The second is not optional — until it lands every
+# fetch fails on the mismatch, which is the intended failure.
 
 on:
   workflow_dispatch:
@@ -55,6 +60,10 @@ jobs:
           cp "$(find build -name 'libvulkan.1.*.dylib' | head -1)" out/macos-aarch64/libvulkan.1.dylib
           MINOS=$(otool -l out/macos-aarch64/libvulkan.1.dylib | grep -o 'minos [0-9.]*' | sort -u)
           [ "$MINOS" = "minos 11.0" ] || { echo "unexpected deployment target: $MINOS"; exit 1; }
+          # The one symbol vk::init pulls out of it (vk/loader.c3), and the same
+          # check fetch-dylibs.sh makes after downloading it.
+          nm -gU out/macos-aarch64/libvulkan.1.dylib | grep -q _vkGetInstanceProcAddr \
+            || { echo "exports no vkGetInstanceProcAddr"; exit 1; }
           ls -la out/macos-aarch64
 
       - name: Upload
@@ -63,3 +72,31 @@ jobs:
           name: vulkan-libs
           path: out/
           if-no-files-found: error
+
+      - name: How to publish it
+        shell: bash
+        run: |
+          # Printed rather than done: this workflow builds a candidate, and what
+          # ships should be a file someone looked at. vendor-kosmickrisp.sh ends
+          # the same way for the driver.
+          SHA=$(shasum -a 256 out/macos-aarch64/libvulkan.1.dylib | awk '{print $1}')
+          cat <<PUBLISH
+
+          Download the 'vulkan-libs' artifact, unzip it, and then:
+
+              # 1. Upload the dylib to the rolling \`latest\` release, replacing
+              #    the one already there. Assets are not reachable from any ref,
+              #    so this costs a clone of this repository nothing -- which is
+              #    why the dylib is not committed.
+              gh release upload latest -R ${{ github.repository }} --clobber \\
+                  macos-aarch64/libvulkan.1.dylib
+
+              # 2. Commit the new hash and version in dylibs.sha256. NOT
+              #    optional: fetch-dylibs.sh verifies against it and refuses
+              #    anything else, so until this lands every fetch -- including
+              #    the release workflow's -- fails on the mismatch. That is the
+              #    intended failure; the alternative is shipping a loader nobody
+              #    chose.
+              $SHA  libvulkan.1.dylib  ${{ inputs.loader_version }}
+
+          PUBLISH

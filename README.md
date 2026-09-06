@@ -25,7 +25,8 @@ parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
   build.c3           # Main generator logic
   types.c3           # XML parsing types
   diag.c3            # Generator diagnostics (skipped/dropped report)
-macos-aarch64/       # Bundled loader + driver dylibs for macOS (see below)
+macos-aarch64/       # Bundled loader + driver dylibs for macOS -- fetched, not
+                     #   committed (see below)
 libs/                # Example dependencies, as git submodules
   window.c3l/        # https://github.com/tonis2/Window.c3
   image.c3l/         # https://github.com/tonis2/image.c3
@@ -115,25 +116,27 @@ sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-too
 - `libvulkan.1.dylib` — the Khronos loader, opened by `vk::init()`
 - `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`.
 
-Installing the `.c3l` gets you both. **A git checkout gets only the loader** —
-the driver is 15 MB and is rebuilt on every Mesa bump, so it is a release asset
-rather than a tracked file, and a checkout fetches it once:
+Installing the `.c3l` gets you both. **A git checkout gets neither** — both are
+release assets rather than tracked files, because git keeps every version of a
+tracked file for ever and a binary on `main` charges every clone, including the
+clones that will never touch macOS. A checkout fetches them once:
 
 ```bash
-./fetch-driver.sh
+./fetch-dylibs.sh
 ```
 
-`build.sh` calls it for you. `driver.sha256` is what makes it reproducible: the
-tag is rolling, the hash is in git, and a mismatch fails by name. Skipping it
-does not break the build — nothing links against the driver — it fails later and
-*silently*, because `vk::findBundledDriver` treats "no bundled driver" as a
-normal outcome and falls back to the loader's own ICD discovery. The symptom is
-no devices, or the wrong ICD, never a missing file.
+`build.sh` calls it for you, and it is a no-op once the files are there.
+`dylibs.sha256` is what makes it reproducible: the release tag is rolling, the
+hashes are in git, and a mismatch fails by name. Skipping the fetch does not
+break the build — nothing links against either dylib — it fails later, and for
+the driver *silently*, because `vk::findBundledDriver` treats "no bundled
+driver" as a normal outcome and falls back to the loader's own ICD discovery.
+The symptom is no devices, or the wrong ICD, never a missing file.
 
-It used to live on a `driver` orphan branch. That kept it out of a checkout but
-not out of the object database — `git clone` fetches every branch, and there is
-no way to opt one out — so every clone paid for it regardless. See
-`fetch-driver.sh` for the longer version.
+The driver used to live on a `driver` orphan branch. That kept it out of a
+checkout but not out of the object database — `git clone` fetches every branch,
+and there is no way to opt one out — so every clone paid for it regardless. See
+`fetch-dylibs.sh` for the longer version.
 
 `vk::createDefaultInstance()` wires the bundled driver up on its own. If you would
 rather use an installed driver (a system MoltenVK from the LunarG SDK, say), set
@@ -175,11 +178,13 @@ so unzipping it is the whole install.
 ### Option 2: Build from source
 
 ```bash
+./fetch-dylibs.sh          # once per checkout; the dylibs are release assets
 c3c build zip --trust=full
 ```
 
 This creates `vulkan.c3l` in the project root (bindings plus the macOS
-loader/driver pair).
+loader/driver pair). The `zip` target runs `fetch-dylibs.sh` itself, so the
+explicit call above is only there to show what it needs.
 
 ### Example usage
 

@@ -17,7 +17,7 @@
 		},
 		"zip": {
 			"type": "prepare",
-			"exec": ["zip -r vulkan.c3l ./vk macos-aarch64 manifest.json"]
+			"exec": ["./fetch-dylibs.sh", "rm -f vulkan.c3l", "zip -r vulkan.c3l ./vk macos-aarch64 manifest.json"]
 		},
 		"cube": {
 			"type": "executable",

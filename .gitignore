@@ -58,18 +58,17 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# ...except the Vulkan loader shipped for macOS (see README); without this
-# exemption the *.dylib rule above silently drops it from commits.
+# The two macOS dylibs under macos-aarch64/ stay ignored, with no exemption.
 #
-# The KosmicKrisp driver beside it is deliberately NOT exempted. It is 15 MB and
-# is rebuilt on every Mesa bump, and git keeps every version of a tracked file
-# for ever, so committing it here would charge every clone -- and every clone of
-# a project using this as a submodule -- for drivers nobody will run again.
+# The loader is 1.4 MB and the KosmicKrisp driver is 15 MB, and git keeps every
+# version of a tracked file for ever -- so committing either would charge every
+# clone, and every clone of a project using this as a submodule, for binaries
+# nobody will run again, including the clones that will never touch macOS.
 #
-# It is a release asset instead, pinned by driver.sha256. It used to be an
-# orphan `driver` branch, which was the wrong shape: a branch stays out of a
-# checkout but not out of the object database, and a clone fetches every branch
-# whether it wants it or not. `build.sh` and the release workflow fetch it with
-# `fetch-driver.sh`, and `vendor-kosmickrisp.sh` publishes it.
-!macos-aarch64/libvulkan.1.dylib
+# They are release assets instead, pinned by dylibs.sha256. The driver used to
+# be an orphan `driver` branch, which was the wrong shape: a branch stays out of
+# a checkout but not out of the object database, and a clone fetches every
+# branch whether it wants it or not. `build.sh` and the release workflow fetch
+# both with `fetch-dylibs.sh`; `vendor-kosmickrisp.sh` publishes the driver and
+# `vendor-vulkan.yml` builds the loader.
 /vulkan.c3l

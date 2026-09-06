@@ -19,35 +19,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch the KosmicKrisp driver
-        # The driver is not on main. It is 15 MB and is replaced whenever Mesa is
-        # worth bumping, and git keeps every version of a tracked file forever --
-        # so committing it here would charge every clone of this repository, and
-        # of anything using it as a submodule, for drivers nobody will run again.
+      - name: Fetch the macOS dylibs
+        # Neither dylib is on main. The driver is 15 MB and is replaced whenever
+        # Mesa is worth bumping, the loader is 1.4 MB, and git keeps every
+        # version of a tracked file forever -- so committing either here would
+        # charge every clone of this repository, and of anything using it as a
+        # submodule, for binaries nobody will run again.
         #
-        # It is an asset on this same rolling release instead, verified against
-        # driver.sha256 (see fetch-driver.sh for why an asset and not the `driver`
-        # branch this replaced). So this pulls it out of the PREVIOUS release and
-        # the upload step below re-attaches it unchanged: the bytes that ship are
-        # the bytes that were pinned, and a Mesa bump is an asset replacement plus
-        # a one-line commit rather than a 15 MB push.
+        # They are assets on this same rolling release instead, verified against
+        # dylibs.sha256 (see fetch-dylibs.sh for why assets and not the `driver`
+        # branch this replaced). So this pulls them out of the PREVIOUS release
+        # and the upload step below re-attaches them unchanged: the bytes that
+        # ship are the bytes that were pinned, and bumping either one is an asset
+        # replacement plus a one-line commit rather than a binary push.
         #
-        # **This fails the release if the asset is missing**, which is the point.
+        # **This fails the release if an asset is missing**, which is the point.
         # The alternative is a bundle that extracts fine and finds no driver at
         # runtime, silently, because vk::findBundledDriver treats that as normal.
-        run: ./fetch-driver.sh
+        run: ./fetch-dylibs.sh
 
       - name: Build vulkan.c3l
         # macos-aarch64/ carries the loader + driver dylibs the library dlopens
         # at runtime on macOS -- nothing is linked, they only need to travel.
+        #
+        # No test -f here: fetch-dylibs.sh hashed both against dylibs.sha256 and
+        # exits non-zero on anything it could not place, so reaching this step
+        # already means both files are the pinned bytes.
+        #
+        # rm first -- zip appends to an existing archive instead of replacing
+        # it. Same packaging as build.sh; keep the two in step.
         run: |
-          test -f macos-aarch64/libvulkan.1.dylib
-          test -f macos-aarch64/libvulkan_kosmickrisp.dylib
-          # fetch-driver.sh already hashed the driver against driver.sha256, so
-          # the size check it used to need is gone. The loader is still worth a
-          # test -f: it is committed, and a bad checkout is the failure left.
-          # rm first -- zip appends to an existing archive instead of replacing
-          # it. Same packaging as build.sh; keep the two in step.
           rm -f vulkan.c3l
           zip -r vulkan.c3l ./vk macos-aarch64 manifest.json
 
@@ -58,11 +59,15 @@ jobs:
           name: latest
           # Two kinds of asset, and they are not interchangeable:
           #
-          #   vulkan.c3l   the bundle a c3c consumer installs, driver inside.
-          #   the dylib    loose, so a SOURCE checkout can fetch just it without
-          #                pulling a 3 MB zip it would throw away -- and so the
-          #                next run of this workflow has something to fetch.
+          #   vulkan.c3l   the bundle a c3c consumer installs, both dylibs
+          #                inside.
+          #   the dylibs   loose, so a SOURCE checkout can fetch just the ones
+          #                it needs without pulling a 3 MB zip it would throw
+          #                away -- and so the next run of this workflow has
+          #                something to fetch. Re-uploaded unchanged every run;
+          #                they are the only copy that exists.
           files: |
             vulkan.c3l
+            macos-aarch64/libvulkan.1.dylib
             macos-aarch64/libvulkan_kosmickrisp.dylib
           generate_release_notes: false
