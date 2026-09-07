@@ -162,11 +162,9 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(
     // device-local-only page (unmapped) must not be reused for a host-visible
     // allocation, otherwise upload memcpy hits a null `mapped`.
     foreach (page : self.pages) {
-        sz aligned_used = alignUp(page.used_size, alignment);
         if (page.memory_type == memory_type
             && page.properties == properties
-            && aligned_used <= page.size
-            && (page.size - aligned_used) >= required_size) {
+            && allocation_fits(page.size, page.used_size, required_size, alignment)) {
             return page;
         }
     }
@@ -201,6 +199,15 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(
 
     self.pages.push(new_page);
     return new_page;
+}
+
+// The end-of-page check shared by buffer and image allocation. Kept as a pure
+// function so the alignment-padding overflow that once reached vkBind*Memory
+// can be pinned without constructing a Vulkan device.
+fn bool allocation_fits(sz page_size, sz used_size, sz required_size, sz alignment)
+{
+    sz offset = alignUp(used_size, alignment);
+    return offset <= page_size && required_size <= page_size - offset;
 }
 
 // Mark a Memory allocation for deletion (will be freed on sync)
