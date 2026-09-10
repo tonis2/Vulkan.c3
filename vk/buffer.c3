@@ -151,7 +151,9 @@ fn void MemoryPage.merge_free_blocks(&self) {
     }
 }
 
-fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits) {
+fn MemoryPage* MemoryAllocator.find_or_create_page(
+    &self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits, sz alignment = 1
+) {
     uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
 
     // Search existing pages for matching properties + enough space.
@@ -162,7 +164,7 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
     foreach (page : self.pages) {
         if (page.memory_type == memory_type
             && page.properties == properties
-            && (page.size - page.used_size) >= required_size) {
+            && allocation_fits(page.size, page.used_size, required_size, alignment)) {
             return page;
         }
     }
@@ -197,6 +199,15 @@ fn MemoryPage* MemoryAllocator.find_or_create_page(&self, MemoryPropertyFlags pr
 
     self.pages.push(new_page);
     return new_page;
+}
+
+// The end-of-page check shared by buffer and image allocation. Kept as a pure
+// function so the alignment-padding overflow that once reached vkBind*Memory
+// can be pinned without constructing a Vulkan device.
+fn bool allocation_fits(sz page_size, sz used_size, sz required_size, sz alignment)
+{
+    sz offset = alignUp(used_size, alignment);
+    return offset <= page_size && required_size <= page_size - offset;
 }
 
 // Mark a Memory allocation for deletion (will be freed on sync)
@@ -386,7 +397,7 @@ fn Memory? new_buffer(
 
     // If no free block found, allocate from page end
     if (!used_free_block) {
-        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits);
+        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits, (sz)mem_reqs.alignment);
         offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
     }
 
@@ -501,7 +512,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
     }
 
     if (!used_free_block) {
-        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits);
+        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits, (sz)mem_reqs.alignment);
         offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
     }
 
