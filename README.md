@@ -1,168 +1,24 @@
 # Vulkan.c3
 
-Vulkan bindings for [C3](https://c3-lang.org/), auto-generated from the official Vulkan XML specification. Covers Vulkan 1.0 through 1.4 with all platform-compatible extensions included.
+Vulkan bindings for [C3](https://c3-lang.org/), generated from the official
+Vulkan XML specification. The library covers Vulkan 1.0–1.4 and compatible
+extensions on Windows, Linux, and macOS.
 
-- Idiomatic C3 error handling — Vulkan error codes map to C3 faults
-- Builder pattern — auto-generated `.set*()` and `.build()` methods for Vulkan structs
-- Cross-platform — Windows, Linux (X11/Wayland), and macOS
-- No link-time Vulkan dependency — the loader is opened at runtime (volk-style), so the Vulkan SDK is optional on every platform, at build time and at run time
-- Ships its own loader and driver on macOS (arm64), so a Mac needs nothing installed to run
+It also adds a few C3-friendly conveniences:
 
-## Project structure
+- Vulkan errors are returned as C3 faults.
+- Generated builders make Vulkan structs less tedious to set up.
+- Vulkan is loaded at runtime, so your project does not link against the SDK.
+- The arm64 macOS package includes its own Vulkan loader and driver.
 
-```
-vk/                  # Generated + hand-written bindings (this is the library)
-  vk.c3              # Types, enums, structs, unions
-  commands.c3        # Command pointers, staged loading, and wrappers
-  builders_core.c3   # Auto-generated builder/setter methods (core Vulkan structs)
-  builders_ext.c3    # Auto-generated builder/setter methods (extension structs)
-  loader.c3          # Runtime loader bootstrap (vk::init)
-  driver.c3          # VK_LUNARG_direct_driver_loading support
-  extra.c3           # Hand-written type aliases (platform types, function pointers)
-  helpers.c3         # Convenience wrappers (swapchain, device queries, etc.)
-  buffer.c3          # Memory allocator and buffer helpers
-parser/              # Bindings generator (reads vk.xml, writes vk/*.c3)
-  build.c3           # Main generator logic
-  types.c3           # XML parsing types
-  diag.c3            # Generator diagnostics (skipped/dropped report)
-macos-aarch64/       # Bundled loader + driver dylibs for macOS -- fetched, not
-                     #   committed (see below)
-libs/                # Example dependencies, as git submodules
-  window.c3l/        # https://github.com/tonis2/Window.c3
-  image.c3l/         # https://github.com/tonis2/image.c3
-examples/
-  cube/              # 3D rotating cube with camera controls
-  textured_cube/     # The same cube, with a texture and descriptor sets
-```
+## Install
 
-## How commands are loaded
+**For a C3 project, download `vulkan.c3l` from the
+[latest release](https://github.com/tonis2/Vulkan.c3/releases/tag/latest). This
+is the recommended way to use the library.**
 
-Nothing links against Vulkan. Every command is a function pointer, resolved in
-three stages (the same model as [volk](https://github.com/zeux/volk)):
-
-1. `vk::init()` opens the loader shared library (`vulkan-1.dll`, `libvulkan.so.1`,
-   `libvulkan.1.dylib`), pulls `vkGetInstanceProcAddr` out of it, and binds the
-   global-level commands — enough to query extensions and layers and to call
-   `vkCreateInstance`. Pass your own candidate paths to `init` to override the
-   search: `vk::init({ "/path/to/libvulkan.so" })!`.
-2. Creating an instance binds every remaining command, core and extension alike,
-   through `vkGetInstanceProcAddr`.
-3. `vk::loadDeviceCommands(device)` is optional: it rebinds device-level commands
-   through `vkGetDeviceProcAddr`, so calls dispatch straight into the driver
-   instead of through the loader trampoline.
-
-`init` must run before anything else in the library — a command called before it
-is a crash, not a link error.
-
-## Quick start
-
-### Prerequisites
-
-1. [C3 compiler](https://c3-lang.org/) (latest version)
-2. Nothing else. The Vulkan SDK is optional on every platform — it is never
-   needed to build, and at run time the loader either ships with the GPU driver
-   (Linux, Windows) or with this library (macOS).
-
-### Running the cube example
-
-The examples build against the window and image libraries in `libs/`, which are
-git submodules — clone with them, or pull them in afterwards:
-
-```bash
-git clone --recurse-submodules https://github.com/tonis2/Vulkan.c3.git
-# already cloned?
-git submodule update --init
-```
-
-Nothing in `vk/` depends on them; they are only needed to build the examples.
-
-**Linux:**
-```bash
-c3c run cube
-```
-
-**Windows:**
-```bash
-c3c run cube-win
-```
-
-**macOS:**
-```bash
-c3c run cube
-```
-
-### Platform setup (runtime only)
-
-The Vulkan SDK is optional everywhere. Install it only when you want validation
-layers and tooling (`vulkaninfo`, `glslc`, RenderDoc integration) — never to
-build or run.
-
-**Linux** — the loader and driver ship with the GPU stack, so nothing is needed. For validation layers and tooling:
-```bash
-# Ubuntu/Debian
-sudo apt install libvulkan1 vulkan-tools vulkan-validationlayers spirv-tools
-
-# Fedora
-sudo dnf install vulkan-loader vulkan-tools vulkan-validation-layers spirv-tools
-
-# Arch
-sudo pacman -S vulkan-icd-loader vulkan-tools vulkan-validation-layers spirv-tools
-```
-
-**Windows** — the loader (`vulkan-1.dll`) ships with the GPU driver, so nothing is needed. The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is only for validation layers and tooling.
-
-**macOS (arm64)** — nothing is needed either. macOS has no system Vulkan, so the library carries its own in `macos-aarch64/` and both are bundled into `vulkan.c3l`:
-
-- `libvulkan.1.dylib` — the Khronos loader, opened by `vk::init()`
-- `libvulkan_kosmickrisp.dylib` — KosmicKrisp, the Mesa Vulkan-on-Metal driver, handed to the loader through `VK_LUNARG_direct_driver_loading`.
-
-Installing the `.c3l` gets you both. **A git checkout gets neither** — both are
-release assets rather than tracked files, because git keeps every version of a
-tracked file for ever and a binary on `main` charges every clone, including the
-clones that will never touch macOS. A checkout fetches them once:
-
-```bash
-./fetch-dylibs.sh
-```
-
-`build.sh` calls it for you, and it is a no-op once the files are there.
-`dylibs.sha256` is what makes it reproducible: the release tag is rolling, the
-hashes are in git, and a mismatch fails by name. Skipping the fetch does not
-break the build — nothing links against either dylib — it fails later, and for
-the driver *silently*, because `vk::findBundledDriver` treats "no bundled
-driver" as a normal outcome and falls back to the loader's own ICD discovery.
-The symptom is no devices, or the wrong ICD, never a missing file.
-
-The driver used to live on a `driver` orphan branch. That kept it out of a
-checkout but not out of the object database — `git clone` fetches every branch,
-and there is no way to opt one out — so every clone paid for it regardless. See
-`fetch-dylibs.sh` for the longer version.
-
-`vk::createDefaultInstance()` wires the bundled driver up on its own. If you would
-rather use an installed driver (a system MoltenVK from the LunarG SDK, say), set
-`skip_bundled_driver` and the loader does its normal ICD discovery:
-
-```c3
-vk::Instance instance = vk::createDefaultInstance({
-    .app_name = "My App",
-    .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" },
-    .skip_bundled_driver = true,
-})!;
-```
-
-Building the instance by hand instead? `vk::findBundledDriver()` returns the
-shipped driver's entry point, and `vk::supportsDirectDriverLoading()` reports
-whether the loader on the machine understands the extension — see `vk/driver.c3`.
-
-Intel Macs are not covered by the bundled pair; there `vk::init` falls back to a
-loader installed by the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#mac), or
-to paths you pass it yourself.
-
-## Using the library in your project
-
-### Option 1: Download the pre-built library
-
-Download `vulkan.c3l` from [releases](https://github.com/tonis2/Vulkan.c3/releases/download/latest/vulkan.c3l), place it in your project (e.g. `./libs/`), and add it to your `project.json`:
+Put the file in your project—for example, at `libs/vulkan.c3l`—and add it to
+`project.json`:
 
 ```json
 {
@@ -171,63 +27,31 @@ Download `vulkan.c3l` from [releases](https://github.com/tonis2/Vulkan.c3/releas
 }
 ```
 
-No `linked-libraries` entry on any target — the loader is opened at runtime by
-`vk::init()`. On macOS the `.c3l` also carries the loader and driver themselves,
-so unzipping it is the whole install.
+That is the whole installation. Do not add Vulkan to `linked-libraries`; the
+library opens the loader at runtime. The Vulkan SDK is optional.
 
-### Option 2: Build from source
+## Example usage
 
-```bash
-./fetch-dylibs.sh          # once per checkout; the dylibs are release assets
-c3c build zip --trust=full
-```
-
-This creates `vulkan.c3l` in the project root (bindings plus the macOS
-loader/driver pair). The `zip` target runs `fetch-dylibs.sh` itself, so the
-explicit call above is only there to show what it needs.
-
-### Example usage
-
-`vk::createDefaultInstance` handles the whole bootstrap — `init`, the platform
-surface extension, and the bundled macOS driver:
+`createDefaultInstance` initializes the loader and fills in the common instance
+defaults. Add `VK_KHR_surface` and the platform extensions when the instance
+will be used with a window:
 
 ```c3
 import vk;
 
-fn void? main() {
+fn void? main()
+{
     vk::Instance instance = vk::createDefaultInstance({
         .app_name = "My App",
         .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" },
     })!;
+    defer instance.free();
+
+    // Create a surface, choose a device, and start rendering.
 }
 ```
 
-Or drive it yourself, calling `vk::init()` first:
-
-```c3
-import vk;
-
-fn void? main() {
-    vk::init()!;
-
-    ApplicationInfo info = {
-        .pApplicationName = "My App",
-        .pEngineName = "My Engine",
-        .applicationVersion = vk::@makeApiVersion(0, 1, 0, 0),
-        .engineVersion = vk::@makeApiVersion(0, 1, 0, 0),
-        .apiVersion = vk::@makeApiVersion(0, 1, 3, 0)
-    };
-
-    InstanceCreateInfo instanceInfo = vk::instanceCreateInfo()
-        .setApplicationInfo(&info)
-        .setEnabledExtensionNames(extensions.array_view());
-
-    vk::Instance instance;
-    vk::createInstance(&instanceInfo, null, &instance)!;
-}
-```
-
-The builder pattern lets you chain `.set*()` calls, then call `.build()` on create-info structs:
+Create-info builders can be chained and built directly:
 
 ```c3
 vk::Pipeline pipeline = vk::graphicsPipelineCreateInfo()
@@ -237,26 +61,102 @@ vk::Pipeline pipeline = vk::graphicsPipelineCreateInfo()
     .build(device)!;
 ```
 
-## Regenerating bindings
+If you create the instance by hand, call `vk::init()` before any other Vulkan
+function. Calling a command before initialization will crash because its
+function pointer has not been loaded yet.
 
-To regenerate the bindings from the latest Vulkan XML specification:
+## Try the examples
+
+The cube examples use the window and image libraries included as git
+submodules. Clone the repository with them:
+
+```bash
+git clone --recurse-submodules https://github.com/tonis2/Vulkan.c3.git
+cd Vulkan.c3
+```
+
+If you already cloned the repository, run `git submodule update --init` once.
+Then start an example:
+
+```bash
+c3c run cube
+c3c run textured_cube
+```
+
+Use `c3c run cube-win` for the Windows target.
+
+## Platform notes
+
+- **Linux and Windows:** the Vulkan loader normally comes with the GPU driver,
+  so no additional setup is needed.
+- **macOS arm64:** `vulkan.c3l` includes the Khronos loader and the KosmicKrisp
+  Vulkan-on-Metal driver. No separate Vulkan installation is needed.
+- **Intel macOS:** install a loader and driver through the
+  [LunarG Vulkan SDK](https://vulkan.lunarg.com/sdk/home#mac), or pass a custom
+  loader path to `vk::init()`.
+
+The Vulkan SDK is only needed if you want tools such as validation layers,
+`vulkaninfo`, or `glslc`.
+
+On macOS, `createDefaultInstance` uses the bundled driver automatically. To use
+an installed driver instead:
+
+```c3
+vk::Instance instance = vk::createDefaultInstance({
+    .app_name = "My App",
+    .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" },
+    .skip_bundled_driver = true,
+})!;
+```
+
+## How command loading works
+
+Vulkan.c3 does not link against Vulkan. It resolves command pointers in stages,
+similar to [volk](https://github.com/zeux/volk):
+
+1. `vk::init()` opens the platform loader and loads global commands.
+2. Creating an instance loads the remaining core and extension commands.
+3. `vk::loadDeviceCommands(device)` can optionally reload device commands
+   through `vkGetDeviceProcAddr` for direct device dispatch.
+
+You can override the loader search when needed:
+
+```c3
+vk::init({ "/path/to/libvulkan.so" })!;
+```
+
+## Build from source
+
+Most users should use the prebuilt `vulkan.c3l` from the latest release. To
+package the current checkout yourself:
+
+```bash
+c3c build zip --trust=full
+```
+
+This creates `vulkan.c3l` in the repository root. The build fetches the pinned
+macOS loader and driver assets when they are missing. You can also fetch them
+directly with `./fetch-dylibs.sh`.
+
+To download the latest `vk.xml`, regenerate the bindings, and package the
+library:
 
 ```bash
 sh build.sh
 ```
 
-This downloads `vk.xml` from the Khronos repository, runs the parser, fetches the
-macOS driver if it is not already there, and zips `vulkan.c3l`. All extensions compatible with supported platforms (Win32, X11, XCB, Wayland, macOS/Metal, iOS) are included. Extensions referencing undefined types are automatically skipped.
-
-The generator prints a summary of everything it skipped or dropped (and why) to stderr. Run it with `c3c run build -- --strict` to make any warning fail the run.
+The generator reports any skipped or dropped definitions. Use
+`c3c run build -- --strict` when you want those warnings to fail the run.
 
 ## Resources
 
-- [Window library (c3w)](https://github.com/tonis2/Window.c3) — windowing dependency used by the examples
-- [Example game](https://github.com/tonis2/game.c3) — a larger project using these bindings
+- [Window.c3](https://github.com/tonis2/Window.c3) — windowing library used by
+  the examples
+- [game.c3](https://github.com/tonis2/game.c3) — a larger project built with
+  these bindings
 - [C3 documentation](https://c3-lang.org/)
 - [Vulkan Tutorial](https://vulkan-tutorial.com/)
-- [Vulkan Specification](https://www.khronos.org/registry/vulkan/)
+- [Vulkan specification](https://www.khronos.org/registry/vulkan/)
 
 ## License
 
