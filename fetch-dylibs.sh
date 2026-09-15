@@ -166,8 +166,12 @@ fetch_one() {
 mkdir -p "$dir" "$CACHE"
 
 # Read the whole pin file up front rather than looping over a redirect: the
-# fetches below have their own stdin needs.
-mapfile -t entries < <(awk '$1 !~ /^#/ && NF >= 3 { print $1, $2, $3 }' "$pin")
+# fetches below have their own stdin needs. Collected with while/read rather
+# than mapfile because the macOS runners ship bash 3.2, which has no mapfile.
+entries=()
+while IFS= read -r entry; do
+    entries+=("$entry")
+done < <(awk '$1 !~ /^#/ && NF >= 3 { print $1, $2, $3 }' "$pin")
 [[ ${#entries[@]} -gt 0 ]] || { echo "fetch-dylibs: $pin lists no dylibs" >&2; exit 1; }
 
 for entry in "${entries[@]}"; do
