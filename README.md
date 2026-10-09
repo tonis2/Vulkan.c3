@@ -67,15 +67,16 @@ function pointer has not been loaded yet.
 
 ## Try the examples
 
-The cube examples use the window and image libraries included as git
-submodules. Clone the repository with them:
+The cube examples use the window and image libraries, which are committed as
+zipped snapshots in `libs/`, so a plain clone is enough:
 
 ```bash
-git clone --recurse-submodules https://github.com/tonis2/Vulkan.c3.git
+git clone https://github.com/tonis2/Vulkan.c3.git
 cd Vulkan.c3
 ```
 
-If you already cloned the repository, run `git submodule update --init` once.
+To move a snapshot to a newer version, zip it from a checkout of that library,
+e.g. `git -C path/to/Window.c3 archive --format=zip -o $PWD/libs/window.c3l HEAD`.
 Then start an example:
 
 ```bash
