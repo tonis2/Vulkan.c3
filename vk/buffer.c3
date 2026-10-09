@@ -29,11 +29,38 @@ interface Allocator
     fn bool is_deleted();
 }
 
-faultdef BUFFER_TOO_SMALL, ALLOCATION_NOT_FOUND, ALLOCATION_HAS_NO_ROOM;
+faultdef BUFFER_TOO_SMALL, ALLOCATION_NOT_FOUND, ALLOCATION_HAS_NO_ROOM, OUT_OF_DEVICE_MEMORY;
 
 macro alignUp(value, factor) => value + factor - 1 - (value + factor - 1) % factor;
 
-// Represents a free region in a memory page
+// ============================================================================
+// Device memory
+//
+// Vulkan allocations are few and slow, so buffers and images are placed in
+// pages. Two kinds, and an allocation only ever goes in its own kind:
+//
+//   shared     `default_page_size` pages holding many small allocations, first
+//              fit over a free list.
+//   dedicated  one page per allocation bigger than that. When it is freed the
+//              page stays, idle, for the next allocation about its size.
+//
+// Every allocation remembers the whole block it took, alignment padding
+// included, and every page counts what it still holds. So a free gives back
+// exactly what was taken, and a page whose count reaches zero starts over as
+// one free block - however its holes would have merged.
+//
+// A page that holds nothing still holds device memory. Idle pages go back to
+// the driver before a new page is made (the request did not fit them, and
+// keeping them would put the new page on top) and on `trim()`. What the
+// allocator keeps is then what is live plus whatever was freed since the last
+// page was made - not every size the process ever asked for.
+//
+// Freeing is immediate (`Memory.free`, the caller knows the GPU is done) or
+// deferred (`Memory.mark_deleted`, given back on the next `sync()` at idle).
+// Either way the block is reusable at once and its page can be released at
+// the next new page, so nothing may still be reading it.
+// ============================================================================
+
 struct FreeBlock {
     sz offset;
     sz size;
@@ -42,11 +69,23 @@ struct FreeBlock {
 struct MemoryPage {
     DeviceMemory memory;
     sz size;
-    sz used_size;
+    sz used_size;               // bytes handed out, padding included
+    usz live;                   // allocations not yet given back
+    bool dedicated;             // made for one allocation bigger than a shared page
     void* mapped;
     MemoryPropertyFlags properties;
     uint memory_type;
-    FreeBlockList free_blocks;  // Tracks holes from deleted allocations
+    FreeBlockList free_blocks;  // by offset, never two touching
+}
+
+// What the allocator holds, in bytes. `idle` is pages holding nothing, which
+// `trim()` would give back.
+struct MemoryStats {
+    sz allocated;
+    sz used;
+    sz idle;
+    usz pages;
+    usz idle_pages;
 }
 
 struct MemoryAllocator {
@@ -57,157 +96,199 @@ struct MemoryAllocator {
     MemoryAllocateFlags flags;
     PageList pages;
     BlockList pending_deletes;  // Allocations marked for deletion
+    // Where the bookkeeping lives, taken at init. Not `mem` at the moment of
+    // the call: a page made while a caller has swapped `mem` for a tracker or
+    // an arena would be freed through the wrong allocator, and a list left
+    // zero-initialised resolves to `tmem`, which a `@pool()` frees under it.
+    alloc::Allocator heap;
 }
 
-// The two lists are given the heap explicitly, and that is not tidiness.
-// A List left zero-initialised has a null allocator, and C3's
-// list_ensure_capacity resolves null to `tmem` — the temp arena. So the first
-// push would back the list with pool memory, and any @pool() open at that
-// moment would free it on the way out. Nothing faults there: the entries turn
-// into 0xAA and the crash lands wherever `pages` is next walked, which may be
-// hundreds of allocations later or in free(). A GPU allocation happening to
-// occur inside a temp scope is ordinary — loaders format tensor names that way
-// — so the allocator has to own its own bookkeeping.
 fn MemoryAllocator? MemoryAllocator.init(&self) {
     if (self.default_page_size == 0) {
         self.default_page_size = 64_000_000;  // 64MB default
     }
-    self.pages.init(mem);
-    self.pending_deletes.init(mem);
+    self.heap = mem;
+    self.pages.init(self.heap);
+    self.pending_deletes.init(self.heap);
     return *self;
 }
 
-// Try to find a free block that fits the required size
-fn FreeBlock* MemoryPage.find_free_block(&self, sz required_size, sz alignment) {
-    foreach (&block : self.free_blocks) {
-        sz aligned_offset = alignUp(block.offset, alignment);
-        sz padding = aligned_offset - block.offset;
-        if (block.size >= required_size + padding) {
-            return block;
-        }
-    }
-    return null;
-}
-
-// Remove a free block from the list (after using it)
-fn void MemoryPage.remove_free_block(&self, FreeBlock* block) {
-    for (sz i = 0; i < self.free_blocks.len(); i++) {
-        if (&self.free_blocks[i] == block) {
-            self.free_blocks.remove_at(i);
-            return;
-        }
-    }
-}
-
-// Add a free block, merging with adjacent blocks if possible
-fn void MemoryPage.add_free_block(&self, sz offset, sz size) {
-    // Try to merge with existing adjacent blocks
-    foreach (&block : self.free_blocks) {
-        // Check if new block is immediately after existing block
-        if (block.offset + block.size == offset) {
-            block.size += size;
-            // Check if we can merge with the next block too
-            self.merge_free_blocks();
-            return;
-        }
-        // Check if new block is immediately before existing block
-        if (offset + size == block.offset) {
-            block.offset = offset;
-            block.size += size;
-            self.merge_free_blocks();
-            return;
-        }
-    }
-    // No adjacent block found, add new one
-    self.free_blocks.push({ .offset = offset, .size = size });
-}
-
-// Merge adjacent free blocks
-fn void MemoryPage.merge_free_blocks(&self) {
-    if (self.free_blocks.len() < 2) return;
-
-    // Sort by offset (simple bubble sort, lists are typically small)
-    for (sz i = 0; i < self.free_blocks.len() - 1; i++) {
-        for (sz j = 0; j < self.free_blocks.len() - i - 1; j++) {
-            if (self.free_blocks[j].offset > self.free_blocks[j + 1].offset) {
-                FreeBlock temp = self.free_blocks[j];
-                self.free_blocks[j] = self.free_blocks[j + 1];
-                self.free_blocks[j + 1] = temp;
-            }
-        }
-    }
-
-    // Merge adjacent blocks
-    sz i = 0;
-    while (i < self.free_blocks.len() - 1) {
-        FreeBlock* current = &self.free_blocks[i];
-        FreeBlock* next = &self.free_blocks[i + 1];
-        if (current.offset + current.size == next.offset) {
-            current.size += next.size;
-            self.free_blocks.remove_at(i + 1);
-        } else {
-            i++;
-        }
-    }
-}
-
-fn MemoryPage* MemoryAllocator.find_or_create_page(
-    &self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits, sz alignment = 1
-) {
-    uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
-
-    // Search existing pages for matching properties + enough space.
-    // Match on memory_type AND properties — on unified-memory GPUs (Apple Silicon
-    // via KosmicKrisp/MoltenVK) all property bits live on one memory_type, so a
-    // device-local-only page (unmapped) must not be reused for a host-visible
-    // allocation, otherwise upload memcpy hits a null `mapped`.
-    foreach (page : self.pages) {
-        if (page.memory_type == memory_type
-            && page.properties == properties
-            && allocation_fits(page.size, page.used_size, required_size, alignment)) {
-            return page;
-        }
-    }
-
-    // Create new page
-    sz page_size = required_size > self.default_page_size ? required_size : self.default_page_size;
-
-    MemoryAllocateFlagsInfo flags_info = {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags};
-
-    DeviceMemory memory = memoryAllocateInfo()
-	.setAllocationSize((DeviceSize)page_size)
-	.setNext(&flags_info)
-	.setMemoryTypeIndex(memory_type)
-	.build(self.device)!!;
-
-	MemoryPage* new_page = mem::alloc(MemoryPage);
-
-	*new_page = {
-		.memory = memory,
-		.size = page_size,
-		.used_size = 0,
-		.memory_type = memory_type,
-		.properties = properties,
-	};
-
-	new_page.free_blocks.init(mem);
-
-    // Map memory if host-visible
-    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
-        vk::mapMemory(self.device, memory, 0, (DeviceSize)page_size, (MemoryMapFlags)0, &new_page.mapped)!!;
-    }
-
-    self.pages.push(new_page);
-    return new_page;
-}
-
-// The end-of-page check shared by buffer and image allocation. Kept as a pure
-// function so the alignment-padding overflow that once reached vkBind*Memory
-// can be pinned without constructing a Vulkan device.
+// The end-of-range check every placement makes: whether `required_size` bytes
+// aligned to `alignment` fit between `used_size` and `page_size`. Pure, so the
+// alignment-padding overflow that once reached vkBind*Memory can be pinned
+// without a device.
 fn bool allocation_fits(sz page_size, sz used_size, sz required_size, sz alignment)
 {
     sz offset = alignUp(used_size, alignment);
     return offset <= page_size && required_size <= page_size - offset;
+}
+
+// A page holding nothing: one free block, the whole of it.
+fn void MemoryPage.reset(&self) {
+    self.free_blocks.clear();
+    self.free_blocks.push({ .offset = 0, .size = self.size });
+    self.used_size = 0;
+    self.live = 0;
+}
+
+fn bool MemoryPage.idle(&self) => self.live == 0;
+
+<*
+ Takes `size` bytes at `alignment` from the first free block they fit.
+
+ @param [out] offset : `Where the allocation starts.`
+ @param [out] padding : `The bytes skipped before it to align it, given back with it.`
+ @return `Whether it fit.`
+*>
+fn bool MemoryPage.take(&self, sz size, sz alignment, sz* offset, sz* padding) {
+    foreach (i, &block : self.free_blocks) {
+        if (!allocation_fits(block.offset + block.size, block.offset, size, alignment)) continue;
+        sz at = alignUp(block.offset, alignment);
+        sz taken = at - block.offset + size;
+        *offset = at;
+        *padding = at - block.offset;
+        if (taken == block.size) {
+            self.free_blocks.remove_at(i);
+        } else {
+            block.offset += taken;
+            block.size -= taken;
+        }
+        self.used_size += taken;
+        self.live++;
+        return true;
+    }
+    return false;
+}
+
+// Gives back a block `take` handed out, padding included, joining it to the
+// free blocks either side.
+fn void MemoryPage.give_back(&self, sz offset, sz size) {
+    if (self.live == 0) return;  // nothing out: a second free of the same block
+    self.live--;
+    if (self.live == 0) {
+        self.reset();
+        return;
+    }
+    self.used_size -= size;
+
+    sz i = 0;
+    sz count = self.free_blocks.len();
+    while (i < count && self.free_blocks[i].offset < offset) i++;
+    bool joins_before = i > 0 && self.free_blocks[i - 1].offset + self.free_blocks[i - 1].size == offset;
+    bool joins_after = i < count && offset + size == self.free_blocks[i].offset;
+
+    if (joins_before && joins_after) {
+        self.free_blocks[i - 1].size += size + self.free_blocks[i].size;
+        self.free_blocks.remove_at(i);
+    } else if (joins_before) {
+        self.free_blocks[i - 1].size += size;
+    } else if (joins_after) {
+        self.free_blocks[i].offset = offset;
+        self.free_blocks[i].size += size;
+    } else {
+        self.free_blocks.insert_at(i, { .offset = offset, .size = size });
+    }
+}
+
+fn MemoryPage*? MemoryAllocator.new_page(&self, uint memory_type, MemoryPropertyFlags properties, sz size, bool dedicated) {
+    MemoryAllocateFlagsInfo flags_info = {.sType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, .flags = self.flags};
+    MemoryAllocateInfo info = memoryAllocateInfo()
+        .setAllocationSize((DeviceSize)size)
+        .setNext(&flags_info)
+        .setMemoryTypeIndex(memory_type);
+
+    DeviceMemory? built = info.build(self.device);
+    if (catch built) {
+        // Idle pages may be what is in the way.
+        if (self.trim() == 0) return OUT_OF_DEVICE_MEMORY~;
+        built = info.build(self.device);
+    }
+    if (catch built) return OUT_OF_DEVICE_MEMORY~;
+    DeviceMemory memory = built;
+
+    void* mapped = null;
+    if ((MemoryPropertyFlagBits)properties & MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
+        if (catch vk::mapMemory(self.device, memory, 0, (DeviceSize)size, (MemoryMapFlags)0, &mapped)) {
+            freeMemory(self.device, memory, null);
+            return OUT_OF_DEVICE_MEMORY~;
+        }
+    }
+
+    MemoryPage* page = alloc::new(self.heap, MemoryPage);
+    *page = {
+        .memory = memory,
+        .size = size,
+        .dedicated = dedicated,
+        .mapped = mapped,
+        .memory_type = memory_type,
+        .properties = properties,
+    };
+    page.free_blocks.init(self.heap);
+    page.reset();
+    self.pages.push(page);
+    return page;
+}
+
+fn void MemoryAllocator.release_page(&self, sz index) {
+    MemoryPage* page = self.pages[index];
+    if (page.mapped != null) vk::unmapMemory(self.device, page.memory);
+    page.free_blocks.free();
+    freeMemory(self.device, page.memory, null);
+    alloc::free(self.heap, page);
+    self.pages.remove_at(index);
+}
+
+<*
+ Finds room for an allocation, making a page if nothing has it.
+
+ A small allocation takes the first shared page with room. A big one takes the
+ smallest idle dedicated page that is at most a quarter bigger than it - the
+ same buffer made again at the same size, the common case - and otherwise gets
+ a page of its own.
+
+ @param [out] offset : `Where in the page it starts.`
+ @param [out] padding : `The alignment bytes before it, which belong to it.`
+ @return? OUT_OF_DEVICE_MEMORY : `No page had room and the device would not make one, even after the idle pages went.`
+ @return? ALLOCATION_HAS_NO_ROOM : `A new page that cannot take it: an alignment bigger than the page.`
+*>
+fn MemoryPage*? MemoryAllocator.place(&self, MemoryPropertyFlags properties, uint memory_type_bits, sz size, sz alignment, sz* offset, sz* padding) {
+    uint memory_type = self.pdevice.getMemoryType(properties, memory_type_bits);
+    bool dedicated = size > self.default_page_size;
+
+    // Match on memory_type AND properties: on unified-memory GPUs (Apple
+    // Silicon via KosmicKrisp/MoltenVK) every property bit lives on one memory
+    // type, and a device-local page is unmapped - a host-visible allocation put
+    // there would memcpy through a null `mapped`.
+    MemoryPage* best = null;
+    foreach (page : self.pages) {
+        if (page.memory_type != memory_type || page.properties != properties || page.dedicated != dedicated) continue;
+        if (!dedicated) {
+            if (page.take(size, alignment, offset, padding)) return page;
+            continue;
+        }
+        if (!page.idle() || page.size < size || page.size - size > size / 4) continue;
+        if (best == null || page.size < best.size) best = page;
+    }
+    if (best != null && best.take(size, alignment, offset, padding)) return best;
+
+    // Idle pages first: none of them could take this, and a new page made
+    // beside them would be on top of memory nobody is using.
+    self.trim();
+    MemoryPage* page = self.new_page(memory_type, properties, dedicated ? size : self.default_page_size, dedicated)!;
+    if (!page.take(size, alignment, offset, padding)) return ALLOCATION_HAS_NO_ROOM~;
+    return page;
+}
+
+// Kept for callers of the old name: a page with room, made if need be. The
+// room is not taken.
+fn MemoryPage* MemoryAllocator.find_or_create_page(
+    &self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits, sz alignment = 1
+) {
+    sz offset;
+    sz padding;
+    MemoryPage* page = self.place(properties, memory_type_bits, required_size, alignment, &offset, &padding)!!;
+    page.give_back(offset - padding, required_size + padding);
+    return page;
 }
 
 // Mark a Memory allocation for deletion (will be freed on sync)
@@ -218,93 +299,65 @@ fn void MemoryAllocator.mark_deleted(&self, Memory* mem) {
 
 // Process all pending deletions - call this when GPU is idle
 fn void MemoryAllocator.sync(&self) {
-    foreach (mem : self.pending_deletes) {
-        if (mem.buffer != null) {
-            vk::destroyBuffer(self.device, mem.buffer, null);
-            mem.buffer = (Buffer)null;
-        }
-        if (mem.image != null) {
-            vk::destroyImage(self.device, mem.image, null);
-            mem.image = (Image)null;
-        }
-
-        // Add the freed region to the page's free list
-        // Note: do NOT decrement used_size — it's a high-water mark (see Memory.free)
-        if (mem.page != null) {
-            mem.page.add_free_block(mem.page_offset, mem.size);
-        }
-
-        mem.size = 0;
-        mem.used_size = 0;
-        mem.page = null;
-        mem.allocator = null;
-    }
+    foreach (mem : self.pending_deletes) mem.release();
     self.pending_deletes.clear();
 }
 
-// Destroy any pages whose entire used range is in their free list.
-// Call this after freeing a large set of allocations (e.g. unloading a model)
-// to actually return device memory to the driver — Memory.free only marks
-// regions as free *within* a page; the underlying Vulkan allocation persists
-// until either MemoryAllocator.free() or this method.
+<*
+ Gives every page that holds nothing back to the driver.
+
+ Safe whenever the blocks in those pages were freed honestly: a page is idle
+ only when every allocation in it went through `Memory.free` (the caller knew
+ the GPU was done) or through `sync()` at idle. Deferred deletes still pending
+ hold their pages.
+
+ @return `The bytes given back.`
+*>
+fn sz MemoryAllocator.trim(&self) {
+    sz released = 0;
+    for (sz i = self.pages.len(); i > 0; i--) {
+        if (!self.pages[i - 1].idle()) continue;
+        released += self.pages[i - 1].size;
+        self.release_page(i - 1);
+    }
+    return released;
+}
+
+// The pending deletions, then `trim()`. Call when the GPU is idle.
 fn void MemoryAllocator.release_empty_pages(&self) {
     self.sync();
-    for (sz i = self.pages.len(); i > 0; i--) {
-        MemoryPage* page = self.pages[i - 1];
-        bool fully_free = page.free_blocks.len() == 1
-            && page.free_blocks[0].offset == 0
-            && page.free_blocks[0].size == page.used_size;
-        if (!fully_free) continue;
+    self.trim();
+}
 
-        if (page.mapped != null) {
-            vk::unmapMemory(self.device, page.memory);
+fn MemoryStats MemoryAllocator.stats(&self) {
+    MemoryStats s;
+    foreach (page : self.pages) {
+        s.allocated += page.size;
+        s.used += page.used_size;
+        s.pages++;
+        if (page.idle()) {
+            s.idle += page.size;
+            s.idle_pages++;
         }
-        page.free_blocks.free();
-        freeMemory(self.device, page.memory, null);
-        mem::free(page);
-        self.pages.remove_at(i - 1);
     }
+    return s;
 }
 
-// Get memory statistics
-fn sz MemoryAllocator.total_allocated(&self) {
-    sz total = 0;
-    foreach (page : self.pages) {
-        total += page.size;
-    }
-    return total;
-}
+fn sz MemoryAllocator.total_allocated(&self) => self.stats().allocated;
+fn sz MemoryAllocator.total_used(&self) => self.stats().used;
 
-fn sz MemoryAllocator.total_used(&self) {
-    sz total = 0;
-    foreach (page : self.pages) {
-        total += page.used_size;
-    }
-    return total;
-}
-
+// Free bytes inside pages that still hold something: what fragmentation costs.
 fn sz MemoryAllocator.total_fragmented(&self) {
     sz total = 0;
     foreach (page : self.pages) {
-        foreach (&block : page.free_blocks) {
-            total += block.size;
-        }
+        if (!page.idle()) total += page.size - page.used_size;
     }
     return total;
 }
 
 fn void MemoryAllocator.free(&self) {
-    // First sync any pending deletions
     self.sync();
-
-    foreach (page : self.pages) {
-        if (page.mapped != null) {
-            vk::unmapMemory(self.device, page.memory);
-        }
-        page.free_blocks.free();
-        freeMemory(self.device, page.memory, null);
-		mem::free(page);
-    }
+    while (self.pages.len() > 0) self.release_page(self.pages.len() - 1);
     self.pages.free();
     self.pending_deletes.free();
 }
@@ -314,6 +367,7 @@ struct Memory
     sz size;
     sz used_size;
     sz page_offset;
+    sz padding;     // alignment bytes before page_offset that belong to this block
     GpuType type;
     vk::Buffer buffer;
     vk::Image image;
@@ -363,54 +417,15 @@ fn Memory? new_buffer(
     }
 
     sz size = (sz)alignUp((sz)mem_reqs.size, (sz)mem_reqs.alignment);
-
-    // Find or create a page with the requested properties
-    uint memory_type = pdevice.getMemoryType(properties, mem_reqs.memoryTypeBits);
-    MemoryPage* page = null;
     sz offset;
-    bool used_free_block = false;
-
-    // First, try to find a free block in an existing page with matching properties
-    foreach (p : allocator.pages) {
-        if (p.memory_type == memory_type && p.properties == properties) {
-            FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
-            if (free_block != null) {
-                page = p;
-                offset = alignUp(free_block.offset, (sz)mem_reqs.alignment);
-                sz padding = offset - free_block.offset;
-                sz total_used = size + padding;
-
-                // Update or remove the free block
-                if (free_block.size > total_used) {
-                    // Shrink the free block
-                    free_block.offset = offset + size;
-                    free_block.size -= total_used;
-                } else {
-                    // Remove the free block entirely
-                    p.remove_free_block(free_block);
-                }
-                used_free_block = true;
-                break;
-            }
-        }
+    sz padding;
+    MemoryPage*? placed = allocator.place(properties, mem_reqs.memoryTypeBits, size, (sz)mem_reqs.alignment, &offset, &padding);
+    if (catch err = placed) {
+        vk::destroyBuffer(device, buffer, null);
+        return err~;
     }
-
-    // If no free block found, allocate from page end
-    if (!used_free_block) {
-        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits, (sz)mem_reqs.alignment);
-        offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
-    }
-
+    MemoryPage* page = placed;
     vk::bindBufferMemory(device, buffer, page.memory, (DeviceSize)offset)!!;
-    if (!used_free_block) {
-        page.used_size = offset + size;
-    } else {
-        // When reusing free block, used_size doesn't change (it tracks high water mark)
-        // but we should update it if we're filling a gap at the end
-        if (offset + size > page.used_size) {
-            page.used_size = offset + size;
-        }
-    }
 
     vk::DeviceAddress address;
 
@@ -427,6 +442,7 @@ fn Memory? new_buffer(
         .size = size,
         .used_size = 0,
         .page_offset = offset,
+        .padding = padding,
         .page = page,
         .allocator = allocator,
         .address = address,
@@ -484,43 +500,12 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
     MemoryRequirements mem_reqs = image.getMemoryRequirements(device);
     sz size = (sz)alignUp((sz)mem_reqs.size, (sz)mem_reqs.alignment);
 
-    // Try to find a free block first
-    uint memory_type = pdevice.getMemoryType(properties, mem_reqs.memoryTypeBits);
-    MemoryPage* page = null;
     sz offset;
-    bool used_free_block = false;
-
-    foreach (p : allocator.pages) {
-        if (p.memory_type == memory_type && p.properties == properties) {
-            FreeBlock* free_block = p.find_free_block(size, (sz)mem_reqs.alignment);
-            if (free_block != null) {
-                page = p;
-                offset = alignUp(free_block.offset, (sz)mem_reqs.alignment);
-                sz padding = offset - free_block.offset;
-                sz total_used = size + padding;
-
-                if (free_block.size > total_used) {
-                    free_block.offset = offset + size;
-                    free_block.size -= total_used;
-                } else {
-                    p.remove_free_block(free_block);
-                }
-                used_free_block = true;
-                break;
-            }
-        }
-    }
-
-    if (!used_free_block) {
-        page = allocator.find_or_create_page(properties, size, mem_reqs.memoryTypeBits, (sz)mem_reqs.alignment);
-        offset = alignUp(page.used_size, (sz)mem_reqs.alignment);
-    }
-
-    vk::bindImageMemory(device, image, page.memory, (DeviceSize)offset)!;
-    if (!used_free_block) {
-        page.used_size = offset + size;
-    } else if (offset + size > page.used_size) {
-        page.used_size = offset + size;
+    sz padding;
+    MemoryPage* page = allocator.place(properties, mem_reqs.memoryTypeBits, size, (sz)mem_reqs.alignment, &offset, &padding)!;
+    if (catch err = vk::bindImageMemory(device, image, page.memory, (DeviceSize)offset)) {
+        page.give_back(offset - padding, size + padding);
+        return err~;
     }
 
     Memory response = {
@@ -528,6 +513,7 @@ fn Memory? create_image_buffer(vk::Image image, vk::MemoryAllocator* allocator, 
         .size = size,
         .used_size = 0,
         .page_offset = offset,
+        .padding = padding,
         .page = page,
         .allocator = allocator
     };
@@ -630,28 +616,29 @@ fn void Memory.mark_deleted(&self) @dynamic
 // Check if this allocation is marked for deletion
 fn bool Memory.is_deleted(&self) @dynamic => self.deleted;
 
-// Immediate free - use when GPU is idle or for staging buffers
-fn void Memory.free(&self) @dynamic
+// Destroys the handle and gives the block back. Both free paths end here.
+fn void Memory.release(&self)
 {
     if (self.buffer != null) {
         vk::destroyBuffer(self.allocator.device, self.buffer, null);
         self.buffer = (Buffer)null;
     }
-
     if (self.image != null) {
         vk::destroyImage(self.allocator.device, self.image, null);
         self.image = (Image)null;
     }
-
-    // Add freed region to page's free list for reuse
-    // Note: do NOT decrement used_size — it's a high-water mark for end-of-page allocation.
-    // Decrementing it causes underflow/overlap when allocations are freed out of order.
     if (self.page != null && self.size > 0) {
-        self.page.add_free_block(self.page_offset, self.size);
+        self.page.give_back(self.page_offset - self.padding, self.size + self.padding);
     }
-
+    self.page = null;
     self.size = 0;
     self.used_size = 0;
+}
+
+// Immediate free - use when the GPU is done with it, or for staging buffers.
+fn void Memory.free(&self) @dynamic
+{
+    self.release();
     self.deleted = true;
 }
 
