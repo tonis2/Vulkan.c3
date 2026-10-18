@@ -16,7 +16,9 @@
 #
 #   libvulkan_kosmickrisp.dylib   Mesa's Vulkan-on-Metal driver, built by
 #                                 vendor-kosmickrisp.sh, which prints the
-#                                 upload command. 15 MB, bumped with Mesa.
+#                                 upload command, or taken as is from the
+#                                 LunarG macOS SDK (lib/). 15 MB, bumped with
+#                                 Mesa.
 #   libvulkan.1.dylib             the Khronos loader, built by
 #                                 vendor-vulkan.yml. 1.4 MB, changes about
 #                                 once a year.
@@ -24,5 +26,5 @@
 # Columns: sha256, file name, and the version the bytes were built from -- the
 # version is what makes a bad bump recoverable, since the way back is to
 # rebuild that exact version.
-c98d6fffd38478ece406fb6bb359aedf4b4a8efe86f1345e963a5a9c23393ad5  libvulkan_kosmickrisp.dylib  mesa-26.3.0-devel
+52d7b68364e19d744882533d663d69b898bfd294f4248b3313785ad801e23e58  libvulkan_kosmickrisp.dylib  vulkan-sdk-1.4.363-mesa-269a955c89
 092cdfd0699a1556c747ce6120b17202e02a7ba9406ba3b11ebd8029e285da44  libvulkan.1.dylib            vulkan-sdk-1.4.350.1
