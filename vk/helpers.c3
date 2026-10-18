@@ -1125,6 +1125,55 @@ const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & X11 & !WAYLAND) = { "VK_KHR_xcb
 const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & WAYLAND) = { "VK_KHR_wayland_surface" };
 const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & !WAYLAND & !X11) = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
 
+// One per Linux window system. A window presents through just the one it runs on.
+const String[] LINUX_SURFACE_EXTENSIONS = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
+
+<*
+ Drops the Linux surface extensions in `requested` that `offered` lacks, as long
+ as one requested surface extension is offered.
+
+ A Linux build with both X11 and Wayland asks for both, but a driver may offer
+ only one, and one missing extension fails the whole instance. When none is
+ offered the list is left as it is, so checkInstanceExtensionSupport names what
+ is missing.
+*>
+fn void dropUnofferedSurfaceExtensions(ZStringList* requested, StringList offered)
+{
+	bool any_offered;
+	foreach (name : requested)
+	{
+		String view = name.str_view();
+		if (array::contains(LINUX_SURFACE_EXTENSIONS, view) && offered.contains(view)) any_offered = true;
+	}
+	if (!any_offered) return;
+
+	for (sz i = requested.len(); i > 0; i--)
+	{
+		String view = (*requested)[i - 1].str_view();
+		if (array::contains(LINUX_SURFACE_EXTENSIONS, view) && !offered.contains(view)) requested.remove_at(i - 1);
+	}
+}
+
+<*
+ dropUnofferedSurfaceExtensions against the drivers the loader has found. Like
+ checkInstanceExtensionSupport it cannot see a driver handed over at create
+ time, so call it only when there is none.
+*>
+fn void? keepOfferedSurfaceExtensions(ZStringList* requested)
+{
+	int surfaces;
+	foreach (name : requested)
+	{
+		if (array::contains(LINUX_SURFACE_EXTENSIONS, name.str_view())) surfaces++;
+	}
+	// With one or none there is no choice to make.
+	if (surfaces < 2) return;
+
+	StringList offered = getInstanceExtensions()!;
+	defer offered.release();
+	dropUnofferedSurfaceExtensions(requested, offered);
+}
+
 fn Instance? createDefaultInstance(InstanceConfig config = { })
 {
 	init()!;
@@ -1167,7 +1216,11 @@ fn Instance? createDefaultInstance(InstanceConfig config = { })
 	// instance extensions are enumerated before the instance exists, so a
 	// driver supplied at create time is invisible here. vkCreateInstance
 	// validates the list against the bundled driver instead.
-	if (!direct_driver) checkInstanceExtensionSupport(exts)!;
+	if (!direct_driver)
+	{
+		keepOfferedSurfaceExtensions(&exts)!;
+		checkInstanceExtensionSupport(exts)!;
+	}
 
 	ApplicationInfo app_info = {
 		.pApplicationName = app_name,
