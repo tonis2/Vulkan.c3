@@ -123,31 +123,30 @@ To copy on a different queue (a dedicated transfer queue, for example), pass
 ### Example: a uniform buffer updated every frame (host-visible)
 
 The GPU can still be reading the uniforms of the frames in flight, so keep one
-copy per frame and write only the current frame's. Each copy's offset must be a
-multiple of `minUniformBufferOffsetAlignment`:
+buffer per frame and write only the current frame's. Each `new_buffer` call
+aligns its buffer for you, so there is no offset math:
 
 ```c3
-vk::PhysicalDeviceProperties props;
-vk::getPhysicalDeviceProperties(physical_device, &props);
-sz slot = (sz)vk::alignUp((ulong)UniformData::size, props.limits.minUniformBufferOffsetAlignment);
-
-vk::Memory uniform_buffer = vk::new_buffer(
-    allocator:  &allocator,
-    usage:      BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-    properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
-    data_size:  FRAMES_IN_FLIGHT * slot,
-)!;
-defer uniform_buffer.free();
+vk::Memory[FRAMES_IN_FLIGHT] uniform_buffers;
+foreach (&buf : uniform_buffers) {
+    *buf = vk::new_buffer(
+        allocator:  &allocator,
+        usage:      BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        data_size:  UniformData::size,
+    )!;
+}
+defer foreach (&buf : uniform_buffers) buf.free();
 
 // Every frame, after frame_sync.beginFrame, a plain memcpy into mapped memory:
 uint frame = frame_sync.current_frame;
-uniform_buffer.upload(&&uniforms, UniformData::size, offset: frame * slot);
+uniform_buffers[frame].upload(&&uniforms, UniformData::size, offset: 0);
 
-// Bind it with a dynamic offset, so one descriptor serves every copy:
+// One descriptor set per frame, each pointing at that frame's buffer (done once at setup):
 vk::WriteDescriptorSet write = vk::writeDescriptorSet()
-    .setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
-    .setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData::size } });
-vk::cmdBindDescriptorSets(cmd, PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &set, 1, (uint[]) { (uint)(frame * slot) });
+    .setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+    .setBufferInfo({ { .buffer = uniform_buffers[frame].buffer, .offset = 0, .range = UniformData::size } });
+// ...then bind sets[frame] with vk::cmdBindDescriptorSets when recording.
 ```
 
 > [!TIP]
@@ -362,7 +361,7 @@ BufferManager
 ### Setting up
 
 ```c3
-enum Pool : uint { GPU, HOST }
+constdef Pool : inline uint { GPU, HOST }
 
 vk::Memory gpu_buffer = vk::new_buffer(
     allocator:  &allocator,
@@ -389,9 +388,9 @@ defer bm.free();   // frees gpu_buffer and host_buffer as well
 
 ```c3
 // Reserve ranges (size in bytes). Passing `data` uploads it right away.
-vk::Region vertices  = bm.alloc(Pool.GPU.ordinal,  (uint)(Vertex::size * vertex_count), vertex_data)!;
-vk::Region materials = bm.alloc(Pool.HOST.ordinal, (uint)(MaterialData::size * MAX_MATERIALS))!;
-vk::Region lights    = bm.alloc(Pool.HOST.ordinal, (uint)(LightData::size * MAX_LIGHTS))!;
+vk::Region vertices  = bm.alloc(Pool.GPU,  (uint)(Vertex::size * vertex_count), vertex_data)!;
+vk::Region materials = bm.alloc(Pool.HOST, (uint)(MaterialData::size * MAX_MATERIALS))!;
+vk::Region lights    = bm.alloc(Pool.HOST, (uint)(LightData::size * MAX_LIGHTS))!;
 
 // Regions are packed back to back. If you bind a region as a descriptor at its
 // offset, round the offset up to the device's alignment limit:
@@ -399,7 +398,7 @@ vk::PhysicalDeviceProperties props;
 vk::getPhysicalDeviceProperties(physical_device, &props);
 uint ubo_alignment = (uint)props.limits.minUniformBufferOffsetAlignment;
 
-vk::Region uniform   = bm.alloc(Pool.HOST.ordinal, (uint)UniformData::size, alignment: ubo_alignment)!;
+vk::Region uniform   = bm.alloc(Pool.HOST, (uint)UniformData::size, alignment: ubo_alignment)!;
 
 // @push appends a value (or the value behind a pointer). The size comes from the type.
 foreach (mat : scene_materials) materials.@push(mat);
@@ -434,13 +433,19 @@ A `DEVICE_LOCAL` buffer can't be written with `memcpy`. When `alloc(..., data)`,
 `@push` or `@region_upload` target one, the data goes through a staging buffer
 using `vk::stage_upload_at`, which copies and waits for each call.
 
-That is fine for occasional writes. To handle them yourself, for example to batch
-copies or use a transfer queue, pass an `uploadFN` and it is called instead:
+That is fine for occasional writes. To handle them yourself, for example to
+stage them through a dedicated transfer queue, pass an `uploadFN` and it is called
+instead. It gets the destination buffer, the data, its size and the byte offset,
+and has to get the data there (data to staging buffer to GPU). This one does the
+same as the default, but on `transfer_queue`:
 
 ```c3
+vk::DeviceQueue transfer_queue;   // set up at startup. An uploadFN is a plain function, so it can't capture it
+
 fn void upload_to_gpu(vk::Allocator buffer, void* data, sz size, sz offset)
 {
-    // e.g. memcpy into a staging ring buffer and record a cmdCopyBuffer for later
+    vk::Memory* memory = (vk::Memory*)buffer.ptr;
+    vk::stage_upload_at(memory.allocator, memory.buffer, data, size, offset, queue: &transfer_queue)!!;
 }
 
 vk::BufferManager bm = vk::create_buffer_manager(
