@@ -4,11 +4,12 @@ import std::math::matrix;
 import std::math::vector;
 import std::io;
 
-struct UniformData
+// What the shaders get as push constants: 128 bytes, the size every device
+// guarantees (maxPushConstantsSize).
+struct CameraData
 {
 	Matrix4f projection;
 	Matrix4f view;
-	Vec3 eye;
 }
 
 struct Camera
@@ -67,7 +68,7 @@ fn void Camera.zoom(Camera* self, float value)
 	self.view.m23 += value;
 }
 
-fn UniformData Camera.matrix(Camera self)
+fn CameraData Camera.matrix(Camera self)
 {
-	return { self.perspective, self.view, self.eye, };
+	return { self.perspective, self.view };
 }

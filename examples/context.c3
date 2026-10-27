@@ -28,7 +28,7 @@ struct Context
 	// Optional depth.
 	vk::Image depth_image;
 	vk::ImageView depth_view;
-	vk::Memory* depth_memory;
+	vk::Memory depth_memory;  // owns depth_image: freeing it destroys the image
 	vk::Format depth_format;
 	bool has_depth;
 	// Frame state.
@@ -142,7 +142,6 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 		.device = ctx.device,
 		.pdevice = ctx.physical_device,
 		.queue = ctx.graphics_queue,
-		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
 		.frames_in_flight = frames,
 	};
 	ctx.allocator.init()!;
@@ -176,8 +175,7 @@ fn void? Context.createDepthResources(&self, uint width, uint height)
 		.build(self.device)!;
 
 	self.depth_image = depth_img;
-	vk::Memory mem = vk::create_image_buffer(depth_img, &self.allocator, MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
-	self.depth_memory = mem::new(vk::Memory, mem);
+	self.depth_memory = vk::create_image_buffer(depth_img, &self.allocator, MEMORY_PROPERTY_DEVICE_LOCAL_BIT)!;
 
 	self.depth_view = vk::imageViewCreateInfo().setViewType(IMAGE_VIEW_TYPE_2D).setFormat(self.depth_format)
 		.setSubresourceRange(
@@ -197,13 +195,7 @@ fn void Context.destroyDepthResources(&self)
 {
 	if (!self.has_depth) return;
 	self.depth_view.free(self.device);
-	if (self.depth_memory != null)
-	{
-		// Destroys depth_image and returns its range to the allocator's free list.
-		self.depth_memory.free();
-		mem::free(self.depth_memory);
-		self.depth_memory = null;
-	}
+	self.depth_memory.free();
 }
 
 fn void Context.free(&self)
@@ -337,6 +329,7 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		data: pixels.ptr,
 		data_size: pixels.len,
 	)!;
+	defer stage.free();
 
 	self.device.@single_time_command(queue: self.graphics_queue ; vk::CommandBuffer cmd)
 	{
@@ -382,8 +375,6 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		vk::cmdPipelineBarrier2(cmd, &&vk::dependencyInfo().setImageMemoryBarriers({ to_shader }));
 	}!;
 
-	stage.free();
-
 	vk::ImageView view = vk::imageViewCreateInfo().setViewType(IMAGE_VIEW_TYPE_2D).setFormat(format)
 		.setComponents(
 			{
@@ -419,7 +410,7 @@ fn vk::Texture? Context.createTexture(&self, char[] pixels, uint width, uint hei
 		.image = image,
 		.view = view,
 		.sampler = sampler,
-		.memory = mem::new(vk::Memory, mem),
+		.memory = mem,
 		.format = format,
 		.width = width,
 		.height = height,

@@ -66,9 +66,7 @@ fn void main(String[] args)
 
 	Camera cam = camera::new(eye: { 0.0, 5.0, 10 }, aspect: (float)WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
 
-	vk::init()!!;
-
-	// Instance + surface (user responsibility)
+	// Instance + surface (user responsibility). createDefaultInstance loads Vulkan.
 	vk::Instance instance = vk::createDefaultInstance(
 		{ .enable_validation = false, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" } }
 	)!!;
@@ -109,15 +107,6 @@ fn void main(String[] args)
 	)!!;
 	defer index_buffer.free();
 
-	vk::Memory uniform_buffer = vk::new_buffer(
-		&ctx.allocator,
-		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		data: &&cam.matrix(),
-		data_size: camera::UniformData::size,
-	)!!;
-	defer uniform_buffer.free();
-
 	// Texture
 	image::Image img = image::png::load_bytes(logo_data[..])!!;
 	defer img.free();
@@ -133,12 +122,6 @@ fn void main(String[] args)
 		(vk::DescriptorSetLayoutBinding[]) {
 			{
 				.binding = 0,
-				.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-				.descriptorCount = 1,
-				.stageFlags = SHADER_STAGE_VERTEX_BIT,
-			},
-			{
-				.binding = 1,
 				.descriptorType = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				.descriptorCount = 1,
 				.stageFlags = SHADER_STAGE_FRAGMENT_BIT,
@@ -147,11 +130,10 @@ fn void main(String[] args)
 	)!!;
 	defer desc_layout.free(ctx.device);
 
-	// Pool with room for one set of each type used here.
+	// Pool with room for the one texture descriptor.
 	vk::DescriptorPool desc_pool = vk::descriptorPoolCreateInfo().setMaxSets(1)
 		.setPoolSizes(
 			(vk::DescriptorPoolSize[]) {
-				{ .type = DESCRIPTOR_TYPE_UNIFORM_BUFFER, .descriptorCount = 1 },
 				{ .type = DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .descriptorCount = 1 },
 			}
 		)
@@ -176,6 +158,11 @@ fn void main(String[] args)
 				{ .binding = 0, .location = 1, .format = FORMAT_R32G32_SFLOAT, .offset = Vec3::size },
 			},
 			.descriptor_layouts = { desc_layout },
+			// The camera matrices, recorded into each frame's command buffer, so
+			// no frame in flight can see them change.
+			.push_constant_ranges = {
+				{ .stageFlags = SHADER_STAGE_VERTEX_BIT, .offset = 0, .size = camera::CameraData::size },
+			},
 			.cull_mode = CULL_MODE_FRONT_BIT,
 			.depth_test = true,
 			.depth_write = true,
@@ -184,24 +171,16 @@ fn void main(String[] args)
 	)!!;
 	defer pipe.free(ctx.device);
 
-	// Write descriptors into the allocated set (once — uniform buffer storage
-	// is updated in place each frame, descriptor handle stays the same).
-	vk::DescriptorBufferInfo buffer_info = {
-		.buffer = uniform_buffer.buffer,
-		.offset = 0,
-		.range = camera::UniformData::size,
-	};
+	// Point the set at the texture, once.
 	vk::DescriptorImageInfo image_info = {
 		.sampler = texture.sampler,
 		.imageView = texture.view,
 		.imageLayout = IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};
-	vk::WriteDescriptorSet[2] descriptor_writes = { vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(0)
-		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-		.setBufferInfo({ buffer_info }), vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(1)
-			.setDescriptorType(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-			.setImageInfo({ image_info }), };
-	vk::updateDescriptorSets(ctx.device, 2, &descriptor_writes[0], 0, null);
+	vk::WriteDescriptorSet texture_write = vk::writeDescriptorSet().setDstSet(desc_set).setDstBinding(0)
+		.setDescriptorType(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+		.setImageInfo({ image_info });
+	vk::updateDescriptorSets(ctx.device, 1, &texture_write, 0, null);
 
 	// Render loop
 	Vec2 prev_mouse;
@@ -214,31 +193,18 @@ fn void main(String[] args)
 		{
 			Vec2 mouse_pos = win.getMousePos();
 			cam.rotate(mouse_pos.x - prev_mouse.x, mouse_pos.y - prev_mouse.y);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
 			prev_mouse = mouse_pos;
 		}
-
-		if (event_map.is_pressed(MOUSE_SCROLL_UP))
-		{
-			cam.zoom(5);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
-		}
-
-		if (event_map.is_pressed(MOUSE_SCROLL_DOWN))
-		{
-			cam.zoom(-5);
-			uniform_buffer.upload(&&cam.matrix(), camera::UniformData::size);
-		}
-
-		if (event_map.is_pressed(ESCAPE))
-		{
-			running = false;
-		}
+		if (event_map.is_pressed(MOUSE_SCROLL_UP)) cam.zoom(5);
+		if (event_map.is_pressed(MOUSE_SCROLL_DOWN)) cam.zoom(-5);
+		if (event_map.is_pressed(ESCAPE)) running = false;
 
 		vk::CommandBuffer cmd = ctx.beginFrame()!!;
 
 		vk::cmdBindPipeline(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.handle);
 		vk::cmdBindDescriptorSets(cmd, PIPELINE_BIND_POINT_GRAPHICS, pipe.layout, 0, 1, &desc_set, 0, null);
+		camera::CameraData camera_data = cam.matrix();
+		vk::cmdPushConstants(cmd, pipe.layout, SHADER_STAGE_VERTEX_BIT, 0, camera::CameraData::size, &camera_data);
 		vk::cmdBindVertexBuffers(cmd, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (vk::DeviceSize[]) { 0 });
 		vk::cmdBindIndexBuffer(cmd, index_buffer.buffer, 0, INDEX_TYPE_UINT16);
 		vk::cmdDrawIndexed(cmd, (uint)indices.len, 1, 0, 0, 0);
@@ -246,5 +212,7 @@ fn void main(String[] args)
 		ctx.endFrame()!!;
 	}
 
+	// The defers above run after this, newest first, and free things the GPU may
+	// still be using.
 	ctx.device.waitIdle();
 }

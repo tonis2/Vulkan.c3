@@ -39,7 +39,7 @@ c3c run cube
 
 | Example | Linux / macOS | Windows | What it shows |
 |---|---|---|---|
-| Rotating cube | `c3c run cube` | `c3c run cube-win` | Instance, device, swapchain, pipeline, buffers, push descriptors |
+| Rotating cube | `c3c run cube` | `c3c run cube-win` | Instance, device, swapchain, render pass, pipeline, buffers, push constants |
 | Textured cube | `c3c run textured_cube` | | Texture upload, image memory, depth buffer, descriptor sets |
 
 Both examples use [c3w](https://github.com/tonis2/Window.c3) for windowing. It

@@ -122,27 +122,38 @@ To copy on a different queue (a dedicated transfer queue, for example), pass
 
 ### Example: a uniform buffer updated every frame (host-visible)
 
+The GPU can still be reading the uniforms of the frames in flight, so keep one
+copy per frame and write only the current frame's. Each copy's offset must be a
+multiple of `minUniformBufferOffsetAlignment`:
+
 ```c3
+vk::PhysicalDeviceProperties props;
+vk::getPhysicalDeviceProperties(physical_device, &props);
+sz slot = (sz)vk::alignUp((ulong)UniformData::size, props.limits.minUniformBufferOffsetAlignment);
+
 vk::Memory uniform_buffer = vk::new_buffer(
     allocator:  &allocator,
     usage:      BUFFER_USAGE_UNIFORM_BUFFER_BIT,
     properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
-    data:       &&camera.matrix(),   // initial contents, optional
-    data_size:  UniformData::size,
+    data_size:  FRAMES_IN_FLIGHT * slot,
 )!;
 defer uniform_buffer.free();
 
-// Every frame, a plain memcpy into mapped memory:
-uniform_buffer.upload(&&camera.matrix(), UniformData::size);
+// Every frame, after frame_sync.beginFrame, a plain memcpy into mapped memory:
+uint frame = frame_sync.current_frame;
+uniform_buffer.upload(&&uniforms, UniformData::size, offset: frame * slot);
 
-// Or write at a byte offset, e.g. one slot per frame in flight:
-uniform_buffer.upload(&&camera.matrix(), UniformData::size, offset: frame_index * UniformData::size);
-
-// Point a descriptor at it:
+// Bind it with a dynamic offset, so one descriptor serves every copy:
 vk::WriteDescriptorSet write = vk::writeDescriptorSet()
-    .setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+    .setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
     .setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData::size } });
+vk::cmdBindDescriptorSets(cmd, PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &set, 1, (uint[]) { (uint)(frame * slot) });
 ```
+
+> [!TIP]
+> For up to 128 bytes, such as camera matrices, push constants
+> (`vkCmdPushConstants`) need no buffer at all, and each frame's command buffer
+> carries its own copy. Both examples pass their camera that way.
 
 ### Example: appending data with `push`
 

@@ -616,7 +616,7 @@ struct Texture
 	vk::Image image;
 	vk::ImageView view;
 	vk::Sampler sampler;
-	vk::Memory* memory;
+	vk::Memory memory;  // owns image: freeing it destroys the image
 	vk::Format format;
 	uint width;
 	uint height;
@@ -744,11 +744,7 @@ fn void Texture.free(&self, vk::Device device)
 {
 	vk::destroySampler(device, self.sampler, null);
 	self.view.free(device);
-	if (self.memory != null)
-	{
-		self.memory.free();
-		mem::free(self.memory);
-	}
+	self.memory.free();
 }
 
 // ============================================================================

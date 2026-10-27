@@ -4,10 +4,8 @@ import std::math::vector;
 
 import vk, camera, c3w;
 
-const WIDTH                = 800;
-const HEIGHT               = 600;
-const VK_API_VERSION_1_3   = vk::@makeApiVersion(0, 1, 3, 0);
-const MAX_FRAMES_IN_FLIGHT = 2;
+const WIDTH  = 800;
+const HEIGHT = 600;
 
 struct Vertex
 {
@@ -15,71 +13,48 @@ struct Vertex
 	Vec4 color;
 }
 
+// 6 faces, 4 vertices each, one color per face.
 Vertex[] vertices = {
-	{ { -1.0, -1.0, 1.0 }, { 1.0, 0, 0, 1.0 } },
-	{ { 1.0, -1.0, 1.0 }, { 1.0, 0, 0, 1.0 } },
-	{ { 1.0, 1.0, 1.0 }, { 1.0, 0, 0, 1.0 } },
-	{ { -1.0, 1.0, 1.0 }, { 1.0, 0, 0, 1.0 } },
-	{ { -1.0, -1.0, -1.0 }, { 255, 255, 255, 1.0 } },
-	{ { -1.0, 1.0, -1.0 }, { 255, 255, 255, 1.0 } },
-	{ { 1.0, 1.0, -1.0 }, { 255, 255, 255, 1.0 } },
-	{ { 1.0, -1.0, -1.0 }, { 255, 255, 255, 1.0 } },
-	{ { -1.0, 1.0, -1.0 }, { 0.7, 0.8, 150, 1.0 } },
-	{ { -1.0, 1.0, 1.0 }, { 0.7, 0.8, 150, 1.0 } },
-	{ { 1.0, 1.0, 1.0 }, { 0.7, 0.8, 150, 1.0 } },
-	{ { 1.0, 1.0, -1.0 }, { 0.7, 0.8, 150, 1.0 } },
-	{ { -1.0, -1.0, -1.0 }, { 0.0, 128, 255, 1.0 } },
-	{ { 1.0, -1.0, -1.0 }, { 0.0, 128, 255, 1.0 } },
-	{ { 1.0, -1.0, 1.0 }, { 0.0, 128, 255, 1.0 } },
-	{ { -1.0, -1.0, 1.0 }, { 0.0, 128, 255, 1.0 } },
-	{ { 1.0, -1.0, -1.0 }, { 0.0, 100.0, 0.0, 1.0 } },
-	{ { 1.0, 1.0, -1.0 }, { 0.0, 100.0, 0.0, 1.0 } },
-	{ { 1.0, 1.0, 1.0 }, { 0.0, 100.0, 0.0, 1.0 } },
-	{ { 1.0, -1.0, 1.0 }, { 0.0, 100.0, 0.0, 1.0 } },
-	{ { -1.0, -1.0, -1.0 }, { 0.2, 0.2, 0.2, 1.0 } },
-	{ { -1.0, -1.0, 1.0 }, { 0.2, 0.2, 0.2, 1.0 } },
-	{ { -1.0, 1.0, 1.0 }, { 0.2, 0.2, 0.2, 1.0 } },
-	{ { -1.0, 1.0, -1.0 }, { 0.2, 0.2, 0.2, 1.0 } },
-	};
+	// Front: red
+	{ { -1, -1, 1 }, { 1, 0, 0, 1 } },
+	{ { 1, -1, 1 }, { 1, 0, 0, 1 } },
+	{ { 1, 1, 1 }, { 1, 0, 0, 1 } },
+	{ { -1, 1, 1 }, { 1, 0, 0, 1 } },
+	// Back: white
+	{ { -1, -1, -1 }, { 1, 1, 1, 1 } },
+	{ { -1, 1, -1 }, { 1, 1, 1, 1 } },
+	{ { 1, 1, -1 }, { 1, 1, 1, 1 } },
+	{ { 1, -1, -1 }, { 1, 1, 1, 1 } },
+	// Top: light blue
+	{ { -1, 1, -1 }, { 0.7, 0.8, 1, 1 } },
+	{ { -1, 1, 1 }, { 0.7, 0.8, 1, 1 } },
+	{ { 1, 1, 1 }, { 0.7, 0.8, 1, 1 } },
+	{ { 1, 1, -1 }, { 0.7, 0.8, 1, 1 } },
+	// Bottom: cyan
+	{ { -1, -1, -1 }, { 0, 1, 1, 1 } },
+	{ { 1, -1, -1 }, { 0, 1, 1, 1 } },
+	{ { 1, -1, 1 }, { 0, 1, 1, 1 } },
+	{ { -1, -1, 1 }, { 0, 1, 1, 1 } },
+	// Right: green
+	{ { 1, -1, -1 }, { 0, 1, 0, 1 } },
+	{ { 1, 1, -1 }, { 0, 1, 0, 1 } },
+	{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
+	{ { 1, -1, 1 }, { 0, 1, 0, 1 } },
+	// Left: gray
+	{ { -1, -1, -1 }, { 0.2, 0.2, 0.2, 1 } },
+	{ { -1, -1, 1 }, { 0.2, 0.2, 0.2, 1 } },
+	{ { -1, 1, 1 }, { 0.2, 0.2, 0.2, 1 } },
+	{ { -1, 1, -1 }, { 0.2, 0.2, 0.2, 1 } },
+};
 
 ushort[] indices = {
-	0,
-	1,
-	2,
-	0,
-	2,
-	3, // front
-	4,
-	5,
-	6,
-	4,
-	6,
-	7, // back
-	8,
-	9,
-	10,
-	8,
-	10,
-	11, // top
-	12,
-	13,
-	14,
-	12,
-	14,
-	15, // bottom
-	16,
-	17,
-	18,
-	16,
-	18,
-	19, // right
-	20,
-	21,
-	22,
-	20,
-	22,
-	23 // left
-	};
+	0, 1, 2, 0, 2, 3,       // front
+	4, 5, 6, 4, 6, 7,       // back
+	8, 9, 10, 8, 10, 11,    // top
+	12, 13, 14, 12, 14, 15, // bottom
+	16, 17, 18, 16, 18, 19, // right
+	20, 21, 22, 20, 22, 23, // left
+};
 
 // Shader data
 char[*] shader = $embed( "./shaders/shader.spv" );
@@ -89,16 +64,17 @@ fn void main(String[] args)
 	c3w::Window win = c3w::new(params: { .width = WIDTH, .height = HEIGHT, .x = 0, .y = 0 }, name: "Cube")!!;
 	defer win.free();
 
-	Camera camera = camera::new(eye: { 0.0, 5.0, 10 }, aspect: WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
-	
+	Camera camera = camera::new(eye: { 0.0, 5.0, 10 }, aspect: (float)WIDTH / HEIGHT, min_zoom: 0.01, max_zoom: 1000);
+
 	ZStringList device_extensions;
-	device_extensions.push_all({ "VK_KHR_swapchain", "VK_KHR_push_descriptor", "VK_KHR_shader_non_semantic_info" });
+	defer device_extensions.free();
+	device_extensions.push_all({ "VK_KHR_swapchain", "VK_KHR_shader_non_semantic_info" });
 
-	vk::init()!!;
-
+	// Loads Vulkan (vk::init) and adds the platform surface extension.
 	vk::Instance instance = vk::createDefaultInstance(
 		{ .enable_validation = false, .extensions = { ...vk::DEFAULT_EXTENSIONS, "VK_KHR_surface" }, .app_name = "test" }
 	)!!;
+	defer instance.free();
 
 	// Create surface. The window library gets our vkGetInstanceProcAddr: it has
 	// no way to find the loader this program opened by itself.
@@ -106,6 +82,7 @@ fn void main(String[] args)
 		instance,
 		(c3w::VkGetInstanceProcAddrFn)vk::getInstanceProcAddr
 	)!!;
+	defer surface.free(instance);
 
 	// --- Physical device selection ---
 	vk::DeviceSelection selection  = vk::selectPhysicalDevice(instance, surface, device_extensions)!!;
@@ -142,16 +119,16 @@ fn void main(String[] args)
 		.setEnabledExtensionNames(device_extensions.array_view())
 		.setNext(&device_features)
 		.build(physical_device)!!;
-
-	defer
-	{
-		device.free();
-		instance.free();
-	}
+	defer device.free();
 
 	graphics_queue.handle = device.getQueue(graphics_queue.index);
 
-	// --- Render pass ---
+	// --- Swapchain ---
+	vk::Swapchain sc;
+	sc.init(device, physical_device, surface, WIDTH, HEIGHT)!!;
+	defer sc.free(device);
+
+	// --- Render pass, in the format the swapchain picked ---
 	AttachmentReference[] colorAttachments = {
 		{ .attachment = 0, .layout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL }
 	};
@@ -166,7 +143,7 @@ fn void main(String[] args)
 		.setAttachments(
 			{
 				{
-					.format = FORMAT_B8G8R8A8_UNORM,
+					.format = sc.format.format,
 					.samples = SAMPLE_COUNT_1_BIT,
 					.initialLayout = IMAGE_LAYOUT_UNDEFINED,
 					.finalLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR,
@@ -179,23 +156,38 @@ fn void main(String[] args)
 		)
 		.setSubpasses({ subpass })
 		.build(device)!!;
+	defer render_pass.free(device);
 
-	// --- Swapchain (with framebuffers) ---
-	vk::Swapchain sc;
-	sc.init(device, physical_device, surface, WIDTH, HEIGHT, render_pass: render_pass)!!;
+	// One framebuffer per swapchain image; sc.free destroys them.
+	foreach (view : sc.views)
+	{
+		sc.framebuffers.push(vk::framebufferCreateInfo().setRenderPass(render_pass)
+			.setWidth(sc.extent.width)
+			.setHeight(sc.extent.height)
+			.setLayers(1)
+			.setAttachments({ view })
+			.build(device)!!);
+	}
 
 	// --- Command pool & buffers ---
 	CommandPool command_pool          = device.createCommandPool(queue: graphics_queue.index)!!;
 	CommandBufferList command_buffers = device.createCommandBuffers(command_pool, sc.image_count)!!;
+	defer command_pool.free(device);
+
+	// --- Frame sync ---
+	vk::FrameSync frame_sync;
+	frame_sync.init(device, sc.image_count)!!;
+	defer frame_sync.free(device);
 
 	// --- Memory allocator & buffers ---
-	vk::MemoryAllocator allocator = (vk::MemoryAllocator) {
+	vk::MemoryAllocator allocator = {
 		.device = device,
 		.pdevice = physical_device,
 		.queue = graphics_queue,
-		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
-		.frames_in_flight = sc.image_count,  // same frame count as frame_sync below
-	}.init()!!;
+		.frames_in_flight = sc.image_count,  // the frame count frame_sync uses
+	};
+	allocator.init()!!;
+	defer allocator.free();
 
 	Memory vertex_buffer = vk::new_buffer(
 		allocator: &allocator,
@@ -204,6 +196,7 @@ fn void main(String[] args)
 		data: vertices.ptr,
 		data_size: Vertex::size * vertices.len
 	)!!;
+	defer vertex_buffer.free();
 
 	Memory index_buffer = vk::new_buffer(
 		allocator: &allocator,
@@ -212,47 +205,23 @@ fn void main(String[] args)
 		data: indices.ptr,
 		data_size: indices.len * ushort::size
 	)!!;
-
-	Memory uniform_buffer = vk::new_buffer(
-		allocator: &allocator,
-		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		data: &&camera.matrix(),
-		data_size: UniformData::size
-	)!!;
-
-	// --- Descriptors ---
-	DescriptorSetLayout descriptor_set_layout = vk::descriptorSetLayoutCreateInfo()
-		.setFlags(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT)
-		.setBindings(
-			{
-				{
-					.binding = 0,
-					.descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-					.descriptorCount = 1,
-					.stageFlags = SHADER_STAGE_VERTEX_BIT
-				}
-			}
-		)
-		.build(device)!!;
-
-	WriteDescriptorSet[] descriptorSets = { vk::writeDescriptorSet()
-		.setDescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-		.setBufferInfo({ { .buffer = uniform_buffer.buffer, .offset = 0, .range = UniformData::size, }, }) };
+	defer index_buffer.free();
 
 	// --- Shader & pipeline ---
 	ShaderModule shader_module = vk::loadShaderModule(device, shader[..])!!;
 	defer shader_module.free(device);
 
-	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo().setSetLayouts({ descriptor_set_layout })
+	// The camera matrices go in as push constants, recorded into each frame's
+	// command buffer, so no frame in flight can see them change.
+	PipelineLayout pipeline_layout = vk::pipelineLayoutCreateInfo()
+		.setPushConstantRanges({ { .stageFlags = SHADER_STAGE_VERTEX_BIT, .offset = 0, .size = CameraData::size } })
 		.build(device)!!;
+	defer pipeline_layout.free(device);
 
-	PipelineShaderStageCreateInfo[2] shader_stages = { vk::pipelineShaderStageCreateInfo()
-		.setStage(SHADER_STAGE_VERTEX_BIT)
-		.setMod(shader_module)
-		.setName("vertexMain"), vk::pipelineShaderStageCreateInfo().setStage(SHADER_STAGE_FRAGMENT_BIT)
-			.setMod(shader_module)
-			.setName("fragmentMain") };
+	PipelineShaderStageCreateInfo[2] shader_stages = {
+		vk::pipelineShaderStageCreateInfo().setStage(SHADER_STAGE_VERTEX_BIT).setMod(shader_module).setName("vertexMain"),
+		vk::pipelineShaderStageCreateInfo().setStage(SHADER_STAGE_FRAGMENT_BIT).setMod(shader_module).setName("fragmentMain"),
+	};
 
 	VertexInputBindingDescription[1] binding_descriptions = {
 		{ .binding = 0, .stride = Vertex::size, .inputRate = VERTEX_INPUT_RATE_VERTEX, }
@@ -260,7 +229,7 @@ fn void main(String[] args)
 
 	VertexInputAttributeDescription[2] attribute_descriptions = {
 		{ .binding = 0, .location = 0, .format = FORMAT_R32G32B32_SFLOAT, .offset = 0 },
-		{ .binding = 0, .location = 1, .format = FORMAT_R32G32B32_SFLOAT, .offset = Vec3::size }
+		{ .binding = 0, .location = 1, .format = FORMAT_R32G32B32A32_SFLOAT, .offset = Vec3::size }
 	};
 
 	PipelineVertexInputStateCreateInfo vertex_input_state = vk::pipelineVertexInputStateCreateInfo()
@@ -279,18 +248,15 @@ fn void main(String[] args)
 	PipelineColorBlendAttachmentState[1] blend_attachments = { vk::defaultColorBlendAttachment() };
 	PipelineColorBlendStateCreateInfo color_blend_state    = vk::defaultColorBlendState(blend_attachments[..]);
 
-	DynamicState[2] dynamic_states = { DYNAMIC_STATE_VIEWPORT, DYNAMIC_STATE_LINE_WIDTH };
+	// Viewport and scissor are set while recording, so only their counts go here.
+	DynamicState[2] dynamic_states = { DYNAMIC_STATE_VIEWPORT, DYNAMIC_STATE_SCISSOR };
 
 	PipelineDynamicStateCreateInfo dynamic_state = vk::pipelineDynamicStateCreateInfo()
 		.setDynamicStates(dynamic_states[..]);
 
-	Viewport[1] viewports = {
-		{ .width = sc.extent.width, .height = sc.extent.height, .minDepth = 0.0, .maxDepth = 1.0 }
-	};
-	Rect2D[1] scissors = { { .extent = sc.extent, .offset = { 0, 0 } } };
-
-	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo().setViewports(viewports[..])
-		.setScissors(scissors[..]);
+	PipelineViewportStateCreateInfo viewport_state = vk::pipelineViewportStateCreateInfo()
+		.setViewportCount(1)
+		.setScissorCount(1);
 
 	Pipeline pipeline = vk::graphicsPipelineCreateInfo().setStages(shader_stages[..]).setLayout(pipeline_layout)
 		.setVertexInputState(&vertex_input_state)
@@ -303,10 +269,7 @@ fn void main(String[] args)
 		.setViewportState(&viewport_state)
 		.setRenderPass(render_pass)
 		.build(device)!!;
-
-	// --- Frame sync ---
-	vk::FrameSync frame_sync;
-	frame_sync.init(device, sc.image_count)!!;
+	defer pipeline.free(device);
 
 	bool running = true;
 	Vec2 prev_mouse;
@@ -317,27 +280,12 @@ fn void main(String[] args)
 		if (event_map.is_pressed(LEFT_MOUSE))
 		{
 			Vec2 mouse_pos = win.getMousePos();
-			camera.rotate(mouse_pos.x - prev_mouse.x, (mouse_pos.y - prev_mouse.y));
-			uniform_buffer.upload(&&camera.matrix(), uniform_buffer.size);
+			camera.rotate(mouse_pos.x - prev_mouse.x, mouse_pos.y - prev_mouse.y);
 			prev_mouse = mouse_pos;
 		}
-
-		if (event_map.is_pressed(MOUSE_SCROLL_UP))
-		{
-			camera.zoom(5);
-			uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
-		}
-
-		if (event_map.is_pressed(MOUSE_SCROLL_DOWN))
-		{
-			camera.zoom(-5);
-			uniform_buffer.upload(&&camera.matrix(), size: uniform_buffer.size);
-		}
-
-		if (event_map.is_pressed(ESCAPE))
-		{
-			running = false;
-		}
+		if (event_map.is_pressed(MOUSE_SCROLL_UP)) camera.zoom(5);
+		if (event_map.is_pressed(MOUSE_SCROLL_DOWN)) camera.zoom(-5);
+		if (event_map.is_pressed(ESCAPE)) running = false;
 
 		uint next_image = frame_sync.beginFrame(device, sc.handle)!!;
 		allocator.sync();  // frees what free_later() queued, once the GPU is done with it
@@ -356,19 +304,13 @@ fn void main(String[] args)
 			command_buffer,
 			0,
 			1,
-			(Viewport[]) { { .width = WIDTH, .height = HEIGHT, .minDepth = 0.0, .maxDepth = 1.0 } }
+			(Viewport[]) { { .width = sc.extent.width, .height = sc.extent.height, .minDepth = 0.0, .maxDepth = 1.0 } }
 		);
 		vk::cmdSetScissor(command_buffer, 0, 1, (Rect2D[]) { { .extent = sc.extent, .offset = { .x = 0, .y = 0 } } });
 
 		vk::cmdBindPipeline(command_buffer, PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-		vk::cmdPushDescriptorSetKHR(
-			command_buffer,
-			PIPELINE_BIND_POINT_GRAPHICS,
-			pipeline_layout,
-			0,
-			1,
-			&descriptorSets[0]
-		);
+		CameraData camera_data = camera.matrix();
+		vk::cmdPushConstants(command_buffer, pipeline_layout, SHADER_STAGE_VERTEX_BIT, 0, CameraData::size, &camera_data);
 
 		vk::cmdBindVertexBuffers(command_buffer, 0, 1, (vk::Buffer[]) { vertex_buffer.buffer }, (DeviceSize[]) { 0 });
 		vk::cmdBindIndexBuffer(command_buffer, index_buffer.buffer, 0, INDEX_TYPE_UINT16);
@@ -378,19 +320,7 @@ fn void main(String[] args)
 		frame_sync.endFrame(graphics_queue.handle, command_buffer, sc.handle, next_image)!!;
 	}
 
-	// Wait until Vulkan is finished, before freeing stuff
+	// The defers above run after this, newest first, and free things the GPU may
+	// still be using.
 	device.waitIdle();
-
-	sc.free(device);
-	render_pass.free(device);
-	command_pool.free(device);
-	vertex_buffer.free();
-	index_buffer.free();
-	uniform_buffer.free();
-	allocator.free();
-	descriptor_set_layout.free(device);
-	pipeline.free(device);
-	pipeline_layout.free(device);
-	frame_sync.free(device);
-	surface.free(instance);
 }
