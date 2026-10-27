@@ -112,7 +112,7 @@ fn void main(String[] args)
 	vk::Memory uniform_buffer = vk::new_buffer(
 		&ctx.allocator,
 		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_CACHED_BIT,
+		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		data: &&cam.matrix(),
 		data_size: camera::UniformData::size,
 	)!!;

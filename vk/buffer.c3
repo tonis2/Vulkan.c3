@@ -3,9 +3,9 @@ import std::io;
 import std::collections::list;
 import std::collections::map;
 
-alias BlockList = List{Memory*};
 alias PageList = List{MemoryPage*};
 alias FreeBlockList = List{FreeBlock};
+alias PendingFreeList = List{PendingFree};
 
 enum GpuType
 {
@@ -25,7 +25,7 @@ interface Allocator
     fn uint get_type();
     fn void* get_buffer();
     fn void free();
-    fn void mark_deleted();
+    fn void free_later();
     fn bool is_deleted();
 }
 
@@ -42,23 +42,32 @@ macro alignUp(value, factor) => value + factor - 1 - (value + factor - 1) % fact
 //   shared     `default_page_size` pages holding many small allocations, first
 //              fit over a free list.
 //   dedicated  one page per allocation bigger than that. When it is freed the
-//              page stays, idle, for the next allocation about its size.
+//              page stays idle until `sync` gives it back, so an allocation
+//              of about its size made in the meantime reuses it.
 //
 // Every allocation remembers the whole block it took, alignment padding
 // included, and every page counts what it still holds. So a free gives back
 // exactly what was taken, and a page whose count reaches zero starts over as
 // one free block - however its holes would have merged.
 //
-// A page that holds nothing still holds device memory. Idle pages go back to
-// the driver before a new page is made (the request did not fit them, and
-// keeping them would put the new page on top) and on `trim()`. What the
-// allocator keeps is then what is live plus whatever was freed since the last
-// page was made - not every size the process ever asked for.
+// Freeing:
 //
-// Freeing is immediate (`Memory.free`, the caller knows the GPU is done) or
-// deferred (`Memory.mark_deleted`, given back on the next `sync()` at idle).
-// Either way the block is reusable at once and its page can be released at
-// the next new page, so nothing may still be reading it.
+//   Memory.free         now. The caller knows the GPU is done with it.
+//   Memory.free_later   once the GPU can no longer be using it. The handles
+//                       are copied into a queue and the Memory is emptied, so
+//                       it is fine to call on a temporary or a copy.
+//   allocator.sync      once per frame, right after the frame fence wait. Frees
+//                       what was queued `frames_in_flight` or more syncs ago,
+//                       and gives back pages that have held nothing and been
+//                       unused for as long. With `wait_idle: true` it waits
+//                       for the GPU itself, then frees and gives back
+//                       everything.
+//   allocator.free      at shutdown. Waits for the GPU and releases everything.
+//
+// A page that holds nothing still holds device memory. Besides `sync`, idle
+// pages go back to the driver before a new page is made (the request did not
+// fit them, and keeping them would put the new page on top), and when the
+// device runs out of memory.
 // ============================================================================
 
 struct FreeBlock {
@@ -75,15 +84,27 @@ struct MemoryPage {
     void* mapped;
     MemoryPropertyFlags properties;
     uint memory_type;
+    ulong last_used;            // the allocator frame it was last placed in
     FreeBlockList free_blocks;  // by offset, never two touching
 }
 
-// What the allocator holds, in bytes. `idle` is pages holding nothing, which
-// `trim()` would give back.
+// An allocation queued by `Memory.free_later`: what to destroy and give back.
+struct PendingFree {
+    Buffer buffer;
+    Image image;
+    MemoryPage* page;
+    sz offset;                  // the whole block, padding included
+    sz size;
+    ulong frame;                // the allocator frame it was queued in
+}
+
+// What the allocator holds, in bytes. `idle` is pages holding nothing, still
+// reserved from the driver; `pending` is allocations queued by `free_later`.
 struct MemoryStats {
     sz allocated;
     sz used;
     sz idle;
+    sz pending;
     usz pages;
     usz idle_pages;
 }
@@ -94,8 +115,12 @@ struct MemoryAllocator {
     DeviceQueue queue;
     sz default_page_size;
     MemoryAllocateFlags flags;
+    // How many frames the GPU may be behind the CPU: the frame count given to
+    // FrameSync. `free_later` allocations wait this many `sync()` calls.
+    uint frames_in_flight;
+    ulong frame;                // counts `sync()` calls
     PageList pages;
-    BlockList pending_deletes;  // Allocations marked for deletion
+    PendingFreeList pending;
     // Where the bookkeeping lives, taken at init. Not `mem` at the moment of
     // the call: a page made while a caller has swapped `mem` for a tracker or
     // an arena would be freed through the wrong allocator, and a list left
@@ -107,9 +132,12 @@ fn MemoryAllocator? MemoryAllocator.init(&self) {
     if (self.default_page_size == 0) {
         self.default_page_size = 64_000_000;  // 64MB default
     }
+    if (self.frames_in_flight == 0) {
+        self.frames_in_flight = 2;  // FrameSync's default
+    }
     self.heap = mem;
     self.pages.init(self.heap);
-    self.pending_deletes.init(self.heap);
+    self.pending.init(self.heap);
     return *self;
 }
 
@@ -263,53 +291,79 @@ fn MemoryPage*? MemoryAllocator.place(&self, MemoryPropertyFlags properties, uin
     foreach (page : self.pages) {
         if (page.memory_type != memory_type || page.properties != properties || page.dedicated != dedicated) continue;
         if (!dedicated) {
-            if (page.take(size, alignment, offset, padding)) return page;
+            if (page.take(size, alignment, offset, padding)) {
+                page.last_used = self.frame;
+                return page;
+            }
             continue;
         }
         if (!page.idle() || page.size < size || page.size - size > size / 4) continue;
         if (best == null || page.size < best.size) best = page;
     }
-    if (best != null && best.take(size, alignment, offset, padding)) return best;
+    if (best != null && best.take(size, alignment, offset, padding)) {
+        best.last_used = self.frame;
+        return best;
+    }
 
     // Idle pages first: none of them could take this, and a new page made
     // beside them would be on top of memory nobody is using.
     self.trim();
     MemoryPage* page = self.new_page(memory_type, properties, dedicated ? size : self.default_page_size, dedicated)!;
     if (!page.take(size, alignment, offset, padding)) return ALLOCATION_HAS_NO_ROOM~;
+    page.last_used = self.frame;
     return page;
 }
 
-// Kept for callers of the old name: a page with room, made if need be. The
-// room is not taken.
-fn MemoryPage* MemoryAllocator.find_or_create_page(
-    &self, MemoryPropertyFlags properties, sz required_size, uint memory_type_bits, sz alignment = 1
-) {
-    sz offset;
-    sz padding;
-    MemoryPage* page = self.place(properties, memory_type_bits, required_size, alignment, &offset, &padding)!!;
-    page.give_back(offset - padding, required_size + padding);
-    return page;
-}
-
-// Mark a Memory allocation for deletion (will be freed on sync)
-fn void MemoryAllocator.mark_deleted(&self, Memory* mem) {
-    if (mem.buffer == null && mem.image == null) return;  // Already freed
-    self.pending_deletes.push(mem);
-}
-
-// Process all pending deletions - call this when GPU is idle
-fn void MemoryAllocator.sync(&self) {
-    foreach (mem : self.pending_deletes) mem.release();
-    self.pending_deletes.clear();
+// Destroys a queued allocation's handles and gives its block back.
+fn void MemoryAllocator.release_pending(&self, PendingFree* p) {
+    if (p.buffer != null) vk::destroyBuffer(self.device, p.buffer, null);
+    if (p.image != null) vk::destroyImage(self.device, p.image, null);
+    if (p.page != null) p.page.give_back(p.offset, p.size);
 }
 
 <*
- Gives every page that holds nothing back to the driver.
+ Call once per frame, right after waiting on the frame's fence (FrameSync.beginFrame).
 
- Safe whenever the blocks in those pages were freed honestly: a page is idle
- only when every allocation in it went through `Memory.free` (the caller knew
- the GPU was done) or through `sync()` at idle. Deferred deletes still pending
- hold their pages.
+ Frees the `free_later` allocations queued `frames_in_flight` or more syncs ago -
+ the GPU has finished every frame that could use them - and gives back pages
+ that hold nothing and have not been used for as long. A page emptied and
+ refilled every frame (staging uploads) is kept instead of being remade.
+
+ @param wait_idle : `Wait for the GPU to finish everything (vkDeviceWaitIdle), then free everything queued and give back every empty page. It stalls the GPU: for level loads and shutdown, not every frame.`
+*>
+fn void MemoryAllocator.sync(&self, bool wait_idle = false) {
+    // Even if the wait fails (device lost) the GPU is no longer running our work.
+    if (wait_idle) (void)vk::deviceWaitIdle(self.device);
+    self.frame++;
+
+    sz kept = 0;
+    for (sz i = 0; i < self.pending.len(); i++) {
+        PendingFree* p = &self.pending[i];
+        if (wait_idle || self.frame - p.frame >= self.frames_in_flight) {
+            self.release_pending(p);
+        } else {
+            self.pending[kept++] = *p;
+        }
+    }
+    while (self.pending.len() > kept) self.pending.remove_last();
+
+    if (wait_idle) {
+        self.trim();
+        return;
+    }
+    for (sz i = self.pages.len(); i > 0; i--) {
+        MemoryPage* page = self.pages[i - 1];
+        if (page.idle() && self.frame - page.last_used >= self.frames_in_flight) self.release_page(i - 1);
+    }
+}
+
+<*
+ Gives every page that holds nothing back to the driver, now. `sync()` already
+ does this for pages that stay empty, so normal code does not need to call it.
+
+ Safe at any time: a page is idle only when every allocation in it was given
+ back by `Memory.free` (the caller knew the GPU was done) or by `sync()`.
+ Allocations still queued by `free_later` hold their pages.
 
  @return `The bytes given back.`
 *>
@@ -323,12 +377,6 @@ fn sz MemoryAllocator.trim(&self) {
     return released;
 }
 
-// The pending deletions, then `trim()`. Call when the GPU is idle.
-fn void MemoryAllocator.release_empty_pages(&self) {
-    self.sync();
-    self.trim();
-}
-
 fn MemoryStats MemoryAllocator.stats(&self) {
     MemoryStats s;
     foreach (page : self.pages) {
@@ -340,6 +388,7 @@ fn MemoryStats MemoryAllocator.stats(&self) {
             s.idle_pages++;
         }
     }
+    foreach (&p : self.pending) s.pending += p.size;
     return s;
 }
 
@@ -355,11 +404,13 @@ fn sz MemoryAllocator.total_fragmented(&self) {
     return total;
 }
 
+// Releases everything at shutdown. Waits for the GPU first, so allocations
+// queued by `free_later` are safe to destroy.
 fn void MemoryAllocator.free(&self) {
-    self.sync();
+    if (self.device != null) self.sync(wait_idle: true);
     while (self.pages.len() > 0) self.release_page(self.pages.len() - 1);
     self.pages.free();
-    self.pending_deletes.free();
+    self.pending.free();
 }
 
 struct Memory
@@ -602,44 +653,53 @@ fn void Memory.push(&self, void* data, sz size) @dynamic
     self.used_size += size;
 }
 
-// Mark this allocation for deferred deletion
-// The actual cleanup happens when Allocator.sync() is called
-fn void Memory.mark_deleted(&self) @dynamic
-{
-    if (self.deleted) return;  // Already marked
-    self.deleted = true;
-    if (self.allocator != null) {
-        self.allocator.mark_deleted(self);
-    }
-}
-
-// Check if this allocation is marked for deletion
+// Whether this allocation was freed, now or later.
 fn bool Memory.is_deleted(&self) @dynamic => self.deleted;
 
-// Destroys the handle and gives the block back. Both free paths end here.
-fn void Memory.release(&self)
+// What freeing this allocation has to destroy and give back, after which the
+// Memory itself holds nothing: a second free of it, or of a copy made after
+// this, does nothing.
+fn PendingFree Memory.take_handles(&self)
 {
-    if (self.buffer != null) {
-        vk::destroyBuffer(self.allocator.device, self.buffer, null);
-        self.buffer = (Buffer)null;
-    }
-    if (self.image != null) {
-        vk::destroyImage(self.allocator.device, self.image, null);
-        self.image = (Image)null;
-    }
-    if (self.page != null && self.size > 0) {
-        self.page.give_back(self.page_offset - self.padding, self.size + self.padding);
-    }
+    PendingFree p = {
+        .buffer = self.buffer,
+        .image = self.image,
+        .page = self.size > 0 ? self.page : null,
+        .offset = self.page_offset - self.padding,
+        .size = self.size + self.padding,
+    };
+    self.buffer = (Buffer)null;
+    self.image = (Image)null;
     self.page = null;
     self.size = 0;
     self.used_size = 0;
+    self.deleted = true;
+    return p;
 }
 
-// Immediate free - use when the GPU is done with it, or for staging buffers.
+// Free now - use when the GPU is done with it, or for staging buffers.
 fn void Memory.free(&self) @dynamic
 {
-    self.release();
-    self.deleted = true;
+    if (self.allocator == null) return;
+    PendingFree p = self.take_handles();
+    self.allocator.release_pending(&p);
+}
+
+<*
+ Free once the GPU can no longer be using it: on the `frames_in_flight`-th
+ `MemoryAllocator.sync()` from now, or the next `sync(wait_idle: true)` or `allocator.free()`.
+
+ The handles are copied into the allocator's queue and this Memory is emptied
+ at once: no pointer to it is kept, so it may go out of scope right after, and
+ a `free()` after it does nothing.
+*>
+fn void Memory.free_later(&self) @dynamic
+{
+    if (self.allocator == null || (self.buffer == null && self.image == null && self.page == null)) return;
+    MemoryAllocator* allocator = self.allocator;
+    PendingFree p = self.take_handles();
+    p.frame = allocator.frame;
+    allocator.pending.push(p);
 }
 
 
@@ -720,14 +780,14 @@ macro void Region.@push(&self, #data, sz size = 0, sz offset = 0, bool auto_incr
 
     $if @kindof(#data) == POINTER: {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
-            self.bm.uploadFN(buffer, #data, data_size, data_offset);
+            self.bm.upload_device_only(buffer, #data, data_size, data_offset);
         } else  {
             buffer.upload(#data, data_size, data_offset);
         }
     }
     $else {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
-            self.bm.uploadFN(buffer, &&#data, data_size, data_offset);
+            self.bm.upload_device_only(buffer, &&#data, data_size, data_offset);
         } else  {
             buffer.upload(&&#data, data_size, data_offset);
         }
@@ -752,14 +812,14 @@ macro void @region_upload(Region region, #data, sz size = 0, sz offset = 0) {
 
     $if @kindof(#data) == POINTER: {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
-            region.bm.uploadFN(buffer, #data, data_size, data_offset);
+            region.bm.upload_device_only(buffer, #data, data_size, data_offset);
         } else  {
             buffer.upload(#data, data_size, data_offset);
         }
     }
     $else {
         if (buffer.get_type() == GpuType.DEVICE_ONLY.ordinal) {
-            region.bm.uploadFN(buffer, &&#data, data_size, data_offset);
+            region.bm.upload_device_only(buffer, &&#data, data_size, data_offset);
         } else  {
             buffer.upload(&&#data, data_size, data_offset);
         }
@@ -773,7 +833,6 @@ alias UploadFN = fn void (vk::Allocator buffer, void* data, sz data_size, sz off
 
 struct BufferManager {
     List{Allocator} buffers;
-    List{Allocator} pending_deletes;
     UploadFN uploadFN;
 }
 
@@ -785,50 +844,63 @@ fn BufferManager create_buffer_manager(Allocator[] buffers, UploadFN uploadFN = 
     return bm;
 }
 
-fn Region? BufferManager.alloc(&self, uint buffer_index, uint size, void* data = null) {
-    Allocator buffer = self.buffers[buffer_index];
+// Write into a DEVICE_ONLY buffer. Uses the manager's uploadFN when one was given,
+// otherwise a staged copy through the Memory's own allocator.
+fn void BufferManager.upload_device_only(&self, Allocator buffer, void* data, sz data_size, sz offset) {
+    if (self.uploadFN != null) {
+        self.uploadFN(buffer, data, data_size, offset);
+        return;
+    }
+    if (buffer.type == Memory) {
+        Memory* memory = (Memory*)buffer.ptr;
+        stage_upload_at(memory.allocator, memory.buffer, data, data_size, offset)!!;
+        return;
+    }
+    unreachable("DEVICE_ONLY buffer is not a vk::Memory, pass an uploadFN to create_buffer_manager");
+}
 
-    if (buffer.total_size() < buffer.get_used_size() + size) return COMPONENT_BUFFER_OVERFLOW~;
+<*
+ Reserve `size` bytes in buffer `buffer_index`, optionally uploading `data` into it.
+ The region's offset is rounded up to `alignment`, e.g. minStorageBufferOffsetAlignment
+ for a region that will be bound as a descriptor at its offset.
+
+ @require alignment > 0 : "alignment must be at least 1"
+*>
+fn Region? BufferManager.alloc(&self, uint buffer_index, uint size, void* data = null, uint alignment = 1) {
+    Allocator buffer = self.buffers[buffer_index];
+    sz offset = alignUp(buffer.get_used_size(), (sz)alignment);
+
+    if (buffer.total_size() < offset + size) return COMPONENT_BUFFER_OVERFLOW~;
 
     Region region = {
         .size = size,
         .buffer = buffer_index,
-        .offset = buffer.get_used_size(),
+        .offset = offset,
         .bm = self,
     };
 
     if (data != null) {
         if (buffer.get_type() == (uint)GpuType.DEVICE_ONLY.ordinal) {
-            self.uploadFN(buffer, data, size, region.offset);
+            self.upload_device_only(buffer, data, size, region.offset);
         } else {
             buffer.upload(data, size, region.offset);
         }
     }
 
-    buffer.set_used_size(buffer.get_used_size() + size);
+    buffer.set_used_size(offset + size);
     return region;
 }
 
+// Frees every buffer now. The GPU must be done with them.
 fn void BufferManager.free(&self) {
-    self.sync();
-    foreach (buffer: self.buffers) {
-        buffer.free();
-    };
+    foreach (buffer: self.buffers) buffer.free();
     self.buffers.free();
-    self.pending_deletes.free();
 }
 
-fn void BufferManager.sync(&self) {
-    foreach (buffer: self.pending_deletes) {
-        buffer.free();
-    }
-    self.pending_deletes.clear();
-}
-
-fn void BufferManager.mark_deleted(&self, Allocator buffer) {
-    if (buffer.is_deleted()) return;
-    buffer.mark_deleted();
-    self.pending_deletes.push(buffer);
+// Frees every buffer once the GPU can no longer be using them (see Memory.free_later).
+fn void BufferManager.free_later(&self) {
+    foreach (buffer: self.buffers) buffer.free_later();
+    self.buffers.free();
 }
 
 struct LocalBuffer (vk::Allocator) {
@@ -867,9 +939,8 @@ fn void LocalBuffer.free(&self) @dynamic {
     self.deleted = true;
 }
 
-fn void LocalBuffer.mark_deleted(&self) @dynamic {
-    self.deleted = true;
-}
+// CPU memory the GPU never reads, so there is nothing to wait for.
+fn void LocalBuffer.free_later(&self) @dynamic => self.free();
 
 fn bool LocalBuffer.is_deleted(&self) @dynamic => self.deleted;
 

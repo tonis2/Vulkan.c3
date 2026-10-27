@@ -38,6 +38,10 @@
 		"build": {
 			"type": "executable",
 			"sources": ["./parser/*", "./parser/build.c3"]
+		},
+		"tests": {
+			"type": "test",
+			"sources": ["./vk/*", "./test/*"]
 		}
 	},
 	"output": "./build"

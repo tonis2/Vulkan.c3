@@ -194,6 +194,7 @@ fn void main(String[] args)
 		.pdevice = physical_device,
 		.queue = graphics_queue,
 		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT | MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
+		.frames_in_flight = sc.image_count,  // same frame count as frame_sync below
 	}.init()!!;
 
 	Memory vertex_buffer = vk::new_buffer(
@@ -215,7 +216,7 @@ fn void main(String[] args)
 	Memory uniform_buffer = vk::new_buffer(
 		allocator: &allocator,
 		usage: BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_CACHED_BIT,
+		properties: MEMORY_PROPERTY_HOST_VISIBLE_BIT | MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		data: &&camera.matrix(),
 		data_size: UniformData::size
 	)!!;
@@ -339,6 +340,7 @@ fn void main(String[] args)
 		}
 
 		uint next_image = frame_sync.beginFrame(device, sc.handle)!!;
+		allocator.sync();  // frees what free_later() queued, once the GPU is done with it
 
 		RenderPassBeginInfo render_pass_info = vk::renderPassBeginInfo().setFramebuffer(sc.framebuffers[next_image])
 			.setRenderPass(render_pass)
@@ -382,6 +384,9 @@ fn void main(String[] args)
 	sc.free(device);
 	render_pass.free(device);
 	command_pool.free(device);
+	vertex_buffer.free();
+	index_buffer.free();
+	uniform_buffer.free();
 	allocator.free();
 	descriptor_set_layout.free(device);
 	pipeline.free(device);

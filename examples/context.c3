@@ -143,6 +143,7 @@ fn Context? init(vk::Instance instance, vk::SurfaceKHR surface, ContextConfig co
 		.pdevice = ctx.physical_device,
 		.queue = ctx.graphics_queue,
 		.flags = MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+		.frames_in_flight = frames,
 	};
 	ctx.allocator.init()!;
 
@@ -196,10 +197,12 @@ fn void Context.destroyDepthResources(&self)
 {
 	if (!self.has_depth) return;
 	self.depth_view.free(self.device);
-	self.depth_image.free(self.device);
 	if (self.depth_memory != null)
 	{
+		// Destroys depth_image and returns its range to the allocator's free list.
+		self.depth_memory.free();
 		mem::free(self.depth_memory);
+		self.depth_memory = null;
 	}
 }
 
@@ -221,6 +224,7 @@ fn void Context.free(&self)
 fn vk::CommandBuffer? Context.beginFrame(&self, float[4] clear_color = { 0, 0, 0, 1 })
 {
 	uint next_image = self.frame_sync.beginFrame(self.device, self.swapchain.handle)!;
+	self.allocator.sync();  // frees what free_later() queued, once the GPU is done with it
 	self.current_image = next_image;
 
 	vk::CommandBuffer cmd = self.command_buffers[next_image];
