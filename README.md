@@ -42,11 +42,6 @@ c3c run cube
 | Rotating cube | `c3c run cube` | `c3c run cube-win` | Instance, device, swapchain, render pass, pipeline, buffers, push constants |
 | Textured cube | `c3c run textured_cube` | | Texture upload, image memory, depth buffer, descriptor sets |
 
-Both examples use [c3w](https://github.com/tonis2/Window.c3) for windowing. It
-and the image library are committed as zipped snapshots in `libs/`, so a plain
-clone is enough. To move a snapshot to a newer version, zip it from a checkout
-of that library:
-`git -C path/to/Window.c3 archive --format=zip -o $PWD/libs/window.c3l HEAD`.
 
 The shaders are written in Slang, and the compiled `.spv` files are checked in.
 To rebuild them you need `slangc`: `c3c build shaders`.
@@ -359,7 +354,6 @@ The generator prints what it skipped or dropped, and why, to stderr. Use
 ## Resources
 
 - [c3w](https://github.com/tonis2/Window.c3): the windowing library used by the examples
-- [game.c3](https://github.com/tonis2/game.c3): a larger project built with these bindings
 - [C3 documentation](https://c3-lang.org/)
 - [Vulkan Tutorial](https://vulkan-tutorial.com/)
 - [Vulkan Specification](https://registry.khronos.org/vulkan/)
