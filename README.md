@@ -354,7 +354,6 @@ The generator prints what it skipped or dropped, and why, to stderr. Use
 ## Resources
 
 - [c3w](https://github.com/tonis2/Window.c3): the windowing library used by the examples
-- [game.c3](https://github.com/tonis2/game.c3): a larger project built with these bindings
 - [C3 documentation](https://c3-lang.org/)
 - [Vulkan Tutorial](https://vulkan-tutorial.com/)
 - [Vulkan Specification](https://registry.khronos.org/vulkan/)
