@@ -425,7 +425,7 @@ fn vk::ImageList? SwapchainKHR.getImages(self, Device device, uint count)
 fn uint SwapchainKHR.getNextImage(self, Device device, Semaphore wait_semaphore)
 {
 	uint index;
-	vk::acquireNextImageKHR(device, self, (uint)-1, wait_semaphore, (Fence)null, &index)!!;
+	vk::acquireNextImageKHR(device, self, ulong::max, wait_semaphore, (Fence)null, &index)!!;
 	return index;
 }
 
@@ -503,7 +503,7 @@ fn void SemaphoreList.release(self, vk::Device device)
 
 fn void? Fence.wait(&self, vk::Device device)
 {
-	vk::waitForFences(device, 1, self, vk::TRUE, (uint)-1)!;
+	vk::waitForFences(device, 1, self, vk::TRUE, ulong::max)!;
 }
 
 fn void? Fence.reset(&self, vk::Device device)
