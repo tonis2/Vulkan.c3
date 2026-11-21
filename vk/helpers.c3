@@ -1120,6 +1120,7 @@ const ZString[] DEFAULT_EXTENSIONS @feat(WIN32) = { "VK_KHR_win32_surface" };
 const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & X11 & !WAYLAND) = { "VK_KHR_xcb_surface" };
 const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & WAYLAND) = { "VK_KHR_wayland_surface" };
 const ZString[] DEFAULT_EXTENSIONS @feat(LINUX & !WAYLAND & !X11) = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };
+const ZString[] DEFAULT_EXTENSIONS @feat(ANDROID) = { "VK_KHR_android_surface" };
 
 // One per Linux window system. A window presents through just the one it runs on.
 const String[] LINUX_SURFACE_EXTENSIONS = { "VK_KHR_wayland_surface", "VK_KHR_xcb_surface" };

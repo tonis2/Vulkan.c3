@@ -3,6 +3,7 @@
   "provides" : "vk",
   "sources": ["vk/**"],
   "targets" : {
+    "android-aarch64": {},
     "macos-x64" : {
       "linked-libraries" : []
     },
